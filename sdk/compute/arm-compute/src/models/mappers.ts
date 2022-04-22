@@ -9167,6 +9167,113 @@ export const PirCommunityGalleryResource: coreClient.CompositeMapper = {
   }
 };
 
+export const CommunityGalleryImageVersionStorageProfile: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CommunityGalleryImageVersionStorageProfile",
+    modelProperties: {
+      osDiskImage: {
+        serializedName: "osDiskImage",
+        type: {
+          name: "Composite",
+          className: "CommunityGalleryOSDiskImage"
+        }
+      },
+      dataDiskImages: {
+        serializedName: "dataDiskImages",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "CommunityGalleryDataDiskImage"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+export const CommunityGalleryDiskImage: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CommunityGalleryDiskImage",
+    modelProperties: {
+      sizeInGB: {
+        serializedName: "sizeInGB",
+        readOnly: true,
+        type: {
+          name: "Number"
+        }
+      },
+      hostCaching: {
+        serializedName: "hostCaching",
+        type: {
+          name: "Enum",
+          allowedValues: ["None", "ReadOnly", "ReadWrite"]
+        }
+      }
+    }
+  }
+};
+
+export const CommunityGalleryImageList: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CommunityGalleryImageList",
+    modelProperties: {
+      value: {
+        serializedName: "value",
+        required: true,
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "CommunityGalleryImage"
+            }
+          }
+        }
+      },
+      nextLink: {
+        serializedName: "nextLink",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const CommunityGalleryImageVersionList: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CommunityGalleryImageVersionList",
+    modelProperties: {
+      value: {
+        serializedName: "value",
+        required: true,
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "CommunityGalleryImageVersion"
+            }
+          }
+        }
+      },
+      nextLink: {
+        serializedName: "nextLink",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
 export const RoleInstance: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -15391,6 +15498,18 @@ export const CommunityGalleryImage: coreClient.CompositeMapper = {
           name: "Composite",
           className: "ImagePurchasePlan"
         }
+      },
+      privacyStatementUri: {
+        serializedName: "properties.privacyStatementUri",
+        type: {
+          name: "String"
+        }
+      },
+      eula: {
+        serializedName: "properties.eula",
+        type: {
+          name: "String"
+        }
       }
     }
   }
@@ -15412,6 +15531,46 @@ export const CommunityGalleryImageVersion: coreClient.CompositeMapper = {
         serializedName: "properties.endOfLifeDate",
         type: {
           name: "DateTime"
+        }
+      },
+      excludeFromLatest: {
+        serializedName: "properties.excludeFromLatest",
+        type: {
+          name: "Boolean"
+        }
+      },
+      storageProfile: {
+        serializedName: "properties.storageProfile",
+        type: {
+          name: "Composite",
+          className: "CommunityGalleryImageVersionStorageProfile"
+        }
+      }
+    }
+  }
+};
+
+export const CommunityGalleryOSDiskImage: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CommunityGalleryOSDiskImage",
+    modelProperties: {
+      ...CommunityGalleryDiskImage.type.modelProperties
+    }
+  }
+};
+
+export const CommunityGalleryDataDiskImage: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CommunityGalleryDataDiskImage",
+    modelProperties: {
+      ...CommunityGalleryDiskImage.type.modelProperties,
+      lun: {
+        serializedName: "lun",
+        required: true,
+        type: {
+          name: "Number"
         }
       }
     }

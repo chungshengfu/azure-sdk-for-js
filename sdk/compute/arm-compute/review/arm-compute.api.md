@@ -926,6 +926,17 @@ export type CommunityGalleriesGetResponse = CommunityGallery;
 export type CommunityGallery = PirCommunityGalleryResource & {};
 
 // @public
+export type CommunityGalleryDataDiskImage = CommunityGalleryDiskImage & {
+    lun: number;
+};
+
+// @public
+export interface CommunityGalleryDiskImage {
+    hostCaching?: HostCaching;
+    readonly sizeInGB?: number;
+}
+
+// @public
 export type CommunityGalleryImage = PirCommunityGalleryResource & {
     osType?: OperatingSystemTypes;
     osState?: OperatingSystemStateTypes;
@@ -936,11 +947,20 @@ export type CommunityGalleryImage = PirCommunityGalleryResource & {
     hyperVGeneration?: HyperVGeneration;
     features?: GalleryImageFeature[];
     purchasePlan?: ImagePurchasePlan;
+    privacyStatementUri?: string;
+    eula?: string;
 };
+
+// @public
+export interface CommunityGalleryImageList {
+    nextLink?: string;
+    value: CommunityGalleryImage[];
+}
 
 // @public
 export interface CommunityGalleryImages {
     get(location: string, publicGalleryName: string, galleryImageName: string, options?: CommunityGalleryImagesGetOptionalParams): Promise<CommunityGalleryImagesGetResponse>;
+    list(location: string, publicGalleryName: string, options?: CommunityGalleryImagesListOptionalParams): PagedAsyncIterableIterator<CommunityGalleryImage>;
 }
 
 // @public
@@ -951,14 +971,37 @@ export interface CommunityGalleryImagesGetOptionalParams extends coreClient.Oper
 export type CommunityGalleryImagesGetResponse = CommunityGalleryImage;
 
 // @public
+export interface CommunityGalleryImagesListNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type CommunityGalleryImagesListNextResponse = CommunityGalleryImageList;
+
+// @public
+export interface CommunityGalleryImagesListOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type CommunityGalleryImagesListResponse = CommunityGalleryImageList;
+
+// @public
 export type CommunityGalleryImageVersion = PirCommunityGalleryResource & {
     publishedDate?: Date;
     endOfLifeDate?: Date;
+    excludeFromLatest?: boolean;
+    storageProfile?: CommunityGalleryImageVersionStorageProfile;
 };
+
+// @public
+export interface CommunityGalleryImageVersionList {
+    nextLink?: string;
+    value: CommunityGalleryImageVersion[];
+}
 
 // @public
 export interface CommunityGalleryImageVersions {
     get(location: string, publicGalleryName: string, galleryImageName: string, galleryImageVersionName: string, options?: CommunityGalleryImageVersionsGetOptionalParams): Promise<CommunityGalleryImageVersionsGetResponse>;
+    list(location: string, publicGalleryName: string, galleryImageName: string, options?: CommunityGalleryImageVersionsListOptionalParams): PagedAsyncIterableIterator<CommunityGalleryImageVersion>;
 }
 
 // @public
@@ -969,6 +1012,26 @@ export interface CommunityGalleryImageVersionsGetOptionalParams extends coreClie
 export type CommunityGalleryImageVersionsGetResponse = CommunityGalleryImageVersion;
 
 // @public
+export interface CommunityGalleryImageVersionsListNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type CommunityGalleryImageVersionsListNextResponse = CommunityGalleryImageVersionList;
+
+// @public
+export interface CommunityGalleryImageVersionsListOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type CommunityGalleryImageVersionsListResponse = CommunityGalleryImageVersionList;
+
+// @public
+export interface CommunityGalleryImageVersionStorageProfile {
+    dataDiskImages?: CommunityGalleryDataDiskImage[];
+    osDiskImage?: CommunityGalleryOSDiskImage;
+}
+
+// @public
 export interface CommunityGalleryInfo {
     readonly communityGalleryEnabled?: boolean;
     eula?: string;
@@ -977,6 +1040,9 @@ export interface CommunityGalleryInfo {
     publisherContact?: string;
     publisherUri?: string;
 }
+
+// @public
+export type CommunityGalleryOSDiskImage = CommunityGalleryDiskImage & {};
 
 // @public (undocumented)
 export class ComputeManagementClient extends coreClient.ServiceClient {

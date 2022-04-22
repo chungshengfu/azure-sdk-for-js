@@ -3519,6 +3519,41 @@ export interface PirCommunityGalleryResource {
   uniqueId?: string;
 }
 
+/** This is the storage profile of a Gallery Image Version. */
+export interface CommunityGalleryImageVersionStorageProfile {
+  /** This is the OS disk image. */
+  osDiskImage?: CommunityGalleryOSDiskImage;
+  /** A list of data disk images. */
+  dataDiskImages?: CommunityGalleryDataDiskImage[];
+}
+
+/** This is the disk image base class. */
+export interface CommunityGalleryDiskImage {
+  /**
+   * This property indicates the size of the VHD to be created.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly sizeInGB?: number;
+  /** The host caching of the disk. Valid values are 'None', 'ReadOnly', and 'ReadWrite' */
+  hostCaching?: HostCaching;
+}
+
+/** The List Community Gallery Images operation response. */
+export interface CommunityGalleryImageList {
+  /** A list of community gallery images. */
+  value: CommunityGalleryImage[];
+  /** The uri to fetch the next page of community gallery images. Call ListNext() with this to fetch the next page of community gallery images. */
+  nextLink?: string;
+}
+
+/** The List Community Gallery Image versions operation response. */
+export interface CommunityGalleryImageVersionList {
+  /** A list of community gallery image versions. */
+  value: CommunityGalleryImageVersion[];
+  /** The uri to fetch the next page of community gallery image versions. Call ListNext() with this to fetch the next page of community gallery image versions. */
+  nextLink?: string;
+}
+
 export interface RoleInstance {
   /**
    * Resource Id
@@ -5958,6 +5993,10 @@ export type CommunityGalleryImage = PirCommunityGalleryResource & {
   features?: GalleryImageFeature[];
   /** Describes the gallery image definition purchase plan. This is used by marketplace images. */
   purchasePlan?: ImagePurchasePlan;
+  /** The uri to describe the privacy statement issued from community gallery publisher. */
+  privacyStatementUri?: string;
+  /** The uri to describe the eula issued from community gallery publisher. */
+  eula?: string;
 };
 
 /** Specifies information about the gallery image version that you want to create or update. */
@@ -5966,6 +6005,19 @@ export type CommunityGalleryImageVersion = PirCommunityGalleryResource & {
   publishedDate?: Date;
   /** The end of life date of the gallery image version Definition. This property can be used for decommissioning purposes. This property is updatable. */
   endOfLifeDate?: Date;
+  /** If set to true, Virtual Machines deployed from the latest version of the Image Definition won't use this Image Version. */
+  excludeFromLatest?: boolean;
+  /** This is the storage profile of a Gallery Image Version. */
+  storageProfile?: CommunityGalleryImageVersionStorageProfile;
+};
+
+/** This is the OS disk image. */
+export type CommunityGalleryOSDiskImage = CommunityGalleryDiskImage & {};
+
+/** This is the data disk image. */
+export type CommunityGalleryDataDiskImage = CommunityGalleryDiskImage & {
+  /** This property specifies the logical unit number of the data disk. This value is used to identify data disks within the Virtual Machine and therefore must be unique for each data disk attached to the Virtual Machine. */
+  lun: number;
 };
 
 /** Describes a Virtual Machine Image. */
@@ -10662,11 +10714,39 @@ export interface CommunityGalleryImagesGetOptionalParams
 export type CommunityGalleryImagesGetResponse = CommunityGalleryImage;
 
 /** Optional parameters. */
+export interface CommunityGalleryImagesListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type CommunityGalleryImagesListResponse = CommunityGalleryImageList;
+
+/** Optional parameters. */
+export interface CommunityGalleryImagesListNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listNext operation. */
+export type CommunityGalleryImagesListNextResponse = CommunityGalleryImageList;
+
+/** Optional parameters. */
 export interface CommunityGalleryImageVersionsGetOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type CommunityGalleryImageVersionsGetResponse = CommunityGalleryImageVersion;
+
+/** Optional parameters. */
+export interface CommunityGalleryImageVersionsListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type CommunityGalleryImageVersionsListResponse = CommunityGalleryImageVersionList;
+
+/** Optional parameters. */
+export interface CommunityGalleryImageVersionsListNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listNext operation. */
+export type CommunityGalleryImageVersionsListNextResponse = CommunityGalleryImageVersionList;
 
 /** Optional parameters. */
 export interface CloudServiceRoleInstancesDeleteOptionalParams

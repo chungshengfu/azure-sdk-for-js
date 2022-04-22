@@ -1,15 +1,30 @@
 # Release History
+    
+## 17.4.0 (2022-04-22)
+    
+**Features**
 
-## 17.3.2 (Unreleased)
-
-### Features Added
-
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
+  - Added operation CommunityGalleryImages.list
+  - Added operation CommunityGalleryImageVersions.list
+  - Added Interface CommunityGalleryDiskImage
+  - Added Interface CommunityGalleryImageList
+  - Added Interface CommunityGalleryImagesListNextOptionalParams
+  - Added Interface CommunityGalleryImagesListOptionalParams
+  - Added Interface CommunityGalleryImageVersionList
+  - Added Interface CommunityGalleryImageVersionsListNextOptionalParams
+  - Added Interface CommunityGalleryImageVersionsListOptionalParams
+  - Added Interface CommunityGalleryImageVersionStorageProfile
+  - Added Type Alias CommunityGalleryDataDiskImage
+  - Added Type Alias CommunityGalleryImagesListNextResponse
+  - Added Type Alias CommunityGalleryImagesListResponse
+  - Added Type Alias CommunityGalleryImageVersionsListNextResponse
+  - Added Type Alias CommunityGalleryImageVersionsListResponse
+  - Added Type Alias CommunityGalleryOSDiskImage
+  - Type Alias CommunityGalleryImage has a new parameter privacyStatementUri
+  - Type Alias CommunityGalleryImage has a new parameter eula
+  - Type Alias CommunityGalleryImageVersion has a new parameter excludeFromLatest
+  - Type Alias CommunityGalleryImageVersion has a new parameter storageProfile
+    
 ## 17.3.1 (2022-04-06)
 
 **features**
