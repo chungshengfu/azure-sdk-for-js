@@ -2,148 +2,152 @@
 // Licensed under the MIT license.
 
 import {
-  DeviceManagementCollectLogsParameters,
-  DeviceManagementCreateOrUpdateDeploymentParameters,
-  DeviceManagementCreateOrUpdateGroupParameters,
-  DeviceManagementDeleteDeploymentParameters,
-  DeviceManagementDeleteGroupParameters,
-  DeviceManagementGetDeploymentParameters,
-  DeviceManagementGetDeploymentStatusParameters,
-  DeviceManagementGetDeviceClassParameters,
-  DeviceManagementGetDeviceModuleParameters,
-  DeviceManagementGetDeviceParameters,
-  DeviceManagementGetDeviceTagParameters,
-  DeviceManagementGetGroupParameters,
-  DeviceManagementGetGroupUpdateComplianceParameters,
-  DeviceManagementGetLogCollectionOperationDetailedStatusParameters,
-  DeviceManagementGetLogCollectionOperationParameters,
-  DeviceManagementGetOperationParameters,
-  DeviceManagementGetUpdateComplianceParameters,
-  DeviceManagementImportDevicesParameters,
-  DeviceManagementListBestUpdatesForGroupParameters,
-  DeviceManagementListDeploymentDevicesParameters,
-  DeviceManagementListDeploymentsForGroupParameters,
-  DeviceManagementListDeviceClassesParameters,
-  DeviceManagementListDeviceTagsParameters,
-  DeviceManagementListDevicesParameters,
-  DeviceManagementListGroupsParameters,
-  DeviceManagementListInstallableUpdatesForDeviceClassParameters,
-  DeviceManagementListLogCollectionOperationsParameters,
-  DeviceManagementListOperationsParameters,
-  DeviceManagementRetryDeploymentParameters,
-  DeviceManagementStopDeploymentParameters,
-  DeviceUpdateDeleteUpdateParameters,
-  DeviceUpdateGetFileParameters,
-  DeviceUpdateGetOperationParameters,
-  DeviceUpdateGetUpdateParameters,
   DeviceUpdateImportUpdateParameters,
-  DeviceUpdateListFilesParameters,
-  DeviceUpdateListNamesParameters,
-  DeviceUpdateListOperationsParameters,
-  DeviceUpdateListProvidersParameters,
   DeviceUpdateListUpdatesParameters,
+  DeviceUpdateGetUpdateParameters,
+  DeviceUpdateDeleteUpdateParameters,
+  DeviceUpdateListProvidersParameters,
+  DeviceUpdateListNamesParameters,
   DeviceUpdateListVersionsParameters,
+  DeviceUpdateListFilesParameters,
+  DeviceUpdateGetFileParameters,
+  DeviceUpdateListOperationsParameters,
+  DeviceUpdateGetOperationParameters,
+  DeviceManagementListDeviceClassesParameters,
+  DeviceManagementGetDeviceClassParameters,
+  DeviceManagementListInstallableUpdatesForDeviceClassParameters,
+  DeviceManagementListDevicesParameters,
+  DeviceManagementImportDevicesParameters,
+  DeviceManagementGetDeviceParameters,
+  DeviceManagementGetDeviceModuleParameters,
+  DeviceManagementGetUpdateComplianceParameters,
+  DeviceManagementListDeviceTagsParameters,
+  DeviceManagementGetDeviceTagParameters,
+  DeviceManagementListGroupsParameters,
+  DeviceManagementGetGroupParameters,
+  DeviceManagementCreateOrUpdateGroupParameters,
+  DeviceManagementDeleteGroupParameters,
+  DeviceManagementGetGroupUpdateComplianceParameters,
+  DeviceManagementListBestUpdatesForGroupParameters,
+  DeviceManagementListDeploymentsForGroupParameters,
+  DeviceManagementGetDeploymentParameters,
+  DeviceManagementCreateOrUpdateDeploymentParameters,
+  DeviceManagementDeleteDeploymentParameters,
+  DeviceManagementGetDeploymentStatusParameters,
+  DeviceManagementListDeploymentDevicesParameters,
+  DeviceManagementGetOperationParameters,
+  DeviceManagementListOperationsParameters,
+  DeviceManagementCollectLogsParameters,
+  DeviceManagementGetLogCollectionOperationParameters,
+  DeviceManagementListLogCollectionOperationsParameters,
+  DeviceManagementGetLogCollectionOperationDetailedStatusParameters,
+  DeviceManagementStopDeploymentParameters,
+  DeviceManagementRetryDeploymentParameters
 } from "./parameters";
 import {
-  DeviceManagementCollectLogs201Response,
-  DeviceManagementCollectLogsdefaultResponse,
-  DeviceManagementCreateOrUpdateDeployment200Response,
-  DeviceManagementCreateOrUpdateDeploymentdefaultResponse,
-  DeviceManagementCreateOrUpdateGroup200Response,
-  DeviceManagementCreateOrUpdateGroupdefaultResponse,
-  DeviceManagementDeleteDeployment204Response,
-  DeviceManagementDeleteDeploymentdefaultResponse,
-  DeviceManagementDeleteGroup204Response,
-  DeviceManagementDeleteGroupdefaultResponse,
-  DeviceManagementGetDeployment200Response,
-  DeviceManagementGetDeploymentStatus200Response,
-  DeviceManagementGetDeploymentStatusdefaultResponse,
-  DeviceManagementGetDeploymentdefaultResponse,
-  DeviceManagementGetDevice200Response,
-  DeviceManagementGetDeviceClass200Response,
-  DeviceManagementGetDeviceClassdefaultResponse,
-  DeviceManagementGetDeviceModule200Response,
-  DeviceManagementGetDeviceModuledefaultResponse,
-  DeviceManagementGetDeviceTag200Response,
-  DeviceManagementGetDeviceTagdefaultResponse,
-  DeviceManagementGetDevicedefaultResponse,
-  DeviceManagementGetGroup200Response,
-  DeviceManagementGetGroupUpdateCompliance200Response,
-  DeviceManagementGetGroupUpdateCompliancedefaultResponse,
-  DeviceManagementGetGroupdefaultResponse,
-  DeviceManagementGetLogCollectionOperation200Response,
-  DeviceManagementGetLogCollectionOperationDetailedStatus200Response,
-  DeviceManagementGetLogCollectionOperationDetailedStatusdefaultResponse,
-  DeviceManagementGetLogCollectionOperationdefaultResponse,
-  DeviceManagementGetOperation200Response,
-  DeviceManagementGetOperation304Response,
-  DeviceManagementGetOperationdefaultResponse,
-  DeviceManagementGetUpdateCompliance200Response,
-  DeviceManagementGetUpdateCompliancedefaultResponse,
-  DeviceManagementImportDevices202Response,
-  DeviceManagementImportDevicesdefaultResponse,
-  DeviceManagementListBestUpdatesForGroup200Response,
-  DeviceManagementListBestUpdatesForGroupdefaultResponse,
-  DeviceManagementListDeploymentDevices200Response,
-  DeviceManagementListDeploymentDevicesdefaultResponse,
-  DeviceManagementListDeploymentsForGroup200Response,
-  DeviceManagementListDeploymentsForGroupdefaultResponse,
-  DeviceManagementListDeviceClasses200Response,
-  DeviceManagementListDeviceClassesdefaultResponse,
-  DeviceManagementListDeviceTags200Response,
-  DeviceManagementListDeviceTagsdefaultResponse,
-  DeviceManagementListDevices200Response,
-  DeviceManagementListDevicesdefaultResponse,
-  DeviceManagementListGroups200Response,
-  DeviceManagementListGroupsdefaultResponse,
-  DeviceManagementListInstallableUpdatesForDeviceClass200Response,
-  DeviceManagementListInstallableUpdatesForDeviceClassdefaultResponse,
-  DeviceManagementListLogCollectionOperations200Response,
-  DeviceManagementListLogCollectionOperationsdefaultResponse,
-  DeviceManagementListOperations200Response,
-  DeviceManagementListOperationsdefaultResponse,
-  DeviceManagementRetryDeployment200Response,
-  DeviceManagementRetryDeploymentdefaultResponse,
-  DeviceManagementStopDeployment200Response,
-  DeviceManagementStopDeploymentdefaultResponse,
-  DeviceUpdateDeleteUpdate202Response,
-  DeviceUpdateDeleteUpdatedefaultResponse,
-  DeviceUpdateGetFile200Response,
-  DeviceUpdateGetFile304Response,
-  DeviceUpdateGetFiledefaultResponse,
-  DeviceUpdateGetOperation200Response,
-  DeviceUpdateGetOperation304Response,
-  DeviceUpdateGetOperationdefaultResponse,
+  DeviceUpdateImportUpdate202Response,
+  DeviceUpdateImportUpdatedefaultResponse,
+  DeviceUpdateListUpdates200Response,
+  DeviceUpdateListUpdatesdefaultResponse,
   DeviceUpdateGetUpdate200Response,
   DeviceUpdateGetUpdate304Response,
   DeviceUpdateGetUpdatedefaultResponse,
-  DeviceUpdateImportUpdate202Response,
-  DeviceUpdateImportUpdatedefaultResponse,
-  DeviceUpdateListFiles200Response,
-  DeviceUpdateListFilesdefaultResponse,
-  DeviceUpdateListNames200Response,
-  DeviceUpdateListNamesdefaultResponse,
-  DeviceUpdateListOperations200Response,
-  DeviceUpdateListOperationsdefaultResponse,
+  DeviceUpdateDeleteUpdate202Response,
+  DeviceUpdateDeleteUpdatedefaultResponse,
   DeviceUpdateListProviders200Response,
   DeviceUpdateListProvidersdefaultResponse,
-  DeviceUpdateListUpdates200Response,
-  DeviceUpdateListUpdatesdefaultResponse,
+  DeviceUpdateListNames200Response,
+  DeviceUpdateListNamesdefaultResponse,
   DeviceUpdateListVersions200Response,
   DeviceUpdateListVersionsdefaultResponse,
+  DeviceUpdateListFiles200Response,
+  DeviceUpdateListFilesdefaultResponse,
+  DeviceUpdateGetFile200Response,
+  DeviceUpdateGetFile304Response,
+  DeviceUpdateGetFiledefaultResponse,
+  DeviceUpdateListOperations200Response,
+  DeviceUpdateListOperationsdefaultResponse,
+  DeviceUpdateGetOperation200Response,
+  DeviceUpdateGetOperation304Response,
+  DeviceUpdateGetOperationdefaultResponse,
+  DeviceManagementListDeviceClasses200Response,
+  DeviceManagementListDeviceClassesdefaultResponse,
+  DeviceManagementGetDeviceClass200Response,
+  DeviceManagementGetDeviceClassdefaultResponse,
+  DeviceManagementListInstallableUpdatesForDeviceClass200Response,
+  DeviceManagementListInstallableUpdatesForDeviceClassdefaultResponse,
+  DeviceManagementListDevices200Response,
+  DeviceManagementListDevicesdefaultResponse,
+  DeviceManagementImportDevices202Response,
+  DeviceManagementImportDevicesdefaultResponse,
+  DeviceManagementGetDevice200Response,
+  DeviceManagementGetDevicedefaultResponse,
+  DeviceManagementGetDeviceModule200Response,
+  DeviceManagementGetDeviceModuledefaultResponse,
+  DeviceManagementGetUpdateCompliance200Response,
+  DeviceManagementGetUpdateCompliancedefaultResponse,
+  DeviceManagementListDeviceTags200Response,
+  DeviceManagementListDeviceTagsdefaultResponse,
+  DeviceManagementGetDeviceTag200Response,
+  DeviceManagementGetDeviceTagdefaultResponse,
+  DeviceManagementListGroups200Response,
+  DeviceManagementListGroupsdefaultResponse,
+  DeviceManagementGetGroup200Response,
+  DeviceManagementGetGroupdefaultResponse,
+  DeviceManagementCreateOrUpdateGroup200Response,
+  DeviceManagementCreateOrUpdateGroupdefaultResponse,
+  DeviceManagementDeleteGroup204Response,
+  DeviceManagementDeleteGroupdefaultResponse,
+  DeviceManagementGetGroupUpdateCompliance200Response,
+  DeviceManagementGetGroupUpdateCompliancedefaultResponse,
+  DeviceManagementListBestUpdatesForGroup200Response,
+  DeviceManagementListBestUpdatesForGroupdefaultResponse,
+  DeviceManagementListDeploymentsForGroup200Response,
+  DeviceManagementListDeploymentsForGroupdefaultResponse,
+  DeviceManagementGetDeployment200Response,
+  DeviceManagementGetDeploymentdefaultResponse,
+  DeviceManagementCreateOrUpdateDeployment200Response,
+  DeviceManagementCreateOrUpdateDeploymentdefaultResponse,
+  DeviceManagementDeleteDeployment204Response,
+  DeviceManagementDeleteDeploymentdefaultResponse,
+  DeviceManagementGetDeploymentStatus200Response,
+  DeviceManagementGetDeploymentStatusdefaultResponse,
+  DeviceManagementListDeploymentDevices200Response,
+  DeviceManagementListDeploymentDevicesdefaultResponse,
+  DeviceManagementGetOperation200Response,
+  DeviceManagementGetOperation304Response,
+  DeviceManagementGetOperationdefaultResponse,
+  DeviceManagementListOperations200Response,
+  DeviceManagementListOperationsdefaultResponse,
+  DeviceManagementCollectLogs201Response,
+  DeviceManagementCollectLogsdefaultResponse,
+  DeviceManagementGetLogCollectionOperation200Response,
+  DeviceManagementGetLogCollectionOperationdefaultResponse,
+  DeviceManagementListLogCollectionOperations200Response,
+  DeviceManagementListLogCollectionOperationsdefaultResponse,
+  DeviceManagementGetLogCollectionOperationDetailedStatus200Response,
+  DeviceManagementGetLogCollectionOperationDetailedStatusdefaultResponse,
+  DeviceManagementStopDeployment200Response,
+  DeviceManagementStopDeploymentdefaultResponse,
+  DeviceManagementRetryDeployment200Response,
+  DeviceManagementRetryDeploymentdefaultResponse
 } from "./responses";
-import { Client, ClientOptions, getClient } from "@azure-rest/core-client";
-import { TokenCredential } from "@azure/core-auth";
+import { Client } from "@azure-rest/core-client";
 
 export interface DeviceUpdateImportUpdate {
   /** Import new update version. */
   post(
     options: DeviceUpdateImportUpdateParameters
-  ): Promise<DeviceUpdateImportUpdate202Response | DeviceUpdateImportUpdatedefaultResponse>;
+  ): Promise<
+    | DeviceUpdateImportUpdate202Response
+    | DeviceUpdateImportUpdatedefaultResponse
+  >;
   /** Get a list of all updates that have been imported to Device Update for IoT Hub. */
   get(
     options?: DeviceUpdateListUpdatesParameters
-  ): Promise<DeviceUpdateListUpdates200Response | DeviceUpdateListUpdatesdefaultResponse>;
+  ): Promise<
+    DeviceUpdateListUpdates200Response | DeviceUpdateListUpdatesdefaultResponse
+  >;
 }
 
 export interface DeviceUpdateGetUpdate {
@@ -158,35 +162,48 @@ export interface DeviceUpdateGetUpdate {
   /** Delete a specific update version. */
   delete(
     options?: DeviceUpdateDeleteUpdateParameters
-  ): Promise<DeviceUpdateDeleteUpdate202Response | DeviceUpdateDeleteUpdatedefaultResponse>;
+  ): Promise<
+    | DeviceUpdateDeleteUpdate202Response
+    | DeviceUpdateDeleteUpdatedefaultResponse
+  >;
 }
 
 export interface DeviceUpdateListProviders {
   /** Get a list of all update providers that have been imported to Device Update for IoT Hub. */
   get(
     options?: DeviceUpdateListProvidersParameters
-  ): Promise<DeviceUpdateListProviders200Response | DeviceUpdateListProvidersdefaultResponse>;
+  ): Promise<
+    | DeviceUpdateListProviders200Response
+    | DeviceUpdateListProvidersdefaultResponse
+  >;
 }
 
 export interface DeviceUpdateListNames {
   /** Get a list of all update names that match the specified provider. */
   get(
     options?: DeviceUpdateListNamesParameters
-  ): Promise<DeviceUpdateListNames200Response | DeviceUpdateListNamesdefaultResponse>;
+  ): Promise<
+    DeviceUpdateListNames200Response | DeviceUpdateListNamesdefaultResponse
+  >;
 }
 
 export interface DeviceUpdateListVersions {
   /** Get a list of all update versions that match the specified provider and name. */
   get(
     options?: DeviceUpdateListVersionsParameters
-  ): Promise<DeviceUpdateListVersions200Response | DeviceUpdateListVersionsdefaultResponse>;
+  ): Promise<
+    | DeviceUpdateListVersions200Response
+    | DeviceUpdateListVersionsdefaultResponse
+  >;
 }
 
 export interface DeviceUpdateListFiles {
   /** Get a list of all update file identifiers for the specified version. */
   get(
     options?: DeviceUpdateListFilesParameters
-  ): Promise<DeviceUpdateListFiles200Response | DeviceUpdateListFilesdefaultResponse>;
+  ): Promise<
+    DeviceUpdateListFiles200Response | DeviceUpdateListFilesdefaultResponse
+  >;
 }
 
 export interface DeviceUpdateGetFile {
@@ -204,7 +221,10 @@ export interface DeviceUpdateListOperations {
   /** Get a list of all import update operations. Completed operations are kept for 7 days before auto-deleted. Delete operations are not returned by this API version. */
   get(
     options?: DeviceUpdateListOperationsParameters
-  ): Promise<DeviceUpdateListOperations200Response | DeviceUpdateListOperationsdefaultResponse>;
+  ): Promise<
+    | DeviceUpdateListOperations200Response
+    | DeviceUpdateListOperationsdefaultResponse
+  >;
 }
 
 export interface DeviceUpdateGetOperation {
@@ -223,7 +243,8 @@ export interface DeviceManagementListDeviceClasses {
   get(
     options?: DeviceManagementListDeviceClassesParameters
   ): Promise<
-    DeviceManagementListDeviceClasses200Response | DeviceManagementListDeviceClassesdefaultResponse
+    | DeviceManagementListDeviceClasses200Response
+    | DeviceManagementListDeviceClassesdefaultResponse
   >;
 }
 
@@ -232,7 +253,8 @@ export interface DeviceManagementGetDeviceClass {
   get(
     options?: DeviceManagementGetDeviceClassParameters
   ): Promise<
-    DeviceManagementGetDeviceClass200Response | DeviceManagementGetDeviceClassdefaultResponse
+    | DeviceManagementGetDeviceClass200Response
+    | DeviceManagementGetDeviceClassdefaultResponse
   >;
 }
 
@@ -250,12 +272,16 @@ export interface DeviceManagementListDevices {
   /** Gets a list of devices connected to Device Update for IoT Hub. */
   get(
     options?: DeviceManagementListDevicesParameters
-  ): Promise<DeviceManagementListDevices200Response | DeviceManagementListDevicesdefaultResponse>;
+  ): Promise<
+    | DeviceManagementListDevices200Response
+    | DeviceManagementListDevicesdefaultResponse
+  >;
   /** Import existing devices from IoT Hub. */
   post(
     options: DeviceManagementImportDevicesParameters
   ): Promise<
-    DeviceManagementImportDevices202Response | DeviceManagementImportDevicesdefaultResponse
+    | DeviceManagementImportDevices202Response
+    | DeviceManagementImportDevicesdefaultResponse
   >;
 }
 
@@ -263,7 +289,10 @@ export interface DeviceManagementGetDevice {
   /** Gets the device properties and latest deployment status for a device connected to Device Update for IoT Hub. */
   get(
     options?: DeviceManagementGetDeviceParameters
-  ): Promise<DeviceManagementGetDevice200Response | DeviceManagementGetDevicedefaultResponse>;
+  ): Promise<
+    | DeviceManagementGetDevice200Response
+    | DeviceManagementGetDevicedefaultResponse
+  >;
 }
 
 export interface DeviceManagementGetDeviceModule {
@@ -271,7 +300,8 @@ export interface DeviceManagementGetDeviceModule {
   get(
     options?: DeviceManagementGetDeviceModuleParameters
   ): Promise<
-    DeviceManagementGetDeviceModule200Response | DeviceManagementGetDeviceModuledefaultResponse
+    | DeviceManagementGetDeviceModule200Response
+    | DeviceManagementGetDeviceModuledefaultResponse
   >;
 }
 
@@ -290,7 +320,8 @@ export interface DeviceManagementListDeviceTags {
   get(
     options?: DeviceManagementListDeviceTagsParameters
   ): Promise<
-    DeviceManagementListDeviceTags200Response | DeviceManagementListDeviceTagsdefaultResponse
+    | DeviceManagementListDeviceTags200Response
+    | DeviceManagementListDeviceTagsdefaultResponse
   >;
 }
 
@@ -298,21 +329,30 @@ export interface DeviceManagementGetDeviceTag {
   /** Gets a count of how many devices have a device tag. */
   get(
     options?: DeviceManagementGetDeviceTagParameters
-  ): Promise<DeviceManagementGetDeviceTag200Response | DeviceManagementGetDeviceTagdefaultResponse>;
+  ): Promise<
+    | DeviceManagementGetDeviceTag200Response
+    | DeviceManagementGetDeviceTagdefaultResponse
+  >;
 }
 
 export interface DeviceManagementListGroups {
   /** Gets a list of all device groups. */
   get(
     options?: DeviceManagementListGroupsParameters
-  ): Promise<DeviceManagementListGroups200Response | DeviceManagementListGroupsdefaultResponse>;
+  ): Promise<
+    | DeviceManagementListGroups200Response
+    | DeviceManagementListGroupsdefaultResponse
+  >;
 }
 
 export interface DeviceManagementGetGroup {
   /** Gets the properties of a group. */
   get(
     options?: DeviceManagementGetGroupParameters
-  ): Promise<DeviceManagementGetGroup200Response | DeviceManagementGetGroupdefaultResponse>;
+  ): Promise<
+    | DeviceManagementGetGroup200Response
+    | DeviceManagementGetGroupdefaultResponse
+  >;
   /** Create or update a device group. */
   put(
     options: DeviceManagementCreateOrUpdateGroupParameters
@@ -323,7 +363,10 @@ export interface DeviceManagementGetGroup {
   /** Deletes a device group. */
   delete(
     options?: DeviceManagementDeleteGroupParameters
-  ): Promise<DeviceManagementDeleteGroup204Response | DeviceManagementDeleteGroupdefaultResponse>;
+  ): Promise<
+    | DeviceManagementDeleteGroup204Response
+    | DeviceManagementDeleteGroupdefaultResponse
+  >;
 }
 
 export interface DeviceManagementGetGroupUpdateCompliance {
@@ -361,7 +404,8 @@ export interface DeviceManagementGetDeployment {
   get(
     options?: DeviceManagementGetDeploymentParameters
   ): Promise<
-    DeviceManagementGetDeployment200Response | DeviceManagementGetDeploymentdefaultResponse
+    | DeviceManagementGetDeployment200Response
+    | DeviceManagementGetDeploymentdefaultResponse
   >;
   /** Creates or updates a deployment. */
   put(
@@ -374,17 +418,22 @@ export interface DeviceManagementGetDeployment {
   delete(
     options?: DeviceManagementDeleteDeploymentParameters
   ): Promise<
-    DeviceManagementDeleteDeployment204Response | DeviceManagementDeleteDeploymentdefaultResponse
+    | DeviceManagementDeleteDeployment204Response
+    | DeviceManagementDeleteDeploymentdefaultResponse
   >;
   /** Stops a deployment. */
   post(
-    options: DeviceManagementStopDeploymentParameters | DeviceManagementRetryDeploymentParameters
+    options:
+      | DeviceManagementStopDeploymentParameters
+      | DeviceManagementRetryDeploymentParameters
   ):
     | Promise<
-        DeviceManagementStopDeployment200Response | DeviceManagementStopDeploymentdefaultResponse
+        | DeviceManagementStopDeployment200Response
+        | DeviceManagementStopDeploymentdefaultResponse
       >
     | Promise<
-        DeviceManagementRetryDeployment200Response | DeviceManagementRetryDeploymentdefaultResponse
+        | DeviceManagementRetryDeployment200Response
+        | DeviceManagementRetryDeploymentdefaultResponse
       >;
 }
 
@@ -424,7 +473,8 @@ export interface DeviceManagementListOperations {
   get(
     options?: DeviceManagementListOperationsParameters
   ): Promise<
-    DeviceManagementListOperations200Response | DeviceManagementListOperationsdefaultResponse
+    | DeviceManagementListOperations200Response
+    | DeviceManagementListOperationsdefaultResponse
   >;
 }
 
@@ -432,7 +482,10 @@ export interface DeviceManagementCollectLogs {
   /** Start the device diagnostics log collection operation on specified devices. */
   put(
     options: DeviceManagementCollectLogsParameters
-  ): Promise<DeviceManagementCollectLogs201Response | DeviceManagementCollectLogsdefaultResponse>;
+  ): Promise<
+    | DeviceManagementCollectLogs201Response
+    | DeviceManagementCollectLogsdefaultResponse
+  >;
   /** Get the device diagnostics log collection operation */
   get(
     options?: DeviceManagementGetLogCollectionOperationParameters
@@ -464,7 +517,10 @@ export interface DeviceManagementGetLogCollectionOperationDetailedStatus {
 
 export interface Routes {
   /** Resource for '/deviceupdate/\{instanceId\}/updates' has methods for the following verbs: post, get */
-  (path: "/deviceupdate/{instanceId}/updates", instanceId: string): DeviceUpdateImportUpdate;
+  (
+    path: "/deviceupdate/{instanceId}/updates",
+    instanceId: string
+  ): DeviceUpdateImportUpdate;
   /** Resource for '/deviceupdate/\{instanceId\}/updates/providers/\{provider\}/names/\{name\}/versions/\{version\}' has methods for the following verbs: get, delete */
   (
     path: "/deviceupdate/{instanceId}/updates/providers/{provider}/names/{name}/versions/{version}",
@@ -650,23 +706,6 @@ export interface Routes {
   ): DeviceManagementGetLogCollectionOperationDetailedStatus;
 }
 
-export type DeviceUpdateRestClient = Client & {
+export type DeviceUpdateClient = Client & {
   path: Routes;
 };
-
-export default function DeviceUpdate(
-  endpoint: string,
-  credentials: TokenCredential,
-  options: ClientOptions = {}
-): DeviceUpdateRestClient {
-  const baseUrl = options.baseUrl ?? `https://${endpoint}`;
-  options.apiVersion = options.apiVersion ?? "2021-06-01-preview";
-  options = {
-    ...options,
-    credentials: {
-      scopes: ["https://api.adu.microsoft.com/.default"],
-    },
-  };
-
-  return getClient(baseUrl, credentials, options) as DeviceUpdateRestClient;
-}
