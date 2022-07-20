@@ -8,7 +8,7 @@
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
-  RestorableSqlResourcesGetResult,
+  DatabaseRestoreResource,
   RestorableSqlResourcesListOptionalParams
 } from "../models";
 
@@ -27,5 +27,5 @@ export interface RestorableSqlResources {
     location: string,
     instanceId: string,
     options?: RestorableSqlResourcesListOptionalParams
-  ): PagedAsyncIterableIterator<RestorableSqlResourcesGetResult>;
+  ): PagedAsyncIterableIterator<DatabaseRestoreResource>;
 }

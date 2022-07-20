@@ -8,17 +8,17 @@
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
-  DatabaseRestoreResource,
-  RestorableMongodbResourcesListOptionalParams
+  RestorableGremlinGraphGetResult,
+  RestorableGremlinGraphsListOptionalParams
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Interface representing a RestorableMongodbResources. */
-export interface RestorableMongodbResources {
+/** Interface representing a RestorableGremlinGraphs. */
+export interface RestorableGremlinGraphs {
   /**
-   * Return a list of database and collection combo that exist on the account at the given timestamp and
-   * location. This helps in scenarios to validate what resources exist at given timestamp and location.
-   * This API requires 'Microsoft.DocumentDB/locations/restorableDatabaseAccounts/.../read' permission.
+   * Show the event feed of all mutations done on all the Azure Cosmos DB Gremlin graphs under a specific
+   * database. This helps in scenario where container was accidentally deleted. This API requires
+   * 'Microsoft.DocumentDB/locations/restorableDatabaseAccounts/.../read' permission
    * @param location Cosmos DB region, with spaces between words and each word capitalized.
    * @param instanceId The instanceId GUID of a restorable database account.
    * @param options The options parameters.
@@ -26,6 +26,6 @@ export interface RestorableMongodbResources {
   list(
     location: string,
     instanceId: string,
-    options?: RestorableMongodbResourcesListOptionalParams
-  ): PagedAsyncIterableIterator<DatabaseRestoreResource>;
+    options?: RestorableGremlinGraphsListOptionalParams
+  ): PagedAsyncIterableIterator<RestorableGremlinGraphGetResult>;
 }

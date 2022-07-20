@@ -7,24 +7,24 @@
  */
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { RestorableSqlResources } from "../operationsInterfaces";
+import { RestorableGremlinGraphs } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { CosmosDBManagementClient } from "../cosmosDBManagementClient";
 import {
-  DatabaseRestoreResource,
-  RestorableSqlResourcesListOptionalParams,
-  RestorableSqlResourcesListResponse
+  RestorableGremlinGraphGetResult,
+  RestorableGremlinGraphsListOptionalParams,
+  RestorableGremlinGraphsListResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing RestorableSqlResources operations. */
-export class RestorableSqlResourcesImpl implements RestorableSqlResources {
+/** Class containing RestorableGremlinGraphs operations. */
+export class RestorableGremlinGraphsImpl implements RestorableGremlinGraphs {
   private readonly client: CosmosDBManagementClient;
 
   /**
-   * Initialize a new instance of the class RestorableSqlResources class.
+   * Initialize a new instance of the class RestorableGremlinGraphs class.
    * @param client Reference to the service client
    */
   constructor(client: CosmosDBManagementClient) {
@@ -32,9 +32,9 @@ export class RestorableSqlResourcesImpl implements RestorableSqlResources {
   }
 
   /**
-   * Return a list of database and container combo that exist on the account at the given timestamp and
-   * location. This helps in scenarios to validate what resources exist at given timestamp and location.
-   * This API requires 'Microsoft.DocumentDB/locations/restorableDatabaseAccounts/.../read' permission.
+   * Show the event feed of all mutations done on all the Azure Cosmos DB Gremlin graphs under a specific
+   * database. This helps in scenario where container was accidentally deleted. This API requires
+   * 'Microsoft.DocumentDB/locations/restorableDatabaseAccounts/.../read' permission
    * @param location Cosmos DB region, with spaces between words and each word capitalized.
    * @param instanceId The instanceId GUID of a restorable database account.
    * @param options The options parameters.
@@ -42,8 +42,8 @@ export class RestorableSqlResourcesImpl implements RestorableSqlResources {
   public list(
     location: string,
     instanceId: string,
-    options?: RestorableSqlResourcesListOptionalParams
-  ): PagedAsyncIterableIterator<DatabaseRestoreResource> {
+    options?: RestorableGremlinGraphsListOptionalParams
+  ): PagedAsyncIterableIterator<RestorableGremlinGraphGetResult> {
     const iter = this.listPagingAll(location, instanceId, options);
     return {
       next() {
@@ -61,8 +61,8 @@ export class RestorableSqlResourcesImpl implements RestorableSqlResources {
   private async *listPagingPage(
     location: string,
     instanceId: string,
-    options?: RestorableSqlResourcesListOptionalParams
-  ): AsyncIterableIterator<DatabaseRestoreResource[]> {
+    options?: RestorableGremlinGraphsListOptionalParams
+  ): AsyncIterableIterator<RestorableGremlinGraphGetResult[]> {
     let result = await this._list(location, instanceId, options);
     yield result.value || [];
   }
@@ -70,8 +70,8 @@ export class RestorableSqlResourcesImpl implements RestorableSqlResources {
   private async *listPagingAll(
     location: string,
     instanceId: string,
-    options?: RestorableSqlResourcesListOptionalParams
-  ): AsyncIterableIterator<DatabaseRestoreResource> {
+    options?: RestorableGremlinGraphsListOptionalParams
+  ): AsyncIterableIterator<RestorableGremlinGraphGetResult> {
     for await (const page of this.listPagingPage(
       location,
       instanceId,
@@ -82,9 +82,9 @@ export class RestorableSqlResourcesImpl implements RestorableSqlResources {
   }
 
   /**
-   * Return a list of database and container combo that exist on the account at the given timestamp and
-   * location. This helps in scenarios to validate what resources exist at given timestamp and location.
-   * This API requires 'Microsoft.DocumentDB/locations/restorableDatabaseAccounts/.../read' permission.
+   * Show the event feed of all mutations done on all the Azure Cosmos DB Gremlin graphs under a specific
+   * database. This helps in scenario where container was accidentally deleted. This API requires
+   * 'Microsoft.DocumentDB/locations/restorableDatabaseAccounts/.../read' permission
    * @param location Cosmos DB region, with spaces between words and each word capitalized.
    * @param instanceId The instanceId GUID of a restorable database account.
    * @param options The options parameters.
@@ -92,8 +92,8 @@ export class RestorableSqlResourcesImpl implements RestorableSqlResources {
   private _list(
     location: string,
     instanceId: string,
-    options?: RestorableSqlResourcesListOptionalParams
-  ): Promise<RestorableSqlResourcesListResponse> {
+    options?: RestorableGremlinGraphsListOptionalParams
+  ): Promise<RestorableGremlinGraphsListResponse> {
     return this.client.sendOperationRequest(
       { location, instanceId, options },
       listOperationSpec
@@ -105,11 +105,11 @@ const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/providers/Microsoft.DocumentDB/locations/{location}/restorableDatabaseAccounts/{instanceId}/restorableSqlResources",
+    "/subscriptions/{subscriptionId}/providers/Microsoft.DocumentDB/locations/{location}/restorableDatabaseAccounts/{instanceId}/restorableGraphs",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.RestorableSqlResourcesListResult
+      bodyMapper: Mappers.RestorableGremlinGraphsListResult
     },
     default: {
       bodyMapper: Mappers.CloudError
@@ -117,8 +117,9 @@ const listOperationSpec: coreClient.OperationSpec = {
   },
   queryParameters: [
     Parameters.apiVersion,
-    Parameters.restoreLocation,
-    Parameters.restoreTimestampInUtc
+    Parameters.startTime,
+    Parameters.endTime,
+    Parameters.restorableGremlinDatabaseRid
   ],
   urlParameters: [
     Parameters.$host,
