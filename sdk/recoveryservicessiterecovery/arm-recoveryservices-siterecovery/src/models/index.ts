@@ -70,6 +70,9 @@ export type UpdateMigrationItemProviderSpecificInputUnion =
 export type MigrateProviderSpecificInputUnion =
   | MigrateProviderSpecificInput
   | VMwareCbtMigrateInput;
+export type ResumeReplicationProviderSpecificInputUnion =
+  | ResumeReplicationProviderSpecificInput
+  | VMwareCbtResumeReplicationInput;
 export type ResyncProviderSpecificInputUnion =
   | ResyncProviderSpecificInput
   | VMwareCbtResyncInput;
@@ -897,6 +900,16 @@ export interface MigrationItemProperties {
    */
   readonly policyFriendlyName?: string;
   /**
+   * The recovery services provider ARM Id.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly recoveryServicesProviderId?: string;
+  /**
+   * The replication status.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly replicationStatus?: string;
+  /**
    * The migration status.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
@@ -916,6 +929,16 @@ export interface MigrationItemProperties {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly lastTestMigrationStatus?: string;
+  /**
+   * The last migration time.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly lastMigrationTime?: Date;
+  /**
+   * The status of the last migration.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly lastMigrationStatus?: string;
   /**
    * The test migrate state.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -1056,6 +1079,36 @@ export interface MigrationRecoveryPointProperties {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly recoveryPointType?: MigrationRecoveryPointType;
+}
+
+/** Pause replication input. */
+export interface PauseReplicationInput {
+  /** Pause replication input properties. */
+  properties: PauseReplicationInputProperties;
+}
+
+/** Pause replication input properties. */
+export interface PauseReplicationInputProperties {
+  /** The class type. */
+  instanceType: string;
+}
+
+/** Resume replication input. */
+export interface ResumeReplicationInput {
+  /** Resume replication input properties. */
+  properties: ResumeReplicationInputProperties;
+}
+
+/** Resume replication input properties. */
+export interface ResumeReplicationInputProperties {
+  /** The provider specific input for resume replication. */
+  providerSpecificDetails: ResumeReplicationProviderSpecificInputUnion;
+}
+
+/** Resume replication provider specific input. */
+export interface ResumeReplicationProviderSpecificInput {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  instanceType: "VMwareCbt";
 }
 
 /** Resync input. */
@@ -5019,10 +5072,20 @@ export interface VMwareCbtProtectedDiskDetails {
    */
   readonly seedManagedDiskId?: string;
   /**
+   * The uri of the seed blob.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly seedBlobUri?: string;
+  /**
    * The ARM Id of the target managed disk.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly targetManagedDiskId?: string;
+  /**
+   * The uri of the target blob.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly targetBlobUri?: string;
   /** The name for the target managed disk. */
   targetDiskName?: string;
 }
@@ -5057,6 +5120,14 @@ export interface VMwareCbtNicDetails {
   targetIPAddressType?: EthernetAddressType;
   /** Target subnet name. */
   targetSubnetName?: string;
+  /** Source network Id. */
+  testNetworkId?: string;
+  /** Test subnet name. */
+  testSubnetName?: string;
+  /** The test IP address. */
+  testIPAddress?: string;
+  /** The test IP address type. */
+  testIPAddressType?: EthernetAddressType;
   /** Target NIC name. */
   targetNicName?: string;
   /** A value indicating whether this NIC is selected for migration. */
@@ -5077,6 +5148,10 @@ export interface VMwareCbtNicInput {
   isSelectedForMigration?: string;
   /** Target NIC name. */
   targetNicName?: string;
+  /** The test subnet name. */
+  testSubnetName?: string;
+  /** The test static IP address. */
+  testStaticIPAddress?: string;
 }
 
 /** VMwareCbt disk input for update. */
@@ -5085,6 +5160,8 @@ export interface VMwareCbtUpdateDiskInput {
   diskId: string;
   /** The target disk name. */
   targetDiskName?: string;
+  /** A value indicating whether the disk is the OS disk. */
+  isOSDisk?: string;
 }
 
 /** Implements the Alert class. */
@@ -5808,6 +5885,11 @@ export type VMwareCbtMigrationDetails = MigrationProviderSpecificSettings & {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly snapshotRunAsAccountId?: string;
+  /**
+   * The replication storage account ARM Id. This is applicable only for the blob based replication test hook.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly storageAccountId?: string;
   /** Target VM name. */
   targetVmName?: string;
   /** The target VM size. */
@@ -5833,6 +5915,8 @@ export type VMwareCbtMigrationDetails = MigrationProviderSpecificSettings & {
   protectedDisks?: VMwareCbtProtectedDiskDetails[];
   /** The target network Id. */
   targetNetworkId?: string;
+  /** The test network Id. */
+  testNetworkId?: string;
   /** The network details. */
   vmNics?: VMwareCbtNicDetails[];
   /** The tags for the target NICs. */
@@ -5868,6 +5952,11 @@ export type VMwareCbtMigrationDetails = MigrationProviderSpecificSettings & {
    */
   readonly resyncProgressPercentage?: number;
   /**
+   * The resume progress percentage.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly resumeProgressPercentage?: number;
+  /**
    * The initial seeding retry count.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
@@ -5877,6 +5966,11 @@ export type VMwareCbtMigrationDetails = MigrationProviderSpecificSettings & {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly resyncRetryCount?: number;
+  /**
+   * The resume retry count.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly resumeRetryCount?: number;
   /**
    * A value indicating whether resync is required.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -5919,8 +6013,12 @@ export type VMwareCbtEnableMigrationInput = EnableMigrationProviderSpecificInput
   targetResourceGroupId: string;
   /** The target network ARM Id. */
   targetNetworkId: string;
+  /** The selected test network ARM Id. */
+  testNetworkId?: string;
   /** The target subnet name. */
   targetSubnetName?: string;
+  /** The selected test subnet name. */
+  testSubnetName?: string;
   /** The target availability set ARM Id. */
   targetAvailabilitySetId?: string;
   /** The target availability zone. */
@@ -5961,6 +6059,8 @@ export type VMwareCbtUpdateMigrationItemInput = UpdateMigrationItemProviderSpeci
   targetBootDiagnosticsStorageAccountId?: string;
   /** The target network ARM Id. */
   targetNetworkId?: string;
+  /** The test network ARM Id. */
+  testNetworkId?: string;
   /** The list of NIC details. */
   vmNics?: VMwareCbtNicInput[];
   /** The list of disk update properties. */
@@ -5987,6 +6087,14 @@ export type VMwareCbtMigrateInput = MigrateProviderSpecificInput & {
   performShutdown: string;
 };
 
+/** VMwareCbt specific resume replication input. */
+export type VMwareCbtResumeReplicationInput = ResumeReplicationProviderSpecificInput & {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  instanceType: "VMwareCbt";
+  /** A value indicating whether Migration resources to be deleted. */
+  deleteMigrationResources?: string;
+};
+
 /** VMwareCbt specific resync input. */
 export type VMwareCbtResyncInput = ResyncProviderSpecificInput & {
   /** Polymorphic discriminator, which specifies the different types this object can be */
@@ -6003,6 +6111,8 @@ export type VMwareCbtTestMigrateInput = TestMigrateProviderSpecificInput & {
   recoveryPointId: string;
   /** The test network Id. */
   networkId: string;
+  /** The list of NIC details. */
+  vmNics?: VMwareCbtNicInput[];
 };
 
 /** Single Host fabric provider specific VM settings. */
@@ -7698,15 +7808,15 @@ export type VMwareCbtContainerMappingInput = ReplicationProviderSpecificContaine
   /** Polymorphic discriminator, which specifies the different types this object can be */
   instanceType: "VMwareCbt";
   /** The target key vault ARM Id. */
-  keyVaultId: string;
+  keyVaultId?: string;
   /** The target key vault URL. */
-  keyVaultUri: string;
+  keyVaultUri?: string;
   /** The storage account ARM Id. */
   storageAccountId: string;
   /** The secret name of the storage account. */
-  storageAccountSasSecretName: string;
+  storageAccountSasSecretName?: string;
   /** The secret name of the service bus connection string. */
-  serviceBusConnectionStringSecretName: string;
+  serviceBusConnectionStringSecretName?: string;
   /** The target location. */
   targetLocation: string;
 };
@@ -8610,7 +8720,13 @@ export enum KnownMigrationState {
   Replicating = "Replicating",
   MigrationInProgress = "MigrationInProgress",
   MigrationSucceeded = "MigrationSucceeded",
-  MigrationFailed = "MigrationFailed"
+  MigrationFailed = "MigrationFailed",
+  ResumeInProgress = "ResumeInProgress",
+  ResumeInitiated = "ResumeInitiated",
+  SuspendingProtection = "SuspendingProtection",
+  ProtectionSuspended = "ProtectionSuspended",
+  MigrationCompletedWithInformation = "MigrationCompletedWithInformation",
+  MigrationPartiallySucceeded = "MigrationPartiallySucceeded"
 }
 
 /**
@@ -8628,7 +8744,13 @@ export enum KnownMigrationState {
  * **Replicating** \
  * **MigrationInProgress** \
  * **MigrationSucceeded** \
- * **MigrationFailed**
+ * **MigrationFailed** \
+ * **ResumeInProgress** \
+ * **ResumeInitiated** \
+ * **SuspendingProtection** \
+ * **ProtectionSuspended** \
+ * **MigrationCompletedWithInformation** \
+ * **MigrationPartiallySucceeded**
  */
 export type MigrationState = string;
 
@@ -8680,7 +8802,9 @@ export enum KnownMigrationItemOperation {
   TestMigrate = "TestMigrate",
   TestMigrateCleanup = "TestMigrateCleanup",
   Migrate = "Migrate",
-  StartResync = "StartResync"
+  StartResync = "StartResync",
+  PauseReplication = "PauseReplication",
+  ResumeReplication = "ResumeReplication"
 }
 
 /**
@@ -8692,7 +8816,9 @@ export enum KnownMigrationItemOperation {
  * **TestMigrate** \
  * **TestMigrateCleanup** \
  * **Migrate** \
- * **StartResync**
+ * **StartResync** \
+ * **PauseReplication** \
+ * **ResumeReplication**
  */
 export type MigrationItemOperation = string;
 
@@ -9995,6 +10121,30 @@ export interface ReplicationMigrationItemsMigrateOptionalParams
 
 /** Contains response data for the migrate operation. */
 export type ReplicationMigrationItemsMigrateResponse = MigrationItem;
+
+/** Optional parameters. */
+export interface ReplicationMigrationItemsPauseReplicationOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the pauseReplication operation. */
+export type ReplicationMigrationItemsPauseReplicationResponse = MigrationItem;
+
+/** Optional parameters. */
+export interface ReplicationMigrationItemsResumeReplicationOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the resumeReplication operation. */
+export type ReplicationMigrationItemsResumeReplicationResponse = MigrationItem;
 
 /** Optional parameters. */
 export interface ReplicationMigrationItemsResyncOptionalParams

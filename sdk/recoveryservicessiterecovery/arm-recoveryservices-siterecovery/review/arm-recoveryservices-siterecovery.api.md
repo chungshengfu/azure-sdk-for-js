@@ -3061,6 +3061,10 @@ export enum KnownMigrationItemOperation {
     // (undocumented)
     Migrate = "Migrate",
     // (undocumented)
+    PauseReplication = "PauseReplication",
+    // (undocumented)
+    ResumeReplication = "ResumeReplication",
+    // (undocumented)
     StartResync = "StartResync",
     // (undocumented)
     TestMigrate = "TestMigrate",
@@ -3093,15 +3097,27 @@ export enum KnownMigrationState {
     // (undocumented)
     InitialSeedingInProgress = "InitialSeedingInProgress",
     // (undocumented)
+    MigrationCompletedWithInformation = "MigrationCompletedWithInformation",
+    // (undocumented)
     MigrationFailed = "MigrationFailed",
     // (undocumented)
     MigrationInProgress = "MigrationInProgress",
+    // (undocumented)
+    MigrationPartiallySucceeded = "MigrationPartiallySucceeded",
     // (undocumented)
     MigrationSucceeded = "MigrationSucceeded",
     // (undocumented)
     None = "None",
     // (undocumented)
-    Replicating = "Replicating"
+    ProtectionSuspended = "ProtectionSuspended",
+    // (undocumented)
+    Replicating = "Replicating",
+    // (undocumented)
+    ResumeInitiated = "ResumeInitiated",
+    // (undocumented)
+    ResumeInProgress = "ResumeInProgress",
+    // (undocumented)
+    SuspendingProtection = "SuspendingProtection"
 }
 
 // @public
@@ -3466,6 +3482,8 @@ export interface MigrationItemProperties {
     readonly eventCorrelationId?: string;
     readonly health?: ProtectionHealth;
     readonly healthErrors?: HealthError[];
+    readonly lastMigrationStatus?: string;
+    readonly lastMigrationTime?: Date;
     readonly lastTestMigrationStatus?: string;
     readonly lastTestMigrationTime?: Date;
     readonly machineName?: string;
@@ -3474,6 +3492,8 @@ export interface MigrationItemProperties {
     readonly policyFriendlyName?: string;
     readonly policyId?: string;
     providerSpecificDetails?: MigrationProviderSpecificSettingsUnion;
+    readonly recoveryServicesProviderId?: string;
+    readonly replicationStatus?: string;
     readonly testMigrateState?: TestMigrationState;
     readonly testMigrateStateDescription?: string;
 }
@@ -3681,6 +3701,16 @@ export interface OSDiskDetails {
 export interface OSVersionWrapper {
     servicePack?: string;
     version?: string;
+}
+
+// @public
+export interface PauseReplicationInput {
+    properties: PauseReplicationInputProperties;
+}
+
+// @public
+export interface PauseReplicationInputProperties {
+    instanceType: string;
 }
 
 // @public
@@ -4740,6 +4770,10 @@ export interface ReplicationMigrationItems {
     beginDeleteAndWait(fabricName: string, protectionContainerName: string, migrationItemName: string, options?: ReplicationMigrationItemsDeleteOptionalParams): Promise<void>;
     beginMigrate(fabricName: string, protectionContainerName: string, migrationItemName: string, migrateInput: MigrateInput, options?: ReplicationMigrationItemsMigrateOptionalParams): Promise<PollerLike<PollOperationState<ReplicationMigrationItemsMigrateResponse>, ReplicationMigrationItemsMigrateResponse>>;
     beginMigrateAndWait(fabricName: string, protectionContainerName: string, migrationItemName: string, migrateInput: MigrateInput, options?: ReplicationMigrationItemsMigrateOptionalParams): Promise<ReplicationMigrationItemsMigrateResponse>;
+    beginPauseReplication(fabricName: string, protectionContainerName: string, migrationItemName: string, pauseReplicationInput: PauseReplicationInput, options?: ReplicationMigrationItemsPauseReplicationOptionalParams): Promise<PollerLike<PollOperationState<ReplicationMigrationItemsPauseReplicationResponse>, ReplicationMigrationItemsPauseReplicationResponse>>;
+    beginPauseReplicationAndWait(fabricName: string, protectionContainerName: string, migrationItemName: string, pauseReplicationInput: PauseReplicationInput, options?: ReplicationMigrationItemsPauseReplicationOptionalParams): Promise<ReplicationMigrationItemsPauseReplicationResponse>;
+    beginResumeReplication(fabricName: string, protectionContainerName: string, migrationItemName: string, resumeReplicationInput: ResumeReplicationInput, options?: ReplicationMigrationItemsResumeReplicationOptionalParams): Promise<PollerLike<PollOperationState<ReplicationMigrationItemsResumeReplicationResponse>, ReplicationMigrationItemsResumeReplicationResponse>>;
+    beginResumeReplicationAndWait(fabricName: string, protectionContainerName: string, migrationItemName: string, resumeReplicationInput: ResumeReplicationInput, options?: ReplicationMigrationItemsResumeReplicationOptionalParams): Promise<ReplicationMigrationItemsResumeReplicationResponse>;
     beginResync(fabricName: string, protectionContainerName: string, migrationItemName: string, input: ResyncInput, options?: ReplicationMigrationItemsResyncOptionalParams): Promise<PollerLike<PollOperationState<ReplicationMigrationItemsResyncResponse>, ReplicationMigrationItemsResyncResponse>>;
     beginResyncAndWait(fabricName: string, protectionContainerName: string, migrationItemName: string, input: ResyncInput, options?: ReplicationMigrationItemsResyncOptionalParams): Promise<ReplicationMigrationItemsResyncResponse>;
     beginTestMigrate(fabricName: string, protectionContainerName: string, migrationItemName: string, testMigrateInput: TestMigrateInput, options?: ReplicationMigrationItemsTestMigrateOptionalParams): Promise<PollerLike<PollOperationState<ReplicationMigrationItemsTestMigrateResponse>, ReplicationMigrationItemsTestMigrateResponse>>;
@@ -4824,6 +4858,24 @@ export interface ReplicationMigrationItemsMigrateOptionalParams extends coreClie
 
 // @public
 export type ReplicationMigrationItemsMigrateResponse = MigrationItem;
+
+// @public
+export interface ReplicationMigrationItemsPauseReplicationOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type ReplicationMigrationItemsPauseReplicationResponse = MigrationItem;
+
+// @public
+export interface ReplicationMigrationItemsResumeReplicationOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type ReplicationMigrationItemsResumeReplicationResponse = MigrationItem;
 
 // @public
 export interface ReplicationMigrationItemsResyncOptionalParams extends coreClient.OperationOptions {
@@ -6140,6 +6192,24 @@ export interface ResumeJobParamsProperties {
 }
 
 // @public
+export interface ResumeReplicationInput {
+    properties: ResumeReplicationInputProperties;
+}
+
+// @public
+export interface ResumeReplicationInputProperties {
+    providerSpecificDetails: ResumeReplicationProviderSpecificInputUnion;
+}
+
+// @public
+export interface ResumeReplicationProviderSpecificInput {
+    instanceType: "VMwareCbt";
+}
+
+// @public (undocumented)
+export type ResumeReplicationProviderSpecificInputUnion = ResumeReplicationProviderSpecificInput | VMwareCbtResumeReplicationInput;
+
+// @public
 export interface ResyncInput {
     properties: ResyncInputProperties;
 }
@@ -6918,11 +6988,11 @@ export type VMwareCbtContainerCreationInput = ReplicationProviderSpecificContain
 // @public
 export type VMwareCbtContainerMappingInput = ReplicationProviderSpecificContainerMappingInput & {
     instanceType: "VMwareCbt";
-    keyVaultId: string;
-    keyVaultUri: string;
+    keyVaultId?: string;
+    keyVaultUri?: string;
     storageAccountId: string;
-    storageAccountSasSecretName: string;
-    serviceBusConnectionStringSecretName: string;
+    storageAccountSasSecretName?: string;
+    serviceBusConnectionStringSecretName?: string;
     targetLocation: string;
 };
 
@@ -6949,7 +7019,9 @@ export type VMwareCbtEnableMigrationInput = EnableMigrationProviderSpecificInput
     targetVmSize?: string;
     targetResourceGroupId: string;
     targetNetworkId: string;
+    testNetworkId?: string;
     targetSubnetName?: string;
+    testSubnetName?: string;
     targetAvailabilitySetId?: string;
     targetAvailabilityZone?: string;
     targetProximityPlacementGroupId?: string;
@@ -6992,6 +7064,7 @@ export type VMwareCbtMigrationDetails = MigrationProviderSpecificSettings & {
     sqlServerLicenseType?: string;
     readonly dataMoverRunAsAccountId?: string;
     readonly snapshotRunAsAccountId?: string;
+    readonly storageAccountId?: string;
     targetVmName?: string;
     targetVmSize?: string;
     readonly targetLocation?: string;
@@ -7005,6 +7078,7 @@ export type VMwareCbtMigrationDetails = MigrationProviderSpecificSettings & {
     };
     protectedDisks?: VMwareCbtProtectedDiskDetails[];
     targetNetworkId?: string;
+    testNetworkId?: string;
     vmNics?: VMwareCbtNicDetails[];
     targetNicTags?: {
         [propertyName: string]: string;
@@ -7015,8 +7089,10 @@ export type VMwareCbtMigrationDetails = MigrationProviderSpecificSettings & {
     readonly initialSeedingProgressPercentage?: number;
     readonly migrationProgressPercentage?: number;
     readonly resyncProgressPercentage?: number;
+    readonly resumeProgressPercentage?: number;
     readonly initialSeedingRetryCount?: number;
     readonly resyncRetryCount?: number;
+    readonly resumeRetryCount?: number;
     readonly resyncRequired?: string;
     readonly resyncState?: ResyncState;
     performAutoResync?: string;
@@ -7040,6 +7116,10 @@ export interface VMwareCbtNicDetails {
     targetIPAddressType?: EthernetAddressType;
     targetNicName?: string;
     targetSubnetName?: string;
+    testIPAddress?: string;
+    testIPAddressType?: EthernetAddressType;
+    testNetworkId?: string;
+    testSubnetName?: string;
 }
 
 // @public
@@ -7050,6 +7130,8 @@ export interface VMwareCbtNicInput {
     targetNicName?: string;
     targetStaticIPAddress?: string;
     targetSubnetName?: string;
+    testStaticIPAddress?: string;
+    testSubnetName?: string;
 }
 
 // @public
@@ -7079,7 +7161,9 @@ export interface VMwareCbtProtectedDiskDetails {
     readonly isOSDisk?: string;
     readonly logStorageAccountId?: string;
     readonly logStorageAccountSasSecretName?: string;
+    readonly seedBlobUri?: string;
     readonly seedManagedDiskId?: string;
+    readonly targetBlobUri?: string;
     targetDiskName?: string;
     readonly targetManagedDiskId?: string;
 }
@@ -7096,6 +7180,12 @@ export type VMwareCbtProtectionContainerMappingDetails = ProtectionContainerMapp
 };
 
 // @public
+export type VMwareCbtResumeReplicationInput = ResumeReplicationProviderSpecificInput & {
+    instanceType: "VMwareCbt";
+    deleteMigrationResources?: string;
+};
+
+// @public
 export type VMwareCbtResyncInput = ResyncProviderSpecificInput & {
     instanceType: "VMwareCbt";
     skipCbtReset: string;
@@ -7106,11 +7196,13 @@ export type VMwareCbtTestMigrateInput = TestMigrateProviderSpecificInput & {
     instanceType: "VMwareCbt";
     recoveryPointId: string;
     networkId: string;
+    vmNics?: VMwareCbtNicInput[];
 };
 
 // @public
 export interface VMwareCbtUpdateDiskInput {
     diskId: string;
+    isOSDisk?: string;
     targetDiskName?: string;
 }
 
@@ -7125,6 +7217,7 @@ export type VMwareCbtUpdateMigrationItemInput = UpdateMigrationItemProviderSpeci
     targetProximityPlacementGroupId?: string;
     targetBootDiagnosticsStorageAccountId?: string;
     targetNetworkId?: string;
+    testNetworkId?: string;
     vmNics?: VMwareCbtNicInput[];
     vmDisks?: VMwareCbtUpdateDiskInput[];
     licenseType?: LicenseType;

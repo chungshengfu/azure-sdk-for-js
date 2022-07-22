@@ -3892,7 +3892,7 @@ packages:
     dependencies:
       semver: 7.3.7
       shelljs: 0.8.5
-      typescript: 4.8.0-dev.20220721
+      typescript: 4.8.0-dev.20220722
     dev: false
 
   /downlevel-dts/0.4.0:
@@ -8702,8 +8702,8 @@ packages:
     hasBin: true
     dev: false
 
-  /typescript/4.8.0-dev.20220721:
-    resolution: {integrity: sha512-Fj63XtbG9v6ATuu3VEpXuTGsYoiZpdpROiXt9FxAk/pdpKsjjNGEuhAq36Vm4WncG0EoakXXbwm9eaZTt8vcbQ==}
+  /typescript/4.8.0-dev.20220722:
+    resolution: {integrity: sha512-/mI+R57LcsW11qm7tGLtRlmTJpVmAhNmEtGbwUcBc1nCCSvJ0TRnUT+Iu/fyY39/AjOfx4u8DIdxUMZb2oH4YQ==}
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: false
@@ -13178,29 +13178,28 @@ packages:
     dev: false
 
   file:projects/arm-recoveryservices-siterecovery.tgz:
-    resolution: {integrity: sha512-vrF7+icM5WNGBO4f9U6bx5d0f3fqEcmYk6NzwNz3eKaoJ3vqz2gKHFQCaHHzczmBEmevTMoR11gFPW/EkKh+HQ==, tarball: file:projects/arm-recoveryservices-siterecovery.tgz}
+    resolution: {integrity: sha512-xtWhj80RjV33P+qRRevSkjykiYZiV/X13Eycn9BIcbZQjqA4jjuuTtl2GSXMIwPhP57gNL6Fx22Vse4vUHMwDA==, tarball: file:projects/arm-recoveryservices-siterecovery.tgz}
     name: '@rush-temp/arm-recoveryservices-siterecovery'
     version: 0.0.0
     dependencies:
       '@azure-tools/test-recorder': 1.0.2
       '@azure/core-lro': 2.2.4
       '@microsoft/api-extractor': 7.18.11
-      '@rollup/plugin-commonjs': 11.0.2_rollup@1.32.1
-      '@rollup/plugin-json': 4.1.0_rollup@1.32.1
-      '@rollup/plugin-multi-entry': 3.0.1_rollup@1.32.1
-      '@rollup/plugin-node-resolve': 8.4.0_rollup@1.32.1
+      '@rollup/plugin-commonjs': 21.1.0_rollup@2.77.0
+      '@rollup/plugin-json': 4.1.0_rollup@2.77.0
+      '@rollup/plugin-multi-entry': 4.1.0_rollup@2.77.0
+      '@rollup/plugin-node-resolve': 13.3.0_rollup@2.77.0
       cross-env: 7.0.3
       mkdirp: 1.0.4
       mocha: 7.2.0
       rimraf: 3.0.2
-      rollup: 1.32.1
-      rollup-plugin-sourcemaps: 0.4.2_rollup@1.32.1
+      rollup: 2.77.0
+      rollup-plugin-sourcemaps: 0.6.3_rollup@2.77.0
       tslib: 2.4.0
       typescript: 4.2.4
       uglify-js: 3.16.2
     transitivePeerDependencies:
-      - encoding
-      - supports-color
+      - '@types/node'
     dev: false
 
   file:projects/arm-recoveryservices.tgz:
