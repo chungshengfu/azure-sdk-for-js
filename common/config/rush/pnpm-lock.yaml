@@ -12437,7 +12437,7 @@ packages:
     dev: false
 
   file:projects/arm-monitor.tgz:
-    resolution: {integrity: sha512-iwO6lMl4PaD+0yeZyD5KGO8cmb1rBo/RvP8vPOQaS32FMnaAQ6wup49gxG/xEPHg4iYO0W6uqnr27yXCunYclA==, tarball: file:projects/arm-monitor.tgz}
+    resolution: {integrity: sha512-QkctnG43Z80Vq1C6ueglHksxQAsNpiz5RzY1ZoZNAVgwCys4M3k4G1CY7C2LISfzi/T0BF98A8mxUWu23YVt/w==, tarball: file:projects/arm-monitor.tgz}
     name: '@rush-temp/arm-monitor'
     version: 0.0.0
     dependencies:
@@ -12461,6 +12461,7 @@ packages:
       uglify-js: 3.16.3
     transitivePeerDependencies:
       - '@types/node'
+      - supports-color
     dev: false
 
   file:projects/arm-msi.tgz:
@@ -16123,7 +16124,7 @@ packages:
     dev: false
 
   file:projects/iot-device-update.tgz:
-    resolution: {integrity: sha512-w/9Kh04HXsBuJ8IJXeHa0oAKv4gGUtvniDmdx0S7cD8Yp8VWJ0vuSAzdKvSyPCfIemGUPwD0m31ZRaC35B+kxg==, tarball: file:projects/iot-device-update.tgz}
+    resolution: {integrity: sha512-Oljd/1N/R75uSgsr1JrqvS+V8/7RcPl+mQTF27MVZGxehFh9m/axwej+1OD08qTihUtQb4qZOSHkgBkw8ufZbw==, tarball: file:projects/iot-device-update.tgz}
     name: '@rush-temp/iot-device-update'
     version: 0.0.0
     dependencies:
@@ -16133,9 +16134,10 @@ packages:
       '@types/chai': 4.3.1
       '@types/mocha': 7.0.2
       '@types/node': 12.20.55
+      autorest: 3.6.2
       chai: 4.3.6
       dotenv: 8.6.0
-      eslint: 8.20.0
+      eslint: 7.32.0
       karma: 6.4.0
       karma-chrome-launcher: 3.1.1
       karma-coverage: 2.2.0
@@ -16157,12 +16159,9 @@ packages:
       rimraf: 3.0.2
       source-map-support: 0.5.21
       tslib: 2.4.0
-      typescript: 4.6.4
+      typescript: 4.2.4
     transitivePeerDependencies:
-      - bufferutil
-      - debug
       - supports-color
-      - utf-8-validate
     dev: false
 
   file:projects/iot-modelsrepository.tgz:
