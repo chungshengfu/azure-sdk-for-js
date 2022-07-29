@@ -1,15 +1,28 @@
 # Release History
+    
+## 2.2.0-beta.1 (2022-07-29)
+    
+**Features**
 
-## 2.1.1 (Unreleased)
-
-### Features Added
-
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
+  - Added operation group Skus
+  - Added Interface Capability
+  - Added Interface Cluster
+  - Added Interface Database
+  - Added Interface LocationInfo
+  - Added Interface PrivateEndpointConnection
+  - Added Interface PrivateLinkResource
+  - Added Interface ProxyResource
+  - Added Interface RegionSkuDetail
+  - Added Interface RegionSkuDetails
+  - Added Interface SkuDetail
+  - Added Interface SkusListOptionalParams
+  - Added Interface TrackedResource
+  - Added Type Alias Name
+  - Added Type Alias SkusListResponse
+  - Class RedisEnterpriseManagementClient has a new parameter skus
+  - Added Enum KnownName
+    
+    
 ## 2.1.0 (2022-04-11)
     
 **Features**
