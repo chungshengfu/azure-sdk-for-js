@@ -16,17 +16,23 @@ import {
 import * as coreAuth from "@azure/core-auth";
 import {
   AvailabilityStatusesImpl,
+  EventsOperationsImpl,
+  OperationsImpl,
+  EmergingIssuesImpl,
+  ImpactedResourcesImpl,
   ChildAvailabilityStatusesImpl,
   ChildResourcesImpl,
-  OperationsImpl,
-  EmergingIssuesImpl
+  MetadataImpl
 } from "./operations";
 import {
   AvailabilityStatuses,
+  EventsOperations,
+  Operations,
+  EmergingIssues,
+  ImpactedResources,
   ChildAvailabilityStatuses,
   ChildResources,
-  Operations,
-  EmergingIssues
+  Metadata
 } from "./operationsInterfaces";
 import { MicrosoftResourceHealthOptionalParams } from "./models";
 
@@ -38,8 +44,7 @@ export class MicrosoftResourceHealth extends coreClient.ServiceClient {
   /**
    * Initializes a new instance of the MicrosoftResourceHealth class.
    * @param credentials Subscription credentials which uniquely identify client subscription.
-   * @param subscriptionId Subscription credentials which uniquely identify Microsoft Azure subscription.
-   *                       The subscription ID forms part of the URI for every service call.
+   * @param subscriptionId The ID of the target subscription.
    * @param options The parameter options
    */
   constructor(
@@ -63,7 +68,7 @@ export class MicrosoftResourceHealth extends coreClient.ServiceClient {
       credential: credentials
     };
 
-    const packageDetails = `azsdk-js-arm-resourcehealth/3.1.1`;
+    const packageDetails = `azsdk-js-arm-resourcehealth/4.0.0`;
     const userAgentPrefix =
       options.userAgentOptions && options.userAgentOptions.userAgentPrefix
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
@@ -110,12 +115,15 @@ export class MicrosoftResourceHealth extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
-    this.apiVersion = options.apiVersion || "2017-07-01";
+    this.apiVersion = options.apiVersion || "2022-07-01";
     this.availabilityStatuses = new AvailabilityStatusesImpl(this);
-    this.childAvailabilityStatuses = new ChildAvailabilityStatusesImpl(this);
-    this.childResources = new ChildResourcesImpl(this);
+    this.eventsOperations = new EventsOperationsImpl(this);
     this.operations = new OperationsImpl(this);
     this.emergingIssues = new EmergingIssuesImpl(this);
+    this.impactedResources = new ImpactedResourcesImpl(this);
+    this.childAvailabilityStatuses = new ChildAvailabilityStatusesImpl(this);
+    this.childResources = new ChildResourcesImpl(this);
+    this.metadata = new MetadataImpl(this);
     this.addCustomApiVersionPolicy(options.apiVersion);
   }
 
@@ -148,8 +156,11 @@ export class MicrosoftResourceHealth extends coreClient.ServiceClient {
   }
 
   availabilityStatuses: AvailabilityStatuses;
-  childAvailabilityStatuses: ChildAvailabilityStatuses;
-  childResources: ChildResources;
+  eventsOperations: EventsOperations;
   operations: Operations;
   emergingIssues: EmergingIssues;
+  impactedResources: ImpactedResources;
+  childAvailabilityStatuses: ChildAvailabilityStatuses;
+  childResources: ChildResources;
+  metadata: Metadata;
 }

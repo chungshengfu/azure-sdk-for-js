@@ -7,7 +7,10 @@
  */
 
 export * from "./availabilityStatuses";
-export * from "./childAvailabilityStatuses";
-export * from "./childResources";
+export * from "./eventsOperations";
 export * from "./operations";
 export * from "./emergingIssues";
+export * from "./impactedResources";
+export * from "./childAvailabilityStatuses";
+export * from "./childResources";
+export * from "./metadata";
