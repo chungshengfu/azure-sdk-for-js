@@ -8,27 +8,39 @@
 
 import * as coreClient from "@azure/core-client";
 import * as coreRestPipeline from "@azure/core-rest-pipeline";
+import {
+  PipelineRequest,
+  PipelineResponse,
+  SendRequest
+} from "@azure/core-rest-pipeline";
 import * as coreAuth from "@azure/core-auth";
-import { ChangesImpl } from "./operations";
-import { Changes } from "./operationsInterfaces";
-import { ChangesClientOptionalParams } from "./models";
+import {
+  PolicyAssignmentsImpl,
+  PolicyDefinitionsImpl,
+  PolicySetDefinitionsImpl
+} from "./operations";
+import {
+  PolicyAssignments,
+  PolicyDefinitions,
+  PolicySetDefinitions
+} from "./operationsInterfaces";
+import { PolicyClientOptionalParams } from "./models";
 
-export class ChangesClient extends coreClient.ServiceClient {
+export class PolicyClient extends coreClient.ServiceClient {
   $host: string;
-  subscriptionId: string;
   apiVersion: string;
+  subscriptionId: string;
 
   /**
-   * Initializes a new instance of the ChangesClient class.
+   * Initializes a new instance of the PolicyClient class.
    * @param credentials Subscription credentials which uniquely identify client subscription.
-   * @param subscriptionId The Azure subscription ID. This is a GUID-formatted string (e.g.
-   *                       00000000-0000-0000-0000-000000000000)
+   * @param subscriptionId The ID of the target subscription.
    * @param options The parameter options
    */
   constructor(
     credentials: coreAuth.TokenCredential,
     subscriptionId: string,
-    options?: ChangesClientOptionalParams
+    options?: PolicyClientOptionalParams
   ) {
     if (credentials === undefined) {
       throw new Error("'credentials' cannot be null");
@@ -41,12 +53,12 @@ export class ChangesClient extends coreClient.ServiceClient {
     if (!options) {
       options = {};
     }
-    const defaults: ChangesClientOptionalParams = {
+    const defaults: PolicyClientOptionalParams = {
       requestContentType: "application/json; charset=utf-8",
       credential: credentials
     };
 
-    const packageDetails = `azsdk-js-arm-changes/1.0.1`;
+    const packageDetails = `azsdk-js-arm-changes/2.0.0-beta.1`;
     const userAgentPrefix =
       options.userAgentOptions && options.userAgentOptions.userAgentPrefix
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
@@ -93,9 +105,42 @@ export class ChangesClient extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
-    this.apiVersion = options.apiVersion || "2022-05-01";
-    this.changes = new ChangesImpl(this);
+    this.apiVersion = options.apiVersion || "2022-08-01-preview";
+    this.policyAssignments = new PolicyAssignmentsImpl(this);
+    this.policyDefinitions = new PolicyDefinitionsImpl(this);
+    this.policySetDefinitions = new PolicySetDefinitionsImpl(this);
+    this.addCustomApiVersionPolicy(options.apiVersion);
   }
 
-  changes: Changes;
+  /** A function that adds a policy that sets the api-version (or equivalent) to reflect the library version. */
+  private addCustomApiVersionPolicy(apiVersion?: string) {
+    if (!apiVersion) {
+      return;
+    }
+    const apiVersionPolicy = {
+      name: "CustomApiVersionPolicy",
+      async sendRequest(
+        request: PipelineRequest,
+        next: SendRequest
+      ): Promise<PipelineResponse> {
+        const param = request.url.split("?");
+        if (param.length > 1) {
+          const newParams = param[1].split("&").map((item) => {
+            if (item.indexOf("api-version") > -1) {
+              return "api-version=" + apiVersion;
+            } else {
+              return item;
+            }
+          });
+          request.url = param[0] + "?" + newParams.join("&");
+        }
+        return next(request);
+      }
+    };
+    this.pipeline.addPolicy(apiVersionPolicy);
+  }
+
+  policyAssignments: PolicyAssignments;
+  policyDefinitions: PolicyDefinitions;
+  policySetDefinitions: PolicySetDefinitions;
 }

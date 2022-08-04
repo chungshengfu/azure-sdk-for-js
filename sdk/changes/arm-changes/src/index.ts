@@ -8,5 +8,5 @@
 
 /// <reference lib="esnext.asynciterable" />
 export * from "./models";
-export { ChangesClient } from "./changesClient";
+export { PolicyClient } from "./policyClient";
 export * from "./operationsInterfaces";
