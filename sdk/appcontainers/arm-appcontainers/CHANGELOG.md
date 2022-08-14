@@ -1,6 +1,6 @@
 # Release History
     
-## 1.1.0 (2022-08-02)
+## 1.1.0 (2022-08-14)
     
 **Features**
 
@@ -8,6 +8,8 @@
   - Added Interface Certificate
   - Added Interface ContainerApp
   - Added Interface CustomHostnameAnalysisResult
+  - Added Interface CustomHostnameAnalysisResultCustomDomainVerificationFailureInfo
+  - Added Interface CustomHostnameAnalysisResultCustomDomainVerificationFailureInfoDetailsItem
   - Added Interface DaprComponent
   - Added Interface ManagedEnvironment
   - Added Interface ManagedEnvironmentStorage
