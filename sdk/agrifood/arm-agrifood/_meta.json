@@ -1,0 +1,8 @@
+{
+  "commit": "6f44be702c43f3828f6cc292ce998c049020b752",
+  "readme": "specification/agrifood/resource-manager/readme.md",
+  "autorest_command": "",
+  "repository_url": "https://github.com/Azure/azure-rest-api-specs.git",
+  "release_tool": "@azure-tools/js-sdk-release-tools@2.4.1",
+  "use": "@autorest/typescript@6.0.0-rc.1"
+}
