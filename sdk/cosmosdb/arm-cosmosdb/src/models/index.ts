@@ -2640,6 +2640,8 @@ export interface RestoreParameters extends RestoreParametersBase {
   gremlinDatabasesToRestore?: GremlinDatabaseRestoreResource[];
   /** List of specific tables available for restore. */
   tablesToRestore?: string[];
+  /** The source backup location for restore. */
+  sourceBackupLocation?: string;
 }
 
 /** Parameters to indicate the information about the restore. */

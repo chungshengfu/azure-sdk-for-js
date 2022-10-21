@@ -3809,6 +3809,7 @@ export interface RestoreParameters extends RestoreParametersBase {
     databasesToRestore?: DatabaseRestoreResource[];
     gremlinDatabasesToRestore?: GremlinDatabaseRestoreResource[];
     restoreMode?: RestoreMode;
+    sourceBackupLocation?: string;
     tablesToRestore?: string[];
 }
 

@@ -6381,6 +6381,12 @@ export const RestoreParameters: coreClient.CompositeMapper = {
             }
           }
         }
+      },
+      sourceBackupLocation: {
+        serializedName: "sourceBackupLocation",
+        type: {
+          name: "String"
+        }
       }
     }
   }
