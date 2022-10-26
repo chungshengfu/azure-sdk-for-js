@@ -4132,7 +4132,7 @@ packages:
     dependencies:
       semver: 7.3.7
       shelljs: 0.8.5
-      typescript: 4.9.0-dev.20221025
+      typescript: 4.9.0-dev.20221026
     dev: false
 
   /downlevel-dts/0.8.0:
@@ -9209,8 +9209,8 @@ packages:
     hasBin: true
     dev: false
 
-  /typescript/4.9.0-dev.20221025:
-    resolution: {integrity: sha512-3TZlt+3jGBjPRVFcNX6BmlajqwNExRm4rhG4llSH5WSMX/eQ54PSueTJ5UhLn9+6/byL31/WRmJJ/7W0j+gCtQ==}
+  /typescript/4.9.0-dev.20221026:
+    resolution: {integrity: sha512-Iy2S0JPIKVsT5vHeRdKPTTz8VHBp7kC12Ur430Fba4a7kEh6Caa09pZGzaB0+erx2gGNn/82JDiAEN+yVeRo5Q==}
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: false
@@ -10980,7 +10980,7 @@ packages:
     dev: false
 
   file:projects/arm-batch.tgz:
-    resolution: {integrity: sha512-3D36iZHpAl+iPABGQh5eQEtvdsSsLzM04bPSQ8+pp/CKNYLFm01lTM8K6F8LhPdmsjWMzuV8e7zo2cBrGG9JrA==, tarball: file:projects/arm-batch.tgz}
+    resolution: {integrity: sha512-lZC1G7TN23uC2xkwyZZN3XJ1QRSGxQPtiSueILmdE+yi4pSUjuXwwLY1GPD772dTlf+dJRH/AzTiHxH6doBbwg==, tarball: file:projects/arm-batch.tgz}
     name: '@rush-temp/arm-batch'
     version: 0.0.0
     dependencies:
@@ -11001,7 +11001,7 @@ packages:
       rollup: 2.79.0
       rollup-plugin-sourcemaps: 0.6.3_rollup@2.79.0
       tslib: 2.4.0
-      typescript: 4.2.4
+      typescript: 4.6.4
       uglify-js: 3.16.3
     transitivePeerDependencies:
       - '@types/node'
