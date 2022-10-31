@@ -43,6 +43,11 @@ import {
   SqlMigrationServicesListMigrationsResponse,
   SqlMigrationServicesListMonitoringDataOptionalParams,
   SqlMigrationServicesListMonitoringDataResponse,
+  SqlMigrationServicesMonitoringDataOptionalParams,
+  SqlMigrationServicesMonitoringDataResponse,
+  ValidateIR,
+  SqlMigrationServicesValidateIROptionalParams,
+  SqlMigrationServicesValidateIRResponse,
   SqlMigrationServicesListBySubscriptionResponse,
   SqlMigrationServicesListByResourceGroupNextResponse,
   SqlMigrationServicesListMigrationsNextResponse,
@@ -231,7 +236,7 @@ export class SqlMigrationServicesImpl implements SqlMigrationServices {
   }
 
   /**
-   * Retrieve the Migration Service.
+   * Retrieve the Database Migration Service
    * @param resourceGroupName Name of the resource group that contains the resource. You can obtain this
    *                          value from the Azure Resource Manager API or the portal.
    * @param sqlMigrationServiceName Name of the SQL Migration Service.
@@ -249,7 +254,7 @@ export class SqlMigrationServicesImpl implements SqlMigrationServices {
   }
 
   /**
-   * Create or Update SQL Migration Service.
+   * Create or Update Database Migration Service.
    * @param resourceGroupName Name of the resource group that contains the resource. You can obtain this
    *                          value from the Azure Resource Manager API or the portal.
    * @param sqlMigrationServiceName Name of the SQL Migration Service.
@@ -320,7 +325,7 @@ export class SqlMigrationServicesImpl implements SqlMigrationServices {
   }
 
   /**
-   * Create or Update SQL Migration Service.
+   * Create or Update Database Migration Service.
    * @param resourceGroupName Name of the resource group that contains the resource. You can obtain this
    *                          value from the Azure Resource Manager API or the portal.
    * @param sqlMigrationServiceName Name of the SQL Migration Service.
@@ -343,7 +348,7 @@ export class SqlMigrationServicesImpl implements SqlMigrationServices {
   }
 
   /**
-   * Delete SQL Migration Service.
+   * Delete Database Migration Service.
    * @param resourceGroupName Name of the resource group that contains the resource. You can obtain this
    *                          value from the Azure Resource Manager API or the portal.
    * @param sqlMigrationServiceName Name of the SQL Migration Service.
@@ -407,7 +412,7 @@ export class SqlMigrationServicesImpl implements SqlMigrationServices {
   }
 
   /**
-   * Delete SQL Migration Service.
+   * Delete Database Migration Service.
    * @param resourceGroupName Name of the resource group that contains the resource. You can obtain this
    *                          value from the Azure Resource Manager API or the portal.
    * @param sqlMigrationServiceName Name of the SQL Migration Service.
@@ -427,7 +432,7 @@ export class SqlMigrationServicesImpl implements SqlMigrationServices {
   }
 
   /**
-   * Update SQL Migration Service.
+   * Update Database Migration Service.
    * @param resourceGroupName Name of the resource group that contains the resource. You can obtain this
    *                          value from the Azure Resource Manager API or the portal.
    * @param sqlMigrationServiceName Name of the SQL Migration Service.
@@ -498,7 +503,7 @@ export class SqlMigrationServicesImpl implements SqlMigrationServices {
   }
 
   /**
-   * Update SQL Migration Service.
+   * Update Database Migration Service.
    * @param resourceGroupName Name of the resource group that contains the resource. You can obtain this
    *                          value from the Azure Resource Manager API or the portal.
    * @param sqlMigrationServiceName Name of the SQL Migration Service.
@@ -613,7 +618,8 @@ export class SqlMigrationServicesImpl implements SqlMigrationServices {
   }
 
   /**
-   * Retrieve the Monitoring Data.
+   * Retrieve the registered Integration Runtime nodes and their monitoring data for a given Database
+   * Migration Service.
    * @param resourceGroupName Name of the resource group that contains the resource. You can obtain this
    *                          value from the Azure Resource Manager API or the portal.
    * @param sqlMigrationServiceName Name of the SQL Migration Service.
@@ -627,6 +633,44 @@ export class SqlMigrationServicesImpl implements SqlMigrationServices {
     return this.client.sendOperationRequest(
       { resourceGroupName, sqlMigrationServiceName, options },
       listMonitoringDataOperationSpec
+    );
+  }
+
+  /**
+   * Retrieve the Monitoring Data.
+   * @param resourceGroupName Name of the resource group that contains the resource. You can obtain this
+   *                          value from the Azure Resource Manager API or the portal.
+   * @param sqlMigrationServiceName Name of the SQL Migration Service.
+   * @param options The options parameters.
+   */
+  monitoringData(
+    resourceGroupName: string,
+    sqlMigrationServiceName: string,
+    options?: SqlMigrationServicesMonitoringDataOptionalParams
+  ): Promise<SqlMigrationServicesMonitoringDataResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, sqlMigrationServiceName, options },
+      monitoringDataOperationSpec
+    );
+  }
+
+  /**
+   * Validate IR connectivity to Linked Services.
+   * @param resourceGroupName Name of the resource group that contains the resource. You can obtain this
+   *                          value from the Azure Resource Manager API or the portal.
+   * @param sqlMigrationServiceName Name of the SQL Migration Service.
+   * @param parameters Details of SqlMigrationService resource.
+   * @param options The options parameters.
+   */
+  validateIR(
+    resourceGroupName: string,
+    sqlMigrationServiceName: string,
+    parameters: ValidateIR,
+    options?: SqlMigrationServicesValidateIROptionalParams
+  ): Promise<SqlMigrationServicesValidateIRResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, sqlMigrationServiceName, parameters, options },
+      validateIROperationSpec
     );
   }
 
@@ -738,7 +782,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
     },
     default: {}
   },
-  requestBody: Parameters.parameters3,
+  requestBody: Parameters.parameters4,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -783,7 +827,7 @@ const updateOperationSpec: coreClient.OperationSpec = {
     },
     default: {}
   },
-  requestBody: Parameters.parameters4,
+  requestBody: Parameters.parameters5,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -844,7 +888,7 @@ const regenerateAuthKeysOperationSpec: coreClient.OperationSpec = {
     },
     default: {}
   },
-  requestBody: Parameters.parameters5,
+  requestBody: Parameters.parameters6,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -866,7 +910,7 @@ const deleteNodeOperationSpec: coreClient.OperationSpec = {
     },
     default: {}
   },
-  requestBody: Parameters.parameters6,
+  requestBody: Parameters.parameters7,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -916,6 +960,48 @@ const listMonitoringDataOperationSpec: coreClient.OperationSpec = {
     Parameters.sqlMigrationServiceName
   ],
   headerParameters: [Parameters.accept],
+  serializer
+};
+const monitoringDataOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DataMigration/sqlMigrationServices/{sqlMigrationServiceName}/MonitoringData",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.IntegrationRuntimeMonitoringData
+    },
+    default: {}
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.resourceGroupName,
+    Parameters.subscriptionId,
+    Parameters.sqlMigrationServiceName
+  ],
+  headerParameters: [Parameters.accept],
+  serializer
+};
+const validateIROperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DataMigration/sqlMigrationServices/{sqlMigrationServiceName}/validateIR",
+  httpMethod: "POST",
+  responses: {
+    200: {
+      bodyMapper: Mappers.ValidateIR
+    },
+    default: {}
+  },
+  requestBody: Parameters.parameters8,
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.resourceGroupName,
+    Parameters.subscriptionId,
+    Parameters.sqlMigrationServiceName
+  ],
+  headerParameters: [Parameters.accept, Parameters.contentType],
+  mediaType: "json",
   serializer
 };
 const listBySubscriptionOperationSpec: coreClient.OperationSpec = {
