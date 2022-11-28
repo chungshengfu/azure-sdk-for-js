@@ -21,27 +21,27 @@ export interface RecoveryPoints {
    * Lists the available recovery points for a replication protected item.
    * @param fabricName The fabric name.
    * @param protectionContainerName The protection container name.
-   * @param replicatedProtectedItemName The replication protected item name.
+   * @param replicationProtectedItemName The replication protected item name.
    * @param options The options parameters.
    */
   listByReplicationProtectedItems(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: RecoveryPointsListByReplicationProtectedItemsOptionalParams
   ): PagedAsyncIterableIterator<RecoveryPoint>;
   /**
    * Get the details of specified recovery point.
    * @param fabricName The fabric name.
    * @param protectionContainerName The protection container name.
-   * @param replicatedProtectedItemName The replication protected item name.
+   * @param replicationProtectedItemName The replication protected item name.
    * @param recoveryPointName The recovery point name.
    * @param options The options parameters.
    */
   get(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     recoveryPointName: string,
     options?: RecoveryPointsGetOptionalParams
   ): Promise<RecoveryPointsGetResponse>;

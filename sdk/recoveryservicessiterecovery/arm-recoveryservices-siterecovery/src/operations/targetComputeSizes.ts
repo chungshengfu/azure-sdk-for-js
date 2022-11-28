@@ -37,19 +37,19 @@ export class TargetComputeSizesImpl implements TargetComputeSizes {
    * Lists the available target compute sizes for a replication protected item.
    * @param fabricName Fabric name.
    * @param protectionContainerName protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param options The options parameters.
    */
   public listByReplicationProtectedItems(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: TargetComputeSizesListByReplicationProtectedItemsOptionalParams
   ): PagedAsyncIterableIterator<TargetComputeSize> {
     const iter = this.listByReplicationProtectedItemsPagingAll(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       options
     );
     return {
@@ -63,7 +63,7 @@ export class TargetComputeSizesImpl implements TargetComputeSizes {
         return this.listByReplicationProtectedItemsPagingPage(
           fabricName,
           protectionContainerName,
-          replicatedProtectedItemName,
+          replicationProtectedItemName,
           options
         );
       }
@@ -73,13 +73,13 @@ export class TargetComputeSizesImpl implements TargetComputeSizes {
   private async *listByReplicationProtectedItemsPagingPage(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: TargetComputeSizesListByReplicationProtectedItemsOptionalParams
   ): AsyncIterableIterator<TargetComputeSize[]> {
     let result = await this._listByReplicationProtectedItems(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       options
     );
     yield result.value || [];
@@ -88,7 +88,7 @@ export class TargetComputeSizesImpl implements TargetComputeSizes {
       result = await this._listByReplicationProtectedItemsNext(
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         continuationToken,
         options
       );
@@ -100,13 +100,13 @@ export class TargetComputeSizesImpl implements TargetComputeSizes {
   private async *listByReplicationProtectedItemsPagingAll(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: TargetComputeSizesListByReplicationProtectedItemsOptionalParams
   ): AsyncIterableIterator<TargetComputeSize> {
     for await (const page of this.listByReplicationProtectedItemsPagingPage(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       options
     )) {
       yield* page;
@@ -117,20 +117,20 @@ export class TargetComputeSizesImpl implements TargetComputeSizes {
    * Lists the available target compute sizes for a replication protected item.
    * @param fabricName Fabric name.
    * @param protectionContainerName protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param options The options parameters.
    */
   private _listByReplicationProtectedItems(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: TargetComputeSizesListByReplicationProtectedItemsOptionalParams
   ): Promise<TargetComputeSizesListByReplicationProtectedItemsResponse> {
     return this.client.sendOperationRequest(
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         options
       },
       listByReplicationProtectedItemsOperationSpec
@@ -141,7 +141,7 @@ export class TargetComputeSizesImpl implements TargetComputeSizes {
    * ListByReplicationProtectedItemsNext
    * @param fabricName Fabric name.
    * @param protectionContainerName protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param nextLink The nextLink from the previous successful call to the
    *                 ListByReplicationProtectedItems method.
    * @param options The options parameters.
@@ -149,7 +149,7 @@ export class TargetComputeSizesImpl implements TargetComputeSizes {
   private _listByReplicationProtectedItemsNext(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     nextLink: string,
     options?: TargetComputeSizesListByReplicationProtectedItemsNextOptionalParams
   ): Promise<TargetComputeSizesListByReplicationProtectedItemsNextResponse> {
@@ -157,7 +157,7 @@ export class TargetComputeSizesImpl implements TargetComputeSizes {
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         nextLink,
         options
       },
@@ -170,7 +170,7 @@ const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listByReplicationProtectedItemsOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/targetComputeSizes",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/targetComputeSizes",
   httpMethod: "GET",
   responses: {
     200: {
@@ -185,7 +185,7 @@ const listByReplicationProtectedItemsOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept],
   serializer
@@ -207,7 +207,7 @@ const listByReplicationProtectedItemsNextOperationSpec: coreClient.OperationSpec
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept],
   serializer

@@ -92,27 +92,27 @@ export interface ReplicationProtectedItems {
    * Gets the details of an ASR replication protected item.
    * @param fabricName Fabric unique name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param options The options parameters.
    */
   get(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: ReplicationProtectedItemsGetOptionalParams
   ): Promise<ReplicationProtectedItemsGetResponse>;
   /**
    * The operation to create an ASR replication protected item (Enable replication).
    * @param fabricName Name of the fabric.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName A name for the replication protected item.
+   * @param replicationProtectedItemName A name for the replication protected item.
    * @param input Enable Protection Input.
    * @param options The options parameters.
    */
   beginCreate(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     input: EnableProtectionInput,
     options?: ReplicationProtectedItemsCreateOptionalParams
   ): Promise<
@@ -125,14 +125,14 @@ export interface ReplicationProtectedItems {
    * The operation to create an ASR replication protected item (Enable replication).
    * @param fabricName Name of the fabric.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName A name for the replication protected item.
+   * @param replicationProtectedItemName A name for the replication protected item.
    * @param input Enable Protection Input.
    * @param options The options parameters.
    */
   beginCreateAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     input: EnableProtectionInput,
     options?: ReplicationProtectedItemsCreateOptionalParams
   ): Promise<ReplicationProtectedItemsCreateResponse>;
@@ -142,13 +142,13 @@ export interface ReplicationProtectedItems {
    * clean disable replication for the item.
    * @param fabricName Fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param options The options parameters.
    */
   beginPurge(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: ReplicationProtectedItemsPurgeOptionalParams
   ): Promise<PollerLike<PollOperationState<void>, void>>;
   /**
@@ -157,27 +157,27 @@ export interface ReplicationProtectedItems {
    * clean disable replication for the item.
    * @param fabricName Fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param options The options parameters.
    */
   beginPurgeAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: ReplicationProtectedItemsPurgeOptionalParams
   ): Promise<void>;
   /**
    * The operation to update the recovery settings of an ASR replication protected item.
    * @param fabricName Fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param updateProtectionInput Update protection input.
    * @param options The options parameters.
    */
   beginUpdate(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     updateProtectionInput: UpdateReplicationProtectedItemInput,
     options?: ReplicationProtectedItemsUpdateOptionalParams
   ): Promise<
@@ -190,14 +190,14 @@ export interface ReplicationProtectedItems {
    * The operation to update the recovery settings of an ASR replication protected item.
    * @param fabricName Fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param updateProtectionInput Update protection input.
    * @param options The options parameters.
    */
   beginUpdateAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     updateProtectionInput: UpdateReplicationProtectedItemInput,
     options?: ReplicationProtectedItemsUpdateOptionalParams
   ): Promise<ReplicationProtectedItemsUpdateResponse>;
@@ -205,14 +205,14 @@ export interface ReplicationProtectedItems {
    * Operation to add disks(s) to the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param addDisksInput Add disks input.
    * @param options The options parameters.
    */
   beginAddDisks(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     addDisksInput: AddDisksInput,
     options?: ReplicationProtectedItemsAddDisksOptionalParams
   ): Promise<
@@ -225,14 +225,14 @@ export interface ReplicationProtectedItems {
    * Operation to add disks(s) to the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param addDisksInput Add disks input.
    * @param options The options parameters.
    */
   beginAddDisksAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     addDisksInput: AddDisksInput,
     options?: ReplicationProtectedItemsAddDisksOptionalParams
   ): Promise<ReplicationProtectedItemsAddDisksResponse>;
@@ -240,14 +240,14 @@ export interface ReplicationProtectedItems {
    * The operation to change the recovery point of a failed over replication protected item.
    * @param fabricName The ARM fabric name.
    * @param protectionContainerName The protection container name.
-   * @param replicatedProtectedItemName The replicated protected item name.
+   * @param replicationProtectedItemName The replicated protected item name.
    * @param applyRecoveryPointInput The ApplyRecoveryPointInput.
    * @param options The options parameters.
    */
   beginApplyRecoveryPoint(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     applyRecoveryPointInput: ApplyRecoveryPointInput,
     options?: ReplicationProtectedItemsApplyRecoveryPointOptionalParams
   ): Promise<
@@ -260,14 +260,14 @@ export interface ReplicationProtectedItems {
    * The operation to change the recovery point of a failed over replication protected item.
    * @param fabricName The ARM fabric name.
    * @param protectionContainerName The protection container name.
-   * @param replicatedProtectedItemName The replicated protected item name.
+   * @param replicationProtectedItemName The replicated protected item name.
    * @param applyRecoveryPointInput The ApplyRecoveryPointInput.
    * @param options The options parameters.
    */
   beginApplyRecoveryPointAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     applyRecoveryPointInput: ApplyRecoveryPointInput,
     options?: ReplicationProtectedItemsApplyRecoveryPointOptionalParams
   ): Promise<ReplicationProtectedItemsApplyRecoveryPointResponse>;
@@ -275,13 +275,13 @@ export interface ReplicationProtectedItems {
    * Operation to cancel the failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param options The options parameters.
    */
   beginFailoverCancel(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: ReplicationProtectedItemsFailoverCancelOptionalParams
   ): Promise<
     PollerLike<
@@ -293,26 +293,26 @@ export interface ReplicationProtectedItems {
    * Operation to cancel the failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param options The options parameters.
    */
   beginFailoverCancelAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: ReplicationProtectedItemsFailoverCancelOptionalParams
   ): Promise<ReplicationProtectedItemsFailoverCancelResponse>;
   /**
    * Operation to commit the failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param options The options parameters.
    */
   beginFailoverCommit(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: ReplicationProtectedItemsFailoverCommitOptionalParams
   ): Promise<
     PollerLike<
@@ -324,27 +324,27 @@ export interface ReplicationProtectedItems {
    * Operation to commit the failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param options The options parameters.
    */
   beginFailoverCommitAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: ReplicationProtectedItemsFailoverCommitOptionalParams
   ): Promise<ReplicationProtectedItemsFailoverCommitResponse>;
   /**
    * Operation to initiate a planned failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param failoverInput Planned failover input.
    * @param options The options parameters.
    */
   beginPlannedFailover(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     failoverInput: PlannedFailoverInput,
     options?: ReplicationProtectedItemsPlannedFailoverOptionalParams
   ): Promise<
@@ -357,14 +357,14 @@ export interface ReplicationProtectedItems {
    * Operation to initiate a planned failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param failoverInput Planned failover input.
    * @param options The options parameters.
    */
   beginPlannedFailoverAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     failoverInput: PlannedFailoverInput,
     options?: ReplicationProtectedItemsPlannedFailoverOptionalParams
   ): Promise<ReplicationProtectedItemsPlannedFailoverResponse>;
@@ -373,14 +373,14 @@ export interface ReplicationProtectedItems {
    * item.
    * @param fabricName Fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param disableProtectionInput Disable protection input.
    * @param options The options parameters.
    */
   beginDelete(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     disableProtectionInput: DisableProtectionInput,
     options?: ReplicationProtectedItemsDeleteOptionalParams
   ): Promise<PollerLike<PollOperationState<void>, void>>;
@@ -389,14 +389,14 @@ export interface ReplicationProtectedItems {
    * item.
    * @param fabricName Fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param disableProtectionInput Disable protection input.
    * @param options The options parameters.
    */
   beginDeleteAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     disableProtectionInput: DisableProtectionInput,
     options?: ReplicationProtectedItemsDeleteOptionalParams
   ): Promise<void>;
@@ -404,14 +404,14 @@ export interface ReplicationProtectedItems {
    * Operation to remove disk(s) from the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param removeDisksInput Remove disks input.
    * @param options The options parameters.
    */
   beginRemoveDisks(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     removeDisksInput: RemoveDisksInput,
     options?: ReplicationProtectedItemsRemoveDisksOptionalParams
   ): Promise<
@@ -424,14 +424,14 @@ export interface ReplicationProtectedItems {
    * Operation to remove disk(s) from the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param removeDisksInput Remove disks input.
    * @param options The options parameters.
    */
   beginRemoveDisksAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     removeDisksInput: RemoveDisksInput,
     options?: ReplicationProtectedItemsRemoveDisksOptionalParams
   ): Promise<ReplicationProtectedItemsRemoveDisksResponse>;
@@ -440,13 +440,13 @@ export interface ReplicationProtectedItems {
    * resynchronization.
    * @param fabricName The name of the fabric.
    * @param protectionContainerName The name of the container.
-   * @param replicatedProtectedItemName The name of the replication protected item.
+   * @param replicationProtectedItemName The name of the replication protected item.
    * @param options The options parameters.
    */
   beginRepairReplication(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: ReplicationProtectedItemsRepairReplicationOptionalParams
   ): Promise<
     PollerLike<
@@ -459,27 +459,27 @@ export interface ReplicationProtectedItems {
    * resynchronization.
    * @param fabricName The name of the fabric.
    * @param protectionContainerName The name of the container.
-   * @param replicatedProtectedItemName The name of the replication protected item.
+   * @param replicationProtectedItemName The name of the replication protected item.
    * @param options The options parameters.
    */
   beginRepairReplicationAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: ReplicationProtectedItemsRepairReplicationOptionalParams
   ): Promise<ReplicationProtectedItemsRepairReplicationResponse>;
   /**
    * Operation to reprotect or reverse replicate a failed over replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param reprotectInput Reverse replication input.
    * @param options The options parameters.
    */
   beginReprotect(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     reprotectInput: ReverseReplicationInput,
     options?: ReplicationProtectedItemsReprotectOptionalParams
   ): Promise<
@@ -492,14 +492,14 @@ export interface ReplicationProtectedItems {
    * Operation to reprotect or reverse replicate a failed over replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param reprotectInput Reverse replication input.
    * @param options The options parameters.
    */
   beginReprotectAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     reprotectInput: ReverseReplicationInput,
     options?: ReplicationProtectedItemsReprotectOptionalParams
   ): Promise<ReplicationProtectedItemsReprotectResponse>;
@@ -507,14 +507,14 @@ export interface ReplicationProtectedItems {
    * Operation to resolve health issues of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param resolveHealthInput Health issue input object.
    * @param options The options parameters.
    */
   beginResolveHealthErrors(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     resolveHealthInput: ResolveHealthInput,
     options?: ReplicationProtectedItemsResolveHealthErrorsOptionalParams
   ): Promise<
@@ -527,14 +527,14 @@ export interface ReplicationProtectedItems {
    * Operation to resolve health issues of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param resolveHealthInput Health issue input object.
    * @param options The options parameters.
    */
   beginResolveHealthErrorsAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     resolveHealthInput: ResolveHealthInput,
     options?: ReplicationProtectedItemsResolveHealthErrorsOptionalParams
   ): Promise<ReplicationProtectedItemsResolveHealthErrorsResponse>;
@@ -542,14 +542,14 @@ export interface ReplicationProtectedItems {
    * Operation to initiate a switch provider of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param switchProviderInput Switch provider input.
    * @param options The options parameters.
    */
   beginSwitchProvider(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     switchProviderInput: SwitchProviderInput,
     options?: ReplicationProtectedItemsSwitchProviderOptionalParams
   ): Promise<
@@ -562,14 +562,14 @@ export interface ReplicationProtectedItems {
    * Operation to initiate a switch provider of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param switchProviderInput Switch provider input.
    * @param options The options parameters.
    */
   beginSwitchProviderAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     switchProviderInput: SwitchProviderInput,
     options?: ReplicationProtectedItemsSwitchProviderOptionalParams
   ): Promise<ReplicationProtectedItemsSwitchProviderResponse>;
@@ -577,14 +577,14 @@ export interface ReplicationProtectedItems {
    * Operation to perform a test failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param testfailoverInput Test failover input.
    * @param options The options parameters.
    */
   beginTestFailover(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     testfailoverInput: TestFailoverInput,
     options?: ReplicationProtectedItemsTestFailoverOptionalParams
   ): Promise<
@@ -597,14 +597,14 @@ export interface ReplicationProtectedItems {
    * Operation to perform a test failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param testfailoverInput Test failover input.
    * @param options The options parameters.
    */
   beginTestFailoverAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     testfailoverInput: TestFailoverInput,
     options?: ReplicationProtectedItemsTestFailoverOptionalParams
   ): Promise<ReplicationProtectedItemsTestFailoverResponse>;
@@ -612,14 +612,14 @@ export interface ReplicationProtectedItems {
    * Operation to clean up the test failover of a replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param cleanupInput Test failover cleanup input.
    * @param options The options parameters.
    */
   beginTestFailoverCleanup(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     cleanupInput: TestFailoverCleanupInput,
     options?: ReplicationProtectedItemsTestFailoverCleanupOptionalParams
   ): Promise<
@@ -632,14 +632,14 @@ export interface ReplicationProtectedItems {
    * Operation to clean up the test failover of a replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param cleanupInput Test failover cleanup input.
    * @param options The options parameters.
    */
   beginTestFailoverCleanupAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     cleanupInput: TestFailoverCleanupInput,
     options?: ReplicationProtectedItemsTestFailoverCleanupOptionalParams
   ): Promise<ReplicationProtectedItemsTestFailoverCleanupResponse>;
@@ -647,14 +647,14 @@ export interface ReplicationProtectedItems {
    * Operation to initiate a failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param failoverInput Failover input.
    * @param options The options parameters.
    */
   beginUnplannedFailover(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     failoverInput: UnplannedFailoverInput,
     options?: ReplicationProtectedItemsUnplannedFailoverOptionalParams
   ): Promise<
@@ -667,14 +667,14 @@ export interface ReplicationProtectedItems {
    * Operation to initiate a failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param failoverInput Failover input.
    * @param options The options parameters.
    */
   beginUnplannedFailoverAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     failoverInput: UnplannedFailoverInput,
     options?: ReplicationProtectedItemsUnplannedFailoverOptionalParams
   ): Promise<ReplicationProtectedItemsUnplannedFailoverResponse>;
@@ -682,14 +682,14 @@ export interface ReplicationProtectedItems {
    * The operation to update appliance of an ASR replication protected item.
    * @param fabricName Fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param applianceUpdateInput Appliance update protection input.
    * @param options The options parameters.
    */
   beginUpdateAppliance(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     applianceUpdateInput: UpdateApplianceForReplicationProtectedItemInput,
     options?: ReplicationProtectedItemsUpdateApplianceOptionalParams
   ): Promise<
@@ -702,14 +702,14 @@ export interface ReplicationProtectedItems {
    * The operation to update appliance of an ASR replication protected item.
    * @param fabricName Fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param applianceUpdateInput Appliance update protection input.
    * @param options The options parameters.
    */
   beginUpdateApplianceAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     applianceUpdateInput: UpdateApplianceForReplicationProtectedItemInput,
     options?: ReplicationProtectedItemsUpdateApplianceOptionalParams
   ): Promise<ReplicationProtectedItemsUpdateApplianceResponse>;

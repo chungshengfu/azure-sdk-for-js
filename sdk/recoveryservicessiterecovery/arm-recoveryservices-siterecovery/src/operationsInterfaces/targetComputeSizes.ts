@@ -19,13 +19,13 @@ export interface TargetComputeSizes {
    * Lists the available target compute sizes for a replication protected item.
    * @param fabricName Fabric name.
    * @param protectionContainerName protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param options The options parameters.
    */
   listByReplicationProtectedItems(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: TargetComputeSizesListByReplicationProtectedItemsOptionalParams
   ): PagedAsyncIterableIterator<TargetComputeSize>;
 }

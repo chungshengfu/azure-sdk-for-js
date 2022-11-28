@@ -229,20 +229,20 @@ export class ReplicationProtectedItemsImpl
    * Gets the details of an ASR replication protected item.
    * @param fabricName Fabric unique name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param options The options parameters.
    */
   get(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: ReplicationProtectedItemsGetOptionalParams
   ): Promise<ReplicationProtectedItemsGetResponse> {
     return this.client.sendOperationRequest(
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         options
       },
       getOperationSpec
@@ -253,14 +253,14 @@ export class ReplicationProtectedItemsImpl
    * The operation to create an ASR replication protected item (Enable replication).
    * @param fabricName Name of the fabric.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName A name for the replication protected item.
+   * @param replicationProtectedItemName A name for the replication protected item.
    * @param input Enable Protection Input.
    * @param options The options parameters.
    */
   async beginCreate(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     input: EnableProtectionInput,
     options?: ReplicationProtectedItemsCreateOptionalParams
   ): Promise<
@@ -313,37 +313,39 @@ export class ReplicationProtectedItemsImpl
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         input,
         options
       },
       createOperationSpec
     );
-    return new LroEngine(lro, {
+    const poller = new LroEngine(lro, {
       resumeFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
+    await poller.poll();
+    return poller;
   }
 
   /**
    * The operation to create an ASR replication protected item (Enable replication).
    * @param fabricName Name of the fabric.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName A name for the replication protected item.
+   * @param replicationProtectedItemName A name for the replication protected item.
    * @param input Enable Protection Input.
    * @param options The options parameters.
    */
   async beginCreateAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     input: EnableProtectionInput,
     options?: ReplicationProtectedItemsCreateOptionalParams
   ): Promise<ReplicationProtectedItemsCreateResponse> {
     const poller = await this.beginCreate(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       input,
       options
     );
@@ -356,13 +358,13 @@ export class ReplicationProtectedItemsImpl
    * clean disable replication for the item.
    * @param fabricName Fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param options The options parameters.
    */
   async beginPurge(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: ReplicationProtectedItemsPurgeOptionalParams
   ): Promise<PollerLike<PollOperationState<void>, void>> {
     const directSendOperation = async (
@@ -409,15 +411,17 @@ export class ReplicationProtectedItemsImpl
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         options
       },
       purgeOperationSpec
     );
-    return new LroEngine(lro, {
+    const poller = new LroEngine(lro, {
       resumeFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
+    await poller.poll();
+    return poller;
   }
 
   /**
@@ -426,19 +430,19 @@ export class ReplicationProtectedItemsImpl
    * clean disable replication for the item.
    * @param fabricName Fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param options The options parameters.
    */
   async beginPurgeAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: ReplicationProtectedItemsPurgeOptionalParams
   ): Promise<void> {
     const poller = await this.beginPurge(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       options
     );
     return poller.pollUntilDone();
@@ -448,14 +452,14 @@ export class ReplicationProtectedItemsImpl
    * The operation to update the recovery settings of an ASR replication protected item.
    * @param fabricName Fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param updateProtectionInput Update protection input.
    * @param options The options parameters.
    */
   async beginUpdate(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     updateProtectionInput: UpdateReplicationProtectedItemInput,
     options?: ReplicationProtectedItemsUpdateOptionalParams
   ): Promise<
@@ -508,37 +512,39 @@ export class ReplicationProtectedItemsImpl
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         updateProtectionInput,
         options
       },
       updateOperationSpec
     );
-    return new LroEngine(lro, {
+    const poller = new LroEngine(lro, {
       resumeFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
+    await poller.poll();
+    return poller;
   }
 
   /**
    * The operation to update the recovery settings of an ASR replication protected item.
    * @param fabricName Fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param updateProtectionInput Update protection input.
    * @param options The options parameters.
    */
   async beginUpdateAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     updateProtectionInput: UpdateReplicationProtectedItemInput,
     options?: ReplicationProtectedItemsUpdateOptionalParams
   ): Promise<ReplicationProtectedItemsUpdateResponse> {
     const poller = await this.beginUpdate(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       updateProtectionInput,
       options
     );
@@ -549,14 +555,14 @@ export class ReplicationProtectedItemsImpl
    * Operation to add disks(s) to the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param addDisksInput Add disks input.
    * @param options The options parameters.
    */
   async beginAddDisks(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     addDisksInput: AddDisksInput,
     options?: ReplicationProtectedItemsAddDisksOptionalParams
   ): Promise<
@@ -609,37 +615,39 @@ export class ReplicationProtectedItemsImpl
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         addDisksInput,
         options
       },
       addDisksOperationSpec
     );
-    return new LroEngine(lro, {
+    const poller = new LroEngine(lro, {
       resumeFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
+    await poller.poll();
+    return poller;
   }
 
   /**
    * Operation to add disks(s) to the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param addDisksInput Add disks input.
    * @param options The options parameters.
    */
   async beginAddDisksAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     addDisksInput: AddDisksInput,
     options?: ReplicationProtectedItemsAddDisksOptionalParams
   ): Promise<ReplicationProtectedItemsAddDisksResponse> {
     const poller = await this.beginAddDisks(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       addDisksInput,
       options
     );
@@ -650,14 +658,14 @@ export class ReplicationProtectedItemsImpl
    * The operation to change the recovery point of a failed over replication protected item.
    * @param fabricName The ARM fabric name.
    * @param protectionContainerName The protection container name.
-   * @param replicatedProtectedItemName The replicated protected item name.
+   * @param replicationProtectedItemName The replicated protected item name.
    * @param applyRecoveryPointInput The ApplyRecoveryPointInput.
    * @param options The options parameters.
    */
   async beginApplyRecoveryPoint(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     applyRecoveryPointInput: ApplyRecoveryPointInput,
     options?: ReplicationProtectedItemsApplyRecoveryPointOptionalParams
   ): Promise<
@@ -710,37 +718,39 @@ export class ReplicationProtectedItemsImpl
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         applyRecoveryPointInput,
         options
       },
       applyRecoveryPointOperationSpec
     );
-    return new LroEngine(lro, {
+    const poller = new LroEngine(lro, {
       resumeFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
+    await poller.poll();
+    return poller;
   }
 
   /**
    * The operation to change the recovery point of a failed over replication protected item.
    * @param fabricName The ARM fabric name.
    * @param protectionContainerName The protection container name.
-   * @param replicatedProtectedItemName The replicated protected item name.
+   * @param replicationProtectedItemName The replicated protected item name.
    * @param applyRecoveryPointInput The ApplyRecoveryPointInput.
    * @param options The options parameters.
    */
   async beginApplyRecoveryPointAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     applyRecoveryPointInput: ApplyRecoveryPointInput,
     options?: ReplicationProtectedItemsApplyRecoveryPointOptionalParams
   ): Promise<ReplicationProtectedItemsApplyRecoveryPointResponse> {
     const poller = await this.beginApplyRecoveryPoint(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       applyRecoveryPointInput,
       options
     );
@@ -751,13 +761,13 @@ export class ReplicationProtectedItemsImpl
    * Operation to cancel the failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param options The options parameters.
    */
   async beginFailoverCancel(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: ReplicationProtectedItemsFailoverCancelOptionalParams
   ): Promise<
     PollerLike<
@@ -809,34 +819,36 @@ export class ReplicationProtectedItemsImpl
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         options
       },
       failoverCancelOperationSpec
     );
-    return new LroEngine(lro, {
+    const poller = new LroEngine(lro, {
       resumeFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
+    await poller.poll();
+    return poller;
   }
 
   /**
    * Operation to cancel the failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param options The options parameters.
    */
   async beginFailoverCancelAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: ReplicationProtectedItemsFailoverCancelOptionalParams
   ): Promise<ReplicationProtectedItemsFailoverCancelResponse> {
     const poller = await this.beginFailoverCancel(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       options
     );
     return poller.pollUntilDone();
@@ -846,13 +858,13 @@ export class ReplicationProtectedItemsImpl
    * Operation to commit the failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param options The options parameters.
    */
   async beginFailoverCommit(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: ReplicationProtectedItemsFailoverCommitOptionalParams
   ): Promise<
     PollerLike<
@@ -904,34 +916,36 @@ export class ReplicationProtectedItemsImpl
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         options
       },
       failoverCommitOperationSpec
     );
-    return new LroEngine(lro, {
+    const poller = new LroEngine(lro, {
       resumeFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
+    await poller.poll();
+    return poller;
   }
 
   /**
    * Operation to commit the failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param options The options parameters.
    */
   async beginFailoverCommitAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: ReplicationProtectedItemsFailoverCommitOptionalParams
   ): Promise<ReplicationProtectedItemsFailoverCommitResponse> {
     const poller = await this.beginFailoverCommit(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       options
     );
     return poller.pollUntilDone();
@@ -941,14 +955,14 @@ export class ReplicationProtectedItemsImpl
    * Operation to initiate a planned failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param failoverInput Planned failover input.
    * @param options The options parameters.
    */
   async beginPlannedFailover(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     failoverInput: PlannedFailoverInput,
     options?: ReplicationProtectedItemsPlannedFailoverOptionalParams
   ): Promise<
@@ -1001,37 +1015,39 @@ export class ReplicationProtectedItemsImpl
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         failoverInput,
         options
       },
       plannedFailoverOperationSpec
     );
-    return new LroEngine(lro, {
+    const poller = new LroEngine(lro, {
       resumeFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
+    await poller.poll();
+    return poller;
   }
 
   /**
    * Operation to initiate a planned failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param failoverInput Planned failover input.
    * @param options The options parameters.
    */
   async beginPlannedFailoverAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     failoverInput: PlannedFailoverInput,
     options?: ReplicationProtectedItemsPlannedFailoverOptionalParams
   ): Promise<ReplicationProtectedItemsPlannedFailoverResponse> {
     const poller = await this.beginPlannedFailover(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       failoverInput,
       options
     );
@@ -1043,14 +1059,14 @@ export class ReplicationProtectedItemsImpl
    * item.
    * @param fabricName Fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param disableProtectionInput Disable protection input.
    * @param options The options parameters.
    */
   async beginDelete(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     disableProtectionInput: DisableProtectionInput,
     options?: ReplicationProtectedItemsDeleteOptionalParams
   ): Promise<PollerLike<PollOperationState<void>, void>> {
@@ -1098,16 +1114,18 @@ export class ReplicationProtectedItemsImpl
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         disableProtectionInput,
         options
       },
       deleteOperationSpec
     );
-    return new LroEngine(lro, {
+    const poller = new LroEngine(lro, {
       resumeFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
+    await poller.poll();
+    return poller;
   }
 
   /**
@@ -1115,21 +1133,21 @@ export class ReplicationProtectedItemsImpl
    * item.
    * @param fabricName Fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param disableProtectionInput Disable protection input.
    * @param options The options parameters.
    */
   async beginDeleteAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     disableProtectionInput: DisableProtectionInput,
     options?: ReplicationProtectedItemsDeleteOptionalParams
   ): Promise<void> {
     const poller = await this.beginDelete(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       disableProtectionInput,
       options
     );
@@ -1140,14 +1158,14 @@ export class ReplicationProtectedItemsImpl
    * Operation to remove disk(s) from the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param removeDisksInput Remove disks input.
    * @param options The options parameters.
    */
   async beginRemoveDisks(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     removeDisksInput: RemoveDisksInput,
     options?: ReplicationProtectedItemsRemoveDisksOptionalParams
   ): Promise<
@@ -1200,37 +1218,39 @@ export class ReplicationProtectedItemsImpl
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         removeDisksInput,
         options
       },
       removeDisksOperationSpec
     );
-    return new LroEngine(lro, {
+    const poller = new LroEngine(lro, {
       resumeFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
+    await poller.poll();
+    return poller;
   }
 
   /**
    * Operation to remove disk(s) from the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param removeDisksInput Remove disks input.
    * @param options The options parameters.
    */
   async beginRemoveDisksAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     removeDisksInput: RemoveDisksInput,
     options?: ReplicationProtectedItemsRemoveDisksOptionalParams
   ): Promise<ReplicationProtectedItemsRemoveDisksResponse> {
     const poller = await this.beginRemoveDisks(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       removeDisksInput,
       options
     );
@@ -1242,13 +1262,13 @@ export class ReplicationProtectedItemsImpl
    * resynchronization.
    * @param fabricName The name of the fabric.
    * @param protectionContainerName The name of the container.
-   * @param replicatedProtectedItemName The name of the replication protected item.
+   * @param replicationProtectedItemName The name of the replication protected item.
    * @param options The options parameters.
    */
   async beginRepairReplication(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: ReplicationProtectedItemsRepairReplicationOptionalParams
   ): Promise<
     PollerLike<
@@ -1300,15 +1320,17 @@ export class ReplicationProtectedItemsImpl
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         options
       },
       repairReplicationOperationSpec
     );
-    return new LroEngine(lro, {
+    const poller = new LroEngine(lro, {
       resumeFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
+    await poller.poll();
+    return poller;
   }
 
   /**
@@ -1316,19 +1338,19 @@ export class ReplicationProtectedItemsImpl
    * resynchronization.
    * @param fabricName The name of the fabric.
    * @param protectionContainerName The name of the container.
-   * @param replicatedProtectedItemName The name of the replication protected item.
+   * @param replicationProtectedItemName The name of the replication protected item.
    * @param options The options parameters.
    */
   async beginRepairReplicationAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: ReplicationProtectedItemsRepairReplicationOptionalParams
   ): Promise<ReplicationProtectedItemsRepairReplicationResponse> {
     const poller = await this.beginRepairReplication(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       options
     );
     return poller.pollUntilDone();
@@ -1338,14 +1360,14 @@ export class ReplicationProtectedItemsImpl
    * Operation to reprotect or reverse replicate a failed over replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param reprotectInput Reverse replication input.
    * @param options The options parameters.
    */
   async beginReprotect(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     reprotectInput: ReverseReplicationInput,
     options?: ReplicationProtectedItemsReprotectOptionalParams
   ): Promise<
@@ -1398,37 +1420,39 @@ export class ReplicationProtectedItemsImpl
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         reprotectInput,
         options
       },
       reprotectOperationSpec
     );
-    return new LroEngine(lro, {
+    const poller = new LroEngine(lro, {
       resumeFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
+    await poller.poll();
+    return poller;
   }
 
   /**
    * Operation to reprotect or reverse replicate a failed over replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param reprotectInput Reverse replication input.
    * @param options The options parameters.
    */
   async beginReprotectAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     reprotectInput: ReverseReplicationInput,
     options?: ReplicationProtectedItemsReprotectOptionalParams
   ): Promise<ReplicationProtectedItemsReprotectResponse> {
     const poller = await this.beginReprotect(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       reprotectInput,
       options
     );
@@ -1439,14 +1463,14 @@ export class ReplicationProtectedItemsImpl
    * Operation to resolve health issues of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param resolveHealthInput Health issue input object.
    * @param options The options parameters.
    */
   async beginResolveHealthErrors(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     resolveHealthInput: ResolveHealthInput,
     options?: ReplicationProtectedItemsResolveHealthErrorsOptionalParams
   ): Promise<
@@ -1499,37 +1523,39 @@ export class ReplicationProtectedItemsImpl
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         resolveHealthInput,
         options
       },
       resolveHealthErrorsOperationSpec
     );
-    return new LroEngine(lro, {
+    const poller = new LroEngine(lro, {
       resumeFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
+    await poller.poll();
+    return poller;
   }
 
   /**
    * Operation to resolve health issues of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param resolveHealthInput Health issue input object.
    * @param options The options parameters.
    */
   async beginResolveHealthErrorsAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     resolveHealthInput: ResolveHealthInput,
     options?: ReplicationProtectedItemsResolveHealthErrorsOptionalParams
   ): Promise<ReplicationProtectedItemsResolveHealthErrorsResponse> {
     const poller = await this.beginResolveHealthErrors(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       resolveHealthInput,
       options
     );
@@ -1540,14 +1566,14 @@ export class ReplicationProtectedItemsImpl
    * Operation to initiate a switch provider of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param switchProviderInput Switch provider input.
    * @param options The options parameters.
    */
   async beginSwitchProvider(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     switchProviderInput: SwitchProviderInput,
     options?: ReplicationProtectedItemsSwitchProviderOptionalParams
   ): Promise<
@@ -1600,38 +1626,40 @@ export class ReplicationProtectedItemsImpl
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         switchProviderInput,
         options
       },
       switchProviderOperationSpec
     );
-    return new LroEngine(lro, {
+    const poller = new LroEngine(lro, {
       resumeFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
       lroResourceLocationConfig: "azure-async-operation"
     });
+    await poller.poll();
+    return poller;
   }
 
   /**
    * Operation to initiate a switch provider of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param switchProviderInput Switch provider input.
    * @param options The options parameters.
    */
   async beginSwitchProviderAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     switchProviderInput: SwitchProviderInput,
     options?: ReplicationProtectedItemsSwitchProviderOptionalParams
   ): Promise<ReplicationProtectedItemsSwitchProviderResponse> {
     const poller = await this.beginSwitchProvider(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       switchProviderInput,
       options
     );
@@ -1642,14 +1670,14 @@ export class ReplicationProtectedItemsImpl
    * Operation to perform a test failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param testfailoverInput Test failover input.
    * @param options The options parameters.
    */
   async beginTestFailover(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     testfailoverInput: TestFailoverInput,
     options?: ReplicationProtectedItemsTestFailoverOptionalParams
   ): Promise<
@@ -1702,37 +1730,39 @@ export class ReplicationProtectedItemsImpl
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         testfailoverInput,
         options
       },
       testFailoverOperationSpec
     );
-    return new LroEngine(lro, {
+    const poller = new LroEngine(lro, {
       resumeFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
+    await poller.poll();
+    return poller;
   }
 
   /**
    * Operation to perform a test failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param testfailoverInput Test failover input.
    * @param options The options parameters.
    */
   async beginTestFailoverAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     testfailoverInput: TestFailoverInput,
     options?: ReplicationProtectedItemsTestFailoverOptionalParams
   ): Promise<ReplicationProtectedItemsTestFailoverResponse> {
     const poller = await this.beginTestFailover(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       testfailoverInput,
       options
     );
@@ -1743,14 +1773,14 @@ export class ReplicationProtectedItemsImpl
    * Operation to clean up the test failover of a replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param cleanupInput Test failover cleanup input.
    * @param options The options parameters.
    */
   async beginTestFailoverCleanup(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     cleanupInput: TestFailoverCleanupInput,
     options?: ReplicationProtectedItemsTestFailoverCleanupOptionalParams
   ): Promise<
@@ -1803,37 +1833,39 @@ export class ReplicationProtectedItemsImpl
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         cleanupInput,
         options
       },
       testFailoverCleanupOperationSpec
     );
-    return new LroEngine(lro, {
+    const poller = new LroEngine(lro, {
       resumeFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
+    await poller.poll();
+    return poller;
   }
 
   /**
    * Operation to clean up the test failover of a replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param cleanupInput Test failover cleanup input.
    * @param options The options parameters.
    */
   async beginTestFailoverCleanupAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     cleanupInput: TestFailoverCleanupInput,
     options?: ReplicationProtectedItemsTestFailoverCleanupOptionalParams
   ): Promise<ReplicationProtectedItemsTestFailoverCleanupResponse> {
     const poller = await this.beginTestFailoverCleanup(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       cleanupInput,
       options
     );
@@ -1844,14 +1876,14 @@ export class ReplicationProtectedItemsImpl
    * Operation to initiate a failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param failoverInput Failover input.
    * @param options The options parameters.
    */
   async beginUnplannedFailover(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     failoverInput: UnplannedFailoverInput,
     options?: ReplicationProtectedItemsUnplannedFailoverOptionalParams
   ): Promise<
@@ -1904,37 +1936,39 @@ export class ReplicationProtectedItemsImpl
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         failoverInput,
         options
       },
       unplannedFailoverOperationSpec
     );
-    return new LroEngine(lro, {
+    const poller = new LroEngine(lro, {
       resumeFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
+    await poller.poll();
+    return poller;
   }
 
   /**
    * Operation to initiate a failover of the replication protected item.
    * @param fabricName Unique fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param failoverInput Failover input.
    * @param options The options parameters.
    */
   async beginUnplannedFailoverAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     failoverInput: UnplannedFailoverInput,
     options?: ReplicationProtectedItemsUnplannedFailoverOptionalParams
   ): Promise<ReplicationProtectedItemsUnplannedFailoverResponse> {
     const poller = await this.beginUnplannedFailover(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       failoverInput,
       options
     );
@@ -1945,14 +1979,14 @@ export class ReplicationProtectedItemsImpl
    * The operation to update appliance of an ASR replication protected item.
    * @param fabricName Fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param applianceUpdateInput Appliance update protection input.
    * @param options The options parameters.
    */
   async beginUpdateAppliance(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     applianceUpdateInput: UpdateApplianceForReplicationProtectedItemInput,
     options?: ReplicationProtectedItemsUpdateApplianceOptionalParams
   ): Promise<
@@ -2005,37 +2039,39 @@ export class ReplicationProtectedItemsImpl
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         applianceUpdateInput,
         options
       },
       updateApplianceOperationSpec
     );
-    return new LroEngine(lro, {
+    const poller = new LroEngine(lro, {
       resumeFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
+    await poller.poll();
+    return poller;
   }
 
   /**
    * The operation to update appliance of an ASR replication protected item.
    * @param fabricName Fabric name.
    * @param protectionContainerName Protection container name.
-   * @param replicatedProtectedItemName Replication protected item name.
+   * @param replicationProtectedItemName Replication protected item name.
    * @param applianceUpdateInput Appliance update protection input.
    * @param options The options parameters.
    */
   async beginUpdateApplianceAndWait(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     applianceUpdateInput: UpdateApplianceForReplicationProtectedItemInput,
     options?: ReplicationProtectedItemsUpdateApplianceOptionalParams
   ): Promise<ReplicationProtectedItemsUpdateApplianceResponse> {
     const poller = await this.beginUpdateAppliance(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       applianceUpdateInput,
       options
     );
@@ -2116,10 +2152,13 @@ export class ReplicationProtectedItemsImpl
       },
       updateMobilityServiceOperationSpec
     );
-    return new LroEngine(lro, {
+    const poller = new LroEngine(lro, {
       resumeFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs
+      intervalInMs: options?.updateIntervalInMs,
+      lroResourceLocationConfig: "location"
     });
+    await poller.poll();
+    return poller;
   }
 
   /**
@@ -2222,7 +2261,7 @@ const listByReplicationProtectionContainersOperationSpec: coreClient.OperationSp
 };
 const getOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}",
   httpMethod: "GET",
   responses: {
     200: {
@@ -2237,14 +2276,14 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const createOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}",
   httpMethod: "PUT",
   responses: {
     200: {
@@ -2269,7 +2308,7 @@ const createOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -2277,7 +2316,7 @@ const createOperationSpec: coreClient.OperationSpec = {
 };
 const purgeOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}",
   httpMethod: "DELETE",
   responses: { 200: {}, 201: {}, 202: {}, 204: {} },
   queryParameters: [Parameters.apiVersion],
@@ -2288,13 +2327,13 @@ const purgeOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   serializer
 };
 const updateOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}",
   httpMethod: "PATCH",
   responses: {
     200: {
@@ -2319,7 +2358,7 @@ const updateOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -2327,7 +2366,7 @@ const updateOperationSpec: coreClient.OperationSpec = {
 };
 const addDisksOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/addDisks",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/addDisks",
   httpMethod: "POST",
   responses: {
     200: {
@@ -2352,7 +2391,7 @@ const addDisksOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -2360,7 +2399,7 @@ const addDisksOperationSpec: coreClient.OperationSpec = {
 };
 const applyRecoveryPointOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/applyRecoveryPoint",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/applyRecoveryPoint",
   httpMethod: "POST",
   responses: {
     200: {
@@ -2385,7 +2424,7 @@ const applyRecoveryPointOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -2393,7 +2432,7 @@ const applyRecoveryPointOperationSpec: coreClient.OperationSpec = {
 };
 const failoverCancelOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/failoverCancel",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/failoverCancel",
   httpMethod: "POST",
   responses: {
     200: {
@@ -2417,14 +2456,14 @@ const failoverCancelOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const failoverCommitOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/failoverCommit",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/failoverCommit",
   httpMethod: "POST",
   responses: {
     200: {
@@ -2448,14 +2487,14 @@ const failoverCommitOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const plannedFailoverOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/plannedFailover",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/plannedFailover",
   httpMethod: "POST",
   responses: {
     200: {
@@ -2480,7 +2519,7 @@ const plannedFailoverOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -2488,7 +2527,7 @@ const plannedFailoverOperationSpec: coreClient.OperationSpec = {
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/remove",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/remove",
   httpMethod: "POST",
   responses: { 200: {}, 201: {}, 202: {}, 204: {} },
   requestBody: Parameters.disableProtectionInput,
@@ -2500,7 +2539,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.contentType],
   mediaType: "json",
@@ -2508,7 +2547,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
 };
 const removeDisksOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/removeDisks",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/removeDisks",
   httpMethod: "POST",
   responses: {
     200: {
@@ -2533,7 +2572,7 @@ const removeDisksOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -2541,7 +2580,7 @@ const removeDisksOperationSpec: coreClient.OperationSpec = {
 };
 const repairReplicationOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/repairReplication",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/repairReplication",
   httpMethod: "POST",
   responses: {
     200: {
@@ -2565,14 +2604,14 @@ const repairReplicationOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const reprotectOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/reProtect",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/reProtect",
   httpMethod: "POST",
   responses: {
     200: {
@@ -2597,7 +2636,7 @@ const reprotectOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -2605,7 +2644,7 @@ const reprotectOperationSpec: coreClient.OperationSpec = {
 };
 const resolveHealthErrorsOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/resolveHealthErrors",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/resolveHealthErrors",
   httpMethod: "POST",
   responses: {
     200: {
@@ -2630,7 +2669,7 @@ const resolveHealthErrorsOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -2638,7 +2677,7 @@ const resolveHealthErrorsOperationSpec: coreClient.OperationSpec = {
 };
 const switchProviderOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/switchProvider",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/switchProvider",
   httpMethod: "POST",
   responses: {
     200: {
@@ -2663,7 +2702,7 @@ const switchProviderOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -2671,7 +2710,7 @@ const switchProviderOperationSpec: coreClient.OperationSpec = {
 };
 const testFailoverOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/testFailover",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/testFailover",
   httpMethod: "POST",
   responses: {
     200: {
@@ -2696,7 +2735,7 @@ const testFailoverOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -2704,7 +2743,7 @@ const testFailoverOperationSpec: coreClient.OperationSpec = {
 };
 const testFailoverCleanupOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/testFailoverCleanup",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/testFailoverCleanup",
   httpMethod: "POST",
   responses: {
     200: {
@@ -2729,7 +2768,7 @@ const testFailoverCleanupOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -2737,7 +2776,7 @@ const testFailoverCleanupOperationSpec: coreClient.OperationSpec = {
 };
 const unplannedFailoverOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/unplannedFailover",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/unplannedFailover",
   httpMethod: "POST",
   responses: {
     200: {
@@ -2762,7 +2801,7 @@ const unplannedFailoverOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -2770,7 +2809,7 @@ const unplannedFailoverOperationSpec: coreClient.OperationSpec = {
 };
 const updateApplianceOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/updateAppliance",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/updateAppliance",
   httpMethod: "POST",
   responses: {
     200: {
@@ -2795,7 +2834,7 @@ const updateApplianceOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -2803,7 +2842,7 @@ const updateApplianceOperationSpec: coreClient.OperationSpec = {
 };
 const updateMobilityServiceOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/updateMobilityService",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/updateMobilityService",
   httpMethod: "POST",
   responses: {
     200: {

@@ -39,19 +39,19 @@ export class RecoveryPointsImpl implements RecoveryPoints {
    * Lists the available recovery points for a replication protected item.
    * @param fabricName The fabric name.
    * @param protectionContainerName The protection container name.
-   * @param replicatedProtectedItemName The replication protected item name.
+   * @param replicationProtectedItemName The replication protected item name.
    * @param options The options parameters.
    */
   public listByReplicationProtectedItems(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: RecoveryPointsListByReplicationProtectedItemsOptionalParams
   ): PagedAsyncIterableIterator<RecoveryPoint> {
     const iter = this.listByReplicationProtectedItemsPagingAll(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       options
     );
     return {
@@ -65,7 +65,7 @@ export class RecoveryPointsImpl implements RecoveryPoints {
         return this.listByReplicationProtectedItemsPagingPage(
           fabricName,
           protectionContainerName,
-          replicatedProtectedItemName,
+          replicationProtectedItemName,
           options
         );
       }
@@ -75,13 +75,13 @@ export class RecoveryPointsImpl implements RecoveryPoints {
   private async *listByReplicationProtectedItemsPagingPage(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: RecoveryPointsListByReplicationProtectedItemsOptionalParams
   ): AsyncIterableIterator<RecoveryPoint[]> {
     let result = await this._listByReplicationProtectedItems(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       options
     );
     yield result.value || [];
@@ -90,7 +90,7 @@ export class RecoveryPointsImpl implements RecoveryPoints {
       result = await this._listByReplicationProtectedItemsNext(
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         continuationToken,
         options
       );
@@ -102,13 +102,13 @@ export class RecoveryPointsImpl implements RecoveryPoints {
   private async *listByReplicationProtectedItemsPagingAll(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: RecoveryPointsListByReplicationProtectedItemsOptionalParams
   ): AsyncIterableIterator<RecoveryPoint> {
     for await (const page of this.listByReplicationProtectedItemsPagingPage(
       fabricName,
       protectionContainerName,
-      replicatedProtectedItemName,
+      replicationProtectedItemName,
       options
     )) {
       yield* page;
@@ -119,20 +119,20 @@ export class RecoveryPointsImpl implements RecoveryPoints {
    * Lists the available recovery points for a replication protected item.
    * @param fabricName The fabric name.
    * @param protectionContainerName The protection container name.
-   * @param replicatedProtectedItemName The replication protected item name.
+   * @param replicationProtectedItemName The replication protected item name.
    * @param options The options parameters.
    */
   private _listByReplicationProtectedItems(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     options?: RecoveryPointsListByReplicationProtectedItemsOptionalParams
   ): Promise<RecoveryPointsListByReplicationProtectedItemsResponse> {
     return this.client.sendOperationRequest(
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         options
       },
       listByReplicationProtectedItemsOperationSpec
@@ -143,14 +143,14 @@ export class RecoveryPointsImpl implements RecoveryPoints {
    * Get the details of specified recovery point.
    * @param fabricName The fabric name.
    * @param protectionContainerName The protection container name.
-   * @param replicatedProtectedItemName The replication protected item name.
+   * @param replicationProtectedItemName The replication protected item name.
    * @param recoveryPointName The recovery point name.
    * @param options The options parameters.
    */
   get(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     recoveryPointName: string,
     options?: RecoveryPointsGetOptionalParams
   ): Promise<RecoveryPointsGetResponse> {
@@ -158,7 +158,7 @@ export class RecoveryPointsImpl implements RecoveryPoints {
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         recoveryPointName,
         options
       },
@@ -170,7 +170,7 @@ export class RecoveryPointsImpl implements RecoveryPoints {
    * ListByReplicationProtectedItemsNext
    * @param fabricName The fabric name.
    * @param protectionContainerName The protection container name.
-   * @param replicatedProtectedItemName The replication protected item name.
+   * @param replicationProtectedItemName The replication protected item name.
    * @param nextLink The nextLink from the previous successful call to the
    *                 ListByReplicationProtectedItems method.
    * @param options The options parameters.
@@ -178,7 +178,7 @@ export class RecoveryPointsImpl implements RecoveryPoints {
   private _listByReplicationProtectedItemsNext(
     fabricName: string,
     protectionContainerName: string,
-    replicatedProtectedItemName: string,
+    replicationProtectedItemName: string,
     nextLink: string,
     options?: RecoveryPointsListByReplicationProtectedItemsNextOptionalParams
   ): Promise<RecoveryPointsListByReplicationProtectedItemsNextResponse> {
@@ -186,7 +186,7 @@ export class RecoveryPointsImpl implements RecoveryPoints {
       {
         fabricName,
         protectionContainerName,
-        replicatedProtectedItemName,
+        replicationProtectedItemName,
         nextLink,
         options
       },
@@ -199,7 +199,7 @@ const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listByReplicationProtectedItemsOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/recoveryPoints",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/recoveryPoints",
   httpMethod: "GET",
   responses: {
     200: {
@@ -214,14 +214,14 @@ const listByReplicationProtectedItemsOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const getOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/recoveryPoints/{recoveryPointName}",
+    "/Subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicationProtectedItemName}/recoveryPoints/{recoveryPointName}",
   httpMethod: "GET",
   responses: {
     200: {
@@ -236,7 +236,7 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName,
+    Parameters.replicationProtectedItemName,
     Parameters.recoveryPointName
   ],
   headerParameters: [Parameters.accept],
@@ -259,7 +259,7 @@ const listByReplicationProtectedItemsNextOperationSpec: coreClient.OperationSpec
     Parameters.resourceName,
     Parameters.fabricName,
     Parameters.protectionContainerName,
-    Parameters.replicatedProtectedItemName
+    Parameters.replicationProtectedItemName
   ],
   headerParameters: [Parameters.accept],
   serializer
