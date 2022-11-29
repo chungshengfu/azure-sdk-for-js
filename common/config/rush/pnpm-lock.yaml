@@ -11509,9 +11509,9 @@ packages:
       '@rollup/plugin-json': 4.1.0_rollup@2.79.1
       '@rollup/plugin-multi-entry': 4.1.0_rollup@2.79.1
       '@rollup/plugin-node-resolve': 13.3.0_rollup@2.79.1
-      '@types/chai': 4.3.3
+      '@types/chai': 4.3.4
       '@types/node': 14.18.33
-      chai: 4.3.6
+      chai: 4.3.7
       cross-env: 7.0.3
       mkdirp: 1.0.4
       mocha: 7.2.0
@@ -11564,9 +11564,9 @@ packages:
       '@rollup/plugin-json': 4.1.0_rollup@2.79.1
       '@rollup/plugin-multi-entry': 4.1.0_rollup@2.79.1
       '@rollup/plugin-node-resolve': 13.3.0_rollup@2.79.1
-      '@types/chai': 4.3.3
+      '@types/chai': 4.3.4
       '@types/node': 14.18.33
-      chai: 4.3.6
+      chai: 4.3.7
       cross-env: 7.0.3
       mkdirp: 1.0.4
       mocha: 7.2.0
@@ -11592,9 +11592,9 @@ packages:
       '@rollup/plugin-json': 4.1.0_rollup@2.79.1
       '@rollup/plugin-multi-entry': 4.1.0_rollup@2.79.1
       '@rollup/plugin-node-resolve': 13.3.0_rollup@2.79.1
-      '@types/chai': 4.3.3
+      '@types/chai': 4.3.4
       '@types/node': 14.18.33
-      chai: 4.3.6
+      chai: 4.3.7
       cross-env: 7.0.3
       mkdirp: 1.0.4
       mocha: 7.2.0
@@ -16092,10 +16092,11 @@ packages:
     dev: false
 
   file:projects/confidential-ledger.tgz:
-    resolution: {integrity: sha512-Ll897AygpWg35/mGZu4wrkY4GkLT1LgR3Uw1QXssM8t3/QzF/sjdxWnTVNvW3OAb48vaoZQ/T+x9m/4Mg9wFSg==, tarball: file:projects/confidential-ledger.tgz}
+    resolution: {integrity: sha512-KDhzZqo405xJSH4TupFOYDO/tH94xNMhrQB9olU10CGTx/TcZ73e6YVWLAbBlZPE4aadiy58HHiLsbGVwAbwDg==, tarball: file:projects/confidential-ledger.tgz}
     name: '@rush-temp/confidential-ledger'
     version: 0.0.0
     dependencies:
+      '@azure-rest/core-client': 1.0.0-beta.10
       '@azure-tools/test-recorder': 1.0.2
       '@azure/identity': 2.1.0
       '@microsoft/api-extractor': 7.33.6
@@ -16121,10 +16122,11 @@ packages:
       karma-mocha-reporter: 2.2.5_karma@6.4.1
       karma-source-map-support: 1.4.0
       karma-sourcemap-loader: 0.3.8
+      mkdirp: 1.0.4
       mocha: 7.2.0
-      mocha-junit-reporter: 2.2.0_mocha@7.2.0
-      nyc: 15.1.0
-      prettier: 2.8.0
+      mocha-junit-reporter: 1.23.3_mocha@7.2.0
+      nyc: 14.1.1
+      prettier: 2.2.1
       rimraf: 3.0.2
       source-map-support: 0.5.21
       tslib: 2.4.1
@@ -16132,7 +16134,6 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - debug
-      - encoding
       - supports-color
       - utf-8-validate
     dev: false
