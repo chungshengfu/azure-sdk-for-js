@@ -1,16 +1,6 @@
 # Release History
-
-## 16.0.0-beta.5 (Unreleased)
-
-### Features Added
-
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
-## 16.0.0-beta.4 (2022-10-09)
+    
+## 16.0.0-beta.5 (2022-12-15)
     
 **Features**
 
@@ -93,6 +83,7 @@
   - Added Interface ClientEncryptionPolicy
   - Added Interface ContinuousModeProperties
   - Added Interface CosmosCassandraDataTransferDataSourceSink
+  - Added Interface CosmosMongoDataTransferDataSourceSink
   - Added Interface CosmosSqlDataTransferDataSourceSink
   - Added Interface CreateJobRequest
   - Added Interface DataTransferDataSourceSink
@@ -235,25 +226,22 @@
   - Interface SqlContainerResource has a new optional parameter restoreParameters
   - Interface SqlDatabaseResource has a new optional parameter createMode
   - Interface SqlDatabaseResource has a new optional parameter restoreParameters
-  - Class CosmosDBManagementClient has a new parameter dataTransferJobs
-  - Class CosmosDBManagementClient has a new parameter graphResources
-  - Class CosmosDBManagementClient has a new parameter restorableGremlinDatabases
-  - Class CosmosDBManagementClient has a new parameter restorableGremlinGraphs
-  - Class CosmosDBManagementClient has a new parameter restorableGremlinResources
-  - Class CosmosDBManagementClient has a new parameter restorableTableResources
-  - Class CosmosDBManagementClient has a new parameter restorableTables
   - Added Enum KnownContinuousTier
   - Added Enum KnownDataTransferComponent
   - Added Enum KnownThroughputPolicyType
   - Enum KnownAuthenticationMethod has a new value Ldap
   - Enum KnownOperationType has a new value Recreate
+  - Added function getContinuationToken
 
 **Breaking Changes**
 
-  - Interface DatabaseAccountCreateUpdateParameters no longer has parameter identity
-  - Interface DatabaseAccountGetResults no longer has parameter identity
-  - Interface RestoreParameters no longer has parameter restoreSource
-  - Interface RestoreParameters no longer has parameter restoreTimestampInUtc
+  - Class CosmosDBManagementClient has a new required parameter dataTransferJobs
+  - Class CosmosDBManagementClient has a new required parameter graphResources
+  - Class CosmosDBManagementClient has a new required parameter restorableGremlinDatabases
+  - Class CosmosDBManagementClient has a new required parameter restorableGremlinGraphs
+  - Class CosmosDBManagementClient has a new required parameter restorableGremlinResources
+  - Class CosmosDBManagementClient has a new required parameter restorableTableResources
+  - Class CosmosDBManagementClient has a new required parameter restorableTables
     
     
 ## 15.2.0 (2022-09-05)
