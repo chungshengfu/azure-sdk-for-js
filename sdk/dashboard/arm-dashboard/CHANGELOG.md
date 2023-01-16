@@ -1,15 +1,30 @@
 # Release History
+    
+## 1.1.0-beta.1 (2023-01-16)
+    
+**Features**
 
-## 1.0.2 (Unreleased)
-
-### Features Added
-
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
+  - Added operation group EnterpriseDetailsOperations
+  - Added Interface EnterpriseConfigurations
+  - Added Interface EnterpriseDetails
+  - Added Interface EnterpriseDetailsPostOptionalParams
+  - Added Interface GrafanaConfigurations
+  - Added Interface MarketplaceTrialQuota
+  - Added Interface SaasSubscriptionDetails
+  - Added Interface Smtp
+  - Added Interface SubscriptionTerm
+  - Added Type Alias AvailablePromotion
+  - Added Type Alias EnterpriseDetailsPostResponse
+  - Added Type Alias MarketplaceAutoRenew
+  - Added Type Alias StartTLSPolicy
+  - Interface ManagedGrafanaProperties has a new optional parameter enterpriseConfigurations
+  - Interface ManagedGrafanaProperties has a new optional parameter grafanaConfigurations
+  - Interface ManagedGrafanaPropertiesUpdateParameters has a new optional parameter enterpriseConfigurations
+  - Interface ManagedGrafanaPropertiesUpdateParameters has a new optional parameter grafanaConfigurations
+  - Added Enum KnownAvailablePromotion
+  - Added Enum KnownMarketplaceAutoRenew
+  - Added Enum KnownStartTLSPolicy
+    
 ## 1.0.1 (2023-01-03)
 
 **Features**

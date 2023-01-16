@@ -419,6 +419,20 @@ export const ManagedGrafanaProperties: coreClient.CompositeMapper = {
           name: "Composite",
           className: "GrafanaIntegrations"
         }
+      },
+      enterpriseConfigurations: {
+        serializedName: "enterpriseConfigurations",
+        type: {
+          name: "Composite",
+          className: "EnterpriseConfigurations"
+        }
+      },
+      grafanaConfigurations: {
+        serializedName: "grafanaConfigurations",
+        type: {
+          name: "Composite",
+          className: "GrafanaConfigurations"
+        }
       }
     }
   }
@@ -585,6 +599,100 @@ export const AzureMonitorWorkspaceIntegration: coreClient.CompositeMapper = {
   }
 };
 
+export const EnterpriseConfigurations: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "EnterpriseConfigurations",
+    modelProperties: {
+      marketplacePlanId: {
+        serializedName: "marketplacePlanId",
+        type: {
+          name: "String"
+        }
+      },
+      marketplaceAutoRenew: {
+        serializedName: "marketplaceAutoRenew",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const GrafanaConfigurations: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "GrafanaConfigurations",
+    modelProperties: {
+      smtp: {
+        serializedName: "smtp",
+        type: {
+          name: "Composite",
+          className: "Smtp"
+        }
+      }
+    }
+  }
+};
+
+export const Smtp: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "Smtp",
+    modelProperties: {
+      enabled: {
+        serializedName: "enabled",
+        type: {
+          name: "Boolean"
+        }
+      },
+      host: {
+        serializedName: "host",
+        type: {
+          name: "String"
+        }
+      },
+      user: {
+        serializedName: "user",
+        type: {
+          name: "String"
+        }
+      },
+      password: {
+        serializedName: "password",
+        type: {
+          name: "String"
+        }
+      },
+      fromAddress: {
+        serializedName: "fromAddress",
+        type: {
+          name: "String"
+        }
+      },
+      fromName: {
+        serializedName: "fromName",
+        type: {
+          name: "String"
+        }
+      },
+      startTLSPolicy: {
+        serializedName: "startTLSPolicy",
+        type: {
+          name: "String"
+        }
+      },
+      skipVerify: {
+        serializedName: "skipVerify",
+        type: {
+          name: "Boolean"
+        }
+      }
+    }
+  }
+};
+
 export const ManagedServiceIdentity: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -716,6 +824,20 @@ export const ManagedGrafanaPropertiesUpdateParameters: coreClient.CompositeMappe
           name: "Composite",
           className: "GrafanaIntegrations"
         }
+      },
+      enterpriseConfigurations: {
+        serializedName: "enterpriseConfigurations",
+        type: {
+          name: "Composite",
+          className: "EnterpriseConfigurations"
+        }
+      },
+      grafanaConfigurations: {
+        serializedName: "grafanaConfigurations",
+        type: {
+          name: "Composite",
+          className: "GrafanaConfigurations"
+        }
       }
     }
   }
@@ -771,6 +893,124 @@ export const PrivateLinkResourceListResult: coreClient.CompositeMapper = {
         readOnly: true,
         type: {
           name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const EnterpriseDetails: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "EnterpriseDetails",
+    modelProperties: {
+      saasSubscriptionDetails: {
+        serializedName: "saasSubscriptionDetails",
+        type: {
+          name: "Composite",
+          className: "SaasSubscriptionDetails"
+        }
+      },
+      marketplaceTrialQuota: {
+        serializedName: "marketplaceTrialQuota",
+        type: {
+          name: "Composite",
+          className: "MarketplaceTrialQuota"
+        }
+      }
+    }
+  }
+};
+
+export const SaasSubscriptionDetails: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "SaasSubscriptionDetails",
+    modelProperties: {
+      planId: {
+        serializedName: "planId",
+        type: {
+          name: "String"
+        }
+      },
+      offerId: {
+        serializedName: "offerId",
+        type: {
+          name: "String"
+        }
+      },
+      publisherId: {
+        serializedName: "publisherId",
+        type: {
+          name: "String"
+        }
+      },
+      term: {
+        serializedName: "term",
+        type: {
+          name: "Composite",
+          className: "SubscriptionTerm"
+        }
+      }
+    }
+  }
+};
+
+export const SubscriptionTerm: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "SubscriptionTerm",
+    modelProperties: {
+      termUnit: {
+        serializedName: "termUnit",
+        type: {
+          name: "String"
+        }
+      },
+      startDate: {
+        serializedName: "startDate",
+        type: {
+          name: "DateTime"
+        }
+      },
+      endDate: {
+        serializedName: "endDate",
+        type: {
+          name: "DateTime"
+        }
+      }
+    }
+  }
+};
+
+export const MarketplaceTrialQuota: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "MarketplaceTrialQuota",
+    modelProperties: {
+      availablePromotion: {
+        defaultValue: "None",
+        serializedName: "availablePromotion",
+        type: {
+          name: "String"
+        }
+      },
+      grafanaResourceId: {
+        serializedName: "grafanaResourceId",
+        type: {
+          name: "String"
+        }
+      },
+      trialStartAt: {
+        serializedName: "trialStartAt",
+        type: {
+          name: "DateTime"
+        }
+      },
+      trialEndAt: {
+        serializedName: "trialEndAt",
+        type: {
+          name: "DateTime"
         }
       }
     }
