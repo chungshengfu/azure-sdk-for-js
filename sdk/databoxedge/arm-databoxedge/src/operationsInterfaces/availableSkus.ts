@@ -13,7 +13,7 @@ import { DataBoxEdgeSku, AvailableSkusListOptionalParams } from "../models";
 /** Interface representing a AvailableSkus. */
 export interface AvailableSkus {
   /**
-   * List all the available Skus and information related to them.
+   * List all the available Skus and information related to the skus.
    * @param options The options parameters.
    */
   list(

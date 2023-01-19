@@ -35,7 +35,7 @@ export class AvailableSkusImpl implements AvailableSkus {
   }
 
   /**
-   * List all the available Skus and information related to them.
+   * List all the available Skus and information related to the skus.
    * @param options The options parameters.
    */
   public list(
@@ -89,7 +89,7 @@ export class AvailableSkusImpl implements AvailableSkus {
   }
 
   /**
-   * List all the available Skus and information related to them.
+   * List all the available Skus and information related to the skus.
    * @param options The options parameters.
    */
   private _list(
@@ -144,7 +144,6 @@ const listNextOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.CloudError
     }
   },
-  queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.nextLink,
