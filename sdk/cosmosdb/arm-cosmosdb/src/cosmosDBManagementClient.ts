@@ -38,6 +38,7 @@ import {
   DataTransferJobsImpl,
   CassandraClustersImpl,
   CassandraDataCentersImpl,
+  CassandraRepairImpl,
   NotebookWorkspacesImpl,
   PrivateEndpointConnectionsImpl,
   PrivateLinkResourcesImpl,
@@ -79,6 +80,7 @@ import {
   DataTransferJobs,
   CassandraClusters,
   CassandraDataCenters,
+  CassandraRepair,
   NotebookWorkspaces,
   PrivateEndpointConnections,
   PrivateLinkResources,
@@ -130,7 +132,7 @@ export class CosmosDBManagementClient extends coreClient.ServiceClient {
       credential: credentials
     };
 
-    const packageDetails = `azsdk-js-arm-cosmosdb/16.0.0-beta.6`;
+    const packageDetails = `azsdk-js-arm-cosmosdb/1.0.0-beta.1`;
     const userAgentPrefix =
       options.userAgentOptions && options.userAgentOptions.userAgentPrefix
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
@@ -183,7 +185,7 @@ export class CosmosDBManagementClient extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
-    this.apiVersion = options.apiVersion || "2022-08-15-preview";
+    this.apiVersion = options.apiVersion || "2022-11-15-preview";
     this.databaseAccounts = new DatabaseAccountsImpl(this);
     this.operations = new OperationsImpl(this);
     this.database = new DatabaseImpl(this);
@@ -207,6 +209,7 @@ export class CosmosDBManagementClient extends coreClient.ServiceClient {
     this.dataTransferJobs = new DataTransferJobsImpl(this);
     this.cassandraClusters = new CassandraClustersImpl(this);
     this.cassandraDataCenters = new CassandraDataCentersImpl(this);
+    this.cassandraRepair = new CassandraRepairImpl(this);
     this.notebookWorkspaces = new NotebookWorkspacesImpl(this);
     this.privateEndpointConnections = new PrivateEndpointConnectionsImpl(this);
     this.privateLinkResources = new PrivateLinkResourcesImpl(this);
@@ -279,6 +282,7 @@ export class CosmosDBManagementClient extends coreClient.ServiceClient {
   dataTransferJobs: DataTransferJobs;
   cassandraClusters: CassandraClusters;
   cassandraDataCenters: CassandraDataCenters;
+  cassandraRepair: CassandraRepair;
   notebookWorkspaces: NotebookWorkspaces;
   privateEndpointConnections: PrivateEndpointConnections;
   privateLinkResources: PrivateLinkResources;

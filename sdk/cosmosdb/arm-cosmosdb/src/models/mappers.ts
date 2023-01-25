@@ -1775,7 +1775,6 @@ export const SqlDatabaseResource: coreClient.CompositeMapper = {
         }
       },
       createMode: {
-        defaultValue: "Default",
         serializedName: "createMode",
         type: {
           name: "String"
@@ -2158,7 +2157,6 @@ export const SqlContainerResource: coreClient.CompositeMapper = {
         }
       },
       createMode: {
-        defaultValue: "Default",
         serializedName: "createMode",
         type: {
           name: "String"
@@ -2180,7 +2178,6 @@ export const IndexingPolicy: coreClient.CompositeMapper = {
         }
       },
       indexingMode: {
-        defaultValue: "consistent",
         serializedName: "indexingMode",
         type: {
           name: "String"
@@ -2276,7 +2273,6 @@ export const Indexes: coreClient.CompositeMapper = {
     className: "Indexes",
     modelProperties: {
       dataType: {
-        defaultValue: "String",
         serializedName: "dataType",
         type: {
           name: "String"
@@ -2289,7 +2285,6 @@ export const Indexes: coreClient.CompositeMapper = {
         }
       },
       kind: {
-        defaultValue: "Hash",
         serializedName: "kind",
         type: {
           name: "String"
@@ -2378,7 +2373,6 @@ export const ContainerPartitionKey: coreClient.CompositeMapper = {
         }
       },
       kind: {
-        defaultValue: "Hash",
         serializedName: "kind",
         type: {
           name: "String"
@@ -2452,7 +2446,6 @@ export const ConflictResolutionPolicy: coreClient.CompositeMapper = {
     className: "ConflictResolutionPolicy",
     modelProperties: {
       mode: {
-        defaultValue: "LastWriterWins",
         serializedName: "mode",
         type: {
           name: "String"
@@ -2909,7 +2902,6 @@ export const MongoDBDatabaseResource: coreClient.CompositeMapper = {
         }
       },
       createMode: {
-        defaultValue: "Default",
         serializedName: "createMode",
         type: {
           name: "String"
@@ -2986,7 +2978,6 @@ export const MongoDBCollectionResource: coreClient.CompositeMapper = {
         }
       },
       createMode: {
-        defaultValue: "Default",
         serializedName: "createMode",
         type: {
           name: "String"
@@ -3976,43 +3967,6 @@ export const CommandOutput: coreClient.CompositeMapper = {
   }
 };
 
-export const ListBackups: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "ListBackups",
-    modelProperties: {
-      value: {
-        serializedName: "value",
-        readOnly: true,
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "BackupResource"
-            }
-          }
-        }
-      }
-    }
-  }
-};
-
-export const BackupResourceProperties: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "BackupResourceProperties",
-    modelProperties: {
-      timestamp: {
-        serializedName: "timestamp",
-        type: {
-          name: "DateTime"
-        }
-      }
-    }
-  }
-};
-
 export const ListDataCenters: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -4117,70 +4071,6 @@ export const DataCenterResourceProperties: coreClient.CompositeMapper = {
         serializedName: "availabilityZone",
         type: {
           name: "Boolean"
-        }
-      },
-      authenticationMethodLdapProperties: {
-        serializedName: "authenticationMethodLdapProperties",
-        type: {
-          name: "Composite",
-          className: "AuthenticationMethodLdapProperties"
-        }
-      }
-    }
-  }
-};
-
-export const AuthenticationMethodLdapProperties: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "AuthenticationMethodLdapProperties",
-    modelProperties: {
-      serverHostname: {
-        serializedName: "serverHostname",
-        type: {
-          name: "String"
-        }
-      },
-      serverPort: {
-        serializedName: "serverPort",
-        type: {
-          name: "Number"
-        }
-      },
-      serviceUserDistinguishedName: {
-        serializedName: "serviceUserDistinguishedName",
-        type: {
-          name: "String"
-        }
-      },
-      serviceUserPassword: {
-        serializedName: "serviceUserPassword",
-        type: {
-          name: "String"
-        }
-      },
-      searchBaseDistinguishedName: {
-        serializedName: "searchBaseDistinguishedName",
-        type: {
-          name: "String"
-        }
-      },
-      searchFilterTemplate: {
-        serializedName: "searchFilterTemplate",
-        type: {
-          name: "String"
-        }
-      },
-      serverCertificates: {
-        serializedName: "serverCertificates",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "Certificate"
-            }
-          }
         }
       }
     }
@@ -4445,6 +4335,854 @@ export const ComponentsM9L909SchemasCassandraclusterpublicstatusPropertiesDatace
         serializedName: "cpuUsage",
         type: {
           name: "Number"
+        }
+      }
+    }
+  }
+};
+
+export const CassandraReaperClusterStatus: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CassandraReaperClusterStatus",
+    modelProperties: {
+      name: {
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      },
+      jmxUserName: {
+        serializedName: "jmxUserName",
+        type: {
+          name: "String"
+        }
+      },
+      jmxPasswordIsSet: {
+        serializedName: "jmxPasswordIsSet",
+        type: {
+          name: "Boolean"
+        }
+      },
+      seedHosts: {
+        serializedName: "seedHosts",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      repairRuns: {
+        serializedName: "repairRuns",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "CassandraReaperRunStatus"
+            }
+          }
+        }
+      },
+      repairSchedules: {
+        serializedName: "repairSchedules",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "CassandraReaperScheduleStatus"
+            }
+          }
+        }
+      },
+      nodesStatus: {
+        serializedName: "nodesStatus",
+        type: {
+          name: "Composite",
+          className: "CassandraReaperNodeStatus"
+        }
+      }
+    }
+  }
+};
+
+export const CassandraReaperRunStatus: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CassandraReaperRunStatus",
+    modelProperties: {
+      cause: {
+        serializedName: "cause",
+        type: {
+          name: "String"
+        }
+      },
+      owner: {
+        serializedName: "owner",
+        type: {
+          name: "String"
+        }
+      },
+      id: {
+        serializedName: "id",
+        type: {
+          name: "String"
+        }
+      },
+      clusterName: {
+        serializedName: "clusterName",
+        type: {
+          name: "String"
+        }
+      },
+      columnFamilies: {
+        serializedName: "columnFamilies",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      keyspaceName: {
+        serializedName: "keyspaceName",
+        type: {
+          name: "String"
+        }
+      },
+      repairState: {
+        serializedName: "repairState",
+        type: {
+          name: "String"
+        }
+      },
+      intensity: {
+        serializedName: "intensity",
+        type: {
+          name: "Number"
+        }
+      },
+      incrementalRepair: {
+        serializedName: "incrementalRepair",
+        type: {
+          name: "Boolean"
+        }
+      },
+      totalSegments: {
+        serializedName: "totalSegments",
+        type: {
+          name: "Number"
+        }
+      },
+      repairParallelism: {
+        serializedName: "repairParallelism",
+        type: {
+          name: "String"
+        }
+      },
+      segmentsRepaired: {
+        serializedName: "segmentsRepaired",
+        type: {
+          name: "Number"
+        }
+      },
+      lastEvent: {
+        serializedName: "lastEvent",
+        type: {
+          name: "String"
+        }
+      },
+      duration: {
+        serializedName: "duration",
+        type: {
+          name: "String"
+        }
+      },
+      nodes: {
+        serializedName: "nodes",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      datacenters: {
+        serializedName: "datacenters",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      blacklistedTables: {
+        serializedName: "blacklistedTables",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      repairThreadCount: {
+        serializedName: "repairThreadCount",
+        type: {
+          name: "Number"
+        }
+      },
+      repairUnitId: {
+        serializedName: "repairUnitId",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const CassandraReaperScheduleStatus: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CassandraReaperScheduleStatus",
+    modelProperties: {
+      id: {
+        serializedName: "id",
+        type: {
+          name: "String"
+        }
+      },
+      owner: {
+        serializedName: "owner",
+        type: {
+          name: "String"
+        }
+      },
+      state: {
+        serializedName: "state",
+        type: {
+          name: "String"
+        }
+      },
+      intensity: {
+        serializedName: "intensity",
+        type: {
+          name: "Number"
+        }
+      },
+      clusterName: {
+        serializedName: "clusterName",
+        type: {
+          name: "String"
+        }
+      },
+      keyspaceName: {
+        serializedName: "keyspaceName",
+        type: {
+          name: "String"
+        }
+      },
+      columnFamilies: {
+        serializedName: "columnFamilies",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      repairParallelism: {
+        serializedName: "repairParallelism",
+        type: {
+          name: "String"
+        }
+      },
+      incrementalRepair: {
+        serializedName: "incrementalRepair",
+        type: {
+          name: "Boolean"
+        }
+      },
+      scheduledDaysBetween: {
+        serializedName: "scheduledDaysBetween",
+        type: {
+          name: "Number"
+        }
+      },
+      nodes: {
+        serializedName: "nodes",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      datacenters: {
+        serializedName: "datacenters",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      blacklistedTables: {
+        serializedName: "blacklistedTables",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      segmentCountPerNode: {
+        serializedName: "segmentCountPerNode",
+        type: {
+          name: "Number"
+        }
+      },
+      repairThreadCount: {
+        serializedName: "repairThreadCount",
+        type: {
+          name: "Number"
+        }
+      },
+      repairUnitId: {
+        serializedName: "repairUnitId",
+        type: {
+          name: "String"
+        }
+      },
+      nextActivation: {
+        serializedName: "nextActivation",
+        type: {
+          name: "String"
+        }
+      },
+      creationTime: {
+        serializedName: "creationTime",
+        type: {
+          name: "String"
+        }
+      },
+      pauseTime: {
+        serializedName: "pauseTime",
+        type: {
+          name: "String"
+        }
+      },
+      segmentTimeout: {
+        serializedName: "segmentTimeout",
+        type: {
+          name: "Number"
+        }
+      },
+      adaptive: {
+        serializedName: "adaptive",
+        type: {
+          name: "Boolean"
+        }
+      },
+      percentUnrepairedThreshold: {
+        serializedName: "percentUnrepairedThreshold",
+        type: {
+          name: "Number"
+        }
+      }
+    }
+  }
+};
+
+export const CassandraReaperNodeStatus: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CassandraReaperNodeStatus",
+    modelProperties: {
+      endpointStates: {
+        serializedName: "endpointStates",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "CassandraReaperGossipInfo"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+export const CassandraReaperGossipInfo: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CassandraReaperGossipInfo",
+    modelProperties: {
+      sourceNode: {
+        serializedName: "sourceNode",
+        type: {
+          name: "String"
+        }
+      },
+      endpoints: {
+        serializedName: "endpoints",
+        type: {
+          name: "Dictionary",
+          value: {
+            type: {
+              name: "Dictionary",
+              value: {
+                type: {
+                  name: "Sequence",
+                  element: {
+                    type: {
+                      name: "Composite",
+                      className: "CassandraReaperEndpointState"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      totalLoad: {
+        serializedName: "totalLoad",
+        type: {
+          name: "Number"
+        }
+      },
+      endpointNames: {
+        serializedName: "endpointNames",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+export const CassandraReaperEndpointState: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CassandraReaperEndpointState",
+    modelProperties: {
+      endpoint: {
+        serializedName: "endpoint",
+        type: {
+          name: "String"
+        }
+      },
+      hostId: {
+        serializedName: "hostId",
+        type: {
+          name: "String"
+        }
+      },
+      dataCenter: {
+        serializedName: "dataCenter",
+        type: {
+          name: "String"
+        }
+      },
+      rack: {
+        serializedName: "rack",
+        type: {
+          name: "String"
+        }
+      },
+      status: {
+        serializedName: "status",
+        type: {
+          name: "String"
+        }
+      },
+      severity: {
+        serializedName: "severity",
+        type: {
+          name: "Number"
+        }
+      },
+      releaseVersion: {
+        serializedName: "releaseVersion",
+        type: {
+          name: "String"
+        }
+      },
+      tokens: {
+        serializedName: "tokens",
+        type: {
+          name: "String"
+        }
+      },
+      load: {
+        serializedName: "load",
+        type: {
+          name: "Number"
+        }
+      },
+      type: {
+        serializedName: "type",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const CassandraClusterRepairPublicResource: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CassandraClusterRepairPublicResource",
+    modelProperties: {
+      id: {
+        serializedName: "id",
+        type: {
+          name: "String"
+        }
+      },
+      name: {
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      },
+      type: {
+        serializedName: "type",
+        type: {
+          name: "String"
+        }
+      },
+      properties: {
+        serializedName: "properties",
+        type: {
+          name: "Composite",
+          className: "CassandraClusterRepairPublicProperties"
+        }
+      }
+    }
+  }
+};
+
+export const CassandraClusterRepairPublicProperties: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CassandraClusterRepairPublicProperties",
+    modelProperties: {
+      keyspace: {
+        serializedName: "keyspace",
+        type: {
+          name: "String"
+        }
+      },
+      owner: {
+        serializedName: "owner",
+        type: {
+          name: "String"
+        }
+      },
+      cause: {
+        serializedName: "cause",
+        type: {
+          name: "String"
+        }
+      },
+      tables: {
+        serializedName: "tables",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      segmentCount: {
+        serializedName: "segmentCount",
+        type: {
+          name: "Number"
+        }
+      },
+      repairParallelism: {
+        serializedName: "repairParallelism",
+        type: {
+          name: "String"
+        }
+      },
+      intensity: {
+        serializedName: "intensity",
+        type: {
+          name: "Number"
+        }
+      },
+      incrementalRepair: {
+        serializedName: "incrementalRepair",
+        type: {
+          name: "Boolean"
+        }
+      },
+      nodes: {
+        serializedName: "nodes",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      dataCenters: {
+        serializedName: "dataCenters",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      blackListedTables: {
+        serializedName: "blackListedTables",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      repairThreadCount: {
+        serializedName: "repairThreadCount",
+        type: {
+          name: "Number"
+        }
+      }
+    }
+  }
+};
+
+export const CassandraClusterRepairListFilter: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CassandraClusterRepairListFilter",
+    modelProperties: {
+      keyspace: {
+        serializedName: "keyspace",
+        readOnly: true,
+        type: {
+          name: "String"
+        }
+      },
+      repairRunStates: {
+        serializedName: "repairRunStates",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+export const CassandraReaperRunStatusFeedResponse: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CassandraReaperRunStatusFeedResponse",
+    modelProperties: {
+      value: {
+        serializedName: "value",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "CassandraReaperRunStatus"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+export const CassandraRepairSegmentResourceFeedResponse: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CassandraRepairSegmentResourceFeedResponse",
+    modelProperties: {
+      value: {
+        serializedName: "value",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "CassandraRepairSegment"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+export const CassandraRepairSegment: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CassandraRepairSegment",
+    modelProperties: {
+      id: {
+        serializedName: "id",
+        type: {
+          name: "String"
+        }
+      },
+      runId: {
+        serializedName: "runId",
+        type: {
+          name: "String"
+        }
+      },
+      repairUnitId: {
+        serializedName: "repairUnitId",
+        type: {
+          name: "String"
+        }
+      },
+      tokenRange: {
+        serializedName: "tokenRange",
+        type: {
+          name: "Composite",
+          className: "CassandraRepairTokenRange"
+        }
+      },
+      failCount: {
+        serializedName: "failCount",
+        type: {
+          name: "Number"
+        }
+      },
+      state: {
+        serializedName: "state",
+        type: {
+          name: "String"
+        }
+      },
+      coordinatorHost: {
+        serializedName: "coordinatorHost",
+        type: {
+          name: "String"
+        }
+      },
+      startTime: {
+        serializedName: "startTime",
+        type: {
+          name: "String"
+        }
+      },
+      endTime: {
+        serializedName: "endTime",
+        type: {
+          name: "String"
+        }
+      },
+      replicas: {
+        serializedName: "replicas",
+        type: {
+          name: "Dictionary",
+          value: { type: { name: "String" } }
+        }
+      }
+    }
+  }
+};
+
+export const CassandraRepairTokenRange: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CassandraRepairTokenRange",
+    modelProperties: {
+      baseRange: {
+        serializedName: "baseRange",
+        type: {
+          name: "Composite",
+          className: "CassandraRepairRingRange"
+        }
+      },
+      tokenRanges: {
+        serializedName: "tokenRanges",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "CassandraRepairRingRange"
+            }
+          }
+        }
+      },
+      replicas: {
+        serializedName: "replicas",
+        type: {
+          name: "Dictionary",
+          value: { type: { name: "String" } }
+        }
+      }
+    }
+  }
+};
+
+export const CassandraRepairRingRange: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CassandraRepairRingRange",
+    modelProperties: {
+      start: {
+        serializedName: "start",
+        type: {
+          name: "String"
+        }
+      },
+      end: {
+        serializedName: "end",
+        type: {
+          name: "String"
         }
       }
     }
@@ -6673,7 +7411,6 @@ export const DatabaseAccountGetResults: coreClient.CompositeMapper = {
         }
       },
       createMode: {
-        defaultValue: "Default",
         serializedName: "properties.createMode",
         type: {
           name: "String"
@@ -6923,7 +7660,6 @@ export const DatabaseAccountCreateUpdateParameters: coreClient.CompositeMapper =
         }
       },
       createMode: {
-        defaultValue: "Default",
         serializedName: "properties.createMode",
         type: {
           name: "String"
@@ -8356,23 +9092,6 @@ export const DataTransferJobGetResults: coreClient.CompositeMapper = {
   }
 };
 
-export const BackupResource: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "BackupResource",
-    modelProperties: {
-      ...ARMProxyResource.type.modelProperties,
-      properties: {
-        serializedName: "properties",
-        type: {
-          name: "Composite",
-          className: "BackupResourceProperties"
-        }
-      }
-    }
-  }
-};
-
 export const DataCenterResource: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -8699,6 +9418,34 @@ export const CosmosCassandraDataTransferDataSourceSink: coreClient.CompositeMapp
   }
 };
 
+export const CosmosMongoDataTransferDataSourceSink: coreClient.CompositeMapper = {
+  serializedName: "CosmosDBMongo",
+  type: {
+    name: "Composite",
+    className: "CosmosMongoDataTransferDataSourceSink",
+    uberParent: "DataTransferDataSourceSink",
+    polymorphicDiscriminator:
+      DataTransferDataSourceSink.type.polymorphicDiscriminator,
+    modelProperties: {
+      ...DataTransferDataSourceSink.type.modelProperties,
+      databaseName: {
+        serializedName: "databaseName",
+        required: true,
+        type: {
+          name: "String"
+        }
+      },
+      collectionName: {
+        serializedName: "collectionName",
+        required: true,
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
 export const CosmosSqlDataTransferDataSourceSink: coreClient.CompositeMapper = {
   serializedName: "CosmosDBSql",
   type: {
@@ -8992,6 +9739,7 @@ export let discriminators = {
   "BackupPolicy.Periodic": PeriodicModeBackupPolicy,
   "BackupPolicy.Continuous": ContinuousModeBackupPolicy,
   "DataTransferDataSourceSink.CosmosDBCassandra": CosmosCassandraDataTransferDataSourceSink,
+  "DataTransferDataSourceSink.CosmosDBMongo": CosmosMongoDataTransferDataSourceSink,
   "DataTransferDataSourceSink.CosmosDBSql": CosmosSqlDataTransferDataSourceSink,
   "DataTransferDataSourceSink.AzureBlobStorage": AzureBlobDataTransferDataSourceSink,
   "ServiceResourceProperties.DataTransfer": DataTransferServiceResourceProperties,

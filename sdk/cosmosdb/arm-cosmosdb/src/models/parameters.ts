@@ -45,6 +45,8 @@ import {
   ClusterResource as ClusterResourceMapper,
   CommandPostBody as CommandPostBodyMapper,
   DataCenterResource as DataCenterResourceMapper,
+  CassandraClusterRepairPublicResource as CassandraClusterRepairPublicResourceMapper,
+  CassandraClusterRepairListFilter as CassandraClusterRepairListFilterMapper,
   NotebookWorkspaceCreateUpdateParameters as NotebookWorkspaceCreateUpdateParametersMapper,
   PrivateEndpointConnection as PrivateEndpointConnectionMapper,
   ServiceResourceCreateUpdateParameters as ServiceResourceCreateUpdateParametersMapper
@@ -122,7 +124,7 @@ export const accountName: OperationURLParameter = {
 export const apiVersion: OperationQueryParameter = {
   parameterPath: "apiVersion",
   mapper: {
-    defaultValue: "2022-08-15-preview",
+    defaultValue: "2022-11-15-preview",
     isConstant: true,
     serializedName: "api-version",
     type: {
@@ -610,22 +612,6 @@ export const body1: OperationParameter = {
   mapper: CommandPostBodyMapper
 };
 
-export const backupId: OperationURLParameter = {
-  parameterPath: "backupId",
-  mapper: {
-    constraints: {
-      Pattern: new RegExp("^[0-9]+$"),
-      MaxLength: 15,
-      MinLength: 1
-    },
-    serializedName: "backupId",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
 export const dataCenterName: OperationURLParameter = {
   parameterPath: "dataCenterName",
   mapper: {
@@ -645,6 +631,60 @@ export const dataCenterName: OperationURLParameter = {
 export const body2: OperationParameter = {
   parameterPath: "body",
   mapper: DataCenterResourceMapper
+};
+
+export const body3: OperationParameter = {
+  parameterPath: "body",
+  mapper: CassandraClusterRepairPublicResourceMapper
+};
+
+export const repairRunId: OperationURLParameter = {
+  parameterPath: "repairRunId",
+  mapper: {
+    serializedName: "repairRunId",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const ownerName: OperationURLParameter = {
+  parameterPath: "ownerName",
+  mapper: {
+    serializedName: "ownerName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const body4: OperationParameter = {
+  parameterPath: ["options", "body"],
+  mapper: CassandraClusterRepairListFilterMapper
+};
+
+export const segmentId: OperationURLParameter = {
+  parameterPath: "segmentId",
+  mapper: {
+    serializedName: "segmentId",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const intensityValue: OperationURLParameter = {
+  parameterPath: "intensityValue",
+  mapper: {
+    serializedName: "intensityValue",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
 };
 
 export const notebookWorkspaceName: OperationURLParameter = {

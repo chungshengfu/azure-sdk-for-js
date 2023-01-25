@@ -15,6 +15,7 @@ export type BackupPolicyUnion =
 export type DataTransferDataSourceSinkUnion =
   | DataTransferDataSourceSink
   | CosmosCassandraDataTransferDataSourceSink
+  | CosmosMongoDataTransferDataSourceSink
   | CosmosSqlDataTransferDataSourceSink
   | AzureBlobDataTransferDataSourceSink;
 export type ServiceResourcePropertiesUnion =
@@ -1454,7 +1455,11 @@ export interface DataTransferJobProperties {
 /** Base class for all DataTransfer source/sink */
 export interface DataTransferDataSourceSink {
   /** Polymorphic discriminator, which specifies the different types this object can be */
-  component: "CosmosDBCassandra" | "CosmosDBSql" | "AzureBlobStorage";
+  component:
+    | "CosmosDBCassandra"
+    | "CosmosDBMongo"
+    | "CosmosDBSql"
+    | "AzureBlobStorage";
 }
 
 /** The List operation response, that contains the Data Transfer jobs and their properties. */
@@ -1489,7 +1494,7 @@ export interface ClusterResourceProperties {
   cassandraVersion?: string;
   /** If you need to set the clusterName property in cassandra.yaml to something besides the resource name of the cluster, set the value to use on this property. */
   clusterNameOverride?: string;
-  /** Which authentication method Cassandra should use to authenticate clients. 'None' turns off authentication, so should not be used except in emergencies. 'Cassandra' is the default password based authentication. The default is 'Cassandra'. 'Ldap' is in preview. */
+  /** Which authentication method Cassandra should use to authenticate clients. 'None' turns off authentication, so should not be used except in emergencies. 'Cassandra' is the default password based authentication. The default is 'Cassandra'. */
   authenticationMethod?: AuthenticationMethod;
   /** Initial password for clients connecting as admin to the cluster. Should be changed after cluster creation. Returns null on GET. This field only applies when the authenticationMethod field is 'Cassandra'. */
   initialCassandraAdminPassword?: string;
@@ -1513,7 +1518,7 @@ export interface ClusterResourceProperties {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly seedNodes?: SeedNode[];
-  /** Number of hours to wait between taking a backup of the cluster. */
+  /** Number of hours to wait between taking a backup of the cluster. To disable backups, set this property to 0. */
   hoursBetweenBackups?: number;
   /** Whether the cluster and associated data centers has been deallocated. */
   deallocated?: boolean;
@@ -1592,20 +1597,6 @@ export interface CommandOutput {
   commandOutput?: string;
 }
 
-/** List of restorable backups for a Cassandra cluster. */
-export interface ListBackups {
-  /**
-   * Container for array of backups.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: BackupResource[];
-}
-
-export interface BackupResourceProperties {
-  /** The time this backup was taken, formatted like 2021-01-21T17:35:21 */
-  timestamp?: Date;
-}
-
 /** List of managed Cassandra data centers and their properties. */
 export interface ListDataCenters {
   /**
@@ -1642,27 +1633,8 @@ export interface DataCenterResourceProperties {
   diskSku?: string;
   /** Number of disk used for data centers. Default value is 4. */
   diskCapacity?: number;
-  /** If the data center has Availability Zone feature, apply it to the Virtual Machine ScaleSet that host the cassandra data center virtual machines. */
+  /** If the azure data center has Availability Zone support, apply it to the Virtual Machine ScaleSet that host the cassandra data center virtual machines. */
   availabilityZone?: boolean;
-  /** Ldap authentication method properties. This feature is in preview. */
-  authenticationMethodLdapProperties?: AuthenticationMethodLdapProperties;
-}
-
-/** Ldap authentication method properties. This feature is in preview. */
-export interface AuthenticationMethodLdapProperties {
-  /** Hostname of the LDAP server. */
-  serverHostname?: string;
-  /** Port of the LDAP server. */
-  serverPort?: number;
-  /** Distinguished name of the look up user account, who can look up user details on authentication. */
-  serviceUserDistinguishedName?: string;
-  /** Password of the look up user. */
-  serviceUserPassword?: string;
-  /** Distinguished name of the object to start the recursive search of users from. */
-  searchBaseDistinguishedName?: string;
-  /** Template to use for searching. Defaults to (cn=%s) where %s will be replaced by the username used to login. */
-  searchFilterTemplate?: string;
-  serverCertificates?: Certificate[];
 }
 
 /** Properties of a managed Cassandra cluster public status. */
@@ -1719,7 +1691,7 @@ export interface ComponentsM9L909SchemasCassandraclusterpublicstatusPropertiesDa
   hostID?: string;
   /** The rack this node is part of. */
   rack?: string;
-  /** The timestamp at which that snapshot of these usage statistics were taken. */
+  /** The timestamp when these statistics were captured. */
   timestamp?: string;
   /** The amount of disk used, in kB, of the directory /var/lib/cassandra. */
   diskUsedKB?: number;
@@ -1735,6 +1707,158 @@ export interface ComponentsM9L909SchemasCassandraclusterpublicstatusPropertiesDa
   memoryTotalKB?: number;
   /** A float representing the current system-wide CPU utilization as a percentage. */
   cpuUsage?: number;
+}
+
+export interface CassandraReaperClusterStatus {
+  name?: string;
+  jmxUserName?: string;
+  jmxPasswordIsSet?: boolean;
+  seedHosts?: string[];
+  repairRuns?: CassandraReaperRunStatus[];
+  repairSchedules?: CassandraReaperScheduleStatus[];
+  nodesStatus?: CassandraReaperNodeStatus;
+}
+
+export interface CassandraReaperRunStatus {
+  cause?: string;
+  owner?: string;
+  id?: string;
+  clusterName?: string;
+  columnFamilies?: string[];
+  keyspaceName?: string;
+  repairState?: string;
+  intensity?: number;
+  incrementalRepair?: boolean;
+  totalSegments?: number;
+  repairParallelism?: string;
+  segmentsRepaired?: number;
+  lastEvent?: string;
+  duration?: string;
+  nodes?: string[];
+  datacenters?: string[];
+  blacklistedTables?: string[];
+  repairThreadCount?: number;
+  repairUnitId?: string;
+}
+
+export interface CassandraReaperScheduleStatus {
+  id?: string;
+  owner?: string;
+  state?: string;
+  intensity?: number;
+  clusterName?: string;
+  keyspaceName?: string;
+  columnFamilies?: string[];
+  repairParallelism?: string;
+  incrementalRepair?: boolean;
+  scheduledDaysBetween?: number;
+  nodes?: string[];
+  datacenters?: string[];
+  blacklistedTables?: string[];
+  segmentCountPerNode?: number;
+  repairThreadCount?: number;
+  repairUnitId?: string;
+  nextActivation?: string;
+  creationTime?: string;
+  pauseTime?: string;
+  segmentTimeout?: number;
+  adaptive?: boolean;
+  percentUnrepairedThreshold?: number;
+}
+
+export interface CassandraReaperNodeStatus {
+  endpointStates?: CassandraReaperGossipInfo[];
+}
+
+export interface CassandraReaperGossipInfo {
+  sourceNode?: string;
+  /** Dictionary of <components·1vevrom·schemas·cassandrareapergossipinfo·properties·endpoints·additionalproperties> */
+  endpoints?: {
+    [propertyName: string]: {
+      [propertyName: string]: CassandraReaperEndpointState[];
+    };
+  };
+  totalLoad?: number;
+  endpointNames?: string[];
+}
+
+export interface CassandraReaperEndpointState {
+  endpoint?: string;
+  hostId?: string;
+  dataCenter?: string;
+  rack?: string;
+  status?: string;
+  severity?: number;
+  releaseVersion?: string;
+  tokens?: string;
+  load?: number;
+  type?: string;
+}
+
+export interface CassandraClusterRepairPublicResource {
+  id?: string;
+  name?: string;
+  type?: string;
+  properties?: CassandraClusterRepairPublicProperties;
+}
+
+export interface CassandraClusterRepairPublicProperties {
+  keyspace?: string;
+  owner?: string;
+  cause?: string;
+  tables?: string[];
+  segmentCount?: number;
+  repairParallelism?: string;
+  intensity?: number;
+  incrementalRepair?: boolean;
+  nodes?: string[];
+  dataCenters?: string[];
+  blackListedTables?: string[];
+  repairThreadCount?: number;
+}
+
+/** Request object to filter list of repair runs. */
+export interface CassandraClusterRepairListFilter {
+  /**
+   * Keyspace name of the repair run.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly keyspace?: string;
+  repairRunStates?: CassandraRepairRunStateEnum[];
+}
+
+export interface CassandraReaperRunStatusFeedResponse {
+  value?: CassandraReaperRunStatus[];
+}
+
+export interface CassandraRepairSegmentResourceFeedResponse {
+  value?: CassandraRepairSegment[];
+}
+
+export interface CassandraRepairSegment {
+  id?: string;
+  runId?: string;
+  repairUnitId?: string;
+  tokenRange?: CassandraRepairTokenRange;
+  failCount?: number;
+  state?: string;
+  coordinatorHost?: string;
+  startTime?: string;
+  endTime?: string;
+  /** Dictionary of <string> */
+  replicas?: { [propertyName: string]: string };
+}
+
+export interface CassandraRepairTokenRange {
+  baseRange?: CassandraRepairRingRange;
+  tokenRanges?: CassandraRepairRingRange[];
+  /** Dictionary of <string> */
+  replicas?: { [propertyName: string]: string };
+}
+
+export interface CassandraRepairRingRange {
+  start?: string;
+  end?: string;
 }
 
 /** The set of data plane operations permitted through this Role Definition. */
@@ -3351,11 +3475,6 @@ export interface DataTransferJobGetResults extends ARMProxyResource {
   readonly error?: ErrorResponse;
 }
 
-/** A restorable backup of a Cassandra cluster. */
-export interface BackupResource extends ARMProxyResource {
-  properties?: BackupResourceProperties;
-}
-
 /** A managed Cassandra data center. */
 export interface DataCenterResource extends ARMProxyResource {
   /** Properties of a managed Cassandra data center. */
@@ -3468,6 +3587,15 @@ export interface CosmosCassandraDataTransferDataSourceSink
   component: "CosmosDBCassandra";
   keyspaceName: string;
   tableName: string;
+}
+
+/** A CosmosDB Cassandra API data source/sink */
+export interface CosmosMongoDataTransferDataSourceSink
+  extends DataTransferDataSourceSink {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  component: "CosmosDBMongo";
+  databaseName: string;
+  collectionName: string;
 }
 
 /** A CosmosDB Cassandra API data source/sink */
@@ -4112,6 +4240,8 @@ export type BackupStorageRedundancy = string;
 export enum KnownDataTransferComponent {
   /** CosmosDBCassandra */
   CosmosDBCassandra = "CosmosDBCassandra",
+  /** CosmosDBMongo */
+  CosmosDBMongo = "CosmosDBMongo",
   /** CosmosDBSql */
   CosmosDBSql = "CosmosDBSql",
   /** AzureBlobStorage */
@@ -4124,6 +4254,7 @@ export enum KnownDataTransferComponent {
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
  * **CosmosDBCassandra** \
+ * **CosmosDBMongo** \
  * **CosmosDBSql** \
  * **AzureBlobStorage**
  */
@@ -4164,9 +4295,7 @@ export enum KnownAuthenticationMethod {
   /** None */
   None = "None",
   /** Cassandra */
-  Cassandra = "Cassandra",
-  /** Ldap */
-  Ldap = "Ldap"
+  Cassandra = "Cassandra"
 }
 
 /**
@@ -4175,8 +4304,7 @@ export enum KnownAuthenticationMethod {
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
  * **None** \
- * **Cassandra** \
- * **Ldap**
+ * **Cassandra**
  */
 export type AuthenticationMethod = string;
 
@@ -4254,6 +4382,39 @@ export enum KnownNodeState {
  * **Stopped**
  */
 export type NodeState = string;
+
+/** Known values of {@link CassandraRepairRunStateEnum} that the service accepts. */
+export enum KnownCassandraRepairRunStateEnum {
+  /** NOTStarted */
+  NOTStarted = "NOT_STARTED",
+  /** Running */
+  Running = "RUNNING",
+  /** Error */
+  Error = "ERROR",
+  /** Done */
+  Done = "DONE",
+  /** Paused */
+  Paused = "PAUSED",
+  /** Aborted */
+  Aborted = "ABORTED",
+  /** Deleted */
+  Deleted = "DELETED"
+}
+
+/**
+ * Defines values for CassandraRepairRunStateEnum. \
+ * {@link KnownCassandraRepairRunStateEnum} can be used interchangeably with CassandraRepairRunStateEnum,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **NOT_STARTED** \
+ * **RUNNING** \
+ * **ERROR** \
+ * **DONE** \
+ * **PAUSED** \
+ * **ABORTED** \
+ * **DELETED**
+ */
+export type CassandraRepairRunStateEnum = string;
 
 /** Known values of {@link NotebookWorkspaceName} that the service accepts. */
 export enum KnownNotebookWorkspaceName {
@@ -6129,20 +6290,6 @@ export interface CassandraClustersInvokeCommandOptionalParams
 export type CassandraClustersInvokeCommandResponse = CommandOutput;
 
 /** Optional parameters. */
-export interface CassandraClustersListBackupsOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listBackups operation. */
-export type CassandraClustersListBackupsResponse = ListBackups;
-
-/** Optional parameters. */
-export interface CassandraClustersGetBackupOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getBackup operation. */
-export type CassandraClustersGetBackupResponse = BackupResource;
-
-/** Optional parameters. */
 export interface CassandraClustersDeallocateOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
@@ -6213,6 +6360,128 @@ export interface CassandraDataCentersUpdateOptionalParams
 
 /** Contains response data for the update operation. */
 export type CassandraDataCentersUpdateResponse = DataCenterResource;
+
+/** Optional parameters. */
+export interface CassandraRepairGetClusterStatusOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the getClusterStatus operation. */
+export type CassandraRepairGetClusterStatusResponse = CassandraReaperClusterStatus;
+
+/** Optional parameters. */
+export interface CassandraRepairGetTableStatusOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the getTableStatus operation. */
+export type CassandraRepairGetTableStatusResponse = {
+  /** The parsed response body. */
+  body: string;
+};
+
+/** Optional parameters. */
+export interface CassandraRepairCreateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the create operation. */
+export type CassandraRepairCreateResponse = CassandraReaperRunStatus;
+
+/** Optional parameters. */
+export interface CassandraRepairDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface CassandraRepairListOptionalParams
+  extends coreClient.OperationOptions {
+  /** Optional filter parameters to list repairs. */
+  body?: CassandraClusterRepairListFilter;
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the list operation. */
+export type CassandraRepairListResponse = CassandraReaperRunStatusFeedResponse;
+
+/** Optional parameters. */
+export interface CassandraRepairPauseOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface CassandraRepairResumeOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface CassandraRepairListSegmentsOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the listSegments operation. */
+export type CassandraRepairListSegmentsResponse = CassandraRepairSegmentResourceFeedResponse;
+
+/** Optional parameters. */
+export interface CassandraRepairShowOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the show operation. */
+export type CassandraRepairShowResponse = CassandraReaperRunStatus;
+
+/** Optional parameters. */
+export interface CassandraRepairAbortSegmentOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface CassandraRepairUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
 
 /** Optional parameters. */
 export interface NotebookWorkspacesListByDatabaseAccountOptionalParams
