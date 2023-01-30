@@ -7,16 +7,16 @@
  */
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { Operation, OperationsListOptionalParams } from "../models";
+import { OperationDetail, OperationsListOptionalParams } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
 /** Interface representing a Operations. */
 export interface Operations {
   /**
-   * Get a list of REST API supported by Microsoft.Migrate provider.
+   * Get a list of REST API supported by Microsoft.OffAzure provider.
    * @param options The options parameters.
    */
   list(
     options?: OperationsListOptionalParams
-  ): PagedAsyncIterableIterator<Operation>;
+  ): PagedAsyncIterableIterator<OperationDetail>;
 }

@@ -6,14 +6,14 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-import { PagedAsyncIterableIterator } from "@azure/core-paging";
+import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { Operations } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { AzureMigrateV2 } from "../azureMigrateV2";
 import {
-  Operation,
+  OperationDetail,
   OperationsListOptionalParams,
   OperationsListResponse
 } from "../models";
@@ -32,12 +32,12 @@ export class OperationsImpl implements Operations {
   }
 
   /**
-   * Get a list of REST API supported by Microsoft.Migrate provider.
+   * Get a list of REST API supported by Microsoft.OffAzure provider.
    * @param options The options parameters.
    */
   public list(
     options?: OperationsListOptionalParams
-  ): PagedAsyncIterableIterator<Operation> {
+  ): PagedAsyncIterableIterator<OperationDetail> {
     const iter = this.listPagingAll(options);
     return {
       next() {
@@ -46,29 +46,34 @@ export class OperationsImpl implements Operations {
       [Symbol.asyncIterator]() {
         return this;
       },
-      byPage: () => {
-        return this.listPagingPage(options);
+      byPage: (settings?: PageSettings) => {
+        if (settings?.maxPageSize) {
+          throw new Error("maxPageSize is not supported by this operation.");
+        }
+        return this.listPagingPage(options, settings);
       }
     };
   }
 
   private async *listPagingPage(
-    options?: OperationsListOptionalParams
-  ): AsyncIterableIterator<Operation[]> {
-    let result = await this._list(options);
+    options?: OperationsListOptionalParams,
+    _settings?: PageSettings
+  ): AsyncIterableIterator<OperationDetail[]> {
+    let result: OperationsListResponse;
+    result = await this._list(options);
     yield result.value || [];
   }
 
   private async *listPagingAll(
     options?: OperationsListOptionalParams
-  ): AsyncIterableIterator<Operation> {
+  ): AsyncIterableIterator<OperationDetail> {
     for await (const page of this.listPagingPage(options)) {
       yield* page;
     }
   }
 
   /**
-   * Get a list of REST API supported by Microsoft.Migrate provider.
+   * Get a list of REST API supported by Microsoft.OffAzure provider.
    * @param options The options parameters.
    */
   private _list(
@@ -81,11 +86,14 @@ export class OperationsImpl implements Operations {
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listOperationSpec: coreClient.OperationSpec = {
-  path: "/providers/Microsoft.Migrate/operations",
+  path: "/providers/Microsoft.OffAzure/operations",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.OperationResultList
+      bodyMapper: Mappers.AvailableOperations
+    },
+    default: {
+      bodyMapper: Mappers.CloudError
     }
   },
   urlParameters: [Parameters.$host],

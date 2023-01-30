@@ -15,32 +15,44 @@ import {
 } from "@azure/core-rest-pipeline";
 import * as coreAuth from "@azure/core-auth";
 import {
-  ProjectsImpl,
+  HyperVClusterOperationsImpl,
+  HyperVHostOperationsImpl,
+  HyperVJobsImpl,
+  HyperVMachinesImpl,
+  HyperVOperationsStatusImpl,
+  HyperVRunAsAccountsImpl,
+  HyperVSitesImpl,
+  JobsImpl,
   MachinesImpl,
-  GroupsImpl,
-  AssessmentsImpl,
-  AssessedMachinesImpl,
-  HyperVCollectorsImpl,
-  ServerCollectorsImpl,
-  VMwareCollectorsImpl,
-  ImportCollectorsImpl,
+  RunAsAccountsImpl,
+  SitesImpl,
+  VCenterOperationsImpl,
+  VMwareOperationsStatusImpl,
+  MasterSitesImpl,
+  OperationsImpl,
   PrivateEndpointConnectionOperationsImpl,
-  PrivateLinkResourceOperationsImpl,
-  OperationsImpl
+  PrivateLinkResourcesImpl,
+  VMwareSitesImpl
 } from "./operations";
 import {
-  Projects,
+  HyperVClusterOperations,
+  HyperVHostOperations,
+  HyperVJobs,
+  HyperVMachines,
+  HyperVOperationsStatus,
+  HyperVRunAsAccounts,
+  HyperVSites,
+  Jobs,
   Machines,
-  Groups,
-  Assessments,
-  AssessedMachines,
-  HyperVCollectors,
-  ServerCollectors,
-  VMwareCollectors,
-  ImportCollectors,
+  RunAsAccounts,
+  Sites,
+  VCenterOperations,
+  VMwareOperationsStatus,
+  MasterSites,
+  Operations,
   PrivateEndpointConnectionOperations,
-  PrivateLinkResourceOperations,
-  Operations
+  PrivateLinkResources,
+  VMwareSites
 } from "./operationsInterfaces";
 import { AzureMigrateV2OptionalParams } from "./models";
 
@@ -76,7 +88,7 @@ export class AzureMigrateV2 extends coreClient.ServiceClient {
       credential: credentials
     };
 
-    const packageDetails = `azsdk-js-arm-migrate/2.0.3`;
+    const packageDetails = `azsdk-js-arm-migrate/1.0.0-beta.1`;
     const userAgentPrefix =
       options.userAgentOptions && options.userAgentOptions.userAgentPrefix
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
@@ -88,55 +100,68 @@ export class AzureMigrateV2 extends coreClient.ServiceClient {
       userAgentOptions: {
         userAgentPrefix
       },
-      baseUri:
+      endpoint:
         options.endpoint ?? options.baseUri ?? "https://management.azure.com"
     };
     super(optionsWithDefaults);
 
+    let bearerTokenAuthenticationPolicyFound: boolean = false;
     if (options?.pipeline && options.pipeline.getOrderedPolicies().length > 0) {
       const pipelinePolicies: coreRestPipeline.PipelinePolicy[] = options.pipeline.getOrderedPolicies();
-      const bearerTokenAuthenticationPolicyFound = pipelinePolicies.some(
+      bearerTokenAuthenticationPolicyFound = pipelinePolicies.some(
         (pipelinePolicy) =>
           pipelinePolicy.name ===
           coreRestPipeline.bearerTokenAuthenticationPolicyName
       );
-      if (!bearerTokenAuthenticationPolicyFound) {
-        this.pipeline.removePolicy({
-          name: coreRestPipeline.bearerTokenAuthenticationPolicyName
-        });
-        this.pipeline.addPolicy(
-          coreRestPipeline.bearerTokenAuthenticationPolicy({
-            scopes: `${optionsWithDefaults.baseUri}/.default`,
-            challengeCallbacks: {
-              authorizeRequestOnChallenge:
-                coreClient.authorizeRequestOnClaimChallenge
-            }
-          })
-        );
-      }
+    }
+    if (
+      !options ||
+      !options.pipeline ||
+      options.pipeline.getOrderedPolicies().length == 0 ||
+      !bearerTokenAuthenticationPolicyFound
+    ) {
+      this.pipeline.removePolicy({
+        name: coreRestPipeline.bearerTokenAuthenticationPolicyName
+      });
+      this.pipeline.addPolicy(
+        coreRestPipeline.bearerTokenAuthenticationPolicy({
+          credential: credentials,
+          scopes:
+            optionsWithDefaults.credentialScopes ??
+            `${optionsWithDefaults.endpoint}/.default`,
+          challengeCallbacks: {
+            authorizeRequestOnChallenge:
+              coreClient.authorizeRequestOnClaimChallenge
+          }
+        })
+      );
     }
     // Parameter assignments
     this.subscriptionId = subscriptionId;
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
-    this.apiVersion = options.apiVersion || "2019-10-01";
-    this.projects = new ProjectsImpl(this);
+    this.apiVersion = options.apiVersion || "2020-07-07";
+    this.hyperVClusterOperations = new HyperVClusterOperationsImpl(this);
+    this.hyperVHostOperations = new HyperVHostOperationsImpl(this);
+    this.hyperVJobs = new HyperVJobsImpl(this);
+    this.hyperVMachines = new HyperVMachinesImpl(this);
+    this.hyperVOperationsStatus = new HyperVOperationsStatusImpl(this);
+    this.hyperVRunAsAccounts = new HyperVRunAsAccountsImpl(this);
+    this.hyperVSites = new HyperVSitesImpl(this);
+    this.jobs = new JobsImpl(this);
     this.machines = new MachinesImpl(this);
-    this.groups = new GroupsImpl(this);
-    this.assessments = new AssessmentsImpl(this);
-    this.assessedMachines = new AssessedMachinesImpl(this);
-    this.hyperVCollectors = new HyperVCollectorsImpl(this);
-    this.serverCollectors = new ServerCollectorsImpl(this);
-    this.vMwareCollectors = new VMwareCollectorsImpl(this);
-    this.importCollectors = new ImportCollectorsImpl(this);
+    this.runAsAccounts = new RunAsAccountsImpl(this);
+    this.sites = new SitesImpl(this);
+    this.vCenterOperations = new VCenterOperationsImpl(this);
+    this.vMwareOperationsStatus = new VMwareOperationsStatusImpl(this);
+    this.masterSites = new MasterSitesImpl(this);
+    this.operations = new OperationsImpl(this);
     this.privateEndpointConnectionOperations = new PrivateEndpointConnectionOperationsImpl(
       this
     );
-    this.privateLinkResourceOperations = new PrivateLinkResourceOperationsImpl(
-      this
-    );
-    this.operations = new OperationsImpl(this);
+    this.privateLinkResources = new PrivateLinkResourcesImpl(this);
+    this.vMwareSites = new VMwareSitesImpl(this);
     this.addCustomApiVersionPolicy(options.apiVersion);
   }
 
@@ -168,16 +193,22 @@ export class AzureMigrateV2 extends coreClient.ServiceClient {
     this.pipeline.addPolicy(apiVersionPolicy);
   }
 
-  projects: Projects;
+  hyperVClusterOperations: HyperVClusterOperations;
+  hyperVHostOperations: HyperVHostOperations;
+  hyperVJobs: HyperVJobs;
+  hyperVMachines: HyperVMachines;
+  hyperVOperationsStatus: HyperVOperationsStatus;
+  hyperVRunAsAccounts: HyperVRunAsAccounts;
+  hyperVSites: HyperVSites;
+  jobs: Jobs;
   machines: Machines;
-  groups: Groups;
-  assessments: Assessments;
-  assessedMachines: AssessedMachines;
-  hyperVCollectors: HyperVCollectors;
-  serverCollectors: ServerCollectors;
-  vMwareCollectors: VMwareCollectors;
-  importCollectors: ImportCollectors;
-  privateEndpointConnectionOperations: PrivateEndpointConnectionOperations;
-  privateLinkResourceOperations: PrivateLinkResourceOperations;
+  runAsAccounts: RunAsAccounts;
+  sites: Sites;
+  vCenterOperations: VCenterOperations;
+  vMwareOperationsStatus: VMwareOperationsStatus;
+  masterSites: MasterSites;
   operations: Operations;
+  privateEndpointConnectionOperations: PrivateEndpointConnectionOperations;
+  privateLinkResources: PrivateLinkResources;
+  vMwareSites: VMwareSites;
 }

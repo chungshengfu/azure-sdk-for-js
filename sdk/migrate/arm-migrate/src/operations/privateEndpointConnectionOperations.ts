@@ -12,14 +12,14 @@ import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { AzureMigrateV2 } from "../azureMigrateV2";
 import {
-  PrivateEndpointConnectionListByProjectOptionalParams,
-  PrivateEndpointConnectionListByProjectResponse,
-  PrivateEndpointConnectionGetOptionalParams,
-  PrivateEndpointConnectionGetResponse,
-  PrivateEndpointConnectionUpdateOptionalParams,
-  PrivateEndpointConnectionUpdateResponse,
-  PrivateEndpointConnectionDeleteOptionalParams,
-  PrivateEndpointConnectionDeleteResponse
+  PrivateEndpointConnectionGetPrivateEndpointConnectionOptionalParams,
+  PrivateEndpointConnectionGetPrivateEndpointConnectionResponse,
+  PrivateEndpointConnection,
+  PrivateEndpointConnectionPutPrivateEndpointConnectionOptionalParams,
+  PrivateEndpointConnectionPutPrivateEndpointConnectionResponse,
+  PrivateEndpointConnectionDeletePrivateEndpointConnectionOptionalParams,
+  PrivateEndpointConnectionGetPrivateEndpointConnectionsOptionalParams,
+  PrivateEndpointConnectionGetPrivateEndpointConnectionsResponse
 } from "../models";
 
 /** Class containing PrivateEndpointConnectionOperations operations. */
@@ -36,108 +36,90 @@ export class PrivateEndpointConnectionOperationsImpl
   }
 
   /**
-   * Get all private endpoint connections in the project. Returns a json array of objects of type
-   * 'privateEndpointConnections' as specified in the Models section.
-   * @param resourceGroupName Name of the Azure Resource Group that project is part of.
-   * @param projectName Name of the Azure Migrate project.
+   * Gets the private link resource.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param siteName Site name.
+   * @param peConnectionName Private link resource name.
    * @param options The options parameters.
    */
-  listByProject(
+  getPrivateEndpointConnection(
     resourceGroupName: string,
-    projectName: string,
-    options?: PrivateEndpointConnectionListByProjectOptionalParams
-  ): Promise<PrivateEndpointConnectionListByProjectResponse> {
+    siteName: string,
+    peConnectionName: string,
+    options?: PrivateEndpointConnectionGetPrivateEndpointConnectionOptionalParams
+  ): Promise<PrivateEndpointConnectionGetPrivateEndpointConnectionResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, projectName, options },
-      listByProjectOperationSpec
+      { resourceGroupName, siteName, peConnectionName, options },
+      getPrivateEndpointConnectionOperationSpec
     );
   }
 
   /**
-   * Get information related to a specific private endpoint connection in the project. Returns a json
-   * object of type 'privateEndpointConnections' as specified in the models section.
-   * @param resourceGroupName Name of the Azure Resource Group that project is part of.
-   * @param projectName Name of the Azure Migrate project.
-   * @param privateEndpointConnectionName Unique name of a private endpoint connection within a project.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param siteName Site name.
+   * @param peConnectionName Private link resource name.
+   * @param body REST model used to encapsulate the user visible state of a PrivateEndpoint.
    * @param options The options parameters.
    */
-  get(
+  putPrivateEndpointConnection(
     resourceGroupName: string,
-    projectName: string,
-    privateEndpointConnectionName: string,
-    options?: PrivateEndpointConnectionGetOptionalParams
-  ): Promise<PrivateEndpointConnectionGetResponse> {
+    siteName: string,
+    peConnectionName: string,
+    body: PrivateEndpointConnection,
+    options?: PrivateEndpointConnectionPutPrivateEndpointConnectionOptionalParams
+  ): Promise<PrivateEndpointConnectionPutPrivateEndpointConnectionResponse> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        projectName,
-        privateEndpointConnectionName,
-        options
-      },
-      getOperationSpec
+      { resourceGroupName, siteName, peConnectionName, body, options },
+      putPrivateEndpointConnectionOperationSpec
     );
   }
 
   /**
-   * Update a specific private endpoint connection in the project.
-   * @param resourceGroupName Name of the Azure Resource Group that project is part of.
-   * @param projectName Name of the Azure Migrate project.
-   * @param privateEndpointConnectionName Unique name of a private endpoint connection within a project.
+   * Gets the private link resource.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param siteName Site name.
+   * @param peConnectionName Private link resource name.
    * @param options The options parameters.
    */
-  update(
+  deletePrivateEndpointConnection(
     resourceGroupName: string,
-    projectName: string,
-    privateEndpointConnectionName: string,
-    options?: PrivateEndpointConnectionUpdateOptionalParams
-  ): Promise<PrivateEndpointConnectionUpdateResponse> {
+    siteName: string,
+    peConnectionName: string,
+    options?: PrivateEndpointConnectionDeletePrivateEndpointConnectionOptionalParams
+  ): Promise<void> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        projectName,
-        privateEndpointConnectionName,
-        options
-      },
-      updateOperationSpec
+      { resourceGroupName, siteName, peConnectionName, options },
+      deletePrivateEndpointConnectionOperationSpec
     );
   }
 
   /**
-   * Delete the private endpoint connection from the project. T.
-   *
-   * @param resourceGroupName Name of the Azure Resource Group that project is part of.
-   * @param projectName Name of the Azure Migrate project.
-   * @param privateEndpointConnectionName Unique name of a private endpoint connection within a project.
+   * Gets the private link resource.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param siteName Site name.
    * @param options The options parameters.
    */
-  delete(
+  getPrivateEndpointConnections(
     resourceGroupName: string,
-    projectName: string,
-    privateEndpointConnectionName: string,
-    options?: PrivateEndpointConnectionDeleteOptionalParams
-  ): Promise<PrivateEndpointConnectionDeleteResponse> {
+    siteName: string,
+    options?: PrivateEndpointConnectionGetPrivateEndpointConnectionsOptionalParams
+  ): Promise<PrivateEndpointConnectionGetPrivateEndpointConnectionsResponse> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        projectName,
-        privateEndpointConnectionName,
-        options
-      },
-      deleteOperationSpec
+      { resourceGroupName, siteName, options },
+      getPrivateEndpointConnectionsOperationSpec
     );
   }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const listByProjectOperationSpec: coreClient.OperationSpec = {
+const getPrivateEndpointConnectionOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Migrate/assessmentprojects/{projectName}/privateEndpointConnections",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OffAzure/masterSites/{siteName}/privateEndpointConnections/{peConnectionName}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.PrivateEndpointConnectionCollection,
-      headersMapper: Mappers.PrivateEndpointConnectionListByProjectHeaders
+      bodyMapper: Mappers.PrivateEndpointConnection
     },
     default: {
       bodyMapper: Mappers.CloudError
@@ -148,73 +130,43 @@ const listByProjectOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.projectName
+    Parameters.siteName,
+    Parameters.peConnectionName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
-const getOperationSpec: coreClient.OperationSpec = {
+const putPrivateEndpointConnectionOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Migrate/assessmentprojects/{projectName}/privateEndpointConnections/{privateEndpointConnectionName}",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: Mappers.PrivateEndpointConnection,
-      headersMapper: Mappers.PrivateEndpointConnectionGetHeaders
-    },
-    default: {
-      bodyMapper: Mappers.CloudError
-    }
-  },
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.projectName,
-    Parameters.privateEndpointConnectionName
-  ],
-  headerParameters: [Parameters.accept],
-  serializer
-};
-const updateOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Migrate/assessmentprojects/{projectName}/privateEndpointConnections/{privateEndpointConnectionName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OffAzure/masterSites/{siteName}/privateEndpointConnections/{peConnectionName}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.PrivateEndpointConnection,
-      headersMapper: Mappers.PrivateEndpointConnectionUpdateHeaders
-    },
-    202: {
-      bodyMapper: Mappers.PrivateEndpointConnection,
-      headersMapper: Mappers.PrivateEndpointConnectionUpdateHeaders
+      bodyMapper: Mappers.PrivateEndpointConnection
     },
     default: {
       bodyMapper: Mappers.CloudError
     }
   },
-  requestBody: Parameters.privateEndpointConnectionBody,
+  requestBody: Parameters.body6,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.projectName,
-    Parameters.privateEndpointConnectionName
+    Parameters.siteName,
+    Parameters.peConnectionName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
   serializer
 };
-const deleteOperationSpec: coreClient.OperationSpec = {
+const deletePrivateEndpointConnectionOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Migrate/assessmentprojects/{projectName}/privateEndpointConnections/{privateEndpointConnectionName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OffAzure/masterSites/{siteName}/privateEndpointConnections/{peConnectionName}",
   httpMethod: "DELETE",
   responses: {
-    200: {
-      headersMapper: Mappers.PrivateEndpointConnectionDeleteHeaders
-    },
+    200: {},
     204: {},
     default: {
       bodyMapper: Mappers.CloudError
@@ -225,8 +177,30 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.projectName,
-    Parameters.privateEndpointConnectionName
+    Parameters.siteName,
+    Parameters.peConnectionName
+  ],
+  headerParameters: [Parameters.accept],
+  serializer
+};
+const getPrivateEndpointConnectionsOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OffAzure/masterSites/{siteName}/privateEndpointConnections",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.PrivateEndpointConnectionCollection
+    },
+    default: {
+      bodyMapper: Mappers.CloudError
+    }
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.siteName
   ],
   headerParameters: [Parameters.accept],
   serializer

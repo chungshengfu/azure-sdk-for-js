@@ -7,69 +7,67 @@
  */
 
 import {
-  PrivateEndpointConnectionListByProjectOptionalParams,
-  PrivateEndpointConnectionListByProjectResponse,
-  PrivateEndpointConnectionGetOptionalParams,
-  PrivateEndpointConnectionGetResponse,
-  PrivateEndpointConnectionUpdateOptionalParams,
-  PrivateEndpointConnectionUpdateResponse,
-  PrivateEndpointConnectionDeleteOptionalParams,
-  PrivateEndpointConnectionDeleteResponse
+  PrivateEndpointConnectionGetPrivateEndpointConnectionOptionalParams,
+  PrivateEndpointConnectionGetPrivateEndpointConnectionResponse,
+  PrivateEndpointConnection,
+  PrivateEndpointConnectionPutPrivateEndpointConnectionOptionalParams,
+  PrivateEndpointConnectionPutPrivateEndpointConnectionResponse,
+  PrivateEndpointConnectionDeletePrivateEndpointConnectionOptionalParams,
+  PrivateEndpointConnectionGetPrivateEndpointConnectionsOptionalParams,
+  PrivateEndpointConnectionGetPrivateEndpointConnectionsResponse
 } from "../models";
 
 /** Interface representing a PrivateEndpointConnectionOperations. */
 export interface PrivateEndpointConnectionOperations {
   /**
-   * Get all private endpoint connections in the project. Returns a json array of objects of type
-   * 'privateEndpointConnections' as specified in the Models section.
-   * @param resourceGroupName Name of the Azure Resource Group that project is part of.
-   * @param projectName Name of the Azure Migrate project.
+   * Gets the private link resource.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param siteName Site name.
+   * @param peConnectionName Private link resource name.
    * @param options The options parameters.
    */
-  listByProject(
+  getPrivateEndpointConnection(
     resourceGroupName: string,
-    projectName: string,
-    options?: PrivateEndpointConnectionListByProjectOptionalParams
-  ): Promise<PrivateEndpointConnectionListByProjectResponse>;
+    siteName: string,
+    peConnectionName: string,
+    options?: PrivateEndpointConnectionGetPrivateEndpointConnectionOptionalParams
+  ): Promise<PrivateEndpointConnectionGetPrivateEndpointConnectionResponse>;
   /**
-   * Get information related to a specific private endpoint connection in the project. Returns a json
-   * object of type 'privateEndpointConnections' as specified in the models section.
-   * @param resourceGroupName Name of the Azure Resource Group that project is part of.
-   * @param projectName Name of the Azure Migrate project.
-   * @param privateEndpointConnectionName Unique name of a private endpoint connection within a project.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param siteName Site name.
+   * @param peConnectionName Private link resource name.
+   * @param body REST model used to encapsulate the user visible state of a PrivateEndpoint.
    * @param options The options parameters.
    */
-  get(
+  putPrivateEndpointConnection(
     resourceGroupName: string,
-    projectName: string,
-    privateEndpointConnectionName: string,
-    options?: PrivateEndpointConnectionGetOptionalParams
-  ): Promise<PrivateEndpointConnectionGetResponse>;
+    siteName: string,
+    peConnectionName: string,
+    body: PrivateEndpointConnection,
+    options?: PrivateEndpointConnectionPutPrivateEndpointConnectionOptionalParams
+  ): Promise<PrivateEndpointConnectionPutPrivateEndpointConnectionResponse>;
   /**
-   * Update a specific private endpoint connection in the project.
-   * @param resourceGroupName Name of the Azure Resource Group that project is part of.
-   * @param projectName Name of the Azure Migrate project.
-   * @param privateEndpointConnectionName Unique name of a private endpoint connection within a project.
+   * Gets the private link resource.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param siteName Site name.
+   * @param peConnectionName Private link resource name.
    * @param options The options parameters.
    */
-  update(
+  deletePrivateEndpointConnection(
     resourceGroupName: string,
-    projectName: string,
-    privateEndpointConnectionName: string,
-    options?: PrivateEndpointConnectionUpdateOptionalParams
-  ): Promise<PrivateEndpointConnectionUpdateResponse>;
+    siteName: string,
+    peConnectionName: string,
+    options?: PrivateEndpointConnectionDeletePrivateEndpointConnectionOptionalParams
+  ): Promise<void>;
   /**
-   * Delete the private endpoint connection from the project. T.
-   *
-   * @param resourceGroupName Name of the Azure Resource Group that project is part of.
-   * @param projectName Name of the Azure Migrate project.
-   * @param privateEndpointConnectionName Unique name of a private endpoint connection within a project.
+   * Gets the private link resource.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param siteName Site name.
    * @param options The options parameters.
    */
-  delete(
+  getPrivateEndpointConnections(
     resourceGroupName: string,
-    projectName: string,
-    privateEndpointConnectionName: string,
-    options?: PrivateEndpointConnectionDeleteOptionalParams
-  ): Promise<PrivateEndpointConnectionDeleteResponse>;
+    siteName: string,
+    options?: PrivateEndpointConnectionGetPrivateEndpointConnectionsOptionalParams
+  ): Promise<PrivateEndpointConnectionGetPrivateEndpointConnectionsResponse>;
 }

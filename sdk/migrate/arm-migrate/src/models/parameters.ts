@@ -12,14 +12,12 @@ import {
   OperationQueryParameter
 } from "@azure/core-client";
 import {
-  Project as ProjectMapper,
-  Group as GroupMapper,
-  UpdateGroupBody as UpdateGroupBodyMapper,
-  Assessment as AssessmentMapper,
-  HyperVCollector as HyperVCollectorMapper,
-  ServerCollector as ServerCollectorMapper,
-  VMwareCollector as VMwareCollectorMapper,
-  ImportCollector as ImportCollectorMapper,
+  HyperVCluster as HyperVClusterMapper,
+  HyperVHost as HyperVHostMapper,
+  HyperVSite as HyperVSiteMapper,
+  VMwareSite as VMwareSiteMapper,
+  VCenter as VCenterMapper,
+  MasterSite as MasterSiteMapper,
   PrivateEndpointConnection as PrivateEndpointConnectionMapper
 } from "../models/mappers";
 
@@ -58,18 +56,6 @@ export const subscriptionId: OperationURLParameter = {
   }
 };
 
-export const apiVersion: OperationQueryParameter = {
-  parameterPath: "apiVersion",
-  mapper: {
-    defaultValue: "2019-10-01",
-    isConstant: true,
-    serializedName: "api-version",
-    type: {
-      name: "String"
-    }
-  }
-};
-
 export const resourceGroupName: OperationURLParameter = {
   parameterPath: "resourceGroupName",
   mapper: {
@@ -81,11 +67,34 @@ export const resourceGroupName: OperationURLParameter = {
   }
 };
 
-export const projectName: OperationURLParameter = {
-  parameterPath: "projectName",
+export const siteName: OperationURLParameter = {
+  parameterPath: "siteName",
   mapper: {
-    serializedName: "projectName",
+    serializedName: "siteName",
     required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const clusterName: OperationURLParameter = {
+  parameterPath: "clusterName",
+  mapper: {
+    serializedName: "clusterName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const apiVersion: OperationQueryParameter = {
+  parameterPath: "apiVersion",
+  mapper: {
+    defaultValue: "2020-07-07",
+    isConstant: true,
+    serializedName: "api-version",
     type: {
       name: "String"
     }
@@ -104,16 +113,15 @@ export const contentType: OperationParameter = {
   }
 };
 
-export const project: OperationParameter = {
-  parameterPath: ["options", "project"],
-  mapper: ProjectMapper
+export const body: OperationParameter = {
+  parameterPath: "body",
+  mapper: HyperVClusterMapper
 };
 
-export const assessmentOptionsName: OperationURLParameter = {
-  parameterPath: "assessmentOptionsName",
+export const filter: OperationQueryParameter = {
+  parameterPath: ["options", "filter"],
   mapper: {
-    serializedName: "assessmentOptionsName",
-    required: true,
+    serializedName: "$filter",
     type: {
       name: "String"
     }
@@ -132,6 +140,33 @@ export const nextLink: OperationURLParameter = {
   skipEncoding: true
 };
 
+export const hostName: OperationURLParameter = {
+  parameterPath: "hostName",
+  mapper: {
+    serializedName: "hostName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const body1: OperationParameter = {
+  parameterPath: "body",
+  mapper: HyperVHostMapper
+};
+
+export const jobName: OperationURLParameter = {
+  parameterPath: "jobName",
+  mapper: {
+    serializedName: "jobName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
 export const machineName: OperationURLParameter = {
   parameterPath: "machineName",
   mapper: {
@@ -143,10 +178,40 @@ export const machineName: OperationURLParameter = {
   }
 };
 
-export const groupName: OperationURLParameter = {
-  parameterPath: "groupName",
+export const top: OperationQueryParameter = {
+  parameterPath: ["options", "top"],
   mapper: {
-    serializedName: "groupName",
+    serializedName: "$top",
+    type: {
+      name: "Number"
+    }
+  }
+};
+
+export const continuationToken: OperationQueryParameter = {
+  parameterPath: ["options", "continuationToken"],
+  mapper: {
+    serializedName: "continuationToken",
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const totalRecordCount: OperationQueryParameter = {
+  parameterPath: ["options", "totalRecordCount"],
+  mapper: {
+    serializedName: "totalRecordCount",
+    type: {
+      name: "Number"
+    }
+  }
+};
+
+export const operationStatusName: OperationURLParameter = {
+  parameterPath: "operationStatusName",
+  mapper: {
+    serializedName: "operationStatusName",
     required: true,
     type: {
       name: "String"
@@ -154,20 +219,10 @@ export const groupName: OperationURLParameter = {
   }
 };
 
-export const group: OperationParameter = {
-  parameterPath: ["options", "group"],
-  mapper: GroupMapper
-};
-
-export const groupUpdateProperties: OperationParameter = {
-  parameterPath: ["options", "groupUpdateProperties"],
-  mapper: UpdateGroupBodyMapper
-};
-
-export const assessmentName: OperationURLParameter = {
-  parameterPath: "assessmentName",
+export const accountName: OperationURLParameter = {
+  parameterPath: "accountName",
   mapper: {
-    serializedName: "assessmentName",
+    serializedName: "accountName",
     required: true,
     type: {
       name: "String"
@@ -175,15 +230,20 @@ export const assessmentName: OperationURLParameter = {
   }
 };
 
-export const assessment: OperationParameter = {
-  parameterPath: ["options", "assessment"],
-  mapper: AssessmentMapper
+export const body2: OperationParameter = {
+  parameterPath: "body",
+  mapper: HyperVSiteMapper
 };
 
-export const assessedMachineName: OperationURLParameter = {
-  parameterPath: "assessedMachineName",
+export const body3: OperationParameter = {
+  parameterPath: "body",
+  mapper: VMwareSiteMapper
+};
+
+export const vcenterName: OperationURLParameter = {
+  parameterPath: "vcenterName",
   mapper: {
-    serializedName: "assessedMachineName",
+    serializedName: "vcenterName",
     required: true,
     type: {
       name: "String"
@@ -191,10 +251,20 @@ export const assessedMachineName: OperationURLParameter = {
   }
 };
 
-export const hyperVCollectorName: OperationURLParameter = {
-  parameterPath: "hyperVCollectorName",
+export const body4: OperationParameter = {
+  parameterPath: "body",
+  mapper: VCenterMapper
+};
+
+export const body5: OperationParameter = {
+  parameterPath: "body",
+  mapper: MasterSiteMapper
+};
+
+export const peConnectionName: OperationURLParameter = {
+  parameterPath: "peConnectionName",
   mapper: {
-    serializedName: "hyperVCollectorName",
+    serializedName: "peConnectionName",
     required: true,
     type: {
       name: "String"
@@ -202,72 +272,8 @@ export const hyperVCollectorName: OperationURLParameter = {
   }
 };
 
-export const collectorBody: OperationParameter = {
-  parameterPath: ["options", "collectorBody"],
-  mapper: HyperVCollectorMapper
-};
-
-export const serverCollectorName: OperationURLParameter = {
-  parameterPath: "serverCollectorName",
-  mapper: {
-    serializedName: "serverCollectorName",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const collectorBody1: OperationParameter = {
-  parameterPath: ["options", "collectorBody"],
-  mapper: ServerCollectorMapper
-};
-
-export const vmWareCollectorName: OperationURLParameter = {
-  parameterPath: "vmWareCollectorName",
-  mapper: {
-    serializedName: "vmWareCollectorName",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const collectorBody2: OperationParameter = {
-  parameterPath: ["options", "collectorBody"],
-  mapper: VMwareCollectorMapper
-};
-
-export const importCollectorName: OperationURLParameter = {
-  parameterPath: "importCollectorName",
-  mapper: {
-    serializedName: "importCollectorName",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const collectorBody3: OperationParameter = {
-  parameterPath: ["options", "collectorBody"],
-  mapper: ImportCollectorMapper
-};
-
-export const privateEndpointConnectionName: OperationURLParameter = {
-  parameterPath: "privateEndpointConnectionName",
-  mapper: {
-    serializedName: "privateEndpointConnectionName",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const privateEndpointConnectionBody: OperationParameter = {
-  parameterPath: ["options", "privateEndpointConnectionBody"],
+export const body6: OperationParameter = {
+  parameterPath: "body",
   mapper: PrivateEndpointConnectionMapper
 };
 
