@@ -286,8 +286,8 @@ export interface RoutingEndpoints {
   eventHubs?: RoutingEventHubProperties[];
   /** The list of storage container endpoints that IoT hub routes messages to, based on the routing rules. */
   storageContainers?: RoutingStorageContainerProperties[];
-  /** The list of Cosmos DB collection endpoints that IoT hub routes messages to, based on the routing rules. */
-  cosmosDBSqlCollections?: RoutingCosmosDBSqlApiProperties[];
+  /** The list of Cosmos DB container endpoints that IoT hub routes messages to, based on the routing rules. */
+  cosmosDBSqlContainers?: RoutingCosmosDBSqlApiProperties[];
 }
 
 /** The properties related to service bus queue endpoint types. */
@@ -392,11 +392,11 @@ export interface RoutingStorageContainerProperties {
   encoding?: RoutingStorageContainerPropertiesEncoding;
 }
 
-/** The properties related to a cosmos DB sql collection endpoint. */
+/** The properties related to a cosmos DB sql container endpoint. */
 export interface RoutingCosmosDBSqlApiProperties {
   /** The name that identifies this endpoint. The name can only include alphanumeric characters, periods, underscores, hyphens and has a maximum length of 64 characters. The following names are reserved:  events, fileNotifications, $default. Endpoint names must be unique across endpoint types. */
   name: string;
-  /** Id of the cosmos DB sql collection endpoint */
+  /** Id of the cosmos DB sql container endpoint */
   id?: string;
   /** The subscription identifier of the cosmos DB account. */
   subscriptionId?: string;
@@ -404,9 +404,9 @@ export interface RoutingCosmosDBSqlApiProperties {
   resourceGroup?: string;
   /** The url of the cosmos DB account. It must include the protocol https:// */
   endpointUri: string;
-  /** Method used to authenticate against the cosmos DB sql collection endpoint */
+  /** Method used to authenticate against the cosmos DB sql container endpoint */
   authenticationType?: AuthenticationType;
-  /** Managed identity properties of routing cosmos DB collection endpoint. */
+  /** Managed identity properties of routing cosmos DB container endpoint. */
   identity?: ManagedIdentity;
   /** The primary key of the cosmos DB account. */
   primaryKey?: string;
@@ -414,11 +414,11 @@ export interface RoutingCosmosDBSqlApiProperties {
   secondaryKey?: string;
   /** The name of the cosmos DB database in the cosmos DB account. */
   databaseName: string;
-  /** The name of the cosmos DB sql collection in the cosmos DB database. */
-  collectionName: string;
-  /** The name of the partition key associated with this cosmos DB sql collection if one exists. This is an optional parameter. */
+  /** The name of the cosmos DB sql container in the cosmos DB database. */
+  containerName: string;
+  /** The name of the partition key associated with this cosmos DB sql container if one exists. This is an optional parameter. */
   partitionKeyName?: string;
-  /** The template for generating a synthetic partition key value for use with this cosmos DB sql collection. The template must include at least one of the following placeholders: {iothub}, {deviceid}, {DD}, {MM}, and {YYYY}. Any one placeholder may be specified at most once, but order and non-placeholder components are arbitrary. This parameter is only required if PartitionKeyName is specified. */
+  /** The template for generating a synthetic partition key value for use with this cosmos DB sql container. The template must include at least one of the following placeholders: {iothub}, {deviceid}, {DD}, {MM}, and {YYYY}. Any one placeholder may be specified at most once, but order and non-placeholder components are arbitrary. This parameter is only required if PartitionKeyName is specified. */
   partitionKeyTemplate?: string;
 }
 
@@ -1287,6 +1287,12 @@ export interface IotHubResourceUpdateHeaders {
 
 /** Defines headers for IotHubResource_delete operation. */
 export interface IotHubResourceDeleteHeaders {
+  /** URL to query for status of the operation. */
+  azureAsyncOperation?: string;
+}
+
+/** Defines headers for IotHub_manualFailover operation. */
+export interface IotHubManualFailoverHeaders {
   /** URL to query for status of the operation. */
   azureAsyncOperation?: string;
 }

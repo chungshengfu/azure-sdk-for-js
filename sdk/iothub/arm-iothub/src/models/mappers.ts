@@ -757,8 +757,8 @@ export const RoutingEndpoints: coreClient.CompositeMapper = {
           }
         }
       },
-      cosmosDBSqlCollections: {
-        serializedName: "cosmosDBSqlCollections",
+      cosmosDBSqlContainers: {
+        serializedName: "cosmosDBSqlContainers",
         type: {
           name: "Sequence",
           element: {
@@ -1165,8 +1165,8 @@ export const RoutingCosmosDBSqlApiProperties: coreClient.CompositeMapper = {
           name: "String"
         }
       },
-      collectionName: {
-        serializedName: "collectionName",
+      containerName: {
+        serializedName: "containerName",
         required: true,
         type: {
           name: "String"
@@ -3301,6 +3301,21 @@ export const IotHubResourceDeleteHeaders: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
     className: "IotHubResourceDeleteHeaders",
+    modelProperties: {
+      azureAsyncOperation: {
+        serializedName: "azure-asyncoperation",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const IotHubManualFailoverHeaders: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "IotHubManualFailoverHeaders",
     modelProperties: {
       azureAsyncOperation: {
         serializedName: "azure-asyncoperation",
