@@ -8,34 +8,31 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { Metadata } from "../operationsInterfaces";
+import { IncidentTasks } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { SecurityInsights } from "../securityInsights";
 import {
-  MetadataModel,
-  MetadataListNextOptionalParams,
-  MetadataListOptionalParams,
-  MetadataListResponse,
-  MetadataGetOptionalParams,
-  MetadataGetResponse,
-  MetadataDeleteOptionalParams,
-  MetadataCreateOptionalParams,
-  MetadataCreateResponse,
-  MetadataPatch,
-  MetadataUpdateOptionalParams,
-  MetadataUpdateResponse,
-  MetadataListNextResponse
+  IncidentTask,
+  IncidentTasksListNextOptionalParams,
+  IncidentTasksListOptionalParams,
+  IncidentTasksListResponse,
+  IncidentTasksGetOptionalParams,
+  IncidentTasksGetResponse,
+  IncidentTasksCreateOrUpdateOptionalParams,
+  IncidentTasksCreateOrUpdateResponse,
+  IncidentTasksDeleteOptionalParams,
+  IncidentTasksListNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing Metadata operations. */
-export class MetadataImpl implements Metadata {
+/** Class containing IncidentTasks operations. */
+export class IncidentTasksImpl implements IncidentTasks {
   private readonly client: SecurityInsights;
 
   /**
-   * Initialize a new instance of the class Metadata class.
+   * Initialize a new instance of the class IncidentTasks class.
    * @param client Reference to the service client
    */
   constructor(client: SecurityInsights) {
@@ -43,17 +40,24 @@ export class MetadataImpl implements Metadata {
   }
 
   /**
-   * List of all metadata
+   * Gets all incident tasks.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param workspaceName The name of the workspace.
+   * @param incidentId Incident ID
    * @param options The options parameters.
    */
   public list(
     resourceGroupName: string,
     workspaceName: string,
-    options?: MetadataListOptionalParams
-  ): PagedAsyncIterableIterator<MetadataModel> {
-    const iter = this.listPagingAll(resourceGroupName, workspaceName, options);
+    incidentId: string,
+    options?: IncidentTasksListOptionalParams
+  ): PagedAsyncIterableIterator<IncidentTask> {
+    const iter = this.listPagingAll(
+      resourceGroupName,
+      workspaceName,
+      incidentId,
+      options
+    );
     return {
       next() {
         return iter.next();
@@ -68,6 +72,7 @@ export class MetadataImpl implements Metadata {
         return this.listPagingPage(
           resourceGroupName,
           workspaceName,
+          incidentId,
           options,
           settings
         );
@@ -78,13 +83,19 @@ export class MetadataImpl implements Metadata {
   private async *listPagingPage(
     resourceGroupName: string,
     workspaceName: string,
-    options?: MetadataListOptionalParams,
+    incidentId: string,
+    options?: IncidentTasksListOptionalParams,
     settings?: PageSettings
-  ): AsyncIterableIterator<MetadataModel[]> {
-    let result: MetadataListResponse;
+  ): AsyncIterableIterator<IncidentTask[]> {
+    let result: IncidentTasksListResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._list(resourceGroupName, workspaceName, options);
+      result = await this._list(
+        resourceGroupName,
+        workspaceName,
+        incidentId,
+        options
+      );
       let page = result.value || [];
       continuationToken = result.nextLink;
       setContinuationToken(page, continuationToken);
@@ -94,6 +105,7 @@ export class MetadataImpl implements Metadata {
       result = await this._listNext(
         resourceGroupName,
         workspaceName,
+        incidentId,
         continuationToken,
         options
       );
@@ -107,11 +119,13 @@ export class MetadataImpl implements Metadata {
   private async *listPagingAll(
     resourceGroupName: string,
     workspaceName: string,
-    options?: MetadataListOptionalParams
-  ): AsyncIterableIterator<MetadataModel> {
+    incidentId: string,
+    options?: IncidentTasksListOptionalParams
+  ): AsyncIterableIterator<IncidentTask> {
     for await (const page of this.listPagingPage(
       resourceGroupName,
       workspaceName,
+      incidentId,
       options
     )) {
       yield* page;
@@ -119,105 +133,93 @@ export class MetadataImpl implements Metadata {
   }
 
   /**
-   * List of all metadata
+   * Gets all incident tasks.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param workspaceName The name of the workspace.
+   * @param incidentId Incident ID
    * @param options The options parameters.
    */
   private _list(
     resourceGroupName: string,
     workspaceName: string,
-    options?: MetadataListOptionalParams
-  ): Promise<MetadataListResponse> {
+    incidentId: string,
+    options?: IncidentTasksListOptionalParams
+  ): Promise<IncidentTasksListResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, workspaceName, options },
+      { resourceGroupName, workspaceName, incidentId, options },
       listOperationSpec
     );
   }
 
   /**
-   * Get a Metadata.
+   * Gets an incident task.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param workspaceName The name of the workspace.
-   * @param metadataName The Metadata name.
+   * @param incidentId Incident ID
+   * @param incidentTaskId Incident task ID
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     workspaceName: string,
-    metadataName: string,
-    options?: MetadataGetOptionalParams
-  ): Promise<MetadataGetResponse> {
+    incidentId: string,
+    incidentTaskId: string,
+    options?: IncidentTasksGetOptionalParams
+  ): Promise<IncidentTasksGetResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, workspaceName, metadataName, options },
+      { resourceGroupName, workspaceName, incidentId, incidentTaskId, options },
       getOperationSpec
     );
   }
 
   /**
-   * Delete a Metadata.
+   * Creates or updates the incident task.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param workspaceName The name of the workspace.
-   * @param metadataName The Metadata name.
+   * @param incidentId Incident ID
+   * @param incidentTaskId Incident task ID
+   * @param incidentTask The incident task
+   * @param options The options parameters.
+   */
+  createOrUpdate(
+    resourceGroupName: string,
+    workspaceName: string,
+    incidentId: string,
+    incidentTaskId: string,
+    incidentTask: IncidentTask,
+    options?: IncidentTasksCreateOrUpdateOptionalParams
+  ): Promise<IncidentTasksCreateOrUpdateResponse> {
+    return this.client.sendOperationRequest(
+      {
+        resourceGroupName,
+        workspaceName,
+        incidentId,
+        incidentTaskId,
+        incidentTask,
+        options
+      },
+      createOrUpdateOperationSpec
+    );
+  }
+
+  /**
+   * Delete the incident task.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param workspaceName The name of the workspace.
+   * @param incidentId Incident ID
+   * @param incidentTaskId Incident task ID
    * @param options The options parameters.
    */
   delete(
     resourceGroupName: string,
     workspaceName: string,
-    metadataName: string,
-    options?: MetadataDeleteOptionalParams
+    incidentId: string,
+    incidentTaskId: string,
+    options?: IncidentTasksDeleteOptionalParams
   ): Promise<void> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, workspaceName, metadataName, options },
+      { resourceGroupName, workspaceName, incidentId, incidentTaskId, options },
       deleteOperationSpec
-    );
-  }
-
-  /**
-   * Create a Metadata.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param workspaceName The name of the workspace.
-   * @param metadataName The Metadata name.
-   * @param metadata Metadata resource.
-   * @param options The options parameters.
-   */
-  create(
-    resourceGroupName: string,
-    workspaceName: string,
-    metadataName: string,
-    metadata: MetadataModel,
-    options?: MetadataCreateOptionalParams
-  ): Promise<MetadataCreateResponse> {
-    return this.client.sendOperationRequest(
-      { resourceGroupName, workspaceName, metadataName, metadata, options },
-      createOperationSpec
-    );
-  }
-
-  /**
-   * Update an existing Metadata.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param workspaceName The name of the workspace.
-   * @param metadataName The Metadata name.
-   * @param metadataPatch Partial metadata request.
-   * @param options The options parameters.
-   */
-  update(
-    resourceGroupName: string,
-    workspaceName: string,
-    metadataName: string,
-    metadataPatch: MetadataPatch,
-    options?: MetadataUpdateOptionalParams
-  ): Promise<MetadataUpdateResponse> {
-    return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        workspaceName,
-        metadataName,
-        metadataPatch,
-        options
-      },
-      updateOperationSpec
     );
   }
 
@@ -225,17 +227,19 @@ export class MetadataImpl implements Metadata {
    * ListNext
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param workspaceName The name of the workspace.
+   * @param incidentId Incident ID
    * @param nextLink The nextLink from the previous successful call to the List method.
    * @param options The options parameters.
    */
   private _listNext(
     resourceGroupName: string,
     workspaceName: string,
+    incidentId: string,
     nextLink: string,
-    options?: MetadataListNextOptionalParams
-  ): Promise<MetadataListNextResponse> {
+    options?: IncidentTasksListNextOptionalParams
+  ): Promise<IncidentTasksListNextResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, workspaceName, nextLink, options },
+      { resourceGroupName, workspaceName, incidentId, nextLink, options },
       listNextOperationSpec
     );
   }
@@ -245,39 +249,11 @@ const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{workspaceName}/providers/Microsoft.SecurityInsights/metadata",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{workspaceName}/providers/Microsoft.SecurityInsights/incidents/{incidentId}/tasks",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.MetadataList
-    },
-    default: {
-      bodyMapper: Mappers.CloudError
-    }
-  },
-  queryParameters: [
-    Parameters.apiVersion,
-    Parameters.filter,
-    Parameters.orderby,
-    Parameters.top1,
-    Parameters.skip
-  ],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.workspaceName
-  ],
-  headerParameters: [Parameters.accept],
-  serializer
-};
-const getOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{workspaceName}/providers/Microsoft.SecurityInsights/metadata/{metadataName}",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: Mappers.MetadataModel
+      bodyMapper: Mappers.IncidentTaskList
     },
     default: {
       bodyMapper: Mappers.CloudError
@@ -289,14 +265,67 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.workspaceName,
-    Parameters.metadataName
+    Parameters.incidentId
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
+const getOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{workspaceName}/providers/Microsoft.SecurityInsights/incidents/{incidentId}/tasks/{incidentTaskId}",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.IncidentTask
+    },
+    default: {
+      bodyMapper: Mappers.CloudError
+    }
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.workspaceName,
+    Parameters.incidentId,
+    Parameters.incidentTaskId
+  ],
+  headerParameters: [Parameters.accept],
+  serializer
+};
+const createOrUpdateOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{workspaceName}/providers/Microsoft.SecurityInsights/incidents/{incidentId}/tasks/{incidentTaskId}",
+  httpMethod: "PUT",
+  responses: {
+    200: {
+      bodyMapper: Mappers.IncidentTask
+    },
+    201: {
+      bodyMapper: Mappers.IncidentTask
+    },
+    default: {
+      bodyMapper: Mappers.CloudError
+    }
+  },
+  requestBody: Parameters.incidentTask,
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.workspaceName,
+    Parameters.incidentId,
+    Parameters.incidentTaskId
+  ],
+  headerParameters: [Parameters.accept, Parameters.contentType],
+  mediaType: "json",
+  serializer
+};
 const deleteOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{workspaceName}/providers/Microsoft.SecurityInsights/metadata/{metadataName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{workspaceName}/providers/Microsoft.SecurityInsights/incidents/{incidentId}/tasks/{incidentTaskId}",
   httpMethod: "DELETE",
   responses: {
     200: {},
@@ -311,62 +340,10 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.workspaceName,
-    Parameters.metadataName
+    Parameters.incidentId,
+    Parameters.incidentTaskId
   ],
   headerParameters: [Parameters.accept],
-  serializer
-};
-const createOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{workspaceName}/providers/Microsoft.SecurityInsights/metadata/{metadataName}",
-  httpMethod: "PUT",
-  responses: {
-    200: {
-      bodyMapper: Mappers.MetadataModel
-    },
-    201: {
-      bodyMapper: Mappers.MetadataModel
-    },
-    default: {
-      bodyMapper: Mappers.CloudError
-    }
-  },
-  requestBody: Parameters.metadata,
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.workspaceName,
-    Parameters.metadataName
-  ],
-  headerParameters: [Parameters.accept, Parameters.contentType],
-  mediaType: "json",
-  serializer
-};
-const updateOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{workspaceName}/providers/Microsoft.SecurityInsights/metadata/{metadataName}",
-  httpMethod: "PATCH",
-  responses: {
-    200: {
-      bodyMapper: Mappers.MetadataModel
-    },
-    default: {
-      bodyMapper: Mappers.CloudError
-    }
-  },
-  requestBody: Parameters.metadataPatch,
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.workspaceName,
-    Parameters.metadataName
-  ],
-  headerParameters: [Parameters.accept, Parameters.contentType],
-  mediaType: "json",
   serializer
 };
 const listNextOperationSpec: coreClient.OperationSpec = {
@@ -374,7 +351,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.MetadataList
+      bodyMapper: Mappers.IncidentTaskList
     },
     default: {
       bodyMapper: Mappers.CloudError
@@ -385,7 +362,8 @@ const listNextOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.workspaceName,
-    Parameters.nextLink
+    Parameters.nextLink,
+    Parameters.incidentId
   ],
   headerParameters: [Parameters.accept],
   serializer
