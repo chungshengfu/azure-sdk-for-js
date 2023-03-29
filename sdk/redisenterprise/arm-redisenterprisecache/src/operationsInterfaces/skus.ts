@@ -7,16 +7,16 @@
  */
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { Operation, OperationsListOptionalParams } from "../models";
+import { SkuDetails, SkusListBySubscriptionOptionalParams } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Interface representing a Operations. */
-export interface Operations {
+/** Interface representing a Skus. */
+export interface Skus {
   /**
-   * List the operations for the provider
+   * Lists all RedisEnterprise skus in a subscription.
    * @param options The options parameters.
    */
-  list(
-    options?: OperationsListOptionalParams
-  ): PagedAsyncIterableIterator<Operation>;
+  listBySubscription(
+    options?: SkusListBySubscriptionOptionalParams
+  ): PagedAsyncIterableIterator<SkuDetails>;
 }

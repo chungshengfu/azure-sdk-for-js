@@ -121,47 +121,20 @@ export interface ErrorAdditionalInfo {
   readonly info?: Record<string, unknown>;
 }
 
-/** The status of a long-running operation. */
-export interface OperationStatus {
-  /** The operation's unique id. */
-  id?: string;
-  /** The operation's name. */
-  name?: string;
-  /** The start time of the operation. */
-  startTime?: string;
-  /** The end time of the operation. */
-  endTime?: string;
-  /** The current status of the operation. */
-  status?: string;
-  /** Error response describing why the operation failed. */
-  error?: ErrorResponse;
+/** The response of a Cluster list operation. */
+export interface ClusterListResult {
+  /** The Cluster items on this page */
+  value: Cluster[];
+  /** The link to the next page of items */
+  nextLink?: string;
 }
 
-/** SKU parameters supplied to the create RedisEnterprise operation. */
+/** SKU parameters supplied to the create RedisEnterprise operation */
 export interface Sku {
   /** The type of RedisEnterprise cluster to deploy. Possible values: (Enterprise_E10, EnterpriseFlash_F300 etc.) */
   name: SkuName;
   /** The size of the RedisEnterprise cluster. Defaults to 2 or 3 depending on SKU. Valid values are (2, 4, 6, ...) for Enterprise SKUs and (3, 9, 15, ...) for Flash SKUs. */
-  capacity?: number;
-}
-
-/** The Private Endpoint resource. */
-export interface PrivateEndpoint {
-  /**
-   * The ARM identifier for Private Endpoint
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly id?: string;
-}
-
-/** A collection of information about the state of the connection between service consumer and provider. */
-export interface PrivateLinkServiceConnectionState {
-  /** Indicates whether the connection has been Approved/Rejected/Removed by the owner of the service. */
-  status?: PrivateEndpointServiceConnectionStatus;
-  /** The reason for approval/rejection of the connection. */
-  description?: string;
-  /** A message indicating if changes on the service provider require any updates on the consumer. */
-  actionsRequired?: string;
+  capacity: number;
 }
 
 /** Common fields that are returned in the response for all Azure Resource Manager resources */
@@ -181,198 +154,209 @@ export interface Resource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly type?: string;
+  /**
+   * Azure Resource Manager metadata containing createdBy and modifiedBy information.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly systemData?: SystemData;
 }
 
-/** A partial update to the RedisEnterprise cluster */
+/** Metadata pertaining to creation and last modification of the resource. */
+export interface SystemData {
+  /** The identity that created the resource. */
+  createdBy?: string;
+  /** The type of identity that created the resource. */
+  createdByType?: CreatedByType;
+  /** The timestamp of resource creation (UTC). */
+  createdAt?: Date;
+  /** The identity that last modified the resource. */
+  lastModifiedBy?: string;
+  /** The type of identity that last modified the resource. */
+  lastModifiedByType?: CreatedByType;
+  /** The timestamp of resource last modification (UTC) */
+  lastModifiedAt?: Date;
+}
+
+/** The response of a SkuDetails list operation. */
+export interface SkuDetailsListResult {
+  /** The SkuDetails items on this page */
+  value: SkuDetails[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The type used for update operations of the Cluster. */
 export interface ClusterUpdate {
   /** The SKU to create, which affects price, performance, and features. */
-  sku?: Sku;
+  sku?: SkuUpdate;
   /** Resource tags. */
   tags?: { [propertyName: string]: string };
-  /** The minimum TLS version for the cluster to support, e.g. '1.2' */
-  minimumTlsVersion?: TlsVersion;
-  /**
-   * DNS name of the cluster endpoint
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly hostName?: string;
-  /**
-   * Current provisioning status of the cluster
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: ProvisioningState;
-  /**
-   * Current resource status of the cluster
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly resourceState?: ResourceState;
-  /**
-   * Version of redis the cluster supports, e.g. '6'
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly redisVersion?: string;
-  /**
-   * List of private endpoint connections associated with the specified RedisEnterprise cluster
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly privateEndpointConnections?: PrivateEndpointConnection[];
+  /** The SKU to create, which affects price, performance, and features. */
+  skuPropertiesSku?: SkuUpdate;
+  /** Resource tags. */
+  tagsPropertiesTags?: { [propertyName: string]: string };
 }
 
-/** The response of a list-all operation. */
-export interface ClusterList {
-  /** List of clusters. */
-  value?: Cluster[];
-  /**
-   * The URI to fetch the next page of results.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
+/** SKU parameters supplied to the create RedisEnterprise operation */
+export interface SkuUpdate {
+  /** The type of RedisEnterprise cluster to deploy. Possible values: (Enterprise_E10, EnterpriseFlash_F300 etc.) */
+  name?: SkuName;
+  /** The size of the RedisEnterprise cluster. Defaults to 2 or 3 depending on SKU. Valid values are (2, 4, 6, ...) for Enterprise SKUs and (3, 9, 15, ...) for Flash SKUs. */
+  capacity?: number;
 }
 
-/** The response of a list-all operation. */
-export interface DatabaseList {
-  /** List of databases */
-  value?: Database[];
-  /**
-   * The URI to fetch the next page of results.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
+/** The response of a Database list operation. */
+export interface DatabaseListResult {
+  /** The Database items on this page */
+  value: Database[];
+  /** The link to the next page of items */
+  nextLink?: string;
 }
 
 /** Persistence-related configuration for the RedisEnterprise database */
 export interface Persistence {
-  /** Sets whether AOF is enabled. */
-  aofEnabled?: boolean;
-  /** Sets whether RDB is enabled. */
-  rdbEnabled?: boolean;
+  /** Sets whether AOF is enabled. Defaults to false. */
+  aofEnabled: boolean;
+  /** Sets whether RDB is enabled. Defaults to false. */
+  rdbEnabled: boolean;
   /** Sets the frequency at which data is written to disk. */
   aofFrequency?: AofFrequency;
   /** Sets the frequency at which a snapshot of the database is created. */
   rdbFrequency?: RdbFrequency;
 }
 
-/** Specifies configuration of a redis module */
-export interface Module {
-  /** The name of the module, e.g. 'RedisBloom', 'RediSearch', 'RedisTimeSeries' */
-  name: string;
-  /** Configuration options for the module, e.g. 'ERROR_RATE 0.01 INITIAL_SIZE 400'. */
-  args?: string;
+/** Export request. Parameters for a Redis Enterprise export operation. */
+export interface ExportParameters {
   /**
-   * The version of the module, e.g. '1.0'.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
+   * SAS URI for the target container directory to export from
+   * This value contains a credential. Consider obscuring before showing to users
    */
-  readonly version?: string;
-}
-
-/** Optional set of properties to configure geo replication for this database. */
-export interface DatabasePropertiesGeoReplication {
-  /** Name for the group of linked database resources */
-  groupNickname?: string;
-  /** List of database resources to link with this database */
-  linkedDatabases?: LinkedDatabase[];
-}
-
-/** Specifies details of a linked database resource. */
-export interface LinkedDatabase {
-  /** Resource ID of a database resource to link with this database. */
-  id?: string;
-  /**
-   * State of the link between the database resources.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly state?: LinkState;
-}
-
-/** A partial update to the RedisEnterprise database */
-export interface DatabaseUpdate {
-  /** Specifies whether redis clients can connect using TLS-encrypted or plaintext redis protocols. Default is TLS-encrypted. */
-  clientProtocol?: Protocol;
-  /** TCP port of the database endpoint. Specified at create time. Defaults to an available port. */
-  port?: number;
-  /**
-   * Current provisioning status of the database
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: ProvisioningState;
-  /**
-   * Current resource status of the database
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly resourceState?: ResourceState;
-  /** Clustering policy - default is OSSCluster. Specified at create time. */
-  clusteringPolicy?: ClusteringPolicy;
-  /** Redis eviction policy - default is VolatileLRU */
-  evictionPolicy?: EvictionPolicy;
-  /** Persistence settings */
-  persistence?: Persistence;
-  /** Optional set of redis modules to enable in this database - modules can only be added at creation time. */
-  modules?: Module[];
-  /** Optional set of properties to configure geo replication for this database. */
-  geoReplication?: DatabasePropertiesGeoReplication;
-}
-
-/** The secret access keys used for authenticating connections to redis */
-export interface AccessKeys {
-  /**
-   * The current primary key that clients can use to authenticate
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly primaryKey?: string;
-  /**
-   * The current secondary key that clients can use to authenticate
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly secondaryKey?: string;
-}
-
-/** Specifies which access keys to reset to a new random value. */
-export interface RegenerateKeyParameters {
-  /** Which access key to regenerate. */
-  keyType: AccessKeyType;
-}
-
-/** Parameters for a Redis Enterprise import operation. */
-export interface ImportClusterParameters {
-  /** SAS URIs for the target blobs to import from */
-  sasUris: string[];
-}
-
-/** Parameters for a Redis Enterprise export operation. */
-export interface ExportClusterParameters {
-  /** SAS URI for the target directory to export to */
-  sasUri: string;
-}
-
-/** List of private endpoint connection associated with the specified storage account */
-export interface PrivateEndpointConnectionListResult {
-  /** Array of private endpoint connections */
-  value?: PrivateEndpointConnection[];
-}
-
-/** A list of private link resources */
-export interface PrivateLinkResourceListResult {
-  /** Array of private link resources */
-  value?: PrivateLinkResource[];
+  sasUris: string;
 }
 
 /** Parameters for a Redis Enterprise Active Geo Replication Force Unlink operation. */
 export interface ForceUnlinkParameters {
-  /** The resource IDs of the database resources to be unlinked. */
+  /** The resource IDs of the database resources to be unlinked */
   ids: string[];
 }
 
-/** The Private Endpoint Connection resource. */
-export interface PrivateEndpointConnection extends Resource {
-  /** The resource of private end point. */
-  privateEndpoint?: PrivateEndpoint;
-  /** A collection of information about the state of the connection between service consumer and provider. */
-  privateLinkServiceConnectionState?: PrivateLinkServiceConnectionState;
+/** Parameters for a Redis Enterprise Active Geo Replication Flush operation. */
+export interface FlushParameters {
+  /** The resource IDs of the database resources to be flushed */
+  ids: string[];
+}
+
+/** Import request. Parameters for a Redis Enterprise import operation */
+export interface ImportParameters {
+  /** SAS URIs for the target blobs to import from */
+  sasUris: string[];
+}
+
+/** Redis Enterprise access keys response */
+export interface AccessKeys {
   /**
-   * The provisioning state of the private endpoint connection resource.
+   * The current primary key that clients can use to authenticate
+   * This value contains a credential. Consider obscuring before showing to users
+   */
+  primaryKey: string;
+  /**
+   * The current secondary key that clients can use to authenticate
+   * This value contains a credential. Consider obscuring before showing to users
+   */
+  secondaryKey: string;
+}
+
+/** Regenerate access keys request. Specifies which access keys to reset to a new random value. */
+export interface RegenerateKeyParameters {
+  /** Which access key to regenerate. */
+  keyType: KeyType;
+}
+
+/** The response of a PrivateEndpointConnection list operation. */
+export interface PrivateEndpointConnectionListResult {
+  /** The PrivateEndpointConnection items on this page */
+  value: PrivateEndpointConnection[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The private endpoint resource. */
+export interface PrivateEndpoint {
+  /** The ARM resource id of the private endpoint resource */
+  id?: string;
+}
+
+/** A collection of information about the state of the connection between service consumer and provider. */
+export interface PrivateLinkServiceConnectionState {
+  /** A message indicating if changes on the service provider require any updates on the consumer. */
+  actionsRequired: string;
+  /** The reason for approval/rejection of the connection. */
+  description: string;
+  /** Indicates whether the connection has been Approved/Rejected/Removed by the owner of the service. */
+  status: PrivateEndpointServiceConnectionStatus;
+}
+
+/** The response of a PrivateLink list operation. */
+export interface PrivateLinkListResult {
+  /** The PrivateLink items on this page */
+  value: PrivateLink[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** Proxy resource for getting status of a long running operation */
+export interface OperationStatusResult {
+  /**
+   * ID of the long running operation
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly provisioningState?: PrivateEndpointConnectionProvisioningState;
+  readonly id: string;
+  /**
+   * Name of the async operation
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /**
+   * Current status of the operation. E.g. 'Succeeded', or 'Failed'
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly status: string;
+  /**
+   * Progress of the operation, if known
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly percentComplete?: any;
+  /**
+   * Resource ID of the resource if known
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly resourceId?: string;
+  /**
+   * Start time if known
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly startTime?: Date;
+  /**
+   * End time if known
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly endTime?: Date;
+  /**
+   * Status of child operations if known
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly operations?: OperationStatusResult[];
+  /**
+   * Error details if known
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly errorDetail?: ErrorDetail;
+}
+
+/** The cluster name parameter */
+export interface ClusterNameParameter {
+  /** Name of the cluster */
+  clusterName: string;
 }
 
 /** The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location' */
@@ -386,42 +370,24 @@ export interface TrackedResource extends Resource {
 /** The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location */
 export interface ProxyResource extends Resource {}
 
-/** A private link resource */
-export interface PrivateLinkResource extends Resource {
-  /**
-   * The private link resource group id.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly groupId?: string;
-  /**
-   * The private link resource required member names.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly requiredMembers?: string[];
-  /** The private link resource Private link DNS zone name. */
-  requiredZoneNames?: string[];
-}
-
 /** Describes the RedisEnterprise cluster */
 export interface Cluster extends TrackedResource {
   /** The SKU to create, which affects price, performance, and features. */
   sku: Sku;
-  /** The Availability Zones where this cluster will be deployed. */
-  zones?: string[];
-  /** The minimum TLS version for the cluster to support, e.g. '1.2' */
-  minimumTlsVersion?: TlsVersion;
   /**
    * DNS name of the cluster endpoint
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly hostName?: string;
+  /** The minimum TLS version for the cluster to support, e.g. the default of '1.2'. */
+  minTlsVersion?: TlsVersion;
   /**
-   * Current provisioning status of the cluster
+   * Current provisioning status of the last operation on the cluster.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly provisioningState?: ProvisioningState;
   /**
-   * Current resource status of the cluster
+   * Current resource status of the cluster.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly resourceState?: ResourceState;
@@ -430,39 +396,162 @@ export interface Cluster extends TrackedResource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly redisVersion?: string;
-  /**
-   * List of private endpoint connections associated with the specified RedisEnterprise cluster
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly privateEndpointConnections?: PrivateEndpointConnection[];
 }
 
-/** Describes a database on the RedisEnterprise cluster */
+/** Information about RedisEnterprise SKUs */
+export interface SkuDetails extends ProxyResource {
+  /** The resource-specific properties for this resource. */
+  properties?: Record<string, unknown>;
+}
+
+/** Describes a Database on a RedisEnterprise cluster */
 export interface Database extends ProxyResource {
   /** Specifies whether redis clients can connect using TLS-encrypted or plaintext redis protocols. Default is TLS-encrypted. */
-  clientProtocol?: Protocol;
-  /** TCP port of the database endpoint. Specified at create time. Defaults to an available port. */
+  clientProtocol?: ClientProtocol;
+  /** Port number for the database to listen on. E.g. 10000. */
   port?: number;
   /**
-   * Current provisioning status of the database
+   * Provisioning state of the database
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly provisioningState?: ProvisioningState;
-  /**
-   * Current resource status of the database
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly resourceState?: ResourceState;
-  /** Clustering policy - default is OSSCluster. Specified at create time. */
-  clusteringPolicy?: ClusteringPolicy;
-  /** Redis eviction policy - default is VolatileLRU */
-  evictionPolicy?: EvictionPolicy;
   /** Persistence settings */
   persistence?: Persistence;
-  /** Optional set of redis modules to enable in this database - modules can only be added at creation time. */
-  modules?: Module[];
-  /** Optional set of properties to configure geo replication for this database. */
-  geoReplication?: DatabasePropertiesGeoReplication;
+}
+
+/** Describes a Database on a RedisEnterprise cluster */
+export interface DatabaseCreateOrUpdate extends ProxyResource {
+  /** Specifies whether redis clients can connect using TLS-encrypted or plaintext redis protocols. Default is TLS-encrypted. */
+  clientProtocol?: ClientProtocol;
+  /** Redis eviction policy - default is VolatileLRU */
+  evictionPolicy?: EvictionPolicy;
+  /** Port number for the database to listen on. E.g. 10000. */
+  port?: number;
+  /** Persistence settings */
+  persistence?: Persistence;
+}
+
+/** Describes a private endpoint connection to a RedisEnterprise cluster */
+export interface PrivateEndpointConnection extends ProxyResource {
+  /** The private endpoint that is connected */
+  privateEndpoint?: PrivateEndpoint;
+  /** A collection of information about the state of the connection between service consumer and provider. */
+  privateLinkServiceConnectionState?: PrivateLinkServiceConnectionState;
+  /**
+   * The provisioning state of the private endpoint connection resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: PrivateEndpointConnectionProvisioningState;
+}
+
+/** Information about private links */
+export interface PrivateLink extends ProxyResource {
+  /** The private link resource group id. */
+  groupId?: string;
+  /** The private link resource required member names. */
+  requiredMembers?: string[];
+  /** The private link resource Private link DNS zone name. */
+  requiredZoneNames?: string[];
+  /** The provisioning state of the private link */
+  provisioningState?: ProvisioningState;
+}
+
+/** Defines headers for RedisEnterprise_create operation. */
+export interface RedisEnterpriseCreateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for RedisEnterprise_update operation. */
+export interface RedisEnterpriseUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for RedisEnterprise_delete operation. */
+export interface RedisEnterpriseDeleteHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for Databases_create operation. */
+export interface DatabasesCreateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for Databases_update operation. */
+export interface DatabasesUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for Databases_delete operation. */
+export interface DatabasesDeleteHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for Databases_exportRdb operation. */
+export interface DatabasesExportRdbHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for Databases_forceUnlink operation. */
+export interface DatabasesForceUnlinkHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for Databases_fush operation. */
+export interface DatabasesFushHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for Databases_importRdb operation. */
+export interface DatabasesImportRdbHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for Databases_regenerateKey operation. */
+export interface DatabasesRegenerateKeyHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for PrivateEndpointConnections_create operation. */
+export interface PrivateEndpointConnectionsCreateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for PrivateEndpointConnections_update operation. */
+export interface PrivateEndpointConnectionsUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for PrivateEndpointConnections_delete operation. */
+export interface PrivateEndpointConnectionsDeleteHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
 }
 
 /** Known values of {@link Origin} that the service accepts. */
@@ -501,47 +590,14 @@ export enum KnownActionType {
  */
 export type ActionType = string;
 
-/** Known values of {@link SkuName} that the service accepts. */
-export enum KnownSkuName {
-  /** EnterpriseE10 */
-  EnterpriseE10 = "Enterprise_E10",
-  /** EnterpriseE20 */
-  EnterpriseE20 = "Enterprise_E20",
-  /** EnterpriseE50 */
-  EnterpriseE50 = "Enterprise_E50",
-  /** EnterpriseE100 */
-  EnterpriseE100 = "Enterprise_E100",
-  /** EnterpriseFlashF300 */
-  EnterpriseFlashF300 = "EnterpriseFlash_F300",
-  /** EnterpriseFlashF700 */
-  EnterpriseFlashF700 = "EnterpriseFlash_F700",
-  /** EnterpriseFlashF1500 */
-  EnterpriseFlashF1500 = "EnterpriseFlash_F1500"
-}
-
-/**
- * Defines values for SkuName. \
- * {@link KnownSkuName} can be used interchangeably with SkuName,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Enterprise_E10** \
- * **Enterprise_E20** \
- * **Enterprise_E50** \
- * **Enterprise_E100** \
- * **EnterpriseFlash_F300** \
- * **EnterpriseFlash_F700** \
- * **EnterpriseFlash_F1500**
- */
-export type SkuName = string;
-
 /** Known values of {@link TlsVersion} that the service accepts. */
 export enum KnownTlsVersion {
-  /** One0 */
-  One0 = "1.0",
-  /** One1 */
-  One1 = "1.1",
-  /** One2 */
-  One2 = "1.2"
+  /** OnePointZero */
+  OnePointZero = "1.0",
+  /** OnePointOne */
+  OnePointOne = "1.1",
+  /** OnePointTwo */
+  OnePointTwo = "1.2"
 }
 
 /**
@@ -563,12 +619,14 @@ export enum KnownProvisioningState {
   Failed = "Failed",
   /** Canceled */
   Canceled = "Canceled",
-  /** Creating */
-  Creating = "Creating",
+  /** Provisioning */
+  Provisioning = "Provisioning",
   /** Updating */
   Updating = "Updating",
   /** Deleting */
-  Deleting = "Deleting"
+  Deleting = "Deleting",
+  /** Accepted */
+  Accepted = "Accepted"
 }
 
 /**
@@ -579,9 +637,10 @@ export enum KnownProvisioningState {
  * **Succeeded** \
  * **Failed** \
  * **Canceled** \
- * **Creating** \
+ * **Provisioning** \
  * **Updating** \
- * **Deleting**
+ * **Deleting** \
+ * **Accepted**
  */
 export type ProvisioningState = string;
 
@@ -633,53 +692,65 @@ export enum KnownResourceState {
  */
 export type ResourceState = string;
 
-/** Known values of {@link PrivateEndpointServiceConnectionStatus} that the service accepts. */
-export enum KnownPrivateEndpointServiceConnectionStatus {
-  /** Pending */
-  Pending = "Pending",
-  /** Approved */
-  Approved = "Approved",
-  /** Rejected */
-  Rejected = "Rejected"
+/** Known values of {@link SkuName} that the service accepts. */
+export enum KnownSkuName {
+  /** EnterpriseE10 */
+  EnterpriseE10 = "Enterprise_E10",
+  /** EnterpriseE20 */
+  EnterpriseE20 = "Enterprise_E20",
+  /** EnterpriseE50 */
+  EnterpriseE50 = "Enterprise_E50",
+  /** EnterpriseE100 */
+  EnterpriseE100 = "Enterprise_E100",
+  /** EnterpriseFlashF300 */
+  EnterpriseFlashF300 = "EnterpriseFlash_F300",
+  /** EnterpriseFlashF700 */
+  EnterpriseFlashF700 = "EnterpriseFlash_F700",
+  /** EnterpriseFlashF1500 */
+  EnterpriseFlashF1500 = "EnterpriseFlash_F1500"
 }
 
 /**
- * Defines values for PrivateEndpointServiceConnectionStatus. \
- * {@link KnownPrivateEndpointServiceConnectionStatus} can be used interchangeably with PrivateEndpointServiceConnectionStatus,
+ * Defines values for SkuName. \
+ * {@link KnownSkuName} can be used interchangeably with SkuName,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Pending** \
- * **Approved** \
- * **Rejected**
+ * **Enterprise_E10** \
+ * **Enterprise_E20** \
+ * **Enterprise_E50** \
+ * **Enterprise_E100** \
+ * **EnterpriseFlash_F300** \
+ * **EnterpriseFlash_F700** \
+ * **EnterpriseFlash_F1500**
  */
-export type PrivateEndpointServiceConnectionStatus = string;
+export type SkuName = string;
 
-/** Known values of {@link PrivateEndpointConnectionProvisioningState} that the service accepts. */
-export enum KnownPrivateEndpointConnectionProvisioningState {
-  /** Succeeded */
-  Succeeded = "Succeeded",
-  /** Creating */
-  Creating = "Creating",
-  /** Deleting */
-  Deleting = "Deleting",
-  /** Failed */
-  Failed = "Failed"
+/** Known values of {@link CreatedByType} that the service accepts. */
+export enum KnownCreatedByType {
+  /** User */
+  User = "User",
+  /** Application */
+  Application = "Application",
+  /** ManagedIdentity */
+  ManagedIdentity = "ManagedIdentity",
+  /** Key */
+  Key = "Key"
 }
 
 /**
- * Defines values for PrivateEndpointConnectionProvisioningState. \
- * {@link KnownPrivateEndpointConnectionProvisioningState} can be used interchangeably with PrivateEndpointConnectionProvisioningState,
+ * Defines values for CreatedByType. \
+ * {@link KnownCreatedByType} can be used interchangeably with CreatedByType,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Succeeded** \
- * **Creating** \
- * **Deleting** \
- * **Failed**
+ * **User** \
+ * **Application** \
+ * **ManagedIdentity** \
+ * **Key**
  */
-export type PrivateEndpointConnectionProvisioningState = string;
+export type CreatedByType = string;
 
-/** Known values of {@link Protocol} that the service accepts. */
-export enum KnownProtocol {
+/** Known values of {@link ClientProtocol} that the service accepts. */
+export enum KnownClientProtocol {
   /** Encrypted */
   Encrypted = "Encrypted",
   /** Plaintext */
@@ -687,32 +758,53 @@ export enum KnownProtocol {
 }
 
 /**
- * Defines values for Protocol. \
- * {@link KnownProtocol} can be used interchangeably with Protocol,
+ * Defines values for ClientProtocol. \
+ * {@link KnownClientProtocol} can be used interchangeably with ClientProtocol,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
  * **Encrypted** \
  * **Plaintext**
  */
-export type Protocol = string;
+export type ClientProtocol = string;
 
-/** Known values of {@link ClusteringPolicy} that the service accepts. */
-export enum KnownClusteringPolicy {
-  /** EnterpriseCluster */
-  EnterpriseCluster = "EnterpriseCluster",
-  /** OSSCluster */
-  OSSCluster = "OSSCluster"
+/** Known values of {@link AofFrequency} that the service accepts. */
+export enum KnownAofFrequency {
+  /** PerSecond */
+  PerSecond = "1s",
+  /** Always */
+  Always = "always"
 }
 
 /**
- * Defines values for ClusteringPolicy. \
- * {@link KnownClusteringPolicy} can be used interchangeably with ClusteringPolicy,
+ * Defines values for AofFrequency. \
+ * {@link KnownAofFrequency} can be used interchangeably with AofFrequency,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **EnterpriseCluster** \
- * **OSSCluster**
+ * **1s** \
+ * **always**
  */
-export type ClusteringPolicy = string;
+export type AofFrequency = string;
+
+/** Known values of {@link RdbFrequency} that the service accepts. */
+export enum KnownRdbFrequency {
+  /** PerHour */
+  PerHour = "1h",
+  /** Per6Hours */
+  Per6Hours = "6h",
+  /** Per12Hours */
+  Per12Hours = "12h"
+}
+
+/**
+ * Defines values for RdbFrequency. \
+ * {@link KnownRdbFrequency} can be used interchangeably with RdbFrequency,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **1h** \
+ * **6h** \
+ * **12h**
+ */
+export type RdbFrequency = string;
 
 /** Known values of {@link EvictionPolicy} that the service accepts. */
 export enum KnownEvictionPolicy {
@@ -750,73 +842,71 @@ export enum KnownEvictionPolicy {
  */
 export type EvictionPolicy = string;
 
-/** Known values of {@link AofFrequency} that the service accepts. */
-export enum KnownAofFrequency {
-  /** OneS */
-  OneS = "1s",
-  /** Always */
-  Always = "always"
+/** Known values of {@link KeyType} that the service accepts. */
+export enum KnownKeyType {
+  /** Primary */
+  Primary = "Primary",
+  /** Secondary */
+  Secondary = "Secondary"
 }
 
 /**
- * Defines values for AofFrequency. \
- * {@link KnownAofFrequency} can be used interchangeably with AofFrequency,
+ * Defines values for KeyType. \
+ * {@link KnownKeyType} can be used interchangeably with KeyType,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **1s** \
- * **always**
+ * **Primary** \
+ * **Secondary**
  */
-export type AofFrequency = string;
+export type KeyType = string;
 
-/** Known values of {@link RdbFrequency} that the service accepts. */
-export enum KnownRdbFrequency {
-  /** OneH */
-  OneH = "1h",
-  /** SixH */
-  SixH = "6h",
-  /** TwelveH */
-  TwelveH = "12h"
+/** Known values of {@link PrivateEndpointServiceConnectionStatus} that the service accepts. */
+export enum KnownPrivateEndpointServiceConnectionStatus {
+  /** Approved */
+  Approved = "Approved",
+  /** Pending */
+  Pending = "Pending",
+  /** Rejected */
+  Rejected = "Rejected"
 }
 
 /**
- * Defines values for RdbFrequency. \
- * {@link KnownRdbFrequency} can be used interchangeably with RdbFrequency,
+ * Defines values for PrivateEndpointServiceConnectionStatus. \
+ * {@link KnownPrivateEndpointServiceConnectionStatus} can be used interchangeably with PrivateEndpointServiceConnectionStatus,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **1h** \
- * **6h** \
- * **12h**
+ * **Approved** \
+ * **Pending** \
+ * **Rejected**
  */
-export type RdbFrequency = string;
+export type PrivateEndpointServiceConnectionStatus = string;
 
-/** Known values of {@link LinkState} that the service accepts. */
-export enum KnownLinkState {
-  /** Linked */
-  Linked = "Linked",
-  /** Linking */
-  Linking = "Linking",
-  /** Unlinking */
-  Unlinking = "Unlinking",
-  /** LinkFailed */
-  LinkFailed = "LinkFailed",
-  /** UnlinkFailed */
-  UnlinkFailed = "UnlinkFailed"
+/** Known values of {@link PrivateEndpointConnectionProvisioningState} that the service accepts. */
+export enum KnownPrivateEndpointConnectionProvisioningState {
+  /** Succeeded */
+  Succeeded = "Succeeded",
+  /** Failed */
+  Failed = "Failed",
+  /** Canceled */
+  Canceled = "Canceled",
+  /** Creating */
+  Creating = "Creating",
+  /** Deleting */
+  Deleting = "Deleting"
 }
 
 /**
- * Defines values for LinkState. \
- * {@link KnownLinkState} can be used interchangeably with LinkState,
+ * Defines values for PrivateEndpointConnectionProvisioningState. \
+ * {@link KnownPrivateEndpointConnectionProvisioningState} can be used interchangeably with PrivateEndpointConnectionProvisioningState,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Linked** \
- * **Linking** \
- * **Unlinking** \
- * **LinkFailed** \
- * **UnlinkFailed**
+ * **Succeeded** \
+ * **Failed** \
+ * **Canceled** \
+ * **Creating** \
+ * **Deleting**
  */
-export type LinkState = string;
-/** Defines values for AccessKeyType. */
-export type AccessKeyType = "Primary" | "Secondary";
+export type PrivateEndpointConnectionProvisioningState = string;
 
 /** Optional parameters. */
 export interface OperationsListOptionalParams
@@ -833,11 +923,25 @@ export interface OperationsListNextOptionalParams
 export type OperationsListNextResponse = OperationListResult;
 
 /** Optional parameters. */
-export interface OperationsStatusGetOptionalParams
+export interface RedisEnterpriseListBySubscriptionOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listBySubscription operation. */
+export type RedisEnterpriseListBySubscriptionResponse = ClusterListResult;
+
+/** Optional parameters. */
+export interface RedisEnterpriseListByResourceGroupOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroup operation. */
+export type RedisEnterpriseListByResourceGroupResponse = ClusterListResult;
+
+/** Optional parameters. */
+export interface RedisEnterpriseGetOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
-export type OperationsStatusGetResponse = OperationStatus;
+export type RedisEnterpriseGetResponse = Cluster;
 
 /** Optional parameters. */
 export interface RedisEnterpriseCreateOptionalParams
@@ -873,46 +977,46 @@ export interface RedisEnterpriseDeleteOptionalParams
 }
 
 /** Optional parameters. */
-export interface RedisEnterpriseGetOptionalParams
+export interface RedisEnterpriseListBySubscriptionNextOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the get operation. */
-export type RedisEnterpriseGetResponse = Cluster;
-
-/** Optional parameters. */
-export interface RedisEnterpriseListByResourceGroupOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByResourceGroup operation. */
-export type RedisEnterpriseListByResourceGroupResponse = ClusterList;
-
-/** Optional parameters. */
-export interface RedisEnterpriseListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type RedisEnterpriseListResponse = ClusterList;
+/** Contains response data for the listBySubscriptionNext operation. */
+export type RedisEnterpriseListBySubscriptionNextResponse = ClusterListResult;
 
 /** Optional parameters. */
 export interface RedisEnterpriseListByResourceGroupNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroupNext operation. */
-export type RedisEnterpriseListByResourceGroupNextResponse = ClusterList;
+export type RedisEnterpriseListByResourceGroupNextResponse = ClusterListResult;
 
 /** Optional parameters. */
-export interface RedisEnterpriseListNextOptionalParams
+export interface SkusListBySubscriptionOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the listNext operation. */
-export type RedisEnterpriseListNextResponse = ClusterList;
+/** Contains response data for the listBySubscription operation. */
+export type SkusListBySubscriptionResponse = SkuDetailsListResult;
+
+/** Optional parameters. */
+export interface SkusListBySubscriptionNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listBySubscriptionNext operation. */
+export type SkusListBySubscriptionNextResponse = SkuDetailsListResult;
 
 /** Optional parameters. */
 export interface DatabasesListByClusterOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByCluster operation. */
-export type DatabasesListByClusterResponse = DatabaseList;
+export type DatabasesListByClusterResponse = DatabaseListResult;
+
+/** Optional parameters. */
+export interface DatabasesGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type DatabasesGetResponse = Database;
 
 /** Optional parameters. */
 export interface DatabasesCreateOptionalParams
@@ -939,14 +1043,43 @@ export interface DatabasesUpdateOptionalParams
 export type DatabasesUpdateResponse = Database;
 
 /** Optional parameters. */
-export interface DatabasesGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type DatabasesGetResponse = Database;
+export interface DatabasesDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
 
 /** Optional parameters. */
-export interface DatabasesDeleteOptionalParams
+export interface DatabasesExportRdbOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface DatabasesForceUnlinkOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface DatabasesFushOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface DatabasesImportRdbOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
@@ -974,45 +1107,18 @@ export interface DatabasesRegenerateKeyOptionalParams
 export type DatabasesRegenerateKeyResponse = AccessKeys;
 
 /** Optional parameters. */
-export interface DatabasesImportOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface DatabasesExportOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface DatabasesForceUnlinkOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
 export interface DatabasesListByClusterNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByClusterNext operation. */
-export type DatabasesListByClusterNextResponse = DatabaseList;
+export type DatabasesListByClusterNextResponse = DatabaseListResult;
 
 /** Optional parameters. */
-export interface PrivateEndpointConnectionsListOptionalParams
+export interface PrivateEndpointConnectionsListByClusterOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the list operation. */
-export type PrivateEndpointConnectionsListResponse = PrivateEndpointConnectionListResult;
+/** Contains response data for the listByCluster operation. */
+export type PrivateEndpointConnectionsListByClusterResponse = PrivateEndpointConnectionListResult;
 
 /** Optional parameters. */
 export interface PrivateEndpointConnectionsGetOptionalParams
@@ -1022,7 +1128,7 @@ export interface PrivateEndpointConnectionsGetOptionalParams
 export type PrivateEndpointConnectionsGetResponse = PrivateEndpointConnection;
 
 /** Optional parameters. */
-export interface PrivateEndpointConnectionsPutOptionalParams
+export interface PrivateEndpointConnectionsCreateOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
@@ -1030,19 +1136,57 @@ export interface PrivateEndpointConnectionsPutOptionalParams
   resumeFrom?: string;
 }
 
-/** Contains response data for the put operation. */
-export type PrivateEndpointConnectionsPutResponse = PrivateEndpointConnection;
+/** Contains response data for the create operation. */
+export type PrivateEndpointConnectionsCreateResponse = PrivateEndpointConnection;
+
+/** Optional parameters. */
+export interface PrivateEndpointConnectionsUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the update operation. */
+export type PrivateEndpointConnectionsUpdateResponse = PrivateEndpointConnection;
 
 /** Optional parameters. */
 export interface PrivateEndpointConnectionsDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface PrivateEndpointConnectionsListByClusterNextOptionalParams
   extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByClusterNext operation. */
+export type PrivateEndpointConnectionsListByClusterNextResponse = PrivateEndpointConnectionListResult;
 
 /** Optional parameters. */
 export interface PrivateLinkResourcesListByClusterOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByCluster operation. */
-export type PrivateLinkResourcesListByClusterResponse = PrivateLinkResourceListResult;
+export type PrivateLinkResourcesListByClusterResponse = PrivateLinkListResult;
+
+/** Optional parameters. */
+export interface PrivateLinkResourcesListByClusterNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByClusterNext operation. */
+export type PrivateLinkResourcesListByClusterNextResponse = PrivateLinkListResult;
+
+/** Optional parameters. */
+export interface OperationsStatusGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type OperationsStatusGetResponse = OperationStatusResult;
 
 /** Optional parameters. */
 export interface RedisEnterpriseManagementClientOptionalParams

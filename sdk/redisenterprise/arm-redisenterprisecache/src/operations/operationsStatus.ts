@@ -29,18 +29,20 @@ export class OperationsStatusImpl implements OperationsStatus {
   }
 
   /**
-   * Gets the status of operation.
-   * @param location The name of Azure region.
-   * @param operationId The ID of an ongoing async operation.
+   * Gets information about a database in a RedisEnterprise cluster
+   * @param subscriptionId ID of the subscription
+   * @param location Location of the long-running operation result
+   * @param operationId Unique ID of the long-running operation
    * @param options The options parameters.
    */
   get(
+    subscriptionId: string,
     location: string,
     operationId: string,
     options?: OperationsStatusGetOptionalParams
   ): Promise<OperationsStatusGetResponse> {
     return this.client.sendOperationRequest(
-      { location, operationId, options },
+      { subscriptionId, location, operationId, options },
       getOperationSpec
     );
   }
@@ -50,11 +52,11 @@ const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const getOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/providers/Microsoft.Cache/locations/{location}/operationsStatus/{operationId}",
+    "/Subscriptions/{subscriptionId}/providers/Microsoft.Cache/locations/{location}/OperationStatuses/{operationId}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.OperationStatus
+      bodyMapper: Mappers.OperationStatusResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -63,9 +65,9 @@ const getOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
+    Parameters.subscriptionId1,
     Parameters.location,
-    Parameters.operationId,
-    Parameters.subscriptionId
+    Parameters.operationId
   ],
   headerParameters: [Parameters.accept],
   serializer

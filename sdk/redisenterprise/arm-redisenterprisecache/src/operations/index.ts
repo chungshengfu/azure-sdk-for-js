@@ -7,8 +7,9 @@
  */
 
 export * from "./operations";
-export * from "./operationsStatus";
 export * from "./redisEnterprise";
+export * from "./skus";
 export * from "./databases";
 export * from "./privateEndpointConnections";
 export * from "./privateLinkResources";
+export * from "./operationsStatus";

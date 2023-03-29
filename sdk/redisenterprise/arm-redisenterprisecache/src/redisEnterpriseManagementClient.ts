@@ -16,19 +16,21 @@ import {
 import * as coreAuth from "@azure/core-auth";
 import {
   OperationsImpl,
-  OperationsStatusImpl,
   RedisEnterpriseImpl,
+  SkusImpl,
   DatabasesImpl,
   PrivateEndpointConnectionsImpl,
-  PrivateLinkResourcesImpl
+  PrivateLinkResourcesImpl,
+  OperationsStatusImpl
 } from "./operations";
 import {
   Operations,
-  OperationsStatus,
   RedisEnterprise,
+  Skus,
   Databases,
   PrivateEndpointConnections,
-  PrivateLinkResources
+  PrivateLinkResources,
+  OperationsStatus
 } from "./operationsInterfaces";
 import { RedisEnterpriseManagementClientOptionalParams } from "./models";
 
@@ -64,7 +66,7 @@ export class RedisEnterpriseManagementClient extends coreClient.ServiceClient {
       credential: credentials
     };
 
-    const packageDetails = `azsdk-js-arm-redisenterprisecache/2.2.1`;
+    const packageDetails = `azsdk-js-arm-redisenterprisecache/3.0.0-beta.1`;
     const userAgentPrefix =
       options.userAgentOptions && options.userAgentOptions.userAgentPrefix
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
@@ -117,13 +119,14 @@ export class RedisEnterpriseManagementClient extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
-    this.apiVersion = options.apiVersion || "2022-01-01";
+    this.apiVersion = options.apiVersion || "2023-03-01-preview";
     this.operations = new OperationsImpl(this);
-    this.operationsStatus = new OperationsStatusImpl(this);
     this.redisEnterprise = new RedisEnterpriseImpl(this);
+    this.skus = new SkusImpl(this);
     this.databases = new DatabasesImpl(this);
     this.privateEndpointConnections = new PrivateEndpointConnectionsImpl(this);
     this.privateLinkResources = new PrivateLinkResourcesImpl(this);
+    this.operationsStatus = new OperationsStatusImpl(this);
     this.addCustomApiVersionPolicy(options.apiVersion);
   }
 
@@ -156,9 +159,10 @@ export class RedisEnterpriseManagementClient extends coreClient.ServiceClient {
   }
 
   operations: Operations;
-  operationsStatus: OperationsStatus;
   redisEnterprise: RedisEnterprise;
+  skus: Skus;
   databases: Databases;
   privateEndpointConnections: PrivateEndpointConnections;
   privateLinkResources: PrivateLinkResources;
+  operationsStatus: OperationsStatus;
 }

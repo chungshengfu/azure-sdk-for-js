@@ -8,26 +8,26 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { Operations } from "../operationsInterfaces";
+import { Skus } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { RedisEnterpriseManagementClient } from "../redisEnterpriseManagementClient";
 import {
-  Operation,
-  OperationsListNextOptionalParams,
-  OperationsListOptionalParams,
-  OperationsListResponse,
-  OperationsListNextResponse
+  SkuDetails,
+  SkusListBySubscriptionNextOptionalParams,
+  SkusListBySubscriptionOptionalParams,
+  SkusListBySubscriptionResponse,
+  SkusListBySubscriptionNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing Operations operations. */
-export class OperationsImpl implements Operations {
+/** Class containing Skus operations. */
+export class SkusImpl implements Skus {
   private readonly client: RedisEnterpriseManagementClient;
 
   /**
-   * Initialize a new instance of the class Operations class.
+   * Initialize a new instance of the class Skus class.
    * @param client Reference to the service client
    */
   constructor(client: RedisEnterpriseManagementClient) {
@@ -35,13 +35,13 @@ export class OperationsImpl implements Operations {
   }
 
   /**
-   * List the operations for the provider
+   * Lists all RedisEnterprise skus in a subscription.
    * @param options The options parameters.
    */
-  public list(
-    options?: OperationsListOptionalParams
-  ): PagedAsyncIterableIterator<Operation> {
-    const iter = this.listPagingAll(options);
+  public listBySubscription(
+    options?: SkusListBySubscriptionOptionalParams
+  ): PagedAsyncIterableIterator<SkuDetails> {
+    const iter = this.listBySubscriptionPagingAll(options);
     return {
       next() {
         return iter.next();
@@ -53,26 +53,26 @@ export class OperationsImpl implements Operations {
         if (settings?.maxPageSize) {
           throw new Error("maxPageSize is not supported by this operation.");
         }
-        return this.listPagingPage(options, settings);
+        return this.listBySubscriptionPagingPage(options, settings);
       }
     };
   }
 
-  private async *listPagingPage(
-    options?: OperationsListOptionalParams,
+  private async *listBySubscriptionPagingPage(
+    options?: SkusListBySubscriptionOptionalParams,
     settings?: PageSettings
-  ): AsyncIterableIterator<Operation[]> {
-    let result: OperationsListResponse;
+  ): AsyncIterableIterator<SkuDetails[]> {
+    let result: SkusListBySubscriptionResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._list(options);
+      result = await this._listBySubscription(options);
       let page = result.value || [];
       continuationToken = result.nextLink;
       setContinuationToken(page, continuationToken);
       yield page;
     }
     while (continuationToken) {
-      result = await this._listNext(continuationToken, options);
+      result = await this._listBySubscriptionNext(continuationToken, options);
       continuationToken = result.nextLink;
       let page = result.value || [];
       setContinuationToken(page, continuationToken);
@@ -80,70 +80,77 @@ export class OperationsImpl implements Operations {
     }
   }
 
-  private async *listPagingAll(
-    options?: OperationsListOptionalParams
-  ): AsyncIterableIterator<Operation> {
-    for await (const page of this.listPagingPage(options)) {
+  private async *listBySubscriptionPagingAll(
+    options?: SkusListBySubscriptionOptionalParams
+  ): AsyncIterableIterator<SkuDetails> {
+    for await (const page of this.listBySubscriptionPagingPage(options)) {
       yield* page;
     }
   }
 
   /**
-   * List the operations for the provider
+   * Lists all RedisEnterprise skus in a subscription.
    * @param options The options parameters.
    */
-  private _list(
-    options?: OperationsListOptionalParams
-  ): Promise<OperationsListResponse> {
-    return this.client.sendOperationRequest({ options }, listOperationSpec);
+  private _listBySubscription(
+    options?: SkusListBySubscriptionOptionalParams
+  ): Promise<SkusListBySubscriptionResponse> {
+    return this.client.sendOperationRequest(
+      { options },
+      listBySubscriptionOperationSpec
+    );
   }
 
   /**
-   * ListNext
-   * @param nextLink The nextLink from the previous successful call to the List method.
+   * ListBySubscriptionNext
+   * @param nextLink The nextLink from the previous successful call to the ListBySubscription method.
    * @param options The options parameters.
    */
-  private _listNext(
+  private _listBySubscriptionNext(
     nextLink: string,
-    options?: OperationsListNextOptionalParams
-  ): Promise<OperationsListNextResponse> {
+    options?: SkusListBySubscriptionNextOptionalParams
+  ): Promise<SkusListBySubscriptionNextResponse> {
     return this.client.sendOperationRequest(
       { nextLink, options },
-      listNextOperationSpec
+      listBySubscriptionNextOperationSpec
     );
   }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const listOperationSpec: coreClient.OperationSpec = {
-  path: "/providers/Microsoft.Cache/operations",
+const listBySubscriptionOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/providers/Microsoft.Cache/skus",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.OperationListResult
+      bodyMapper: Mappers.SkuDetailsListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.$host],
+  urlParameters: [Parameters.$host, Parameters.subscriptionId],
   headerParameters: [Parameters.accept],
   serializer
 };
-const listNextOperationSpec: coreClient.OperationSpec = {
+const listBySubscriptionNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.OperationListResult
+      bodyMapper: Mappers.SkuDetailsListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  urlParameters: [Parameters.$host, Parameters.nextLink],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.nextLink,
+    Parameters.subscriptionId
+  ],
   headerParameters: [Parameters.accept],
   serializer
 };

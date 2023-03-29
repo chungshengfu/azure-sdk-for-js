@@ -14,12 +14,14 @@ import {
 /** Interface representing a OperationsStatus. */
 export interface OperationsStatus {
   /**
-   * Gets the status of operation.
-   * @param location The name of Azure region.
-   * @param operationId The ID of an ongoing async operation.
+   * Gets information about a database in a RedisEnterprise cluster
+   * @param subscriptionId ID of the subscription
+   * @param location Location of the long-running operation result
+   * @param operationId Unique ID of the long-running operation
    * @param options The options parameters.
    */
   get(
+    subscriptionId: string,
     location: string,
     operationId: string,
     options?: OperationsStatusGetOptionalParams
