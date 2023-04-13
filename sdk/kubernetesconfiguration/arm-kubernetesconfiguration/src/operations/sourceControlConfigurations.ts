@@ -13,10 +13,16 @@ import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { SourceControlConfigurationClient } from "../sourceControlConfigurationClient";
-import { PollerLike, PollOperationState, LroEngine } from "@azure/core-lro";
-import { LroImpl } from "../lroImpl";
+import {
+  SimplePollerLike,
+  OperationState,
+  createHttpPoller
+} from "@azure/core-lro";
+import { createLroSpec } from "../lroImpl";
 import {
   SourceControlConfiguration,
+  KubernetesClusterResourceProviderName,
+  KubernetesClusterResourceName,
   SourceControlConfigurationsListNextOptionalParams,
   SourceControlConfigurationsListOptionalParams,
   SourceControlConfigurationsListResponse,
@@ -54,8 +60,8 @@ export class SourceControlConfigurationsImpl
    */
   public list(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     options?: SourceControlConfigurationsListOptionalParams
   ): PagedAsyncIterableIterator<SourceControlConfiguration> {
@@ -91,8 +97,8 @@ export class SourceControlConfigurationsImpl
 
   private async *listPagingPage(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     options?: SourceControlConfigurationsListOptionalParams,
     settings?: PageSettings
@@ -130,8 +136,8 @@ export class SourceControlConfigurationsImpl
 
   private async *listPagingAll(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     options?: SourceControlConfigurationsListOptionalParams
   ): AsyncIterableIterator<SourceControlConfiguration> {
@@ -159,8 +165,8 @@ export class SourceControlConfigurationsImpl
    */
   get(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     sourceControlConfigurationName: string,
     options?: SourceControlConfigurationsGetOptionalParams
@@ -192,8 +198,8 @@ export class SourceControlConfigurationsImpl
    */
   createOrUpdate(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     sourceControlConfigurationName: string,
     sourceControlConfiguration: SourceControlConfiguration,
@@ -227,19 +233,19 @@ export class SourceControlConfigurationsImpl
    */
   async beginDelete(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     sourceControlConfigurationName: string,
     options?: SourceControlConfigurationsDeleteOptionalParams
-  ): Promise<PollerLike<PollOperationState<void>, void>> {
+  ): Promise<SimplePollerLike<OperationState<void>, void>> {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
     ): Promise<void> => {
       return this.client.sendOperationRequest(args, spec);
     };
-    const sendOperation = async (
+    const sendOperationFn = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
     ) => {
@@ -272,9 +278,9 @@ export class SourceControlConfigurationsImpl
       };
     };
 
-    const lro = new LroImpl(
-      sendOperation,
-      {
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: {
         resourceGroupName,
         clusterRp,
         clusterResourceName,
@@ -282,10 +288,10 @@ export class SourceControlConfigurationsImpl
         sourceControlConfigurationName,
         options
       },
-      deleteOperationSpec
-    );
-    const poller = new LroEngine(lro, {
-      resumeFrom: options?.resumeFrom,
+      spec: deleteOperationSpec
+    });
+    const poller = await createHttpPoller<void, OperationState<void>>(lro, {
+      restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
     await poller.poll();
@@ -306,8 +312,8 @@ export class SourceControlConfigurationsImpl
    */
   async beginDeleteAndWait(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     sourceControlConfigurationName: string,
     options?: SourceControlConfigurationsDeleteOptionalParams
@@ -335,8 +341,8 @@ export class SourceControlConfigurationsImpl
    */
   private _list(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     options?: SourceControlConfigurationsListOptionalParams
   ): Promise<SourceControlConfigurationsListResponse> {
@@ -365,8 +371,8 @@ export class SourceControlConfigurationsImpl
    */
   private _listNext(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     nextLink: string,
     options?: SourceControlConfigurationsListNextOptionalParams
@@ -503,7 +509,6 @@ const listNextOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,

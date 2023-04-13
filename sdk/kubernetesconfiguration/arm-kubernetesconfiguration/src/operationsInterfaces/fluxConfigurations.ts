@@ -7,9 +7,11 @@
  */
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { PollerLike, PollOperationState } from "@azure/core-lro";
+import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   FluxConfiguration,
+  KubernetesClusterResourceProviderName,
+  KubernetesClusterResourceName,
   FluxConfigurationsListOptionalParams,
   FluxConfigurationsGetOptionalParams,
   FluxConfigurationsGetResponse,
@@ -36,8 +38,8 @@ export interface FluxConfigurations {
    */
   list(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     options?: FluxConfigurationsListOptionalParams
   ): PagedAsyncIterableIterator<FluxConfiguration>;
@@ -54,8 +56,8 @@ export interface FluxConfigurations {
    */
   get(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     fluxConfigurationName: string,
     options?: FluxConfigurationsGetOptionalParams
@@ -74,15 +76,15 @@ export interface FluxConfigurations {
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     fluxConfigurationName: string,
     fluxConfiguration: FluxConfiguration,
     options?: FluxConfigurationsCreateOrUpdateOptionalParams
   ): Promise<
-    PollerLike<
-      PollOperationState<FluxConfigurationsCreateOrUpdateResponse>,
+    SimplePollerLike<
+      OperationState<FluxConfigurationsCreateOrUpdateResponse>,
       FluxConfigurationsCreateOrUpdateResponse
     >
   >;
@@ -100,8 +102,8 @@ export interface FluxConfigurations {
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     fluxConfigurationName: string,
     fluxConfiguration: FluxConfiguration,
@@ -121,15 +123,15 @@ export interface FluxConfigurations {
    */
   beginUpdate(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     fluxConfigurationName: string,
     fluxConfigurationPatch: FluxConfigurationPatch,
     options?: FluxConfigurationsUpdateOptionalParams
   ): Promise<
-    PollerLike<
-      PollOperationState<FluxConfigurationsUpdateResponse>,
+    SimplePollerLike<
+      OperationState<FluxConfigurationsUpdateResponse>,
       FluxConfigurationsUpdateResponse
     >
   >;
@@ -147,8 +149,8 @@ export interface FluxConfigurations {
    */
   beginUpdateAndWait(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     fluxConfigurationName: string,
     fluxConfigurationPatch: FluxConfigurationPatch,
@@ -168,12 +170,12 @@ export interface FluxConfigurations {
    */
   beginDelete(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     fluxConfigurationName: string,
     options?: FluxConfigurationsDeleteOptionalParams
-  ): Promise<PollerLike<PollOperationState<void>, void>>;
+  ): Promise<SimplePollerLike<OperationState<void>, void>>;
   /**
    * This will delete the YAML file used to set up the Flux Configuration, thus stopping future sync from
    * the source repo.
@@ -188,8 +190,8 @@ export interface FluxConfigurations {
    */
   beginDeleteAndWait(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     fluxConfigurationName: string,
     options?: FluxConfigurationsDeleteOptionalParams

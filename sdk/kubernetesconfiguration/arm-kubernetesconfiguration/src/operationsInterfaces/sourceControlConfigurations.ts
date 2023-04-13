@@ -7,9 +7,11 @@
  */
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { PollerLike, PollOperationState } from "@azure/core-lro";
+import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   SourceControlConfiguration,
+  KubernetesClusterResourceProviderName,
+  KubernetesClusterResourceName,
   SourceControlConfigurationsListOptionalParams,
   SourceControlConfigurationsGetOptionalParams,
   SourceControlConfigurationsGetResponse,
@@ -33,8 +35,8 @@ export interface SourceControlConfigurations {
    */
   list(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     options?: SourceControlConfigurationsListOptionalParams
   ): PagedAsyncIterableIterator<SourceControlConfiguration>;
@@ -51,8 +53,8 @@ export interface SourceControlConfigurations {
    */
   get(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     sourceControlConfigurationName: string,
     options?: SourceControlConfigurationsGetOptionalParams
@@ -71,8 +73,8 @@ export interface SourceControlConfigurations {
    */
   createOrUpdate(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     sourceControlConfigurationName: string,
     sourceControlConfiguration: SourceControlConfiguration,
@@ -92,12 +94,12 @@ export interface SourceControlConfigurations {
    */
   beginDelete(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     sourceControlConfigurationName: string,
     options?: SourceControlConfigurationsDeleteOptionalParams
-  ): Promise<PollerLike<PollOperationState<void>, void>>;
+  ): Promise<SimplePollerLike<OperationState<void>, void>>;
   /**
    * This will delete the YAML file used to set up the Source control configuration, thus stopping future
    * sync from the source repo.
@@ -112,8 +114,8 @@ export interface SourceControlConfigurations {
    */
   beginDeleteAndWait(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     sourceControlConfigurationName: string,
     options?: SourceControlConfigurationsDeleteOptionalParams

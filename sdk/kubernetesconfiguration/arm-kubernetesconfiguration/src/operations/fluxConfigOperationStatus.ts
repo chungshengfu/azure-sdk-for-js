@@ -12,6 +12,8 @@ import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { SourceControlConfigurationClient } from "../sourceControlConfigurationClient";
 import {
+  KubernetesClusterResourceProviderName,
+  KubernetesClusterResourceName,
   FluxConfigOperationStatusGetOptionalParams,
   FluxConfigOperationStatusGetResponse
 } from "../models";
@@ -43,8 +45,8 @@ export class FluxConfigOperationStatusImpl
    */
   get(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     fluxConfigurationName: string,
     operationId: string,

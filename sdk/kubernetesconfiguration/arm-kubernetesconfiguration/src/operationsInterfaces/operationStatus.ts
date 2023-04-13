@@ -9,6 +9,8 @@
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
   OperationStatusResult,
+  KubernetesClusterResourceProviderName,
+  KubernetesClusterResourceName,
   OperationStatusListOptionalParams,
   OperationStatusGetOptionalParams,
   OperationStatusGetResponse
@@ -29,8 +31,8 @@ export interface OperationStatus {
    */
   list(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     options?: OperationStatusListOptionalParams
   ): PagedAsyncIterableIterator<OperationStatusResult>;
@@ -48,8 +50,8 @@ export interface OperationStatus {
    */
   get(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     extensionName: string,
     operationId: string,

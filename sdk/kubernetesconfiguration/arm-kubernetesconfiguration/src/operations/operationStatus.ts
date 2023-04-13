@@ -15,6 +15,8 @@ import * as Parameters from "../models/parameters";
 import { SourceControlConfigurationClient } from "../sourceControlConfigurationClient";
 import {
   OperationStatusResult,
+  KubernetesClusterResourceProviderName,
+  KubernetesClusterResourceName,
   OperationStatusListNextOptionalParams,
   OperationStatusListOptionalParams,
   OperationStatusListResponse,
@@ -48,8 +50,8 @@ export class OperationStatusImpl implements OperationStatus {
    */
   public list(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     options?: OperationStatusListOptionalParams
   ): PagedAsyncIterableIterator<OperationStatusResult> {
@@ -85,8 +87,8 @@ export class OperationStatusImpl implements OperationStatus {
 
   private async *listPagingPage(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     options?: OperationStatusListOptionalParams,
     settings?: PageSettings
@@ -124,8 +126,8 @@ export class OperationStatusImpl implements OperationStatus {
 
   private async *listPagingAll(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     options?: OperationStatusListOptionalParams
   ): AsyncIterableIterator<OperationStatusResult> {
@@ -154,8 +156,8 @@ export class OperationStatusImpl implements OperationStatus {
    */
   get(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     extensionName: string,
     operationId: string,
@@ -187,8 +189,8 @@ export class OperationStatusImpl implements OperationStatus {
    */
   private _list(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     options?: OperationStatusListOptionalParams
   ): Promise<OperationStatusListResponse> {
@@ -217,8 +219,8 @@ export class OperationStatusImpl implements OperationStatus {
    */
   private _listNext(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     nextLink: string,
     options?: OperationStatusListNextOptionalParams
@@ -300,7 +302,6 @@ const listNextOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,

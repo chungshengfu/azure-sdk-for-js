@@ -1,15 +1,56 @@
 # Release History
+    
+## 6.0.0 (2023-04-13)
+    
+**Features**
 
-## 5.1.1 (Unreleased)
+  - Added Interface AzureBlobDefinition
+  - Added Interface AzureBlobPatchDefinition
+  - Added Interface ManagedIdentityDefinition
+  - Added Interface ManagedIdentityPatchDefinition
+  - Added Interface Plan
+  - Added Interface ServicePrincipalDefinition
+  - Added Interface ServicePrincipalPatchDefinition
+  - Added Type Alias KubernetesClusterResourceName
+  - Added Type Alias KubernetesClusterResourceProviderName
+  - Interface Extension has a new optional parameter currentVersion
+  - Interface Extension has a new optional parameter isSystemExtension
+  - Interface Extension has a new optional parameter plan
+  - Interface FluxConfiguration has a new optional parameter azureBlob
+  - Interface FluxConfigurationPatch has a new optional parameter azureBlob
+  - Added Enum KnownKubernetesClusterResourceName
+  - Added Enum KnownKubernetesClusterResourceProviderName
+  - Enum KnownSourceKindType has a new value AzureBlob
 
-### Features Added
+**Breaking Changes**
 
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
+  - Operation Extensions.beginCreate has a new signature
+  - Operation Extensions.beginCreateAndWait has a new signature
+  - Operation Extensions.beginDelete has a new signature
+  - Operation Extensions.beginDeleteAndWait has a new signature
+  - Operation Extensions.beginUpdate has a new signature
+  - Operation Extensions.beginUpdateAndWait has a new signature
+  - Operation Extensions.get has a new signature
+  - Operation Extensions.list has a new signature
+  - Operation FluxConfigOperationStatus.get has a new signature
+  - Operation FluxConfigurations.beginCreateOrUpdate has a new signature
+  - Operation FluxConfigurations.beginCreateOrUpdateAndWait has a new signature
+  - Operation FluxConfigurations.beginDelete has a new signature
+  - Operation FluxConfigurations.beginDeleteAndWait has a new signature
+  - Operation FluxConfigurations.beginUpdate has a new signature
+  - Operation FluxConfigurations.beginUpdateAndWait has a new signature
+  - Operation FluxConfigurations.get has a new signature
+  - Operation FluxConfigurations.list has a new signature
+  - Operation OperationStatus.get has a new signature
+  - Operation OperationStatus.list has a new signature
+  - Operation SourceControlConfigurations.beginDelete has a new signature
+  - Operation SourceControlConfigurations.beginDeleteAndWait has a new signature
+  - Operation SourceControlConfigurations.createOrUpdate has a new signature
+  - Operation SourceControlConfigurations.get has a new signature
+  - Operation SourceControlConfigurations.list has a new signature
+  - Interface Extension no longer has parameter installedVersion
+    
+    
 ## 5.1.0 (2022-11-28)
     
 **Features**

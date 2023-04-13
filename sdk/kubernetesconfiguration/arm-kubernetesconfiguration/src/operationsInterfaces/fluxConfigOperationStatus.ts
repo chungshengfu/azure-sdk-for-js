@@ -7,6 +7,8 @@
  */
 
 import {
+  KubernetesClusterResourceProviderName,
+  KubernetesClusterResourceName,
   FluxConfigOperationStatusGetOptionalParams,
   FluxConfigOperationStatusGetResponse
 } from "../models";
@@ -27,8 +29,8 @@ export interface FluxConfigOperationStatus {
    */
   get(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     fluxConfigurationName: string,
     operationId: string,

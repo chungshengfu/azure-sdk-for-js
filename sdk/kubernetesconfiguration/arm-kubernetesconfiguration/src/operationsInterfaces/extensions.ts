@@ -7,9 +7,11 @@
  */
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { PollerLike, PollOperationState } from "@azure/core-lro";
+import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   Extension,
+  KubernetesClusterResourceProviderName,
+  KubernetesClusterResourceName,
   ExtensionsListOptionalParams,
   ExtensionsCreateOptionalParams,
   ExtensionsCreateResponse,
@@ -36,8 +38,8 @@ export interface Extensions {
    */
   list(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     options?: ExtensionsListOptionalParams
   ): PagedAsyncIterableIterator<Extension>;
@@ -55,15 +57,15 @@ export interface Extensions {
    */
   beginCreate(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     extensionName: string,
     extension: Extension,
     options?: ExtensionsCreateOptionalParams
   ): Promise<
-    PollerLike<
-      PollOperationState<ExtensionsCreateResponse>,
+    SimplePollerLike<
+      OperationState<ExtensionsCreateResponse>,
       ExtensionsCreateResponse
     >
   >;
@@ -81,8 +83,8 @@ export interface Extensions {
    */
   beginCreateAndWait(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     extensionName: string,
     extension: Extension,
@@ -101,8 +103,8 @@ export interface Extensions {
    */
   get(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     extensionName: string,
     options?: ExtensionsGetOptionalParams
@@ -121,12 +123,12 @@ export interface Extensions {
    */
   beginDelete(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     extensionName: string,
     options?: ExtensionsDeleteOptionalParams
-  ): Promise<PollerLike<PollOperationState<void>, void>>;
+  ): Promise<SimplePollerLike<OperationState<void>, void>>;
   /**
    * Delete a Kubernetes Cluster Extension. This will cause the Agent to Uninstall the extension from the
    * cluster.
@@ -141,8 +143,8 @@ export interface Extensions {
    */
   beginDeleteAndWait(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     extensionName: string,
     options?: ExtensionsDeleteOptionalParams
@@ -161,15 +163,15 @@ export interface Extensions {
    */
   beginUpdate(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     extensionName: string,
     patchExtension: PatchExtension,
     options?: ExtensionsUpdateOptionalParams
   ): Promise<
-    PollerLike<
-      PollOperationState<ExtensionsUpdateResponse>,
+    SimplePollerLike<
+      OperationState<ExtensionsUpdateResponse>,
       ExtensionsUpdateResponse
     >
   >;
@@ -187,8 +189,8 @@ export interface Extensions {
    */
   beginUpdateAndWait(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
+    clusterRp: KubernetesClusterResourceProviderName,
+    clusterResourceName: KubernetesClusterResourceName,
     clusterName: string,
     extensionName: string,
     patchExtension: PatchExtension,

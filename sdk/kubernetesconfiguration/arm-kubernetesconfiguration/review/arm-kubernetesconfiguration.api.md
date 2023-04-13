@@ -6,12 +6,38 @@
 
 import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
+import { OperationState } from '@azure/core-lro';
 import { PagedAsyncIterableIterator } from '@azure/core-paging';
-import { PollerLike } from '@azure/core-lro';
-import { PollOperationState } from '@azure/core-lro';
+import { SimplePollerLike } from '@azure/core-lro';
 
 // @public
 export type AKSIdentityType = "SystemAssigned" | "UserAssigned";
+
+// @public
+export interface AzureBlobDefinition {
+    accountKey?: string;
+    containerName?: string;
+    localAuthRef?: string;
+    managedIdentity?: ManagedIdentityDefinition;
+    sasToken?: string;
+    servicePrincipal?: ServicePrincipalDefinition;
+    syncIntervalInSeconds?: number;
+    timeoutInSeconds?: number;
+    url?: string;
+}
+
+// @public
+export interface AzureBlobPatchDefinition {
+    accountKey?: string;
+    containerName?: string;
+    localAuthRef?: string;
+    managedIdentity?: ManagedIdentityPatchDefinition;
+    sasToken?: string;
+    servicePrincipal?: ServicePrincipalPatchDefinition;
+    syncIntervalInSeconds?: number;
+    timeoutInSeconds?: number;
+    url?: string;
+}
 
 // @public
 export interface BucketDefinition {
@@ -79,14 +105,16 @@ export interface Extension extends ProxyResource {
     configurationSettings?: {
         [propertyName: string]: string;
     };
+    readonly currentVersion?: string;
     readonly customLocationSettings?: {
         [propertyName: string]: string;
     };
     readonly errorInfo?: ErrorDetail;
     extensionType?: string;
     identity?: Identity;
-    readonly installedVersion?: string;
+    readonly isSystemExtension?: boolean;
     readonly packageUri?: string;
+    plan?: Plan;
     readonly provisioningState?: ProvisioningState;
     releaseTrain?: string;
     scope?: Scope;
@@ -104,14 +132,14 @@ export interface ExtensionPropertiesAksAssignedIdentity {
 
 // @public
 export interface Extensions {
-    beginCreate(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, extensionName: string, extension: Extension, options?: ExtensionsCreateOptionalParams): Promise<PollerLike<PollOperationState<ExtensionsCreateResponse>, ExtensionsCreateResponse>>;
-    beginCreateAndWait(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, extensionName: string, extension: Extension, options?: ExtensionsCreateOptionalParams): Promise<ExtensionsCreateResponse>;
-    beginDelete(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, extensionName: string, options?: ExtensionsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
-    beginDeleteAndWait(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, extensionName: string, options?: ExtensionsDeleteOptionalParams): Promise<void>;
-    beginUpdate(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, extensionName: string, patchExtension: PatchExtension, options?: ExtensionsUpdateOptionalParams): Promise<PollerLike<PollOperationState<ExtensionsUpdateResponse>, ExtensionsUpdateResponse>>;
-    beginUpdateAndWait(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, extensionName: string, patchExtension: PatchExtension, options?: ExtensionsUpdateOptionalParams): Promise<ExtensionsUpdateResponse>;
-    get(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, extensionName: string, options?: ExtensionsGetOptionalParams): Promise<ExtensionsGetResponse>;
-    list(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, options?: ExtensionsListOptionalParams): PagedAsyncIterableIterator<Extension>;
+    beginCreate(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, extensionName: string, extension: Extension, options?: ExtensionsCreateOptionalParams): Promise<SimplePollerLike<OperationState<ExtensionsCreateResponse>, ExtensionsCreateResponse>>;
+    beginCreateAndWait(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, extensionName: string, extension: Extension, options?: ExtensionsCreateOptionalParams): Promise<ExtensionsCreateResponse>;
+    beginDelete(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, extensionName: string, options?: ExtensionsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
+    beginDeleteAndWait(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, extensionName: string, options?: ExtensionsDeleteOptionalParams): Promise<void>;
+    beginUpdate(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, extensionName: string, patchExtension: PatchExtension, options?: ExtensionsUpdateOptionalParams): Promise<SimplePollerLike<OperationState<ExtensionsUpdateResponse>, ExtensionsUpdateResponse>>;
+    beginUpdateAndWait(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, extensionName: string, patchExtension: PatchExtension, options?: ExtensionsUpdateOptionalParams): Promise<ExtensionsUpdateResponse>;
+    get(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, extensionName: string, options?: ExtensionsGetOptionalParams): Promise<ExtensionsGetResponse>;
+    list(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, options?: ExtensionsListOptionalParams): PagedAsyncIterableIterator<Extension>;
 }
 
 // @public
@@ -180,7 +208,7 @@ export type FluxComplianceState = string;
 
 // @public
 export interface FluxConfigOperationStatus {
-    get(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, fluxConfigurationName: string, operationId: string, options?: FluxConfigOperationStatusGetOptionalParams): Promise<FluxConfigOperationStatusGetResponse>;
+    get(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, fluxConfigurationName: string, operationId: string, options?: FluxConfigOperationStatusGetOptionalParams): Promise<FluxConfigOperationStatusGetResponse>;
 }
 
 // @public
@@ -192,6 +220,7 @@ export type FluxConfigOperationStatusGetResponse = OperationStatusResult;
 
 // @public
 export interface FluxConfiguration extends ProxyResource {
+    azureBlob?: AzureBlobDefinition;
     bucket?: BucketDefinition;
     readonly complianceState?: FluxComplianceState;
     configurationProtectedSettings?: {
@@ -217,6 +246,7 @@ export interface FluxConfiguration extends ProxyResource {
 
 // @public
 export interface FluxConfigurationPatch {
+    azureBlob?: AzureBlobPatchDefinition;
     bucket?: BucketPatchDefinition;
     configurationProtectedSettings?: {
         [propertyName: string]: string;
@@ -231,14 +261,14 @@ export interface FluxConfigurationPatch {
 
 // @public
 export interface FluxConfigurations {
-    beginCreateOrUpdate(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, fluxConfigurationName: string, fluxConfiguration: FluxConfiguration, options?: FluxConfigurationsCreateOrUpdateOptionalParams): Promise<PollerLike<PollOperationState<FluxConfigurationsCreateOrUpdateResponse>, FluxConfigurationsCreateOrUpdateResponse>>;
-    beginCreateOrUpdateAndWait(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, fluxConfigurationName: string, fluxConfiguration: FluxConfiguration, options?: FluxConfigurationsCreateOrUpdateOptionalParams): Promise<FluxConfigurationsCreateOrUpdateResponse>;
-    beginDelete(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, fluxConfigurationName: string, options?: FluxConfigurationsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
-    beginDeleteAndWait(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, fluxConfigurationName: string, options?: FluxConfigurationsDeleteOptionalParams): Promise<void>;
-    beginUpdate(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, fluxConfigurationName: string, fluxConfigurationPatch: FluxConfigurationPatch, options?: FluxConfigurationsUpdateOptionalParams): Promise<PollerLike<PollOperationState<FluxConfigurationsUpdateResponse>, FluxConfigurationsUpdateResponse>>;
-    beginUpdateAndWait(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, fluxConfigurationName: string, fluxConfigurationPatch: FluxConfigurationPatch, options?: FluxConfigurationsUpdateOptionalParams): Promise<FluxConfigurationsUpdateResponse>;
-    get(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, fluxConfigurationName: string, options?: FluxConfigurationsGetOptionalParams): Promise<FluxConfigurationsGetResponse>;
-    list(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, options?: FluxConfigurationsListOptionalParams): PagedAsyncIterableIterator<FluxConfiguration>;
+    beginCreateOrUpdate(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, fluxConfigurationName: string, fluxConfiguration: FluxConfiguration, options?: FluxConfigurationsCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<FluxConfigurationsCreateOrUpdateResponse>, FluxConfigurationsCreateOrUpdateResponse>>;
+    beginCreateOrUpdateAndWait(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, fluxConfigurationName: string, fluxConfiguration: FluxConfiguration, options?: FluxConfigurationsCreateOrUpdateOptionalParams): Promise<FluxConfigurationsCreateOrUpdateResponse>;
+    beginDelete(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, fluxConfigurationName: string, options?: FluxConfigurationsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
+    beginDeleteAndWait(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, fluxConfigurationName: string, options?: FluxConfigurationsDeleteOptionalParams): Promise<void>;
+    beginUpdate(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, fluxConfigurationName: string, fluxConfigurationPatch: FluxConfigurationPatch, options?: FluxConfigurationsUpdateOptionalParams): Promise<SimplePollerLike<OperationState<FluxConfigurationsUpdateResponse>, FluxConfigurationsUpdateResponse>>;
+    beginUpdateAndWait(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, fluxConfigurationName: string, fluxConfigurationPatch: FluxConfigurationPatch, options?: FluxConfigurationsUpdateOptionalParams): Promise<FluxConfigurationsUpdateResponse>;
+    get(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, fluxConfigurationName: string, options?: FluxConfigurationsGetOptionalParams): Promise<FluxConfigurationsGetResponse>;
+    list(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, options?: FluxConfigurationsListOptionalParams): PagedAsyncIterableIterator<FluxConfiguration>;
 }
 
 // @public
@@ -369,6 +399,20 @@ export enum KnownFluxComplianceState {
 }
 
 // @public
+export enum KnownKubernetesClusterResourceName {
+    ConnectedClusters = "connectedClusters",
+    ManagedClusters = "managedClusters",
+    ProvisionedClusters = "provisionedClusters"
+}
+
+// @public
+export enum KnownKubernetesClusterResourceProviderName {
+    MicrosoftContainerService = "Microsoft.ContainerService",
+    MicrosoftHybridContainerService = "Microsoft.HybridContainerService",
+    MicrosoftKubernetes = "Microsoft.Kubernetes"
+}
+
+// @public
 export enum KnownKustomizationValidationType {
     Client = "client",
     None = "none",
@@ -427,9 +471,16 @@ export enum KnownScopeType {
 
 // @public
 export enum KnownSourceKindType {
+    AzureBlob = "AzureBlob",
     Bucket = "Bucket",
     GitRepository = "GitRepository"
 }
+
+// @public
+export type KubernetesClusterResourceName = string;
+
+// @public
+export type KubernetesClusterResourceProviderName = string;
 
 // @public
 export interface KustomizationDefinition {
@@ -459,6 +510,16 @@ export type KustomizationValidationType = string;
 
 // @public
 export type LevelType = string;
+
+// @public
+export interface ManagedIdentityDefinition {
+    clientId?: string;
+}
+
+// @public
+export interface ManagedIdentityPatchDefinition {
+    clientId?: string;
+}
 
 // @public
 export type MessageLevelType = string;
@@ -510,8 +571,8 @@ export type OperationsListResponse = ResourceProviderOperationList;
 
 // @public
 export interface OperationStatus {
-    get(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, extensionName: string, operationId: string, options?: OperationStatusGetOptionalParams): Promise<OperationStatusGetResponse>;
-    list(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, options?: OperationStatusListOptionalParams): PagedAsyncIterableIterator<OperationStatusResult>;
+    get(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, extensionName: string, operationId: string, options?: OperationStatusGetOptionalParams): Promise<OperationStatusGetResponse>;
+    list(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, options?: OperationStatusListOptionalParams): PagedAsyncIterableIterator<OperationStatusResult>;
 }
 
 // @public
@@ -568,6 +629,15 @@ export interface PatchExtension {
         [propertyName: string]: string;
     };
     releaseTrain?: string;
+    version?: string;
+}
+
+// @public
+export interface Plan {
+    name: string;
+    product: string;
+    promotionCode?: string;
+    publisher: string;
     version?: string;
 }
 
@@ -638,6 +708,26 @@ export interface ScopeNamespace {
 export type ScopeType = string;
 
 // @public
+export interface ServicePrincipalDefinition {
+    clientCertificate?: string;
+    clientCertificatePassword?: string;
+    clientCertificateSendChain?: boolean;
+    clientId?: string;
+    clientSecret?: string;
+    tenantId?: string;
+}
+
+// @public
+export interface ServicePrincipalPatchDefinition {
+    clientCertificate?: string;
+    clientCertificatePassword?: string;
+    clientCertificateSendChain?: boolean;
+    clientId?: string;
+    clientSecret?: string;
+    tenantId?: string;
+}
+
+// @public
 export interface SourceControlConfiguration extends ProxyResource {
     readonly complianceStatus?: ComplianceStatus;
     configurationProtectedSettings?: {
@@ -695,11 +785,11 @@ export interface SourceControlConfigurationList {
 
 // @public
 export interface SourceControlConfigurations {
-    beginDelete(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, sourceControlConfigurationName: string, options?: SourceControlConfigurationsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
-    beginDeleteAndWait(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, sourceControlConfigurationName: string, options?: SourceControlConfigurationsDeleteOptionalParams): Promise<void>;
-    createOrUpdate(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, sourceControlConfigurationName: string, sourceControlConfiguration: SourceControlConfiguration, options?: SourceControlConfigurationsCreateOrUpdateOptionalParams): Promise<SourceControlConfigurationsCreateOrUpdateResponse>;
-    get(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, sourceControlConfigurationName: string, options?: SourceControlConfigurationsGetOptionalParams): Promise<SourceControlConfigurationsGetResponse>;
-    list(resourceGroupName: string, clusterRp: string, clusterResourceName: string, clusterName: string, options?: SourceControlConfigurationsListOptionalParams): PagedAsyncIterableIterator<SourceControlConfiguration>;
+    beginDelete(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, sourceControlConfigurationName: string, options?: SourceControlConfigurationsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
+    beginDeleteAndWait(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, sourceControlConfigurationName: string, options?: SourceControlConfigurationsDeleteOptionalParams): Promise<void>;
+    createOrUpdate(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, sourceControlConfigurationName: string, sourceControlConfiguration: SourceControlConfiguration, options?: SourceControlConfigurationsCreateOrUpdateOptionalParams): Promise<SourceControlConfigurationsCreateOrUpdateResponse>;
+    get(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, sourceControlConfigurationName: string, options?: SourceControlConfigurationsGetOptionalParams): Promise<SourceControlConfigurationsGetResponse>;
+    list(resourceGroupName: string, clusterRp: KubernetesClusterResourceProviderName, clusterResourceName: KubernetesClusterResourceName, clusterName: string, options?: SourceControlConfigurationsListOptionalParams): PagedAsyncIterableIterator<SourceControlConfiguration>;
 }
 
 // @public
