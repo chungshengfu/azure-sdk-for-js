@@ -13,8 +13,12 @@ import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { EventGridManagementClient } from "../eventGridManagementClient";
-import { PollerLike, PollOperationState, LroEngine } from "@azure/core-lro";
-import { LroImpl } from "../lroImpl";
+import {
+  SimplePollerLike,
+  OperationState,
+  createHttpPoller
+} from "@azure/core-lro";
+import { createLroSpec } from "../lroImpl";
 import {
   EventSubscription,
   EventSubscriptionsListGlobalBySubscriptionNextOptionalParams,
@@ -951,8 +955,8 @@ export class EventSubscriptionsImpl implements EventSubscriptions {
     eventSubscriptionInfo: EventSubscription,
     options?: EventSubscriptionsCreateOrUpdateOptionalParams
   ): Promise<
-    PollerLike<
-      PollOperationState<EventSubscriptionsCreateOrUpdateResponse>,
+    SimplePollerLike<
+      OperationState<EventSubscriptionsCreateOrUpdateResponse>,
       EventSubscriptionsCreateOrUpdateResponse
     >
   > {
@@ -962,7 +966,7 @@ export class EventSubscriptionsImpl implements EventSubscriptions {
     ): Promise<EventSubscriptionsCreateOrUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
-    const sendOperation = async (
+    const sendOperationFn = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
     ) => {
@@ -995,13 +999,16 @@ export class EventSubscriptionsImpl implements EventSubscriptions {
       };
     };
 
-    const lro = new LroImpl(
-      sendOperation,
-      { scope, eventSubscriptionName, eventSubscriptionInfo, options },
-      createOrUpdateOperationSpec
-    );
-    const poller = new LroEngine(lro, {
-      resumeFrom: options?.resumeFrom,
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: { scope, eventSubscriptionName, eventSubscriptionInfo, options },
+      spec: createOrUpdateOperationSpec
+    });
+    const poller = await createHttpPoller<
+      EventSubscriptionsCreateOrUpdateResponse,
+      OperationState<EventSubscriptionsCreateOrUpdateResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
     await poller.poll();
@@ -1058,14 +1065,14 @@ export class EventSubscriptionsImpl implements EventSubscriptions {
     scope: string,
     eventSubscriptionName: string,
     options?: EventSubscriptionsDeleteOptionalParams
-  ): Promise<PollerLike<PollOperationState<void>, void>> {
+  ): Promise<SimplePollerLike<OperationState<void>, void>> {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
     ): Promise<void> => {
       return this.client.sendOperationRequest(args, spec);
     };
-    const sendOperation = async (
+    const sendOperationFn = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
     ) => {
@@ -1098,13 +1105,13 @@ export class EventSubscriptionsImpl implements EventSubscriptions {
       };
     };
 
-    const lro = new LroImpl(
-      sendOperation,
-      { scope, eventSubscriptionName, options },
-      deleteOperationSpec
-    );
-    const poller = new LroEngine(lro, {
-      resumeFrom: options?.resumeFrom,
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: { scope, eventSubscriptionName, options },
+      spec: deleteOperationSpec
+    });
+    const poller = await createHttpPoller<void, OperationState<void>>(lro, {
+      restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
     await poller.poll();
@@ -1157,8 +1164,8 @@ export class EventSubscriptionsImpl implements EventSubscriptions {
     eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters,
     options?: EventSubscriptionsUpdateOptionalParams
   ): Promise<
-    PollerLike<
-      PollOperationState<EventSubscriptionsUpdateResponse>,
+    SimplePollerLike<
+      OperationState<EventSubscriptionsUpdateResponse>,
       EventSubscriptionsUpdateResponse
     >
   > {
@@ -1168,7 +1175,7 @@ export class EventSubscriptionsImpl implements EventSubscriptions {
     ): Promise<EventSubscriptionsUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
-    const sendOperation = async (
+    const sendOperationFn = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
     ) => {
@@ -1201,18 +1208,21 @@ export class EventSubscriptionsImpl implements EventSubscriptions {
       };
     };
 
-    const lro = new LroImpl(
-      sendOperation,
-      {
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: {
         scope,
         eventSubscriptionName,
         eventSubscriptionUpdateParameters,
         options
       },
-      updateOperationSpec
-    );
-    const poller = new LroEngine(lro, {
-      resumeFrom: options?.resumeFrom,
+      spec: updateOperationSpec
+    });
+    const poller = await createHttpPoller<
+      EventSubscriptionsUpdateResponse,
+      OperationState<EventSubscriptionsUpdateResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
     await poller.poll();

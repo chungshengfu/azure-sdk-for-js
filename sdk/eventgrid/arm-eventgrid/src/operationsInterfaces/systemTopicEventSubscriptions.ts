@@ -7,7 +7,7 @@
  */
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { PollerLike, PollOperationState } from "@azure/core-lro";
+import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   EventSubscription,
   SystemTopicEventSubscriptionsListBySystemTopicOptionalParams,
@@ -71,8 +71,8 @@ export interface SystemTopicEventSubscriptions {
     eventSubscriptionInfo: EventSubscription,
     options?: SystemTopicEventSubscriptionsCreateOrUpdateOptionalParams
   ): Promise<
-    PollerLike<
-      PollOperationState<SystemTopicEventSubscriptionsCreateOrUpdateResponse>,
+    SimplePollerLike<
+      OperationState<SystemTopicEventSubscriptionsCreateOrUpdateResponse>,
       SystemTopicEventSubscriptionsCreateOrUpdateResponse
     >
   >;
@@ -107,7 +107,7 @@ export interface SystemTopicEventSubscriptions {
     systemTopicName: string,
     eventSubscriptionName: string,
     options?: SystemTopicEventSubscriptionsDeleteOptionalParams
-  ): Promise<PollerLike<PollOperationState<void>, void>>;
+  ): Promise<SimplePollerLike<OperationState<void>, void>>;
   /**
    * Delete an existing event subscription of a system topic.
    * @param resourceGroupName The name of the resource group within the user's subscription.
@@ -138,8 +138,8 @@ export interface SystemTopicEventSubscriptions {
     eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters,
     options?: SystemTopicEventSubscriptionsUpdateOptionalParams
   ): Promise<
-    PollerLike<
-      PollOperationState<SystemTopicEventSubscriptionsUpdateResponse>,
+    SimplePollerLike<
+      OperationState<SystemTopicEventSubscriptionsUpdateResponse>,
       SystemTopicEventSubscriptionsUpdateResponse
     >
   >;

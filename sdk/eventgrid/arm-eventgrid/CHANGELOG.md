@@ -1,15 +1,20 @@
 # Release History
+    
+## 15.0.0 (2023-04-14)
+    
+**Breaking Changes**
 
-## 14.1.1 (Unreleased)
-
-### Features Added
-
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
+  - Operation PrivateEndpointConnections.beginDelete has a new signature
+  - Operation PrivateEndpointConnections.beginDeleteAndWait has a new signature
+  - Operation PrivateEndpointConnections.beginUpdate has a new signature
+  - Operation PrivateEndpointConnections.beginUpdateAndWait has a new signature
+  - Operation PrivateEndpointConnections.get has a new signature
+  - Operation PrivateEndpointConnections.listByResource has a new signature
+  - Operation PrivateLinkResources.get has a new signature
+  - Operation PrivateLinkResources.listByResource has a new signature
+  - Class EventGridManagementClient has a new signature
+    
+    
 ## 14.1.0 (2023-01-10)
     
 **Features**

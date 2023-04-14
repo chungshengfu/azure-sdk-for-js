@@ -7,7 +7,7 @@
  */
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { PollerLike, PollOperationState } from "@azure/core-lro";
+import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   EventSubscription,
   DomainTopicEventSubscriptionsListOptionalParams,
@@ -75,8 +75,8 @@ export interface DomainTopicEventSubscriptions {
     eventSubscriptionInfo: EventSubscription,
     options?: DomainTopicEventSubscriptionsCreateOrUpdateOptionalParams
   ): Promise<
-    PollerLike<
-      PollOperationState<DomainTopicEventSubscriptionsCreateOrUpdateResponse>,
+    SimplePollerLike<
+      OperationState<DomainTopicEventSubscriptionsCreateOrUpdateResponse>,
       DomainTopicEventSubscriptionsCreateOrUpdateResponse
     >
   >;
@@ -114,7 +114,7 @@ export interface DomainTopicEventSubscriptions {
     topicName: string,
     eventSubscriptionName: string,
     options?: DomainTopicEventSubscriptionsDeleteOptionalParams
-  ): Promise<PollerLike<PollOperationState<void>, void>>;
+  ): Promise<SimplePollerLike<OperationState<void>, void>>;
   /**
    * Delete a nested existing event subscription for a domain topic.
    * @param resourceGroupName The name of the resource group within the user's subscription.
@@ -148,8 +148,8 @@ export interface DomainTopicEventSubscriptions {
     eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters,
     options?: DomainTopicEventSubscriptionsUpdateOptionalParams
   ): Promise<
-    PollerLike<
-      PollOperationState<DomainTopicEventSubscriptionsUpdateResponse>,
+    SimplePollerLike<
+      OperationState<DomainTopicEventSubscriptionsUpdateResponse>,
       DomainTopicEventSubscriptionsUpdateResponse
     >
   >;

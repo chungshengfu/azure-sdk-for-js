@@ -60,23 +60,30 @@ import {
   TopicTypes,
   VerifiedPartners
 } from "./operationsInterfaces";
-import { EventGridManagementClientOptionalParams } from "./models";
+import {
+  PrivateEndpointConnectionsParentType,
+  EventGridManagementClientOptionalParams
+} from "./models";
 
 export class EventGridManagementClient extends coreClient.ServiceClient {
   $host: string;
   subscriptionId: string;
   apiVersion: string;
+  parentType: PrivateEndpointConnectionsParentType;
 
   /**
    * Initializes a new instance of the EventGridManagementClient class.
    * @param credentials Subscription credentials which uniquely identify client subscription.
    * @param subscriptionId Subscription credentials that uniquely identify a Microsoft Azure
    *                       subscription. The subscription ID forms part of the URI for every service call.
+   * @param parentType The type of the parent resource. This can be either \'topics\', \'domains\', or
+   *                   \'partnerNamespaces\'.
    * @param options The parameter options
    */
   constructor(
     credentials: coreAuth.TokenCredential,
     subscriptionId: string,
+    parentType: PrivateEndpointConnectionsParentType,
     options?: EventGridManagementClientOptionalParams
   ) {
     if (credentials === undefined) {
@@ -84,6 +91,9 @@ export class EventGridManagementClient extends coreClient.ServiceClient {
     }
     if (subscriptionId === undefined) {
       throw new Error("'subscriptionId' cannot be null");
+    }
+    if (parentType === undefined) {
+      throw new Error("'parentType' cannot be null");
     }
 
     // Initializing default values for options
@@ -95,7 +105,7 @@ export class EventGridManagementClient extends coreClient.ServiceClient {
       credential: credentials
     };
 
-    const packageDetails = `azsdk-js-arm-eventgrid/14.1.1`;
+    const packageDetails = `azsdk-js-arm-eventgrid/15.0.0`;
     const userAgentPrefix =
       options.userAgentOptions && options.userAgentOptions.userAgentPrefix
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
@@ -145,6 +155,7 @@ export class EventGridManagementClient extends coreClient.ServiceClient {
     }
     // Parameter assignments
     this.subscriptionId = subscriptionId;
+    this.parentType = parentType;
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";

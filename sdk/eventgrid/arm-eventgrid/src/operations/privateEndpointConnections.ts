@@ -13,11 +13,14 @@ import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { EventGridManagementClient } from "../eventGridManagementClient";
-import { PollerLike, PollOperationState, LroEngine } from "@azure/core-lro";
-import { LroImpl } from "../lroImpl";
+import {
+  SimplePollerLike,
+  OperationState,
+  createHttpPoller
+} from "@azure/core-lro";
+import { createLroSpec } from "../lroImpl";
 import {
   PrivateEndpointConnection,
-  PrivateEndpointConnectionsParentType,
   PrivateEndpointConnectionsListByResourceNextOptionalParams,
   PrivateEndpointConnectionsListByResourceOptionalParams,
   PrivateEndpointConnectionsListByResourceResponse,
@@ -46,21 +49,17 @@ export class PrivateEndpointConnectionsImpl
   /**
    * Get all private endpoint connections under a topic, domain, or partner namespace.
    * @param resourceGroupName The name of the resource group within the user's subscription.
-   * @param parentType The type of the parent resource. This can be either \'topics\', \'domains\', or
-   *                   \'partnerNamespaces\'.
    * @param parentName The name of the parent resource (namely, either, the topic name, domain name, or
    *                   partner namespace name).
    * @param options The options parameters.
    */
   public listByResource(
     resourceGroupName: string,
-    parentType: PrivateEndpointConnectionsParentType,
     parentName: string,
     options?: PrivateEndpointConnectionsListByResourceOptionalParams
   ): PagedAsyncIterableIterator<PrivateEndpointConnection> {
     const iter = this.listByResourcePagingAll(
       resourceGroupName,
-      parentType,
       parentName,
       options
     );
@@ -77,7 +76,6 @@ export class PrivateEndpointConnectionsImpl
         }
         return this.listByResourcePagingPage(
           resourceGroupName,
-          parentType,
           parentName,
           options,
           settings
@@ -88,7 +86,6 @@ export class PrivateEndpointConnectionsImpl
 
   private async *listByResourcePagingPage(
     resourceGroupName: string,
-    parentType: PrivateEndpointConnectionsParentType,
     parentName: string,
     options?: PrivateEndpointConnectionsListByResourceOptionalParams,
     settings?: PageSettings
@@ -98,7 +95,6 @@ export class PrivateEndpointConnectionsImpl
     if (!continuationToken) {
       result = await this._listByResource(
         resourceGroupName,
-        parentType,
         parentName,
         options
       );
@@ -110,7 +106,6 @@ export class PrivateEndpointConnectionsImpl
     while (continuationToken) {
       result = await this._listByResourceNext(
         resourceGroupName,
-        parentType,
         parentName,
         continuationToken,
         options
@@ -124,13 +119,11 @@ export class PrivateEndpointConnectionsImpl
 
   private async *listByResourcePagingAll(
     resourceGroupName: string,
-    parentType: PrivateEndpointConnectionsParentType,
     parentName: string,
     options?: PrivateEndpointConnectionsListByResourceOptionalParams
   ): AsyncIterableIterator<PrivateEndpointConnection> {
     for await (const page of this.listByResourcePagingPage(
       resourceGroupName,
-      parentType,
       parentName,
       options
     )) {
@@ -141,8 +134,6 @@ export class PrivateEndpointConnectionsImpl
   /**
    * Get a specific private endpoint connection under a topic, domain, or partner namespace.
    * @param resourceGroupName The name of the resource group within the user's subscription.
-   * @param parentType The type of the parent resource. This can be either \'topics\', \'domains\', or
-   *                   \'partnerNamespaces\'.
    * @param parentName The name of the parent resource (namely, either, the topic name, domain name, or
    *                   partner namespace name).
    * @param privateEndpointConnectionName The name of the private endpoint connection connection.
@@ -150,19 +141,12 @@ export class PrivateEndpointConnectionsImpl
    */
   get(
     resourceGroupName: string,
-    parentType: PrivateEndpointConnectionsParentType,
     parentName: string,
     privateEndpointConnectionName: string,
     options?: PrivateEndpointConnectionsGetOptionalParams
   ): Promise<PrivateEndpointConnectionsGetResponse> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        parentType,
-        parentName,
-        privateEndpointConnectionName,
-        options
-      },
+      { resourceGroupName, parentName, privateEndpointConnectionName, options },
       getOperationSpec
     );
   }
@@ -170,8 +154,6 @@ export class PrivateEndpointConnectionsImpl
   /**
    * Update a specific private endpoint connection under a topic, domain or partner namespace.
    * @param resourceGroupName The name of the resource group within the user's subscription.
-   * @param parentType The type of the parent resource. This can be either \'topics\', \'domains\', or
-   *                   \'partnerNamespaces\'.
    * @param parentName The name of the parent resource (namely, either, the topic name, domain name, or
    *                   partner namespace name).
    * @param privateEndpointConnectionName The name of the private endpoint connection connection.
@@ -180,14 +162,13 @@ export class PrivateEndpointConnectionsImpl
    */
   async beginUpdate(
     resourceGroupName: string,
-    parentType: PrivateEndpointConnectionsParentType,
     parentName: string,
     privateEndpointConnectionName: string,
     privateEndpointConnection: PrivateEndpointConnection,
     options?: PrivateEndpointConnectionsUpdateOptionalParams
   ): Promise<
-    PollerLike<
-      PollOperationState<PrivateEndpointConnectionsUpdateResponse>,
+    SimplePollerLike<
+      OperationState<PrivateEndpointConnectionsUpdateResponse>,
       PrivateEndpointConnectionsUpdateResponse
     >
   > {
@@ -197,7 +178,7 @@ export class PrivateEndpointConnectionsImpl
     ): Promise<PrivateEndpointConnectionsUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
-    const sendOperation = async (
+    const sendOperationFn = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
     ) => {
@@ -230,20 +211,22 @@ export class PrivateEndpointConnectionsImpl
       };
     };
 
-    const lro = new LroImpl(
-      sendOperation,
-      {
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: {
         resourceGroupName,
-        parentType,
         parentName,
         privateEndpointConnectionName,
         privateEndpointConnection,
         options
       },
-      updateOperationSpec
-    );
-    const poller = new LroEngine(lro, {
-      resumeFrom: options?.resumeFrom,
+      spec: updateOperationSpec
+    });
+    const poller = await createHttpPoller<
+      PrivateEndpointConnectionsUpdateResponse,
+      OperationState<PrivateEndpointConnectionsUpdateResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
     await poller.poll();
@@ -253,8 +236,6 @@ export class PrivateEndpointConnectionsImpl
   /**
    * Update a specific private endpoint connection under a topic, domain or partner namespace.
    * @param resourceGroupName The name of the resource group within the user's subscription.
-   * @param parentType The type of the parent resource. This can be either \'topics\', \'domains\', or
-   *                   \'partnerNamespaces\'.
    * @param parentName The name of the parent resource (namely, either, the topic name, domain name, or
    *                   partner namespace name).
    * @param privateEndpointConnectionName The name of the private endpoint connection connection.
@@ -263,7 +244,6 @@ export class PrivateEndpointConnectionsImpl
    */
   async beginUpdateAndWait(
     resourceGroupName: string,
-    parentType: PrivateEndpointConnectionsParentType,
     parentName: string,
     privateEndpointConnectionName: string,
     privateEndpointConnection: PrivateEndpointConnection,
@@ -271,7 +251,6 @@ export class PrivateEndpointConnectionsImpl
   ): Promise<PrivateEndpointConnectionsUpdateResponse> {
     const poller = await this.beginUpdate(
       resourceGroupName,
-      parentType,
       parentName,
       privateEndpointConnectionName,
       privateEndpointConnection,
@@ -283,8 +262,6 @@ export class PrivateEndpointConnectionsImpl
   /**
    * Delete a specific private endpoint connection under a topic, domain, or partner namespace.
    * @param resourceGroupName The name of the resource group within the user's subscription.
-   * @param parentType The type of the parent resource. This can be either \'topics\', \'domains\', or
-   *                   \'partnerNamespaces\'.
    * @param parentName The name of the parent resource (namely, either, the topic name, domain name, or
    *                   partner namespace name).
    * @param privateEndpointConnectionName The name of the private endpoint connection connection.
@@ -292,18 +269,17 @@ export class PrivateEndpointConnectionsImpl
    */
   async beginDelete(
     resourceGroupName: string,
-    parentType: PrivateEndpointConnectionsParentType,
     parentName: string,
     privateEndpointConnectionName: string,
     options?: PrivateEndpointConnectionsDeleteOptionalParams
-  ): Promise<PollerLike<PollOperationState<void>, void>> {
+  ): Promise<SimplePollerLike<OperationState<void>, void>> {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
     ): Promise<void> => {
       return this.client.sendOperationRequest(args, spec);
     };
-    const sendOperation = async (
+    const sendOperationFn = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
     ) => {
@@ -336,19 +312,18 @@ export class PrivateEndpointConnectionsImpl
       };
     };
 
-    const lro = new LroImpl(
-      sendOperation,
-      {
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: {
         resourceGroupName,
-        parentType,
         parentName,
         privateEndpointConnectionName,
         options
       },
-      deleteOperationSpec
-    );
-    const poller = new LroEngine(lro, {
-      resumeFrom: options?.resumeFrom,
+      spec: deleteOperationSpec
+    });
+    const poller = await createHttpPoller<void, OperationState<void>>(lro, {
+      restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
     await poller.poll();
@@ -358,8 +333,6 @@ export class PrivateEndpointConnectionsImpl
   /**
    * Delete a specific private endpoint connection under a topic, domain, or partner namespace.
    * @param resourceGroupName The name of the resource group within the user's subscription.
-   * @param parentType The type of the parent resource. This can be either \'topics\', \'domains\', or
-   *                   \'partnerNamespaces\'.
    * @param parentName The name of the parent resource (namely, either, the topic name, domain name, or
    *                   partner namespace name).
    * @param privateEndpointConnectionName The name of the private endpoint connection connection.
@@ -367,14 +340,12 @@ export class PrivateEndpointConnectionsImpl
    */
   async beginDeleteAndWait(
     resourceGroupName: string,
-    parentType: PrivateEndpointConnectionsParentType,
     parentName: string,
     privateEndpointConnectionName: string,
     options?: PrivateEndpointConnectionsDeleteOptionalParams
   ): Promise<void> {
     const poller = await this.beginDelete(
       resourceGroupName,
-      parentType,
       parentName,
       privateEndpointConnectionName,
       options
@@ -385,20 +356,17 @@ export class PrivateEndpointConnectionsImpl
   /**
    * Get all private endpoint connections under a topic, domain, or partner namespace.
    * @param resourceGroupName The name of the resource group within the user's subscription.
-   * @param parentType The type of the parent resource. This can be either \'topics\', \'domains\', or
-   *                   \'partnerNamespaces\'.
    * @param parentName The name of the parent resource (namely, either, the topic name, domain name, or
    *                   partner namespace name).
    * @param options The options parameters.
    */
   private _listByResource(
     resourceGroupName: string,
-    parentType: PrivateEndpointConnectionsParentType,
     parentName: string,
     options?: PrivateEndpointConnectionsListByResourceOptionalParams
   ): Promise<PrivateEndpointConnectionsListByResourceResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, parentType, parentName, options },
+      { resourceGroupName, parentName, options },
       listByResourceOperationSpec
     );
   }
@@ -406,8 +374,6 @@ export class PrivateEndpointConnectionsImpl
   /**
    * ListByResourceNext
    * @param resourceGroupName The name of the resource group within the user's subscription.
-   * @param parentType The type of the parent resource. This can be either \'topics\', \'domains\', or
-   *                   \'partnerNamespaces\'.
    * @param parentName The name of the parent resource (namely, either, the topic name, domain name, or
    *                   partner namespace name).
    * @param nextLink The nextLink from the previous successful call to the ListByResource method.
@@ -415,13 +381,12 @@ export class PrivateEndpointConnectionsImpl
    */
   private _listByResourceNext(
     resourceGroupName: string,
-    parentType: PrivateEndpointConnectionsParentType,
     parentName: string,
     nextLink: string,
     options?: PrivateEndpointConnectionsListByResourceNextOptionalParams
   ): Promise<PrivateEndpointConnectionsListByResourceNextResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, parentType, parentName, nextLink, options },
+      { resourceGroupName, parentName, nextLink, options },
       listByResourceNextOperationSpec
     );
   }

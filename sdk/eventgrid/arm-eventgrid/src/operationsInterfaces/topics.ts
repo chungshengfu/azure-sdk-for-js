@@ -7,7 +7,7 @@
  */
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { PollerLike, PollOperationState } from "@azure/core-lro";
+import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   Topic,
   TopicsListBySubscriptionOptionalParams,
@@ -86,8 +86,8 @@ export interface Topics {
     topicInfo: Topic,
     options?: TopicsCreateOrUpdateOptionalParams
   ): Promise<
-    PollerLike<
-      PollOperationState<TopicsCreateOrUpdateResponse>,
+    SimplePollerLike<
+      OperationState<TopicsCreateOrUpdateResponse>,
       TopicsCreateOrUpdateResponse
     >
   >;
@@ -114,7 +114,7 @@ export interface Topics {
     resourceGroupName: string,
     topicName: string,
     options?: TopicsDeleteOptionalParams
-  ): Promise<PollerLike<PollOperationState<void>, void>>;
+  ): Promise<SimplePollerLike<OperationState<void>, void>>;
   /**
    * Delete existing topic.
    * @param resourceGroupName The name of the resource group within the user's subscription.
@@ -138,7 +138,7 @@ export interface Topics {
     topicName: string,
     topicUpdateParameters: TopicUpdateParameters,
     options?: TopicsUpdateOptionalParams
-  ): Promise<PollerLike<PollOperationState<void>, void>>;
+  ): Promise<SimplePollerLike<OperationState<void>, void>>;
   /**
    * Asynchronously updates a topic with the specified parameters.
    * @param resourceGroupName The name of the resource group within the user's subscription.
@@ -176,8 +176,8 @@ export interface Topics {
     regenerateKeyRequest: TopicRegenerateKeyRequest,
     options?: TopicsRegenerateKeyOptionalParams
   ): Promise<
-    PollerLike<
-      PollOperationState<TopicsRegenerateKeyResponse>,
+    SimplePollerLike<
+      OperationState<TopicsRegenerateKeyResponse>,
       TopicsRegenerateKeyResponse
     >
   >;

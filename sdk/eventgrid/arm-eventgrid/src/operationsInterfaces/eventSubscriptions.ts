@@ -7,7 +7,7 @@
  */
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { PollerLike, PollOperationState } from "@azure/core-lro";
+import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   EventSubscription,
   EventSubscriptionsListGlobalBySubscriptionOptionalParams,
@@ -190,8 +190,8 @@ export interface EventSubscriptions {
     eventSubscriptionInfo: EventSubscription,
     options?: EventSubscriptionsCreateOrUpdateOptionalParams
   ): Promise<
-    PollerLike<
-      PollOperationState<EventSubscriptionsCreateOrUpdateResponse>,
+    SimplePollerLike<
+      OperationState<EventSubscriptionsCreateOrUpdateResponse>,
       EventSubscriptionsCreateOrUpdateResponse
     >
   >;
@@ -236,7 +236,7 @@ export interface EventSubscriptions {
     scope: string,
     eventSubscriptionName: string,
     options?: EventSubscriptionsDeleteOptionalParams
-  ): Promise<PollerLike<PollOperationState<void>, void>>;
+  ): Promise<SimplePollerLike<OperationState<void>, void>>;
   /**
    * Delete an existing event subscription.
    * @param scope The scope of the event subscription. The scope can be a subscription, or a resource
@@ -275,8 +275,8 @@ export interface EventSubscriptions {
     eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters,
     options?: EventSubscriptionsUpdateOptionalParams
   ): Promise<
-    PollerLike<
-      PollOperationState<EventSubscriptionsUpdateResponse>,
+    SimplePollerLike<
+      OperationState<EventSubscriptionsUpdateResponse>,
       EventSubscriptionsUpdateResponse
     >
   >;

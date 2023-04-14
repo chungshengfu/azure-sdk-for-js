@@ -13,8 +13,12 @@ import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { EventGridManagementClient } from "../eventGridManagementClient";
-import { PollerLike, PollOperationState, LroEngine } from "@azure/core-lro";
-import { LroImpl } from "../lroImpl";
+import {
+  SimplePollerLike,
+  OperationState,
+  createHttpPoller
+} from "@azure/core-lro";
+import { createLroSpec } from "../lroImpl";
 import {
   EventSubscription,
   SystemTopicEventSubscriptionsListBySystemTopicNextOptionalParams,
@@ -171,8 +175,8 @@ export class SystemTopicEventSubscriptionsImpl
     eventSubscriptionInfo: EventSubscription,
     options?: SystemTopicEventSubscriptionsCreateOrUpdateOptionalParams
   ): Promise<
-    PollerLike<
-      PollOperationState<SystemTopicEventSubscriptionsCreateOrUpdateResponse>,
+    SimplePollerLike<
+      OperationState<SystemTopicEventSubscriptionsCreateOrUpdateResponse>,
       SystemTopicEventSubscriptionsCreateOrUpdateResponse
     >
   > {
@@ -182,7 +186,7 @@ export class SystemTopicEventSubscriptionsImpl
     ): Promise<SystemTopicEventSubscriptionsCreateOrUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
-    const sendOperation = async (
+    const sendOperationFn = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
     ) => {
@@ -215,19 +219,22 @@ export class SystemTopicEventSubscriptionsImpl
       };
     };
 
-    const lro = new LroImpl(
-      sendOperation,
-      {
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: {
         resourceGroupName,
         systemTopicName,
         eventSubscriptionName,
         eventSubscriptionInfo,
         options
       },
-      createOrUpdateOperationSpec
-    );
-    const poller = new LroEngine(lro, {
-      resumeFrom: options?.resumeFrom,
+      spec: createOrUpdateOperationSpec
+    });
+    const poller = await createHttpPoller<
+      SystemTopicEventSubscriptionsCreateOrUpdateResponse,
+      OperationState<SystemTopicEventSubscriptionsCreateOrUpdateResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
     await poller.poll();
@@ -275,14 +282,14 @@ export class SystemTopicEventSubscriptionsImpl
     systemTopicName: string,
     eventSubscriptionName: string,
     options?: SystemTopicEventSubscriptionsDeleteOptionalParams
-  ): Promise<PollerLike<PollOperationState<void>, void>> {
+  ): Promise<SimplePollerLike<OperationState<void>, void>> {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
     ): Promise<void> => {
       return this.client.sendOperationRequest(args, spec);
     };
-    const sendOperation = async (
+    const sendOperationFn = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
     ) => {
@@ -315,13 +322,18 @@ export class SystemTopicEventSubscriptionsImpl
       };
     };
 
-    const lro = new LroImpl(
-      sendOperation,
-      { resourceGroupName, systemTopicName, eventSubscriptionName, options },
-      deleteOperationSpec
-    );
-    const poller = new LroEngine(lro, {
-      resumeFrom: options?.resumeFrom,
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: {
+        resourceGroupName,
+        systemTopicName,
+        eventSubscriptionName,
+        options
+      },
+      spec: deleteOperationSpec
+    });
+    const poller = await createHttpPoller<void, OperationState<void>>(lro, {
+      restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
     await poller.poll();
@@ -367,8 +379,8 @@ export class SystemTopicEventSubscriptionsImpl
     eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters,
     options?: SystemTopicEventSubscriptionsUpdateOptionalParams
   ): Promise<
-    PollerLike<
-      PollOperationState<SystemTopicEventSubscriptionsUpdateResponse>,
+    SimplePollerLike<
+      OperationState<SystemTopicEventSubscriptionsUpdateResponse>,
       SystemTopicEventSubscriptionsUpdateResponse
     >
   > {
@@ -378,7 +390,7 @@ export class SystemTopicEventSubscriptionsImpl
     ): Promise<SystemTopicEventSubscriptionsUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
-    const sendOperation = async (
+    const sendOperationFn = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
     ) => {
@@ -411,19 +423,22 @@ export class SystemTopicEventSubscriptionsImpl
       };
     };
 
-    const lro = new LroImpl(
-      sendOperation,
-      {
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: {
         resourceGroupName,
         systemTopicName,
         eventSubscriptionName,
         eventSubscriptionUpdateParameters,
         options
       },
-      updateOperationSpec
-    );
-    const poller = new LroEngine(lro, {
-      resumeFrom: options?.resumeFrom,
+      spec: updateOperationSpec
+    });
+    const poller = await createHttpPoller<
+      SystemTopicEventSubscriptionsUpdateResponse,
+      OperationState<SystemTopicEventSubscriptionsUpdateResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
     });
     await poller.poll();

@@ -6,9 +6,9 @@
 
 import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
+import { OperationState } from '@azure/core-lro';
 import { PagedAsyncIterableIterator } from '@azure/core-paging';
-import { PollerLike } from '@azure/core-lro';
-import { PollOperationState } from '@azure/core-lro';
+import { SimplePollerLike } from '@azure/core-lro';
 
 // @public
 export interface AdvancedFilter {
@@ -53,7 +53,7 @@ export type ChannelProvisioningState = string;
 
 // @public
 export interface Channels {
-    beginDelete(resourceGroupName: string, partnerNamespaceName: string, channelName: string, options?: ChannelsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginDelete(resourceGroupName: string, partnerNamespaceName: string, channelName: string, options?: ChannelsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginDeleteAndWait(resourceGroupName: string, partnerNamespaceName: string, channelName: string, options?: ChannelsDeleteOptionalParams): Promise<void>;
     createOrUpdate(resourceGroupName: string, partnerNamespaceName: string, channelName: string, channelInfo: Channel, options?: ChannelsCreateOrUpdateOptionalParams): Promise<ChannelsCreateOrUpdateResponse>;
     get(resourceGroupName: string, partnerNamespaceName: string, channelName: string, options?: ChannelsGetOptionalParams): Promise<ChannelsGetResponse>;
@@ -197,11 +197,11 @@ export interface Domain extends TrackedResource {
 
 // @public
 export interface DomainEventSubscriptions {
-    beginCreateOrUpdate(resourceGroupName: string, domainName: string, eventSubscriptionName: string, eventSubscriptionInfo: EventSubscription, options?: DomainEventSubscriptionsCreateOrUpdateOptionalParams): Promise<PollerLike<PollOperationState<DomainEventSubscriptionsCreateOrUpdateResponse>, DomainEventSubscriptionsCreateOrUpdateResponse>>;
+    beginCreateOrUpdate(resourceGroupName: string, domainName: string, eventSubscriptionName: string, eventSubscriptionInfo: EventSubscription, options?: DomainEventSubscriptionsCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<DomainEventSubscriptionsCreateOrUpdateResponse>, DomainEventSubscriptionsCreateOrUpdateResponse>>;
     beginCreateOrUpdateAndWait(resourceGroupName: string, domainName: string, eventSubscriptionName: string, eventSubscriptionInfo: EventSubscription, options?: DomainEventSubscriptionsCreateOrUpdateOptionalParams): Promise<DomainEventSubscriptionsCreateOrUpdateResponse>;
-    beginDelete(resourceGroupName: string, domainName: string, eventSubscriptionName: string, options?: DomainEventSubscriptionsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginDelete(resourceGroupName: string, domainName: string, eventSubscriptionName: string, options?: DomainEventSubscriptionsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginDeleteAndWait(resourceGroupName: string, domainName: string, eventSubscriptionName: string, options?: DomainEventSubscriptionsDeleteOptionalParams): Promise<void>;
-    beginUpdate(resourceGroupName: string, domainName: string, eventSubscriptionName: string, eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters, options?: DomainEventSubscriptionsUpdateOptionalParams): Promise<PollerLike<PollOperationState<DomainEventSubscriptionsUpdateResponse>, DomainEventSubscriptionsUpdateResponse>>;
+    beginUpdate(resourceGroupName: string, domainName: string, eventSubscriptionName: string, eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters, options?: DomainEventSubscriptionsUpdateOptionalParams): Promise<SimplePollerLike<OperationState<DomainEventSubscriptionsUpdateResponse>, DomainEventSubscriptionsUpdateResponse>>;
     beginUpdateAndWait(resourceGroupName: string, domainName: string, eventSubscriptionName: string, eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters, options?: DomainEventSubscriptionsUpdateOptionalParams): Promise<DomainEventSubscriptionsUpdateResponse>;
     get(resourceGroupName: string, domainName: string, eventSubscriptionName: string, options?: DomainEventSubscriptionsGetOptionalParams): Promise<DomainEventSubscriptionsGetResponse>;
     getDeliveryAttributes(resourceGroupName: string, domainName: string, eventSubscriptionName: string, options?: DomainEventSubscriptionsGetDeliveryAttributesOptionalParams): Promise<DomainEventSubscriptionsGetDeliveryAttributesResponse>;
@@ -280,11 +280,11 @@ export interface DomainRegenerateKeyRequest {
 
 // @public
 export interface Domains {
-    beginCreateOrUpdate(resourceGroupName: string, domainName: string, domainInfo: Domain, options?: DomainsCreateOrUpdateOptionalParams): Promise<PollerLike<PollOperationState<DomainsCreateOrUpdateResponse>, DomainsCreateOrUpdateResponse>>;
+    beginCreateOrUpdate(resourceGroupName: string, domainName: string, domainInfo: Domain, options?: DomainsCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<DomainsCreateOrUpdateResponse>, DomainsCreateOrUpdateResponse>>;
     beginCreateOrUpdateAndWait(resourceGroupName: string, domainName: string, domainInfo: Domain, options?: DomainsCreateOrUpdateOptionalParams): Promise<DomainsCreateOrUpdateResponse>;
-    beginDelete(resourceGroupName: string, domainName: string, options?: DomainsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginDelete(resourceGroupName: string, domainName: string, options?: DomainsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginDeleteAndWait(resourceGroupName: string, domainName: string, options?: DomainsDeleteOptionalParams): Promise<void>;
-    beginUpdate(resourceGroupName: string, domainName: string, domainUpdateParameters: DomainUpdateParameters, options?: DomainsUpdateOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginUpdate(resourceGroupName: string, domainName: string, domainUpdateParameters: DomainUpdateParameters, options?: DomainsUpdateOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginUpdateAndWait(resourceGroupName: string, domainName: string, domainUpdateParameters: DomainUpdateParameters, options?: DomainsUpdateOptionalParams): Promise<void>;
     get(resourceGroupName: string, domainName: string, options?: DomainsGetOptionalParams): Promise<DomainsGetResponse>;
     listByResourceGroup(resourceGroupName: string, options?: DomainsListByResourceGroupOptionalParams): PagedAsyncIterableIterator<Domain>;
@@ -387,11 +387,11 @@ export interface DomainTopic extends Resource {
 
 // @public
 export interface DomainTopicEventSubscriptions {
-    beginCreateOrUpdate(resourceGroupName: string, domainName: string, topicName: string, eventSubscriptionName: string, eventSubscriptionInfo: EventSubscription, options?: DomainTopicEventSubscriptionsCreateOrUpdateOptionalParams): Promise<PollerLike<PollOperationState<DomainTopicEventSubscriptionsCreateOrUpdateResponse>, DomainTopicEventSubscriptionsCreateOrUpdateResponse>>;
+    beginCreateOrUpdate(resourceGroupName: string, domainName: string, topicName: string, eventSubscriptionName: string, eventSubscriptionInfo: EventSubscription, options?: DomainTopicEventSubscriptionsCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<DomainTopicEventSubscriptionsCreateOrUpdateResponse>, DomainTopicEventSubscriptionsCreateOrUpdateResponse>>;
     beginCreateOrUpdateAndWait(resourceGroupName: string, domainName: string, topicName: string, eventSubscriptionName: string, eventSubscriptionInfo: EventSubscription, options?: DomainTopicEventSubscriptionsCreateOrUpdateOptionalParams): Promise<DomainTopicEventSubscriptionsCreateOrUpdateResponse>;
-    beginDelete(resourceGroupName: string, domainName: string, topicName: string, eventSubscriptionName: string, options?: DomainTopicEventSubscriptionsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginDelete(resourceGroupName: string, domainName: string, topicName: string, eventSubscriptionName: string, options?: DomainTopicEventSubscriptionsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginDeleteAndWait(resourceGroupName: string, domainName: string, topicName: string, eventSubscriptionName: string, options?: DomainTopicEventSubscriptionsDeleteOptionalParams): Promise<void>;
-    beginUpdate(resourceGroupName: string, domainName: string, topicName: string, eventSubscriptionName: string, eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters, options?: DomainTopicEventSubscriptionsUpdateOptionalParams): Promise<PollerLike<PollOperationState<DomainTopicEventSubscriptionsUpdateResponse>, DomainTopicEventSubscriptionsUpdateResponse>>;
+    beginUpdate(resourceGroupName: string, domainName: string, topicName: string, eventSubscriptionName: string, eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters, options?: DomainTopicEventSubscriptionsUpdateOptionalParams): Promise<SimplePollerLike<OperationState<DomainTopicEventSubscriptionsUpdateResponse>, DomainTopicEventSubscriptionsUpdateResponse>>;
     beginUpdateAndWait(resourceGroupName: string, domainName: string, topicName: string, eventSubscriptionName: string, eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters, options?: DomainTopicEventSubscriptionsUpdateOptionalParams): Promise<DomainTopicEventSubscriptionsUpdateResponse>;
     get(resourceGroupName: string, domainName: string, topicName: string, eventSubscriptionName: string, options?: DomainTopicEventSubscriptionsGetOptionalParams): Promise<DomainTopicEventSubscriptionsGetResponse>;
     getDeliveryAttributes(resourceGroupName: string, domainName: string, topicName: string, eventSubscriptionName: string, options?: DomainTopicEventSubscriptionsGetDeliveryAttributesOptionalParams): Promise<DomainTopicEventSubscriptionsGetDeliveryAttributesResponse>;
@@ -465,9 +465,9 @@ export type DomainTopicProvisioningState = string;
 
 // @public
 export interface DomainTopics {
-    beginCreateOrUpdate(resourceGroupName: string, domainName: string, domainTopicName: string, options?: DomainTopicsCreateOrUpdateOptionalParams): Promise<PollerLike<PollOperationState<DomainTopicsCreateOrUpdateResponse>, DomainTopicsCreateOrUpdateResponse>>;
+    beginCreateOrUpdate(resourceGroupName: string, domainName: string, domainTopicName: string, options?: DomainTopicsCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<DomainTopicsCreateOrUpdateResponse>, DomainTopicsCreateOrUpdateResponse>>;
     beginCreateOrUpdateAndWait(resourceGroupName: string, domainName: string, domainTopicName: string, options?: DomainTopicsCreateOrUpdateOptionalParams): Promise<DomainTopicsCreateOrUpdateResponse>;
-    beginDelete(resourceGroupName: string, domainName: string, domainTopicName: string, options?: DomainTopicsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginDelete(resourceGroupName: string, domainName: string, domainTopicName: string, options?: DomainTopicsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginDeleteAndWait(resourceGroupName: string, domainName: string, domainTopicName: string, options?: DomainTopicsDeleteOptionalParams): Promise<void>;
     get(resourceGroupName: string, domainName: string, domainTopicName: string, options?: DomainTopicsGetOptionalParams): Promise<DomainTopicsGetResponse>;
     listByDomain(resourceGroupName: string, domainName: string, options?: DomainTopicsListByDomainOptionalParams): PagedAsyncIterableIterator<DomainTopic>;
@@ -550,7 +550,7 @@ export type EventDeliverySchema = string;
 export class EventGridManagementClient extends coreClient.ServiceClient {
     // (undocumented)
     $host: string;
-    constructor(credentials: coreAuth.TokenCredential, subscriptionId: string, options?: EventGridManagementClientOptionalParams);
+    constructor(credentials: coreAuth.TokenCredential, subscriptionId: string, parentType: PrivateEndpointConnectionsParentType, options?: EventGridManagementClientOptionalParams);
     // (undocumented)
     apiVersion: string;
     // (undocumented)
@@ -569,6 +569,8 @@ export class EventGridManagementClient extends coreClient.ServiceClient {
     extensionTopics: ExtensionTopics;
     // (undocumented)
     operations: Operations;
+    // (undocumented)
+    parentType: PrivateEndpointConnectionsParentType;
     // (undocumented)
     partnerConfigurations: PartnerConfigurations;
     // (undocumented)
@@ -666,11 +668,11 @@ export type EventSubscriptionProvisioningState = string;
 
 // @public
 export interface EventSubscriptions {
-    beginCreateOrUpdate(scope: string, eventSubscriptionName: string, eventSubscriptionInfo: EventSubscription, options?: EventSubscriptionsCreateOrUpdateOptionalParams): Promise<PollerLike<PollOperationState<EventSubscriptionsCreateOrUpdateResponse>, EventSubscriptionsCreateOrUpdateResponse>>;
+    beginCreateOrUpdate(scope: string, eventSubscriptionName: string, eventSubscriptionInfo: EventSubscription, options?: EventSubscriptionsCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<EventSubscriptionsCreateOrUpdateResponse>, EventSubscriptionsCreateOrUpdateResponse>>;
     beginCreateOrUpdateAndWait(scope: string, eventSubscriptionName: string, eventSubscriptionInfo: EventSubscription, options?: EventSubscriptionsCreateOrUpdateOptionalParams): Promise<EventSubscriptionsCreateOrUpdateResponse>;
-    beginDelete(scope: string, eventSubscriptionName: string, options?: EventSubscriptionsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginDelete(scope: string, eventSubscriptionName: string, options?: EventSubscriptionsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginDeleteAndWait(scope: string, eventSubscriptionName: string, options?: EventSubscriptionsDeleteOptionalParams): Promise<void>;
-    beginUpdate(scope: string, eventSubscriptionName: string, eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters, options?: EventSubscriptionsUpdateOptionalParams): Promise<PollerLike<PollOperationState<EventSubscriptionsUpdateResponse>, EventSubscriptionsUpdateResponse>>;
+    beginUpdate(scope: string, eventSubscriptionName: string, eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters, options?: EventSubscriptionsUpdateOptionalParams): Promise<SimplePollerLike<OperationState<EventSubscriptionsUpdateResponse>, EventSubscriptionsUpdateResponse>>;
     beginUpdateAndWait(scope: string, eventSubscriptionName: string, eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters, options?: EventSubscriptionsUpdateOptionalParams): Promise<EventSubscriptionsUpdateResponse>;
     get(scope: string, eventSubscriptionName: string, options?: EventSubscriptionsGetOptionalParams): Promise<EventSubscriptionsGetResponse>;
     getDeliveryAttributes(scope: string, eventSubscriptionName: string, options?: EventSubscriptionsGetDeliveryAttributesOptionalParams): Promise<EventSubscriptionsGetDeliveryAttributesResponse>;
@@ -1433,11 +1435,11 @@ export type PartnerConfigurationProvisioningState = string;
 // @public
 export interface PartnerConfigurations {
     authorizePartner(resourceGroupName: string, partnerInfo: Partner, options?: PartnerConfigurationsAuthorizePartnerOptionalParams): Promise<PartnerConfigurationsAuthorizePartnerResponse>;
-    beginCreateOrUpdate(resourceGroupName: string, partnerConfigurationInfo: PartnerConfiguration, options?: PartnerConfigurationsCreateOrUpdateOptionalParams): Promise<PollerLike<PollOperationState<PartnerConfigurationsCreateOrUpdateResponse>, PartnerConfigurationsCreateOrUpdateResponse>>;
+    beginCreateOrUpdate(resourceGroupName: string, partnerConfigurationInfo: PartnerConfiguration, options?: PartnerConfigurationsCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<PartnerConfigurationsCreateOrUpdateResponse>, PartnerConfigurationsCreateOrUpdateResponse>>;
     beginCreateOrUpdateAndWait(resourceGroupName: string, partnerConfigurationInfo: PartnerConfiguration, options?: PartnerConfigurationsCreateOrUpdateOptionalParams): Promise<PartnerConfigurationsCreateOrUpdateResponse>;
-    beginDelete(resourceGroupName: string, options?: PartnerConfigurationsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginDelete(resourceGroupName: string, options?: PartnerConfigurationsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginDeleteAndWait(resourceGroupName: string, options?: PartnerConfigurationsDeleteOptionalParams): Promise<void>;
-    beginUpdate(resourceGroupName: string, partnerConfigurationUpdateParameters: PartnerConfigurationUpdateParameters, options?: PartnerConfigurationsUpdateOptionalParams): Promise<PollerLike<PollOperationState<PartnerConfigurationsUpdateResponse>, PartnerConfigurationsUpdateResponse>>;
+    beginUpdate(resourceGroupName: string, partnerConfigurationUpdateParameters: PartnerConfigurationUpdateParameters, options?: PartnerConfigurationsUpdateOptionalParams): Promise<SimplePollerLike<OperationState<PartnerConfigurationsUpdateResponse>, PartnerConfigurationsUpdateResponse>>;
     beginUpdateAndWait(resourceGroupName: string, partnerConfigurationUpdateParameters: PartnerConfigurationUpdateParameters, options?: PartnerConfigurationsUpdateOptionalParams): Promise<PartnerConfigurationsUpdateResponse>;
     get(resourceGroupName: string, options?: PartnerConfigurationsGetOptionalParams): Promise<PartnerConfigurationsGetResponse>;
     listByResourceGroup(resourceGroupName: string, options?: PartnerConfigurationsListByResourceGroupOptionalParams): PagedAsyncIterableIterator<PartnerConfiguration>;
@@ -1557,11 +1559,11 @@ export interface PartnerNamespaceRegenerateKeyRequest {
 
 // @public
 export interface PartnerNamespaces {
-    beginCreateOrUpdate(resourceGroupName: string, partnerNamespaceName: string, partnerNamespaceInfo: PartnerNamespace, options?: PartnerNamespacesCreateOrUpdateOptionalParams): Promise<PollerLike<PollOperationState<PartnerNamespacesCreateOrUpdateResponse>, PartnerNamespacesCreateOrUpdateResponse>>;
+    beginCreateOrUpdate(resourceGroupName: string, partnerNamespaceName: string, partnerNamespaceInfo: PartnerNamespace, options?: PartnerNamespacesCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<PartnerNamespacesCreateOrUpdateResponse>, PartnerNamespacesCreateOrUpdateResponse>>;
     beginCreateOrUpdateAndWait(resourceGroupName: string, partnerNamespaceName: string, partnerNamespaceInfo: PartnerNamespace, options?: PartnerNamespacesCreateOrUpdateOptionalParams): Promise<PartnerNamespacesCreateOrUpdateResponse>;
-    beginDelete(resourceGroupName: string, partnerNamespaceName: string, options?: PartnerNamespacesDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginDelete(resourceGroupName: string, partnerNamespaceName: string, options?: PartnerNamespacesDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginDeleteAndWait(resourceGroupName: string, partnerNamespaceName: string, options?: PartnerNamespacesDeleteOptionalParams): Promise<void>;
-    beginUpdate(resourceGroupName: string, partnerNamespaceName: string, partnerNamespaceUpdateParameters: PartnerNamespaceUpdateParameters, options?: PartnerNamespacesUpdateOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginUpdate(resourceGroupName: string, partnerNamespaceName: string, partnerNamespaceUpdateParameters: PartnerNamespaceUpdateParameters, options?: PartnerNamespacesUpdateOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginUpdateAndWait(resourceGroupName: string, partnerNamespaceName: string, partnerNamespaceUpdateParameters: PartnerNamespaceUpdateParameters, options?: PartnerNamespacesUpdateOptionalParams): Promise<void>;
     get(resourceGroupName: string, partnerNamespaceName: string, options?: PartnerNamespacesGetOptionalParams): Promise<PartnerNamespacesGetResponse>;
     listByResourceGroup(resourceGroupName: string, options?: PartnerNamespacesListByResourceGroupOptionalParams): PagedAsyncIterableIterator<PartnerNamespace>;
@@ -1678,11 +1680,11 @@ export type PartnerRegistrationProvisioningState = string;
 
 // @public
 export interface PartnerRegistrations {
-    beginCreateOrUpdate(resourceGroupName: string, partnerRegistrationName: string, partnerRegistrationInfo: PartnerRegistration, options?: PartnerRegistrationsCreateOrUpdateOptionalParams): Promise<PollerLike<PollOperationState<PartnerRegistrationsCreateOrUpdateResponse>, PartnerRegistrationsCreateOrUpdateResponse>>;
+    beginCreateOrUpdate(resourceGroupName: string, partnerRegistrationName: string, partnerRegistrationInfo: PartnerRegistration, options?: PartnerRegistrationsCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<PartnerRegistrationsCreateOrUpdateResponse>, PartnerRegistrationsCreateOrUpdateResponse>>;
     beginCreateOrUpdateAndWait(resourceGroupName: string, partnerRegistrationName: string, partnerRegistrationInfo: PartnerRegistration, options?: PartnerRegistrationsCreateOrUpdateOptionalParams): Promise<PartnerRegistrationsCreateOrUpdateResponse>;
-    beginDelete(resourceGroupName: string, partnerRegistrationName: string, options?: PartnerRegistrationsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginDelete(resourceGroupName: string, partnerRegistrationName: string, options?: PartnerRegistrationsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginDeleteAndWait(resourceGroupName: string, partnerRegistrationName: string, options?: PartnerRegistrationsDeleteOptionalParams): Promise<void>;
-    beginUpdate(resourceGroupName: string, partnerRegistrationName: string, partnerRegistrationUpdateParameters: PartnerRegistrationUpdateParameters, options?: PartnerRegistrationsUpdateOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginUpdate(resourceGroupName: string, partnerRegistrationName: string, partnerRegistrationUpdateParameters: PartnerRegistrationUpdateParameters, options?: PartnerRegistrationsUpdateOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginUpdateAndWait(resourceGroupName: string, partnerRegistrationName: string, partnerRegistrationUpdateParameters: PartnerRegistrationUpdateParameters, options?: PartnerRegistrationsUpdateOptionalParams): Promise<void>;
     get(resourceGroupName: string, partnerRegistrationName: string, options?: PartnerRegistrationsGetOptionalParams): Promise<PartnerRegistrationsGetResponse>;
     listByResourceGroup(resourceGroupName: string, options?: PartnerRegistrationsListByResourceGroupOptionalParams): PagedAsyncIterableIterator<PartnerRegistration>;
@@ -1781,11 +1783,11 @@ export type PartnerTopicActivationState = string;
 
 // @public
 export interface PartnerTopicEventSubscriptions {
-    beginCreateOrUpdate(resourceGroupName: string, partnerTopicName: string, eventSubscriptionName: string, eventSubscriptionInfo: EventSubscription, options?: PartnerTopicEventSubscriptionsCreateOrUpdateOptionalParams): Promise<PollerLike<PollOperationState<PartnerTopicEventSubscriptionsCreateOrUpdateResponse>, PartnerTopicEventSubscriptionsCreateOrUpdateResponse>>;
+    beginCreateOrUpdate(resourceGroupName: string, partnerTopicName: string, eventSubscriptionName: string, eventSubscriptionInfo: EventSubscription, options?: PartnerTopicEventSubscriptionsCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<PartnerTopicEventSubscriptionsCreateOrUpdateResponse>, PartnerTopicEventSubscriptionsCreateOrUpdateResponse>>;
     beginCreateOrUpdateAndWait(resourceGroupName: string, partnerTopicName: string, eventSubscriptionName: string, eventSubscriptionInfo: EventSubscription, options?: PartnerTopicEventSubscriptionsCreateOrUpdateOptionalParams): Promise<PartnerTopicEventSubscriptionsCreateOrUpdateResponse>;
-    beginDelete(resourceGroupName: string, partnerTopicName: string, eventSubscriptionName: string, options?: PartnerTopicEventSubscriptionsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginDelete(resourceGroupName: string, partnerTopicName: string, eventSubscriptionName: string, options?: PartnerTopicEventSubscriptionsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginDeleteAndWait(resourceGroupName: string, partnerTopicName: string, eventSubscriptionName: string, options?: PartnerTopicEventSubscriptionsDeleteOptionalParams): Promise<void>;
-    beginUpdate(resourceGroupName: string, partnerTopicName: string, eventSubscriptionName: string, eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters, options?: PartnerTopicEventSubscriptionsUpdateOptionalParams): Promise<PollerLike<PollOperationState<PartnerTopicEventSubscriptionsUpdateResponse>, PartnerTopicEventSubscriptionsUpdateResponse>>;
+    beginUpdate(resourceGroupName: string, partnerTopicName: string, eventSubscriptionName: string, eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters, options?: PartnerTopicEventSubscriptionsUpdateOptionalParams): Promise<SimplePollerLike<OperationState<PartnerTopicEventSubscriptionsUpdateResponse>, PartnerTopicEventSubscriptionsUpdateResponse>>;
     beginUpdateAndWait(resourceGroupName: string, partnerTopicName: string, eventSubscriptionName: string, eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters, options?: PartnerTopicEventSubscriptionsUpdateOptionalParams): Promise<PartnerTopicEventSubscriptionsUpdateResponse>;
     get(resourceGroupName: string, partnerTopicName: string, eventSubscriptionName: string, options?: PartnerTopicEventSubscriptionsGetOptionalParams): Promise<PartnerTopicEventSubscriptionsGetResponse>;
     getDeliveryAttributes(resourceGroupName: string, partnerTopicName: string, eventSubscriptionName: string, options?: PartnerTopicEventSubscriptionsGetDeliveryAttributesOptionalParams): Promise<PartnerTopicEventSubscriptionsGetDeliveryAttributesResponse>;
@@ -1872,7 +1874,7 @@ export type PartnerTopicRoutingMode = string;
 // @public
 export interface PartnerTopics {
     activate(resourceGroupName: string, partnerTopicName: string, options?: PartnerTopicsActivateOptionalParams): Promise<PartnerTopicsActivateResponse>;
-    beginDelete(resourceGroupName: string, partnerTopicName: string, options?: PartnerTopicsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginDelete(resourceGroupName: string, partnerTopicName: string, options?: PartnerTopicsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginDeleteAndWait(resourceGroupName: string, partnerTopicName: string, options?: PartnerTopicsDeleteOptionalParams): Promise<void>;
     createOrUpdate(resourceGroupName: string, partnerTopicName: string, partnerTopicInfo: PartnerTopic, options?: PartnerTopicsCreateOrUpdateOptionalParams): Promise<PartnerTopicsCreateOrUpdateResponse>;
     deactivate(resourceGroupName: string, partnerTopicName: string, options?: PartnerTopicsDeactivateOptionalParams): Promise<PartnerTopicsDeactivateResponse>;
@@ -1998,12 +2000,12 @@ export interface PrivateEndpointConnectionListResult {
 
 // @public
 export interface PrivateEndpointConnections {
-    beginDelete(resourceGroupName: string, parentType: PrivateEndpointConnectionsParentType, parentName: string, privateEndpointConnectionName: string, options?: PrivateEndpointConnectionsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
-    beginDeleteAndWait(resourceGroupName: string, parentType: PrivateEndpointConnectionsParentType, parentName: string, privateEndpointConnectionName: string, options?: PrivateEndpointConnectionsDeleteOptionalParams): Promise<void>;
-    beginUpdate(resourceGroupName: string, parentType: PrivateEndpointConnectionsParentType, parentName: string, privateEndpointConnectionName: string, privateEndpointConnection: PrivateEndpointConnection, options?: PrivateEndpointConnectionsUpdateOptionalParams): Promise<PollerLike<PollOperationState<PrivateEndpointConnectionsUpdateResponse>, PrivateEndpointConnectionsUpdateResponse>>;
-    beginUpdateAndWait(resourceGroupName: string, parentType: PrivateEndpointConnectionsParentType, parentName: string, privateEndpointConnectionName: string, privateEndpointConnection: PrivateEndpointConnection, options?: PrivateEndpointConnectionsUpdateOptionalParams): Promise<PrivateEndpointConnectionsUpdateResponse>;
-    get(resourceGroupName: string, parentType: PrivateEndpointConnectionsParentType, parentName: string, privateEndpointConnectionName: string, options?: PrivateEndpointConnectionsGetOptionalParams): Promise<PrivateEndpointConnectionsGetResponse>;
-    listByResource(resourceGroupName: string, parentType: PrivateEndpointConnectionsParentType, parentName: string, options?: PrivateEndpointConnectionsListByResourceOptionalParams): PagedAsyncIterableIterator<PrivateEndpointConnection>;
+    beginDelete(resourceGroupName: string, parentName: string, privateEndpointConnectionName: string, options?: PrivateEndpointConnectionsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
+    beginDeleteAndWait(resourceGroupName: string, parentName: string, privateEndpointConnectionName: string, options?: PrivateEndpointConnectionsDeleteOptionalParams): Promise<void>;
+    beginUpdate(resourceGroupName: string, parentName: string, privateEndpointConnectionName: string, privateEndpointConnection: PrivateEndpointConnection, options?: PrivateEndpointConnectionsUpdateOptionalParams): Promise<SimplePollerLike<OperationState<PrivateEndpointConnectionsUpdateResponse>, PrivateEndpointConnectionsUpdateResponse>>;
+    beginUpdateAndWait(resourceGroupName: string, parentName: string, privateEndpointConnectionName: string, privateEndpointConnection: PrivateEndpointConnection, options?: PrivateEndpointConnectionsUpdateOptionalParams): Promise<PrivateEndpointConnectionsUpdateResponse>;
+    get(resourceGroupName: string, parentName: string, privateEndpointConnectionName: string, options?: PrivateEndpointConnectionsGetOptionalParams): Promise<PrivateEndpointConnectionsGetResponse>;
+    listByResource(resourceGroupName: string, parentName: string, options?: PrivateEndpointConnectionsListByResourceOptionalParams): PagedAsyncIterableIterator<PrivateEndpointConnection>;
 }
 
 // @public
@@ -2064,8 +2066,8 @@ export interface PrivateLinkResource {
 
 // @public
 export interface PrivateLinkResources {
-    get(resourceGroupName: string, parentType: string, parentName: string, privateLinkResourceName: string, options?: PrivateLinkResourcesGetOptionalParams): Promise<PrivateLinkResourcesGetResponse>;
-    listByResource(resourceGroupName: string, parentType: string, parentName: string, options?: PrivateLinkResourcesListByResourceOptionalParams): PagedAsyncIterableIterator<PrivateLinkResource>;
+    get(resourceGroupName: string, parentName: string, privateLinkResourceName: string, options?: PrivateLinkResourcesGetOptionalParams): Promise<PrivateLinkResourcesGetResponse>;
+    listByResource(resourceGroupName: string, parentName: string, options?: PrivateLinkResourcesListByResourceOptionalParams): PagedAsyncIterableIterator<PrivateLinkResource>;
 }
 
 // @public
@@ -2228,11 +2230,11 @@ export interface SystemTopic extends TrackedResource {
 
 // @public
 export interface SystemTopicEventSubscriptions {
-    beginCreateOrUpdate(resourceGroupName: string, systemTopicName: string, eventSubscriptionName: string, eventSubscriptionInfo: EventSubscription, options?: SystemTopicEventSubscriptionsCreateOrUpdateOptionalParams): Promise<PollerLike<PollOperationState<SystemTopicEventSubscriptionsCreateOrUpdateResponse>, SystemTopicEventSubscriptionsCreateOrUpdateResponse>>;
+    beginCreateOrUpdate(resourceGroupName: string, systemTopicName: string, eventSubscriptionName: string, eventSubscriptionInfo: EventSubscription, options?: SystemTopicEventSubscriptionsCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<SystemTopicEventSubscriptionsCreateOrUpdateResponse>, SystemTopicEventSubscriptionsCreateOrUpdateResponse>>;
     beginCreateOrUpdateAndWait(resourceGroupName: string, systemTopicName: string, eventSubscriptionName: string, eventSubscriptionInfo: EventSubscription, options?: SystemTopicEventSubscriptionsCreateOrUpdateOptionalParams): Promise<SystemTopicEventSubscriptionsCreateOrUpdateResponse>;
-    beginDelete(resourceGroupName: string, systemTopicName: string, eventSubscriptionName: string, options?: SystemTopicEventSubscriptionsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginDelete(resourceGroupName: string, systemTopicName: string, eventSubscriptionName: string, options?: SystemTopicEventSubscriptionsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginDeleteAndWait(resourceGroupName: string, systemTopicName: string, eventSubscriptionName: string, options?: SystemTopicEventSubscriptionsDeleteOptionalParams): Promise<void>;
-    beginUpdate(resourceGroupName: string, systemTopicName: string, eventSubscriptionName: string, eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters, options?: SystemTopicEventSubscriptionsUpdateOptionalParams): Promise<PollerLike<PollOperationState<SystemTopicEventSubscriptionsUpdateResponse>, SystemTopicEventSubscriptionsUpdateResponse>>;
+    beginUpdate(resourceGroupName: string, systemTopicName: string, eventSubscriptionName: string, eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters, options?: SystemTopicEventSubscriptionsUpdateOptionalParams): Promise<SimplePollerLike<OperationState<SystemTopicEventSubscriptionsUpdateResponse>, SystemTopicEventSubscriptionsUpdateResponse>>;
     beginUpdateAndWait(resourceGroupName: string, systemTopicName: string, eventSubscriptionName: string, eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters, options?: SystemTopicEventSubscriptionsUpdateOptionalParams): Promise<SystemTopicEventSubscriptionsUpdateResponse>;
     get(resourceGroupName: string, systemTopicName: string, eventSubscriptionName: string, options?: SystemTopicEventSubscriptionsGetOptionalParams): Promise<SystemTopicEventSubscriptionsGetResponse>;
     getDeliveryAttributes(resourceGroupName: string, systemTopicName: string, eventSubscriptionName: string, options?: SystemTopicEventSubscriptionsGetDeliveryAttributesOptionalParams): Promise<SystemTopicEventSubscriptionsGetDeliveryAttributesResponse>;
@@ -2303,11 +2305,11 @@ export type SystemTopicEventSubscriptionsUpdateResponse = EventSubscription;
 
 // @public
 export interface SystemTopics {
-    beginCreateOrUpdate(resourceGroupName: string, systemTopicName: string, systemTopicInfo: SystemTopic, options?: SystemTopicsCreateOrUpdateOptionalParams): Promise<PollerLike<PollOperationState<SystemTopicsCreateOrUpdateResponse>, SystemTopicsCreateOrUpdateResponse>>;
+    beginCreateOrUpdate(resourceGroupName: string, systemTopicName: string, systemTopicInfo: SystemTopic, options?: SystemTopicsCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<SystemTopicsCreateOrUpdateResponse>, SystemTopicsCreateOrUpdateResponse>>;
     beginCreateOrUpdateAndWait(resourceGroupName: string, systemTopicName: string, systemTopicInfo: SystemTopic, options?: SystemTopicsCreateOrUpdateOptionalParams): Promise<SystemTopicsCreateOrUpdateResponse>;
-    beginDelete(resourceGroupName: string, systemTopicName: string, options?: SystemTopicsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginDelete(resourceGroupName: string, systemTopicName: string, options?: SystemTopicsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginDeleteAndWait(resourceGroupName: string, systemTopicName: string, options?: SystemTopicsDeleteOptionalParams): Promise<void>;
-    beginUpdate(resourceGroupName: string, systemTopicName: string, systemTopicUpdateParameters: SystemTopicUpdateParameters, options?: SystemTopicsUpdateOptionalParams): Promise<PollerLike<PollOperationState<SystemTopicsUpdateResponse>, SystemTopicsUpdateResponse>>;
+    beginUpdate(resourceGroupName: string, systemTopicName: string, systemTopicUpdateParameters: SystemTopicUpdateParameters, options?: SystemTopicsUpdateOptionalParams): Promise<SimplePollerLike<OperationState<SystemTopicsUpdateResponse>, SystemTopicsUpdateResponse>>;
     beginUpdateAndWait(resourceGroupName: string, systemTopicName: string, systemTopicUpdateParameters: SystemTopicUpdateParameters, options?: SystemTopicsUpdateOptionalParams): Promise<SystemTopicsUpdateResponse>;
     get(resourceGroupName: string, systemTopicName: string, options?: SystemTopicsGetOptionalParams): Promise<SystemTopicsGetResponse>;
     listByResourceGroup(resourceGroupName: string, options?: SystemTopicsListByResourceGroupOptionalParams): PagedAsyncIterableIterator<SystemTopic>;
@@ -2409,11 +2411,11 @@ export interface Topic extends TrackedResource {
 
 // @public
 export interface TopicEventSubscriptions {
-    beginCreateOrUpdate(resourceGroupName: string, topicName: string, eventSubscriptionName: string, eventSubscriptionInfo: EventSubscription, options?: TopicEventSubscriptionsCreateOrUpdateOptionalParams): Promise<PollerLike<PollOperationState<TopicEventSubscriptionsCreateOrUpdateResponse>, TopicEventSubscriptionsCreateOrUpdateResponse>>;
+    beginCreateOrUpdate(resourceGroupName: string, topicName: string, eventSubscriptionName: string, eventSubscriptionInfo: EventSubscription, options?: TopicEventSubscriptionsCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<TopicEventSubscriptionsCreateOrUpdateResponse>, TopicEventSubscriptionsCreateOrUpdateResponse>>;
     beginCreateOrUpdateAndWait(resourceGroupName: string, topicName: string, eventSubscriptionName: string, eventSubscriptionInfo: EventSubscription, options?: TopicEventSubscriptionsCreateOrUpdateOptionalParams): Promise<TopicEventSubscriptionsCreateOrUpdateResponse>;
-    beginDelete(resourceGroupName: string, topicName: string, eventSubscriptionName: string, options?: TopicEventSubscriptionsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginDelete(resourceGroupName: string, topicName: string, eventSubscriptionName: string, options?: TopicEventSubscriptionsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginDeleteAndWait(resourceGroupName: string, topicName: string, eventSubscriptionName: string, options?: TopicEventSubscriptionsDeleteOptionalParams): Promise<void>;
-    beginUpdate(resourceGroupName: string, topicName: string, eventSubscriptionName: string, eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters, options?: TopicEventSubscriptionsUpdateOptionalParams): Promise<PollerLike<PollOperationState<TopicEventSubscriptionsUpdateResponse>, TopicEventSubscriptionsUpdateResponse>>;
+    beginUpdate(resourceGroupName: string, topicName: string, eventSubscriptionName: string, eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters, options?: TopicEventSubscriptionsUpdateOptionalParams): Promise<SimplePollerLike<OperationState<TopicEventSubscriptionsUpdateResponse>, TopicEventSubscriptionsUpdateResponse>>;
     beginUpdateAndWait(resourceGroupName: string, topicName: string, eventSubscriptionName: string, eventSubscriptionUpdateParameters: EventSubscriptionUpdateParameters, options?: TopicEventSubscriptionsUpdateOptionalParams): Promise<TopicEventSubscriptionsUpdateResponse>;
     get(resourceGroupName: string, topicName: string, eventSubscriptionName: string, options?: TopicEventSubscriptionsGetOptionalParams): Promise<TopicEventSubscriptionsGetResponse>;
     getDeliveryAttributes(resourceGroupName: string, topicName: string, eventSubscriptionName: string, options?: TopicEventSubscriptionsGetDeliveryAttributesOptionalParams): Promise<TopicEventSubscriptionsGetDeliveryAttributesResponse>;
@@ -2492,13 +2494,13 @@ export interface TopicRegenerateKeyRequest {
 
 // @public
 export interface Topics {
-    beginCreateOrUpdate(resourceGroupName: string, topicName: string, topicInfo: Topic, options?: TopicsCreateOrUpdateOptionalParams): Promise<PollerLike<PollOperationState<TopicsCreateOrUpdateResponse>, TopicsCreateOrUpdateResponse>>;
+    beginCreateOrUpdate(resourceGroupName: string, topicName: string, topicInfo: Topic, options?: TopicsCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<TopicsCreateOrUpdateResponse>, TopicsCreateOrUpdateResponse>>;
     beginCreateOrUpdateAndWait(resourceGroupName: string, topicName: string, topicInfo: Topic, options?: TopicsCreateOrUpdateOptionalParams): Promise<TopicsCreateOrUpdateResponse>;
-    beginDelete(resourceGroupName: string, topicName: string, options?: TopicsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginDelete(resourceGroupName: string, topicName: string, options?: TopicsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginDeleteAndWait(resourceGroupName: string, topicName: string, options?: TopicsDeleteOptionalParams): Promise<void>;
-    beginRegenerateKey(resourceGroupName: string, topicName: string, regenerateKeyRequest: TopicRegenerateKeyRequest, options?: TopicsRegenerateKeyOptionalParams): Promise<PollerLike<PollOperationState<TopicsRegenerateKeyResponse>, TopicsRegenerateKeyResponse>>;
+    beginRegenerateKey(resourceGroupName: string, topicName: string, regenerateKeyRequest: TopicRegenerateKeyRequest, options?: TopicsRegenerateKeyOptionalParams): Promise<SimplePollerLike<OperationState<TopicsRegenerateKeyResponse>, TopicsRegenerateKeyResponse>>;
     beginRegenerateKeyAndWait(resourceGroupName: string, topicName: string, regenerateKeyRequest: TopicRegenerateKeyRequest, options?: TopicsRegenerateKeyOptionalParams): Promise<TopicsRegenerateKeyResponse>;
-    beginUpdate(resourceGroupName: string, topicName: string, topicUpdateParameters: TopicUpdateParameters, options?: TopicsUpdateOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginUpdate(resourceGroupName: string, topicName: string, topicUpdateParameters: TopicUpdateParameters, options?: TopicsUpdateOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginUpdateAndWait(resourceGroupName: string, topicName: string, topicUpdateParameters: TopicUpdateParameters, options?: TopicsUpdateOptionalParams): Promise<void>;
     get(resourceGroupName: string, topicName: string, options?: TopicsGetOptionalParams): Promise<TopicsGetResponse>;
     listByResourceGroup(resourceGroupName: string, options?: TopicsListByResourceGroupOptionalParams): PagedAsyncIterableIterator<Topic>;
