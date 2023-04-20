@@ -45,6 +45,12 @@ import {
   ClusterResource as ClusterResourceMapper,
   CommandPostBody as CommandPostBodyMapper,
   DataCenterResource as DataCenterResourceMapper,
+  CassandraClusterRepairPublicResource as CassandraClusterRepairPublicResourceMapper,
+  CassandraClusterRepairListFilter as CassandraClusterRepairListFilterMapper,
+  MongoCluster as MongoClusterMapper,
+  MongoClusterUpdate as MongoClusterUpdateMapper,
+  FirewallRule as FirewallRuleMapper,
+  CheckNameAvailabilityRequest as CheckNameAvailabilityRequestMapper,
   NotebookWorkspaceCreateUpdateParameters as NotebookWorkspaceCreateUpdateParametersMapper,
   PrivateEndpointConnection as PrivateEndpointConnectionMapper,
   ServiceResourceCreateUpdateParameters as ServiceResourceCreateUpdateParametersMapper
@@ -122,7 +128,7 @@ export const accountName: OperationURLParameter = {
 export const apiVersion: OperationQueryParameter = {
   parameterPath: "apiVersion",
   mapper: {
-    defaultValue: "2022-11-15-preview",
+    defaultValue: "2023-03-15-preview",
     isConstant: true,
     serializedName: "api-version",
     type: {
@@ -610,18 +616,12 @@ export const body1: OperationParameter = {
   mapper: CommandPostBodyMapper
 };
 
-export const backupId: OperationURLParameter = {
-  parameterPath: "backupId",
+export const xMsForceDeallocate: OperationParameter = {
+  parameterPath: ["options", "xMsForceDeallocate"],
   mapper: {
-    constraints: {
-      Pattern: new RegExp("^[0-9]+$"),
-      MaxLength: 15,
-      MinLength: 1
-    },
-    serializedName: "backupId",
-    required: true,
+    serializedName: "x-ms-force-deallocate",
     type: {
-      name: "String"
+      name: "Boolean"
     }
   }
 };
@@ -645,6 +645,126 @@ export const dataCenterName: OperationURLParameter = {
 export const body2: OperationParameter = {
   parameterPath: "body",
   mapper: DataCenterResourceMapper
+};
+
+export const body3: OperationParameter = {
+  parameterPath: "body",
+  mapper: CassandraClusterRepairPublicResourceMapper
+};
+
+export const repairRunId: OperationURLParameter = {
+  parameterPath: "repairRunId",
+  mapper: {
+    serializedName: "repairRunId",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const ownerName: OperationURLParameter = {
+  parameterPath: "ownerName",
+  mapper: {
+    serializedName: "ownerName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const body4: OperationParameter = {
+  parameterPath: ["options", "body"],
+  mapper: CassandraClusterRepairListFilterMapper
+};
+
+export const segmentId: OperationURLParameter = {
+  parameterPath: "segmentId",
+  mapper: {
+    serializedName: "segmentId",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const intensityValue: OperationURLParameter = {
+  parameterPath: "intensityValue",
+  mapper: {
+    serializedName: "intensityValue",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const parameters: OperationParameter = {
+  parameterPath: "parameters",
+  mapper: MongoClusterMapper
+};
+
+export const mongoClusterName: OperationURLParameter = {
+  parameterPath: "mongoClusterName",
+  mapper: {
+    constraints: {
+      Pattern: new RegExp("^[a-z0-9]+(-[a-z0-9]+)*"),
+      MaxLength: 40,
+      MinLength: 3
+    },
+    serializedName: "mongoClusterName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const parameters1: OperationParameter = {
+  parameterPath: "parameters",
+  mapper: MongoClusterUpdateMapper
+};
+
+export const parameters2: OperationParameter = {
+  parameterPath: "parameters",
+  mapper: FirewallRuleMapper
+};
+
+export const firewallRuleName: OperationURLParameter = {
+  parameterPath: "firewallRuleName",
+  mapper: {
+    constraints: {
+      Pattern: new RegExp("^[a-zA-Z0-9][-_.a-zA-Z0-9]*"),
+      MaxLength: 80,
+      MinLength: 1
+    },
+    serializedName: "firewallRuleName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const parameters3: OperationParameter = {
+  parameterPath: "parameters",
+  mapper: CheckNameAvailabilityRequestMapper
+};
+
+export const location2: OperationURLParameter = {
+  parameterPath: "location",
+  mapper: {
+    constraints: {
+      MinLength: 1
+    },
+    serializedName: "location",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
 };
 
 export const notebookWorkspaceName: OperationURLParameter = {
@@ -674,7 +794,7 @@ export const privateEndpointConnectionName: OperationURLParameter = {
   }
 };
 
-export const parameters: OperationParameter = {
+export const parameters4: OperationParameter = {
   parameterPath: "parameters",
   mapper: PrivateEndpointConnectionMapper
 };

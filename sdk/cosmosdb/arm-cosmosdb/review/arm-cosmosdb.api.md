@@ -55,6 +55,7 @@ export type AuthenticationMethod = string;
 
 // @public
 export interface AuthenticationMethodLdapProperties {
+    connectionTimeoutInMs?: number;
     searchBaseDistinguishedName?: string;
     searchFilterTemplate?: string;
     // (undocumented)
@@ -90,6 +91,9 @@ export interface AzureBlobDataTransferDataSourceSink extends DataTransferDataSou
     // (undocumented)
     endpointUrl?: string;
 }
+
+// @public
+export type AzureConnectionMethod = string;
 
 // @public
 export interface BackupInformation {
@@ -129,6 +133,13 @@ export interface BackupResourceProperties {
     timestamp?: Date;
 }
 
+// @public (undocumented)
+export interface BackupSchedule {
+    cronExpression?: string;
+    retentionInHours?: number;
+    scheduleName?: string;
+}
+
 // @public
 export type BackupStorageRedundancy = string;
 
@@ -146,6 +157,7 @@ export interface Capacity {
 export interface CassandraClusterPublicStatus {
     connectionErrors?: ConnectionError[];
     dataCenters?: CassandraClusterPublicStatusDataCentersItem[];
+    errors?: CassandraError[];
     // (undocumented)
     eTag?: string;
     // (undocumented)
@@ -158,6 +170,42 @@ export interface CassandraClusterPublicStatusDataCentersItem {
     // (undocumented)
     nodes?: ComponentsM9L909SchemasCassandraclusterpublicstatusPropertiesDatacentersItemsPropertiesNodesItems[];
     seedNodes?: string[];
+}
+
+// @public
+export interface CassandraClusterRepairListFilter {
+    readonly keyspace?: string;
+    // (undocumented)
+    repairRunStates?: CassandraRepairRunStateEnum[];
+}
+
+// @public (undocumented)
+export interface CassandraClusterRepairPublicProperties {
+    autoStart?: boolean;
+    blacklistedTables?: string[];
+    cause?: string;
+    dataCenters?: string[];
+    incrementalRepair?: boolean;
+    intensity?: number;
+    keyspace?: string;
+    nodes?: string[];
+    owner?: string;
+    repairParallelism?: string;
+    repairThreadCount?: number;
+    segmentCount?: number;
+    tables?: string[];
+}
+
+// @public (undocumented)
+export interface CassandraClusterRepairPublicResource {
+    // (undocumented)
+    id?: string;
+    // (undocumented)
+    name?: string;
+    // (undocumented)
+    properties?: CassandraClusterRepairPublicProperties;
+    // (undocumented)
+    type?: string;
 }
 
 // @public
@@ -175,8 +223,6 @@ export interface CassandraClusters {
     beginUpdate(resourceGroupName: string, clusterName: string, body: ClusterResource, options?: CassandraClustersUpdateOptionalParams): Promise<SimplePollerLike<OperationState<CassandraClustersUpdateResponse>, CassandraClustersUpdateResponse>>;
     beginUpdateAndWait(resourceGroupName: string, clusterName: string, body: ClusterResource, options?: CassandraClustersUpdateOptionalParams): Promise<CassandraClustersUpdateResponse>;
     get(resourceGroupName: string, clusterName: string, options?: CassandraClustersGetOptionalParams): Promise<CassandraClustersGetResponse>;
-    getBackup(resourceGroupName: string, clusterName: string, backupId: string, options?: CassandraClustersGetBackupOptionalParams): Promise<CassandraClustersGetBackupResponse>;
-    listBackups(resourceGroupName: string, clusterName: string, options?: CassandraClustersListBackupsOptionalParams): PagedAsyncIterableIterator<BackupResource>;
     listByResourceGroup(resourceGroupName: string, options?: CassandraClustersListByResourceGroupOptionalParams): PagedAsyncIterableIterator<ClusterResource>;
     listBySubscription(options?: CassandraClustersListBySubscriptionOptionalParams): PagedAsyncIterableIterator<ClusterResource>;
     status(resourceGroupName: string, clusterName: string, options?: CassandraClustersStatusOptionalParams): Promise<CassandraClustersStatusResponse>;
@@ -195,6 +241,7 @@ export type CassandraClustersCreateUpdateResponse = ClusterResource;
 export interface CassandraClustersDeallocateOptionalParams extends coreClient.OperationOptions {
     resumeFrom?: string;
     updateIntervalInMs?: number;
+    xMsForceDeallocate?: boolean;
 }
 
 // @public
@@ -202,13 +249,6 @@ export interface CassandraClustersDeleteOptionalParams extends coreClient.Operat
     resumeFrom?: string;
     updateIntervalInMs?: number;
 }
-
-// @public
-export interface CassandraClustersGetBackupOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type CassandraClustersGetBackupResponse = BackupResource;
 
 // @public
 export interface CassandraClustersGetOptionalParams extends coreClient.OperationOptions {
@@ -225,13 +265,6 @@ export interface CassandraClustersInvokeCommandOptionalParams extends coreClient
 
 // @public
 export type CassandraClustersInvokeCommandResponse = CommandOutput;
-
-// @public
-export interface CassandraClustersListBackupsOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type CassandraClustersListBackupsResponse = ListBackups;
 
 // @public
 export interface CassandraClustersListByResourceGroupOptionalParams extends coreClient.OperationOptions {
@@ -319,6 +352,14 @@ export interface CassandraDataCentersUpdateOptionalParams extends coreClient.Ope
 // @public
 export type CassandraDataCentersUpdateResponse = DataCenterResource;
 
+// @public (undocumented)
+export interface CassandraError {
+    additionalErrorInfo?: string;
+    code?: string;
+    message?: string;
+    target?: string;
+}
+
 // @public
 export interface CassandraKeyspaceCreateUpdateParameters extends ARMResourceProperties {
     options?: CreateUpdateOptions;
@@ -355,6 +396,448 @@ export interface CassandraKeyspaceResource {
 export interface CassandraPartitionKey {
     name?: string;
 }
+
+// @public (undocumented)
+export interface CassandraReaperClusterStatus {
+    // (undocumented)
+    jmxPasswordIsSet?: boolean;
+    // (undocumented)
+    jmxUsername?: string;
+    // (undocumented)
+    name?: string;
+    // (undocumented)
+    nodesStatus?: CassandraReaperNodeStatus;
+    // (undocumented)
+    repairRuns?: CassandraReaperRunStatus[];
+    // (undocumented)
+    repairSchedules?: CassandraReaperScheduleStatus[];
+    // (undocumented)
+    seedHosts?: string[];
+}
+
+// @public (undocumented)
+export interface CassandraReaperEndpointState {
+    // (undocumented)
+    dc?: string;
+    // (undocumented)
+    endpoint?: string;
+    // (undocumented)
+    hostId?: string;
+    // (undocumented)
+    load?: number;
+    // (undocumented)
+    rack?: string;
+    // (undocumented)
+    releaseVersion?: string;
+    // (undocumented)
+    severity?: number;
+    // (undocumented)
+    status?: string;
+    // (undocumented)
+    tokens?: string;
+    // (undocumented)
+    type?: string;
+}
+
+// @public (undocumented)
+export interface CassandraReaperGossipInfo {
+    // (undocumented)
+    endpointNames?: string[];
+    endpoints?: {
+        [propertyName: string]: {
+            [propertyName: string]: CassandraReaperEndpointState[];
+        };
+    };
+    // (undocumented)
+    sourceNode?: string;
+    // (undocumented)
+    totalLoad?: number;
+}
+
+// @public (undocumented)
+export interface CassandraReaperNodeStatus {
+    // (undocumented)
+    endpointStates?: CassandraReaperGossipInfo[];
+}
+
+// @public (undocumented)
+export interface CassandraReaperRunStatus {
+    // (undocumented)
+    adaptiveSchedule?: string;
+    // (undocumented)
+    blacklistedTables?: string[];
+    // (undocumented)
+    cause?: string;
+    // (undocumented)
+    clusterName?: string;
+    // (undocumented)
+    columnFamilies?: string[];
+    // (undocumented)
+    creationTime?: string;
+    // (undocumented)
+    currentTime?: string;
+    // (undocumented)
+    datacenters?: string[];
+    // (undocumented)
+    duration?: string;
+    // (undocumented)
+    endTime?: string;
+    // (undocumented)
+    id?: string;
+    // (undocumented)
+    incrementalRepair?: boolean;
+    // (undocumented)
+    intensity?: number;
+    // (undocumented)
+    keyspaceName?: string;
+    // (undocumented)
+    lastEvent?: string;
+    // (undocumented)
+    nodes?: string[];
+    // (undocumented)
+    owner?: string;
+    // (undocumented)
+    pauseTime?: string;
+    // (undocumented)
+    repairParallelism?: string;
+    // (undocumented)
+    repairThreadCount?: number;
+    // (undocumented)
+    repairUnitId?: string;
+    // (undocumented)
+    segmentsRepaired?: number;
+    // (undocumented)
+    segmentTimeout?: string;
+    // (undocumented)
+    startTime?: string;
+    // (undocumented)
+    state?: string;
+    // (undocumented)
+    totalSegments?: number;
+}
+
+// @public (undocumented)
+export interface CassandraReaperRunStatusFeedResponse {
+    // (undocumented)
+    value?: CassandraReaperRunStatus[];
+}
+
+// @public (undocumented)
+export interface CassandraReaperScheduleStatus {
+    // (undocumented)
+    adaptive?: boolean;
+    // (undocumented)
+    blacklistedTables?: string[];
+    // (undocumented)
+    clusterName?: string;
+    // (undocumented)
+    columnFamilies?: string[];
+    // (undocumented)
+    creationTime?: string;
+    // (undocumented)
+    datacenters?: string[];
+    // (undocumented)
+    id?: string;
+    // (undocumented)
+    incrementalRepair?: boolean;
+    // (undocumented)
+    intensity?: number;
+    // (undocumented)
+    keyspaceName?: string;
+    // (undocumented)
+    nextActivation?: string;
+    // (undocumented)
+    nodes?: string[];
+    // (undocumented)
+    owner?: string;
+    // (undocumented)
+    pauseTime?: string;
+    // (undocumented)
+    percentUnrepairedThreshold?: number;
+    // (undocumented)
+    repairParallelism?: string;
+    // (undocumented)
+    repairThreadCount?: number;
+    // (undocumented)
+    repairUnitId?: string;
+    // (undocumented)
+    scheduledDaysBetween?: number;
+    // (undocumented)
+    segmentCountPerNode?: number;
+    // (undocumented)
+    segmentTimeout?: number;
+    // (undocumented)
+    state?: string;
+}
+
+// @public
+export interface CassandraRepair {
+    // (undocumented)
+    beginAbortSegment(resourceGroupName: string, clusterName: string, repairRunId: string, segmentId: string, options?: CassandraRepairAbortSegmentOptionalParams): Promise<SimplePollerLike<OperationState<CassandraRepairAbortSegmentResponse>, CassandraRepairAbortSegmentResponse>>;
+    // (undocumented)
+    beginAbortSegmentAndWait(resourceGroupName: string, clusterName: string, repairRunId: string, segmentId: string, options?: CassandraRepairAbortSegmentOptionalParams): Promise<CassandraRepairAbortSegmentResponse>;
+    // (undocumented)
+    beginCreate(resourceGroupName: string, clusterName: string, body: CassandraClusterRepairPublicResource, options?: CassandraRepairCreateOptionalParams): Promise<SimplePollerLike<OperationState<CassandraRepairCreateResponse>, CassandraRepairCreateResponse>>;
+    // (undocumented)
+    beginCreateAndWait(resourceGroupName: string, clusterName: string, body: CassandraClusterRepairPublicResource, options?: CassandraRepairCreateOptionalParams): Promise<CassandraRepairCreateResponse>;
+    // (undocumented)
+    beginDelete(resourceGroupName: string, clusterName: string, repairRunId: string, ownerName: string, options?: CassandraRepairDeleteOptionalParams): Promise<SimplePollerLike<OperationState<CassandraRepairDeleteResponse>, CassandraRepairDeleteResponse>>;
+    // (undocumented)
+    beginDeleteAndWait(resourceGroupName: string, clusterName: string, repairRunId: string, ownerName: string, options?: CassandraRepairDeleteOptionalParams): Promise<CassandraRepairDeleteResponse>;
+    // (undocumented)
+    beginGetClusterStatus(resourceGroupName: string, clusterName: string, options?: CassandraRepairGetClusterStatusOptionalParams): Promise<SimplePollerLike<OperationState<CassandraRepairGetClusterStatusResponse>, CassandraRepairGetClusterStatusResponse>>;
+    // (undocumented)
+    beginGetClusterStatusAndWait(resourceGroupName: string, clusterName: string, options?: CassandraRepairGetClusterStatusOptionalParams): Promise<CassandraRepairGetClusterStatusResponse>;
+    // (undocumented)
+    beginGetTableStatus(resourceGroupName: string, clusterName: string, options?: CassandraRepairGetTableStatusOptionalParams): Promise<SimplePollerLike<OperationState<CassandraRepairGetTableStatusResponse>, CassandraRepairGetTableStatusResponse>>;
+    // (undocumented)
+    beginGetTableStatusAndWait(resourceGroupName: string, clusterName: string, options?: CassandraRepairGetTableStatusOptionalParams): Promise<CassandraRepairGetTableStatusResponse>;
+    // (undocumented)
+    beginList(resourceGroupName: string, clusterName: string, options?: CassandraRepairListOptionalParams): Promise<SimplePollerLike<OperationState<CassandraRepairListResponse>, CassandraRepairListResponse>>;
+    // (undocumented)
+    beginListAndWait(resourceGroupName: string, clusterName: string, options?: CassandraRepairListOptionalParams): Promise<CassandraRepairListResponse>;
+    // (undocumented)
+    beginListSegments(resourceGroupName: string, clusterName: string, repairRunId: string, options?: CassandraRepairListSegmentsOptionalParams): Promise<SimplePollerLike<OperationState<CassandraRepairListSegmentsResponse>, CassandraRepairListSegmentsResponse>>;
+    // (undocumented)
+    beginListSegmentsAndWait(resourceGroupName: string, clusterName: string, repairRunId: string, options?: CassandraRepairListSegmentsOptionalParams): Promise<CassandraRepairListSegmentsResponse>;
+    // (undocumented)
+    beginPause(resourceGroupName: string, clusterName: string, repairRunId: string, options?: CassandraRepairPauseOptionalParams): Promise<SimplePollerLike<OperationState<CassandraRepairPauseResponse>, CassandraRepairPauseResponse>>;
+    // (undocumented)
+    beginPauseAndWait(resourceGroupName: string, clusterName: string, repairRunId: string, options?: CassandraRepairPauseOptionalParams): Promise<CassandraRepairPauseResponse>;
+    // (undocumented)
+    beginResume(resourceGroupName: string, clusterName: string, repairRunId: string, options?: CassandraRepairResumeOptionalParams): Promise<SimplePollerLike<OperationState<CassandraRepairResumeResponse>, CassandraRepairResumeResponse>>;
+    // (undocumented)
+    beginResumeAndWait(resourceGroupName: string, clusterName: string, repairRunId: string, options?: CassandraRepairResumeOptionalParams): Promise<CassandraRepairResumeResponse>;
+    // (undocumented)
+    beginShow(resourceGroupName: string, clusterName: string, repairRunId: string, options?: CassandraRepairShowOptionalParams): Promise<SimplePollerLike<OperationState<CassandraRepairShowResponse>, CassandraRepairShowResponse>>;
+    // (undocumented)
+    beginShowAndWait(resourceGroupName: string, clusterName: string, repairRunId: string, options?: CassandraRepairShowOptionalParams): Promise<CassandraRepairShowResponse>;
+    // (undocumented)
+    beginUpdate(resourceGroupName: string, clusterName: string, repairRunId: string, intensityValue: string, options?: CassandraRepairUpdateOptionalParams): Promise<SimplePollerLike<OperationState<CassandraRepairUpdateResponse>, CassandraRepairUpdateResponse>>;
+    // (undocumented)
+    beginUpdateAndWait(resourceGroupName: string, clusterName: string, repairRunId: string, intensityValue: string, options?: CassandraRepairUpdateOptionalParams): Promise<CassandraRepairUpdateResponse>;
+}
+
+// @public
+export interface CassandraRepairAbortSegmentHeaders {
+    // (undocumented)
+    location?: string;
+}
+
+// @public
+export interface CassandraRepairAbortSegmentOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type CassandraRepairAbortSegmentResponse = CassandraRepairAbortSegmentHeaders;
+
+// @public
+export interface CassandraRepairCreateHeaders {
+    azureAsyncOperation?: string;
+    location?: string;
+}
+
+// @public
+export interface CassandraRepairCreateOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type CassandraRepairCreateResponse = CassandraReaperRunStatus;
+
+// @public
+export interface CassandraRepairDeleteHeaders {
+    // (undocumented)
+    location?: string;
+}
+
+// @public
+export interface CassandraRepairDeleteOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type CassandraRepairDeleteResponse = CassandraRepairDeleteHeaders;
+
+// @public
+export interface CassandraRepairGetClusterStatusHeaders {
+    azureAsyncOperation?: string;
+    location?: string;
+}
+
+// @public
+export interface CassandraRepairGetClusterStatusOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type CassandraRepairGetClusterStatusResponse = CassandraReaperClusterStatus;
+
+// @public
+export interface CassandraRepairGetTableStatusHeaders {
+    azureAsyncOperation?: string;
+    location?: string;
+}
+
+// @public
+export interface CassandraRepairGetTableStatusOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type CassandraRepairGetTableStatusResponse = {
+    body: string;
+};
+
+// @public
+export interface CassandraRepairListHeaders {
+    azureAsyncOperation?: string;
+    location?: string;
+}
+
+// @public
+export interface CassandraRepairListOptionalParams extends coreClient.OperationOptions {
+    body?: CassandraClusterRepairListFilter;
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type CassandraRepairListResponse = CassandraReaperRunStatusFeedResponse;
+
+// @public
+export interface CassandraRepairListSegmentsHeaders {
+    azureAsyncOperation?: string;
+    location?: string;
+}
+
+// @public
+export interface CassandraRepairListSegmentsOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type CassandraRepairListSegmentsResponse = CassandraRepairSegmentResourceFeedResponse;
+
+// @public
+export interface CassandraRepairPauseHeaders {
+    // (undocumented)
+    location?: string;
+}
+
+// @public
+export interface CassandraRepairPauseOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type CassandraRepairPauseResponse = CassandraRepairPauseHeaders;
+
+// @public
+export interface CassandraRepairResumeHeaders {
+    // (undocumented)
+    location?: string;
+}
+
+// @public
+export interface CassandraRepairResumeOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type CassandraRepairResumeResponse = CassandraRepairResumeHeaders;
+
+// @public (undocumented)
+export interface CassandraRepairRingRange {
+    // (undocumented)
+    end?: string;
+    // (undocumented)
+    start?: string;
+}
+
+// @public
+export type CassandraRepairRunStateEnum = string;
+
+// @public (undocumented)
+export interface CassandraRepairSegment {
+    // (undocumented)
+    coordinatorHost?: string;
+    // (undocumented)
+    endTime?: string;
+    // (undocumented)
+    failCount?: number;
+    // (undocumented)
+    id?: string;
+    // (undocumented)
+    repairUnitId?: string;
+    replicas?: {
+        [propertyName: string]: string;
+    };
+    // (undocumented)
+    runId?: string;
+    // (undocumented)
+    startTime?: string;
+    // (undocumented)
+    state?: string;
+    // (undocumented)
+    tokenRange?: CassandraRepairTokenRange;
+}
+
+// @public (undocumented)
+export interface CassandraRepairSegmentResourceFeedResponse {
+    // (undocumented)
+    value?: CassandraRepairSegment[];
+}
+
+// @public
+export interface CassandraRepairShowHeaders {
+    azureAsyncOperation?: string;
+    location?: string;
+}
+
+// @public
+export interface CassandraRepairShowOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type CassandraRepairShowResponse = CassandraReaperRunStatus;
+
+// @public (undocumented)
+export interface CassandraRepairTokenRange {
+    // (undocumented)
+    baseRange?: CassandraRepairRingRange;
+    replicas?: {
+        [propertyName: string]: string;
+    };
+    // (undocumented)
+    tokenRanges?: CassandraRepairRingRange[];
+}
+
+// @public
+export interface CassandraRepairUpdateHeaders {
+    // (undocumented)
+    location?: string;
+}
+
+// @public
+export interface CassandraRepairUpdateOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type CassandraRepairUpdateResponse = CassandraRepairUpdateHeaders;
 
 // @public
 export interface CassandraResources {
@@ -764,6 +1247,22 @@ export interface Certificate {
     pem?: string;
 }
 
+// @public
+export type CheckNameAvailabilityReason = string;
+
+// @public
+export interface CheckNameAvailabilityRequest {
+    name?: string;
+    type?: string;
+}
+
+// @public
+export interface CheckNameAvailabilityResponse {
+    message?: string;
+    nameAvailable?: boolean;
+    reason?: CheckNameAvailabilityReason;
+}
+
 // @public (undocumented)
 export interface ClientEncryptionIncludedPath {
     clientEncryptionKeyId: string;
@@ -825,23 +1324,31 @@ export interface ClusterResource extends ManagedCassandraARMResourceProperties {
 // @public
 export interface ClusterResourceProperties {
     authenticationMethod?: AuthenticationMethod;
+    azureConnectionMethod?: AzureConnectionMethod;
+    backupSchedules?: BackupSchedule[];
     cassandraAuditLoggingEnabled?: boolean;
     cassandraVersion?: string;
     clientCertificates?: Certificate[];
     clusterNameOverride?: string;
+    clusterType?: ClusterType;
     deallocated?: boolean;
     delegatedManagementSubnetId?: string;
+    extensions?: string[];
     externalGossipCertificates?: Certificate[];
     externalSeedNodes?: SeedNode[];
     readonly gossipCertificates?: Certificate[];
     hoursBetweenBackups?: number;
     initialCassandraAdminPassword?: string;
     prometheusEndpoint?: SeedNode;
+    provisionError?: CassandraError;
     provisioningState?: ManagedCassandraProvisioningState;
     repairEnabled?: boolean;
     restoreFromBackupId?: string;
     readonly seedNodes?: SeedNode[];
 }
+
+// @public
+export type ClusterType = string;
 
 // @public
 export interface Collection {
@@ -948,6 +1455,7 @@ export interface Components1Jq1T4ISchemasManagedserviceidentityPropertiesUserass
 // @public (undocumented)
 export interface ComponentsM9L909SchemasCassandraclusterpublicstatusPropertiesDatacentersItemsPropertiesNodesItems {
     address?: string;
+    cassandraProcessStatus?: string;
     cpuUsage?: number;
     diskFreeKB?: number;
     diskUsedKB?: number;
@@ -997,6 +1505,12 @@ export interface ConnectionError {
 
 // @public
 export type ConnectionState = string;
+
+// @public
+export interface ConnectionString {
+    readonly connectionString?: string;
+    readonly description?: string;
+}
 
 // @public
 export type ConnectorOffer = string;
@@ -1070,6 +1584,8 @@ export class CosmosDBManagementClient extends coreClient.ServiceClient {
     // (undocumented)
     cassandraDataCenters: CassandraDataCenters;
     // (undocumented)
+    cassandraRepair: CassandraRepair;
+    // (undocumented)
     cassandraResources: CassandraResources;
     // (undocumented)
     collection: Collection;
@@ -1093,6 +1609,8 @@ export class CosmosDBManagementClient extends coreClient.ServiceClient {
     gremlinResources: GremlinResources;
     // (undocumented)
     locations: Locations;
+    // (undocumented)
+    mongoClusters: MongoClusters;
     // (undocumented)
     mongoDBResources: MongoDBResources;
     // (undocumented)
@@ -1155,6 +1673,15 @@ export interface CosmosDBManagementClientOptionalParams extends coreClient.Servi
 }
 
 // @public
+export interface CosmosMongoDataTransferDataSourceSink extends DataTransferDataSourceSink {
+    // (undocumented)
+    collectionName: string;
+    component: "CosmosDBMongo";
+    // (undocumented)
+    databaseName: string;
+}
+
+// @public
 export interface CosmosSqlDataTransferDataSourceSink extends DataTransferDataSourceSink {
     component: "CosmosDBSql";
     // (undocumented)
@@ -1191,6 +1718,8 @@ export interface Database {
 export interface DatabaseAccountConnectionString {
     readonly connectionString?: string;
     readonly description?: string;
+    readonly keyKind?: Kind;
+    readonly type?: Type;
 }
 
 // @public
@@ -1599,11 +2128,13 @@ export interface DataCenterResourceProperties {
     backupStorageCustomerKeyUri?: string;
     base64EncodedCassandraYamlFragment?: string;
     dataCenterLocation?: string;
+    deallocated?: boolean;
     delegatedSubnetId?: string;
     diskCapacity?: number;
     diskSku?: string;
     managedDiskCustomerKeyUri?: string;
     nodeCount?: number;
+    provisionError?: CassandraError;
     provisioningState?: ManagedCassandraProvisioningState;
     readonly seedNodes?: SeedNode[];
     sku?: string;
@@ -1614,11 +2145,11 @@ export type DataTransferComponent = string;
 
 // @public
 export interface DataTransferDataSourceSink {
-    component: "CosmosDBCassandra" | "CosmosDBSql" | "AzureBlobStorage";
+    component: "CosmosDBCassandra" | "CosmosDBMongo" | "CosmosDBSql" | "AzureBlobStorage";
 }
 
 // @public (undocumented)
-export type DataTransferDataSourceSinkUnion = DataTransferDataSourceSink | CosmosCassandraDataTransferDataSourceSink | CosmosSqlDataTransferDataSourceSink | AzureBlobDataTransferDataSourceSink;
+export type DataTransferDataSourceSinkUnion = DataTransferDataSourceSink | CosmosCassandraDataTransferDataSourceSink | CosmosMongoDataTransferDataSourceSink | CosmosSqlDataTransferDataSourceSink | AzureBlobDataTransferDataSourceSink;
 
 // @public
 export interface DataTransferJobFeedResults {
@@ -1741,9 +2272,29 @@ export interface DiagnosticLogSettings {
 export type EnableFullTextQuery = "None" | "True" | "False";
 
 // @public
+export interface ErrorAdditionalInfo {
+    readonly info?: Record<string, unknown>;
+    readonly type?: string;
+}
+
+// @public
+export interface ErrorDetail {
+    readonly additionalInfo?: ErrorAdditionalInfo[];
+    readonly code?: string;
+    readonly details?: ErrorDetail[];
+    readonly message?: string;
+    readonly target?: string;
+}
+
+// @public
 export interface ErrorResponse {
     code?: string;
     message?: string;
+}
+
+// @public
+export interface ErrorResponseAutoGenerated {
+    error?: ErrorDetail;
 }
 
 // @public (undocumented)
@@ -1768,6 +2319,19 @@ export interface FailoverPolicy {
     failoverPriority?: number;
     readonly id?: string;
     locationName?: string;
+}
+
+// @public
+export interface FirewallRule extends ProxyResourceAutoGenerated {
+    endIpAddress: string;
+    readonly provisioningState?: ProvisioningState;
+    startIpAddress: string;
+}
+
+// @public
+export interface FirewallRuleListResult {
+    readonly nextLink?: string;
+    value?: FirewallRule[];
 }
 
 // @public
@@ -2232,6 +2796,9 @@ export interface KeyWrapMetadata {
 }
 
 // @public
+export type Kind = string;
+
+// @public
 export enum KnownAnalyticalStorageSchemaType {
     FullFidelity = "FullFidelity",
     WellDefined = "WellDefined"
@@ -2255,6 +2822,12 @@ export enum KnownAuthenticationMethod {
 }
 
 // @public
+export enum KnownAzureConnectionMethod {
+    None = "None",
+    Vpn = "Vpn"
+}
+
+// @public
 export enum KnownBackupPolicyMigrationStatus {
     Completed = "Completed",
     Failed = "Failed",
@@ -2273,6 +2846,29 @@ export enum KnownBackupStorageRedundancy {
     Geo = "Geo",
     Local = "Local",
     Zone = "Zone"
+}
+
+// @public
+export enum KnownCassandraRepairRunStateEnum {
+    Aborted = "ABORTED",
+    Deleted = "DELETED",
+    Done = "DONE",
+    Error = "ERROR",
+    NOTStarted = "NOT_STARTED",
+    Paused = "PAUSED",
+    Running = "RUNNING"
+}
+
+// @public
+export enum KnownCheckNameAvailabilityReason {
+    AlreadyExists = "AlreadyExists",
+    Invalid = "Invalid"
+}
+
+// @public
+export enum KnownClusterType {
+    NonProduction = "NonProduction",
+    Production = "Production"
 }
 
 // @public
@@ -2319,6 +2915,7 @@ export enum KnownCreatedByType {
 // @public
 export enum KnownCreateMode {
     Default = "Default",
+    PointInTimeRestore = "PointInTimeRestore",
     Restore = "Restore"
 }
 
@@ -2333,6 +2930,7 @@ export enum KnownDatabaseAccountKind {
 export enum KnownDataTransferComponent {
     AzureBlobStorage = "AzureBlobStorage",
     CosmosDBCassandra = "CosmosDBCassandra",
+    CosmosDBMongo = "CosmosDBMongo",
     CosmosDBSql = "CosmosDBSql"
 }
 
@@ -2369,6 +2967,14 @@ export enum KnownKeyKind {
 }
 
 // @public
+export enum KnownKind {
+    Primary = "Primary",
+    PrimaryReadonly = "PrimaryReadonly",
+    Secondary = "Secondary",
+    SecondaryReadonly = "SecondaryReadonly"
+}
+
+// @public
 export enum KnownManagedCassandraProvisioningState {
     Canceled = "Canceled",
     Creating = "Creating",
@@ -2389,6 +2995,22 @@ export enum KnownMinimalTlsVersion {
     Tls = "Tls",
     Tls11 = "Tls11",
     Tls12 = "Tls12"
+}
+
+// @public
+export enum KnownMongoClusterStatus {
+    Dropping = "Dropping",
+    Provisioning = "Provisioning",
+    Ready = "Ready",
+    Starting = "Starting",
+    Stopped = "Stopped",
+    Stopping = "Stopping",
+    Updating = "Updating"
+}
+
+// @public
+export enum KnownNodeKind {
+    Shard = "Shard"
 }
 
 // @public
@@ -2435,6 +3057,16 @@ export enum KnownPrimaryAggregationType {
     Minimum = "Minimum",
     None = "None",
     Total = "Total"
+}
+
+// @public
+export enum KnownProvisioningState {
+    Canceled = "Canceled",
+    Dropping = "Dropping",
+    Failed = "Failed",
+    InProgress = "InProgress",
+    Succeeded = "Succeeded",
+    Updating = "Updating"
 }
 
 // @public
@@ -2490,6 +3122,15 @@ export enum KnownSpatialType {
 }
 
 // @public
+export enum KnownStatus {
+    Deleting = "Deleting",
+    Initializing = "Initializing",
+    InternallyReady = "InternallyReady",
+    Online = "Online",
+    Uninitialized = "Uninitialized"
+}
+
+// @public
 export enum KnownThroughputPolicyType {
     Custom = "custom",
     Equal = "equal",
@@ -2512,6 +3153,19 @@ export enum KnownTriggerType {
 }
 
 // @public
+export enum KnownType {
+    Cassandra = "Cassandra",
+    CassandraConnectorMetadata = "CassandraConnectorMetadata",
+    Gremlin = "Gremlin",
+    GremlinV2 = "GremlinV2",
+    MongoDB = "MongoDB",
+    Sql = "Sql",
+    SqlDedicatedGateway = "SqlDedicatedGateway",
+    Table = "Table",
+    Undefined = "Undefined"
+}
+
+// @public
 export enum KnownUnitType {
     Bytes = "Bytes",
     BytesPerSecond = "BytesPerSecond",
@@ -2530,6 +3184,11 @@ export interface ListBackups {
 // @public
 export interface ListClusters {
     value?: ClusterResource[];
+}
+
+// @public
+export interface ListConnectionStringsResult {
+    readonly connectionStrings?: ConnectionString[];
 }
 
 // @public
@@ -2562,7 +3221,9 @@ export interface LocationListResult {
 export interface LocationProperties {
     readonly backupStorageRedundancies?: BackupStorageRedundancy[];
     readonly isResidencyRestricted?: boolean;
-    readonly status?: string;
+    readonly isSubscriptionRegionAccessAllowedForAz?: boolean;
+    readonly isSubscriptionRegionAccessAllowedForRegular?: boolean;
+    readonly status?: Status;
     readonly supportsAvailabilityZone?: boolean;
 }
 
@@ -2631,6 +3292,13 @@ export interface ManagedServiceIdentity {
     userAssignedIdentities?: {
         [propertyName: string]: Components1Jq1T4ISchemasManagedserviceidentityPropertiesUserassignedidentitiesAdditionalproperties;
     };
+}
+
+// @public
+export interface MaterializedViewDefinition {
+    definition: string;
+    sourceCollectionId: string;
+    readonly sourceCollectionRid?: string;
 }
 
 // @public
@@ -2706,6 +3374,206 @@ export interface MetricValue {
 
 // @public
 export type MinimalTlsVersion = string;
+
+// @public
+export interface MongoCluster extends TrackedResource {
+    administratorLogin?: string;
+    administratorLoginPassword?: string;
+    readonly clusterStatus?: MongoClusterStatus;
+    readonly connectionString?: string;
+    createMode?: CreateMode;
+    readonly earliestRestoreTime?: string;
+    nodeGroupSpecs?: NodeGroupSpec[];
+    readonly provisioningState?: ProvisioningState;
+    restoreParameters?: MongoClusterRestoreParameters;
+    serverVersion?: string;
+}
+
+// @public
+export interface MongoClusterListResult {
+    readonly nextLink?: string;
+    value?: MongoCluster[];
+}
+
+// @public
+export interface MongoClusterRestoreParameters {
+    pointInTimeUTC?: Date;
+    sourceResourceId?: string;
+}
+
+// @public
+export interface MongoClusters {
+    beginCreateOrUpdate(resourceGroupName: string, mongoClusterName: string, parameters: MongoCluster, options?: MongoClustersCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<MongoClustersCreateOrUpdateResponse>, MongoClustersCreateOrUpdateResponse>>;
+    beginCreateOrUpdateAndWait(resourceGroupName: string, mongoClusterName: string, parameters: MongoCluster, options?: MongoClustersCreateOrUpdateOptionalParams): Promise<MongoClustersCreateOrUpdateResponse>;
+    beginCreateOrUpdateFirewallRule(resourceGroupName: string, mongoClusterName: string, firewallRuleName: string, parameters: FirewallRule, options?: MongoClustersCreateOrUpdateFirewallRuleOptionalParams): Promise<SimplePollerLike<OperationState<MongoClustersCreateOrUpdateFirewallRuleResponse>, MongoClustersCreateOrUpdateFirewallRuleResponse>>;
+    beginCreateOrUpdateFirewallRuleAndWait(resourceGroupName: string, mongoClusterName: string, firewallRuleName: string, parameters: FirewallRule, options?: MongoClustersCreateOrUpdateFirewallRuleOptionalParams): Promise<MongoClustersCreateOrUpdateFirewallRuleResponse>;
+    beginDelete(resourceGroupName: string, mongoClusterName: string, options?: MongoClustersDeleteOptionalParams): Promise<SimplePollerLike<OperationState<MongoClustersDeleteResponse>, MongoClustersDeleteResponse>>;
+    beginDeleteAndWait(resourceGroupName: string, mongoClusterName: string, options?: MongoClustersDeleteOptionalParams): Promise<MongoClustersDeleteResponse>;
+    beginDeleteFirewallRule(resourceGroupName: string, mongoClusterName: string, firewallRuleName: string, options?: MongoClustersDeleteFirewallRuleOptionalParams): Promise<SimplePollerLike<OperationState<MongoClustersDeleteFirewallRuleResponse>, MongoClustersDeleteFirewallRuleResponse>>;
+    beginDeleteFirewallRuleAndWait(resourceGroupName: string, mongoClusterName: string, firewallRuleName: string, options?: MongoClustersDeleteFirewallRuleOptionalParams): Promise<MongoClustersDeleteFirewallRuleResponse>;
+    beginUpdate(resourceGroupName: string, mongoClusterName: string, parameters: MongoClusterUpdate, options?: MongoClustersUpdateOptionalParams): Promise<SimplePollerLike<OperationState<MongoClustersUpdateResponse>, MongoClustersUpdateResponse>>;
+    beginUpdateAndWait(resourceGroupName: string, mongoClusterName: string, parameters: MongoClusterUpdate, options?: MongoClustersUpdateOptionalParams): Promise<MongoClustersUpdateResponse>;
+    checkNameAvailability(location: string, parameters: CheckNameAvailabilityRequest, options?: MongoClustersCheckNameAvailabilityOptionalParams): Promise<MongoClustersCheckNameAvailabilityResponse>;
+    get(resourceGroupName: string, mongoClusterName: string, options?: MongoClustersGetOptionalParams): Promise<MongoClustersGetResponse>;
+    getFirewallRule(resourceGroupName: string, mongoClusterName: string, firewallRuleName: string, options?: MongoClustersGetFirewallRuleOptionalParams): Promise<MongoClustersGetFirewallRuleResponse>;
+    list(options?: MongoClustersListOptionalParams): PagedAsyncIterableIterator<MongoCluster>;
+    listByResourceGroup(resourceGroupName: string, options?: MongoClustersListByResourceGroupOptionalParams): PagedAsyncIterableIterator<MongoCluster>;
+    listConnectionStrings(resourceGroupName: string, mongoClusterName: string, options?: MongoClustersListConnectionStringsOptionalParams): Promise<MongoClustersListConnectionStringsResponse>;
+    listFirewallRules(resourceGroupName: string, mongoClusterName: string, options?: MongoClustersListFirewallRulesOptionalParams): PagedAsyncIterableIterator<FirewallRule>;
+}
+
+// @public
+export interface MongoClustersCheckNameAvailabilityOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type MongoClustersCheckNameAvailabilityResponse = CheckNameAvailabilityResponse;
+
+// @public
+export interface MongoClustersCreateOrUpdateFirewallRuleOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type MongoClustersCreateOrUpdateFirewallRuleResponse = FirewallRule;
+
+// @public
+export interface MongoClustersCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type MongoClustersCreateOrUpdateResponse = MongoCluster;
+
+// @public
+export interface MongoClustersDeleteFirewallRuleHeaders {
+    // (undocumented)
+    location?: string;
+}
+
+// @public
+export interface MongoClustersDeleteFirewallRuleOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type MongoClustersDeleteFirewallRuleResponse = MongoClustersDeleteFirewallRuleHeaders;
+
+// @public
+export interface MongoClustersDeleteHeaders {
+    // (undocumented)
+    location?: string;
+}
+
+// @public
+export interface MongoClustersDeleteOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type MongoClustersDeleteResponse = MongoClustersDeleteHeaders;
+
+// @public
+export interface MongoClustersGetFirewallRuleOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type MongoClustersGetFirewallRuleResponse = FirewallRule;
+
+// @public
+export interface MongoClustersGetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type MongoClustersGetResponse = MongoCluster;
+
+// @public
+export interface MongoClustersListByResourceGroupNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type MongoClustersListByResourceGroupNextResponse = MongoClusterListResult;
+
+// @public
+export interface MongoClustersListByResourceGroupOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type MongoClustersListByResourceGroupResponse = MongoClusterListResult;
+
+// @public
+export interface MongoClustersListConnectionStringsOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type MongoClustersListConnectionStringsResponse = ListConnectionStringsResult;
+
+// @public
+export interface MongoClustersListFirewallRulesNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type MongoClustersListFirewallRulesNextResponse = FirewallRuleListResult;
+
+// @public
+export interface MongoClustersListFirewallRulesOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type MongoClustersListFirewallRulesResponse = FirewallRuleListResult;
+
+// @public
+export interface MongoClustersListNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type MongoClustersListNextResponse = MongoClusterListResult;
+
+// @public
+export interface MongoClustersListOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type MongoClustersListResponse = MongoClusterListResult;
+
+// @public
+export type MongoClusterStatus = string;
+
+// @public
+export interface MongoClustersUpdateHeaders {
+    // (undocumented)
+    location?: string;
+}
+
+// @public
+export interface MongoClustersUpdateOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type MongoClustersUpdateResponse = MongoCluster;
+
+// @public
+export interface MongoClusterUpdate {
+    administratorLogin?: string;
+    administratorLoginPassword?: string;
+    readonly clusterStatus?: MongoClusterStatus;
+    readonly connectionString?: string;
+    createMode?: CreateMode;
+    readonly earliestRestoreTime?: string;
+    nodeGroupSpecs?: NodeGroupSpec[];
+    readonly provisioningState?: ProvisioningState;
+    restoreParameters?: MongoClusterRestoreParameters;
+    serverVersion?: string;
+    tags?: {
+        [propertyName: string]: string;
+    };
+}
 
 // @public
 export interface MongoDBCollectionCreateUpdateParameters extends ARMResourceProperties {
@@ -2812,6 +3680,8 @@ export interface MongoDBResources {
     beginMongoDBContainerRedistributeThroughputAndWait(resourceGroupName: string, accountName: string, databaseName: string, collectionName: string, redistributeThroughputParameters: RedistributeThroughputParameters, options?: MongoDBResourcesMongoDBContainerRedistributeThroughputOptionalParams): Promise<MongoDBResourcesMongoDBContainerRedistributeThroughputResponse>;
     beginMongoDBContainerRetrieveThroughputDistribution(resourceGroupName: string, accountName: string, databaseName: string, collectionName: string, retrieveThroughputParameters: RetrieveThroughputParameters, options?: MongoDBResourcesMongoDBContainerRetrieveThroughputDistributionOptionalParams): Promise<SimplePollerLike<OperationState<MongoDBResourcesMongoDBContainerRetrieveThroughputDistributionResponse>, MongoDBResourcesMongoDBContainerRetrieveThroughputDistributionResponse>>;
     beginMongoDBContainerRetrieveThroughputDistributionAndWait(resourceGroupName: string, accountName: string, databaseName: string, collectionName: string, retrieveThroughputParameters: RetrieveThroughputParameters, options?: MongoDBResourcesMongoDBContainerRetrieveThroughputDistributionOptionalParams): Promise<MongoDBResourcesMongoDBContainerRetrieveThroughputDistributionResponse>;
+    beginMongoDBDatabasePartitionMerge(resourceGroupName: string, accountName: string, databaseName: string, mergeParameters: MergeParameters, options?: MongoDBResourcesMongoDBDatabasePartitionMergeOptionalParams): Promise<SimplePollerLike<OperationState<MongoDBResourcesMongoDBDatabasePartitionMergeResponse>, MongoDBResourcesMongoDBDatabasePartitionMergeResponse>>;
+    beginMongoDBDatabasePartitionMergeAndWait(resourceGroupName: string, accountName: string, databaseName: string, mergeParameters: MergeParameters, options?: MongoDBResourcesMongoDBDatabasePartitionMergeOptionalParams): Promise<MongoDBResourcesMongoDBDatabasePartitionMergeResponse>;
     beginMongoDBDatabaseRedistributeThroughput(resourceGroupName: string, accountName: string, databaseName: string, redistributeThroughputParameters: RedistributeThroughputParameters, options?: MongoDBResourcesMongoDBDatabaseRedistributeThroughputOptionalParams): Promise<SimplePollerLike<OperationState<MongoDBResourcesMongoDBDatabaseRedistributeThroughputResponse>, MongoDBResourcesMongoDBDatabaseRedistributeThroughputResponse>>;
     beginMongoDBDatabaseRedistributeThroughputAndWait(resourceGroupName: string, accountName: string, databaseName: string, redistributeThroughputParameters: RedistributeThroughputParameters, options?: MongoDBResourcesMongoDBDatabaseRedistributeThroughputOptionalParams): Promise<MongoDBResourcesMongoDBDatabaseRedistributeThroughputResponse>;
     beginMongoDBDatabaseRetrieveThroughputDistribution(resourceGroupName: string, accountName: string, databaseName: string, retrieveThroughputParameters: RetrieveThroughputParameters, options?: MongoDBResourcesMongoDBDatabaseRetrieveThroughputDistributionOptionalParams): Promise<SimplePollerLike<OperationState<MongoDBResourcesMongoDBDatabaseRetrieveThroughputDistributionResponse>, MongoDBResourcesMongoDBDatabaseRetrieveThroughputDistributionResponse>>;
@@ -3100,6 +3970,21 @@ export interface MongoDBResourcesMongoDBContainerRetrieveThroughputDistributionO
 export type MongoDBResourcesMongoDBContainerRetrieveThroughputDistributionResponse = PhysicalPartitionThroughputInfoResult;
 
 // @public
+export interface MongoDBResourcesMongoDBDatabasePartitionMergeHeaders {
+    azureAsyncOperation?: string;
+    location?: string;
+}
+
+// @public
+export interface MongoDBResourcesMongoDBDatabasePartitionMergeOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type MongoDBResourcesMongoDBDatabasePartitionMergeResponse = PhysicalPartitionStorageInfoCollection;
+
+// @public
 export interface MongoDBResourcesMongoDBDatabaseRedistributeThroughputHeaders {
     azureAsyncOperation?: string;
     location?: string;
@@ -3238,6 +4123,22 @@ export interface MongoUserDefinitionListResult {
 
 // @public
 export type NetworkAclBypass = "None" | "AzureServices";
+
+// @public
+export interface NodeGroupProperties {
+    diskSizeGB?: number;
+    enableHa?: boolean;
+    sku?: string;
+}
+
+// @public
+export interface NodeGroupSpec extends NodeGroupProperties {
+    kind?: NodeKind;
+    nodeCount?: number;
+}
+
+// @public
+export type NodeKind = string;
 
 // @public
 export type NodeState = string;
@@ -3658,7 +4559,14 @@ export interface PrivilegeResource {
 }
 
 // @public
+export type ProvisioningState = string;
+
+// @public
 export interface ProxyResource extends Resource {
+}
+
+// @public
+export interface ProxyResourceAutoGenerated extends ResourceAutoGenerated {
 }
 
 // @public
@@ -3692,6 +4600,14 @@ export interface RegionForOnlineOffline {
 export interface Resource {
     readonly id?: string;
     readonly name?: string;
+    readonly type?: string;
+}
+
+// @public
+export interface ResourceAutoGenerated {
+    readonly id?: string;
+    readonly name?: string;
+    readonly systemData?: SystemData;
     readonly type?: string;
 }
 
@@ -4304,6 +5220,7 @@ export interface SqlContainerResource {
     defaultTtl?: number;
     id: string;
     indexingPolicy?: IndexingPolicy;
+    materializedViewDefinition?: MaterializedViewDefinition;
     partitionKey?: ContainerPartitionKey;
     restoreParameters?: ResourceRestoreParameters;
     uniqueKeyPolicy?: UniqueKeyPolicy;
@@ -4410,6 +5327,8 @@ export interface SqlResources {
     beginSqlContainerRedistributeThroughputAndWait(resourceGroupName: string, accountName: string, databaseName: string, containerName: string, redistributeThroughputParameters: RedistributeThroughputParameters, options?: SqlResourcesSqlContainerRedistributeThroughputOptionalParams): Promise<SqlResourcesSqlContainerRedistributeThroughputResponse>;
     beginSqlContainerRetrieveThroughputDistribution(resourceGroupName: string, accountName: string, databaseName: string, containerName: string, retrieveThroughputParameters: RetrieveThroughputParameters, options?: SqlResourcesSqlContainerRetrieveThroughputDistributionOptionalParams): Promise<SimplePollerLike<OperationState<SqlResourcesSqlContainerRetrieveThroughputDistributionResponse>, SqlResourcesSqlContainerRetrieveThroughputDistributionResponse>>;
     beginSqlContainerRetrieveThroughputDistributionAndWait(resourceGroupName: string, accountName: string, databaseName: string, containerName: string, retrieveThroughputParameters: RetrieveThroughputParameters, options?: SqlResourcesSqlContainerRetrieveThroughputDistributionOptionalParams): Promise<SqlResourcesSqlContainerRetrieveThroughputDistributionResponse>;
+    beginSqlDatabasePartitionMerge(resourceGroupName: string, accountName: string, databaseName: string, mergeParameters: MergeParameters, options?: SqlResourcesSqlDatabasePartitionMergeOptionalParams): Promise<SimplePollerLike<OperationState<SqlResourcesSqlDatabasePartitionMergeResponse>, SqlResourcesSqlDatabasePartitionMergeResponse>>;
+    beginSqlDatabasePartitionMergeAndWait(resourceGroupName: string, accountName: string, databaseName: string, mergeParameters: MergeParameters, options?: SqlResourcesSqlDatabasePartitionMergeOptionalParams): Promise<SqlResourcesSqlDatabasePartitionMergeResponse>;
     beginSqlDatabaseRedistributeThroughput(resourceGroupName: string, accountName: string, databaseName: string, redistributeThroughputParameters: RedistributeThroughputParameters, options?: SqlResourcesSqlDatabaseRedistributeThroughputOptionalParams): Promise<SimplePollerLike<OperationState<SqlResourcesSqlDatabaseRedistributeThroughputResponse>, SqlResourcesSqlDatabaseRedistributeThroughputResponse>>;
     beginSqlDatabaseRedistributeThroughputAndWait(resourceGroupName: string, accountName: string, databaseName: string, redistributeThroughputParameters: RedistributeThroughputParameters, options?: SqlResourcesSqlDatabaseRedistributeThroughputOptionalParams): Promise<SqlResourcesSqlDatabaseRedistributeThroughputResponse>;
     beginSqlDatabaseRetrieveThroughputDistribution(resourceGroupName: string, accountName: string, databaseName: string, retrieveThroughputParameters: RetrieveThroughputParameters, options?: SqlResourcesSqlDatabaseRetrieveThroughputDistributionOptionalParams): Promise<SimplePollerLike<OperationState<SqlResourcesSqlDatabaseRetrieveThroughputDistributionResponse>, SqlResourcesSqlDatabaseRetrieveThroughputDistributionResponse>>;
@@ -4874,6 +5793,21 @@ export interface SqlResourcesSqlContainerRetrieveThroughputDistributionOptionalP
 export type SqlResourcesSqlContainerRetrieveThroughputDistributionResponse = PhysicalPartitionThroughputInfoResult;
 
 // @public
+export interface SqlResourcesSqlDatabasePartitionMergeHeaders {
+    azureAsyncOperation?: string;
+    location?: string;
+}
+
+// @public
+export interface SqlResourcesSqlDatabasePartitionMergeOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type SqlResourcesSqlDatabasePartitionMergeResponse = PhysicalPartitionStorageInfoCollection;
+
+// @public
 export interface SqlResourcesSqlDatabaseRedistributeThroughputHeaders {
     azureAsyncOperation?: string;
     location?: string;
@@ -5055,6 +5989,9 @@ export interface SqlUserDefinedFunctionResource {
     body?: string;
     id: string;
 }
+
+// @public
+export type Status = string;
 
 // @public
 export interface SystemData {
@@ -5257,10 +6194,21 @@ export interface ThroughputSettingsUpdateParameters extends ARMResourcePropertie
 }
 
 // @public
+export interface TrackedResource extends ResourceAutoGenerated {
+    location: string;
+    tags?: {
+        [propertyName: string]: string;
+    };
+}
+
+// @public
 export type TriggerOperation = string;
 
 // @public
 export type TriggerType = string;
+
+// @public
+export type Type = string;
 
 // @public
 export interface UniqueKey {

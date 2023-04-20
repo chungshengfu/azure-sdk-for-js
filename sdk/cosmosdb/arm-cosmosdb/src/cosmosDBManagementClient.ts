@@ -38,6 +38,8 @@ import {
   DataTransferJobsImpl,
   CassandraClustersImpl,
   CassandraDataCentersImpl,
+  CassandraRepairImpl,
+  MongoClustersImpl,
   NotebookWorkspacesImpl,
   PrivateEndpointConnectionsImpl,
   PrivateLinkResourcesImpl,
@@ -79,6 +81,8 @@ import {
   DataTransferJobs,
   CassandraClusters,
   CassandraDataCenters,
+  CassandraRepair,
+  MongoClusters,
   NotebookWorkspaces,
   PrivateEndpointConnections,
   PrivateLinkResources,
@@ -183,7 +187,7 @@ export class CosmosDBManagementClient extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
-    this.apiVersion = options.apiVersion || "2022-11-15-preview";
+    this.apiVersion = options.apiVersion || "2023-03-15-preview";
     this.databaseAccounts = new DatabaseAccountsImpl(this);
     this.operations = new OperationsImpl(this);
     this.database = new DatabaseImpl(this);
@@ -207,6 +211,8 @@ export class CosmosDBManagementClient extends coreClient.ServiceClient {
     this.dataTransferJobs = new DataTransferJobsImpl(this);
     this.cassandraClusters = new CassandraClustersImpl(this);
     this.cassandraDataCenters = new CassandraDataCentersImpl(this);
+    this.cassandraRepair = new CassandraRepairImpl(this);
+    this.mongoClusters = new MongoClustersImpl(this);
     this.notebookWorkspaces = new NotebookWorkspacesImpl(this);
     this.privateEndpointConnections = new PrivateEndpointConnectionsImpl(this);
     this.privateLinkResources = new PrivateLinkResourcesImpl(this);
@@ -279,6 +285,8 @@ export class CosmosDBManagementClient extends coreClient.ServiceClient {
   dataTransferJobs: DataTransferJobs;
   cassandraClusters: CassandraClusters;
   cassandraDataCenters: CassandraDataCenters;
+  cassandraRepair: CassandraRepair;
+  mongoClusters: MongoClusters;
   notebookWorkspaces: NotebookWorkspaces;
   privateEndpointConnections: PrivateEndpointConnections;
   privateLinkResources: PrivateLinkResources;
