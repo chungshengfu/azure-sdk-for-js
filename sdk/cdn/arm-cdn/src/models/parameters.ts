@@ -16,6 +16,8 @@ import {
   CheckNameAvailabilityInput as CheckNameAvailabilityInputMapper,
   ValidateProbeInput as ValidateProbeInputMapper,
   CheckHostNameAvailabilityInput as CheckHostNameAvailabilityInputMapper,
+  ValidateSecretInput as ValidateSecretInputMapper,
+  ProfileUpgradeParameters as ProfileUpgradeParametersMapper,
   AFDDomain as AFDDomainMapper,
   AFDDomainUpdateParameters as AFDDomainUpdateParametersMapper,
   AFDEndpoint as AFDEndpointMapper,
@@ -26,6 +28,8 @@ import {
   AFDOriginGroupUpdateParameters as AFDOriginGroupUpdateParametersMapper,
   AFDOrigin as AFDOriginMapper,
   AFDOriginUpdateParameters as AFDOriginUpdateParametersMapper,
+  L4Route as L4RouteMapper,
+  L4RouteUpdatePropertiesParameters as L4RouteUpdatePropertiesParametersMapper,
   Route as RouteMapper,
   RouteUpdateParameters as RouteUpdateParametersMapper,
   Rule as RuleMapper,
@@ -33,9 +37,10 @@ import {
   SecurityPolicy as SecurityPolicyMapper,
   SecurityPolicyUpdateParameters as SecurityPolicyUpdateParametersMapper,
   Secret as SecretMapper,
-  ValidateSecretInput as ValidateSecretInputMapper,
   Profile as ProfileMapper,
   ProfileUpdateParameters as ProfileUpdateParametersMapper,
+  CanMigrateParameters as CanMigrateParametersMapper,
+  MigrationParameters as MigrationParametersMapper,
   Endpoint as EndpointMapper,
   EndpointUpdateParameters as EndpointUpdateParametersMapper,
   PurgeParameters as PurgeParametersMapper,
@@ -121,7 +126,7 @@ export const resourceGroupName: OperationURLParameter = {
 export const apiVersion: OperationQueryParameter = {
   parameterPath: "apiVersion",
   mapper: {
-    defaultValue: "2021-06-01",
+    defaultValue: "2023-04-11-preview",
     isConstant: true,
     serializedName: "api-version",
     type: {
@@ -143,6 +148,22 @@ export const validateProbeInput: OperationParameter = {
 export const profileName: OperationURLParameter = {
   parameterPath: "profileName",
   mapper: {
+    constraints: {
+      Pattern: new RegExp("^[a-zA-Z0-9]+(-*[a-zA-Z0-9])*$"),
+      MaxLength: 260,
+      MinLength: 1
+    },
+    serializedName: "profileName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const profileName1: OperationURLParameter = {
+  parameterPath: "profileName",
+  mapper: {
     serializedName: "profileName",
     required: true,
     type: {
@@ -154,6 +175,16 @@ export const profileName: OperationURLParameter = {
 export const checkHostNameAvailabilityInput: OperationParameter = {
   parameterPath: "checkHostNameAvailabilityInput",
   mapper: CheckHostNameAvailabilityInputMapper
+};
+
+export const validateSecretInput: OperationParameter = {
+  parameterPath: "validateSecretInput",
+  mapper: ValidateSecretInputMapper
+};
+
+export const profileUpgradeParameters: OperationParameter = {
+  parameterPath: "profileUpgradeParameters",
+  mapper: ProfileUpgradeParametersMapper
 };
 
 export const nextLink: OperationURLParameter = {
@@ -275,10 +306,20 @@ export const routeName: OperationURLParameter = {
 
 export const route: OperationParameter = {
   parameterPath: "route",
-  mapper: RouteMapper
+  mapper: L4RouteMapper
 };
 
 export const routeUpdateProperties: OperationParameter = {
+  parameterPath: "routeUpdateProperties",
+  mapper: L4RouteUpdatePropertiesParametersMapper
+};
+
+export const route1: OperationParameter = {
+  parameterPath: "route",
+  mapper: RouteMapper
+};
+
+export const routeUpdateProperties1: OperationParameter = {
   parameterPath: "routeUpdateProperties",
   mapper: RouteUpdateParametersMapper
 };
@@ -350,11 +391,6 @@ export const secretName: OperationURLParameter = {
 export const secret: OperationParameter = {
   parameterPath: "secret",
   mapper: SecretMapper
-};
-
-export const validateSecretInput: OperationParameter = {
-  parameterPath: "validateSecretInput",
-  mapper: ValidateSecretInputMapper
 };
 
 export const metrics: OperationQueryParameter = {
@@ -651,6 +687,16 @@ export const profile: OperationParameter = {
 export const profileUpdateParameters: OperationParameter = {
   parameterPath: "profileUpdateParameters",
   mapper: ProfileUpdateParametersMapper
+};
+
+export const canMigrateParameters: OperationParameter = {
+  parameterPath: "canMigrateParameters",
+  mapper: CanMigrateParametersMapper
+};
+
+export const migrationParameters: OperationParameter = {
+  parameterPath: "migrationParameters",
+  mapper: MigrationParametersMapper
 };
 
 export const endpoint1: OperationParameter = {

@@ -9,23 +9,23 @@
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
-  Route,
-  RoutesListByEndpointOptionalParams,
-  RoutesGetOptionalParams,
-  RoutesGetResponse,
-  RoutesCreateOptionalParams,
-  RoutesCreateResponse,
-  RouteUpdateParameters,
-  RoutesUpdateOptionalParams,
-  RoutesUpdateResponse,
-  RoutesDeleteOptionalParams
+  L4Route,
+  L4RoutesListByEndpointOptionalParams,
+  L4RoutesGetOptionalParams,
+  L4RoutesGetResponse,
+  L4RoutesCreateOptionalParams,
+  L4RoutesCreateResponse,
+  L4RouteUpdatePropertiesParameters,
+  L4RoutesUpdateOptionalParams,
+  L4RoutesUpdateResponse,
+  L4RoutesDeleteOptionalParams
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Interface representing a Routes. */
-export interface Routes {
+/** Interface representing a L4Routes. */
+export interface L4Routes {
   /**
-   * Lists all of the existing origins within a profile.
+   * Lists all of the L4 routes within a profile.
    * @param resourceGroupName Name of the Resource group within the Azure subscription.
    * @param profileName Name of the Azure Front Door Standard or Azure Front Door Premium profile which
    *                    is unique within the resource group.
@@ -36,16 +36,16 @@ export interface Routes {
     resourceGroupName: string,
     profileName: string,
     endpointName: string,
-    options?: RoutesListByEndpointOptionalParams
-  ): PagedAsyncIterableIterator<Route>;
+    options?: L4RoutesListByEndpointOptionalParams
+  ): PagedAsyncIterableIterator<L4Route>;
   /**
-   * Gets an existing route with the specified route name under the specified subscription, resource
-   * group, profile, and AzureFrontDoor endpoint.
+   * Gets an existing route with the specified route name for L4 under the specified subscription,
+   * resource group, profile, and AzureFrontDoor endpoint.
    * @param resourceGroupName Name of the Resource group within the Azure subscription.
    * @param profileName Name of the Azure Front Door Standard or Azure Front Door Premium profile which
    *                    is unique within the resource group.
    * @param endpointName Name of the endpoint under the profile which is unique globally.
-   * @param routeName Name of the routing rule.
+   * @param routeName Name of the L4 route.
    * @param options The options parameters.
    */
   get(
@@ -53,8 +53,8 @@ export interface Routes {
     profileName: string,
     endpointName: string,
     routeName: string,
-    options?: RoutesGetOptionalParams
-  ): Promise<RoutesGetResponse>;
+    options?: L4RoutesGetOptionalParams
+  ): Promise<L4RoutesGetResponse>;
   /**
    * Creates a new route with the specified route name under the specified subscription, resource group,
    * profile, and AzureFrontDoor endpoint.
@@ -71,10 +71,13 @@ export interface Routes {
     profileName: string,
     endpointName: string,
     routeName: string,
-    route: Route,
-    options?: RoutesCreateOptionalParams
+    route: L4Route,
+    options?: L4RoutesCreateOptionalParams
   ): Promise<
-    SimplePollerLike<OperationState<RoutesCreateResponse>, RoutesCreateResponse>
+    SimplePollerLike<
+      OperationState<L4RoutesCreateResponse>,
+      L4RoutesCreateResponse
+    >
   >;
   /**
    * Creates a new route with the specified route name under the specified subscription, resource group,
@@ -92,9 +95,9 @@ export interface Routes {
     profileName: string,
     endpointName: string,
     routeName: string,
-    route: Route,
-    options?: RoutesCreateOptionalParams
-  ): Promise<RoutesCreateResponse>;
+    route: L4Route,
+    options?: L4RoutesCreateOptionalParams
+  ): Promise<L4RoutesCreateResponse>;
   /**
    * Updates an existing route with the specified route name under the specified subscription, resource
    * group, profile, and AzureFrontDoor endpoint.
@@ -111,10 +114,13 @@ export interface Routes {
     profileName: string,
     endpointName: string,
     routeName: string,
-    routeUpdateProperties: RouteUpdateParameters,
-    options?: RoutesUpdateOptionalParams
+    routeUpdateProperties: L4RouteUpdatePropertiesParameters,
+    options?: L4RoutesUpdateOptionalParams
   ): Promise<
-    SimplePollerLike<OperationState<RoutesUpdateResponse>, RoutesUpdateResponse>
+    SimplePollerLike<
+      OperationState<L4RoutesUpdateResponse>,
+      L4RoutesUpdateResponse
+    >
   >;
   /**
    * Updates an existing route with the specified route name under the specified subscription, resource
@@ -132,9 +138,9 @@ export interface Routes {
     profileName: string,
     endpointName: string,
     routeName: string,
-    routeUpdateProperties: RouteUpdateParameters,
-    options?: RoutesUpdateOptionalParams
-  ): Promise<RoutesUpdateResponse>;
+    routeUpdateProperties: L4RouteUpdatePropertiesParameters,
+    options?: L4RoutesUpdateOptionalParams
+  ): Promise<L4RoutesUpdateResponse>;
   /**
    * Deletes an existing route with the specified route name under the specified subscription, resource
    * group, profile, and AzureFrontDoor endpoint.
@@ -150,7 +156,7 @@ export interface Routes {
     profileName: string,
     endpointName: string,
     routeName: string,
-    options?: RoutesDeleteOptionalParams
+    options?: L4RoutesDeleteOptionalParams
   ): Promise<SimplePollerLike<OperationState<void>, void>>;
   /**
    * Deletes an existing route with the specified route name under the specified subscription, resource
@@ -167,6 +173,6 @@ export interface Routes {
     profileName: string,
     endpointName: string,
     routeName: string,
-    options?: RoutesDeleteOptionalParams
+    options?: L4RoutesDeleteOptionalParams
   ): Promise<void>;
 }

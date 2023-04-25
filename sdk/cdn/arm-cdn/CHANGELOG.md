@@ -1,15 +1,181 @@
 # Release History
+    
+## 9.0.0-beta.1 (2023-04-25)
+    
+**Features**
 
-## 8.0.1 (Unreleased)
+  - Added operation group L4Routes
+  - Added operation AfdProfiles.beginUpgrade
+  - Added operation AfdProfiles.beginUpgradeAndWait
+  - Added operation AfdProfiles.checkEndpointNameAvailability
+  - Added operation AfdProfiles.validateSecret
+  - Added operation Profiles.beginMigrate
+  - Added operation Profiles.beginMigrateAndWait
+  - Added operation Profiles.beginMigrationCommit
+  - Added operation Profiles.beginMigrationCommitAndWait
+  - Added operation Profiles.canMigrate
+  - Added Interface AfdCustomDomainsCreateHeaders
+  - Added Interface AfdCustomDomainsDeleteHeaders
+  - Added Interface AfdCustomDomainsRefreshValidationTokenHeaders
+  - Added Interface AfdCustomDomainsUpdateHeaders
+  - Added Interface AfdEndpointsCreateHeaders
+  - Added Interface AfdEndpointsDeleteHeaders
+  - Added Interface AfdEndpointsPurgeContentHeaders
+  - Added Interface AfdEndpointsUpdateHeaders
+  - Added Interface AfdOriginGroupsCreateHeaders
+  - Added Interface AfdOriginGroupsDeleteHeaders
+  - Added Interface AfdOriginGroupsUpdateHeaders
+  - Added Interface AfdOriginsCreateHeaders
+  - Added Interface AfdOriginsDeleteHeaders
+  - Added Interface AfdOriginsUpdateHeaders
+  - Added Interface AfdProfilesCheckEndpointNameAvailabilityOptionalParams
+  - Added Interface AfdProfilesUpgradeHeaders
+  - Added Interface AfdProfilesUpgradeOptionalParams
+  - Added Interface AfdProfilesValidateSecretOptionalParams
+  - Added Interface CanMigrateParameters
+  - Added Interface CanMigrateResult
+  - Added Interface CustomDomainsCreateHeaders
+  - Added Interface CustomDomainsDeleteHeaders
+  - Added Interface CustomDomainsDisableCustomHttpsHeaders
+  - Added Interface CustomDomainsEnableCustomHttpsHeaders
+  - Added Interface EndpointsCreateHeaders
+  - Added Interface EndpointsDeleteHeaders
+  - Added Interface EndpointsLoadContentHeaders
+  - Added Interface EndpointsPurgeContentHeaders
+  - Added Interface EndpointsStartHeaders
+  - Added Interface EndpointsStopHeaders
+  - Added Interface EndpointsUpdateHeaders
+  - Added Interface L4Route
+  - Added Interface L4RouteBaseSettings
+  - Added Interface L4RouteListResult
+  - Added Interface L4RouteProperties
+  - Added Interface L4RoutesCreateHeaders
+  - Added Interface L4RoutesCreateOptionalParams
+  - Added Interface L4RoutesDeleteHeaders
+  - Added Interface L4RoutesDeleteOptionalParams
+  - Added Interface L4RoutesGetOptionalParams
+  - Added Interface L4RoutesListByEndpointNextOptionalParams
+  - Added Interface L4RoutesListByEndpointOptionalParams
+  - Added Interface L4RoutesUpdateHeaders
+  - Added Interface L4RoutesUpdateOptionalParams
+  - Added Interface L4RouteUpdatePropertiesParameters
+  - Added Interface ManagedServiceIdentity
+  - Added Interface MigrateResult
+  - Added Interface MigrationErrorType
+  - Added Interface MigrationParameters
+  - Added Interface MigrationWebApplicationFirewallMapping
+  - Added Interface OriginGroupsCreateHeaders
+  - Added Interface OriginGroupsDeleteHeaders
+  - Added Interface OriginGroupsUpdateHeaders
+  - Added Interface OriginsCreateHeaders
+  - Added Interface OriginsDeleteHeaders
+  - Added Interface OriginsUpdateHeaders
+  - Added Interface PoliciesCreateOrUpdateHeaders
+  - Added Interface PoliciesUpdateHeaders
+  - Added Interface ProfileChangeSkuWafMapping
+  - Added Interface ProfilesCanMigrateOptionalParams
+  - Added Interface ProfilesCreateHeaders
+  - Added Interface ProfilesDeleteHeaders
+  - Added Interface ProfilesMigrateHeaders
+  - Added Interface ProfilesMigrateOptionalParams
+  - Added Interface ProfilesMigrationCommitHeaders
+  - Added Interface ProfilesMigrationCommitOptionalParams
+  - Added Interface ProfilesUpdateHeaders
+  - Added Interface ProfileUpgradeParameters
+  - Added Interface RoutesCreateHeaders
+  - Added Interface RoutesDeleteHeaders
+  - Added Interface RoutesUpdateHeaders
+  - Added Interface RulesCreateHeaders
+  - Added Interface RulesDeleteHeaders
+  - Added Interface RuleSetsDeleteHeaders
+  - Added Interface RulesUpdateHeaders
+  - Added Interface SecretsCreateHeaders
+  - Added Interface SecretsDeleteHeaders
+  - Added Interface SecurityPoliciesCreateHeaders
+  - Added Interface SecurityPoliciesDeleteHeaders
+  - Added Interface SecurityPoliciesPatchHeaders
+  - Added Interface UserAssignedIdentity
+  - Added Type Alias AfdProfilesCheckEndpointNameAvailabilityResponse
+  - Added Type Alias AfdProfilesUpgradeResponse
+  - Added Type Alias AfdProfilesValidateSecretResponse
+  - Added Type Alias BackendProtocol
+  - Added Type Alias CanMigrateDefaultSku
+  - Added Type Alias ClientIPPreservationState
+  - Added Type Alias FrontendProtocol
+  - Added Type Alias L4RoutesCreateResponse
+  - Added Type Alias L4RoutesGetResponse
+  - Added Type Alias L4RoutesListByEndpointNextResponse
+  - Added Type Alias L4RoutesListByEndpointResponse
+  - Added Type Alias L4RoutesUpdateResponse
+  - Added Type Alias ManagedServiceIdentityType
+  - Added Type Alias MetricsGranularity
+  - Added Type Alias MetricsSeriesUnit
+  - Added Type Alias ProfilesCanMigrateResponse
+  - Added Type Alias ProfilesMigrateResponse
+  - Added Type Alias RouteType
+  - Added Type Alias RoutingMethod
+  - Added Type Alias SessionAffinityType
+  - Added Type Alias WafMetricsGranularity
+  - Added Type Alias WafMetricsSeriesUnit
+  - Interface AFDDomain has a new optional parameter extendedProperties
+  - Interface AFDDomainProperties has a new optional parameter extendedProperties
+  - Interface AFDEndpoint has a new optional parameter dedicatedVIP
+  - Interface AFDEndpointPropertiesUpdateParameters has a new optional parameter dedicatedVIP
+  - Interface AFDEndpointUpdateParameters has a new optional parameter dedicatedVIP
+  - Interface AFDOrigin has a new optional parameter clientIPPreservationState
+  - Interface AFDOrigin has a new optional parameter originPorts
+  - Interface AFDOriginGroup has a new optional parameter routeType
+  - Interface AFDOriginGroup has a new optional parameter sessionAffinityType
+  - Interface AFDOriginGroupUpdateParameters has a new optional parameter routeType
+  - Interface AFDOriginGroupUpdateParameters has a new optional parameter sessionAffinityType
+  - Interface AFDOriginGroupUpdatePropertiesParameters has a new optional parameter routeType
+  - Interface AFDOriginGroupUpdatePropertiesParameters has a new optional parameter sessionAffinityType
+  - Interface AFDOriginUpdateParameters has a new optional parameter clientIPPreservationState
+  - Interface AFDOriginUpdateParameters has a new optional parameter originPorts
+  - Interface AFDOriginUpdatePropertiesParameters has a new optional parameter clientIPPreservationState
+  - Interface AFDOriginUpdatePropertiesParameters has a new optional parameter originPorts
+  - Interface AzureFirstPartyManagedCertificateParameters has a new optional parameter certificateAuthority
+  - Interface AzureFirstPartyManagedCertificateParameters has a new optional parameter expirationDate
+  - Interface AzureFirstPartyManagedCertificateParameters has a new optional parameter secretSource
+  - Interface AzureFirstPartyManagedCertificateParameters has a new optional parameter subject
+  - Interface AzureFirstPartyManagedCertificateParameters has a new optional parameter subjectAlternativeNames
+  - Interface AzureFirstPartyManagedCertificateParameters has a new optional parameter thumbprint
+  - Interface CdnWebApplicationFirewallPolicy has a new optional parameter extendedProperties
+  - Interface HealthProbeParameters has a new optional parameter probePort
+  - Interface Profile has a new optional parameter extendedProperties
+  - Interface Profile has a new optional parameter identity
+  - Interface ProfileUpdateParameters has a new optional parameter identity
+  - Added Enum KnownBackendProtocol
+  - Added Enum KnownCanMigrateDefaultSku
+  - Added Enum KnownClientIPPreservationState
+  - Added Enum KnownFrontendProtocol
+  - Added Enum KnownManagedServiceIdentityType
+  - Added Enum KnownMetricsGranularity
+  - Added Enum KnownMetricsSeriesUnit
+  - Added Enum KnownRouteType
+  - Added Enum KnownRoutingMethod
+  - Added Enum KnownSessionAffinityType
+  - Added Enum KnownWafMetricsGranularity
+  - Added Enum KnownWafMetricsSeriesUnit
+  - Enum KnownProfileResourceState has a new value AbortingMigration
+  - Enum KnownProfileResourceState has a new value CommittingMigration
+  - Enum KnownProfileResourceState has a new value Migrated
+  - Enum KnownProfileResourceState has a new value Migrating
+  - Enum KnownProfileResourceState has a new value PendingMigrationCommit
 
-### Features Added
+**Breaking Changes**
 
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
+  - Removed operation group Validate
+  - Type of parameter granularity of interface MetricsResponse is changed from MetricsResponseGranularity to MetricsGranularity
+  - Type of parameter unit of interface MetricsResponseSeriesItem is changed from MetricsResponseSeriesItemUnit to MetricsSeriesUnit
+  - Type of parameter granularity of interface WafMetricsResponse is changed from WafMetricsResponseGranularity to WafMetricsGranularity
+  - Type of parameter unit of interface WafMetricsResponseSeriesItem is changed from "count" to WafMetricsSeriesUnit
+  - Class CdnManagementClient no longer has parameter validate
+  - Removed Enum KnownMetricsResponseGranularity
+  - Removed Enum KnownMetricsResponseSeriesItemUnit
+  - Removed Enum KnownWafMetricsResponseGranularity
+    
+    
 ## 8.0.0 (2022-11-17)
     
 **Features**

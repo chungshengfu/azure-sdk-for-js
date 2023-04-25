@@ -8,7 +8,7 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { AfdCustomDomains } from "../operationsInterfaces";
+import { L4Routes } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
@@ -20,29 +20,28 @@ import {
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
-  AFDDomain,
-  AfdCustomDomainsListByProfileNextOptionalParams,
-  AfdCustomDomainsListByProfileOptionalParams,
-  AfdCustomDomainsListByProfileResponse,
-  AfdCustomDomainsGetOptionalParams,
-  AfdCustomDomainsGetResponse,
-  AfdCustomDomainsCreateOptionalParams,
-  AfdCustomDomainsCreateResponse,
-  AFDDomainUpdateParameters,
-  AfdCustomDomainsUpdateOptionalParams,
-  AfdCustomDomainsUpdateResponse,
-  AfdCustomDomainsDeleteOptionalParams,
-  AfdCustomDomainsRefreshValidationTokenOptionalParams,
-  AfdCustomDomainsListByProfileNextResponse
+  L4Route,
+  L4RoutesListByEndpointNextOptionalParams,
+  L4RoutesListByEndpointOptionalParams,
+  L4RoutesListByEndpointResponse,
+  L4RoutesGetOptionalParams,
+  L4RoutesGetResponse,
+  L4RoutesCreateOptionalParams,
+  L4RoutesCreateResponse,
+  L4RouteUpdatePropertiesParameters,
+  L4RoutesUpdateOptionalParams,
+  L4RoutesUpdateResponse,
+  L4RoutesDeleteOptionalParams,
+  L4RoutesListByEndpointNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing AfdCustomDomains operations. */
-export class AfdCustomDomainsImpl implements AfdCustomDomains {
+/** Class containing L4Routes operations. */
+export class L4RoutesImpl implements L4Routes {
   private readonly client: CdnManagementClient;
 
   /**
-   * Initialize a new instance of the class AfdCustomDomains class.
+   * Initialize a new instance of the class L4Routes class.
    * @param client Reference to the service client
    */
   constructor(client: CdnManagementClient) {
@@ -50,20 +49,23 @@ export class AfdCustomDomainsImpl implements AfdCustomDomains {
   }
 
   /**
-   * Lists existing AzureFrontDoor domains.
+   * Lists all of the L4 routes within a profile.
    * @param resourceGroupName Name of the Resource group within the Azure subscription.
    * @param profileName Name of the Azure Front Door Standard or Azure Front Door Premium profile which
    *                    is unique within the resource group.
+   * @param endpointName Name of the endpoint under the profile which is unique globally.
    * @param options The options parameters.
    */
-  public listByProfile(
+  public listByEndpoint(
     resourceGroupName: string,
     profileName: string,
-    options?: AfdCustomDomainsListByProfileOptionalParams
-  ): PagedAsyncIterableIterator<AFDDomain> {
-    const iter = this.listByProfilePagingAll(
+    endpointName: string,
+    options?: L4RoutesListByEndpointOptionalParams
+  ): PagedAsyncIterableIterator<L4Route> {
+    const iter = this.listByEndpointPagingAll(
       resourceGroupName,
       profileName,
+      endpointName,
       options
     );
     return {
@@ -77,9 +79,10 @@ export class AfdCustomDomainsImpl implements AfdCustomDomains {
         if (settings?.maxPageSize) {
           throw new Error("maxPageSize is not supported by this operation.");
         }
-        return this.listByProfilePagingPage(
+        return this.listByEndpointPagingPage(
           resourceGroupName,
           profileName,
+          endpointName,
           options,
           settings
         );
@@ -87,18 +90,20 @@ export class AfdCustomDomainsImpl implements AfdCustomDomains {
     };
   }
 
-  private async *listByProfilePagingPage(
+  private async *listByEndpointPagingPage(
     resourceGroupName: string,
     profileName: string,
-    options?: AfdCustomDomainsListByProfileOptionalParams,
+    endpointName: string,
+    options?: L4RoutesListByEndpointOptionalParams,
     settings?: PageSettings
-  ): AsyncIterableIterator<AFDDomain[]> {
-    let result: AfdCustomDomainsListByProfileResponse;
+  ): AsyncIterableIterator<L4Route[]> {
+    let result: L4RoutesListByEndpointResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._listByProfile(
+      result = await this._listByEndpoint(
         resourceGroupName,
         profileName,
+        endpointName,
         options
       );
       let page = result.value || [];
@@ -107,9 +112,10 @@ export class AfdCustomDomainsImpl implements AfdCustomDomains {
       yield page;
     }
     while (continuationToken) {
-      result = await this._listByProfileNext(
+      result = await this._listByEndpointNext(
         resourceGroupName,
         profileName,
+        endpointName,
         continuationToken,
         options
       );
@@ -120,14 +126,16 @@ export class AfdCustomDomainsImpl implements AfdCustomDomains {
     }
   }
 
-  private async *listByProfilePagingAll(
+  private async *listByEndpointPagingAll(
     resourceGroupName: string,
     profileName: string,
-    options?: AfdCustomDomainsListByProfileOptionalParams
-  ): AsyncIterableIterator<AFDDomain> {
-    for await (const page of this.listByProfilePagingPage(
+    endpointName: string,
+    options?: L4RoutesListByEndpointOptionalParams
+  ): AsyncIterableIterator<L4Route> {
+    for await (const page of this.listByEndpointPagingPage(
       resourceGroupName,
       profileName,
+      endpointName,
       options
     )) {
       yield* page;
@@ -135,69 +143,76 @@ export class AfdCustomDomainsImpl implements AfdCustomDomains {
   }
 
   /**
-   * Lists existing AzureFrontDoor domains.
+   * Lists all of the L4 routes within a profile.
    * @param resourceGroupName Name of the Resource group within the Azure subscription.
    * @param profileName Name of the Azure Front Door Standard or Azure Front Door Premium profile which
    *                    is unique within the resource group.
+   * @param endpointName Name of the endpoint under the profile which is unique globally.
    * @param options The options parameters.
    */
-  private _listByProfile(
+  private _listByEndpoint(
     resourceGroupName: string,
     profileName: string,
-    options?: AfdCustomDomainsListByProfileOptionalParams
-  ): Promise<AfdCustomDomainsListByProfileResponse> {
+    endpointName: string,
+    options?: L4RoutesListByEndpointOptionalParams
+  ): Promise<L4RoutesListByEndpointResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, profileName, options },
-      listByProfileOperationSpec
+      { resourceGroupName, profileName, endpointName, options },
+      listByEndpointOperationSpec
     );
   }
 
   /**
-   * Gets an existing AzureFrontDoor domain with the specified domain name under the specified
-   * subscription, resource group and profile.
+   * Gets an existing route with the specified route name for L4 under the specified subscription,
+   * resource group, profile, and AzureFrontDoor endpoint.
    * @param resourceGroupName Name of the Resource group within the Azure subscription.
    * @param profileName Name of the Azure Front Door Standard or Azure Front Door Premium profile which
    *                    is unique within the resource group.
-   * @param customDomainName Name of the domain under the profile which is unique globally.
+   * @param endpointName Name of the endpoint under the profile which is unique globally.
+   * @param routeName Name of the L4 route.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     profileName: string,
-    customDomainName: string,
-    options?: AfdCustomDomainsGetOptionalParams
-  ): Promise<AfdCustomDomainsGetResponse> {
+    endpointName: string,
+    routeName: string,
+    options?: L4RoutesGetOptionalParams
+  ): Promise<L4RoutesGetResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, profileName, customDomainName, options },
+      { resourceGroupName, profileName, endpointName, routeName, options },
       getOperationSpec
     );
   }
 
   /**
-   * Creates a new domain within the specified profile.
+   * Creates a new route with the specified route name under the specified subscription, resource group,
+   * profile, and AzureFrontDoor endpoint.
    * @param resourceGroupName Name of the Resource group within the Azure subscription.
    * @param profileName Name of the Azure Front Door Standard or Azure Front Door Premium profile which
    *                    is unique within the resource group.
-   * @param customDomainName Name of the domain under the profile which is unique globally
-   * @param customDomain Domain properties
+   * @param endpointName Name of the endpoint under the profile which is unique globally.
+   * @param routeName Name of the routing rule.
+   * @param route Route properties
    * @param options The options parameters.
    */
   async beginCreate(
     resourceGroupName: string,
     profileName: string,
-    customDomainName: string,
-    customDomain: AFDDomain,
-    options?: AfdCustomDomainsCreateOptionalParams
+    endpointName: string,
+    routeName: string,
+    route: L4Route,
+    options?: L4RoutesCreateOptionalParams
   ): Promise<
     SimplePollerLike<
-      OperationState<AfdCustomDomainsCreateResponse>,
-      AfdCustomDomainsCreateResponse
+      OperationState<L4RoutesCreateResponse>,
+      L4RoutesCreateResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
-    ): Promise<AfdCustomDomainsCreateResponse> => {
+    ): Promise<L4RoutesCreateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -238,15 +253,16 @@ export class AfdCustomDomainsImpl implements AfdCustomDomains {
       args: {
         resourceGroupName,
         profileName,
-        customDomainName,
-        customDomain,
+        endpointName,
+        routeName,
+        route,
         options
       },
       spec: createOperationSpec
     });
     const poller = await createHttpPoller<
-      AfdCustomDomainsCreateResponse,
-      OperationState<AfdCustomDomainsCreateResponse>
+      L4RoutesCreateResponse,
+      OperationState<L4RoutesCreateResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
@@ -257,56 +273,63 @@ export class AfdCustomDomainsImpl implements AfdCustomDomains {
   }
 
   /**
-   * Creates a new domain within the specified profile.
+   * Creates a new route with the specified route name under the specified subscription, resource group,
+   * profile, and AzureFrontDoor endpoint.
    * @param resourceGroupName Name of the Resource group within the Azure subscription.
    * @param profileName Name of the Azure Front Door Standard or Azure Front Door Premium profile which
    *                    is unique within the resource group.
-   * @param customDomainName Name of the domain under the profile which is unique globally
-   * @param customDomain Domain properties
+   * @param endpointName Name of the endpoint under the profile which is unique globally.
+   * @param routeName Name of the routing rule.
+   * @param route Route properties
    * @param options The options parameters.
    */
   async beginCreateAndWait(
     resourceGroupName: string,
     profileName: string,
-    customDomainName: string,
-    customDomain: AFDDomain,
-    options?: AfdCustomDomainsCreateOptionalParams
-  ): Promise<AfdCustomDomainsCreateResponse> {
+    endpointName: string,
+    routeName: string,
+    route: L4Route,
+    options?: L4RoutesCreateOptionalParams
+  ): Promise<L4RoutesCreateResponse> {
     const poller = await this.beginCreate(
       resourceGroupName,
       profileName,
-      customDomainName,
-      customDomain,
+      endpointName,
+      routeName,
+      route,
       options
     );
     return poller.pollUntilDone();
   }
 
   /**
-   * Updates an existing domain within a profile.
+   * Updates an existing route with the specified route name under the specified subscription, resource
+   * group, profile, and AzureFrontDoor endpoint.
    * @param resourceGroupName Name of the Resource group within the Azure subscription.
    * @param profileName Name of the Azure Front Door Standard or Azure Front Door Premium profile which
    *                    is unique within the resource group.
-   * @param customDomainName Name of the domain under the profile which is unique globally
-   * @param customDomainUpdateProperties Domain properties
+   * @param endpointName Name of the endpoint under the profile which is unique globally.
+   * @param routeName Name of the routing rule.
+   * @param routeUpdateProperties Route update properties
    * @param options The options parameters.
    */
   async beginUpdate(
     resourceGroupName: string,
     profileName: string,
-    customDomainName: string,
-    customDomainUpdateProperties: AFDDomainUpdateParameters,
-    options?: AfdCustomDomainsUpdateOptionalParams
+    endpointName: string,
+    routeName: string,
+    routeUpdateProperties: L4RouteUpdatePropertiesParameters,
+    options?: L4RoutesUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
-      OperationState<AfdCustomDomainsUpdateResponse>,
-      AfdCustomDomainsUpdateResponse
+      OperationState<L4RoutesUpdateResponse>,
+      L4RoutesUpdateResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
-    ): Promise<AfdCustomDomainsUpdateResponse> => {
+    ): Promise<L4RoutesUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -347,15 +370,16 @@ export class AfdCustomDomainsImpl implements AfdCustomDomains {
       args: {
         resourceGroupName,
         profileName,
-        customDomainName,
-        customDomainUpdateProperties,
+        endpointName,
+        routeName,
+        routeUpdateProperties,
         options
       },
       spec: updateOperationSpec
     });
     const poller = await createHttpPoller<
-      AfdCustomDomainsUpdateResponse,
-      OperationState<AfdCustomDomainsUpdateResponse>
+      L4RoutesUpdateResponse,
+      OperationState<L4RoutesUpdateResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
@@ -366,45 +390,51 @@ export class AfdCustomDomainsImpl implements AfdCustomDomains {
   }
 
   /**
-   * Updates an existing domain within a profile.
+   * Updates an existing route with the specified route name under the specified subscription, resource
+   * group, profile, and AzureFrontDoor endpoint.
    * @param resourceGroupName Name of the Resource group within the Azure subscription.
    * @param profileName Name of the Azure Front Door Standard or Azure Front Door Premium profile which
    *                    is unique within the resource group.
-   * @param customDomainName Name of the domain under the profile which is unique globally
-   * @param customDomainUpdateProperties Domain properties
+   * @param endpointName Name of the endpoint under the profile which is unique globally.
+   * @param routeName Name of the routing rule.
+   * @param routeUpdateProperties Route update properties
    * @param options The options parameters.
    */
   async beginUpdateAndWait(
     resourceGroupName: string,
     profileName: string,
-    customDomainName: string,
-    customDomainUpdateProperties: AFDDomainUpdateParameters,
-    options?: AfdCustomDomainsUpdateOptionalParams
-  ): Promise<AfdCustomDomainsUpdateResponse> {
+    endpointName: string,
+    routeName: string,
+    routeUpdateProperties: L4RouteUpdatePropertiesParameters,
+    options?: L4RoutesUpdateOptionalParams
+  ): Promise<L4RoutesUpdateResponse> {
     const poller = await this.beginUpdate(
       resourceGroupName,
       profileName,
-      customDomainName,
-      customDomainUpdateProperties,
+      endpointName,
+      routeName,
+      routeUpdateProperties,
       options
     );
     return poller.pollUntilDone();
   }
 
   /**
-   * Deletes an existing AzureFrontDoor domain with the specified domain name under the specified
-   * subscription, resource group and profile.
+   * Deletes an existing route with the specified route name under the specified subscription, resource
+   * group, profile, and AzureFrontDoor endpoint.
    * @param resourceGroupName Name of the Resource group within the Azure subscription.
    * @param profileName Name of the Azure Front Door Standard or Azure Front Door Premium profile which
    *                    is unique within the resource group.
-   * @param customDomainName Name of the domain under the profile which is unique globally.
+   * @param endpointName Name of the endpoint under the profile which is unique globally.
+   * @param routeName Name of the routing rule.
    * @param options The options parameters.
    */
   async beginDelete(
     resourceGroupName: string,
     profileName: string,
-    customDomainName: string,
-    options?: AfdCustomDomainsDeleteOptionalParams
+    endpointName: string,
+    routeName: string,
+    options?: L4RoutesDeleteOptionalParams
   ): Promise<SimplePollerLike<OperationState<void>, void>> {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
@@ -447,7 +477,13 @@ export class AfdCustomDomainsImpl implements AfdCustomDomains {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, profileName, customDomainName, options },
+      args: {
+        resourceGroupName,
+        profileName,
+        endpointName,
+        routeName,
+        options
+      },
       spec: deleteOperationSpec
     });
     const poller = await createHttpPoller<void, OperationState<void>>(lro, {
@@ -460,149 +496,64 @@ export class AfdCustomDomainsImpl implements AfdCustomDomains {
   }
 
   /**
-   * Deletes an existing AzureFrontDoor domain with the specified domain name under the specified
-   * subscription, resource group and profile.
+   * Deletes an existing route with the specified route name under the specified subscription, resource
+   * group, profile, and AzureFrontDoor endpoint.
    * @param resourceGroupName Name of the Resource group within the Azure subscription.
    * @param profileName Name of the Azure Front Door Standard or Azure Front Door Premium profile which
    *                    is unique within the resource group.
-   * @param customDomainName Name of the domain under the profile which is unique globally.
+   * @param endpointName Name of the endpoint under the profile which is unique globally.
+   * @param routeName Name of the routing rule.
    * @param options The options parameters.
    */
   async beginDeleteAndWait(
     resourceGroupName: string,
     profileName: string,
-    customDomainName: string,
-    options?: AfdCustomDomainsDeleteOptionalParams
+    endpointName: string,
+    routeName: string,
+    options?: L4RoutesDeleteOptionalParams
   ): Promise<void> {
     const poller = await this.beginDelete(
       resourceGroupName,
       profileName,
-      customDomainName,
+      endpointName,
+      routeName,
       options
     );
     return poller.pollUntilDone();
   }
 
   /**
-   * Updates the domain validation token.
+   * ListByEndpointNext
    * @param resourceGroupName Name of the Resource group within the Azure subscription.
    * @param profileName Name of the Azure Front Door Standard or Azure Front Door Premium profile which
    *                    is unique within the resource group.
-   * @param customDomainName Name of the domain under the profile which is unique globally.
+   * @param endpointName Name of the endpoint under the profile which is unique globally.
+   * @param nextLink The nextLink from the previous successful call to the ListByEndpoint method.
    * @param options The options parameters.
    */
-  async beginRefreshValidationToken(
+  private _listByEndpointNext(
     resourceGroupName: string,
     profileName: string,
-    customDomainName: string,
-    options?: AfdCustomDomainsRefreshValidationTokenOptionalParams
-  ): Promise<SimplePollerLike<OperationState<void>, void>> {
-    const directSendOperation = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ): Promise<void> => {
-      return this.client.sendOperationRequest(args, spec);
-    };
-    const sendOperationFn = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
-      const providedCallback = args.options?.onResponse;
-      const callback: coreClient.RawResponseCallback = (
-        rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
-      ) => {
-        currentRawResponse = rawResponse;
-        providedCallback?.(rawResponse, flatResponse);
-      };
-      const updatedArgs = {
-        ...args,
-        options: {
-          ...args.options,
-          onResponse: callback
-        }
-      };
-      const flatResponse = await directSendOperation(updatedArgs, spec);
-      return {
-        flatResponse,
-        rawResponse: {
-          statusCode: currentRawResponse!.status,
-          body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
-      };
-    };
-
-    const lro = createLroSpec({
-      sendOperationFn,
-      args: { resourceGroupName, profileName, customDomainName, options },
-      spec: refreshValidationTokenOperationSpec
-    });
-    const poller = await createHttpPoller<void, OperationState<void>>(lro, {
-      restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
-    });
-    await poller.poll();
-    return poller;
-  }
-
-  /**
-   * Updates the domain validation token.
-   * @param resourceGroupName Name of the Resource group within the Azure subscription.
-   * @param profileName Name of the Azure Front Door Standard or Azure Front Door Premium profile which
-   *                    is unique within the resource group.
-   * @param customDomainName Name of the domain under the profile which is unique globally.
-   * @param options The options parameters.
-   */
-  async beginRefreshValidationTokenAndWait(
-    resourceGroupName: string,
-    profileName: string,
-    customDomainName: string,
-    options?: AfdCustomDomainsRefreshValidationTokenOptionalParams
-  ): Promise<void> {
-    const poller = await this.beginRefreshValidationToken(
-      resourceGroupName,
-      profileName,
-      customDomainName,
-      options
-    );
-    return poller.pollUntilDone();
-  }
-
-  /**
-   * ListByProfileNext
-   * @param resourceGroupName Name of the Resource group within the Azure subscription.
-   * @param profileName Name of the Azure Front Door Standard or Azure Front Door Premium profile which
-   *                    is unique within the resource group.
-   * @param nextLink The nextLink from the previous successful call to the ListByProfile method.
-   * @param options The options parameters.
-   */
-  private _listByProfileNext(
-    resourceGroupName: string,
-    profileName: string,
+    endpointName: string,
     nextLink: string,
-    options?: AfdCustomDomainsListByProfileNextOptionalParams
-  ): Promise<AfdCustomDomainsListByProfileNextResponse> {
+    options?: L4RoutesListByEndpointNextOptionalParams
+  ): Promise<L4RoutesListByEndpointNextResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, profileName, nextLink, options },
-      listByProfileNextOperationSpec
+      { resourceGroupName, profileName, endpointName, nextLink, options },
+      listByEndpointNextOperationSpec
     );
   }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const listByProfileOperationSpec: coreClient.OperationSpec = {
+const listByEndpointOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cdn/profiles/{profileName}/customDomains",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cdn/profiles/{profileName}/afdEndpoints/{endpointName}/l4routes",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.AFDDomainListResult
+      bodyMapper: Mappers.L4RouteListResult
     },
     default: {
       bodyMapper: Mappers.AfdErrorResponse
@@ -613,18 +564,19 @@ const listByProfileOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.profileName1
+    Parameters.profileName1,
+    Parameters.endpointName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const getOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cdn/profiles/{profileName}/customDomains/{customDomainName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cdn/profiles/{profileName}/afdEndpoints/{endpointName}/l4routes/{routeName}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.AFDDomain
+      bodyMapper: Mappers.L4Route
     },
     default: {
       bodyMapper: Mappers.AfdErrorResponse
@@ -636,40 +588,42 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.profileName1,
-    Parameters.customDomainName
+    Parameters.endpointName,
+    Parameters.routeName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const createOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cdn/profiles/{profileName}/customDomains/{customDomainName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cdn/profiles/{profileName}/afdEndpoints/{endpointName}/l4routes/{routeName}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.AFDDomain
+      bodyMapper: Mappers.L4Route
     },
     201: {
-      bodyMapper: Mappers.AFDDomain
+      bodyMapper: Mappers.L4Route
     },
     202: {
-      bodyMapper: Mappers.AFDDomain
+      bodyMapper: Mappers.L4Route
     },
     204: {
-      bodyMapper: Mappers.AFDDomain
+      bodyMapper: Mappers.L4Route
     },
     default: {
       bodyMapper: Mappers.AfdErrorResponse
     }
   },
-  requestBody: Parameters.customDomain,
+  requestBody: Parameters.route,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.profileName1,
-    Parameters.customDomainName
+    Parameters.endpointName,
+    Parameters.routeName
   ],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: "json",
@@ -677,33 +631,34 @@ const createOperationSpec: coreClient.OperationSpec = {
 };
 const updateOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cdn/profiles/{profileName}/customDomains/{customDomainName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cdn/profiles/{profileName}/afdEndpoints/{endpointName}/l4routes/{routeName}",
   httpMethod: "PATCH",
   responses: {
     200: {
-      bodyMapper: Mappers.AFDDomain
+      bodyMapper: Mappers.L4Route
     },
     201: {
-      bodyMapper: Mappers.AFDDomain
+      bodyMapper: Mappers.L4Route
     },
     202: {
-      bodyMapper: Mappers.AFDDomain
+      bodyMapper: Mappers.L4Route
     },
     204: {
-      bodyMapper: Mappers.AFDDomain
+      bodyMapper: Mappers.L4Route
     },
     default: {
       bodyMapper: Mappers.AfdErrorResponse
     }
   },
-  requestBody: Parameters.customDomainUpdateProperties,
+  requestBody: Parameters.routeUpdateProperties,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.profileName1,
-    Parameters.customDomainName
+    Parameters.endpointName,
+    Parameters.routeName
   ],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: "json",
@@ -711,7 +666,7 @@ const updateOperationSpec: coreClient.OperationSpec = {
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cdn/profiles/{profileName}/customDomains/{customDomainName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cdn/profiles/{profileName}/afdEndpoints/{endpointName}/l4routes/{routeName}",
   httpMethod: "DELETE",
   responses: {
     200: {},
@@ -728,41 +683,18 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.profileName1,
-    Parameters.customDomainName
+    Parameters.endpointName,
+    Parameters.routeName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
-const refreshValidationTokenOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cdn/profiles/{profileName}/customDomains/{customDomainName}/refreshValidationToken",
-  httpMethod: "POST",
-  responses: {
-    200: {},
-    201: {},
-    202: {},
-    204: {},
-    default: {
-      bodyMapper: Mappers.AfdErrorResponse
-    }
-  },
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.profileName1,
-    Parameters.customDomainName
-  ],
-  headerParameters: [Parameters.accept],
-  serializer
-};
-const listByProfileNextOperationSpec: coreClient.OperationSpec = {
+const listByEndpointNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.AFDDomainListResult
+      bodyMapper: Mappers.L4RouteListResult
     },
     default: {
       bodyMapper: Mappers.AfdErrorResponse
@@ -773,7 +705,8 @@ const listByProfileNextOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.profileName1,
-    Parameters.nextLink
+    Parameters.nextLink,
+    Parameters.endpointName
   ],
   headerParameters: [Parameters.accept],
   serializer

@@ -20,12 +20,12 @@ import {
   AfdEndpointsImpl,
   AfdOriginGroupsImpl,
   AfdOriginsImpl,
+  L4RoutesImpl,
   RoutesImpl,
   RuleSetsImpl,
   RulesImpl,
   SecurityPoliciesImpl,
   SecretsImpl,
-  ValidateImpl,
   LogAnalyticsImpl,
   ProfilesImpl,
   EndpointsImpl,
@@ -44,12 +44,12 @@ import {
   AfdEndpoints,
   AfdOriginGroups,
   AfdOrigins,
+  L4Routes,
   Routes,
   RuleSets,
   Rules,
   SecurityPolicies,
   Secrets,
-  Validate,
   LogAnalytics,
   Profiles,
   Endpoints,
@@ -111,7 +111,7 @@ export class CdnManagementClient extends coreClient.ServiceClient {
       credential: credentials
     };
 
-    const packageDetails = `azsdk-js-arm-cdn/8.0.1`;
+    const packageDetails = `azsdk-js-arm-cdn/9.0.0-beta.1`;
     const userAgentPrefix =
       options.userAgentOptions && options.userAgentOptions.userAgentPrefix
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
@@ -164,18 +164,18 @@ export class CdnManagementClient extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
-    this.apiVersion = options.apiVersion || "2021-06-01";
+    this.apiVersion = options.apiVersion || "2023-04-11-preview";
     this.afdProfiles = new AfdProfilesImpl(this);
     this.afdCustomDomains = new AfdCustomDomainsImpl(this);
     this.afdEndpoints = new AfdEndpointsImpl(this);
     this.afdOriginGroups = new AfdOriginGroupsImpl(this);
     this.afdOrigins = new AfdOriginsImpl(this);
+    this.l4Routes = new L4RoutesImpl(this);
     this.routes = new RoutesImpl(this);
     this.ruleSets = new RuleSetsImpl(this);
     this.rules = new RulesImpl(this);
     this.securityPolicies = new SecurityPoliciesImpl(this);
     this.secrets = new SecretsImpl(this);
-    this.validate = new ValidateImpl(this);
     this.logAnalytics = new LogAnalyticsImpl(this);
     this.profiles = new ProfilesImpl(this);
     this.endpoints = new EndpointsImpl(this);
@@ -290,12 +290,12 @@ export class CdnManagementClient extends coreClient.ServiceClient {
   afdEndpoints: AfdEndpoints;
   afdOriginGroups: AfdOriginGroups;
   afdOrigins: AfdOrigins;
+  l4Routes: L4Routes;
   routes: Routes;
   ruleSets: RuleSets;
   rules: Rules;
   securityPolicies: SecurityPolicies;
   secrets: Secrets;
-  validate: Validate;
   logAnalytics: LogAnalytics;
   profiles: Profiles;
   endpoints: Endpoints;
