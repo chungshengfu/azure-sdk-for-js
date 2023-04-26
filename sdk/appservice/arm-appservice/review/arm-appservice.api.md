@@ -1171,7 +1171,7 @@ export interface AppServicePlans {
     listWebAppsByHybridConnection(resourceGroupName: string, name: string, namespaceName: string, relayName: string, options?: AppServicePlansListWebAppsByHybridConnectionOptionalParams): PagedAsyncIterableIterator<string>;
     rebootWorker(resourceGroupName: string, name: string, workerName: string, options?: AppServicePlansRebootWorkerOptionalParams): Promise<void>;
     restartWebApps(resourceGroupName: string, name: string, options?: AppServicePlansRestartWebAppsOptionalParams): Promise<void>;
-    update(resourceGroupName: string, name: string, appServicePlan: AppServicePlanPatchResource, options?: AppServicePlansUpdateOptionalParams): Promise<AppServicePlansUpdateResponse>;
+    update(resourceGroupName: string, name: string, appServicePlanPatch: AppServicePlanPatchResource, options?: AppServicePlansUpdateOptionalParams): Promise<AppServicePlansUpdateResponse>;
     updateVnetGateway(resourceGroupName: string, name: string, vnetName: string, gatewayName: string, connectionEnvelope: VnetGateway, options?: AppServicePlansUpdateVnetGatewayOptionalParams): Promise<AppServicePlansUpdateVnetGatewayResponse>;
     updateVnetRoute(resourceGroupName: string, name: string, vnetName: string, routeName: string, route: VnetRoute, options?: AppServicePlansUpdateVnetRouteOptionalParams): Promise<AppServicePlansUpdateVnetRouteResponse>;
 }
@@ -4322,6 +4322,16 @@ export enum KnownWorkflowSkuName {
     Premium = "Premium",
     Shared = "Shared",
     Standard = "Standard"
+}
+
+// @public
+export enum KnownWorkflowState {
+    Completed = "Completed",
+    Deleted = "Deleted",
+    Disabled = "Disabled",
+    Enabled = "Enabled",
+    NotSpecified = "NotSpecified",
+    Suspended = "Suspended"
 }
 
 // @public
@@ -12301,7 +12311,7 @@ export interface WorkflowsRegenerateAccessKeyOptionalParams extends coreClient.O
 }
 
 // @public
-export type WorkflowState = "NotSpecified" | "Completed" | "Enabled" | "Disabled" | "Deleted" | "Suspended";
+export type WorkflowState = string;
 
 // @public
 export type WorkflowStatus = string;

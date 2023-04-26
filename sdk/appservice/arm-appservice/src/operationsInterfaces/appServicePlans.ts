@@ -185,13 +185,13 @@ export interface AppServicePlans {
    * Description for Creates or updates an App Service Plan.
    * @param resourceGroupName Name of the resource group to which the resource belongs.
    * @param name Name of the App Service plan.
-   * @param appServicePlan Details of the App Service plan.
+   * @param appServicePlanPatch Details of the App Service plan.
    * @param options The options parameters.
    */
   update(
     resourceGroupName: string,
     name: string,
-    appServicePlan: AppServicePlanPatchResource,
+    appServicePlanPatch: AppServicePlanPatchResource,
     options?: AppServicePlansUpdateOptionalParams
   ): Promise<AppServicePlansUpdateResponse>;
   /**

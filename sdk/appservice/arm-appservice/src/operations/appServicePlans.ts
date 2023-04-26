@@ -722,17 +722,17 @@ export class AppServicePlansImpl implements AppServicePlans {
    * Description for Creates or updates an App Service Plan.
    * @param resourceGroupName Name of the resource group to which the resource belongs.
    * @param name Name of the App Service plan.
-   * @param appServicePlan Details of the App Service plan.
+   * @param appServicePlanPatch Details of the App Service plan.
    * @param options The options parameters.
    */
   update(
     resourceGroupName: string,
     name: string,
-    appServicePlan: AppServicePlanPatchResource,
+    appServicePlanPatch: AppServicePlanPatchResource,
     options?: AppServicePlansUpdateOptionalParams
   ): Promise<AppServicePlansUpdateResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, name, appServicePlan, options },
+      { resourceGroupName, name, appServicePlanPatch, options },
       updateOperationSpec
     );
   }
@@ -1400,7 +1400,7 @@ const updateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultErrorResponse
     }
   },
-  requestBody: Parameters.appServicePlan1,
+  requestBody: Parameters.appServicePlanPatch,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,

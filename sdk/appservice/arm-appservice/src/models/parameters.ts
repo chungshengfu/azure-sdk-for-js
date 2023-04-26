@@ -514,8 +514,8 @@ export const appServicePlan: OperationParameter = {
   mapper: AppServicePlanMapper
 };
 
-export const appServicePlan1: OperationParameter = {
-  parameterPath: "appServicePlan",
+export const appServicePlanPatch: OperationParameter = {
+  parameterPath: "appServicePlanPatch",
   mapper: AppServicePlanPatchResourceMapper
 };
 
