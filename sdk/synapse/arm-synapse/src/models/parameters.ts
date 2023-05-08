@@ -60,6 +60,7 @@ import {
   KustoPoolCheckNameRequest as KustoPoolCheckNameRequestMapper,
   KustoPool as KustoPoolMapper,
   KustoPoolUpdate as KustoPoolUpdateMapper,
+  KustoPoolMigrateRequest as KustoPoolMigrateRequestMapper,
   LanguageExtensionsList as LanguageExtensionsListMapper,
   FollowerDatabaseDefinition as FollowerDatabaseDefinitionMapper,
   DatabaseCheckNameRequest as DatabaseCheckNameRequestMapper,
@@ -70,6 +71,7 @@ import {
   DataConnection as DataConnectionMapper,
   ClusterPrincipalAssignmentCheckNameRequest as ClusterPrincipalAssignmentCheckNameRequestMapper,
   ClusterPrincipalAssignment as ClusterPrincipalAssignmentMapper,
+  DatabaseInviteFollowerRequest as DatabaseInviteFollowerRequestMapper,
   DatabasePrincipalAssignmentCheckNameRequest as DatabasePrincipalAssignmentCheckNameRequestMapper,
   DatabasePrincipalAssignment as DatabasePrincipalAssignmentMapper
 } from "../models/mappers";
@@ -142,6 +144,9 @@ export const resourceGroupName: OperationURLParameter = {
 export const workspaceName: OperationURLParameter = {
   parameterPath: "workspaceName",
   mapper: {
+    constraints: {
+      Pattern: new RegExp("^[a-z0-9\\-]{1,50}$")
+    },
     serializedName: "workspaceName",
     required: true,
     type: {
@@ -984,6 +989,9 @@ export const location: OperationURLParameter = {
 export const kustoPoolName1: OperationURLParameter = {
   parameterPath: "kustoPoolName",
   mapper: {
+    constraints: {
+      Pattern: new RegExp("^[a-z][a-z0-9]{3,21}$")
+    },
     serializedName: "kustoPoolName",
     required: true,
     type: {
@@ -1000,6 +1008,11 @@ export const parameters23: OperationParameter = {
 export const parameters24: OperationParameter = {
   parameterPath: "parameters",
   mapper: KustoPoolUpdateMapper
+};
+
+export const kustoPoolMigrateRequest: OperationParameter = {
+  parameterPath: "kustoPoolMigrateRequest",
+  mapper: KustoPoolMigrateRequestMapper
 };
 
 export const languageExtensionsToAdd: OperationParameter = {
@@ -1041,6 +1054,9 @@ export const parameters25: OperationParameter = {
 export const databaseName: OperationURLParameter = {
   parameterPath: "databaseName",
   mapper: {
+    constraints: {
+      Pattern: new RegExp("^[a-zA-Z0-9_\\-\\. ]{1,260}$")
+    },
     serializedName: "databaseName",
     required: true,
     type: {
@@ -1101,12 +1117,17 @@ export const parameters29: OperationParameter = {
   mapper: ClusterPrincipalAssignmentMapper
 };
 
+export const parameters30: OperationParameter = {
+  parameterPath: "parameters",
+  mapper: DatabaseInviteFollowerRequestMapper
+};
+
 export const principalAssignmentName2: OperationParameter = {
   parameterPath: "principalAssignmentName",
   mapper: DatabasePrincipalAssignmentCheckNameRequestMapper
 };
 
-export const parameters30: OperationParameter = {
+export const parameters31: OperationParameter = {
   parameterPath: "parameters",
   mapper: DatabasePrincipalAssignmentMapper
 };
