@@ -11,9 +11,6 @@ import * as coreClient from "@azure/core-client";
 export type ContainerRegistryCredentialsUnion =
   | ContainerRegistryCredentials
   | ContainerRegistryBasicCredentials;
-export type CustomPersistentDiskPropertiesUnion =
-  | CustomPersistentDiskProperties
-  | AzureFileVolume;
 export type StoragePropertiesUnion = StorageProperties | StorageAccount;
 export type CertificatePropertiesUnion =
   | CertificateProperties
@@ -34,6 +31,9 @@ export type AcceleratorAuthSettingUnion =
   | AcceleratorPublicSetting
   | AcceleratorBasicAuthSetting
   | AcceleratorSshSetting;
+export type CustomPersistentDiskPropertiesUnion =
+  | CustomPersistentDiskProperties
+  | AzureFileVolume;
 export type UploadedUserSourceInfoUnion =
   | UploadedUserSourceInfo
   | JarUploadedUserSourceInfo
@@ -1100,129 +1100,68 @@ export interface ApplicationInsightsAgentVersions {
   readonly java?: string;
 }
 
-/** App resource properties payload */
 export interface AppResourceProperties {
-  /** Indicates whether the App exposes public endpoint */
-  public?: boolean;
+  /** ASA App xxx propertes */
+  xxx?: number;
+}
+
+/** The complex type of the extended location. */
+export interface ExtendedLocation {
+  /** The name of the extended location. */
+  name?: string;
+  /** The type of the extended location. */
+  type?: ExtendedLocationTypes;
+}
+
+/** Managed service identity (system assigned and/or user assigned identities) */
+export interface ManagedServiceIdentity {
   /**
-   * URL of the App
+   * The service principal ID of the system assigned identity. This property will only be provided for a system assigned identity.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly url?: string;
-  /** Collection of addons */
-  addonConfigs?: { [propertyName: string]: Record<string, unknown> };
+  readonly principalId?: string;
   /**
-   * Provisioning state of the App
+   * The tenant ID of the system assigned identity. This property will only be provided for a system assigned identity.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly provisioningState?: AppResourceProvisioningState;
+  readonly tenantId?: string;
+  /** Type of managed service identity (where both SystemAssigned and UserAssigned types are allowed). */
+  type: ManagedServiceIdentityType;
+  /** The set of user assigned identities associated with the resource. The userAssignedIdentities dictionary keys will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}. The dictionary values can be empty objects ({}) in requests. */
+  userAssignedIdentities?: { [propertyName: string]: UserAssignedIdentity };
+}
+
+/** User assigned identity properties */
+export interface UserAssignedIdentity {
   /**
-   * Fully qualified dns Name.
+   * The principal ID of the assigned identity.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly fqdn?: string;
-  /** Indicate if only https is allowed. */
-  httpsOnly?: boolean;
-  /** Temporary disk settings */
-  temporaryDisk?: TemporaryDisk;
-  /** Persistent disk settings */
-  persistentDisk?: PersistentDisk;
-  /** List of custom persistent disks */
-  customPersistentDisks?: CustomPersistentDiskResource[];
-  /** Indicate if end to end TLS is enabled. */
-  enableEndToEndTLS?: boolean;
-  /** Collection of loaded certificates */
-  loadedCertificates?: LoadedCertificate[];
-  /** Additional App settings in vnet injection instance */
-  vnetAddons?: AppVNetAddons;
-  /** App ingress settings payload. */
-  ingressSettings?: IngressSettings;
-  /** Collection of auth secrets */
+  readonly principalId?: string;
+  /**
+   * The client ID of the assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly clientId?: string;
+}
+
+/** Non versioned Container App configuration properties that define the mutable settings of a Container app */
+export interface Configuration {
+  /** Collection of secrets used by a Container app */
   secrets?: Secret[];
-}
-
-/** Temporary disk payload */
-export interface TemporaryDisk {
-  /** Size of the temporary disk in GB */
-  sizeInGB?: number;
-  /** Mount path of the temporary disk */
-  mountPath?: string;
-}
-
-/** Persistent disk payload */
-export interface PersistentDisk {
-  /** Size of the persistent disk in GB */
-  sizeInGB?: number;
   /**
-   * Size of the used persistent disk in GB
-   * NOTE: This property will not be serialized. It can only be populated by the server.
+   * ActiveRevisionsMode controls how active revisions are handled for the Container app:
+   * <list><item>Multiple: multiple revisions can be active.</item><item>Single: Only one revision can be active at a time. Revision weights can not be used in this mode. If no value if provided, this is the default.</item></list>
    */
-  readonly usedInGB?: number;
-  /** Mount path of the persistent disk */
-  mountPath?: string;
-}
-
-/** Custom persistent disk resource payload. */
-export interface CustomPersistentDiskResource {
-  /** Properties of the custom persistent disk resource payload. */
-  customPersistentDiskProperties?: CustomPersistentDiskPropertiesUnion;
-  /** The resource id of Azure Spring Apps Storage resource. */
-  storageId: string;
-}
-
-/** Custom persistent disk resource payload. */
-export interface CustomPersistentDiskProperties {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  type: "AzureFileVolume";
-  /** The mount path of the persistent disk. */
-  mountPath: string;
-  /** Indicates whether the persistent disk is a readOnly one. */
-  readOnly?: boolean;
-  /** If set to true, it will create and mount a dedicated directory for every individual app instance. */
-  enableSubPath?: boolean;
-  /** These are the mount options for a persistent disk. */
-  mountOptions?: string[];
-}
-
-/** Loaded certificate payload */
-export interface LoadedCertificate {
-  /** Resource Id of loaded certificate */
-  resourceId: string;
-  /** Indicate whether the certificate will be loaded into default trust store, only work for Java runtime. */
-  loadTrustStore?: boolean;
-}
-
-/** Additional App settings in vnet injection instance */
-export interface AppVNetAddons {
-  /** Indicates whether the App in vnet injection instance exposes endpoint which could be accessed from internet. */
-  publicEndpoint?: boolean;
-  /**
-   * URL of the App in vnet injection instance which could be accessed from internet
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly publicEndpointUrl?: string;
-}
-
-/** App ingress settings payload. */
-export interface IngressSettings {
-  /** Ingress read time out in seconds. */
-  readTimeoutInSeconds?: number;
-  /** Ingress send time out in seconds. */
-  sendTimeoutInSeconds?: number;
-  /** Type of the affinity, set this to Cookie to enable session affinity. */
-  sessionAffinity?: SessionAffinity;
-  /** Time in seconds until the cookie expires. */
-  sessionCookieMaxAge?: number;
-  /** How ingress should communicate with this app backend service. */
-  backendProtocol?: BackendProtocol;
-  /** Client-Certification Authentication. */
-  clientAuth?: IngressSettingsClientAuth;
-}
-
-/** Client-Certification Authentication. */
-export interface IngressSettingsClientAuth {
-  /** Collection of certificate resource id. */
-  certificates?: string[];
+  activeRevisionsMode?: ActiveRevisionsMode;
+  /** Ingress configurations. */
+  ingress?: Ingress;
+  /** Collection of private container registry credentials for containers used by the Container app */
+  registries?: RegistryCredentials[];
+  /** Dapr configuration for the Container App. */
+  dapr?: Dapr;
+  /** Optional. Max inactive revisions a Container App can have. */
+  maxInactiveRevisions?: number;
 }
 
 /** Secret definition. */
@@ -1231,34 +1170,379 @@ export interface Secret {
   name?: string;
   /** Secret Value. */
   value?: string;
+  /** Resource ID of a managed identity to authenticate with Azure Key Vault, or System to use a system-assigned identity. */
+  identity?: string;
+  /** Azure Key Vault URL pointing to the secret referenced by the container app. */
+  keyVaultUrl?: string;
 }
 
-/** Managed identity properties retrieved from ARM request headers. */
-export interface ManagedIdentityProperties {
-  /** Type of the managed identity */
-  type?: ManagedIdentityType;
-  /** Principal Id of system-assigned managed identity. */
-  principalId?: string;
-  /** Tenant Id of system-assigned managed identity. */
-  tenantId?: string;
-  /** Properties of user-assigned managed identities */
-  userAssignedIdentities?: {
-    [propertyName: string]: UserAssignedManagedIdentity;
-  };
+/** Container App Ingress configuration. */
+export interface Ingress {
+  /**
+   * Hostname.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly fqdn?: string;
+  /** Bool indicating if app exposes an external http endpoint */
+  external?: boolean;
+  /** Target Port in containers for traffic from ingress */
+  targetPort?: number;
+  /** Exposed Port in containers for TCP traffic from ingress */
+  exposedPort?: number;
+  /** Ingress transport protocol */
+  transport?: IngressTransportMethod;
+  /** Traffic weights for app's revisions */
+  traffic?: TrafficWeight[];
+  /** custom domain bindings for Container Apps' hostnames. */
+  customDomains?: CustomDomain[];
+  /** Bool indicating if HTTP connections to is allowed. If set to false HTTP connections are automatically redirected to HTTPS connections */
+  allowInsecure?: boolean;
+  /** Rules to restrict incoming IP address. */
+  ipSecurityRestrictions?: IpSecurityRestrictionRule[];
+  /** Sticky Sessions for Single Revision Mode */
+  stickySessions?: IngressStickySessions;
+  /** Client certificate mode for mTLS authentication. Ignore indicates server drops client certificate on forwarding. Accept indicates server forwards client certificate but does not require a client certificate. Require indicates server requires a client certificate. */
+  clientCertificateMode?: IngressClientCertificateMode;
+  /** CORS policy for container app */
+  corsPolicy?: CorsPolicy;
 }
 
-/** The details of the user-assigned managed identity assigned to an App. */
-export interface UserAssignedManagedIdentity {
+/** Traffic weight assigned to a revision */
+export interface TrafficWeight {
+  /** Name of a revision */
+  revisionName?: string;
+  /** Traffic weight assigned to a revision */
+  weight?: number;
+  /** Indicates that the traffic weight belongs to a latest stable revision */
+  latestRevision?: boolean;
+  /** Associates a traffic label with a revision */
+  label?: string;
+}
+
+/** Custom Domain of a Container App */
+export interface CustomDomain {
+  /** Hostname. */
+  name: string;
+  /** Custom Domain binding type. */
+  bindingType?: BindingType;
+  /** Resource Id of the Certificate to be bound to this hostname. Must exist in the Managed Environment. */
+  certificateId?: string;
+}
+
+/** Rule to restrict incoming IP address. */
+export interface IpSecurityRestrictionRule {
+  /** Name for the IP restriction rule. */
+  name: string;
+  /** Describe the IP restriction rule that is being sent to the container-app. This is an optional field. */
+  description?: string;
+  /** CIDR notation to match incoming IP address */
+  ipAddressRange: string;
+  /** Allow or Deny rules to determine for incoming IP. Note: Rules can only consist of ALL Allow or ALL Deny */
+  action: Action;
+}
+
+/** Sticky Sessions for Single Revision Mode */
+export interface IngressStickySessions {
+  /** Sticky Session Affinity */
+  affinity?: Affinity;
+}
+
+/** Cross-Origin-Resource-Sharing policy */
+export interface CorsPolicy {
+  /** Specifies the content for the access-control-allow-origins header */
+  allowedOrigins: string[];
+  /** Specifies the content for the access-control-allow-methods header */
+  allowedMethods?: string[];
+  /** Specifies the content for the access-control-allow-headers header */
+  allowedHeaders?: string[];
+  /** Specifies the content for the access-control-expose-headers header */
+  exposeHeaders?: string[];
+  /** Specifies the content for the access-control-max-age header */
+  maxAge?: number;
+  /** Specifies whether the resource allows credentials */
+  allowCredentials?: boolean;
+}
+
+/** Container App Private Registry */
+export interface RegistryCredentials {
+  /** Container Registry Server */
+  server?: string;
+  /** Container Registry Username */
+  username?: string;
+  /** The name of the Secret that contains the registry login password */
+  passwordSecretRef?: string;
+  /** A Managed Identity to use to authenticate with Azure Container Registry. For user-assigned identities, use the full user-assigned identity Resource ID. For system-assigned identities, use 'system' */
+  identity?: string;
+}
+
+/** Container App Dapr configuration. */
+export interface Dapr {
+  /** Boolean indicating if the Dapr side car is enabled */
+  enabled?: boolean;
+  /** Dapr application identifier */
+  appId?: string;
+  /** Tells Dapr which protocol your application is using. Valid options are http and grpc. Default is http */
+  appProtocol?: AppProtocol;
+  /** Tells Dapr which port your application is listening on */
+  appPort?: number;
+  /** Dapr max size of http header read buffer in KB to handle when sending multi-KB headers. Default is 65KB. */
+  httpReadBufferSize?: number;
+  /** Increasing max size of request body http and grpc servers parameter in MB to handle uploading of big files. Default is 4 MB. */
+  httpMaxRequestSize?: number;
+  /** Sets the log level for the Dapr sidecar. Allowed values are debug, info, warn, error. Default is info. */
+  logLevel?: LogLevel;
+  /** Enables API logging for the Dapr sidecar */
+  enableApiLogging?: boolean;
+}
+
+/**
+ * Container App versioned application definition.
+ * Defines the desired state of an immutable revision.
+ * Any changes to this section Will result in a new revision being created
+ */
+export interface Template {
+  /** User friendly suffix that is appended to the revision name */
+  revisionSuffix?: string;
+  /** List of specialized containers that run before app containers. */
+  initContainers?: InitContainer[];
+  /** List of container definitions for the Container App. */
+  containers?: Container[];
+  /** Scaling properties for the Container App. */
+  scale?: Scale;
+  /** List of volume definitions for the Container App. */
+  volumes?: Volume[];
+}
+
+/** Container App base container definition. */
+export interface BaseContainer {
+  /** Container image tag. */
+  image?: string;
+  /** Custom container name. */
+  name?: string;
+  /** Container start command. */
+  command?: string[];
+  /** Container start command arguments. */
+  args?: string[];
+  /** Container environment variables. */
+  env?: EnvironmentVar[];
+  /** Container resource requirements. */
+  resources?: ContainerResources;
+  /** Container volume mounts. */
+  volumeMounts?: VolumeMount[];
+}
+
+/** Container App container environment variable. */
+export interface EnvironmentVar {
+  /** Environment variable name. */
+  name?: string;
+  /** Non-secret environment variable value. */
+  value?: string;
+  /** Name of the Container App secret from which to pull the environment variable value. */
+  secretRef?: string;
+}
+
+/** Container App container resource requirements. */
+export interface ContainerResources {
+  /** Required CPU in cores, e.g. 0.5 */
+  cpu?: number;
+  /** Required memory, e.g. "250Mb" */
+  memory?: string;
   /**
-   * Principal Id of user-assigned managed identity.
+   * Ephemeral Storage, e.g. "1Gi"
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly principalId?: string;
+  readonly ephemeralStorage?: string;
+}
+
+/** Volume mount for the Container App. */
+export interface VolumeMount {
+  /** This must match the Name of a Volume. */
+  volumeName?: string;
+  /** Path within the container at which the volume should be mounted.Must not contain ':'. */
+  mountPath?: string;
+}
+
+/** Probe describes a health check to be performed against a container to determine whether it is alive or ready to receive traffic. */
+export interface ContainerAppProbe {
+  /** Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1. Maximum value is 10. */
+  failureThreshold?: number;
+  /** HTTPGet specifies the http request to perform. */
+  httpGet?: ContainerAppProbeHttpGet;
+  /** Number of seconds after the container has started before liveness probes are initiated. Minimum value is 1. Maximum value is 60. */
+  initialDelaySeconds?: number;
+  /** How often (in seconds) to perform the probe. Default to 10 seconds. Minimum value is 1. Maximum value is 240. */
+  periodSeconds?: number;
+  /** Minimum consecutive successes for the probe to be considered successful after having failed. Defaults to 1. Must be 1 for liveness and startup. Minimum value is 1. Maximum value is 10. */
+  successThreshold?: number;
+  /** TCPSocket specifies an action involving a TCP port. TCP hooks not yet supported. */
+  tcpSocket?: ContainerAppProbeTcpSocket;
+  /** Optional duration in seconds the pod needs to terminate gracefully upon probe failure. The grace period is the duration in seconds after the processes running in the pod are sent a termination signal and the time when the processes are forcibly halted with a kill signal. Set this value longer than the expected cleanup time for your process. If this value is nil, the pod's terminationGracePeriodSeconds will be used. Otherwise, this value overrides the value provided by the pod spec. Value must be non-negative integer. The value zero indicates stop immediately via the kill signal (no opportunity to shut down). This is an alpha field and requires enabling ProbeTerminationGracePeriod feature gate. Maximum value is 3600 seconds (1 hour) */
+  terminationGracePeriodSeconds?: number;
+  /** Number of seconds after which the probe times out. Defaults to 1 second. Minimum value is 1. Maximum value is 240. */
+  timeoutSeconds?: number;
+  /** The type of probe. */
+  type?: Type;
+}
+
+/** HTTPGet specifies the http request to perform. */
+export interface ContainerAppProbeHttpGet {
+  /** Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead. */
+  host?: string;
+  /** Custom headers to set in the request. HTTP allows repeated headers. */
+  httpHeaders?: ContainerAppProbeHttpGetHttpHeadersItem[];
+  /** Path to access on the HTTP server. */
+  path?: string;
+  /** Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME. */
+  port: number;
+  /** Scheme to use for connecting to the host. Defaults to HTTP. */
+  scheme?: Scheme;
+}
+
+/** HTTPHeader describes a custom header to be used in HTTP probes */
+export interface ContainerAppProbeHttpGetHttpHeadersItem {
+  /** The header field name */
+  name: string;
+  /** The header field value */
+  value: string;
+}
+
+/** TCPSocket specifies an action involving a TCP port. TCP hooks not yet supported. */
+export interface ContainerAppProbeTcpSocket {
+  /** Optional: Host name to connect to, defaults to the pod IP. */
+  host?: string;
+  /** Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME. */
+  port: number;
+}
+
+/** Container App scaling configurations. */
+export interface Scale {
+  /** Optional. Minimum number of container replicas. */
+  minReplicas?: number;
+  /** Optional. Maximum number of container replicas. Defaults to 10 if not set. */
+  maxReplicas?: number;
+  /** Scaling rules. */
+  rules?: ScaleRule[];
+}
+
+/** Container App container scaling rule. */
+export interface ScaleRule {
+  /** Scale Rule Name */
+  name?: string;
+  /** Azure Queue based scaling. */
+  azureQueue?: QueueScaleRule;
+  /** Custom scale rule. */
+  custom?: CustomScaleRule;
+  /** HTTP requests based scaling. */
+  http?: HttpScaleRule;
+  /** Tcp requests based scaling. */
+  tcp?: TcpScaleRule;
+}
+
+/** Container App container Azure Queue based scaling rule. */
+export interface QueueScaleRule {
+  /** Queue name. */
+  queueName?: string;
+  /** Queue length. */
+  queueLength?: number;
+  /** Authentication secrets for the queue scale rule. */
+  auth?: ScaleRuleAuth[];
+}
+
+/** Auth Secrets for Container App Scale Rule */
+export interface ScaleRuleAuth {
+  /** Name of the Container App secret from which to pull the auth params. */
+  secretRef?: string;
+  /** Trigger Parameter that uses the secret */
+  triggerParameter?: string;
+}
+
+/** Container App container Custom scaling rule. */
+export interface CustomScaleRule {
   /**
-   * Client Id of user-assigned managed identity.
+   * Type of the custom scale rule
+   * eg: azure-servicebus, redis etc.
+   */
+  type?: string;
+  /** Metadata properties to describe custom scale rule. */
+  metadata?: { [propertyName: string]: string };
+  /** Authentication secrets for the custom scale rule. */
+  auth?: ScaleRuleAuth[];
+}
+
+/** Container App container Http scaling rule. */
+export interface HttpScaleRule {
+  /** Metadata properties to describe http scale rule. */
+  metadata?: { [propertyName: string]: string };
+  /** Authentication secrets for the custom scale rule. */
+  auth?: ScaleRuleAuth[];
+}
+
+/** Container App container Tcp scaling rule. */
+export interface TcpScaleRule {
+  /** Metadata properties to describe tcp scale rule. */
+  metadata?: { [propertyName: string]: string };
+  /** Authentication secrets for the tcp scale rule. */
+  auth?: ScaleRuleAuth[];
+}
+
+/** Volume definitions for the Container App. */
+export interface Volume {
+  /** Volume name. */
+  name?: string;
+  /** Storage type for the volume. If not provided, use EmptyDir. */
+  storageType?: StorageType;
+  /** Name of storage resource. No need to provide for EmptyDir and Secret. */
+  storageName?: string;
+  /** List of secrets to be added in volume. If no secrets are provided, all secrets in collection will be added to volume. */
+  secrets?: SecretVolumeItem[];
+}
+
+/** Secret to be added to volume. */
+export interface SecretVolumeItem {
+  /** Name of the Container App secret from which to pull the secret value. */
+  secretRef?: string;
+  /** Path to project secret to. If no path is provided, path defaults to name of secret listed in secretRef. */
+  path?: string;
+}
+
+/** Common fields that are returned in the response for all Azure Resource Manager resources */
+export interface ResourceAutoGenerated {
+  /**
+   * Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly clientId?: string;
+  readonly id?: string;
+  /**
+   * The name of the resource
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /**
+   * The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly type?: string;
+  /**
+   * Azure Resource Manager metadata containing createdBy and modifiedBy information.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly systemData?: SystemDataAutoGenerated;
+}
+
+/** Metadata pertaining to creation and last modification of the resource. */
+export interface SystemDataAutoGenerated {
+  /** The identity that created the resource. */
+  createdBy?: string;
+  /** The type of identity that created the resource. */
+  createdByType?: CreatedByType;
+  /** The timestamp of resource creation (UTC). */
+  createdAt?: Date;
+  /** The identity that last modified the resource. */
+  lastModifiedBy?: string;
+  /** The type of identity that last modified the resource. */
+  lastModifiedByType?: CreatedByType;
+  /** The timestamp of resource last modification (UTC) */
+  lastModifiedAt?: Date;
 }
 
 /** Object that includes an array of App resources and a possible link for next set */
@@ -1506,7 +1790,7 @@ export interface DeploymentSettings {
   /** Optional duration in seconds the App Instance needs to terminate gracefully. May be decreased in delete request. Value must be non-negative integer. The value zero indicates stop immediately via the kill signal (no opportunity to shut down). If this value is nil, the default grace period will be used instead. The grace period is the duration in seconds after the processes running in the App Instance are sent a termination signal and the time when the processes are forcibly halted with a kill signal. Set this value longer than the expected cleanup time for your process. Defaults to 90 seconds. */
   terminationGracePeriodSeconds?: number;
   /** Scaling properties for the Azure Spring Apps App Instance. */
-  scale?: Scale;
+  scale?: ScaleAutoGenerated;
   /** Container liveness and readiness probe settings */
   containerProbeSettings?: ContainerProbeSettings;
 }
@@ -1544,41 +1828,41 @@ export interface ProbeAction {
 }
 
 /** Azure Spring Apps scaling configurations. */
-export interface Scale {
+export interface ScaleAutoGenerated {
   /** Optional. Minimum number of container replicas. */
   minReplicas?: number;
   /** Optional. Maximum number of container replicas. Defaults to 10 if not set. */
   maxReplicas?: number;
   /** Scaling rules. */
-  rules?: ScaleRule[];
+  rules?: ScaleRuleAutoGenerated[];
 }
 
 /** Azure Spring Apps App Instance scaling rule. */
-export interface ScaleRule {
+export interface ScaleRuleAutoGenerated {
   /** Scale Rule Name */
   name?: string;
   /** Azure Queue based scaling. */
-  azureQueue?: QueueScaleRule;
+  azureQueue?: QueueScaleRuleAutoGenerated;
   /** Custom scale rule. */
-  custom?: CustomScaleRule;
+  custom?: CustomScaleRuleAutoGenerated;
   /** HTTP requests based scaling. */
-  http?: HttpScaleRule;
+  http?: HttpScaleRuleAutoGenerated;
   /** Tcp requests based scaling. */
-  tcp?: TcpScaleRule;
+  tcp?: TcpScaleRuleAutoGenerated;
 }
 
 /** Azure Spring Apps App Instance Azure Queue based scaling rule. */
-export interface QueueScaleRule {
+export interface QueueScaleRuleAutoGenerated {
   /** Queue name. */
   queueName?: string;
   /** Queue length. */
   queueLength?: number;
   /** Authentication secrets for the queue scale rule. */
-  auth?: ScaleRuleAuth[];
+  auth?: ScaleRuleAuthAutoGenerated[];
 }
 
 /** Auth Secrets for Azure Spring Apps App Instance Scale Rule */
-export interface ScaleRuleAuth {
+export interface ScaleRuleAuthAutoGenerated {
   /** Name of the Azure Spring Apps App Instance secret from which to pull the auth params. */
   secretRef?: string;
   /** Trigger Parameter that uses the secret */
@@ -1586,7 +1870,7 @@ export interface ScaleRuleAuth {
 }
 
 /** Azure Spring Apps App Instance Custom scaling rule. */
-export interface CustomScaleRule {
+export interface CustomScaleRuleAutoGenerated {
   /**
    * Type of the custom scale rule
    * eg: azure-servicebus, redis etc.
@@ -1595,23 +1879,23 @@ export interface CustomScaleRule {
   /** Metadata properties to describe custom scale rule. */
   metadata?: { [propertyName: string]: string };
   /** Authentication secrets for the custom scale rule. */
-  auth?: ScaleRuleAuth[];
+  auth?: ScaleRuleAuthAutoGenerated[];
 }
 
 /** Azure Spring Apps App Instance Http scaling rule. */
-export interface HttpScaleRule {
+export interface HttpScaleRuleAutoGenerated {
   /** Metadata properties to describe http scale rule. */
   metadata?: { [propertyName: string]: string };
   /** Authentication secrets for the custom scale rule. */
-  auth?: ScaleRuleAuth[];
+  auth?: ScaleRuleAuthAutoGenerated[];
 }
 
 /** Azure Spring Apps App Instance Tcp scaling rule. */
-export interface TcpScaleRule {
+export interface TcpScaleRuleAutoGenerated {
   /** Metadata properties to describe tcp scale rule. */
   metadata?: { [propertyName: string]: string };
   /** Authentication secrets for the tcp scale rule. */
-  auth?: ScaleRuleAuth[];
+  auth?: ScaleRuleAuthAutoGenerated[];
 }
 
 /** Container liveness and readiness probe settings */
@@ -2407,6 +2691,167 @@ export interface PredefinedAcceleratorProperties {
   state?: PredefinedAcceleratorState;
 }
 
+/** Managed identity properties retrieved from ARM request headers. */
+export interface ManagedIdentityProperties {
+  /** Type of the managed identity */
+  type?: ManagedIdentityType;
+  /** Principal Id of system-assigned managed identity. */
+  principalId?: string;
+  /** Tenant Id of system-assigned managed identity. */
+  tenantId?: string;
+  /** Properties of user-assigned managed identities */
+  userAssignedIdentities?: {
+    [propertyName: string]: UserAssignedManagedIdentity;
+  };
+}
+
+/** The details of the user-assigned managed identity assigned to an App. */
+export interface UserAssignedManagedIdentity {
+  /**
+   * Principal Id of user-assigned managed identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly principalId?: string;
+  /**
+   * Client Id of user-assigned managed identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly clientId?: string;
+}
+
+/** App resource properties payload */
+export interface AppResourcePropertiesAutoGenerated {
+  /** Indicates whether the App exposes public endpoint */
+  public?: boolean;
+  /**
+   * URL of the App
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly url?: string;
+  /** Collection of addons */
+  addonConfigs?: { [propertyName: string]: Record<string, unknown> };
+  /**
+   * Provisioning state of the App
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: AppResourceProvisioningState;
+  /**
+   * Fully qualified dns Name.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly fqdn?: string;
+  /** Indicate if only https is allowed. */
+  httpsOnly?: boolean;
+  /** Temporary disk settings */
+  temporaryDisk?: TemporaryDisk;
+  /** Persistent disk settings */
+  persistentDisk?: PersistentDisk;
+  /** List of custom persistent disks */
+  customPersistentDisks?: CustomPersistentDiskResource[];
+  /** Indicate if end to end TLS is enabled. */
+  enableEndToEndTLS?: boolean;
+  /** Collection of loaded certificates */
+  loadedCertificates?: LoadedCertificate[];
+  /** Additional App settings in vnet injection instance */
+  vnetAddons?: AppVNetAddons;
+  /** App ingress settings payload. */
+  ingressSettings?: IngressSettings;
+  /** Collection of auth secrets */
+  secrets?: SecretAutoGenerated[];
+}
+
+/** Temporary disk payload */
+export interface TemporaryDisk {
+  /** Size of the temporary disk in GB */
+  sizeInGB?: number;
+  /** Mount path of the temporary disk */
+  mountPath?: string;
+}
+
+/** Persistent disk payload */
+export interface PersistentDisk {
+  /** Size of the persistent disk in GB */
+  sizeInGB?: number;
+  /**
+   * Size of the used persistent disk in GB
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly usedInGB?: number;
+  /** Mount path of the persistent disk */
+  mountPath?: string;
+}
+
+/** Custom persistent disk resource payload. */
+export interface CustomPersistentDiskResource {
+  /** Properties of the custom persistent disk resource payload. */
+  customPersistentDiskProperties?: CustomPersistentDiskPropertiesUnion;
+  /** The resource id of Azure Spring Apps Storage resource. */
+  storageId: string;
+}
+
+/** Custom persistent disk resource payload. */
+export interface CustomPersistentDiskProperties {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  type: "AzureFileVolume";
+  /** The mount path of the persistent disk. */
+  mountPath: string;
+  /** Indicates whether the persistent disk is a readOnly one. */
+  readOnly?: boolean;
+  /** If set to true, it will create and mount a dedicated directory for every individual app instance. */
+  enableSubPath?: boolean;
+  /** These are the mount options for a persistent disk. */
+  mountOptions?: string[];
+}
+
+/** Loaded certificate payload */
+export interface LoadedCertificate {
+  /** Resource Id of loaded certificate */
+  resourceId: string;
+  /** Indicate whether the certificate will be loaded into default trust store, only work for Java runtime. */
+  loadTrustStore?: boolean;
+}
+
+/** Additional App settings in vnet injection instance */
+export interface AppVNetAddons {
+  /** Indicates whether the App in vnet injection instance exposes endpoint which could be accessed from internet. */
+  publicEndpoint?: boolean;
+  /**
+   * URL of the App in vnet injection instance which could be accessed from internet
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly publicEndpointUrl?: string;
+}
+
+/** App ingress settings payload. */
+export interface IngressSettings {
+  /** Ingress read time out in seconds. */
+  readTimeoutInSeconds?: number;
+  /** Ingress send time out in seconds. */
+  sendTimeoutInSeconds?: number;
+  /** Type of the affinity, set this to Cookie to enable session affinity. */
+  sessionAffinity?: SessionAffinity;
+  /** Time in seconds until the cookie expires. */
+  sessionCookieMaxAge?: number;
+  /** How ingress should communicate with this app backend service. */
+  backendProtocol?: BackendProtocol;
+  /** Client-Certification Authentication. */
+  clientAuth?: IngressSettingsClientAuth;
+}
+
+/** Client-Certification Authentication. */
+export interface IngressSettingsClientAuth {
+  /** Collection of certificate resource id. */
+  certificates?: string[];
+}
+
+/** Secret definition. */
+export interface SecretAutoGenerated {
+  /** Secret Name. */
+  name?: string;
+  /** Secret Value. */
+  value?: string;
+}
+
 /** Custom container payload */
 export interface CustomContainer {
   /** The name of the registry that contains the container image */
@@ -2455,12 +2900,21 @@ export interface ContainerRegistryBasicCredentials
   password: string;
 }
 
-/** The properties of the Azure File volume. Azure File shares are mounted as volumes. */
-export interface AzureFileVolume extends CustomPersistentDiskProperties {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  type: "AzureFileVolume";
-  /** The share name of the Azure File share. */
-  shareName?: string;
+/** Container App init container definition */
+export interface InitContainer extends BaseContainer {}
+
+/** Container App container definition */
+export interface Container extends BaseContainer {
+  /** List of probes for the container. */
+  probes?: ContainerAppProbe[];
+}
+
+/** The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location' */
+export interface TrackedResourceAutoGenerated extends ResourceAutoGenerated {
+  /** Resource tags. */
+  tags?: { [propertyName: string]: string };
+  /** The geo-location where the resource lives */
+  location: string;
 }
 
 /** storage resource of type Azure Storage Account. */
@@ -2581,6 +3035,14 @@ export interface AcceleratorSshSetting extends AcceleratorAuthSetting {
   privateKey?: string;
 }
 
+/** The properties of the Azure File volume. Azure File shares are mounted as volumes. */
+export interface AzureFileVolume extends CustomPersistentDiskProperties {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  type: "AzureFileVolume";
+  /** The share name of the Azure File share. */
+  shareName?: string;
+}
+
 /** Service resource */
 export interface ServiceResource extends TrackedResource {
   /** Properties of the Service resource */
@@ -2679,16 +3141,6 @@ export interface MonitoringSettingResource extends ProxyResource {
   properties?: MonitoringSettingProperties;
 }
 
-/** App resource payload */
-export interface AppResource extends ProxyResource {
-  /** Properties of the App resource */
-  properties?: AppResourceProperties;
-  /** The Managed Identity type of the app resource */
-  identity?: ManagedIdentityProperties;
-  /** The GEO location of the application, always the same with its parent resource */
-  location?: string;
-}
-
 /** Binding resource payload */
 export interface BindingResource extends ProxyResource {
   /** Properties of the Binding resource */
@@ -2779,6 +3231,61 @@ export interface PredefinedAcceleratorResource extends ProxyResource {
   sku?: Sku;
 }
 
+/** Container App. */
+export interface ContainerApp extends TrackedResourceAutoGenerated {
+  /** The complex type of the extended location. */
+  extendedLocation?: ExtendedLocation;
+  /** managed identities for the Container App to interact with other Azure services without maintaining any secrets or credentials in code. */
+  identity?: ManagedServiceIdentity;
+  /** The fully qualified resource ID of the resource that manages this resource. Indicates if this resource is managed by another Azure resource. If this is present, complete mode deployment will not delete the resource if it is removed from the template since it is managed by another resource. */
+  managedBy?: string;
+  /**
+   * Provisioning state of the Container App.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ContainerAppProvisioningState;
+  /** Deprecated. Resource ID of the Container App's environment. */
+  managedEnvironmentId?: string;
+  /** Resource ID of environment. */
+  environmentId?: string;
+  /** Workload profile name to pin for container app execution. */
+  workloadProfileName?: string;
+  /**
+   * Name of the latest revision of the Container App.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly latestRevisionName?: string;
+  /**
+   * Name of the latest ready revision of the Container App.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly latestReadyRevisionName?: string;
+  /**
+   * Fully Qualified Domain Name of the latest revision of the Container App.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly latestRevisionFqdn?: string;
+  /**
+   * Id used to verify domain name ownership
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly customDomainVerificationId?: string;
+  /** Non versioned Container App configuration properties. */
+  configuration?: Configuration;
+  /** Container App versioned application definition. */
+  template?: Template;
+  /**
+   * Outbound IP Addresses for container app.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly outboundIpAddresses?: string[];
+  /**
+   * The endpoint of the eventstream of the container app.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly eventStreamEndpoint?: string;
+}
+
 /** Uploaded Jar binary for a deployment */
 export interface JarUploadedUserSourceInfo extends UploadedUserSourceInfo {
   /** Polymorphic discriminator, which specifies the different types this object can be */
@@ -2811,6 +3318,11 @@ export interface NetCoreZipUploadedUserSourceInfo
   netCoreMainEntryPath?: string;
   /** Runtime version of the .Net file */
   runtimeVersion?: string;
+}
+
+/** App resource payload */
+export interface AppResource extends ContainerApp {
+  properties?: AppResourceProperties;
 }
 
 /** Defines headers for BuildService_deleteBuild operation. */
@@ -3217,6 +3729,10 @@ export type BuildProvisioningState = string;
 
 /** Known values of {@link BindingType} that the service accepts. */
 export enum KnownBindingType {
+  /** Disabled */
+  Disabled = "Disabled",
+  /** SniEnabled */
+  SniEnabled = "SniEnabled",
   /** ApplicationInsights */
   ApplicationInsights = "ApplicationInsights",
   /** ApacheSkyWalking */
@@ -3238,6 +3754,8 @@ export enum KnownBindingType {
  * {@link KnownBindingType} can be used interchangeably with BindingType,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
+ * **Disabled** \
+ * **SniEnabled** \
  * **ApplicationInsights** \
  * **ApacheSkyWalking** \
  * **AppDynamics** \
@@ -3377,86 +3895,23 @@ export enum KnownMonitoringSettingState {
  */
 export type MonitoringSettingState = string;
 
-/** Known values of {@link AppResourceProvisioningState} that the service accepts. */
-export enum KnownAppResourceProvisioningState {
-  /** Succeeded */
-  Succeeded = "Succeeded",
-  /** Failed */
-  Failed = "Failed",
-  /** Creating */
-  Creating = "Creating",
-  /** Updating */
-  Updating = "Updating",
-  /** Deleting */
-  Deleting = "Deleting"
+/** Known values of {@link ExtendedLocationTypes} that the service accepts. */
+export enum KnownExtendedLocationTypes {
+  /** CustomLocation */
+  CustomLocation = "CustomLocation"
 }
 
 /**
- * Defines values for AppResourceProvisioningState. \
- * {@link KnownAppResourceProvisioningState} can be used interchangeably with AppResourceProvisioningState,
+ * Defines values for ExtendedLocationTypes. \
+ * {@link KnownExtendedLocationTypes} can be used interchangeably with ExtendedLocationTypes,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Succeeded** \
- * **Failed** \
- * **Creating** \
- * **Updating** \
- * **Deleting**
+ * **CustomLocation**
  */
-export type AppResourceProvisioningState = string;
+export type ExtendedLocationTypes = string;
 
-/** Known values of {@link Type} that the service accepts. */
-export enum KnownType {
-  /** AzureFileVolume */
-  AzureFileVolume = "AzureFileVolume"
-}
-
-/**
- * Defines values for Type. \
- * {@link KnownType} can be used interchangeably with Type,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **AzureFileVolume**
- */
-export type Type = string;
-
-/** Known values of {@link SessionAffinity} that the service accepts. */
-export enum KnownSessionAffinity {
-  /** Cookie */
-  Cookie = "Cookie",
-  /** None */
-  None = "None"
-}
-
-/**
- * Defines values for SessionAffinity. \
- * {@link KnownSessionAffinity} can be used interchangeably with SessionAffinity,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Cookie** \
- * **None**
- */
-export type SessionAffinity = string;
-
-/** Known values of {@link BackendProtocol} that the service accepts. */
-export enum KnownBackendProtocol {
-  /** Grpc */
-  Grpc = "GRPC",
-  /** Default */
-  Default = "Default"
-}
-
-/**
- * Defines values for BackendProtocol. \
- * {@link KnownBackendProtocol} can be used interchangeably with BackendProtocol,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **GRPC** \
- * **Default**
- */
-export type BackendProtocol = string;
-
-/** Known values of {@link ManagedIdentityType} that the service accepts. */
-export enum KnownManagedIdentityType {
+/** Known values of {@link ManagedServiceIdentityType} that the service accepts. */
+export enum KnownManagedServiceIdentityType {
   /** None */
   None = "None",
   /** SystemAssigned */
@@ -3468,8 +3923,8 @@ export enum KnownManagedIdentityType {
 }
 
 /**
- * Defines values for ManagedIdentityType. \
- * {@link KnownManagedIdentityType} can be used interchangeably with ManagedIdentityType,
+ * Defines values for ManagedServiceIdentityType. \
+ * {@link KnownManagedServiceIdentityType} can be used interchangeably with ManagedServiceIdentityType,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
  * **None** \
@@ -3477,10 +3932,226 @@ export enum KnownManagedIdentityType {
  * **UserAssigned** \
  * **SystemAssigned,UserAssigned**
  */
-export type ManagedIdentityType = string;
+export type ManagedServiceIdentityType = string;
+
+/** Known values of {@link ContainerAppProvisioningState} that the service accepts. */
+export enum KnownContainerAppProvisioningState {
+  /** InProgress */
+  InProgress = "InProgress",
+  /** Succeeded */
+  Succeeded = "Succeeded",
+  /** Failed */
+  Failed = "Failed",
+  /** Canceled */
+  Canceled = "Canceled",
+  /** Deleting */
+  Deleting = "Deleting"
+}
+
+/**
+ * Defines values for ContainerAppProvisioningState. \
+ * {@link KnownContainerAppProvisioningState} can be used interchangeably with ContainerAppProvisioningState,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **InProgress** \
+ * **Succeeded** \
+ * **Failed** \
+ * **Canceled** \
+ * **Deleting**
+ */
+export type ContainerAppProvisioningState = string;
+
+/** Known values of {@link ActiveRevisionsMode} that the service accepts. */
+export enum KnownActiveRevisionsMode {
+  /** Multiple */
+  Multiple = "Multiple",
+  /** Single */
+  Single = "Single"
+}
+
+/**
+ * Defines values for ActiveRevisionsMode. \
+ * {@link KnownActiveRevisionsMode} can be used interchangeably with ActiveRevisionsMode,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Multiple** \
+ * **Single**
+ */
+export type ActiveRevisionsMode = string;
+
+/** Known values of {@link IngressTransportMethod} that the service accepts. */
+export enum KnownIngressTransportMethod {
+  /** Auto */
+  Auto = "auto",
+  /** Http */
+  Http = "http",
+  /** Http2 */
+  Http2 = "http2",
+  /** Tcp */
+  Tcp = "tcp"
+}
+
+/**
+ * Defines values for IngressTransportMethod. \
+ * {@link KnownIngressTransportMethod} can be used interchangeably with IngressTransportMethod,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **auto** \
+ * **http** \
+ * **http2** \
+ * **tcp**
+ */
+export type IngressTransportMethod = string;
+
+/** Known values of {@link Action} that the service accepts. */
+export enum KnownAction {
+  /** Allow */
+  Allow = "Allow",
+  /** Deny */
+  Deny = "Deny"
+}
+
+/**
+ * Defines values for Action. \
+ * {@link KnownAction} can be used interchangeably with Action,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Allow** \
+ * **Deny**
+ */
+export type Action = string;
+
+/** Known values of {@link Affinity} that the service accepts. */
+export enum KnownAffinity {
+  /** Sticky */
+  Sticky = "sticky",
+  /** None */
+  None = "none"
+}
+
+/**
+ * Defines values for Affinity. \
+ * {@link KnownAffinity} can be used interchangeably with Affinity,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **sticky** \
+ * **none**
+ */
+export type Affinity = string;
+
+/** Known values of {@link IngressClientCertificateMode} that the service accepts. */
+export enum KnownIngressClientCertificateMode {
+  /** Ignore */
+  Ignore = "ignore",
+  /** Accept */
+  Accept = "accept",
+  /** Require */
+  Require = "require"
+}
+
+/**
+ * Defines values for IngressClientCertificateMode. \
+ * {@link KnownIngressClientCertificateMode} can be used interchangeably with IngressClientCertificateMode,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **ignore** \
+ * **accept** \
+ * **require**
+ */
+export type IngressClientCertificateMode = string;
+
+/** Known values of {@link AppProtocol} that the service accepts. */
+export enum KnownAppProtocol {
+  /** Http */
+  Http = "http",
+  /** Grpc */
+  Grpc = "grpc"
+}
+
+/**
+ * Defines values for AppProtocol. \
+ * {@link KnownAppProtocol} can be used interchangeably with AppProtocol,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **http** \
+ * **grpc**
+ */
+export type AppProtocol = string;
+
+/** Known values of {@link LogLevel} that the service accepts. */
+export enum KnownLogLevel {
+  /** Info */
+  Info = "info",
+  /** Debug */
+  Debug = "debug",
+  /** Warn */
+  Warn = "warn",
+  /** Error */
+  Error = "error"
+}
+
+/**
+ * Defines values for LogLevel. \
+ * {@link KnownLogLevel} can be used interchangeably with LogLevel,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **info** \
+ * **debug** \
+ * **warn** \
+ * **error**
+ */
+export type LogLevel = string;
+
+/** Known values of {@link Scheme} that the service accepts. */
+export enum KnownScheme {
+  /** Http */
+  Http = "HTTP",
+  /** Https */
+  Https = "HTTPS"
+}
+
+/**
+ * Defines values for Scheme. \
+ * {@link KnownScheme} can be used interchangeably with Scheme,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **HTTP** \
+ * **HTTPS**
+ */
+export type Scheme = string;
+
+/** Known values of {@link Type} that the service accepts. */
+export enum KnownType {
+  /** Liveness */
+  Liveness = "Liveness",
+  /** Readiness */
+  Readiness = "Readiness",
+  /** Startup */
+  Startup = "Startup",
+  /** AzureFileVolume */
+  AzureFileVolume = "AzureFileVolume"
+}
+
+/**
+ * Defines values for Type. \
+ * {@link KnownType} can be used interchangeably with Type,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Liveness** \
+ * **Readiness** \
+ * **Startup** \
+ * **AzureFileVolume**
+ */
+export type Type = string;
 
 /** Known values of {@link StorageType} that the service accepts. */
 export enum KnownStorageType {
+  /** AzureFile */
+  AzureFile = "AzureFile",
+  /** EmptyDir */
+  EmptyDir = "EmptyDir",
+  /** Secret */
+  Secret = "Secret",
   /** StorageAccount */
   StorageAccount = "StorageAccount"
 }
@@ -3490,6 +4161,9 @@ export enum KnownStorageType {
  * {@link KnownStorageType} can be used interchangeably with StorageType,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
+ * **AzureFile** \
+ * **EmptyDir** \
+ * **Secret** \
  * **StorageAccount**
  */
 export type StorageType = string;
@@ -3955,6 +4629,93 @@ export enum KnownPredefinedAcceleratorState {
  * **Disabled**: Disable the predefined accelerator.
  */
 export type PredefinedAcceleratorState = string;
+
+/** Known values of {@link ManagedIdentityType} that the service accepts. */
+export enum KnownManagedIdentityType {
+  /** None */
+  None = "None",
+  /** SystemAssigned */
+  SystemAssigned = "SystemAssigned",
+  /** UserAssigned */
+  UserAssigned = "UserAssigned",
+  /** SystemAssignedUserAssigned */
+  SystemAssignedUserAssigned = "SystemAssigned,UserAssigned"
+}
+
+/**
+ * Defines values for ManagedIdentityType. \
+ * {@link KnownManagedIdentityType} can be used interchangeably with ManagedIdentityType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **None** \
+ * **SystemAssigned** \
+ * **UserAssigned** \
+ * **SystemAssigned,UserAssigned**
+ */
+export type ManagedIdentityType = string;
+
+/** Known values of {@link AppResourceProvisioningState} that the service accepts. */
+export enum KnownAppResourceProvisioningState {
+  /** Succeeded */
+  Succeeded = "Succeeded",
+  /** Failed */
+  Failed = "Failed",
+  /** Creating */
+  Creating = "Creating",
+  /** Updating */
+  Updating = "Updating",
+  /** Deleting */
+  Deleting = "Deleting"
+}
+
+/**
+ * Defines values for AppResourceProvisioningState. \
+ * {@link KnownAppResourceProvisioningState} can be used interchangeably with AppResourceProvisioningState,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Succeeded** \
+ * **Failed** \
+ * **Creating** \
+ * **Updating** \
+ * **Deleting**
+ */
+export type AppResourceProvisioningState = string;
+
+/** Known values of {@link SessionAffinity} that the service accepts. */
+export enum KnownSessionAffinity {
+  /** Cookie */
+  Cookie = "Cookie",
+  /** None */
+  None = "None"
+}
+
+/**
+ * Defines values for SessionAffinity. \
+ * {@link KnownSessionAffinity} can be used interchangeably with SessionAffinity,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Cookie** \
+ * **None**
+ */
+export type SessionAffinity = string;
+
+/** Known values of {@link BackendProtocol} that the service accepts. */
+export enum KnownBackendProtocol {
+  /** Grpc */
+  Grpc = "GRPC",
+  /** Default */
+  Default = "Default"
+}
+
+/**
+ * Defines values for BackendProtocol. \
+ * {@link KnownBackendProtocol} can be used interchangeably with BackendProtocol,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **GRPC** \
+ * **Default**
+ */
+export type BackendProtocol = string;
 
 /** Known values of {@link HttpSchemeType} that the service accepts. */
 export enum KnownHttpSchemeType {
