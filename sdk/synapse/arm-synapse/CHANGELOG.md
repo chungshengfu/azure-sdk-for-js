@@ -1,16 +1,6 @@
 # Release History
-
-## 9.0.0-beta.2 (Unreleased)
-
-### Features Added
-
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
-## 9.0.0-beta.1 (2023-02-08)
+    
+## 9.0.0-beta.2 (2023-07-10)
     
 **Features**
 
@@ -49,6 +39,7 @@
   - Added Interface GetIntegrationRuntimeEnableInteractivequeryOptionalParams
   - Added Interface GetIntegrationRuntimeStartOptionalParams
   - Added Interface GetIntegrationRuntimeStopOptionalParams
+  - Added Interface IntegrationRuntimeDataFlowPropertiesCustomPropertiesItem
   - Added Interface IntegrationRuntimeEnableinteractivequery
   - Added Interface IntegrationRuntimeOperationStatus
   - Added Interface IntegrationRuntimeResource
@@ -130,6 +121,7 @@
   - Added Type Alias WorkspaceManagedSqlServerDedicatedSQLMinimalTlsSettingsListResponse
   - Added Type Alias WorkspaceManagedSqlServerDedicatedSQLMinimalTlsSettingsUpdateResponse
   - Added Type Alias WorkspaceStatus
+  - Interface IntegrationRuntimeDataFlowProperties has a new optional parameter customProperties
   - Interface IntegrationRuntimeStatusResponse has a new optional parameter dataFactoryName
   - Interface IntegrationRuntimeStatusResponse has a new optional parameter state
   - Interface SqlPoolOperationResultsGetLocationHeaderResultOptionalParams has a new optional parameter resumeFrom
@@ -145,6 +137,7 @@
   - Removed operation group PrivateLinkResources
   - Removed operation SqlPoolOperationResults.getLocationHeaderResult
   - Removed operation SqlPools.update
+  - Class SynapseManagementClient has a new signature
   - Interface IntegrationRuntimeStatusResponse no longer has parameter properties
   - Interface SqlPoolSchemasListNextOptionalParams no longer has parameter filter
   - Interface SqlPoolSensitivityLabelsListCurrentNextOptionalParams no longer has parameter filter

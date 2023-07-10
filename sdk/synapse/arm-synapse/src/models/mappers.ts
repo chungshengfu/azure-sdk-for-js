@@ -2792,6 +2792,7 @@ export const LibraryInfo: coreClient.CompositeMapper = {
       },
       uploadedTimestamp: {
         serializedName: "uploadedTimestamp",
+        readOnly: true,
         type: {
           name: "DateTime"
         }
@@ -5002,6 +5003,40 @@ export const IntegrationRuntimeDataFlowProperties: coreClient.CompositeMapper = 
         type: {
           name: "Boolean"
         }
+      },
+      customProperties: {
+        serializedName: "customProperties",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className:
+                "IntegrationRuntimeDataFlowPropertiesCustomPropertiesItem"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+export const IntegrationRuntimeDataFlowPropertiesCustomPropertiesItem: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "IntegrationRuntimeDataFlowPropertiesCustomPropertiesItem",
+    modelProperties: {
+      name: {
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      },
+      value: {
+        serializedName: "value",
+        type: {
+          name: "String"
+        }
       }
     }
   }
@@ -6228,6 +6263,20 @@ export const SelfHostedIntegrationRuntimeStatus: coreClient.CompositeMapper = {
               name: "String"
             }
           }
+        }
+      },
+      osType: {
+        serializedName: "typeProperties.osType",
+        readOnly: true,
+        type: {
+          name: "Number"
+        }
+      },
+      targetFramework: {
+        serializedName: "typeProperties.targetFramework",
+        readOnly: true,
+        type: {
+          name: "Number"
         }
       }
     }
@@ -8835,6 +8884,7 @@ export const Workspace: coreClient.CompositeMapper = {
       },
       connectivityEndpoints: {
         serializedName: "properties.connectivityEndpoints",
+        readOnly: true,
         type: {
           name: "Dictionary",
           value: { type: { name: "String" } }
@@ -8877,9 +8927,7 @@ export const Workspace: coreClient.CompositeMapper = {
         readOnly: true,
         type: {
           name: "Dictionary",
-          value: {
-            type: { name: "Dictionary", value: { type: { name: "any" } } }
-          }
+          value: { type: { name: "any" } }
         }
       },
       managedVirtualNetworkSettings: {
@@ -9003,6 +9051,7 @@ export const BigDataPoolResourceInfo: coreClient.CompositeMapper = {
       },
       cacheSize: {
         serializedName: "properties.cacheSize",
+        readOnly: true,
         type: {
           name: "Number"
         }
@@ -9538,6 +9587,7 @@ export const LibraryResource: coreClient.CompositeMapper = {
       },
       uploadedTimestamp: {
         serializedName: "properties.uploadedTimestamp",
+        readOnly: true,
         type: {
           name: "DateTime"
         }

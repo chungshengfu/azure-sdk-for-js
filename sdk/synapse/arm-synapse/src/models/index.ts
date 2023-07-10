@@ -1219,8 +1219,11 @@ export interface LibraryInfo {
   path?: string;
   /** Storage blob container name. */
   containerName?: string;
-  /** The last update time of the library. */
-  uploadedTimestamp?: Date;
+  /**
+   * The last update time of the library.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly uploadedTimestamp?: Date;
   /** Type of the library. */
   type?: string;
   /**
@@ -2118,6 +2121,15 @@ export interface IntegrationRuntimeDataFlowProperties {
   timeToLive?: number;
   /** Cluster will not be recycled and it will be used in next data flow activity run until TTL (time to live) is reached if this is set as false. Default is true. */
   cleanup?: boolean;
+  /** Custom properties are used to tune the data flow runtime performance. */
+  customProperties?: IntegrationRuntimeDataFlowPropertiesCustomPropertiesItem[];
+}
+
+export interface IntegrationRuntimeDataFlowPropertiesCustomPropertiesItem {
+  /** Name of custom property. */
+  name?: string;
+  /** Value of custom property. */
+  value?: string;
 }
 
 /** VNet properties for managed integration runtime. */
@@ -2643,6 +2655,10 @@ export interface SelfHostedIntegrationRuntimeStatus
   serviceRegion?: string;
   /** The newer versions on download center. */
   newerVersions?: string[];
+  /** NOTE: This property will not be serialized. It can only be populated by the server. */
+  readonly osType?: number;
+  /** NOTE: This property will not be serialized. It can only be populated by the server. */
+  readonly targetFramework?: number;
 }
 
 /** Azure Synapse secure string definition. The string value will be masked with asterisks '*' during Get or List API calls. */
@@ -4143,8 +4159,11 @@ export interface Workspace extends TrackedResource {
   sqlAdministratorLogin?: string;
   /** Virtual Network profile */
   virtualNetworkProfile?: VirtualNetworkProfile;
-  /** Connectivity endpoints */
-  connectivityEndpoints?: { [propertyName: string]: string };
+  /**
+   * Connectivity endpoints
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly connectivityEndpoints?: { [propertyName: string]: string };
   /** Setting this to 'default' will ensure that all compute for this workspace is in a virtual network managed on behalf of the user. */
   managedVirtualNetwork?: string;
   /** Private endpoint connections to the workspace */
@@ -4160,9 +4179,7 @@ export interface Workspace extends TrackedResource {
    * Workspace level configs and feature flags
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly extraProperties?: {
-    [propertyName: string]: Record<string, unknown>;
-  };
+  readonly extraProperties?: Record<string, unknown>;
   /** Managed Virtual Network Settings */
   managedVirtualNetworkSettings?: ManagedVirtualNetworkSettings;
   /** Git integration settings */
@@ -4208,8 +4225,11 @@ export interface BigDataPoolResourceInfo extends TrackedResource {
   isAutotuneEnabled?: boolean;
   /** Whether session level packages enabled. */
   sessionLevelPackagesEnabled?: boolean;
-  /** The cache size */
-  cacheSize?: number;
+  /**
+   * The cache size
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly cacheSize?: number;
   /** Dynamic Executor Allocation */
   dynamicExecutorAllocation?: DynamicExecutorAllocation;
   /** The Spark events folder */
@@ -4444,8 +4464,11 @@ export interface LibraryResource extends SubResource {
   path?: string;
   /** Storage blob container name. */
   containerName?: string;
-  /** The last update time of the library. */
-  uploadedTimestamp?: Date;
+  /**
+   * The last update time of the library.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly uploadedTimestamp?: Date;
   /** Type of the library. */
   typePropertiesType?: string;
   /**
