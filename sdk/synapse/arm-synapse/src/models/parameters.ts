@@ -13,6 +13,8 @@ import {
 } from "@azure/core-client";
 import {
   AzureADOnlyAuthentication as AzureADOnlyAuthenticationMapper,
+  BigDataPoolPatchInfo as BigDataPoolPatchInfoMapper,
+  BigDataPoolResourceInfo as BigDataPoolResourceInfoMapper,
   CheckNameAvailabilityRequest as CheckNameAvailabilityRequestMapper,
   IpFirewallRuleInfo as IpFirewallRuleInfoMapper,
   ReplaceAllIpFirewallRulesRequest as ReplaceAllIpFirewallRulesRequestMapper,
@@ -50,8 +52,6 @@ import {
   Workspace as WorkspaceMapper,
   WorkspaceAadAdminInfo as WorkspaceAadAdminInfoMapper,
   ManagedIdentitySqlControlSettingsModel as ManagedIdentitySqlControlSettingsModelMapper,
-  BigDataPoolPatchInfo as BigDataPoolPatchInfoMapper,
-  BigDataPoolResourceInfo as BigDataPoolResourceInfoMapper,
   UpdateIntegrationRuntimeRequest as UpdateIntegrationRuntimeRequestMapper,
   IntegrationRuntimeResource as IntegrationRuntimeResourceMapper,
   GetSsisObjectMetadataRequest as GetSsisObjectMetadataRequestMapper,
@@ -101,7 +101,7 @@ export const $host: OperationURLParameter = {
 export const apiVersion: OperationQueryParameter = {
   parameterPath: "apiVersion",
   mapper: {
-    defaultValue: "2021-06-01",
+    defaultValue: "2023-05-01",
     isConstant: true,
     serializedName: "api-version",
     type: {
@@ -190,9 +190,52 @@ export const nextLink: OperationURLParameter = {
   skipEncoding: true
 };
 
+export const bigDataPoolName: OperationURLParameter = {
+  parameterPath: "bigDataPoolName",
+  mapper: {
+    serializedName: "bigDataPoolName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const bigDataPoolPatchInfo: OperationParameter = {
+  parameterPath: "bigDataPoolPatchInfo",
+  mapper: BigDataPoolPatchInfoMapper
+};
+
+export const bigDataPoolInfo: OperationParameter = {
+  parameterPath: "bigDataPoolInfo",
+  mapper: BigDataPoolResourceInfoMapper
+};
+
+export const force: OperationQueryParameter = {
+  parameterPath: ["options", "force"],
+  mapper: {
+    defaultValue: false,
+    serializedName: "force",
+    type: {
+      name: "Boolean"
+    }
+  }
+};
+
 export const request: OperationParameter = {
   parameterPath: "request",
   mapper: CheckNameAvailabilityRequestMapper
+};
+
+export const location: OperationURLParameter = {
+  parameterPath: "location",
+  mapper: {
+    serializedName: "location",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
 };
 
 export const operationId: OperationURLParameter = {
@@ -241,6 +284,17 @@ export const keyName: OperationURLParameter = {
 export const keyProperties: OperationParameter = {
   parameterPath: "keyProperties",
   mapper: KeyMapper
+};
+
+export const libraryName: OperationURLParameter = {
+  parameterPath: "libraryName",
+  mapper: {
+    serializedName: "libraryName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
 };
 
 export const privateEndpointConnectionName: OperationURLParameter = {
@@ -818,6 +872,11 @@ export const restorableDroppedSqlPoolId: OperationURLParameter = {
   }
 };
 
+export const updateIntegrationRuntimeRequest: OperationParameter = {
+  parameterPath: "updateIntegrationRuntimeRequest",
+  mapper: UpdateIntegrationRuntimeRequestMapper
+};
+
 export const apiVersion1: OperationQueryParameter = {
   parameterPath: "apiVersion",
   mapper: {
@@ -828,54 +887,6 @@ export const apiVersion1: OperationQueryParameter = {
       name: "String"
     }
   }
-};
-
-export const bigDataPoolName: OperationURLParameter = {
-  parameterPath: "bigDataPoolName",
-  mapper: {
-    serializedName: "bigDataPoolName",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const bigDataPoolPatchInfo: OperationParameter = {
-  parameterPath: "bigDataPoolPatchInfo",
-  mapper: BigDataPoolPatchInfoMapper
-};
-
-export const bigDataPoolInfo: OperationParameter = {
-  parameterPath: "bigDataPoolInfo",
-  mapper: BigDataPoolResourceInfoMapper
-};
-
-export const force: OperationQueryParameter = {
-  parameterPath: ["options", "force"],
-  mapper: {
-    defaultValue: false,
-    serializedName: "force",
-    type: {
-      name: "Boolean"
-    }
-  }
-};
-
-export const libraryName: OperationURLParameter = {
-  parameterPath: "libraryName",
-  mapper: {
-    serializedName: "libraryName",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const updateIntegrationRuntimeRequest: OperationParameter = {
-  parameterPath: "updateIntegrationRuntimeRequest",
-  mapper: UpdateIntegrationRuntimeRequestMapper
 };
 
 export const integrationRuntimeName: OperationURLParameter = {
@@ -967,7 +978,7 @@ export const kustoPoolName: OperationParameter = {
   mapper: KustoPoolCheckNameRequestMapper
 };
 
-export const location: OperationURLParameter = {
+export const location1: OperationURLParameter = {
   parameterPath: "location",
   mapper: {
     constraints: {

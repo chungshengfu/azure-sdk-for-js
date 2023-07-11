@@ -163,6 +163,240 @@ export const AzureADOnlyAuthenticationListResult: coreClient.CompositeMapper = {
   }
 };
 
+export const AutoScaleProperties: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "AutoScaleProperties",
+    modelProperties: {
+      minNodeCount: {
+        serializedName: "minNodeCount",
+        type: {
+          name: "Number"
+        }
+      },
+      enabled: {
+        serializedName: "enabled",
+        type: {
+          name: "Boolean"
+        }
+      },
+      maxNodeCount: {
+        serializedName: "maxNodeCount",
+        type: {
+          name: "Number"
+        }
+      }
+    }
+  }
+};
+
+export const AutoPauseProperties: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "AutoPauseProperties",
+    modelProperties: {
+      delayInMinutes: {
+        serializedName: "delayInMinutes",
+        type: {
+          name: "Number"
+        }
+      },
+      enabled: {
+        serializedName: "enabled",
+        type: {
+          name: "Boolean"
+        }
+      }
+    }
+  }
+};
+
+export const DynamicExecutorAllocation: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "DynamicExecutorAllocation",
+    modelProperties: {
+      enabled: {
+        serializedName: "enabled",
+        type: {
+          name: "Boolean"
+        }
+      },
+      minExecutors: {
+        serializedName: "minExecutors",
+        type: {
+          name: "Number"
+        }
+      },
+      maxExecutors: {
+        serializedName: "maxExecutors",
+        type: {
+          name: "Number"
+        }
+      }
+    }
+  }
+};
+
+export const LibraryRequirements: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "LibraryRequirements",
+    modelProperties: {
+      time: {
+        serializedName: "time",
+        readOnly: true,
+        type: {
+          name: "DateTime"
+        }
+      },
+      content: {
+        serializedName: "content",
+        type: {
+          name: "String"
+        }
+      },
+      filename: {
+        serializedName: "filename",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const LibraryInfo: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "LibraryInfo",
+    modelProperties: {
+      name: {
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      },
+      path: {
+        serializedName: "path",
+        type: {
+          name: "String"
+        }
+      },
+      containerName: {
+        serializedName: "containerName",
+        type: {
+          name: "String"
+        }
+      },
+      uploadedTimestamp: {
+        serializedName: "uploadedTimestamp",
+        readOnly: true,
+        type: {
+          name: "DateTime"
+        }
+      },
+      type: {
+        serializedName: "type",
+        type: {
+          name: "String"
+        }
+      },
+      provisioningStatus: {
+        serializedName: "provisioningStatus",
+        readOnly: true,
+        type: {
+          name: "String"
+        }
+      },
+      creatorId: {
+        serializedName: "creatorId",
+        readOnly: true,
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const SparkConfigProperties: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "SparkConfigProperties",
+    modelProperties: {
+      time: {
+        serializedName: "time",
+        readOnly: true,
+        type: {
+          name: "DateTime"
+        }
+      },
+      content: {
+        serializedName: "content",
+        type: {
+          name: "String"
+        }
+      },
+      filename: {
+        serializedName: "filename",
+        type: {
+          name: "String"
+        }
+      },
+      configurationType: {
+        serializedName: "configurationType",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const BigDataPoolPatchInfo: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "BigDataPoolPatchInfo",
+    modelProperties: {
+      tags: {
+        serializedName: "tags",
+        type: {
+          name: "Dictionary",
+          value: { type: { name: "String" } }
+        }
+      }
+    }
+  }
+};
+
+export const BigDataPoolResourceInfoListResult: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "BigDataPoolResourceInfoListResult",
+    modelProperties: {
+      nextLink: {
+        serializedName: "nextLink",
+        type: {
+          name: "String"
+        }
+      },
+      value: {
+        serializedName: "value",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "BigDataPoolResourceInfo"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
 export const CheckNameAvailabilityRequest: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -326,6 +560,139 @@ export const KeyInfoListResult: coreClient.CompositeMapper = {
               className: "Key"
             }
           }
+        }
+      }
+    }
+  }
+};
+
+export const LibraryListResponse: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "LibraryListResponse",
+    modelProperties: {
+      value: {
+        serializedName: "value",
+        required: true,
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "LibraryResource"
+            }
+          }
+        }
+      },
+      nextLink: {
+        serializedName: "nextLink",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const ListUsagesResult: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "ListUsagesResult",
+    modelProperties: {
+      value: {
+        serializedName: "value",
+        required: true,
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "Usage"
+            }
+          }
+        }
+      },
+      nextLink: {
+        serializedName: "nextLink",
+        readOnly: true,
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const Usage: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "Usage",
+    modelProperties: {
+      id: {
+        serializedName: "id",
+        type: {
+          name: "String"
+        }
+      },
+      unit: {
+        serializedName: "unit",
+        readOnly: true,
+        type: {
+          name: "String"
+        }
+      },
+      currentValue: {
+        serializedName: "currentValue",
+        readOnly: true,
+        type: {
+          name: "Number"
+        }
+      },
+      limit: {
+        serializedName: "limit",
+        readOnly: true,
+        type: {
+          name: "Number"
+        }
+      },
+      name: {
+        serializedName: "name",
+        type: {
+          name: "Composite",
+          className: "UsageName"
+        }
+      },
+      nextResetTime: {
+        serializedName: "nextResetTime",
+        type: {
+          name: "DateTime"
+        }
+      },
+      quotaPeriod: {
+        serializedName: "quotaPeriod",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const UsageName: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "UsageName",
+    modelProperties: {
+      value: {
+        serializedName: "value",
+        type: {
+          name: "String"
+        }
+      },
+      localizedValue: {
+        serializedName: "localizedValue",
+        type: {
+          name: "String"
         }
       }
     }
@@ -1972,6 +2339,39 @@ export const ServerSecurityAlertPolicyListResult: coreClient.CompositeMapper = {
   }
 };
 
+export const VulnerabilityAssessmentRecurringScansPropertiesAutoGenerated: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "VulnerabilityAssessmentRecurringScansPropertiesAutoGenerated",
+    modelProperties: {
+      isEnabled: {
+        serializedName: "isEnabled",
+        type: {
+          name: "Boolean"
+        }
+      },
+      emailSubscriptionAdmins: {
+        defaultValue: true,
+        serializedName: "emailSubscriptionAdmins",
+        type: {
+          name: "Boolean"
+        }
+      },
+      emails: {
+        serializedName: "emails",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
 export const ServerVulnerabilityAssessmentListResult: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -2658,267 +3058,6 @@ export const RestorableDroppedSqlPoolListResult: coreClient.CompositeMapper = {
               className: "RestorableDroppedSqlPool"
             }
           }
-        }
-      }
-    }
-  }
-};
-
-export const AutoScaleProperties: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "AutoScaleProperties",
-    modelProperties: {
-      minNodeCount: {
-        serializedName: "minNodeCount",
-        type: {
-          name: "Number"
-        }
-      },
-      enabled: {
-        serializedName: "enabled",
-        type: {
-          name: "Boolean"
-        }
-      },
-      maxNodeCount: {
-        serializedName: "maxNodeCount",
-        type: {
-          name: "Number"
-        }
-      }
-    }
-  }
-};
-
-export const AutoPauseProperties: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "AutoPauseProperties",
-    modelProperties: {
-      delayInMinutes: {
-        serializedName: "delayInMinutes",
-        type: {
-          name: "Number"
-        }
-      },
-      enabled: {
-        serializedName: "enabled",
-        type: {
-          name: "Boolean"
-        }
-      }
-    }
-  }
-};
-
-export const DynamicExecutorAllocation: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "DynamicExecutorAllocation",
-    modelProperties: {
-      enabled: {
-        serializedName: "enabled",
-        type: {
-          name: "Boolean"
-        }
-      },
-      minExecutors: {
-        serializedName: "minExecutors",
-        type: {
-          name: "Number"
-        }
-      },
-      maxExecutors: {
-        serializedName: "maxExecutors",
-        type: {
-          name: "Number"
-        }
-      }
-    }
-  }
-};
-
-export const LibraryRequirements: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "LibraryRequirements",
-    modelProperties: {
-      time: {
-        serializedName: "time",
-        readOnly: true,
-        type: {
-          name: "DateTime"
-        }
-      },
-      content: {
-        serializedName: "content",
-        type: {
-          name: "String"
-        }
-      },
-      filename: {
-        serializedName: "filename",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-
-export const LibraryInfo: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "LibraryInfo",
-    modelProperties: {
-      name: {
-        serializedName: "name",
-        type: {
-          name: "String"
-        }
-      },
-      path: {
-        serializedName: "path",
-        type: {
-          name: "String"
-        }
-      },
-      containerName: {
-        serializedName: "containerName",
-        type: {
-          name: "String"
-        }
-      },
-      uploadedTimestamp: {
-        serializedName: "uploadedTimestamp",
-        type: {
-          name: "DateTime"
-        }
-      },
-      type: {
-        serializedName: "type",
-        type: {
-          name: "String"
-        }
-      },
-      provisioningStatus: {
-        serializedName: "provisioningStatus",
-        readOnly: true,
-        type: {
-          name: "String"
-        }
-      },
-      creatorId: {
-        serializedName: "creatorId",
-        readOnly: true,
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-
-export const SparkConfigProperties: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "SparkConfigProperties",
-    modelProperties: {
-      time: {
-        serializedName: "time",
-        readOnly: true,
-        type: {
-          name: "DateTime"
-        }
-      },
-      content: {
-        serializedName: "content",
-        type: {
-          name: "String"
-        }
-      },
-      filename: {
-        serializedName: "filename",
-        type: {
-          name: "String"
-        }
-      },
-      configurationType: {
-        serializedName: "configurationType",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-
-export const BigDataPoolPatchInfo: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "BigDataPoolPatchInfo",
-    modelProperties: {
-      tags: {
-        serializedName: "tags",
-        type: {
-          name: "Dictionary",
-          value: { type: { name: "String" } }
-        }
-      }
-    }
-  }
-};
-
-export const BigDataPoolResourceInfoListResult: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "BigDataPoolResourceInfoListResult",
-    modelProperties: {
-      nextLink: {
-        serializedName: "nextLink",
-        type: {
-          name: "String"
-        }
-      },
-      value: {
-        serializedName: "value",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "BigDataPoolResourceInfo"
-            }
-          }
-        }
-      }
-    }
-  }
-};
-
-export const LibraryListResponse: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "LibraryListResponse",
-    modelProperties: {
-      value: {
-        serializedName: "value",
-        required: true,
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "LibraryResource"
-            }
-          }
-        }
-      },
-      nextLink: {
-        serializedName: "nextLink",
-        type: {
-          name: "String"
         }
       }
     }
@@ -6229,6 +6368,20 @@ export const SelfHostedIntegrationRuntimeStatus: coreClient.CompositeMapper = {
             }
           }
         }
+      },
+      osType: {
+        serializedName: "typeProperties.osType",
+        readOnly: true,
+        type: {
+          name: "Number"
+        }
+      },
+      targetFramework: {
+        serializedName: "typeProperties.targetFramework",
+        readOnly: true,
+        type: {
+          name: "Number"
+        }
       }
     }
   }
@@ -8083,7 +8236,8 @@ export const ServerVulnerabilityAssessment: coreClient.CompositeMapper = {
         serializedName: "properties.recurringScans",
         type: {
           name: "Composite",
-          className: "VulnerabilityAssessmentRecurringScansProperties"
+          className:
+            "VulnerabilityAssessmentRecurringScansPropertiesAutoGenerated"
         }
       }
     }
@@ -8665,6 +8819,144 @@ export const KustoPoolPrivateLinkResources: coreClient.CompositeMapper = {
   }
 };
 
+export const BigDataPoolResourceInfo: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "BigDataPoolResourceInfo",
+    modelProperties: {
+      ...TrackedResource.type.modelProperties,
+      provisioningState: {
+        serializedName: "properties.provisioningState",
+        type: {
+          name: "String"
+        }
+      },
+      autoScale: {
+        serializedName: "properties.autoScale",
+        type: {
+          name: "Composite",
+          className: "AutoScaleProperties"
+        }
+      },
+      creationDate: {
+        serializedName: "properties.creationDate",
+        readOnly: true,
+        type: {
+          name: "DateTime"
+        }
+      },
+      autoPause: {
+        serializedName: "properties.autoPause",
+        type: {
+          name: "Composite",
+          className: "AutoPauseProperties"
+        }
+      },
+      isComputeIsolationEnabled: {
+        serializedName: "properties.isComputeIsolationEnabled",
+        type: {
+          name: "Boolean"
+        }
+      },
+      isAutotuneEnabled: {
+        serializedName: "properties.isAutotuneEnabled",
+        type: {
+          name: "Boolean"
+        }
+      },
+      sessionLevelPackagesEnabled: {
+        serializedName: "properties.sessionLevelPackagesEnabled",
+        type: {
+          name: "Boolean"
+        }
+      },
+      cacheSize: {
+        serializedName: "properties.cacheSize",
+        readOnly: true,
+        type: {
+          name: "Number"
+        }
+      },
+      dynamicExecutorAllocation: {
+        serializedName: "properties.dynamicExecutorAllocation",
+        type: {
+          name: "Composite",
+          className: "DynamicExecutorAllocation"
+        }
+      },
+      sparkEventsFolder: {
+        serializedName: "properties.sparkEventsFolder",
+        type: {
+          name: "String"
+        }
+      },
+      nodeCount: {
+        serializedName: "properties.nodeCount",
+        type: {
+          name: "Number"
+        }
+      },
+      libraryRequirements: {
+        serializedName: "properties.libraryRequirements",
+        type: {
+          name: "Composite",
+          className: "LibraryRequirements"
+        }
+      },
+      customLibraries: {
+        serializedName: "properties.customLibraries",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "LibraryInfo"
+            }
+          }
+        }
+      },
+      sparkConfigProperties: {
+        serializedName: "properties.sparkConfigProperties",
+        type: {
+          name: "Composite",
+          className: "SparkConfigProperties"
+        }
+      },
+      sparkVersion: {
+        serializedName: "properties.sparkVersion",
+        type: {
+          name: "String"
+        }
+      },
+      defaultSparkLogFolder: {
+        serializedName: "properties.defaultSparkLogFolder",
+        type: {
+          name: "String"
+        }
+      },
+      nodeSize: {
+        serializedName: "properties.nodeSize",
+        type: {
+          name: "String"
+        }
+      },
+      nodeSizeFamily: {
+        serializedName: "properties.nodeSizeFamily",
+        type: {
+          name: "String"
+        }
+      },
+      lastSucceededTimestamp: {
+        serializedName: "properties.lastSucceededTimestamp",
+        readOnly: true,
+        type: {
+          name: "DateTime"
+        }
+      }
+    }
+  }
+};
+
 export const PrivateLinkHub: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -8835,6 +9127,7 @@ export const Workspace: coreClient.CompositeMapper = {
       },
       connectivityEndpoints: {
         serializedName: "properties.connectivityEndpoints",
+        readOnly: true,
         type: {
           name: "Dictionary",
           value: { type: { name: "String" } }
@@ -8877,9 +9170,7 @@ export const Workspace: coreClient.CompositeMapper = {
         readOnly: true,
         type: {
           name: "Dictionary",
-          value: {
-            type: { name: "Dictionary", value: { type: { name: "any" } } }
-          }
+          value: { type: { name: "any" } }
         }
       },
       managedVirtualNetworkSettings: {
@@ -8944,143 +9235,6 @@ export const Workspace: coreClient.CompositeMapper = {
         serializedName: "properties.trustedServiceBypassEnabled",
         type: {
           name: "Boolean"
-        }
-      }
-    }
-  }
-};
-
-export const BigDataPoolResourceInfo: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "BigDataPoolResourceInfo",
-    modelProperties: {
-      ...TrackedResource.type.modelProperties,
-      provisioningState: {
-        serializedName: "properties.provisioningState",
-        type: {
-          name: "String"
-        }
-      },
-      autoScale: {
-        serializedName: "properties.autoScale",
-        type: {
-          name: "Composite",
-          className: "AutoScaleProperties"
-        }
-      },
-      creationDate: {
-        serializedName: "properties.creationDate",
-        readOnly: true,
-        type: {
-          name: "DateTime"
-        }
-      },
-      autoPause: {
-        serializedName: "properties.autoPause",
-        type: {
-          name: "Composite",
-          className: "AutoPauseProperties"
-        }
-      },
-      isComputeIsolationEnabled: {
-        serializedName: "properties.isComputeIsolationEnabled",
-        type: {
-          name: "Boolean"
-        }
-      },
-      isAutotuneEnabled: {
-        serializedName: "properties.isAutotuneEnabled",
-        type: {
-          name: "Boolean"
-        }
-      },
-      sessionLevelPackagesEnabled: {
-        serializedName: "properties.sessionLevelPackagesEnabled",
-        type: {
-          name: "Boolean"
-        }
-      },
-      cacheSize: {
-        serializedName: "properties.cacheSize",
-        type: {
-          name: "Number"
-        }
-      },
-      dynamicExecutorAllocation: {
-        serializedName: "properties.dynamicExecutorAllocation",
-        type: {
-          name: "Composite",
-          className: "DynamicExecutorAllocation"
-        }
-      },
-      sparkEventsFolder: {
-        serializedName: "properties.sparkEventsFolder",
-        type: {
-          name: "String"
-        }
-      },
-      nodeCount: {
-        serializedName: "properties.nodeCount",
-        type: {
-          name: "Number"
-        }
-      },
-      libraryRequirements: {
-        serializedName: "properties.libraryRequirements",
-        type: {
-          name: "Composite",
-          className: "LibraryRequirements"
-        }
-      },
-      customLibraries: {
-        serializedName: "properties.customLibraries",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "LibraryInfo"
-            }
-          }
-        }
-      },
-      sparkConfigProperties: {
-        serializedName: "properties.sparkConfigProperties",
-        type: {
-          name: "Composite",
-          className: "SparkConfigProperties"
-        }
-      },
-      sparkVersion: {
-        serializedName: "properties.sparkVersion",
-        type: {
-          name: "String"
-        }
-      },
-      defaultSparkLogFolder: {
-        serializedName: "properties.defaultSparkLogFolder",
-        type: {
-          name: "String"
-        }
-      },
-      nodeSize: {
-        serializedName: "properties.nodeSize",
-        type: {
-          name: "String"
-        }
-      },
-      nodeSizeFamily: {
-        serializedName: "properties.nodeSizeFamily",
-        type: {
-          name: "String"
-        }
-      },
-      lastSucceededTimestamp: {
-        serializedName: "properties.lastSucceededTimestamp",
-        readOnly: true,
-        type: {
-          name: "DateTime"
         }
       }
     }
@@ -9538,6 +9692,7 @@ export const LibraryResource: coreClient.CompositeMapper = {
       },
       uploadedTimestamp: {
         serializedName: "properties.uploadedTimestamp",
+        readOnly: true,
         type: {
           name: "DateTime"
         }

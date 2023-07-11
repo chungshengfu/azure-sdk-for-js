@@ -7,9 +7,12 @@
  */
 
 export * from "./azureADOnlyAuthentications";
+export * from "./bigDataPools";
 export * from "./operations";
 export * from "./ipFirewallRules";
 export * from "./keys";
+export * from "./library";
+export * from "./libraries";
 export * from "./privateEndpointConnections";
 export * from "./privateLinkResourcesOperations";
 export * from "./privateLinkHubPrivateLinkResources";
@@ -57,9 +60,6 @@ export * from "./workspaceAadAdmins";
 export * from "./workspaceSqlAadAdmins";
 export * from "./workspaceManagedIdentitySqlControlSettings";
 export * from "./restorableDroppedSqlPools";
-export * from "./bigDataPools";
-export * from "./library";
-export * from "./libraries";
 export * from "./integrationRuntimes";
 export * from "./integrationRuntimeNodeIpAddressOperations";
 export * from "./integrationRuntimeObjectMetadata";

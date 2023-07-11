@@ -11,9 +11,12 @@ import * as coreRestPipeline from "@azure/core-rest-pipeline";
 import * as coreAuth from "@azure/core-auth";
 import {
   AzureADOnlyAuthenticationsImpl,
+  BigDataPoolsImpl,
   OperationsImpl,
   IpFirewallRulesImpl,
   KeysImpl,
+  LibraryImpl,
+  LibrariesImpl,
   PrivateEndpointConnectionsImpl,
   PrivateLinkResourcesOperationsImpl,
   PrivateLinkHubPrivateLinkResourcesImpl,
@@ -61,9 +64,6 @@ import {
   WorkspaceSqlAadAdminsImpl,
   WorkspaceManagedIdentitySqlControlSettingsImpl,
   RestorableDroppedSqlPoolsImpl,
-  BigDataPoolsImpl,
-  LibraryImpl,
-  LibrariesImpl,
   IntegrationRuntimesImpl,
   IntegrationRuntimeNodeIpAddressOperationsImpl,
   IntegrationRuntimeObjectMetadataImpl,
@@ -88,9 +88,12 @@ import {
 } from "./operations";
 import {
   AzureADOnlyAuthentications,
+  BigDataPools,
   Operations,
   IpFirewallRules,
   Keys,
+  Library,
+  Libraries,
   PrivateEndpointConnections,
   PrivateLinkResourcesOperations,
   PrivateLinkHubPrivateLinkResources,
@@ -138,9 +141,6 @@ import {
   WorkspaceSqlAadAdmins,
   WorkspaceManagedIdentitySqlControlSettings,
   RestorableDroppedSqlPools,
-  BigDataPools,
-  Library,
-  Libraries,
   IntegrationRuntimes,
   IntegrationRuntimeNodeIpAddressOperations,
   IntegrationRuntimeObjectMetadata,
@@ -167,7 +167,7 @@ import { SynapseManagementClientOptionalParams } from "./models";
 
 export class SynapseManagementClient extends coreClient.ServiceClient {
   $host: string;
-  subscriptionId: string;
+  subscriptionId?: string;
 
   /**
    * Initializes a new instance of the SynapseManagementClient class.
@@ -179,12 +179,26 @@ export class SynapseManagementClient extends coreClient.ServiceClient {
     credentials: coreAuth.TokenCredential,
     subscriptionId: string,
     options?: SynapseManagementClientOptionalParams
+  );
+  constructor(
+    credentials: coreAuth.TokenCredential,
+    options?: SynapseManagementClientOptionalParams
+  );
+  constructor(
+    credentials: coreAuth.TokenCredential,
+    subscriptionIdOrOptions?: SynapseManagementClientOptionalParams | string,
+    options?: SynapseManagementClientOptionalParams
   ) {
     if (credentials === undefined) {
       throw new Error("'credentials' cannot be null");
     }
-    if (subscriptionId === undefined) {
-      throw new Error("'subscriptionId' cannot be null");
+
+    let subscriptionId: string | undefined;
+
+    if (typeof subscriptionIdOrOptions === "string") {
+      subscriptionId = subscriptionIdOrOptions;
+    } else if (typeof subscriptionIdOrOptions === "object") {
+      options = subscriptionIdOrOptions;
     }
 
     // Initializing default values for options
@@ -250,9 +264,12 @@ export class SynapseManagementClient extends coreClient.ServiceClient {
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
     this.azureADOnlyAuthentications = new AzureADOnlyAuthenticationsImpl(this);
+    this.bigDataPools = new BigDataPoolsImpl(this);
     this.operations = new OperationsImpl(this);
     this.ipFirewallRules = new IpFirewallRulesImpl(this);
     this.keys = new KeysImpl(this);
+    this.library = new LibraryImpl(this);
+    this.libraries = new LibrariesImpl(this);
     this.privateEndpointConnections = new PrivateEndpointConnectionsImpl(this);
     this.privateLinkResourcesOperations = new PrivateLinkResourcesOperationsImpl(
       this
@@ -344,9 +361,6 @@ export class SynapseManagementClient extends coreClient.ServiceClient {
       this
     );
     this.restorableDroppedSqlPools = new RestorableDroppedSqlPoolsImpl(this);
-    this.bigDataPools = new BigDataPoolsImpl(this);
-    this.library = new LibraryImpl(this);
-    this.libraries = new LibrariesImpl(this);
     this.integrationRuntimes = new IntegrationRuntimesImpl(this);
     this.integrationRuntimeNodeIpAddressOperations = new IntegrationRuntimeNodeIpAddressOperationsImpl(
       this
@@ -393,9 +407,12 @@ export class SynapseManagementClient extends coreClient.ServiceClient {
   }
 
   azureADOnlyAuthentications: AzureADOnlyAuthentications;
+  bigDataPools: BigDataPools;
   operations: Operations;
   ipFirewallRules: IpFirewallRules;
   keys: Keys;
+  library: Library;
+  libraries: Libraries;
   privateEndpointConnections: PrivateEndpointConnections;
   privateLinkResourcesOperations: PrivateLinkResourcesOperations;
   privateLinkHubPrivateLinkResources: PrivateLinkHubPrivateLinkResources;
@@ -443,9 +460,6 @@ export class SynapseManagementClient extends coreClient.ServiceClient {
   workspaceSqlAadAdmins: WorkspaceSqlAadAdmins;
   workspaceManagedIdentitySqlControlSettings: WorkspaceManagedIdentitySqlControlSettings;
   restorableDroppedSqlPools: RestorableDroppedSqlPools;
-  bigDataPools: BigDataPools;
-  library: Library;
-  libraries: Libraries;
   integrationRuntimes: IntegrationRuntimes;
   integrationRuntimeNodeIpAddressOperations: IntegrationRuntimeNodeIpAddressOperations;
   integrationRuntimeObjectMetadata: IntegrationRuntimeObjectMetadata;

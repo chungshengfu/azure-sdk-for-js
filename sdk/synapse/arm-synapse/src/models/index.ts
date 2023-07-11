@@ -124,6 +124,103 @@ export interface AzureADOnlyAuthenticationListResult {
   readonly nextLink?: string;
 }
 
+/** Auto-scaling properties of a Big Data pool powered by Apache Spark */
+export interface AutoScaleProperties {
+  /** The minimum number of nodes the Big Data pool can support. */
+  minNodeCount?: number;
+  /** Whether automatic scaling is enabled for the Big Data pool. */
+  enabled?: boolean;
+  /** The maximum number of nodes the Big Data pool can support. */
+  maxNodeCount?: number;
+}
+
+/** Auto-pausing properties of a Big Data pool powered by Apache Spark */
+export interface AutoPauseProperties {
+  /** Number of minutes of idle time before the Big Data pool is automatically paused. */
+  delayInMinutes?: number;
+  /** Whether auto-pausing is enabled for the Big Data pool. */
+  enabled?: boolean;
+}
+
+/** Dynamic Executor Allocation Properties */
+export interface DynamicExecutorAllocation {
+  /** Indicates whether Dynamic Executor Allocation is enabled or not. */
+  enabled?: boolean;
+  /** The minimum number of executors alloted */
+  minExecutors?: number;
+  /** The maximum number of executors alloted */
+  maxExecutors?: number;
+}
+
+/** Library requirements for a Big Data pool powered by Apache Spark */
+export interface LibraryRequirements {
+  /**
+   * The last update time of the library requirements file.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly time?: Date;
+  /** The library requirements. */
+  content?: string;
+  /** The filename of the library requirements file. */
+  filename?: string;
+}
+
+/** Library/package information of a Big Data pool powered by Apache Spark */
+export interface LibraryInfo {
+  /** Name of the library. */
+  name?: string;
+  /** Storage blob path of library. */
+  path?: string;
+  /** Storage blob container name. */
+  containerName?: string;
+  /**
+   * The last update time of the library.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly uploadedTimestamp?: Date;
+  /** Type of the library. */
+  type?: string;
+  /**
+   * Provisioning status of the library/package.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningStatus?: string;
+  /**
+   * Creator Id of the library/package.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly creatorId?: string;
+}
+
+/** SparkConfig Properties for a Big Data pool powered by Apache Spark */
+export interface SparkConfigProperties {
+  /**
+   * The last update time of the spark config properties file.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly time?: Date;
+  /** The spark config properties. */
+  content?: string;
+  /** The filename of the spark config properties file. */
+  filename?: string;
+  /** The type of the spark config properties file. */
+  configurationType?: ConfigurationType;
+}
+
+/** Properties patch for a Big Data pool */
+export interface BigDataPoolPatchInfo {
+  /** Updated tags for the Big Data pool */
+  tags?: { [propertyName: string]: string };
+}
+
+/** Collection of Big Data pool information */
+export interface BigDataPoolResourceInfoListResult {
+  /** Link to the next page of results */
+  nextLink?: string;
+  /** List of Big Data pools */
+  value?: BigDataPoolResourceInfo[];
+}
+
 /** A request about whether a workspace name is available */
 export interface CheckNameAvailabilityRequest {
   /** Workspace name */
@@ -183,6 +280,63 @@ export interface KeyInfoListResult {
   nextLink?: string;
   /** List of keys */
   value?: Key[];
+}
+
+/** A list of Library resources. */
+export interface LibraryListResponse {
+  /** List of Library. */
+  value: LibraryResource[];
+  /** The link to the next page of results, if any remaining results exist. */
+  nextLink?: string;
+}
+
+/** The List Usages operation response. */
+export interface ListUsagesResult {
+  /** The list of resource usages. */
+  value: Usage[];
+  /**
+   * URL to get the next set of results (if there are any).
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly nextLink?: string;
+}
+
+/** Resource usage and limit. */
+export interface Usage {
+  /** Fully qualified ID. */
+  id?: string;
+  /**
+   * The unit of usage measurement.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly unit?: string;
+  /**
+   * The current usage of the resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly currentValue?: number;
+  /**
+   * The maximum permitted usage of the resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly limit?: number;
+  /**
+   * The name of the type of usage.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: UsageName;
+  /** Optional.The time that the metric's value will reset. */
+  nextResetTime?: Date;
+  /** Optional. The quota period that determines the length of time between value resets. */
+  quotaPeriod?: string;
+}
+
+/** Name of the usage metrics */
+export interface UsageName {
+  /** The name of the usage metric. */
+  value?: string;
+  /** The localized name of the usage metric. */
+  localizedValue?: string;
 }
 
 /** An operation that is available in this resource provider */
@@ -878,6 +1032,16 @@ export interface ServerSecurityAlertPolicyListResult {
   readonly nextLink?: string;
 }
 
+/** Properties of a Vulnerability Assessment recurring scans. */
+export interface VulnerabilityAssessmentRecurringScansPropertiesAutoGenerated {
+  /** Recurring scans state. */
+  isEnabled?: boolean;
+  /** Specifies that the schedule scan notification will be is sent to the subscription administrators. */
+  emailSubscriptionAdmins?: boolean;
+  /** Specifies an array of e-mail addresses to which the scan notification is sent. */
+  emails?: string[];
+}
+
 /** A list of the server's vulnerability assessments. */
 export interface ServerVulnerabilityAssessmentListResult {
   /**
@@ -1168,108 +1332,6 @@ export interface ManagedIdentitySqlControlSettingsModelPropertiesGrantSqlControl
 export interface RestorableDroppedSqlPoolListResult {
   /** A list of restorable dropped Sql pools */
   value: RestorableDroppedSqlPool[];
-}
-
-/** Auto-scaling properties of a Big Data pool powered by Apache Spark */
-export interface AutoScaleProperties {
-  /** The minimum number of nodes the Big Data pool can support. */
-  minNodeCount?: number;
-  /** Whether automatic scaling is enabled for the Big Data pool. */
-  enabled?: boolean;
-  /** The maximum number of nodes the Big Data pool can support. */
-  maxNodeCount?: number;
-}
-
-/** Auto-pausing properties of a Big Data pool powered by Apache Spark */
-export interface AutoPauseProperties {
-  /** Number of minutes of idle time before the Big Data pool is automatically paused. */
-  delayInMinutes?: number;
-  /** Whether auto-pausing is enabled for the Big Data pool. */
-  enabled?: boolean;
-}
-
-/** Dynamic Executor Allocation Properties */
-export interface DynamicExecutorAllocation {
-  /** Indicates whether Dynamic Executor Allocation is enabled or not. */
-  enabled?: boolean;
-  /** The minimum number of executors alloted */
-  minExecutors?: number;
-  /** The maximum number of executors alloted */
-  maxExecutors?: number;
-}
-
-/** Library requirements for a Big Data pool powered by Apache Spark */
-export interface LibraryRequirements {
-  /**
-   * The last update time of the library requirements file.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly time?: Date;
-  /** The library requirements. */
-  content?: string;
-  /** The filename of the library requirements file. */
-  filename?: string;
-}
-
-/** Library/package information of a Big Data pool powered by Apache Spark */
-export interface LibraryInfo {
-  /** Name of the library. */
-  name?: string;
-  /** Storage blob path of library. */
-  path?: string;
-  /** Storage blob container name. */
-  containerName?: string;
-  /** The last update time of the library. */
-  uploadedTimestamp?: Date;
-  /** Type of the library. */
-  type?: string;
-  /**
-   * Provisioning status of the library/package.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningStatus?: string;
-  /**
-   * Creator Id of the library/package.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly creatorId?: string;
-}
-
-/** SparkConfig Properties for a Big Data pool powered by Apache Spark */
-export interface SparkConfigProperties {
-  /**
-   * The last update time of the spark config properties file.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly time?: Date;
-  /** The spark config properties. */
-  content?: string;
-  /** The filename of the spark config properties file. */
-  filename?: string;
-  /** The type of the spark config properties file. */
-  configurationType?: ConfigurationType;
-}
-
-/** Properties patch for a Big Data pool */
-export interface BigDataPoolPatchInfo {
-  /** Updated tags for the Big Data pool */
-  tags?: { [propertyName: string]: string };
-}
-
-/** Collection of Big Data pool information */
-export interface BigDataPoolResourceInfoListResult {
-  /** Link to the next page of results */
-  nextLink?: string;
-  /** List of Big Data pools */
-  value?: BigDataPoolResourceInfo[];
-}
-
-/** A list of Library resources. */
-export interface LibraryListResponse {
-  /** List of Library. */
-  value: LibraryResource[];
-  /** The link to the next page of results, if any remaining results exist. */
-  nextLink?: string;
 }
 
 /** Update integration runtime request. */
@@ -2643,6 +2705,10 @@ export interface SelfHostedIntegrationRuntimeStatus
   serviceRegion?: string;
   /** The newer versions on download center. */
   newerVersions?: string[];
+  /** NOTE: This property will not be serialized. It can only be populated by the server. */
+  readonly osType?: number;
+  /** NOTE: This property will not be serialized. It can only be populated by the server. */
+  readonly targetFramework?: number;
 }
 
 /** Azure Synapse secure string definition. The string value will be masked with asterisks '*' during Get or List API calls. */
@@ -3773,7 +3839,7 @@ export interface ServerVulnerabilityAssessment extends ProxyResource {
   /** Specifies the identifier key of the storage account for vulnerability assessment scan results. If 'StorageContainerSasKey' isn't specified, storageAccountAccessKey is required. */
   storageAccountAccessKey?: string;
   /** The recurring scans settings */
-  recurringScans?: VulnerabilityAssessmentRecurringScansProperties;
+  recurringScans?: VulnerabilityAssessmentRecurringScansPropertiesAutoGenerated;
 }
 
 /** The server encryption protector. */
@@ -4069,6 +4135,57 @@ export interface KustoPoolPrivateLinkResources extends ProxyResource {
   readonly provisioningState?: ResourceProvisioningState;
 }
 
+/** A Big Data pool */
+export interface BigDataPoolResourceInfo extends TrackedResource {
+  /** The state of the Big Data pool. */
+  provisioningState?: string;
+  /** Auto-scaling properties */
+  autoScale?: AutoScaleProperties;
+  /**
+   * The time when the Big Data pool was created.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly creationDate?: Date;
+  /** Auto-pausing properties */
+  autoPause?: AutoPauseProperties;
+  /** Whether compute isolation is required or not. */
+  isComputeIsolationEnabled?: boolean;
+  /** Whether autotune is required or not. */
+  isAutotuneEnabled?: boolean;
+  /** Whether session level packages enabled. */
+  sessionLevelPackagesEnabled?: boolean;
+  /**
+   * The cache size
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly cacheSize?: number;
+  /** Dynamic Executor Allocation */
+  dynamicExecutorAllocation?: DynamicExecutorAllocation;
+  /** The Spark events folder */
+  sparkEventsFolder?: string;
+  /** The number of nodes in the Big Data pool. */
+  nodeCount?: number;
+  /** Library version requirements */
+  libraryRequirements?: LibraryRequirements;
+  /** List of custom libraries/packages associated with the spark pool. */
+  customLibraries?: LibraryInfo[];
+  /** Spark configuration file to specify additional properties */
+  sparkConfigProperties?: SparkConfigProperties;
+  /** The Apache Spark version. */
+  sparkVersion?: string;
+  /** The default folder where Spark logs will be written. */
+  defaultSparkLogFolder?: string;
+  /** The level of compute power that each node in the Big Data pool has. */
+  nodeSize?: NodeSize;
+  /** The kind of nodes that the Big Data pool provides. */
+  nodeSizeFamily?: NodeSizeFamily;
+  /**
+   * The time when the Big Data pool was updated successfully.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly lastSucceededTimestamp?: Date;
+}
+
 /** A privateLinkHub */
 export interface PrivateLinkHub extends TrackedResource {
   /** PrivateLinkHub provisioning state */
@@ -4143,8 +4260,11 @@ export interface Workspace extends TrackedResource {
   sqlAdministratorLogin?: string;
   /** Virtual Network profile */
   virtualNetworkProfile?: VirtualNetworkProfile;
-  /** Connectivity endpoints */
-  connectivityEndpoints?: { [propertyName: string]: string };
+  /**
+   * Connectivity endpoints
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly connectivityEndpoints?: { [propertyName: string]: string };
   /** Setting this to 'default' will ensure that all compute for this workspace is in a virtual network managed on behalf of the user. */
   managedVirtualNetwork?: string;
   /** Private endpoint connections to the workspace */
@@ -4160,9 +4280,7 @@ export interface Workspace extends TrackedResource {
    * Workspace level configs and feature flags
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly extraProperties?: {
-    [propertyName: string]: Record<string, unknown>;
-  };
+  readonly extraProperties?: Record<string, unknown>;
   /** Managed Virtual Network Settings */
   managedVirtualNetworkSettings?: ManagedVirtualNetworkSettings;
   /** Git integration settings */
@@ -4187,54 +4305,6 @@ export interface Workspace extends TrackedResource {
   azureADOnlyAuthentication?: boolean;
   /** Is trustedServiceBypassEnabled for the workspace */
   trustedServiceBypassEnabled?: boolean;
-}
-
-/** A Big Data pool */
-export interface BigDataPoolResourceInfo extends TrackedResource {
-  /** The state of the Big Data pool. */
-  provisioningState?: string;
-  /** Auto-scaling properties */
-  autoScale?: AutoScaleProperties;
-  /**
-   * The time when the Big Data pool was created.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly creationDate?: Date;
-  /** Auto-pausing properties */
-  autoPause?: AutoPauseProperties;
-  /** Whether compute isolation is required or not. */
-  isComputeIsolationEnabled?: boolean;
-  /** Whether autotune is required or not. */
-  isAutotuneEnabled?: boolean;
-  /** Whether session level packages enabled. */
-  sessionLevelPackagesEnabled?: boolean;
-  /** The cache size */
-  cacheSize?: number;
-  /** Dynamic Executor Allocation */
-  dynamicExecutorAllocation?: DynamicExecutorAllocation;
-  /** The Spark events folder */
-  sparkEventsFolder?: string;
-  /** The number of nodes in the Big Data pool. */
-  nodeCount?: number;
-  /** Library version requirements */
-  libraryRequirements?: LibraryRequirements;
-  /** List of custom libraries/packages associated with the spark pool. */
-  customLibraries?: LibraryInfo[];
-  /** Spark configuration file to specify additional properties */
-  sparkConfigProperties?: SparkConfigProperties;
-  /** The Apache Spark version. */
-  sparkVersion?: string;
-  /** The default folder where Spark logs will be written. */
-  defaultSparkLogFolder?: string;
-  /** The level of compute power that each node in the Big Data pool has. */
-  nodeSize?: NodeSize;
-  /** The kind of nodes that the Big Data pool provides. */
-  nodeSizeFamily?: NodeSizeFamily;
-  /**
-   * The time when the Big Data pool was updated successfully.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly lastSucceededTimestamp?: Date;
 }
 
 /** Class representing a Kusto kusto pool. */
@@ -4444,8 +4514,11 @@ export interface LibraryResource extends SubResource {
   path?: string;
   /** Storage blob container name. */
   containerName?: string;
-  /** The last update time of the library. */
-  uploadedTimestamp?: Date;
+  /**
+   * The last update time of the library.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly uploadedTimestamp?: Date;
   /** Type of the library. */
   typePropertiesType?: string;
   /**
@@ -4521,6 +4594,81 @@ export enum KnownStateValue {
  * **Updating**
  */
 export type StateValue = string;
+
+/** Known values of {@link ConfigurationType} that the service accepts. */
+export enum KnownConfigurationType {
+  /** File */
+  File = "File",
+  /** Artifact */
+  Artifact = "Artifact"
+}
+
+/**
+ * Defines values for ConfigurationType. \
+ * {@link KnownConfigurationType} can be used interchangeably with ConfigurationType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **File** \
+ * **Artifact**
+ */
+export type ConfigurationType = string;
+
+/** Known values of {@link NodeSize} that the service accepts. */
+export enum KnownNodeSize {
+  /** None */
+  None = "None",
+  /** Small */
+  Small = "Small",
+  /** Medium */
+  Medium = "Medium",
+  /** Large */
+  Large = "Large",
+  /** XLarge */
+  XLarge = "XLarge",
+  /** XXLarge */
+  XXLarge = "XXLarge",
+  /** XXXLarge */
+  XXXLarge = "XXXLarge"
+}
+
+/**
+ * Defines values for NodeSize. \
+ * {@link KnownNodeSize} can be used interchangeably with NodeSize,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **None** \
+ * **Small** \
+ * **Medium** \
+ * **Large** \
+ * **XLarge** \
+ * **XXLarge** \
+ * **XXXLarge**
+ */
+export type NodeSize = string;
+
+/** Known values of {@link NodeSizeFamily} that the service accepts. */
+export enum KnownNodeSizeFamily {
+  /** None */
+  None = "None",
+  /** MemoryOptimized */
+  MemoryOptimized = "MemoryOptimized",
+  /** HardwareAcceleratedFpga */
+  HardwareAcceleratedFpga = "HardwareAcceleratedFPGA",
+  /** HardwareAcceleratedGPU */
+  HardwareAcceleratedGPU = "HardwareAcceleratedGPU"
+}
+
+/**
+ * Defines values for NodeSizeFamily. \
+ * {@link KnownNodeSizeFamily} can be used interchangeably with NodeSizeFamily,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **None** \
+ * **MemoryOptimized** \
+ * **HardwareAcceleratedFPGA** \
+ * **HardwareAcceleratedGPU**
+ */
+export type NodeSizeFamily = string;
 
 /** Known values of {@link ProvisioningState} that the service accepts. */
 export enum KnownProvisioningState {
@@ -5043,81 +5191,6 @@ export enum KnownWorkspacePublicNetworkAccess {
  * **Disabled**
  */
 export type WorkspacePublicNetworkAccess = string;
-
-/** Known values of {@link ConfigurationType} that the service accepts. */
-export enum KnownConfigurationType {
-  /** File */
-  File = "File",
-  /** Artifact */
-  Artifact = "Artifact"
-}
-
-/**
- * Defines values for ConfigurationType. \
- * {@link KnownConfigurationType} can be used interchangeably with ConfigurationType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **File** \
- * **Artifact**
- */
-export type ConfigurationType = string;
-
-/** Known values of {@link NodeSize} that the service accepts. */
-export enum KnownNodeSize {
-  /** None */
-  None = "None",
-  /** Small */
-  Small = "Small",
-  /** Medium */
-  Medium = "Medium",
-  /** Large */
-  Large = "Large",
-  /** XLarge */
-  XLarge = "XLarge",
-  /** XXLarge */
-  XXLarge = "XXLarge",
-  /** XXXLarge */
-  XXXLarge = "XXXLarge"
-}
-
-/**
- * Defines values for NodeSize. \
- * {@link KnownNodeSize} can be used interchangeably with NodeSize,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **None** \
- * **Small** \
- * **Medium** \
- * **Large** \
- * **XLarge** \
- * **XXLarge** \
- * **XXXLarge**
- */
-export type NodeSize = string;
-
-/** Known values of {@link NodeSizeFamily} that the service accepts. */
-export enum KnownNodeSizeFamily {
-  /** None */
-  None = "None",
-  /** MemoryOptimized */
-  MemoryOptimized = "MemoryOptimized",
-  /** HardwareAcceleratedFpga */
-  HardwareAcceleratedFpga = "HardwareAcceleratedFPGA",
-  /** HardwareAcceleratedGPU */
-  HardwareAcceleratedGPU = "HardwareAcceleratedGPU"
-}
-
-/**
- * Defines values for NodeSizeFamily. \
- * {@link KnownNodeSizeFamily} can be used interchangeably with NodeSizeFamily,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **None** \
- * **MemoryOptimized** \
- * **HardwareAcceleratedFPGA** \
- * **HardwareAcceleratedGPU**
- */
-export type NodeSizeFamily = string;
 
 /** Known values of {@link IntegrationRuntimeAutoUpdate} that the service accepts. */
 export enum KnownIntegrationRuntimeAutoUpdate {
@@ -6133,11 +6206,79 @@ export interface AzureADOnlyAuthenticationsListNextOptionalParams
 export type AzureADOnlyAuthenticationsListNextResponse = AzureADOnlyAuthenticationListResult;
 
 /** Optional parameters. */
+export interface BigDataPoolsGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type BigDataPoolsGetResponse = BigDataPoolResourceInfo;
+
+/** Optional parameters. */
+export interface BigDataPoolsUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the update operation. */
+export type BigDataPoolsUpdateResponse = BigDataPoolResourceInfo;
+
+/** Optional parameters. */
+export interface BigDataPoolsCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Whether to stop any running jobs in the Big Data pool */
+  force?: boolean;
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createOrUpdate operation. */
+export type BigDataPoolsCreateOrUpdateResponse = BigDataPoolResourceInfo;
+
+/** Optional parameters. */
+export interface BigDataPoolsDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the delete operation. */
+export type BigDataPoolsDeleteResponse = BigDataPoolResourceInfo;
+
+/** Optional parameters. */
+export interface BigDataPoolsListByWorkspaceOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByWorkspace operation. */
+export type BigDataPoolsListByWorkspaceResponse = BigDataPoolResourceInfoListResult;
+
+/** Optional parameters. */
+export interface BigDataPoolsListByWorkspaceNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByWorkspaceNext operation. */
+export type BigDataPoolsListByWorkspaceNextResponse = BigDataPoolResourceInfoListResult;
+
+/** Optional parameters. */
 export interface OperationsCheckNameAvailabilityOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the checkNameAvailability operation. */
 export type OperationsCheckNameAvailabilityResponse = CheckNameAvailabilityResponse;
+
+/** Optional parameters. */
+export interface OperationsGetSubscriptionQuotaAndUsageOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getSubscriptionQuotaAndUsage operation. */
+export type OperationsGetSubscriptionQuotaAndUsageResponse = ListUsagesResult;
+
+/** Optional parameters. */
+export interface OperationsGetWorkspaceQuotaAndUsageOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getWorkspaceQuotaAndUsage operation. */
+export type OperationsGetWorkspaceQuotaAndUsageResponse = ListUsagesResult;
 
 /** Optional parameters. */
 export interface OperationsListOptionalParams
@@ -6246,6 +6387,26 @@ export interface KeysListByWorkspaceNextOptionalParams
 
 /** Contains response data for the listByWorkspaceNext operation. */
 export type KeysListByWorkspaceNextResponse = KeyInfoListResult;
+
+/** Optional parameters. */
+export interface LibraryGetOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type LibraryGetResponse = LibraryResource;
+
+/** Optional parameters. */
+export interface LibrariesListByWorkspaceOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByWorkspace operation. */
+export type LibrariesListByWorkspaceResponse = LibraryListResponse;
+
+/** Optional parameters. */
+export interface LibrariesListByWorkspaceNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByWorkspaceNext operation. */
+export type LibrariesListByWorkspaceNextResponse = LibraryListResponse;
 
 /** Optional parameters. */
 export interface PrivateEndpointConnectionsGetOptionalParams
@@ -7522,80 +7683,6 @@ export interface RestorableDroppedSqlPoolsListByWorkspaceOptionalParams
 
 /** Contains response data for the listByWorkspace operation. */
 export type RestorableDroppedSqlPoolsListByWorkspaceResponse = RestorableDroppedSqlPoolListResult;
-
-/** Optional parameters. */
-export interface BigDataPoolsGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type BigDataPoolsGetResponse = BigDataPoolResourceInfo;
-
-/** Optional parameters. */
-export interface BigDataPoolsUpdateOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the update operation. */
-export type BigDataPoolsUpdateResponse = BigDataPoolResourceInfo;
-
-/** Optional parameters. */
-export interface BigDataPoolsCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Whether to stop any running jobs in the Big Data pool */
-  force?: boolean;
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createOrUpdate operation. */
-export type BigDataPoolsCreateOrUpdateResponse = BigDataPoolResourceInfo;
-
-/** Optional parameters. */
-export interface BigDataPoolsDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the delete operation. */
-export type BigDataPoolsDeleteResponse = BigDataPoolResourceInfo;
-
-/** Optional parameters. */
-export interface BigDataPoolsListByWorkspaceOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByWorkspace operation. */
-export type BigDataPoolsListByWorkspaceResponse = BigDataPoolResourceInfoListResult;
-
-/** Optional parameters. */
-export interface BigDataPoolsListByWorkspaceNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByWorkspaceNext operation. */
-export type BigDataPoolsListByWorkspaceNextResponse = BigDataPoolResourceInfoListResult;
-
-/** Optional parameters. */
-export interface LibraryGetOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type LibraryGetResponse = LibraryResource;
-
-/** Optional parameters. */
-export interface LibrariesListByWorkspaceOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByWorkspace operation. */
-export type LibrariesListByWorkspaceResponse = LibraryListResponse;
-
-/** Optional parameters. */
-export interface LibrariesListByWorkspaceNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByWorkspaceNext operation. */
-export type LibrariesListByWorkspaceNextResponse = LibraryListResponse;
 
 /** Optional parameters. */
 export interface IntegrationRuntimesUpdateOptionalParams
