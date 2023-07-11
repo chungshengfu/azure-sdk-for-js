@@ -1,15 +1,28 @@
 # Release History
+    
+## 19.0.0 (2023-07-11)
+    
+**Features**
 
-## 18.1.1 (Unreleased)
+  - Added Type Alias PermissionScopeServiceName
+  - Added Enum KnownPermissionScopeServiceName
 
-### Features Added
+**Breaking Changes**
 
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
+  - Interface BlobContainersListNextOptionalParams no longer has parameter filter
+  - Interface BlobContainersListNextOptionalParams no longer has parameter include
+  - Interface BlobContainersListNextOptionalParams no longer has parameter maxpagesize
+  - Interface EncryptionScopesListNextOptionalParams no longer has parameter filter
+  - Interface EncryptionScopesListNextOptionalParams no longer has parameter include
+  - Interface EncryptionScopesListNextOptionalParams no longer has parameter maxpagesize
+  - Interface FileSharesListNextOptionalParams no longer has parameter expand
+  - Interface FileSharesListNextOptionalParams no longer has parameter filter
+  - Interface FileSharesListNextOptionalParams no longer has parameter maxpagesize
+  - Interface QueueListNextOptionalParams no longer has parameter filter
+  - Interface QueueListNextOptionalParams no longer has parameter maxpagesize
+  - Type of parameter service of interface PermissionScope is changed from string to PermissionScopeServiceName
+    
+    
 ## 18.1.0 (2022-11-24)
     
 **Features**
