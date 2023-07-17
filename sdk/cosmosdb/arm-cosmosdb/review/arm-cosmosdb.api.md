@@ -120,15 +120,23 @@ export type BackupPolicyType = string;
 export type BackupPolicyUnion = BackupPolicy | PeriodicModeBackupPolicy | ContinuousModeBackupPolicy;
 
 // @public
-export interface BackupResource extends ARMProxyResource {
-    // (undocumented)
-    properties?: BackupResourceProperties;
+export interface BackupResource {
+    backupExpiryTimestamp?: Date;
+    backupId?: string;
+    backupStartTimestamp?: Date;
+    backupState?: BackupState;
+    backupStopTimestamp?: Date;
 }
 
 // @public (undocumented)
-export interface BackupResourceProperties {
-    timestamp?: Date;
+export interface BackupSchedule {
+    cronExpression?: string;
+    retentionInHours?: number;
+    scheduleName?: string;
 }
+
+// @public
+export type BackupState = string;
 
 // @public
 export type BackupStorageRedundancy = string;
@@ -160,6 +168,42 @@ export interface CassandraClusterPublicStatusDataCentersItem {
     // (undocumented)
     nodes?: ComponentsM9L909SchemasCassandraclusterpublicstatusPropertiesDatacentersItemsPropertiesNodesItems[];
     seedNodes?: string[];
+}
+
+// @public
+export interface CassandraClusterRepairListFilter {
+    readonly keyspace?: string;
+    // (undocumented)
+    repairRunStates?: CassandraRepairRunStateEnum[];
+}
+
+// @public (undocumented)
+export interface CassandraClusterRepairPublicProperties {
+    autoStart?: boolean;
+    blacklistedTables?: string[];
+    cause?: string;
+    dataCenters?: string[];
+    incrementalRepair?: boolean;
+    intensity?: number;
+    keyspace?: string;
+    nodes?: string[];
+    owner?: string;
+    repairParallelism?: string;
+    repairThreadCount?: number;
+    segmentCount?: number;
+    tables?: string[];
+}
+
+// @public (undocumented)
+export interface CassandraClusterRepairPublicResource {
+    // (undocumented)
+    id?: string;
+    // (undocumented)
+    name?: string;
+    // (undocumented)
+    properties?: CassandraClusterRepairPublicProperties;
+    // (undocumented)
+    type?: string;
 }
 
 // @public
@@ -197,6 +241,7 @@ export type CassandraClustersCreateUpdateResponse = ClusterResource;
 export interface CassandraClustersDeallocateOptionalParams extends coreClient.OperationOptions {
     resumeFrom?: string;
     updateIntervalInMs?: number;
+    xMsForceDeallocate?: boolean;
 }
 
 // @public
@@ -364,6 +409,367 @@ export interface CassandraKeyspaceResource {
 // @public
 export interface CassandraPartitionKey {
     name?: string;
+}
+
+// @public (undocumented)
+export interface CassandraReaperClusterStatus {
+    // (undocumented)
+    jmxPasswordIsSet?: boolean;
+    // (undocumented)
+    jmxUserName?: string;
+    // (undocumented)
+    name?: string;
+    // (undocumented)
+    nodesStatus?: CassandraReaperNodeStatus;
+    // (undocumented)
+    repairRuns?: CassandraReaperRunStatus[];
+    // (undocumented)
+    repairSchedules?: CassandraReaperScheduleStatus[];
+    // (undocumented)
+    seedHosts?: string[];
+}
+
+// @public (undocumented)
+export interface CassandraReaperEndpointState {
+    // (undocumented)
+    dataCenter?: string;
+    // (undocumented)
+    endpoint?: string;
+    // (undocumented)
+    hostId?: string;
+    // (undocumented)
+    load?: number;
+    // (undocumented)
+    rack?: string;
+    // (undocumented)
+    releaseVersion?: string;
+    // (undocumented)
+    severity?: number;
+    // (undocumented)
+    status?: string;
+    // (undocumented)
+    tokens?: string;
+    // (undocumented)
+    type?: string;
+}
+
+// @public (undocumented)
+export interface CassandraReaperGossipInfo {
+    // (undocumented)
+    endpointNames?: string[];
+    endpoints?: {
+        [propertyName: string]: {
+            [propertyName: string]: CassandraReaperEndpointState[];
+        };
+    };
+    // (undocumented)
+    sourceNode?: string;
+    // (undocumented)
+    totalLoad?: number;
+}
+
+// @public (undocumented)
+export interface CassandraReaperNodeStatus {
+    // (undocumented)
+    endpointStates?: CassandraReaperGossipInfo[];
+}
+
+// @public (undocumented)
+export interface CassandraReaperRunStatus {
+    // (undocumented)
+    adaptiveSchedule?: string;
+    // (undocumented)
+    blacklistedTables?: string[];
+    // (undocumented)
+    cause?: string;
+    // (undocumented)
+    clusterName?: string;
+    // (undocumented)
+    columnFamilies?: string[];
+    // (undocumented)
+    creationTime?: string;
+    // (undocumented)
+    currentTime?: string;
+    // (undocumented)
+    datacenters?: string[];
+    // (undocumented)
+    duration?: string;
+    // (undocumented)
+    endTime?: string;
+    // (undocumented)
+    id?: string;
+    // (undocumented)
+    incrementalRepair?: boolean;
+    // (undocumented)
+    intensity?: number;
+    // (undocumented)
+    keyspaceName?: string;
+    // (undocumented)
+    lastEvent?: string;
+    // (undocumented)
+    nodes?: string[];
+    // (undocumented)
+    owner?: string;
+    // (undocumented)
+    pauseTime?: string;
+    // (undocumented)
+    repairParallelism?: string;
+    // (undocumented)
+    repairState?: string;
+    // (undocumented)
+    repairThreadCount?: number;
+    // (undocumented)
+    repairUnitId?: string;
+    // (undocumented)
+    segmentsRepaired?: number;
+    // (undocumented)
+    segmentTimeout?: string;
+    // (undocumented)
+    startTime?: string;
+    // (undocumented)
+    totalSegments?: number;
+}
+
+// @public (undocumented)
+export interface CassandraReaperRunStatusFeedResponse {
+    // (undocumented)
+    value?: CassandraReaperRunStatus[];
+}
+
+// @public (undocumented)
+export interface CassandraReaperScheduleStatus {
+    // (undocumented)
+    adaptive?: boolean;
+    // (undocumented)
+    blacklistedTables?: string[];
+    // (undocumented)
+    clusterName?: string;
+    // (undocumented)
+    columnFamilies?: string[];
+    // (undocumented)
+    creationTime?: string;
+    // (undocumented)
+    datacenters?: string[];
+    // (undocumented)
+    id?: string;
+    // (undocumented)
+    incrementalRepair?: boolean;
+    // (undocumented)
+    intensity?: number;
+    // (undocumented)
+    keyspaceName?: string;
+    // (undocumented)
+    nextActivation?: string;
+    // (undocumented)
+    nodes?: string[];
+    // (undocumented)
+    owner?: string;
+    // (undocumented)
+    pauseTime?: string;
+    // (undocumented)
+    percentUnrepairedThreshold?: number;
+    // (undocumented)
+    repairParallelism?: string;
+    // (undocumented)
+    repairThreadCount?: number;
+    // (undocumented)
+    repairUnitId?: string;
+    // (undocumented)
+    scheduledDaysBetween?: number;
+    // (undocumented)
+    segmentCountPerNode?: number;
+    // (undocumented)
+    segmentTimeout?: number;
+    // (undocumented)
+    state?: string;
+}
+
+// @public
+export interface CassandraRepair {
+    // (undocumented)
+    beginAbortSegment(resourceGroupName: string, clusterName: string, repairRunId: string, segmentId: string, options?: CassandraRepairAbortSegmentOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
+    // (undocumented)
+    beginAbortSegmentAndWait(resourceGroupName: string, clusterName: string, repairRunId: string, segmentId: string, options?: CassandraRepairAbortSegmentOptionalParams): Promise<void>;
+    // (undocumented)
+    beginCreate(resourceGroupName: string, clusterName: string, body: CassandraClusterRepairPublicResource, options?: CassandraRepairCreateOptionalParams): Promise<SimplePollerLike<OperationState<CassandraRepairCreateResponse>, CassandraRepairCreateResponse>>;
+    // (undocumented)
+    beginCreateAndWait(resourceGroupName: string, clusterName: string, body: CassandraClusterRepairPublicResource, options?: CassandraRepairCreateOptionalParams): Promise<CassandraRepairCreateResponse>;
+    // (undocumented)
+    beginDelete(resourceGroupName: string, clusterName: string, repairRunId: string, ownerName: string, options?: CassandraRepairDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
+    // (undocumented)
+    beginDeleteAndWait(resourceGroupName: string, clusterName: string, repairRunId: string, ownerName: string, options?: CassandraRepairDeleteOptionalParams): Promise<void>;
+    // (undocumented)
+    beginGetClusterStatus(resourceGroupName: string, clusterName: string, options?: CassandraRepairGetClusterStatusOptionalParams): Promise<SimplePollerLike<OperationState<CassandraRepairGetClusterStatusResponse>, CassandraRepairGetClusterStatusResponse>>;
+    // (undocumented)
+    beginGetClusterStatusAndWait(resourceGroupName: string, clusterName: string, options?: CassandraRepairGetClusterStatusOptionalParams): Promise<CassandraRepairGetClusterStatusResponse>;
+    // (undocumented)
+    beginGetTableStatus(resourceGroupName: string, clusterName: string, options?: CassandraRepairGetTableStatusOptionalParams): Promise<SimplePollerLike<OperationState<CassandraRepairGetTableStatusResponse>, CassandraRepairGetTableStatusResponse>>;
+    // (undocumented)
+    beginGetTableStatusAndWait(resourceGroupName: string, clusterName: string, options?: CassandraRepairGetTableStatusOptionalParams): Promise<CassandraRepairGetTableStatusResponse>;
+    // (undocumented)
+    beginList(resourceGroupName: string, clusterName: string, options?: CassandraRepairListOptionalParams): Promise<SimplePollerLike<OperationState<CassandraRepairListResponse>, CassandraRepairListResponse>>;
+    // (undocumented)
+    beginListAndWait(resourceGroupName: string, clusterName: string, options?: CassandraRepairListOptionalParams): Promise<CassandraRepairListResponse>;
+    // (undocumented)
+    beginListSegments(resourceGroupName: string, clusterName: string, repairRunId: string, options?: CassandraRepairListSegmentsOptionalParams): Promise<SimplePollerLike<OperationState<CassandraRepairListSegmentsResponse>, CassandraRepairListSegmentsResponse>>;
+    // (undocumented)
+    beginListSegmentsAndWait(resourceGroupName: string, clusterName: string, repairRunId: string, options?: CassandraRepairListSegmentsOptionalParams): Promise<CassandraRepairListSegmentsResponse>;
+    // (undocumented)
+    beginPause(resourceGroupName: string, clusterName: string, repairRunId: string, options?: CassandraRepairPauseOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
+    // (undocumented)
+    beginPauseAndWait(resourceGroupName: string, clusterName: string, repairRunId: string, options?: CassandraRepairPauseOptionalParams): Promise<void>;
+    // (undocumented)
+    beginResume(resourceGroupName: string, clusterName: string, repairRunId: string, options?: CassandraRepairResumeOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
+    // (undocumented)
+    beginResumeAndWait(resourceGroupName: string, clusterName: string, repairRunId: string, options?: CassandraRepairResumeOptionalParams): Promise<void>;
+    // (undocumented)
+    beginShow(resourceGroupName: string, clusterName: string, repairRunId: string, options?: CassandraRepairShowOptionalParams): Promise<SimplePollerLike<OperationState<CassandraRepairShowResponse>, CassandraRepairShowResponse>>;
+    // (undocumented)
+    beginShowAndWait(resourceGroupName: string, clusterName: string, repairRunId: string, options?: CassandraRepairShowOptionalParams): Promise<CassandraRepairShowResponse>;
+    // (undocumented)
+    beginUpdate(resourceGroupName: string, clusterName: string, repairRunId: string, intensityValue: string, options?: CassandraRepairUpdateOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
+    // (undocumented)
+    beginUpdateAndWait(resourceGroupName: string, clusterName: string, repairRunId: string, intensityValue: string, options?: CassandraRepairUpdateOptionalParams): Promise<void>;
+}
+
+// @public
+export interface CassandraRepairAbortSegmentOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export interface CassandraRepairCreateOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type CassandraRepairCreateResponse = CassandraReaperRunStatus;
+
+// @public
+export interface CassandraRepairDeleteOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export interface CassandraRepairGetClusterStatusOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type CassandraRepairGetClusterStatusResponse = CassandraReaperClusterStatus;
+
+// @public
+export interface CassandraRepairGetTableStatusOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type CassandraRepairGetTableStatusResponse = {
+    body: string;
+};
+
+// @public
+export interface CassandraRepairListOptionalParams extends coreClient.OperationOptions {
+    body?: CassandraClusterRepairListFilter;
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type CassandraRepairListResponse = CassandraReaperRunStatusFeedResponse;
+
+// @public
+export interface CassandraRepairListSegmentsOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type CassandraRepairListSegmentsResponse = CassandraRepairSegmentResourceFeedResponse;
+
+// @public
+export interface CassandraRepairPauseOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export interface CassandraRepairResumeOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public (undocumented)
+export interface CassandraRepairRingRange {
+    // (undocumented)
+    end?: string;
+    // (undocumented)
+    start?: string;
+}
+
+// @public
+export type CassandraRepairRunStateEnum = string;
+
+// @public (undocumented)
+export interface CassandraRepairSegment {
+    // (undocumented)
+    coordinatorHost?: string;
+    // (undocumented)
+    endTime?: string;
+    // (undocumented)
+    failCount?: number;
+    // (undocumented)
+    id?: string;
+    // (undocumented)
+    repairUnitId?: string;
+    replicas?: {
+        [propertyName: string]: string;
+    };
+    // (undocumented)
+    runId?: string;
+    // (undocumented)
+    startTime?: string;
+    // (undocumented)
+    state?: string;
+    // (undocumented)
+    tokenRange?: CassandraRepairTokenRange;
+}
+
+// @public (undocumented)
+export interface CassandraRepairSegmentResourceFeedResponse {
+    // (undocumented)
+    value?: CassandraRepairSegment[];
+}
+
+// @public
+export interface CassandraRepairShowOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type CassandraRepairShowResponse = CassandraReaperRunStatus;
+
+// @public (undocumented)
+export interface CassandraRepairTokenRange {
+    // (undocumented)
+    baseRange?: CassandraRepairRingRange;
+    replicas?: {
+        [propertyName: string]: string;
+    };
+    // (undocumented)
+    tokenRanges?: CassandraRepairRingRange[];
+}
+
+// @public
+export interface CassandraRepairUpdateOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
 }
 
 // @public
@@ -851,12 +1257,15 @@ export interface ClusterResource extends ManagedCassandraARMResourceProperties {
 // @public
 export interface ClusterResourceProperties {
     authenticationMethod?: AuthenticationMethod;
+    backupSchedules?: BackupSchedule[];
     cassandraAuditLoggingEnabled?: boolean;
     cassandraVersion?: string;
     clientCertificates?: Certificate[];
     clusterNameOverride?: string;
+    clusterType?: ClusterType;
     deallocated?: boolean;
     delegatedManagementSubnetId?: string;
+    extensions?: string[];
     externalGossipCertificates?: Certificate[];
     externalSeedNodes?: SeedNode[];
     readonly gossipCertificates?: Certificate[];
@@ -869,6 +1278,9 @@ export interface ClusterResourceProperties {
     restoreFromBackupId?: string;
     readonly seedNodes?: SeedNode[];
 }
+
+// @public
+export type ClusterType = string;
 
 // @public
 export interface Collection {
@@ -980,6 +1392,7 @@ export interface ComponentsM9L909SchemasCassandraclusterpublicstatusPropertiesDa
     diskFreeKB?: number;
     diskUsedKB?: number;
     hostID?: string;
+    isLatestModel?: boolean;
     load?: string;
     memoryBuffersAndCachedKB?: number;
     memoryFreeKB?: number;
@@ -1103,6 +1516,8 @@ export class CosmosDBManagementClient extends coreClient.ServiceClient {
     cassandraClusters: CassandraClusters;
     // (undocumented)
     cassandraDataCenters: CassandraDataCenters;
+    // (undocumented)
+    cassandraRepair: CassandraRepair;
     // (undocumented)
     cassandraResources: CassandraResources;
     // (undocumented)
@@ -2354,6 +2769,14 @@ export enum KnownBackupPolicyType {
 }
 
 // @public
+export enum KnownBackupState {
+    Failed = "Failed",
+    Initiated = "Initiated",
+    InProgress = "InProgress",
+    Succeeded = "Succeeded"
+}
+
+// @public
 export enum KnownBackupStorageRedundancy {
     Geo = "Geo",
     Local = "Local",
@@ -2361,9 +2784,26 @@ export enum KnownBackupStorageRedundancy {
 }
 
 // @public
+export enum KnownCassandraRepairRunStateEnum {
+    Aborted = "ABORTED",
+    Deleted = "DELETED",
+    Done = "DONE",
+    Error = "ERROR",
+    NOTStarted = "NOT_STARTED",
+    Paused = "PAUSED",
+    Running = "RUNNING"
+}
+
+// @public
 export enum KnownCheckNameAvailabilityReason {
     AlreadyExists = "AlreadyExists",
     Invalid = "Invalid"
+}
+
+// @public
+export enum KnownClusterType {
+    NonProduction = "NonProduction",
+    Production = "Production"
 }
 
 // @public

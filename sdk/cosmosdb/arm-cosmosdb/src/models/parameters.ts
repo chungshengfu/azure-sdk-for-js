@@ -45,6 +45,8 @@ import {
   ClusterResource as ClusterResourceMapper,
   CommandPostBody as CommandPostBodyMapper,
   DataCenterResource as DataCenterResourceMapper,
+  CassandraClusterRepairPublicResource as CassandraClusterRepairPublicResourceMapper,
+  CassandraClusterRepairListFilter as CassandraClusterRepairListFilterMapper,
   MongoCluster as MongoClusterMapper,
   MongoClusterUpdate as MongoClusterUpdateMapper,
   FirewallRule as FirewallRuleMapper,
@@ -630,6 +632,16 @@ export const backupId: OperationURLParameter = {
   }
 };
 
+export const xMsForceDeallocate: OperationParameter = {
+  parameterPath: ["options", "xMsForceDeallocate"],
+  mapper: {
+    serializedName: "x-ms-force-deallocate",
+    type: {
+      name: "Boolean"
+    }
+  }
+};
+
 export const dataCenterName: OperationURLParameter = {
   parameterPath: "dataCenterName",
   mapper: {
@@ -649,6 +661,60 @@ export const dataCenterName: OperationURLParameter = {
 export const body2: OperationParameter = {
   parameterPath: "body",
   mapper: DataCenterResourceMapper
+};
+
+export const body3: OperationParameter = {
+  parameterPath: "body",
+  mapper: CassandraClusterRepairPublicResourceMapper
+};
+
+export const repairRunId: OperationURLParameter = {
+  parameterPath: "repairRunId",
+  mapper: {
+    serializedName: "repairRunId",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const ownerName: OperationURLParameter = {
+  parameterPath: "ownerName",
+  mapper: {
+    serializedName: "ownerName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const body4: OperationParameter = {
+  parameterPath: ["options", "body"],
+  mapper: CassandraClusterRepairListFilterMapper
+};
+
+export const segmentId: OperationURLParameter = {
+  parameterPath: "segmentId",
+  mapper: {
+    serializedName: "segmentId",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const intensityValue: OperationURLParameter = {
+  parameterPath: "intensityValue",
+  mapper: {
+    serializedName: "intensityValue",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
 };
 
 export const parameters: OperationParameter = {

@@ -38,6 +38,7 @@ import {
   DataTransferJobsImpl,
   CassandraClustersImpl,
   CassandraDataCentersImpl,
+  CassandraRepairImpl,
   MongoClustersImpl,
   NotebookWorkspacesImpl,
   PrivateEndpointConnectionsImpl,
@@ -80,6 +81,7 @@ import {
   DataTransferJobs,
   CassandraClusters,
   CassandraDataCenters,
+  CassandraRepair,
   MongoClusters,
   NotebookWorkspaces,
   PrivateEndpointConnections,
@@ -209,6 +211,7 @@ export class CosmosDBManagementClient extends coreClient.ServiceClient {
     this.dataTransferJobs = new DataTransferJobsImpl(this);
     this.cassandraClusters = new CassandraClustersImpl(this);
     this.cassandraDataCenters = new CassandraDataCentersImpl(this);
+    this.cassandraRepair = new CassandraRepairImpl(this);
     this.mongoClusters = new MongoClustersImpl(this);
     this.notebookWorkspaces = new NotebookWorkspacesImpl(this);
     this.privateEndpointConnections = new PrivateEndpointConnectionsImpl(this);
@@ -282,6 +285,7 @@ export class CosmosDBManagementClient extends coreClient.ServiceClient {
   dataTransferJobs: DataTransferJobs;
   cassandraClusters: CassandraClusters;
   cassandraDataCenters: CassandraDataCenters;
+  cassandraRepair: CassandraRepair;
   mongoClusters: MongoClusters;
   notebookWorkspaces: NotebookWorkspaces;
   privateEndpointConnections: PrivateEndpointConnections;

@@ -1,19 +1,10 @@
 # Release History
-
-## 16.0.0-beta.7 (Unreleased)
-
-### Features Added
-
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
-## 16.0.0-beta.6 (2023-06-13)
+    
+## 16.0.0-beta.7 (2023-07-17)
     
 **Features**
 
+  - Added operation group CassandraRepair
   - Added operation group DataTransferJobs
   - Added operation group GraphResources
   - Added operation group MongoClusters
@@ -58,9 +49,34 @@
   - Added operation SqlResources.beginSqlDatabaseRetrieveThroughputDistributionAndWait
   - Added Interface AzureBlobDataTransferDataSourceSink
   - Added Interface BackupResource
-  - Added Interface BackupResourceProperties
+  - Added Interface BackupSchedule
+  - Added Interface CassandraClusterRepairListFilter
+  - Added Interface CassandraClusterRepairPublicProperties
+  - Added Interface CassandraClusterRepairPublicResource
   - Added Interface CassandraClustersGetBackupOptionalParams
   - Added Interface CassandraClustersListBackupsOptionalParams
+  - Added Interface CassandraReaperClusterStatus
+  - Added Interface CassandraReaperEndpointState
+  - Added Interface CassandraReaperGossipInfo
+  - Added Interface CassandraReaperNodeStatus
+  - Added Interface CassandraReaperRunStatus
+  - Added Interface CassandraReaperRunStatusFeedResponse
+  - Added Interface CassandraReaperScheduleStatus
+  - Added Interface CassandraRepairAbortSegmentOptionalParams
+  - Added Interface CassandraRepairCreateOptionalParams
+  - Added Interface CassandraRepairDeleteOptionalParams
+  - Added Interface CassandraRepairGetClusterStatusOptionalParams
+  - Added Interface CassandraRepairGetTableStatusOptionalParams
+  - Added Interface CassandraRepairListOptionalParams
+  - Added Interface CassandraRepairListSegmentsOptionalParams
+  - Added Interface CassandraRepairPauseOptionalParams
+  - Added Interface CassandraRepairResumeOptionalParams
+  - Added Interface CassandraRepairRingRange
+  - Added Interface CassandraRepairSegment
+  - Added Interface CassandraRepairSegmentResourceFeedResponse
+  - Added Interface CassandraRepairShowOptionalParams
+  - Added Interface CassandraRepairTokenRange
+  - Added Interface CassandraRepairUpdateOptionalParams
   - Added Interface CassandraResourcesCreateUpdateCassandraViewHeaders
   - Added Interface CassandraResourcesCreateUpdateCassandraViewOptionalParams
   - Added Interface CassandraResourcesDeleteCassandraViewHeaders
@@ -184,8 +200,16 @@
   - Added Interface SqlResourcesSqlDatabaseRetrieveThroughputDistributionHeaders
   - Added Interface SqlResourcesSqlDatabaseRetrieveThroughputDistributionOptionalParams
   - Added Interface TrackedResource
+  - Added Type Alias BackupState
   - Added Type Alias CassandraClustersGetBackupResponse
   - Added Type Alias CassandraClustersListBackupsResponse
+  - Added Type Alias CassandraRepairCreateResponse
+  - Added Type Alias CassandraRepairGetClusterStatusResponse
+  - Added Type Alias CassandraRepairGetTableStatusResponse
+  - Added Type Alias CassandraRepairListResponse
+  - Added Type Alias CassandraRepairListSegmentsResponse
+  - Added Type Alias CassandraRepairRunStateEnum
+  - Added Type Alias CassandraRepairShowResponse
   - Added Type Alias CassandraResourcesCreateUpdateCassandraViewResponse
   - Added Type Alias CassandraResourcesGetCassandraViewResponse
   - Added Type Alias CassandraResourcesGetCassandraViewThroughputResponse
@@ -194,6 +218,7 @@
   - Added Type Alias CassandraResourcesMigrateCassandraViewToManualThroughputResponse
   - Added Type Alias CassandraResourcesUpdateCassandraViewThroughputResponse
   - Added Type Alias CheckNameAvailabilityReason
+  - Added Type Alias ClusterType
   - Added Type Alias DataTransferComponent
   - Added Type Alias DataTransferDataSourceSinkUnion
   - Added Type Alias DataTransferJobsCancelResponse
@@ -239,6 +264,11 @@
   - Added Type Alias SqlResourcesSqlDatabaseRetrieveThroughputDistributionResponse
   - Added Type Alias ThroughputPolicyType
   - Interface ARMResourceProperties has a new optional parameter identity
+  - Interface CassandraClustersDeallocateOptionalParams has a new optional parameter xMsForceDeallocate
+  - Interface ClusterResourceProperties has a new optional parameter backupSchedules
+  - Interface ClusterResourceProperties has a new optional parameter clusterType
+  - Interface ClusterResourceProperties has a new optional parameter extensions
+  - Interface ComponentsM9L909SchemasCassandraclusterpublicstatusPropertiesDatacentersItemsPropertiesNodesItems has a new optional parameter isLatestModel
   - Interface DatabaseAccountCreateUpdateParameters has a new optional parameter diagnosticLogSettings
   - Interface DatabaseAccountCreateUpdateParameters has a new optional parameter enableBurstCapacity
   - Interface DatabaseAccountCreateUpdateParameters has a new optional parameter enableMaterializedViews
@@ -264,7 +294,10 @@
   - Interface SqlDatabaseResource has a new optional parameter restoreParameters
   - Interface TableResource has a new optional parameter createMode
   - Interface TableResource has a new optional parameter restoreParameters
+  - Added Enum KnownBackupState
+  - Added Enum KnownCassandraRepairRunStateEnum
   - Added Enum KnownCheckNameAvailabilityReason
+  - Added Enum KnownClusterType
   - Added Enum KnownDataTransferComponent
   - Added Enum KnownMongoClusterStatus
   - Added Enum KnownNodeKind
