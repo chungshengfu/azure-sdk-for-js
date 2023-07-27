@@ -2653,6 +2653,7 @@ export interface GalleryImageVersions {
     beginUpdate(resourceGroupName: string, galleryName: string, galleryImageName: string, galleryImageVersionName: string, galleryImageVersion: GalleryImageVersionUpdate, options?: GalleryImageVersionsUpdateOptionalParams): Promise<SimplePollerLike<OperationState<GalleryImageVersionsUpdateResponse>, GalleryImageVersionsUpdateResponse>>;
     beginUpdateAndWait(resourceGroupName: string, galleryName: string, galleryImageName: string, galleryImageVersionName: string, galleryImageVersion: GalleryImageVersionUpdate, options?: GalleryImageVersionsUpdateOptionalParams): Promise<GalleryImageVersionsUpdateResponse>;
     get(resourceGroupName: string, galleryName: string, galleryImageName: string, galleryImageVersionName: string, options?: GalleryImageVersionsGetOptionalParams): Promise<GalleryImageVersionsGetResponse>;
+    getLatest(resourceGroupName: string, galleryName: string, galleryImageName: string, options?: GalleryImageVersionsGetLatestOptionalParams): Promise<GalleryImageVersionsGetLatestResponse>;
     listByGalleryImage(resourceGroupName: string, galleryName: string, galleryImageName: string, options?: GalleryImageVersionsListByGalleryImageOptionalParams): PagedAsyncIterableIterator<GalleryImageVersion>;
 }
 
@@ -2676,6 +2677,13 @@ export interface GalleryImageVersionsDeleteOptionalParams extends coreClient.Ope
     resumeFrom?: string;
     updateIntervalInMs?: number;
 }
+
+// @public
+export interface GalleryImageVersionsGetLatestOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type GalleryImageVersionsGetLatestResponse = LatestVersion;
 
 // @public
 export interface GalleryImageVersionsGetOptionalParams extends coreClient.OperationOptions {
@@ -3891,6 +3899,14 @@ export interface LastPatchInstallationSummary {
 export interface LatestGalleryImageVersion {
     latestVersionName?: string;
     location?: string;
+}
+
+// @public
+export interface LatestVersion {
+    readonly id?: string;
+    readonly name?: string;
+    readonly properties?: LatestGalleryImageVersion;
+    readonly type?: string;
 }
 
 // @public

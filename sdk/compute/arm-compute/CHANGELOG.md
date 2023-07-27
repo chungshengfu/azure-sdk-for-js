@@ -1,5 +1,15 @@
 # Release History
     
+## 21.2.0 (2023-07-27)
+    
+**Features**
+
+  - Added operation GalleryImageVersions.getLatest
+  - Added Interface GalleryImageVersionsGetLatestOptionalParams
+  - Added Interface LatestVersion
+  - Added Type Alias GalleryImageVersionsGetLatestResponse
+    
+    
 ## 21.1.0 (2023-07-07)
     
 **Features**

@@ -9895,6 +9895,64 @@ export const RegionalReplicationStatus: coreClient.CompositeMapper = {
   }
 };
 
+export const LatestVersion: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "LatestVersion",
+    modelProperties: {
+      id: {
+        serializedName: "id",
+        readOnly: true,
+        type: {
+          name: "String"
+        }
+      },
+      name: {
+        serializedName: "name",
+        readOnly: true,
+        type: {
+          name: "String"
+        }
+      },
+      type: {
+        serializedName: "type",
+        readOnly: true,
+        type: {
+          name: "String"
+        }
+      },
+      properties: {
+        serializedName: "properties",
+        type: {
+          name: "Composite",
+          className: "LatestGalleryImageVersion"
+        }
+      }
+    }
+  }
+};
+
+export const LatestGalleryImageVersion: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "LatestGalleryImageVersion",
+    modelProperties: {
+      latestVersionName: {
+        serializedName: "latestVersionName",
+        type: {
+          name: "String"
+        }
+      },
+      location: {
+        serializedName: "location",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
 export const GalleryApplicationCustomAction: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -11922,27 +11980,6 @@ export const ManagedArtifact: coreClient.CompositeMapper = {
       id: {
         serializedName: "id",
         required: true,
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-
-export const LatestGalleryImageVersion: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "LatestGalleryImageVersion",
-    modelProperties: {
-      latestVersionName: {
-        serializedName: "latestVersionName",
-        type: {
-          name: "String"
-        }
-      },
-      location: {
-        serializedName: "location",
         type: {
           name: "String"
         }
