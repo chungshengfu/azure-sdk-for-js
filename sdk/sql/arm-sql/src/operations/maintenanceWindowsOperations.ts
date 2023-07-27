@@ -95,7 +95,7 @@ const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const getOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/databases/{databaseName}/maintenanceWindows/current",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/databases/{databaseName}/maintenanceWindows/{maintenanceWindowName}",
   httpMethod: "GET",
   responses: {
     200: {
@@ -103,30 +103,32 @@ const getOperationSpec: coreClient.OperationSpec = {
     },
     default: {}
   },
-  queryParameters: [Parameters.apiVersion3, Parameters.maintenanceWindowName],
+  queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.serverName,
-    Parameters.databaseName
+    Parameters.databaseName,
+    Parameters.subscriptionId,
+    Parameters.maintenanceWindowName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const createOrUpdateOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/databases/{databaseName}/maintenanceWindows/current",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/databases/{databaseName}/maintenanceWindows/{maintenanceWindowName}",
   httpMethod: "PUT",
   responses: { 200: {}, default: {} },
-  requestBody: Parameters.parameters31,
-  queryParameters: [Parameters.apiVersion3, Parameters.maintenanceWindowName],
+  requestBody: Parameters.parameters47,
+  queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.serverName,
-    Parameters.databaseName
+    Parameters.databaseName,
+    Parameters.subscriptionId,
+    Parameters.maintenanceWindowName
   ],
   headerParameters: [Parameters.contentType],
   mediaType: "json",
