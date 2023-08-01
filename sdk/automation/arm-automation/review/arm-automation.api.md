@@ -9,9 +9,9 @@
 import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 import * as coreRestPipeline from '@azure/core-rest-pipeline';
+import { OperationState } from '@azure/core-lro';
 import { PagedAsyncIterableIterator } from '@azure/core-paging';
-import { PollerLike } from '@azure/core-lro';
-import { PollOperationState } from '@azure/core-lro';
+import { SimplePollerLike } from '@azure/core-lro';
 
 // @public
 export interface Activity {
@@ -103,48 +103,6 @@ export interface AdvancedScheduleMonthlyOccurrence {
 }
 
 // @public
-export interface AgentRegistration {
-    dscMetaConfiguration?: string;
-    endpoint?: string;
-    id?: string;
-    keys?: AgentRegistrationKeys;
-}
-
-// @public
-export interface AgentRegistrationInformation {
-    get(resourceGroupName: string, automationAccountName: string, options?: AgentRegistrationInformationGetOptionalParams): Promise<AgentRegistrationInformationGetResponse>;
-    regenerateKey(resourceGroupName: string, automationAccountName: string, parameters: AgentRegistrationRegenerateKeyParameter, options?: AgentRegistrationInformationRegenerateKeyOptionalParams): Promise<AgentRegistrationInformationRegenerateKeyResponse>;
-}
-
-// @public
-export interface AgentRegistrationInformationGetOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type AgentRegistrationInformationGetResponse = AgentRegistration;
-
-// @public
-export interface AgentRegistrationInformationRegenerateKeyOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type AgentRegistrationInformationRegenerateKeyResponse = AgentRegistration;
-
-// @public
-export type AgentRegistrationKeyName = string;
-
-// @public
-export interface AgentRegistrationKeys {
-    primary?: string;
-    secondary?: string;
-}
-
-// @public
-export interface AgentRegistrationRegenerateKeyParameter {
-    keyName: AgentRegistrationKeyName;
-}
-
-// @public
 export interface AutomationAccount extends TrackedResource {
     automationHybridServiceUrl?: string;
     readonly creationTime?: Date;
@@ -209,6 +167,20 @@ export interface AutomationAccountListByResourceGroupOptionalParams extends core
 export type AutomationAccountListByResourceGroupResponse = AutomationAccountListResult;
 
 // @public
+export interface AutomationAccountListDeletedRunbooksNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type AutomationAccountListDeletedRunbooksNextResponse = DeletedRunbookListResult;
+
+// @public
+export interface AutomationAccountListDeletedRunbooksOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type AutomationAccountListDeletedRunbooksResponse = DeletedRunbookListResult;
+
+// @public
 export interface AutomationAccountListNextOptionalParams extends coreClient.OperationOptions {
 }
 
@@ -235,6 +207,7 @@ export interface AutomationAccountOperations {
     get(resourceGroupName: string, automationAccountName: string, options?: AutomationAccountGetOptionalParams): Promise<AutomationAccountGetResponse>;
     list(options?: AutomationAccountListOptionalParams): PagedAsyncIterableIterator<AutomationAccount>;
     listByResourceGroup(resourceGroupName: string, options?: AutomationAccountListByResourceGroupOptionalParams): PagedAsyncIterableIterator<AutomationAccount>;
+    listDeletedRunbooks(resourceGroupName: string, automationAccountName: string, options?: AutomationAccountListDeletedRunbooksOptionalParams): PagedAsyncIterableIterator<DeletedRunbook>;
     update(resourceGroupName: string, automationAccountName: string, parameters: AutomationAccountUpdateParameters, options?: AutomationAccountUpdateOptionalParams): Promise<AutomationAccountUpdateResponse>;
 }
 
@@ -270,8 +243,6 @@ export class AutomationClient extends coreClient.ServiceClient {
     // (undocumented)
     activityOperations: ActivityOperations;
     // (undocumented)
-    agentRegistrationInformation: AgentRegistrationInformation;
-    // (undocumented)
     automationAccountOperations: AutomationAccountOperations;
     // (undocumented)
     certificateOperations: CertificateOperations;
@@ -283,17 +254,9 @@ export class AutomationClient extends coreClient.ServiceClient {
     // (undocumented)
     credentialOperations: CredentialOperations;
     // (undocumented)
-    deletedAutomationAccounts: DeletedAutomationAccounts;
-    // (undocumented)
-    dscCompilationJobOperations: DscCompilationJobOperations;
-    // (undocumented)
-    dscCompilationJobStream: DscCompilationJobStream;
-    // (undocumented)
     dscConfigurationOperations: DscConfigurationOperations;
     // (undocumented)
     dscNodeConfigurationOperations: DscNodeConfigurationOperations;
-    // (undocumented)
-    dscNodeOperations: DscNodeOperations;
     // (undocumented)
     fields: Fields;
     // (undocumented)
@@ -313,19 +276,13 @@ export class AutomationClient extends coreClient.ServiceClient {
     // (undocumented)
     moduleOperations: ModuleOperations;
     // (undocumented)
-    nodeCountInformation: NodeCountInformation;
-    // (undocumented)
-    nodeReports: NodeReports;
-    // (undocumented)
     objectDataTypes: ObjectDataTypes;
     // (undocumented)
     operations: Operations;
     // (undocumented)
-    privateEndpointConnections: PrivateEndpointConnections;
-    // (undocumented)
-    privateLinkResources: PrivateLinkResources;
-    // (undocumented)
     python2Package: Python2Package;
+    // (undocumented)
+    python3Package: Python3Package;
     // (undocumented)
     runbookDraftOperations: RunbookDraftOperations;
     // (undocumented)
@@ -336,8 +293,6 @@ export class AutomationClient extends coreClient.ServiceClient {
     softwareUpdateConfigurationMachineRuns: SoftwareUpdateConfigurationMachineRuns;
     // (undocumented)
     softwareUpdateConfigurationRuns: SoftwareUpdateConfigurationRuns;
-    // (undocumented)
-    softwareUpdateConfigurations: SoftwareUpdateConfigurations;
     // (undocumented)
     sourceControlOperations: SourceControlOperations;
     // (undocumented)
@@ -356,10 +311,6 @@ export class AutomationClient extends coreClient.ServiceClient {
     usages: Usages;
     // (undocumented)
     variableOperations: VariableOperations;
-    // (undocumented)
-    watcherOperations: WatcherOperations;
-    // (undocumented)
-    webhookOperations: WebhookOperations;
 }
 
 // @public
@@ -373,13 +324,6 @@ export type AutomationKeyName = string;
 
 // @public
 export type AutomationKeyPermissions = string;
-
-// @public
-export interface AzureQueryProperties {
-    locations?: string[];
-    scope?: string[];
-    tagSettings?: TagSettingsProperties;
-}
 
 // @public
 export interface Certificate extends ProxyResource {
@@ -459,12 +403,6 @@ export interface CertificateUpdateParameters {
 
 // @public
 export type CertificateUpdateResponse = Certificate;
-
-// @public (undocumented)
-export interface ComponentsSgqdofSchemasIdentityPropertiesUserassignedidentitiesAdditionalproperties {
-    readonly clientId?: string;
-    readonly principalId?: string;
-}
 
 // @public
 export interface Connection extends ProxyResource {
@@ -656,9 +594,6 @@ export interface ConvertGraphRunbookContentOptionalParams extends coreClient.Ope
 export type ConvertGraphRunbookContentResponse = GraphicalRunbookContent;
 
 // @public
-export type CountType = string;
-
-// @public
 export type CreatedByType = string;
 
 // @public
@@ -741,132 +676,30 @@ export interface CredentialUpdateParameters {
 export type CredentialUpdateResponse = Credential_2;
 
 // @public
-export interface DeletedAutomationAccount {
-    automationAccountId?: string;
-    automationAccountResourceId?: string;
-    readonly deletionTime?: Date;
+export interface DeletedRunbook {
+    creationTime?: Date;
+    deletionTime?: Date;
+    description?: string;
     id?: string;
     location?: string;
-    locationPropertiesLocation?: string;
     name?: string;
+    runbookType?: string;
+    runtime?: string;
+    runtimeEnvironment?: string;
     type?: string;
 }
 
 // @public
-export interface DeletedAutomationAccountListResult {
-    value?: DeletedAutomationAccount[];
-}
-
-// @public
-export interface DeletedAutomationAccounts {
-    listBySubscription(options?: DeletedAutomationAccountsListBySubscriptionOptionalParams): Promise<DeletedAutomationAccountsListBySubscriptionResponse>;
-}
-
-// @public
-export interface DeletedAutomationAccountsListBySubscriptionOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type DeletedAutomationAccountsListBySubscriptionResponse = DeletedAutomationAccountListResult;
-
-// @public
-export interface DscCompilationJob extends ProxyResource {
-    configuration?: DscConfigurationAssociationProperty;
-    readonly creationTime?: Date;
-    readonly endTime?: Date;
-    readonly exception?: string;
-    readonly jobId?: string;
-    readonly lastModifiedTime?: Date;
-    readonly lastStatusModifiedTime?: Date;
-    parameters?: {
-        [propertyName: string]: string;
-    };
-    provisioningState?: JobProvisioningState;
-    runOn?: string;
-    readonly startedBy?: string;
-    readonly startTime?: Date;
-    status?: JobStatus;
-    statusDetails?: string;
-}
-
-// @public
-export interface DscCompilationJobCreateOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export interface DscCompilationJobCreateParameters {
-    configuration: DscConfigurationAssociationProperty;
-    incrementNodeConfigurationBuild?: boolean;
-    location?: string;
-    name?: string;
-    parameters?: {
-        [propertyName: string]: string;
-    };
-    tags?: {
-        [propertyName: string]: string;
-    };
-}
-
-// @public
-export type DscCompilationJobCreateResponse = DscCompilationJob;
-
-// @public
-export interface DscCompilationJobGetOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type DscCompilationJobGetResponse = DscCompilationJob;
-
-// @public
-export interface DscCompilationJobGetStreamOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type DscCompilationJobGetStreamResponse = JobStream;
-
-// @public
-export interface DscCompilationJobListByAutomationAccountNextOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type DscCompilationJobListByAutomationAccountNextResponse = DscCompilationJobListResult;
-
-// @public
-export interface DscCompilationJobListByAutomationAccountOptionalParams extends coreClient.OperationOptions {
-    filter?: string;
-}
-
-// @public
-export type DscCompilationJobListByAutomationAccountResponse = DscCompilationJobListResult;
-
-// @public
-export interface DscCompilationJobListResult {
+export interface DeletedRunbookListResult {
     nextLink?: string;
-    value?: DscCompilationJob[];
+    value?: DeletedRunbook[];
 }
 
 // @public
-export interface DscCompilationJobOperations {
-    beginCreate(resourceGroupName: string, automationAccountName: string, compilationJobName: string, parameters: DscCompilationJobCreateParameters, options?: DscCompilationJobCreateOptionalParams): Promise<PollerLike<PollOperationState<DscCompilationJobCreateResponse>, DscCompilationJobCreateResponse>>;
-    beginCreateAndWait(resourceGroupName: string, automationAccountName: string, compilationJobName: string, parameters: DscCompilationJobCreateParameters, options?: DscCompilationJobCreateOptionalParams): Promise<DscCompilationJobCreateResponse>;
-    get(resourceGroupName: string, automationAccountName: string, compilationJobName: string, options?: DscCompilationJobGetOptionalParams): Promise<DscCompilationJobGetResponse>;
-    getStream(resourceGroupName: string, automationAccountName: string, jobId: string, jobStreamId: string, options?: DscCompilationJobGetStreamOptionalParams): Promise<DscCompilationJobGetStreamResponse>;
-    listByAutomationAccount(resourceGroupName: string, automationAccountName: string, options?: DscCompilationJobListByAutomationAccountOptionalParams): PagedAsyncIterableIterator<DscCompilationJob>;
+export interface Dimension {
+    displayName?: string;
+    name?: string;
 }
-
-// @public
-export interface DscCompilationJobStream {
-    listByJob(resourceGroupName: string, automationAccountName: string, jobId: string, options?: DscCompilationJobStreamListByJobOptionalParams): Promise<DscCompilationJobStreamListByJobResponse>;
-}
-
-// @public
-export interface DscCompilationJobStreamListByJobOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type DscCompilationJobStreamListByJobResponse = JobStreamListResult;
 
 // @public
 export interface DscConfiguration extends TrackedResource {
@@ -927,7 +760,7 @@ export interface DscConfigurationGetContentOptionalParams extends coreClient.Ope
 
 // @public
 export type DscConfigurationGetContentResponse = {
-    body: string;
+    body: coreRestPipeline.RequestBodyType;
 };
 
 // @public
@@ -1038,31 +871,6 @@ export interface DscConfigurationUpdateParameters {
 export type DscConfigurationUpdateResponse = DscConfiguration;
 
 // @public
-export interface DscMetaConfiguration {
-    actionAfterReboot?: string;
-    allowModuleOverwrite?: boolean;
-    certificateId?: string;
-    configurationMode?: string;
-    configurationModeFrequencyMins?: number;
-    rebootNodeIfNeeded?: boolean;
-    refreshFrequencyMins?: number;
-}
-
-// @public
-export interface DscNode extends ProxyResource {
-    accountId?: string;
-    etag?: string;
-    extensionHandler?: DscNodeExtensionHandlerAssociationProperty[];
-    ip?: string;
-    lastSeen?: Date;
-    namePropertiesNodeConfigurationName?: string;
-    nodeId?: string;
-    registrationTime?: Date;
-    status?: string;
-    totalCount?: number;
-}
-
-// @public
 export interface DscNodeConfiguration extends ProxyResource {
     configuration?: DscConfigurationAssociationProperty;
     creationTime?: Date;
@@ -1127,7 +935,7 @@ export interface DscNodeConfigurationListResult {
 
 // @public
 export interface DscNodeConfigurationOperations {
-    beginCreateOrUpdate(resourceGroupName: string, automationAccountName: string, nodeConfigurationName: string, parameters: DscNodeConfigurationCreateOrUpdateParameters, options?: DscNodeConfigurationCreateOrUpdateOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
+    beginCreateOrUpdate(resourceGroupName: string, automationAccountName: string, nodeConfigurationName: string, parameters: DscNodeConfigurationCreateOrUpdateParameters, options?: DscNodeConfigurationCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginCreateOrUpdateAndWait(resourceGroupName: string, automationAccountName: string, nodeConfigurationName: string, parameters: DscNodeConfigurationCreateOrUpdateParameters, options?: DscNodeConfigurationCreateOrUpdateOptionalParams): Promise<void>;
     delete(resourceGroupName: string, automationAccountName: string, nodeConfigurationName: string, options?: DscNodeConfigurationDeleteOptionalParams): Promise<void>;
     get(resourceGroupName: string, automationAccountName: string, nodeConfigurationName: string, options?: DscNodeConfigurationGetOptionalParams): Promise<DscNodeConfigurationGetResponse>;
@@ -1135,130 +943,9 @@ export interface DscNodeConfigurationOperations {
 }
 
 // @public
-export interface DscNodeDeleteOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
 export interface DscNodeExtensionHandlerAssociationProperty {
     name?: string;
     version?: string;
-}
-
-// @public
-export interface DscNodeGetOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type DscNodeGetResponse = DscNode;
-
-// @public
-export interface DscNodeListByAutomationAccountNextOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type DscNodeListByAutomationAccountNextResponse = DscNodeListResult;
-
-// @public
-export interface DscNodeListByAutomationAccountOptionalParams extends coreClient.OperationOptions {
-    filter?: string;
-    inlinecount?: string;
-    skip?: number;
-    top?: number;
-}
-
-// @public
-export type DscNodeListByAutomationAccountResponse = DscNodeListResult;
-
-// @public
-export interface DscNodeListResult {
-    nextLink?: string;
-    totalCount?: number;
-    value?: DscNode[];
-}
-
-// @public
-export interface DscNodeOperations {
-    delete(resourceGroupName: string, automationAccountName: string, nodeId: string, options?: DscNodeDeleteOptionalParams): Promise<void>;
-    get(resourceGroupName: string, automationAccountName: string, nodeId: string, options?: DscNodeGetOptionalParams): Promise<DscNodeGetResponse>;
-    listByAutomationAccount(resourceGroupName: string, automationAccountName: string, options?: DscNodeListByAutomationAccountOptionalParams): PagedAsyncIterableIterator<DscNode>;
-    update(resourceGroupName: string, automationAccountName: string, nodeId: string, dscNodeUpdateParameters: DscNodeUpdateParameters, options?: DscNodeUpdateOptionalParams): Promise<DscNodeUpdateResponse>;
-}
-
-// @public
-export interface DscNodeReport {
-    configurationVersion?: string;
-    endTime?: Date;
-    errors?: DscReportError[];
-    hostName?: string;
-    id?: string;
-    iPV4Addresses?: string[];
-    iPV6Addresses?: string[];
-    lastModifiedTime?: Date;
-    metaConfiguration?: DscMetaConfiguration;
-    numberOfResources?: number;
-    rawErrors?: string;
-    rebootRequested?: string;
-    refreshMode?: string;
-    reportFormatVersion?: string;
-    reportId?: string;
-    resources?: DscReportResource[];
-    startTime?: Date;
-    status?: string;
-    type?: string;
-}
-
-// @public
-export interface DscNodeReportListResult {
-    nextLink?: string;
-    value?: DscNodeReport[];
-}
-
-// @public
-export interface DscNodeUpdateOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export interface DscNodeUpdateParameters {
-    nodeId?: string;
-    // (undocumented)
-    properties?: DscNodeUpdateParametersProperties;
-}
-
-// @public (undocumented)
-export interface DscNodeUpdateParametersProperties {
-    name?: string;
-}
-
-// @public
-export type DscNodeUpdateResponse = DscNode;
-
-// @public
-export interface DscReportError {
-    errorCode?: string;
-    errorDetails?: string;
-    errorMessage?: string;
-    errorSource?: string;
-    locale?: string;
-    resourceId?: string;
-}
-
-// @public
-export interface DscReportResource {
-    dependsOn?: DscReportResourceNavigation[];
-    durationInSeconds?: number;
-    error?: string;
-    moduleName?: string;
-    moduleVersion?: string;
-    resourceId?: string;
-    resourceName?: string;
-    sourceInfo?: string;
-    startDate?: Date;
-    status?: string;
-}
-
-// @public
-export interface DscReportResourceNavigation {
-    resourceId?: string;
 }
 
 // @public
@@ -1467,7 +1154,7 @@ export interface Identity {
     readonly tenantId?: string;
     type?: ResourceIdentityType;
     userAssignedIdentities?: {
-        [propertyName: string]: ComponentsSgqdofSchemasIdentityPropertiesUserassignedidentitiesAdditionalproperties;
+        [propertyName: string]: UserAssignedIdentitiesProperties;
     };
 }
 
@@ -1482,7 +1169,7 @@ export interface Job extends ProxyResource {
     parameters?: {
         [propertyName: string]: string;
     };
-    provisioningState?: JobProvisioningState;
+    readonly provisioningState?: JobProvisioningState;
     runbook?: RunbookAssociationProperty;
     runOn?: string;
     startedBy?: string;
@@ -1766,12 +1453,6 @@ export interface KeyVaultProperties {
 }
 
 // @public
-export enum KnownAgentRegistrationKeyName {
-    Primary = "primary",
-    Secondary = "secondary"
-}
-
-// @public
 export enum KnownAutomationAccountState {
     Ok = "Ok",
     Suspended = "Suspended",
@@ -1794,12 +1475,6 @@ export enum KnownAutomationKeyPermissions {
 export enum KnownContentSourceType {
     EmbeddedContent = "embeddedContent",
     Uri = "uri"
-}
-
-// @public
-export enum KnownCountType {
-    Nodeconfiguration = "nodeconfiguration",
-    Status = "status"
 }
 
 // @public
@@ -1917,11 +1592,23 @@ export enum KnownJobStreamType {
 }
 
 // @public
-export enum KnownLinuxUpdateClasses {
-    Critical = "Critical",
-    Other = "Other",
-    Security = "Security",
-    Unclassified = "Unclassified"
+export enum KnownModuleProvisioningState {
+    ActivitiesStored = "ActivitiesStored",
+    Cancelled = "Cancelled",
+    ConnectionTypeImported = "ConnectionTypeImported",
+    ContentDownloaded = "ContentDownloaded",
+    ContentRetrieved = "ContentRetrieved",
+    ContentStored = "ContentStored",
+    ContentValidated = "ContentValidated",
+    Created = "Created",
+    Creating = "Creating",
+    Failed = "Failed",
+    ModuleDataStored = "ModuleDataStored",
+    ModuleImportRunbookComplete = "ModuleImportRunbookComplete",
+    RunningImportModuleRunbook = "RunningImportModuleRunbook",
+    StartingImportModuleRunbook = "StartingImportModuleRunbook",
+    Succeeded = "Succeeded",
+    Updating = "Updating"
 }
 
 // @public
@@ -2003,19 +1690,6 @@ export enum KnownTokenType {
 }
 
 // @public
-export enum KnownWindowsUpdateClasses {
-    Critical = "Critical",
-    Definition = "Definition",
-    FeaturePack = "FeaturePack",
-    Security = "Security",
-    ServicePack = "ServicePack",
-    Tools = "Tools",
-    Unclassified = "Unclassified",
-    UpdateRollup = "UpdateRollup",
-    Updates = "Updates"
-}
-
-// @public
 export enum KnownWorkerType {
     HybridV1 = "HybridV1",
     HybridV2 = "HybridV2"
@@ -2039,15 +1713,21 @@ export interface LinkedWorkspaceOperations {
 }
 
 // @public
-export interface LinuxProperties {
-    excludedPackageNameMasks?: string[];
-    includedPackageClassifications?: LinuxUpdateClasses;
-    includedPackageNameMasks?: string[];
-    rebootSetting?: string;
+export interface LogSpecification {
+    blobDuration?: string;
+    displayName?: string;
+    name?: string;
 }
 
 // @public
-export type LinuxUpdateClasses = string;
+export interface MetricSpecification {
+    aggregationType?: string;
+    dimensions?: Dimension[];
+    displayDescription?: string;
+    displayName?: string;
+    name?: string;
+    unit?: string;
+}
 
 // @public
 export interface Module extends TrackedResource {
@@ -2129,7 +1809,7 @@ export interface ModuleOperations {
 }
 
 // @public
-export type ModuleProvisioningState = "Created" | "Creating" | "StartingImportModuleRunbook" | "RunningImportModuleRunbook" | "ContentRetrieved" | "ContentDownloaded" | "ContentValidated" | "ConnectionTypeImported" | "ContentStored" | "ModuleDataStored" | "ActivitiesStored" | "ModuleImportRunbookComplete" | "Succeeded" | "Failed" | "Cancelled" | "Updating";
+export type ModuleProvisioningState = string;
 
 // @public
 export interface ModuleUpdateOptionalParams extends coreClient.OperationOptions {
@@ -2147,78 +1827,6 @@ export interface ModuleUpdateParameters {
 
 // @public
 export type ModuleUpdateResponse = Module;
-
-// @public
-export interface NodeCount {
-    name?: string;
-    // (undocumented)
-    properties?: NodeCountProperties;
-}
-
-// @public
-export interface NodeCountInformation {
-    get(resourceGroupName: string, automationAccountName: string, countType: CountType, options?: NodeCountInformationGetOptionalParams): Promise<NodeCountInformationGetResponse>;
-}
-
-// @public
-export interface NodeCountInformationGetOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type NodeCountInformationGetResponse = NodeCounts;
-
-// @public (undocumented)
-export interface NodeCountProperties {
-    count?: number;
-}
-
-// @public
-export interface NodeCounts {
-    totalCount?: number;
-    value?: NodeCount[];
-}
-
-// @public
-export interface NodeReports {
-    get(resourceGroupName: string, automationAccountName: string, nodeId: string, reportId: string, options?: NodeReportsGetOptionalParams): Promise<NodeReportsGetResponse>;
-    getContent(resourceGroupName: string, automationAccountName: string, nodeId: string, reportId: string, options?: NodeReportsGetContentOptionalParams): Promise<NodeReportsGetContentResponse>;
-    listByNode(resourceGroupName: string, automationAccountName: string, nodeId: string, options?: NodeReportsListByNodeOptionalParams): PagedAsyncIterableIterator<DscNodeReport>;
-}
-
-// @public
-export interface NodeReportsGetContentOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type NodeReportsGetContentResponse = Record<string, unknown>;
-
-// @public
-export interface NodeReportsGetOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type NodeReportsGetResponse = DscNodeReport;
-
-// @public
-export interface NodeReportsListByNodeNextOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type NodeReportsListByNodeNextResponse = DscNodeReportListResult;
-
-// @public
-export interface NodeReportsListByNodeOptionalParams extends coreClient.OperationOptions {
-    filter?: string;
-}
-
-// @public
-export type NodeReportsListByNodeResponse = DscNodeReportListResult;
-
-// @public
-export interface NonAzureQueryProperties {
-    functionAlias?: string;
-    workspaceId?: string;
-}
 
 // @public
 export interface ObjectDataTypes {
@@ -2241,16 +1849,16 @@ export interface ObjectDataTypesListFieldsByTypeOptionalParams extends coreClien
 export type ObjectDataTypesListFieldsByTypeResponse = TypeFieldListResult;
 
 // @public
-export type OperatingSystemType = "Windows" | "Linux";
-
-// @public
 export interface Operation {
     display?: OperationDisplay;
     name?: string;
+    origin?: string;
+    serviceSpecification?: OperationPropertiesFormatServiceSpecification;
 }
 
 // @public
 export interface OperationDisplay {
+    description?: string;
     operation?: string;
     provider?: string;
     resource?: string;
@@ -2259,6 +1867,12 @@ export interface OperationDisplay {
 // @public
 export interface OperationListResult {
     value?: Operation[];
+}
+
+// @public
+export interface OperationPropertiesFormatServiceSpecification {
+    logSpecifications?: LogSpecification[];
+    metricSpecifications?: MetricSpecification[];
 }
 
 // @public
@@ -2281,76 +1895,9 @@ export interface PrivateEndpointConnection extends ProxyResource {
 }
 
 // @public
-export interface PrivateEndpointConnectionListResult {
-    value?: PrivateEndpointConnection[];
-}
-
-// @public
-export interface PrivateEndpointConnections {
-    beginCreateOrUpdate(resourceGroupName: string, automationAccountName: string, privateEndpointConnectionName: string, parameters: PrivateEndpointConnection, options?: PrivateEndpointConnectionsCreateOrUpdateOptionalParams): Promise<PollerLike<PollOperationState<PrivateEndpointConnectionsCreateOrUpdateResponse>, PrivateEndpointConnectionsCreateOrUpdateResponse>>;
-    beginCreateOrUpdateAndWait(resourceGroupName: string, automationAccountName: string, privateEndpointConnectionName: string, parameters: PrivateEndpointConnection, options?: PrivateEndpointConnectionsCreateOrUpdateOptionalParams): Promise<PrivateEndpointConnectionsCreateOrUpdateResponse>;
-    beginDelete(resourceGroupName: string, automationAccountName: string, privateEndpointConnectionName: string, options?: PrivateEndpointConnectionsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
-    beginDeleteAndWait(resourceGroupName: string, automationAccountName: string, privateEndpointConnectionName: string, options?: PrivateEndpointConnectionsDeleteOptionalParams): Promise<void>;
-    get(resourceGroupName: string, automationAccountName: string, privateEndpointConnectionName: string, options?: PrivateEndpointConnectionsGetOptionalParams): Promise<PrivateEndpointConnectionsGetResponse>;
-    listByAutomationAccount(resourceGroupName: string, automationAccountName: string, options?: PrivateEndpointConnectionsListByAutomationAccountOptionalParams): PagedAsyncIterableIterator<PrivateEndpointConnection>;
-}
-
-// @public
-export interface PrivateEndpointConnectionsCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type PrivateEndpointConnectionsCreateOrUpdateResponse = PrivateEndpointConnection;
-
-// @public
-export interface PrivateEndpointConnectionsDeleteOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export interface PrivateEndpointConnectionsGetOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type PrivateEndpointConnectionsGetResponse = PrivateEndpointConnection;
-
-// @public
-export interface PrivateEndpointConnectionsListByAutomationAccountOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type PrivateEndpointConnectionsListByAutomationAccountResponse = PrivateEndpointConnectionListResult;
-
-// @public
 export interface PrivateEndpointProperty {
     id?: string;
 }
-
-// @public
-export interface PrivateLinkResource extends ProxyResource {
-    readonly groupId?: string;
-    readonly requiredMembers?: string[];
-}
-
-// @public
-export interface PrivateLinkResourceListResult {
-    value?: PrivateLinkResource[];
-}
-
-// @public
-export interface PrivateLinkResources {
-    listAutomation(resourceGroupName: string, automationAccountName: string, options?: PrivateLinkResourcesAutomationOptionalParams): PagedAsyncIterableIterator<PrivateLinkResource>;
-}
-
-// @public
-export interface PrivateLinkResourcesAutomationOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type PrivateLinkResourcesAutomationResponse = PrivateLinkResourceListResult;
 
 // @public
 export interface PrivateLinkServiceConnectionStateProperty {
@@ -2413,6 +1960,54 @@ export interface Python2PackageUpdateOptionalParams extends coreClient.Operation
 
 // @public
 export type Python2PackageUpdateResponse = Module;
+
+// @public
+export interface Python3Package {
+    createOrUpdate(resourceGroupName: string, automationAccountName: string, packageName: string, parameters: PythonPackageCreateParameters, options?: Python3PackageCreateOrUpdateOptionalParams): Promise<Python3PackageCreateOrUpdateResponse>;
+    delete(resourceGroupName: string, automationAccountName: string, packageName: string, options?: Python3PackageDeleteOptionalParams): Promise<void>;
+    get(resourceGroupName: string, automationAccountName: string, packageName: string, options?: Python3PackageGetOptionalParams): Promise<Python3PackageGetResponse>;
+    listByAutomationAccount(resourceGroupName: string, automationAccountName: string, options?: Python3PackageListByAutomationAccountOptionalParams): PagedAsyncIterableIterator<Module>;
+    update(resourceGroupName: string, automationAccountName: string, packageName: string, parameters: PythonPackageUpdateParameters, options?: Python3PackageUpdateOptionalParams): Promise<Python3PackageUpdateResponse>;
+}
+
+// @public
+export interface Python3PackageCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type Python3PackageCreateOrUpdateResponse = Module;
+
+// @public
+export interface Python3PackageDeleteOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export interface Python3PackageGetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type Python3PackageGetResponse = Module;
+
+// @public
+export interface Python3PackageListByAutomationAccountNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type Python3PackageListByAutomationAccountNextResponse = ModuleListResult;
+
+// @public
+export interface Python3PackageListByAutomationAccountOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type Python3PackageListByAutomationAccountResponse = ModuleListResult;
+
+// @public
+export interface Python3PackageUpdateOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type Python3PackageUpdateResponse = Module;
 
 // @public
 export interface PythonPackageCreateParameters {
@@ -2550,7 +2145,7 @@ export type RunbookDraftGetResponse = RunbookDraft;
 
 // @public
 export interface RunbookDraftOperations {
-    beginReplaceContent(resourceGroupName: string, automationAccountName: string, runbookName: string, runbookContent: string, options?: RunbookDraftReplaceContentOptionalParams): Promise<PollerLike<PollOperationState<RunbookDraftReplaceContentResponse>, RunbookDraftReplaceContentResponse>>;
+    beginReplaceContent(resourceGroupName: string, automationAccountName: string, runbookName: string, runbookContent: string, options?: RunbookDraftReplaceContentOptionalParams): Promise<SimplePollerLike<OperationState<RunbookDraftReplaceContentResponse>, RunbookDraftReplaceContentResponse>>;
     beginReplaceContentAndWait(resourceGroupName: string, automationAccountName: string, runbookName: string, runbookContent: string, options?: RunbookDraftReplaceContentOptionalParams): Promise<RunbookDraftReplaceContentResponse>;
     get(resourceGroupName: string, automationAccountName: string, runbookName: string, options?: RunbookDraftGetOptionalParams): Promise<RunbookDraftGetResponse>;
     getContent(resourceGroupName: string, automationAccountName: string, runbookName: string, options?: RunbookDraftGetContentOptionalParams): Promise<RunbookDraftGetContentResponse>;
@@ -2627,7 +2222,7 @@ export interface RunbookListResult {
 
 // @public
 export interface RunbookOperations {
-    beginPublish(resourceGroupName: string, automationAccountName: string, runbookName: string, options?: RunbookPublishOptionalParams): Promise<PollerLike<PollOperationState<RunbookPublishResponse>, RunbookPublishResponse>>;
+    beginPublish(resourceGroupName: string, automationAccountName: string, runbookName: string, options?: RunbookPublishOptionalParams): Promise<SimplePollerLike<OperationState<RunbookPublishResponse>, RunbookPublishResponse>>;
     beginPublishAndWait(resourceGroupName: string, automationAccountName: string, runbookName: string, options?: RunbookPublishOptionalParams): Promise<RunbookPublishResponse>;
     createOrUpdate(resourceGroupName: string, automationAccountName: string, runbookName: string, parameters: RunbookCreateOrUpdateParameters, options?: RunbookCreateOrUpdateOptionalParams): Promise<RunbookCreateOrUpdateResponse>;
     delete(resourceGroupName: string, automationAccountName: string, runbookName: string, options?: RunbookDeleteOptionalParams): Promise<void>;
@@ -2798,41 +2393,6 @@ export interface Sku {
 export type SkuNameEnum = string;
 
 // @public
-export interface SoftwareUpdateConfiguration {
-    readonly createdBy?: string;
-    readonly creationTime?: Date;
-    error?: ErrorResponse;
-    readonly id?: string;
-    readonly lastModifiedBy?: string;
-    readonly lastModifiedTime?: Date;
-    readonly name?: string;
-    readonly provisioningState?: string;
-    scheduleInfo: SUCScheduleProperties;
-    tasks?: SoftwareUpdateConfigurationTasks;
-    readonly type?: string;
-    updateConfiguration: UpdateConfiguration;
-}
-
-// @public
-export interface SoftwareUpdateConfigurationCollectionItem {
-    readonly creationTime?: Date;
-    frequency?: ScheduleFrequency;
-    readonly id?: string;
-    readonly lastModifiedTime?: Date;
-    readonly name?: string;
-    nextRun?: Date;
-    readonly provisioningState?: string;
-    startTime?: Date;
-    tasks?: SoftwareUpdateConfigurationTasks;
-    updateConfiguration?: UpdateConfiguration;
-}
-
-// @public
-export interface SoftwareUpdateConfigurationListResult {
-    value?: SoftwareUpdateConfigurationCollectionItem[];
-}
-
-// @public
 export interface SoftwareUpdateConfigurationMachineRun {
     readonly configuredDuration?: string;
     readonly correlationId?: string;
@@ -2946,50 +2506,6 @@ export interface SoftwareUpdateConfigurationRunTaskProperties {
 export interface SoftwareUpdateConfigurationRunTasks {
     postTask?: SoftwareUpdateConfigurationRunTaskProperties;
     preTask?: SoftwareUpdateConfigurationRunTaskProperties;
-}
-
-// @public
-export interface SoftwareUpdateConfigurations {
-    create(resourceGroupName: string, automationAccountName: string, softwareUpdateConfigurationName: string, parameters: SoftwareUpdateConfiguration, options?: SoftwareUpdateConfigurationsCreateOptionalParams): Promise<SoftwareUpdateConfigurationsCreateResponse>;
-    delete(resourceGroupName: string, automationAccountName: string, softwareUpdateConfigurationName: string, options?: SoftwareUpdateConfigurationsDeleteOptionalParams): Promise<void>;
-    getByName(resourceGroupName: string, automationAccountName: string, softwareUpdateConfigurationName: string, options?: SoftwareUpdateConfigurationsGetByNameOptionalParams): Promise<SoftwareUpdateConfigurationsGetByNameResponse>;
-    list(resourceGroupName: string, automationAccountName: string, options?: SoftwareUpdateConfigurationsListOptionalParams): Promise<SoftwareUpdateConfigurationsListResponse>;
-}
-
-// @public
-export interface SoftwareUpdateConfigurationsCreateOptionalParams extends coreClient.OperationOptions {
-    clientRequestId?: string;
-}
-
-// @public
-export type SoftwareUpdateConfigurationsCreateResponse = SoftwareUpdateConfiguration;
-
-// @public
-export interface SoftwareUpdateConfigurationsDeleteOptionalParams extends coreClient.OperationOptions {
-    clientRequestId?: string;
-}
-
-// @public
-export interface SoftwareUpdateConfigurationsGetByNameOptionalParams extends coreClient.OperationOptions {
-    clientRequestId?: string;
-}
-
-// @public
-export type SoftwareUpdateConfigurationsGetByNameResponse = SoftwareUpdateConfiguration;
-
-// @public
-export interface SoftwareUpdateConfigurationsListOptionalParams extends coreClient.OperationOptions {
-    clientRequestId?: string;
-    filter?: string;
-}
-
-// @public
-export type SoftwareUpdateConfigurationsListResponse = SoftwareUpdateConfigurationListResult;
-
-// @public
-export interface SoftwareUpdateConfigurationTasks {
-    postTask?: TaskProperties;
-    preTask?: TaskProperties;
 }
 
 // @public
@@ -3251,24 +2767,6 @@ export interface StatisticsOperations {
 export type StreamType = string;
 
 // @public
-export interface SUCScheduleProperties {
-    advancedSchedule?: AdvancedSchedule;
-    creationTime?: Date;
-    description?: string;
-    expiryTime?: Date;
-    expiryTimeOffsetMinutes?: number;
-    frequency?: ScheduleFrequency;
-    interval?: number;
-    isEnabled?: boolean;
-    lastModifiedTime?: Date;
-    nextRun?: Date;
-    nextRunOffsetMinutes?: number;
-    startTime?: Date;
-    readonly startTimeOffsetMinutes?: number;
-    timeZone?: string;
-}
-
-// @public
 export type SyncType = string;
 
 // @public
@@ -3279,31 +2777,6 @@ export interface SystemData {
     lastModifiedAt?: Date;
     lastModifiedBy?: string;
     lastModifiedByType?: CreatedByType;
-}
-
-// @public
-export type TagOperators = "All" | "Any";
-
-// @public
-export interface TagSettingsProperties {
-    filterOperator?: TagOperators;
-    tags?: {
-        [propertyName: string]: string[];
-    };
-}
-
-// @public
-export interface TargetProperties {
-    azureQueries?: AzureQueryProperties[];
-    nonAzureQueries?: NonAzureQueryProperties[];
-}
-
-// @public
-export interface TaskProperties {
-    parameters?: {
-        [propertyName: string]: string;
-    };
-    source?: string;
 }
 
 // @public
@@ -3417,17 +2890,6 @@ export interface TypeFieldListResult {
 }
 
 // @public
-export interface UpdateConfiguration {
-    azureVirtualMachines?: string[];
-    duration?: string;
-    linux?: LinuxProperties;
-    nonAzureComputerNames?: string[];
-    operatingSystem: OperatingSystemType;
-    targets?: TargetProperties;
-    windows?: WindowsProperties;
-}
-
-// @public
 export interface UpdateConfigurationNavigation {
     readonly name?: string;
 }
@@ -3464,6 +2926,12 @@ export interface UsagesListByAutomationAccountOptionalParams extends coreClient.
 
 // @public
 export type UsagesListByAutomationAccountResponse = UsageListResult;
+
+// @public (undocumented)
+export interface UserAssignedIdentitiesProperties {
+    readonly clientId?: string;
+    readonly principalId?: string;
+}
 
 // @public
 export interface Variable extends ProxyResource {
@@ -3542,214 +3010,6 @@ export interface VariableUpdateParameters {
 
 // @public
 export type VariableUpdateResponse = Variable;
-
-// @public
-export interface Watcher extends Resource {
-    readonly creationTime?: Date;
-    description?: string;
-    etag?: string;
-    executionFrequencyInSeconds?: number;
-    readonly lastModifiedBy?: string;
-    readonly lastModifiedTime?: Date;
-    location?: string;
-    scriptName?: string;
-    scriptParameters?: {
-        [propertyName: string]: string;
-    };
-    scriptRunOn?: string;
-    readonly status?: string;
-    tags?: {
-        [propertyName: string]: string;
-    };
-}
-
-// @public
-export interface WatcherCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type WatcherCreateOrUpdateResponse = Watcher;
-
-// @public
-export interface WatcherDeleteOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export interface WatcherGetOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type WatcherGetResponse = Watcher;
-
-// @public
-export interface WatcherListByAutomationAccountNextOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type WatcherListByAutomationAccountNextResponse = WatcherListResult;
-
-// @public
-export interface WatcherListByAutomationAccountOptionalParams extends coreClient.OperationOptions {
-    filter?: string;
-}
-
-// @public
-export type WatcherListByAutomationAccountResponse = WatcherListResult;
-
-// @public
-export interface WatcherListResult {
-    nextLink?: string;
-    value?: Watcher[];
-}
-
-// @public
-export interface WatcherOperations {
-    createOrUpdate(resourceGroupName: string, automationAccountName: string, watcherName: string, parameters: Watcher, options?: WatcherCreateOrUpdateOptionalParams): Promise<WatcherCreateOrUpdateResponse>;
-    delete(resourceGroupName: string, automationAccountName: string, watcherName: string, options?: WatcherDeleteOptionalParams): Promise<void>;
-    get(resourceGroupName: string, automationAccountName: string, watcherName: string, options?: WatcherGetOptionalParams): Promise<WatcherGetResponse>;
-    listByAutomationAccount(resourceGroupName: string, automationAccountName: string, options?: WatcherListByAutomationAccountOptionalParams): PagedAsyncIterableIterator<Watcher>;
-    start(resourceGroupName: string, automationAccountName: string, watcherName: string, options?: WatcherStartOptionalParams): Promise<void>;
-    stop(resourceGroupName: string, automationAccountName: string, watcherName: string, options?: WatcherStopOptionalParams): Promise<void>;
-    update(resourceGroupName: string, automationAccountName: string, watcherName: string, parameters: WatcherUpdateParameters, options?: WatcherUpdateOptionalParams): Promise<WatcherUpdateResponse>;
-}
-
-// @public
-export interface WatcherStartOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export interface WatcherStopOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export interface WatcherUpdateOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public (undocumented)
-export interface WatcherUpdateParameters {
-    executionFrequencyInSeconds?: number;
-    name?: string;
-}
-
-// @public
-export type WatcherUpdateResponse = Watcher;
-
-// @public
-export interface Webhook extends ProxyResource {
-    creationTime?: Date;
-    description?: string;
-    expiryTime?: Date;
-    isEnabled?: boolean;
-    lastInvokedTime?: Date;
-    lastModifiedBy?: string;
-    lastModifiedTime?: Date;
-    parameters?: {
-        [propertyName: string]: string;
-    };
-    runbook?: RunbookAssociationProperty;
-    runOn?: string;
-    uri?: string;
-}
-
-// @public
-export interface WebhookCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export interface WebhookCreateOrUpdateParameters {
-    expiryTime?: Date;
-    isEnabled?: boolean;
-    name: string;
-    parameters?: {
-        [propertyName: string]: string;
-    };
-    runbook?: RunbookAssociationProperty;
-    runOn?: string;
-    uri?: string;
-}
-
-// @public
-export type WebhookCreateOrUpdateResponse = Webhook;
-
-// @public
-export interface WebhookDeleteOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export interface WebhookGenerateUriOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type WebhookGenerateUriResponse = {
-    body: string;
-};
-
-// @public
-export interface WebhookGetOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type WebhookGetResponse = Webhook;
-
-// @public
-export interface WebhookListByAutomationAccountNextOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type WebhookListByAutomationAccountNextResponse = WebhookListResult;
-
-// @public
-export interface WebhookListByAutomationAccountOptionalParams extends coreClient.OperationOptions {
-    filter?: string;
-}
-
-// @public
-export type WebhookListByAutomationAccountResponse = WebhookListResult;
-
-// @public
-export interface WebhookListResult {
-    nextLink?: string;
-    value?: Webhook[];
-}
-
-// @public
-export interface WebhookOperations {
-    createOrUpdate(resourceGroupName: string, automationAccountName: string, webhookName: string, parameters: WebhookCreateOrUpdateParameters, options?: WebhookCreateOrUpdateOptionalParams): Promise<WebhookCreateOrUpdateResponse>;
-    delete(resourceGroupName: string, automationAccountName: string, webhookName: string, options?: WebhookDeleteOptionalParams): Promise<void>;
-    generateUri(resourceGroupName: string, automationAccountName: string, options?: WebhookGenerateUriOptionalParams): Promise<WebhookGenerateUriResponse>;
-    get(resourceGroupName: string, automationAccountName: string, webhookName: string, options?: WebhookGetOptionalParams): Promise<WebhookGetResponse>;
-    listByAutomationAccount(resourceGroupName: string, automationAccountName: string, options?: WebhookListByAutomationAccountOptionalParams): PagedAsyncIterableIterator<Webhook>;
-    update(resourceGroupName: string, automationAccountName: string, webhookName: string, parameters: WebhookUpdateParameters, options?: WebhookUpdateOptionalParams): Promise<WebhookUpdateResponse>;
-}
-
-// @public
-export interface WebhookUpdateOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export interface WebhookUpdateParameters {
-    description?: string;
-    isEnabled?: boolean;
-    name?: string;
-    parameters?: {
-        [propertyName: string]: string;
-    };
-    runOn?: string;
-}
-
-// @public
-export type WebhookUpdateResponse = Webhook;
-
-// @public
-export interface WindowsProperties {
-    excludedKbNumbers?: string[];
-    includedKbNumbers?: string[];
-    includedUpdateClassifications?: WindowsUpdateClasses;
-    rebootSetting?: string;
-}
-
-// @public
-export type WindowsUpdateClasses = string;
 
 // @public
 type WorkerType_2 = string;

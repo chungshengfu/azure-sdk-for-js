@@ -9,10 +9,93 @@
 import * as coreClient from "@azure/core-client";
 import * as coreRestPipeline from "@azure/core-rest-pipeline";
 
-/** A list of private endpoint connections */
-export interface PrivateEndpointConnectionListResult {
-  /** Array of private endpoint connections */
-  value?: PrivateEndpointConnection[];
+/** The parameters supplied to the update automation account operation. */
+export interface AutomationAccountUpdateParameters {
+  /** Gets or sets the name of the resource. */
+  name?: string;
+  /** Gets or sets the location of the resource. */
+  location?: string;
+  /** Sets the identity property for automation account */
+  identity?: Identity;
+  /** Gets or sets the tags attached to the resource. */
+  tags?: { [propertyName: string]: string };
+  /** Gets or sets account SKU. */
+  sku?: Sku;
+  /** Set the encryption properties for the automation account */
+  encryption?: EncryptionProperties;
+  /** Indicates whether traffic on the non-ARM endpoint (Webhook/Agent) is allowed from the public internet */
+  publicNetworkAccess?: boolean;
+  /** Indicates whether requests using non-AAD authentication are blocked */
+  disableLocalAuth?: boolean;
+}
+
+/** The account SKU. */
+export interface Sku {
+  /** Gets or sets the SKU name of the account. */
+  name: SkuNameEnum;
+  /** Gets or sets the SKU family. */
+  family?: string;
+  /** Gets or sets the SKU capacity. */
+  capacity?: number;
+}
+
+/** The encryption settings for automation account */
+export interface EncryptionProperties {
+  /** Key vault properties. */
+  keyVaultProperties?: KeyVaultProperties;
+  /** Encryption Key Source */
+  keySource?: EncryptionKeySourceType;
+  /** User identity used for CMK. */
+  identity?: EncryptionPropertiesIdentity;
+}
+
+/** Settings concerning key vault encryption for a configuration store. */
+export interface KeyVaultProperties {
+  /** The URI of the key vault key used to encrypt data. */
+  keyvaultUri?: string;
+  /** The name of key used to encrypt data. */
+  keyName?: string;
+  /** The key version of the key used to encrypt data. */
+  keyVersion?: string;
+}
+
+/** User identity used for CMK. */
+export interface EncryptionPropertiesIdentity {
+  /** The user identity used for CMK. It will be an ARM resource id in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'. */
+  userAssignedIdentity?: Record<string, unknown>;
+}
+
+/** Identity for the resource. */
+export interface Identity {
+  /**
+   * The principal ID of resource identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly principalId?: string;
+  /**
+   * The tenant ID of resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly tenantId?: string;
+  /** The identity type. */
+  type?: ResourceIdentityType;
+  /** The list of user identities associated with the resource. The user identity dictionary key references will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'. */
+  userAssignedIdentities?: {
+    [propertyName: string]: UserAssignedIdentitiesProperties;
+  };
+}
+
+export interface UserAssignedIdentitiesProperties {
+  /**
+   * The principal id of user assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly principalId?: string;
+  /**
+   * The client id of user assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly clientId?: string;
 }
 
 /** Private endpoint which the connection belongs to. */
@@ -53,6 +136,22 @@ export interface Resource {
   readonly type?: string;
 }
 
+/** Metadata pertaining to creation and last modification of the resource. */
+export interface SystemData {
+  /** The identity that created the resource. */
+  createdBy?: string;
+  /** The type of identity that created the resource. */
+  createdByType?: CreatedByType;
+  /** The timestamp of resource creation (UTC). */
+  createdAt?: Date;
+  /** The identity that last modified the resource. */
+  lastModifiedBy?: string;
+  /** The type of identity that last modified the resource. */
+  lastModifiedByType?: CreatedByType;
+  /** The timestamp of resource last modification (UTC) */
+  lastModifiedAt?: Date;
+}
+
 /** Error response of an operation failure */
 export interface ErrorResponse {
   /** Error code */
@@ -61,18 +160,336 @@ export interface ErrorResponse {
   message?: string;
 }
 
-/** A list of private link resources */
-export interface PrivateLinkResourceListResult {
-  /** Array of private link resources */
-  value?: PrivateLinkResource[];
+/** The parameters supplied to the create or update automation account operation. */
+export interface AutomationAccountCreateOrUpdateParameters {
+  /** Gets or sets name of the resource. */
+  name?: string;
+  /** Gets or sets the location of the resource. */
+  location?: string;
+  /** Sets the identity property for automation account */
+  identity?: Identity;
+  /** Gets or sets the tags attached to the resource. */
+  tags?: { [propertyName: string]: string };
+  /** Gets or sets account SKU. */
+  sku?: Sku;
+  /** Set the encryption properties for the automation account */
+  encryption?: EncryptionProperties;
+  /** Indicates whether traffic on the non-ARM endpoint (Webhook/Agent) is allowed from the public internet */
+  publicNetworkAccess?: boolean;
+  /** Indicates whether requests using non-AAD authentication are blocked */
+  disableLocalAuth?: boolean;
 }
 
-/** Definition of the content link. */
-export interface ContentLink {
-  /** Gets or sets the uri of the runbook content. */
-  uri?: string;
+/** The response model for the list account operation. */
+export interface AutomationAccountListResult {
+  /** Gets or sets list of accounts. */
+  value?: AutomationAccount[];
+  /** Gets or sets the next link. */
+  nextLink?: string;
+}
+
+/** The response model for the list statistics operation. */
+export interface StatisticsListResult {
+  /** Gets or sets a list of statistics. */
+  value?: Statistics[];
+}
+
+/** Definition of the statistic. */
+export interface Statistics {
+  /**
+   * Gets the property value of the statistic.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly counterProperty?: string;
+  /**
+   * Gets the value of the statistic.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly counterValue?: number;
+  /**
+   * Gets the startTime of the statistic.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly startTime?: Date;
+  /**
+   * Gets the endTime of the statistic.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly endTime?: Date;
+  /**
+   * Gets the id.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly id?: string;
+}
+
+/** The response model for the get usage operation. */
+export interface UsageListResult {
+  /** Gets or sets usage. */
+  value?: Usage[];
+}
+
+/** Definition of Usage. */
+export interface Usage {
+  /** Gets or sets the id of the resource. */
+  id?: string;
+  /** Gets or sets the usage counter name. */
+  name?: UsageCounterName;
+  /** Gets or sets the usage unit name. */
+  unit?: string;
+  /** Gets or sets the current usage value. */
+  currentValue?: number;
+  /** Gets or sets max limit. -1 for unlimited */
+  limit?: number;
+  /** Gets or sets the throttle status. */
+  throttleStatus?: string;
+}
+
+/** Definition of usage counter name. */
+export interface UsageCounterName {
+  /** Gets or sets the usage counter name. */
+  value?: string;
+  /** Gets or sets the localized usage counter name. */
+  localizedValue?: string;
+}
+
+export interface KeyListResult {
+  /** Lists the automation keys. */
+  keys?: Key[];
+}
+
+/** Automation key which is used to register a DSC Node */
+export interface Key {
+  /**
+   * Automation key name.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly keyName?: AutomationKeyName;
+  /**
+   * Automation key permissions.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly permissions?: AutomationKeyPermissions;
+  /**
+   * Value of the Automation Key used for registration.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly value?: string;
+}
+
+/** The response model for the list deleted runbook. */
+export interface DeletedRunbookListResult {
+  /** List of deleted runbooks in automation account. */
+  value?: DeletedRunbook[];
+  /** Gets or sets the next link. */
+  nextLink?: string;
+}
+
+/** Definition of deleted runbook. */
+export interface DeletedRunbook {
+  /** The resource id. */
+  id?: string;
+  /** Gets or sets name of the resource. */
+  name?: string;
+  /** The resource type. */
+  type?: string;
+  /** Gets or sets the location of the resource. */
+  location?: string;
+  /** Type of the runbook. */
+  runbookType?: string;
+  /** Gets or sets runtime of the runbook. */
+  runtime?: string;
+  /** Environment of the runbook. */
+  runtimeEnvironment?: string;
+  /** Gets or sets the creation time. */
+  creationTime?: Date;
+  /** Gets or sets the last modified time. */
+  deletionTime?: Date;
+  /** Gets or sets the description. */
+  description?: string;
+}
+
+/** The parameters supplied to the create or update or replace certificate operation. */
+export interface CertificateCreateOrUpdateParameters {
+  /** Gets or sets the name of the certificate. */
+  name: string;
+  /** Gets or sets the base64 encoded value of the certificate. */
+  base64Value: string;
+  /** Gets or sets the description of the certificate. */
+  description?: string;
+  /** Gets or sets the thumbprint of the certificate. */
+  thumbprint?: string;
+  /** Gets or sets the is exportable flag of the certificate. */
+  isExportable?: boolean;
+}
+
+/** The parameters supplied to the update certificate operation. */
+export interface CertificateUpdateParameters {
+  /** Gets or sets the name of the certificate. */
+  name?: string;
+  /** Gets or sets the description of the certificate. */
+  description?: string;
+}
+
+/** The response model for the list certificate operation. */
+export interface CertificateListResult {
+  /** Gets or sets a list of certificates. */
+  value?: Certificate[];
+  /** Gets or sets the next link. */
+  nextLink?: string;
+}
+
+/** The connection type property associated with the entity. */
+export interface ConnectionTypeAssociationProperty {
+  /** Gets or sets the name of the connection type. */
+  name?: string;
+}
+
+/** The parameters supplied to the create or update connection operation. */
+export interface ConnectionCreateOrUpdateParameters {
+  /** Gets or sets the name of the connection. */
+  name: string;
+  /** Gets or sets the description of the connection. */
+  description?: string;
+  /** Gets or sets the connectionType of the connection. */
+  connectionType: ConnectionTypeAssociationProperty;
+  /** Gets or sets the field definition properties of the connection. */
+  fieldDefinitionValues?: { [propertyName: string]: string };
+}
+
+/** The parameters supplied to the update connection operation. */
+export interface ConnectionUpdateParameters {
+  /** Gets or sets the name of the connection. */
+  name?: string;
+  /** Gets or sets the description of the connection. */
+  description?: string;
+  /** Gets or sets the field definition values of the connection. */
+  fieldDefinitionValues?: { [propertyName: string]: string };
+}
+
+/** The response model for the list connection operation. */
+export interface ConnectionListResult {
+  /** Gets or sets a list of connection. */
+  value?: Connection[];
+  /** Gets or sets the next link. */
+  nextLink?: string;
+}
+
+/** Definition of the connection type. */
+export interface ConnectionType {
+  /**
+   * Gets the id of the resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly id?: string;
+  /**
+   * Gets the name of the connection type.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /**
+   * Resource type
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly type?: string;
+  /** Gets or sets a Boolean value to indicate if the connection type is global. */
+  isGlobal?: boolean;
+  /**
+   * Gets the field definitions of the connection type.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly fieldDefinitions?: { [propertyName: string]: FieldDefinition };
+  /**
+   * Gets the creation time.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly creationTime?: Date;
+  /** Gets or sets the last modified time. */
+  lastModifiedTime?: Date;
+  /** Gets or sets the description. */
+  description?: string;
+}
+
+/** Definition of the connection fields. */
+export interface FieldDefinition {
+  /** Gets or sets the isEncrypted flag of the connection field definition. */
+  isEncrypted?: boolean;
+  /** Gets or sets the isOptional flag of the connection field definition. */
+  isOptional?: boolean;
+  /** Gets or sets the type of the connection field definition. */
+  type: string;
+}
+
+/** The parameters supplied to the create or update connection type operation. */
+export interface ConnectionTypeCreateOrUpdateParameters {
+  /** Gets or sets the name of the connection type. */
+  name: string;
+  /** Gets or sets a Boolean value to indicate if the connection type is global. */
+  isGlobal?: boolean;
+  /** Gets or sets the field definitions of the connection type. */
+  fieldDefinitions: { [propertyName: string]: FieldDefinition };
+}
+
+/** The response model for the list connection type operation. */
+export interface ConnectionTypeListResult {
+  /** Gets or sets a list of connection types. */
+  value?: ConnectionType[];
+  /** Gets or sets the next link. */
+  nextLink?: string;
+}
+
+/** The parameters supplied to the create or update credential operation. */
+export interface CredentialCreateOrUpdateParameters {
+  /** Gets or sets the name of the credential. */
+  name: string;
+  /** Gets or sets the user name of the credential. */
+  userName: string;
+  /** Gets or sets the password of the credential. */
+  password: string;
+  /** Gets or sets the description of the credential. */
+  description?: string;
+}
+
+/** The parameters supplied to the Update credential operation. */
+export interface CredentialUpdateParameters {
+  /** Gets or sets the name of the credential. */
+  name?: string;
+  /** Gets or sets the user name of the credential. */
+  userName?: string;
+  /** Gets or sets the password of the credential. */
+  password?: string;
+  /** Gets or sets the description of the credential. */
+  description?: string;
+}
+
+/** The response model for the list credential operation. */
+export interface CredentialListResult {
+  /** Gets or sets a list of credentials. */
+  value?: Credential[];
+  /** Gets or sets the next link. */
+  nextLink?: string;
+}
+
+/** Definition of the configuration parameter type. */
+export interface DscConfigurationParameter {
+  /** Gets or sets the type of the parameter. */
+  type?: string;
+  /** Gets or sets a Boolean value to indicate whether the parameter is mandatory or not. */
+  isMandatory?: boolean;
+  /** Get or sets the position of the parameter. */
+  position?: number;
+  /** Gets or sets the default value of parameter. */
+  defaultValue?: string;
+}
+
+/** Definition of the content source. */
+export interface ContentSource {
   /** Gets or sets the hash. */
-  contentHash?: ContentHash;
+  hash?: ContentHash;
+  /** Gets or sets the content source type. */
+  type?: ContentSourceType;
+  /** Gets or sets the value of the content. This is based on the content source type. */
+  value?: string;
   /** Gets or sets the version of the content. */
   version?: string;
 }
@@ -85,204 +502,52 @@ export interface ContentHash {
   value: string;
 }
 
-/** Definition of the module error info type. */
-export interface ModuleErrorInfo {
-  /** Gets or sets the error code. */
-  code?: string;
-  /** Gets or sets the error message. */
-  message?: string;
-}
-
-/** The parameters supplied to the create or update module operation. */
-export interface PythonPackageCreateParameters {
+/** The parameters supplied to the create or update configuration operation. */
+export interface DscConfigurationCreateOrUpdateParameters {
+  /** Gets or sets name of the resource. */
+  name?: string;
+  /** Gets or sets the location of the resource. */
+  location?: string;
   /** Gets or sets the tags attached to the resource. */
   tags?: { [propertyName: string]: string };
-  /** Gets or sets the module content link. */
-  contentLink: ContentLink;
+  /** Gets or sets verbose log option. */
+  logVerbose?: boolean;
+  /** Gets or sets progress log option. */
+  logProgress?: boolean;
+  /** Gets or sets the source. */
+  source: ContentSource;
+  /** Gets or sets the configuration parameters. */
+  parameters?: { [propertyName: string]: DscConfigurationParameter };
+  /** Gets or sets the description of the configuration. */
+  description?: string;
 }
 
-/** The parameters supplied to the update module operation. */
-export interface PythonPackageUpdateParameters {
+/** The parameters supplied to the create or update configuration operation. */
+export interface DscConfigurationUpdateParameters {
+  /** Gets or sets name of the resource. */
+  name?: string;
   /** Gets or sets the tags attached to the resource. */
   tags?: { [propertyName: string]: string };
+  /** Gets or sets verbose log option. */
+  logVerbose?: boolean;
+  /** Gets or sets progress log option. */
+  logProgress?: boolean;
+  /** Gets or sets the source. */
+  source?: ContentSource;
+  /** Gets or sets the configuration parameters. */
+  parameters?: { [propertyName: string]: DscConfigurationParameter };
+  /** Gets or sets the description of the configuration. */
+  description?: string;
 }
 
-/** The response model for the list module operation. */
-export interface ModuleListResult {
-  /** Gets or sets a list of modules. */
-  value?: Module[];
+/** The response model for the list configuration operation. */
+export interface DscConfigurationListResult {
+  /** Gets or sets a list of configurations. */
+  value?: DscConfiguration[];
   /** Gets or sets the next link. */
   nextLink?: string;
-}
-
-/** Definition of the agent registration information type. */
-export interface AgentRegistration {
-  /** Gets or sets the dsc meta configuration. */
-  dscMetaConfiguration?: string;
-  /** Gets or sets the dsc server endpoint. */
-  endpoint?: string;
-  /** Gets or sets the agent registration keys. */
-  keys?: AgentRegistrationKeys;
-  /** Gets or sets the id. */
-  id?: string;
-}
-
-/** Definition of the agent registration keys. */
-export interface AgentRegistrationKeys {
-  /** Gets or sets the primary key. */
-  primary?: string;
-  /** Gets or sets the secondary key. */
-  secondary?: string;
-}
-
-/** The parameters supplied to the regenerate keys operation. */
-export interface AgentRegistrationRegenerateKeyParameter {
-  /** Gets or sets the agent registration key name - primary or secondary. */
-  keyName: AgentRegistrationKeyName;
-}
-
-/** The dsc extensionHandler property associated with the node */
-export interface DscNodeExtensionHandlerAssociationProperty {
-  /** Gets or sets the name of the extension handler. */
-  name?: string;
-  /** Gets or sets the version of the extension handler. */
-  version?: string;
-}
-
-/** The parameters supplied to the update dsc node operation. */
-export interface DscNodeUpdateParameters {
-  /** Gets or sets the id of the dsc node. */
-  nodeId?: string;
-  properties?: DscNodeUpdateParametersProperties;
-}
-
-export interface DscNodeUpdateParametersProperties {
-  /** Gets or sets the name of the dsc node configuration. */
-  name?: string;
-}
-
-/** The response model for the list dsc nodes operation. */
-export interface DscNodeListResult {
-  /** Gets or sets a list of dsc nodes. */
-  value?: DscNode[];
-  /** Gets or sets the next link. */
-  nextLink?: string;
-  /** Gets the total number of nodes matching filter criteria. */
+  /** Gets the total number of configurations matching filter criteria. */
   totalCount?: number;
-}
-
-/** The response model for the list dsc nodes operation. */
-export interface DscNodeReportListResult {
-  /** Gets or sets a list of dsc node reports. */
-  value?: DscNodeReport[];
-  /** Gets or sets the next link. */
-  nextLink?: string;
-}
-
-/** Definition of the dsc node report type. */
-export interface DscNodeReport {
-  /** Gets or sets the end time of the node report. */
-  endTime?: Date;
-  /** Gets or sets the lastModifiedTime of the node report. */
-  lastModifiedTime?: Date;
-  /** Gets or sets the start time of the node report. */
-  startTime?: Date;
-  /** Gets or sets the type of the node report. */
-  type?: string;
-  /** Gets or sets the id of the node report. */
-  reportId?: string;
-  /** Gets or sets the status of the node report. */
-  status?: string;
-  /** Gets or sets the refreshMode of the node report. */
-  refreshMode?: string;
-  /** Gets or sets the rebootRequested of the node report. */
-  rebootRequested?: string;
-  /** Gets or sets the reportFormatVersion of the node report. */
-  reportFormatVersion?: string;
-  /** Gets or sets the configurationVersion of the node report. */
-  configurationVersion?: string;
-  /** Gets or sets the id. */
-  id?: string;
-  /** Gets or sets the errors for the node report. */
-  errors?: DscReportError[];
-  /** Gets or sets the resource for the node report. */
-  resources?: DscReportResource[];
-  /** Gets or sets the metaConfiguration of the node at the time of the report. */
-  metaConfiguration?: DscMetaConfiguration;
-  /** Gets or sets the hostname of the node that sent the report. */
-  hostName?: string;
-  /** Gets or sets the IPv4 address of the node that sent the report. */
-  iPV4Addresses?: string[];
-  /** Gets or sets the IPv6 address of the node that sent the report. */
-  iPV6Addresses?: string[];
-  /** Gets or sets the number of resource in the node report. */
-  numberOfResources?: number;
-  /** Gets or sets the unparsed errors for the node report. */
-  rawErrors?: string;
-}
-
-/** Definition of the dsc node report error type. */
-export interface DscReportError {
-  /** Gets or sets the source of the error. */
-  errorSource?: string;
-  /** Gets or sets the resource ID which generated the error. */
-  resourceId?: string;
-  /** Gets or sets the error code. */
-  errorCode?: string;
-  /** Gets or sets the error message. */
-  errorMessage?: string;
-  /** Gets or sets the locale of the error. */
-  locale?: string;
-  /** Gets or sets the error details. */
-  errorDetails?: string;
-}
-
-/** Definition of the DSC Report Resource. */
-export interface DscReportResource {
-  /** Gets or sets the ID of the resource. */
-  resourceId?: string;
-  /** Gets or sets the source info of the resource. */
-  sourceInfo?: string;
-  /** Gets or sets the Resource Navigation values for resources the resource depends on. */
-  dependsOn?: DscReportResourceNavigation[];
-  /** Gets or sets the module name of the resource. */
-  moduleName?: string;
-  /** Gets or sets the module version of the resource. */
-  moduleVersion?: string;
-  /** Gets or sets the name of the resource. */
-  resourceName?: string;
-  /** Gets or sets the error of the resource. */
-  error?: string;
-  /** Gets or sets the status of the resource. */
-  status?: string;
-  /** Gets or sets the duration in seconds for the resource. */
-  durationInSeconds?: number;
-  /** Gets or sets the start date of the resource. */
-  startDate?: Date;
-}
-
-/** Navigation for DSC Report Resource. */
-export interface DscReportResourceNavigation {
-  /** Gets or sets the ID of the resource to navigate to. */
-  resourceId?: string;
-}
-
-/** Definition of the DSC Meta Configuration. */
-export interface DscMetaConfiguration {
-  /** Gets or sets the ConfigurationModeFrequencyMins value of the meta configuration. */
-  configurationModeFrequencyMins?: number;
-  /** Gets or sets the RebootNodeIfNeeded value of the meta configuration. */
-  rebootNodeIfNeeded?: boolean;
-  /** Gets or sets the ConfigurationMode value of the meta configuration. */
-  configurationMode?: string;
-  /** Gets or sets the ActionAfterReboot value of the meta configuration. */
-  actionAfterReboot?: string;
-  /** Gets or sets the CertificateId value of the meta configuration. */
-  certificateId?: string;
-  /** Gets or sets the RefreshFrequencyMins value of the meta configuration. */
-  refreshFrequencyMins?: number;
-  /** Gets or sets the AllowModuleOverwrite value of the meta configuration. */
-  allowModuleOverwrite?: boolean;
 }
 
 /** The Dsc configuration property associated with the entity. */
@@ -305,18 +570,6 @@ export interface DscNodeConfigurationCreateOrUpdateParameters {
   incrementNodeConfigurationBuild?: boolean;
 }
 
-/** Definition of the content source. */
-export interface ContentSource {
-  /** Gets or sets the hash. */
-  hash?: ContentHash;
-  /** Gets or sets the content source type. */
-  type?: ContentSourceType;
-  /** Gets or sets the value of the content. This is based on the content source type. */
-  value?: string;
-  /** Gets or sets the version of the content. */
-  version?: string;
-}
-
 /** The response model for the list job operation. */
 export interface DscNodeConfigurationListResult {
   /** Gets or sets a list of Dsc node configurations. */
@@ -327,36 +580,75 @@ export interface DscNodeConfigurationListResult {
   totalCount?: number;
 }
 
-/** The parameters supplied to the create compilation job operation. */
-export interface DscCompilationJobCreateParameters {
-  /** Gets or sets name of the resource. */
+/** The parameters supplied to the create hybrid runbook worker operation. */
+export interface HybridRunbookWorkerCreateParameters {
+  /** Gets or sets the name of the resource. */
   name?: string;
-  /** Gets or sets the location of the resource. */
-  location?: string;
-  /** Gets or sets the tags attached to the resource. */
-  tags?: { [propertyName: string]: string };
-  /** Gets or sets the configuration. */
-  configuration: DscConfigurationAssociationProperty;
+  /** Azure Resource Manager Id for a virtual machine. */
+  vmResourceId?: string;
+}
+
+/** Parameters supplied to move hybrid worker operation. */
+export interface HybridRunbookWorkerMoveParameters {
+  /** Gets or sets the target hybrid runbook worker group. */
+  hybridRunbookWorkerGroupName?: string;
+}
+
+/** The response model for the list hybrid runbook workers. */
+export interface HybridRunbookWorkersListResult {
+  /** Gets or sets a list of hybrid runbook workers. */
+  value?: HybridRunbookWorker[];
+  /** Gets or sets the next link. */
+  nextLink?: string;
+}
+
+/** Definition of RunAs credential to use for hybrid worker. */
+export interface RunAsCredentialAssociationProperty {
+  /** Gets or sets the name of the credential. */
+  name?: string;
+}
+
+/** The parameters supplied to the create hybrid runbook worker group operation. */
+export interface HybridRunbookWorkerGroupCreateOrUpdateParameters {
+  /** Gets or sets the name of the resource. */
+  name?: string;
+  /** Sets the credential of a worker group. */
+  credential?: RunAsCredentialAssociationProperty;
+}
+
+/** The response model for the list hybrid runbook worker groups. */
+export interface HybridRunbookWorkerGroupsListResult {
+  /** Gets or sets a list of hybrid runbook worker groups. */
+  value?: HybridRunbookWorkerGroup[];
+  /** Gets or sets the next link. */
+  nextLink?: string;
+}
+
+/** The runbook property associated with the entity. */
+export interface RunbookAssociationProperty {
+  /** Gets or sets the name of the runbook. */
+  name?: string;
+}
+
+/** The parameters supplied to the create job operation. */
+export interface JobCreateParameters {
+  /** Gets or sets the runbook. */
+  runbook?: RunbookAssociationProperty;
   /** Gets or sets the parameters of the job. */
   parameters?: { [propertyName: string]: string };
-  /** If a new build version of NodeConfiguration is required. */
-  incrementNodeConfigurationBuild?: boolean;
+  /** Gets or sets the runOn which specifies the group name where the job is to be executed. */
+  runOn?: string;
 }
 
 /** The response model for the list job operation. */
-export interface DscCompilationJobListResult {
-  /** Gets or sets a list of Dsc Compilation jobs. */
-  value?: DscCompilationJob[];
-  /** Gets or sets the next link. */
-  nextLink?: string;
-}
-
-/** The response model for the list job stream operation. */
-export interface JobStreamListResult {
-  /** A list of job streams. */
-  value?: JobStream[];
-  /** Gets or sets the next link. */
-  nextLink?: string;
+export interface JobListResultV2 {
+  /** List of jobs. */
+  value?: JobCollectionItem[];
+  /**
+   * The  link to the next page.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly nextLink?: string;
 }
 
 /** Definition of the job stream. */
@@ -377,24 +669,704 @@ export interface JobStream {
   value?: { [propertyName: string]: Record<string, unknown> };
 }
 
-/** Gets the count of nodes by count type */
-export interface NodeCounts {
-  /** Gets an array of counts */
-  value?: NodeCount[];
-  /** Gets the total number of records matching countType criteria. */
-  totalCount?: number;
+/** The response model for the list job stream operation. */
+export interface JobStreamListResult {
+  /** A list of job streams. */
+  value?: JobStream[];
+  /** Gets or sets the next link. */
+  nextLink?: string;
 }
 
-/** Number of nodes based on the Filter */
-export interface NodeCount {
-  /** Gets the name of a count type */
+/** Definition of the job schedule. */
+export interface JobSchedule {
+  /**
+   * Gets the id of the resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly id?: string;
+  /**
+   * Gets the name of the variable.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /**
+   * Resource type
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly type?: string;
+  /** Gets or sets the id of job schedule. */
+  jobScheduleId?: string;
+  /** Gets or sets the schedule. */
+  schedule?: ScheduleAssociationProperty;
+  /** Gets or sets the runbook. */
+  runbook?: RunbookAssociationProperty;
+  /** Gets or sets the hybrid worker group that the scheduled job should run on. */
+  runOn?: string;
+  /** Gets or sets the parameters of the job schedule. */
+  parameters?: { [propertyName: string]: string };
+}
+
+/** The schedule property associated with the entity. */
+export interface ScheduleAssociationProperty {
+  /** Gets or sets the name of the Schedule. */
   name?: string;
-  properties?: NodeCountProperties;
 }
 
-export interface NodeCountProperties {
-  /** Gets the count for the name */
-  count?: number;
+/** The parameters supplied to the create job schedule operation. */
+export interface JobScheduleCreateParameters {
+  /** Gets or sets the schedule. */
+  schedule: ScheduleAssociationProperty;
+  /** Gets or sets the runbook. */
+  runbook: RunbookAssociationProperty;
+  /** Gets or sets the hybrid worker group that the scheduled job should run on. */
+  runOn?: string;
+  /** Gets or sets a list of job properties. */
+  parameters?: { [propertyName: string]: string };
+}
+
+/** The response model for the list job schedule operation. */
+export interface JobScheduleListResult {
+  /** Gets or sets a list of job schedules. */
+  value?: JobSchedule[];
+  /** Gets or sets the next link. */
+  nextLink?: string;
+}
+
+/** Definition of the linked workspace. */
+export interface LinkedWorkspace {
+  /**
+   * Gets the id of the linked workspace.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly id?: string;
+}
+
+/** Definition of the activity. */
+export interface Activity {
+  /** Gets or sets the id of the resource. */
+  id?: string;
+  /**
+   * Gets the name of the activity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /** Gets or sets the user name of the activity. */
+  definition?: string;
+  /** Gets or sets the parameter sets of the activity. */
+  parameterSets?: ActivityParameterSet[];
+  /** Gets or sets the output types of the activity. */
+  outputTypes?: ActivityOutputType[];
+  /** Gets or sets the creation time. */
+  creationTime?: Date;
+  /** Gets or sets the last modified time. */
+  lastModifiedTime?: Date;
+  /** Gets or sets the description. */
+  description?: string;
+}
+
+/** Definition of the activity parameter set. */
+export interface ActivityParameterSet {
+  /** Gets or sets the name of the activity parameter set. */
+  name?: string;
+  /** Gets or sets the parameters of the activity parameter set. */
+  parameters?: ActivityParameter[];
+}
+
+/** Definition of the activity parameter. */
+export interface ActivityParameter {
+  /** Gets or sets the name of the activity parameter. */
+  name?: string;
+  /** Gets or sets the type of the activity parameter. */
+  type?: string;
+  /** Gets or sets a Boolean value that indicates true if the parameter is required. If the value is false, the parameter is optional. */
+  isMandatory?: boolean;
+  /** Gets or sets a Boolean value that indicates true if the parameter is dynamic. */
+  isDynamic?: boolean;
+  /** Gets or sets the position of the activity parameter. */
+  position?: number;
+  /** Gets or sets a Boolean value that indicates true if the parameter can take values from the incoming pipeline objects. This setting is used if the cmdlet must access the complete input object. false indicates that the parameter cannot take values from the complete input object. */
+  valueFromPipeline?: boolean;
+  /** Gets or sets a Boolean value that indicates true if the parameter can be filled from a property of the incoming pipeline object that has the same name as this parameter. false indicates that the parameter cannot be filled from the incoming pipeline object property with the same name. */
+  valueFromPipelineByPropertyName?: boolean;
+  /** Gets or sets a Boolean value that indicates true if the cmdlet parameter accepts all the remaining command-line arguments that are associated with this parameter in the form of an array. false if the cmdlet parameter does not accept all the remaining argument values. */
+  valueFromRemainingArguments?: boolean;
+  /** Gets or sets the description of the activity parameter. */
+  description?: string;
+  /** Gets or sets the validation set of activity parameter. */
+  validationSet?: ActivityParameterValidationSet[];
+}
+
+/** Definition of the activity parameter validation set. */
+export interface ActivityParameterValidationSet {
+  /** Gets or sets the name of the activity parameter validation set member. */
+  memberValue?: string;
+}
+
+/** Definition of the activity output type. */
+export interface ActivityOutputType {
+  /** Gets or sets the name of the activity output type. */
+  name?: string;
+  /** Gets or sets the type of the activity output type. */
+  type?: string;
+}
+
+/** The response model for the list activity operation. */
+export interface ActivityListResult {
+  /** Gets or sets a list of activities. */
+  value?: Activity[];
+  /** Gets or sets the next link. */
+  nextLink?: string;
+}
+
+/** Definition of the content link. */
+export interface ContentLink {
+  /** Gets or sets the uri of the runbook content. */
+  uri?: string;
+  /** Gets or sets the hash. */
+  contentHash?: ContentHash;
+  /** Gets or sets the version of the content. */
+  version?: string;
+}
+
+/** Definition of the module error info type. */
+export interface ModuleErrorInfo {
+  /** Gets or sets the error code. */
+  code?: string;
+  /** Gets or sets the error message. */
+  message?: string;
+}
+
+/** The parameters supplied to the create or update module operation. */
+export interface ModuleCreateOrUpdateParameters {
+  /** Gets or sets name of the resource. */
+  name?: string;
+  /** Gets or sets the location of the resource. */
+  location?: string;
+  /** Gets or sets the tags attached to the resource. */
+  tags?: { [propertyName: string]: string };
+  /** Gets or sets the module content link. */
+  contentLink: ContentLink;
+}
+
+/** The parameters supplied to the update module operation. */
+export interface ModuleUpdateParameters {
+  /** Gets or sets name of the resource. */
+  name?: string;
+  /** Gets or sets the location of the resource. */
+  location?: string;
+  /** Gets or sets the tags attached to the resource. */
+  tags?: { [propertyName: string]: string };
+  /** Gets or sets the module content link. */
+  contentLink?: ContentLink;
+}
+
+/** The response model for the list module operation. */
+export interface ModuleListResult {
+  /** Gets or sets a list of modules. */
+  value?: Module[];
+  /** Gets or sets the next link. */
+  nextLink?: string;
+}
+
+/** The response model for the list fields operation. */
+export interface TypeFieldListResult {
+  /** Gets or sets a list of fields. */
+  value?: TypeField[];
+}
+
+/** Information about a field of a type. */
+export interface TypeField {
+  /** Gets or sets the name of the field. */
+  name?: string;
+  /** Gets or sets the type of the field. */
+  type?: string;
+}
+
+/** The response model for the list of Automation operations */
+export interface OperationListResult {
+  /** List of Automation operations supported by the Automation resource provider. */
+  value?: Operation[];
+}
+
+/** Automation REST API operation */
+export interface Operation {
+  /** Operation name: {provider}/{resource}/{operation} */
+  name?: string;
+  /** Provider, Resource and Operation values */
+  display?: OperationDisplay;
+  /** Origin of the operation. */
+  origin?: string;
+  /** Specification of the service. */
+  serviceSpecification?: OperationPropertiesFormatServiceSpecification;
+}
+
+/** Provider, Resource and Operation values */
+export interface OperationDisplay {
+  /** Service provider: Microsoft.Automation */
+  provider?: string;
+  /** Resource on which the operation is performed: Runbooks, Jobs etc. */
+  resource?: string;
+  /** Operation type: Read, write, delete, etc. */
+  operation?: string;
+  /** Description of the operation. */
+  description?: string;
+}
+
+/** Specification of the service. */
+export interface OperationPropertiesFormatServiceSpecification {
+  /** Operation service specification. */
+  metricSpecifications?: MetricSpecification[];
+  /** Operation log specification. */
+  logSpecifications?: LogSpecification[];
+}
+
+/** Description of metrics specification. */
+export interface MetricSpecification {
+  /** The name of the metric. */
+  name?: string;
+  /** The display name of the metric. */
+  displayName?: string;
+  /** The description of the metric. */
+  displayDescription?: string;
+  /** Units the metric to be displayed in. */
+  unit?: string;
+  /** The aggregation type. */
+  aggregationType?: string;
+  /** List of dimensions. */
+  dimensions?: Dimension[];
+}
+
+/** Dimension of the metric. */
+export interface Dimension {
+  /** The name of the dimension. */
+  name?: string;
+  /** The display name of the dimension. */
+  displayName?: string;
+}
+
+/** Description of logging specification. */
+export interface LogSpecification {
+  /** The name of the specification. */
+  name?: string;
+  /** The display name of the specification. */
+  displayName?: string;
+  /** Duration of the blob. */
+  blobDuration?: string;
+}
+
+/** Graphical Runbook Content */
+export interface GraphicalRunbookContent {
+  /** Raw graphical Runbook content. */
+  rawContent?: RawGraphicalRunbookContent;
+  /** Graphical Runbook content as JSON */
+  graphRunbookJson?: string;
+}
+
+/** Raw Graphical Runbook content */
+export interface RawGraphicalRunbookContent {
+  /** Schema version of the serializer. */
+  schemaVersion?: string;
+  /** Serialized Graphical runbook */
+  runbookDefinition?: string;
+  /** Runbook Type */
+  runbookType?: GraphRunbookType;
+}
+
+/** The parameters supplied to the create or update module operation. */
+export interface PythonPackageCreateParameters {
+  /** Gets or sets the tags attached to the resource. */
+  tags?: { [propertyName: string]: string };
+  /** Gets or sets the module content link. */
+  contentLink: ContentLink;
+}
+
+/** The parameters supplied to the update module operation. */
+export interface PythonPackageUpdateParameters {
+  /** Gets or sets the tags attached to the resource. */
+  tags?: { [propertyName: string]: string };
+}
+
+export interface RunbookDraft {
+  /** Gets or sets whether runbook is in edit mode. */
+  inEdit?: boolean;
+  /** Gets or sets the draft runbook content link. */
+  draftContentLink?: ContentLink;
+  /** Gets or sets the creation time of the runbook draft. */
+  creationTime?: Date;
+  /** Gets or sets the last modified time of the runbook draft. */
+  lastModifiedTime?: Date;
+  /** Gets or sets the runbook draft parameters. */
+  parameters?: { [propertyName: string]: RunbookParameter };
+  /** Gets or sets the runbook output types. */
+  outputTypes?: string[];
+}
+
+/** Definition of the runbook parameter type. */
+export interface RunbookParameter {
+  /** Gets or sets the type of the parameter. */
+  type?: string;
+  /** Gets or sets a Boolean value to indicate whether the parameter is mandatory or not. */
+  isMandatory?: boolean;
+  /** Get or sets the position of the parameter. */
+  position?: number;
+  /** Gets or sets the default value of parameter. */
+  defaultValue?: string;
+}
+
+/** The response model for the undo edit runbook operation. */
+export interface RunbookDraftUndoEditResult {
+  statusCode?: HttpStatusCode;
+  requestId?: string;
+}
+
+/** The parameters supplied to the create or update runbook operation. */
+export interface RunbookCreateOrUpdateParameters {
+  /** Gets or sets the name of the resource. */
+  name?: string;
+  /** Gets or sets the location of the resource. */
+  location?: string;
+  /** Gets or sets the tags attached to the resource. */
+  tags?: { [propertyName: string]: string };
+  /** Gets or sets verbose log option. */
+  logVerbose?: boolean;
+  /** Gets or sets progress log option. */
+  logProgress?: boolean;
+  /** Gets or sets the type of the runbook. */
+  runbookType: RunbookTypeEnum;
+  /** Gets or sets the draft runbook properties. */
+  draft?: RunbookDraft;
+  /** Gets or sets the published runbook content link. */
+  publishContentLink?: ContentLink;
+  /** Gets or sets the description of the runbook. */
+  description?: string;
+  /** Gets or sets the activity-level tracing options of the runbook. */
+  logActivityTrace?: number;
+}
+
+/** The parameters supplied to the update runbook operation. */
+export interface RunbookUpdateParameters {
+  /** Gets or sets the name of the resource. */
+  name?: string;
+  /** Gets or sets the location of the resource. */
+  location?: string;
+  /** Gets or sets the tags attached to the resource. */
+  tags?: { [propertyName: string]: string };
+  /** Gets or sets the description of the runbook. */
+  description?: string;
+  /** Gets or sets verbose log option. */
+  logVerbose?: boolean;
+  /** Gets or sets progress log option. */
+  logProgress?: boolean;
+  /** Gets or sets the activity-level tracing options of the runbook. */
+  logActivityTrace?: number;
+}
+
+/** The response model for the list runbook operation. */
+export interface RunbookListResult {
+  /** Gets or sets a list of runbooks. */
+  value?: Runbook[];
+  /** Gets or sets the next link. */
+  nextLink?: string;
+}
+
+/** The parameters supplied to the create test job operation. */
+export interface TestJobCreateParameters {
+  /** Gets or sets the parameters of the test job. */
+  parameters?: { [propertyName: string]: string };
+  /** Gets or sets the runOn which specifies the group name where the job is to be executed. */
+  runOn?: string;
+}
+
+/** Definition of the test job. */
+export interface TestJob {
+  /** Gets or sets the creation time of the test job. */
+  creationTime?: Date;
+  /** Gets or sets the status of the test job. */
+  status?: string;
+  /** Gets or sets the status details of the test job. */
+  statusDetails?: string;
+  /** Gets or sets the runOn which specifies the group name where the job is to be executed. */
+  runOn?: string;
+  /** Gets or sets the start time of the test job. */
+  startTime?: Date;
+  /** Gets or sets the end time of the test job. */
+  endTime?: Date;
+  /** Gets or sets the exception of the test job. */
+  exception?: string;
+  /** Gets or sets the last modified time of the test job. */
+  lastModifiedTime?: Date;
+  /** Gets or sets the last status modified time of the test job. */
+  lastStatusModifiedTime?: Date;
+  /** Gets or sets the parameters of the test job. */
+  parameters?: { [propertyName: string]: string };
+  /** The activity-level tracing options of the runbook. */
+  logActivityTrace?: number;
+}
+
+/** The parameters supplied to the create or update schedule operation. */
+export interface ScheduleCreateOrUpdateParameters {
+  /** Gets or sets the name of the Schedule. */
+  name: string;
+  /** Gets or sets the description of the schedule. */
+  description?: string;
+  /** Gets or sets the start time of the schedule. */
+  startTime: Date;
+  /** Gets or sets the end time of the schedule. */
+  expiryTime?: Date;
+  /** Gets or sets the interval of the schedule. */
+  interval?: any;
+  /** Gets or sets the frequency of the schedule. */
+  frequency: ScheduleFrequency;
+  /** Gets or sets the time zone of the schedule. */
+  timeZone?: string;
+  /** Gets or sets the AdvancedSchedule. */
+  advancedSchedule?: AdvancedSchedule;
+}
+
+/** The properties of the create Advanced Schedule. */
+export interface AdvancedSchedule {
+  /** Days of the week that the job should execute on. */
+  weekDays?: string[];
+  /** Days of the month that the job should execute on. Must be between 1 and 31. */
+  monthDays?: number[];
+  /** Occurrences of days within a month. */
+  monthlyOccurrences?: AdvancedScheduleMonthlyOccurrence[];
+}
+
+/** The properties of the create advanced schedule monthly occurrence. */
+export interface AdvancedScheduleMonthlyOccurrence {
+  /** Occurrence of the week within the month. Must be between 1 and 5 */
+  occurrence?: number;
+  /** Day of the occurrence. Must be one of monday, tuesday, wednesday, thursday, friday, saturday, sunday. */
+  day?: ScheduleDay;
+}
+
+/** The parameters supplied to the update schedule operation. */
+export interface ScheduleUpdateParameters {
+  /** Gets or sets the name of the Schedule. */
+  name?: string;
+  /** Gets or sets the description of the schedule. */
+  description?: string;
+  /** Gets or sets a value indicating whether this schedule is enabled. */
+  isEnabled?: boolean;
+}
+
+/** The response model for the list schedule operation. */
+export interface ScheduleListResult {
+  /** Gets or sets a list of schedules. */
+  value?: Schedule[];
+  /** Gets or sets the next link. */
+  nextLink?: string;
+}
+
+/** Software update configuration machine run model. */
+export interface SoftwareUpdateConfigurationMachineRun {
+  /**
+   * Name of the software update configuration machine run
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /**
+   * Resource Id of the software update configuration machine run
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly id?: string;
+  /**
+   * name of the updated computer
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly targetComputer?: string;
+  /**
+   * type of the updated computer.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly targetComputerType?: string;
+  /** software update configuration triggered this run */
+  softwareUpdateConfiguration?: UpdateConfigurationNavigation;
+  /**
+   * Status of the software update configuration machine run.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly status?: string;
+  /**
+   * Operating system target of the software update configuration triggered this run
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly osType?: string;
+  /**
+   * correlation id of the software update configuration machine run
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly correlationId?: string;
+  /**
+   * source computer id of the software update configuration machine run
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly sourceComputerId?: string;
+  /**
+   * Start time of the software update configuration machine run.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly startTime?: Date;
+  /**
+   * End time of the software update configuration machine run.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly endTime?: Date;
+  /**
+   * configured duration for the software update configuration run.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly configuredDuration?: string;
+  /** Job associated with the software update configuration machine run */
+  job?: JobNavigation;
+  /**
+   * Creation time of the resource, which only appears in the response.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly creationTime?: Date;
+  /**
+   * createdBy property, which only appears in the response.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly createdBy?: string;
+  /**
+   * Last time resource was modified, which only appears in the response.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly lastModifiedTime?: Date;
+  /**
+   * lastModifiedBy property, which only appears in the response.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly lastModifiedBy?: string;
+  /** Details of provisioning error */
+  error?: ErrorResponse;
+}
+
+/** Software update configuration Run Navigation model. */
+export interface UpdateConfigurationNavigation {
+  /**
+   * Name of the software update configuration triggered the software update configuration run
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+}
+
+/** Software update configuration machine run job navigation properties. */
+export interface JobNavigation {
+  /**
+   * Id of the job associated with the software update configuration run
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly id?: string;
+}
+
+/** result of listing all software update configuration machine runs */
+export interface SoftwareUpdateConfigurationMachineRunListResult {
+  /** outer object returned when listing all software update configuration machine runs */
+  value?: SoftwareUpdateConfigurationMachineRun[];
+  /** link to next page of results. */
+  nextLink?: string;
+}
+
+/** Software update configuration Run properties. */
+export interface SoftwareUpdateConfigurationRun {
+  /**
+   * Name of the software update configuration run.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /**
+   * Resource Id of the software update configuration run
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly id?: string;
+  /** software update configuration triggered this run */
+  softwareUpdateConfiguration?: UpdateConfigurationNavigation;
+  /**
+   * Status of the software update configuration run.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly status?: string;
+  /**
+   * Configured duration for the software update configuration run.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly configuredDuration?: string;
+  /**
+   * Operating system target of the software update configuration triggered this run
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly osType?: string;
+  /**
+   * Start time of the software update configuration run.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly startTime?: Date;
+  /**
+   * End time of the software update configuration run.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly endTime?: Date;
+  /**
+   * Number of computers in the software update configuration run.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly computerCount?: number;
+  /**
+   * Number of computers with failed status.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly failedCount?: number;
+  /**
+   * Creation time of the resource, which only appears in the response.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly creationTime?: Date;
+  /**
+   * CreatedBy property, which only appears in the response.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly createdBy?: string;
+  /**
+   * Last time resource was modified, which only appears in the response.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly lastModifiedTime?: Date;
+  /**
+   * LastModifiedBy property, which only appears in the response.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly lastModifiedBy?: string;
+  /** Software update configuration tasks triggered in this run */
+  tasks?: SoftwareUpdateConfigurationRunTasks;
+}
+
+/** Software update configuration run tasks model. */
+export interface SoftwareUpdateConfigurationRunTasks {
+  /** Pre task properties. */
+  preTask?: SoftwareUpdateConfigurationRunTaskProperties;
+  /** Post task properties. */
+  postTask?: SoftwareUpdateConfigurationRunTaskProperties;
+}
+
+/** Task properties of the software update configuration. */
+export interface SoftwareUpdateConfigurationRunTaskProperties {
+  /** The status of the task. */
+  status?: string;
+  /** The name of the source of the task. */
+  source?: string;
+  /** The job id of the task. */
+  jobId?: string;
+}
+
+/** result of listing all software update configuration runs */
+export interface SoftwareUpdateConfigurationRunListResult {
+  /** outer object returned when listing all software update configuration runs */
+  value?: SoftwareUpdateConfigurationRun[];
+  /** link to next page of results. */
+  nextLink?: string;
 }
 
 /** The parameters supplied to the create or update source control operation. */
@@ -588,630 +1560,6 @@ export interface SourceControlSyncJobStreamById {
   value?: { [propertyName: string]: Record<string, unknown> };
 }
 
-/** The parameters supplied to the update automation account operation. */
-export interface AutomationAccountUpdateParameters {
-  /** Gets or sets the name of the resource. */
-  name?: string;
-  /** Gets or sets the location of the resource. */
-  location?: string;
-  /** Sets the identity property for automation account */
-  identity?: Identity;
-  /** Gets or sets the tags attached to the resource. */
-  tags?: { [propertyName: string]: string };
-  /** Gets or sets account SKU. */
-  sku?: Sku;
-  /** Set the encryption properties for the automation account */
-  encryption?: EncryptionProperties;
-  /** Indicates whether traffic on the non-ARM endpoint (Webhook/Agent) is allowed from the public internet */
-  publicNetworkAccess?: boolean;
-  /** Indicates whether requests using non-AAD authentication are blocked */
-  disableLocalAuth?: boolean;
-}
-
-/** The account SKU. */
-export interface Sku {
-  /** Gets or sets the SKU name of the account. */
-  name: SkuNameEnum;
-  /** Gets or sets the SKU family. */
-  family?: string;
-  /** Gets or sets the SKU capacity. */
-  capacity?: number;
-}
-
-/** The encryption settings for automation account */
-export interface EncryptionProperties {
-  /** Key vault properties. */
-  keyVaultProperties?: KeyVaultProperties;
-  /** Encryption Key Source */
-  keySource?: EncryptionKeySourceType;
-  /** User identity used for CMK. */
-  identity?: EncryptionPropertiesIdentity;
-}
-
-/** Settings concerning key vault encryption for a configuration store. */
-export interface KeyVaultProperties {
-  /** The URI of the key vault key used to encrypt data. */
-  keyvaultUri?: string;
-  /** The name of key used to encrypt data. */
-  keyName?: string;
-  /** The key version of the key used to encrypt data. */
-  keyVersion?: string;
-}
-
-/** User identity used for CMK. */
-export interface EncryptionPropertiesIdentity {
-  /** The user identity used for CMK. It will be an ARM resource id in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'. */
-  userAssignedIdentity?: Record<string, unknown>;
-}
-
-/** Identity for the resource. */
-export interface Identity {
-  /**
-   * The principal ID of resource identity.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly principalId?: string;
-  /**
-   * The tenant ID of resource.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly tenantId?: string;
-  /** The identity type. */
-  type?: ResourceIdentityType;
-  /** The list of user identities associated with the resource. The user identity dictionary key references will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'. */
-  userAssignedIdentities?: {
-    [propertyName: string]: ComponentsSgqdofSchemasIdentityPropertiesUserassignedidentitiesAdditionalproperties;
-  };
-}
-
-export interface ComponentsSgqdofSchemasIdentityPropertiesUserassignedidentitiesAdditionalproperties {
-  /**
-   * The principal id of user assigned identity.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly principalId?: string;
-  /**
-   * The client id of user assigned identity.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly clientId?: string;
-}
-
-/** Metadata pertaining to creation and last modification of the resource. */
-export interface SystemData {
-  /** The identity that created the resource. */
-  createdBy?: string;
-  /** The type of identity that created the resource. */
-  createdByType?: CreatedByType;
-  /** The timestamp of resource creation (UTC). */
-  createdAt?: Date;
-  /** The identity that last modified the resource. */
-  lastModifiedBy?: string;
-  /** The type of identity that last modified the resource. */
-  lastModifiedByType?: CreatedByType;
-  /** The timestamp of resource last modification (UTC) */
-  lastModifiedAt?: Date;
-}
-
-/** The parameters supplied to the create or update automation account operation. */
-export interface AutomationAccountCreateOrUpdateParameters {
-  /** Gets or sets name of the resource. */
-  name?: string;
-  /** Gets or sets the location of the resource. */
-  location?: string;
-  /** Sets the identity property for automation account */
-  identity?: Identity;
-  /** Gets or sets the tags attached to the resource. */
-  tags?: { [propertyName: string]: string };
-  /** Gets or sets account SKU. */
-  sku?: Sku;
-  /** Set the encryption properties for the automation account */
-  encryption?: EncryptionProperties;
-  /** Indicates whether traffic on the non-ARM endpoint (Webhook/Agent) is allowed from the public internet */
-  publicNetworkAccess?: boolean;
-  /** Indicates whether requests using non-AAD authentication are blocked */
-  disableLocalAuth?: boolean;
-}
-
-/** The response model for the list account operation. */
-export interface AutomationAccountListResult {
-  /** Gets or sets list of accounts. */
-  value?: AutomationAccount[];
-  /** Gets or sets the next link. */
-  nextLink?: string;
-}
-
-/** The response model for the list statistics operation. */
-export interface StatisticsListResult {
-  /** Gets or sets a list of statistics. */
-  value?: Statistics[];
-}
-
-/** Definition of the statistic. */
-export interface Statistics {
-  /**
-   * Gets the property value of the statistic.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly counterProperty?: string;
-  /**
-   * Gets the value of the statistic.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly counterValue?: number;
-  /**
-   * Gets the startTime of the statistic.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly startTime?: Date;
-  /**
-   * Gets the endTime of the statistic.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly endTime?: Date;
-  /**
-   * Gets the id.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly id?: string;
-}
-
-/** The response model for the get usage operation. */
-export interface UsageListResult {
-  /** Gets or sets usage. */
-  value?: Usage[];
-}
-
-/** Definition of Usage. */
-export interface Usage {
-  /** Gets or sets the id of the resource. */
-  id?: string;
-  /** Gets or sets the usage counter name. */
-  name?: UsageCounterName;
-  /** Gets or sets the usage unit name. */
-  unit?: string;
-  /** Gets or sets the current usage value. */
-  currentValue?: number;
-  /** Gets or sets max limit. -1 for unlimited */
-  limit?: number;
-  /** Gets or sets the throttle status. */
-  throttleStatus?: string;
-}
-
-/** Definition of usage counter name. */
-export interface UsageCounterName {
-  /** Gets or sets the usage counter name. */
-  value?: string;
-  /** Gets or sets the localized usage counter name. */
-  localizedValue?: string;
-}
-
-export interface KeyListResult {
-  /** Lists the automation keys. */
-  keys?: Key[];
-}
-
-/** Automation key which is used to register a DSC Node */
-export interface Key {
-  /**
-   * Automation key name.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly keyName?: AutomationKeyName;
-  /**
-   * Automation key permissions.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly permissions?: AutomationKeyPermissions;
-  /**
-   * Value of the Automation Key used for registration.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: string;
-}
-
-/** The parameters supplied to the create or update or replace certificate operation. */
-export interface CertificateCreateOrUpdateParameters {
-  /** Gets or sets the name of the certificate. */
-  name: string;
-  /** Gets or sets the base64 encoded value of the certificate. */
-  base64Value: string;
-  /** Gets or sets the description of the certificate. */
-  description?: string;
-  /** Gets or sets the thumbprint of the certificate. */
-  thumbprint?: string;
-  /** Gets or sets the is exportable flag of the certificate. */
-  isExportable?: boolean;
-}
-
-/** The parameters supplied to the update certificate operation. */
-export interface CertificateUpdateParameters {
-  /** Gets or sets the name of the certificate. */
-  name?: string;
-  /** Gets or sets the description of the certificate. */
-  description?: string;
-}
-
-/** The response model for the list certificate operation. */
-export interface CertificateListResult {
-  /** Gets or sets a list of certificates. */
-  value?: Certificate[];
-  /** Gets or sets the next link. */
-  nextLink?: string;
-}
-
-/** The connection type property associated with the entity. */
-export interface ConnectionTypeAssociationProperty {
-  /** Gets or sets the name of the connection type. */
-  name?: string;
-}
-
-/** The parameters supplied to the create or update connection operation. */
-export interface ConnectionCreateOrUpdateParameters {
-  /** Gets or sets the name of the connection. */
-  name: string;
-  /** Gets or sets the description of the connection. */
-  description?: string;
-  /** Gets or sets the connectionType of the connection. */
-  connectionType: ConnectionTypeAssociationProperty;
-  /** Gets or sets the field definition properties of the connection. */
-  fieldDefinitionValues?: { [propertyName: string]: string };
-}
-
-/** The parameters supplied to the update connection operation. */
-export interface ConnectionUpdateParameters {
-  /** Gets or sets the name of the connection. */
-  name?: string;
-  /** Gets or sets the description of the connection. */
-  description?: string;
-  /** Gets or sets the field definition values of the connection. */
-  fieldDefinitionValues?: { [propertyName: string]: string };
-}
-
-/** The response model for the list connection operation. */
-export interface ConnectionListResult {
-  /** Gets or sets a list of connection. */
-  value?: Connection[];
-  /** Gets or sets the next link. */
-  nextLink?: string;
-}
-
-/** Definition of the connection type. */
-export interface ConnectionType {
-  /**
-   * Gets the id of the resource.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly id?: string;
-  /**
-   * Gets the name of the connection type.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly name?: string;
-  /**
-   * Resource type
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly type?: string;
-  /** Gets or sets a Boolean value to indicate if the connection type is global. */
-  isGlobal?: boolean;
-  /**
-   * Gets the field definitions of the connection type.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly fieldDefinitions?: { [propertyName: string]: FieldDefinition };
-  /**
-   * Gets the creation time.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly creationTime?: Date;
-  /** Gets or sets the last modified time. */
-  lastModifiedTime?: Date;
-  /** Gets or sets the description. */
-  description?: string;
-}
-
-/** Definition of the connection fields. */
-export interface FieldDefinition {
-  /** Gets or sets the isEncrypted flag of the connection field definition. */
-  isEncrypted?: boolean;
-  /** Gets or sets the isOptional flag of the connection field definition. */
-  isOptional?: boolean;
-  /** Gets or sets the type of the connection field definition. */
-  type: string;
-}
-
-/** The parameters supplied to the create or update connection type operation. */
-export interface ConnectionTypeCreateOrUpdateParameters {
-  /** Gets or sets the name of the connection type. */
-  name: string;
-  /** Gets or sets a Boolean value to indicate if the connection type is global. */
-  isGlobal?: boolean;
-  /** Gets or sets the field definitions of the connection type. */
-  fieldDefinitions: { [propertyName: string]: FieldDefinition };
-}
-
-/** The response model for the list connection type operation. */
-export interface ConnectionTypeListResult {
-  /** Gets or sets a list of connection types. */
-  value?: ConnectionType[];
-  /** Gets or sets the next link. */
-  nextLink?: string;
-}
-
-/** The parameters supplied to the create or update credential operation. */
-export interface CredentialCreateOrUpdateParameters {
-  /** Gets or sets the name of the credential. */
-  name: string;
-  /** Gets or sets the user name of the credential. */
-  userName: string;
-  /** Gets or sets the password of the credential. */
-  password: string;
-  /** Gets or sets the description of the credential. */
-  description?: string;
-}
-
-/** The parameters supplied to the Update credential operation. */
-export interface CredentialUpdateParameters {
-  /** Gets or sets the name of the credential. */
-  name?: string;
-  /** Gets or sets the user name of the credential. */
-  userName?: string;
-  /** Gets or sets the password of the credential. */
-  password?: string;
-  /** Gets or sets the description of the credential. */
-  description?: string;
-}
-
-/** The response model for the list credential operation. */
-export interface CredentialListResult {
-  /** Gets or sets a list of credentials. */
-  value?: Credential[];
-  /** Gets or sets the next link. */
-  nextLink?: string;
-}
-
-/** Definition of the job schedule. */
-export interface JobSchedule {
-  /**
-   * Gets the id of the resource.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly id?: string;
-  /**
-   * Gets the name of the variable.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly name?: string;
-  /**
-   * Resource type
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly type?: string;
-  /** Gets or sets the id of job schedule. */
-  jobScheduleId?: string;
-  /** Gets or sets the schedule. */
-  schedule?: ScheduleAssociationProperty;
-  /** Gets or sets the runbook. */
-  runbook?: RunbookAssociationProperty;
-  /** Gets or sets the hybrid worker group that the scheduled job should run on. */
-  runOn?: string;
-  /** Gets or sets the parameters of the job schedule. */
-  parameters?: { [propertyName: string]: string };
-}
-
-/** The schedule property associated with the entity. */
-export interface ScheduleAssociationProperty {
-  /** Gets or sets the name of the Schedule. */
-  name?: string;
-}
-
-/** The runbook property associated with the entity. */
-export interface RunbookAssociationProperty {
-  /** Gets or sets the name of the runbook. */
-  name?: string;
-}
-
-/** The parameters supplied to the create job schedule operation. */
-export interface JobScheduleCreateParameters {
-  /** Gets or sets the schedule. */
-  schedule: ScheduleAssociationProperty;
-  /** Gets or sets the runbook. */
-  runbook: RunbookAssociationProperty;
-  /** Gets or sets the hybrid worker group that the scheduled job should run on. */
-  runOn?: string;
-  /** Gets or sets a list of job properties. */
-  parameters?: { [propertyName: string]: string };
-}
-
-/** The response model for the list job schedule operation. */
-export interface JobScheduleListResult {
-  /** Gets or sets a list of job schedules. */
-  value?: JobSchedule[];
-  /** Gets or sets the next link. */
-  nextLink?: string;
-}
-
-/** Definition of the linked workspace. */
-export interface LinkedWorkspace {
-  /**
-   * Gets the id of the linked workspace.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly id?: string;
-}
-
-/** Definition of the activity. */
-export interface Activity {
-  /** Gets or sets the id of the resource. */
-  id?: string;
-  /**
-   * Gets the name of the activity.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly name?: string;
-  /** Gets or sets the user name of the activity. */
-  definition?: string;
-  /** Gets or sets the parameter sets of the activity. */
-  parameterSets?: ActivityParameterSet[];
-  /** Gets or sets the output types of the activity. */
-  outputTypes?: ActivityOutputType[];
-  /** Gets or sets the creation time. */
-  creationTime?: Date;
-  /** Gets or sets the last modified time. */
-  lastModifiedTime?: Date;
-  /** Gets or sets the description. */
-  description?: string;
-}
-
-/** Definition of the activity parameter set. */
-export interface ActivityParameterSet {
-  /** Gets or sets the name of the activity parameter set. */
-  name?: string;
-  /** Gets or sets the parameters of the activity parameter set. */
-  parameters?: ActivityParameter[];
-}
-
-/** Definition of the activity parameter. */
-export interface ActivityParameter {
-  /** Gets or sets the name of the activity parameter. */
-  name?: string;
-  /** Gets or sets the type of the activity parameter. */
-  type?: string;
-  /** Gets or sets a Boolean value that indicates true if the parameter is required. If the value is false, the parameter is optional. */
-  isMandatory?: boolean;
-  /** Gets or sets a Boolean value that indicates true if the parameter is dynamic. */
-  isDynamic?: boolean;
-  /** Gets or sets the position of the activity parameter. */
-  position?: number;
-  /** Gets or sets a Boolean value that indicates true if the parameter can take values from the incoming pipeline objects. This setting is used if the cmdlet must access the complete input object. false indicates that the parameter cannot take values from the complete input object. */
-  valueFromPipeline?: boolean;
-  /** Gets or sets a Boolean value that indicates true if the parameter can be filled from a property of the incoming pipeline object that has the same name as this parameter. false indicates that the parameter cannot be filled from the incoming pipeline object property with the same name. */
-  valueFromPipelineByPropertyName?: boolean;
-  /** Gets or sets a Boolean value that indicates true if the cmdlet parameter accepts all the remaining command-line arguments that are associated with this parameter in the form of an array. false if the cmdlet parameter does not accept all the remaining argument values. */
-  valueFromRemainingArguments?: boolean;
-  /** Gets or sets the description of the activity parameter. */
-  description?: string;
-  /** Gets or sets the validation set of activity parameter. */
-  validationSet?: ActivityParameterValidationSet[];
-}
-
-/** Definition of the activity parameter validation set. */
-export interface ActivityParameterValidationSet {
-  /** Gets or sets the name of the activity parameter validation set member. */
-  memberValue?: string;
-}
-
-/** Definition of the activity output type. */
-export interface ActivityOutputType {
-  /** Gets or sets the name of the activity output type. */
-  name?: string;
-  /** Gets or sets the type of the activity output type. */
-  type?: string;
-}
-
-/** The response model for the list activity operation. */
-export interface ActivityListResult {
-  /** Gets or sets a list of activities. */
-  value?: Activity[];
-  /** Gets or sets the next link. */
-  nextLink?: string;
-}
-
-/** The parameters supplied to the create or update module operation. */
-export interface ModuleCreateOrUpdateParameters {
-  /** Gets or sets name of the resource. */
-  name?: string;
-  /** Gets or sets the location of the resource. */
-  location?: string;
-  /** Gets or sets the tags attached to the resource. */
-  tags?: { [propertyName: string]: string };
-  /** Gets or sets the module content link. */
-  contentLink: ContentLink;
-}
-
-/** The parameters supplied to the update module operation. */
-export interface ModuleUpdateParameters {
-  /** Gets or sets name of the resource. */
-  name?: string;
-  /** Gets or sets the location of the resource. */
-  location?: string;
-  /** Gets or sets the tags attached to the resource. */
-  tags?: { [propertyName: string]: string };
-  /** Gets or sets the module content link. */
-  contentLink?: ContentLink;
-}
-
-/** The response model for the list fields operation. */
-export interface TypeFieldListResult {
-  /** Gets or sets a list of fields. */
-  value?: TypeField[];
-}
-
-/** Information about a field of a type. */
-export interface TypeField {
-  /** Gets or sets the name of the field. */
-  name?: string;
-  /** Gets or sets the type of the field. */
-  type?: string;
-}
-
-/** The parameters supplied to the create or update schedule operation. */
-export interface ScheduleCreateOrUpdateParameters {
-  /** Gets or sets the name of the Schedule. */
-  name: string;
-  /** Gets or sets the description of the schedule. */
-  description?: string;
-  /** Gets or sets the start time of the schedule. */
-  startTime: Date;
-  /** Gets or sets the end time of the schedule. */
-  expiryTime?: Date;
-  /** Gets or sets the interval of the schedule. */
-  interval?: any;
-  /** Gets or sets the frequency of the schedule. */
-  frequency: ScheduleFrequency;
-  /** Gets or sets the time zone of the schedule. */
-  timeZone?: string;
-  /** Gets or sets the AdvancedSchedule. */
-  advancedSchedule?: AdvancedSchedule;
-}
-
-/** The properties of the create Advanced Schedule. */
-export interface AdvancedSchedule {
-  /** Days of the week that the job should execute on. */
-  weekDays?: string[];
-  /** Days of the month that the job should execute on. Must be between 1 and 31. */
-  monthDays?: number[];
-  /** Occurrences of days within a month. */
-  monthlyOccurrences?: AdvancedScheduleMonthlyOccurrence[];
-}
-
-/** The properties of the create advanced schedule monthly occurrence. */
-export interface AdvancedScheduleMonthlyOccurrence {
-  /** Occurrence of the week within the month. Must be between 1 and 5 */
-  occurrence?: number;
-  /** Day of the occurrence. Must be one of monday, tuesday, wednesday, thursday, friday, saturday, sunday. */
-  day?: ScheduleDay;
-}
-
-/** The parameters supplied to the update schedule operation. */
-export interface ScheduleUpdateParameters {
-  /** Gets or sets the name of the Schedule. */
-  name?: string;
-  /** Gets or sets the description of the schedule. */
-  description?: string;
-  /** Gets or sets a value indicating whether this schedule is enabled. */
-  isEnabled?: boolean;
-}
-
-/** The response model for the list schedule operation. */
-export interface ScheduleListResult {
-  /** Gets or sets a list of schedules. */
-  value?: Schedule[];
-  /** Gets or sets the next link. */
-  nextLink?: string;
-}
-
 /** The parameters supplied to the create or update variable operation. */
 export interface VariableCreateOrUpdateParameters {
   /** Gets or sets the name of the variable. */
@@ -1242,806 +1590,12 @@ export interface VariableListResult {
   nextLink?: string;
 }
 
-export interface WatcherUpdateParameters {
-  /** Gets or sets the name of the resource. */
+/** The dsc extensionHandler property associated with the node */
+export interface DscNodeExtensionHandlerAssociationProperty {
+  /** Gets or sets the name of the extension handler. */
   name?: string;
-  /** Gets or sets the frequency at which the watcher is invoked. */
-  executionFrequencyInSeconds?: number;
-}
-
-/** The response model for the list watcher operation. */
-export interface WatcherListResult {
-  /** Gets or sets a list of watchers. */
-  value?: Watcher[];
-  /** Gets or sets the next link. */
-  nextLink?: string;
-}
-
-/** Definition of the configuration parameter type. */
-export interface DscConfigurationParameter {
-  /** Gets or sets the type of the parameter. */
-  type?: string;
-  /** Gets or sets a Boolean value to indicate whether the parameter is mandatory or not. */
-  isMandatory?: boolean;
-  /** Get or sets the position of the parameter. */
-  position?: number;
-  /** Gets or sets the default value of parameter. */
-  defaultValue?: string;
-}
-
-/** The parameters supplied to the create or update configuration operation. */
-export interface DscConfigurationCreateOrUpdateParameters {
-  /** Gets or sets name of the resource. */
-  name?: string;
-  /** Gets or sets the location of the resource. */
-  location?: string;
-  /** Gets or sets the tags attached to the resource. */
-  tags?: { [propertyName: string]: string };
-  /** Gets or sets verbose log option. */
-  logVerbose?: boolean;
-  /** Gets or sets progress log option. */
-  logProgress?: boolean;
-  /** Gets or sets the source. */
-  source: ContentSource;
-  /** Gets or sets the configuration parameters. */
-  parameters?: { [propertyName: string]: DscConfigurationParameter };
-  /** Gets or sets the description of the configuration. */
-  description?: string;
-}
-
-/** The parameters supplied to the create or update configuration operation. */
-export interface DscConfigurationUpdateParameters {
-  /** Gets or sets name of the resource. */
-  name?: string;
-  /** Gets or sets the tags attached to the resource. */
-  tags?: { [propertyName: string]: string };
-  /** Gets or sets verbose log option. */
-  logVerbose?: boolean;
-  /** Gets or sets progress log option. */
-  logProgress?: boolean;
-  /** Gets or sets the source. */
-  source?: ContentSource;
-  /** Gets or sets the configuration parameters. */
-  parameters?: { [propertyName: string]: DscConfigurationParameter };
-  /** Gets or sets the description of the configuration. */
-  description?: string;
-}
-
-/** The response model for the list configuration operation. */
-export interface DscConfigurationListResult {
-  /** Gets or sets a list of configurations. */
-  value?: DscConfiguration[];
-  /** Gets or sets the next link. */
-  nextLink?: string;
-  /** Gets the total number of configurations matching filter criteria. */
-  totalCount?: number;
-}
-
-/** The parameters supplied to the create job operation. */
-export interface JobCreateParameters {
-  /** Gets or sets the runbook. */
-  runbook?: RunbookAssociationProperty;
-  /** Gets or sets the parameters of the job. */
-  parameters?: { [propertyName: string]: string };
-  /** Gets or sets the runOn which specifies the group name where the job is to be executed. */
-  runOn?: string;
-}
-
-/** The response model for the list job operation. */
-export interface JobListResultV2 {
-  /** List of jobs. */
-  value?: JobCollectionItem[];
-  /**
-   * The  link to the next page.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** The response model for the list of Automation operations */
-export interface OperationListResult {
-  /** List of Automation operations supported by the Automation resource provider. */
-  value?: Operation[];
-}
-
-/** Automation REST API operation */
-export interface Operation {
-  /** Operation name: {provider}/{resource}/{operation} */
-  name?: string;
-  /** Provider, Resource and Operation values */
-  display?: OperationDisplay;
-}
-
-/** Provider, Resource and Operation values */
-export interface OperationDisplay {
-  /** Service provider: Microsoft.Automation */
-  provider?: string;
-  /** Resource on which the operation is performed: Runbooks, Jobs etc. */
-  resource?: string;
-  /** Operation type: Read, write, delete, etc. */
-  operation?: string;
-}
-
-/** Graphical Runbook Content */
-export interface GraphicalRunbookContent {
-  /** Raw graphical Runbook content. */
-  rawContent?: RawGraphicalRunbookContent;
-  /** Graphical Runbook content as JSON */
-  graphRunbookJson?: string;
-}
-
-/** Raw Graphical Runbook content */
-export interface RawGraphicalRunbookContent {
-  /** Schema version of the serializer. */
-  schemaVersion?: string;
-  /** Serialized Graphical runbook */
-  runbookDefinition?: string;
-  /** Runbook Type */
-  runbookType?: GraphRunbookType;
-}
-
-/** Software update configuration properties. */
-export interface SoftwareUpdateConfiguration {
-  /**
-   * Resource name.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly name?: string;
-  /**
-   * Resource Id.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly id?: string;
-  /**
-   * Resource type
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly type?: string;
-  /** update specific properties for the Software update configuration */
-  updateConfiguration: UpdateConfiguration;
-  /** Schedule information for the Software update configuration */
-  scheduleInfo: SUCScheduleProperties;
-  /**
-   * Provisioning state for the software update configuration, which only appears in the response.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: string;
-  /** Details of provisioning error */
-  error?: ErrorResponse;
-  /**
-   * Creation time of the resource, which only appears in the response.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly creationTime?: Date;
-  /**
-   * CreatedBy property, which only appears in the response.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly createdBy?: string;
-  /**
-   * Last time resource was modified, which only appears in the response.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly lastModifiedTime?: Date;
-  /**
-   * LastModifiedBy property, which only appears in the response.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly lastModifiedBy?: string;
-  /** Tasks information for the Software update configuration. */
-  tasks?: SoftwareUpdateConfigurationTasks;
-}
-
-/** Update specific properties of the software update configuration. */
-export interface UpdateConfiguration {
-  /** operating system of target machines */
-  operatingSystem: OperatingSystemType;
-  /** Windows specific update configuration. */
-  windows?: WindowsProperties;
-  /** Linux specific update configuration. */
-  linux?: LinuxProperties;
-  /** Maximum time allowed for the software update configuration run. Duration needs to be specified using the format PT[n]H[n]M[n]S as per ISO8601 */
-  duration?: string;
-  /** List of azure resource Ids for azure virtual machines targeted by the software update configuration. */
-  azureVirtualMachines?: string[];
-  /** List of names of non-azure machines targeted by the software update configuration. */
-  nonAzureComputerNames?: string[];
-  /** Group targets for the software update configuration. */
-  targets?: TargetProperties;
-}
-
-/** Windows specific update configuration. */
-export interface WindowsProperties {
-  /** Update classification included in the software update configuration. A comma separated string with required values */
-  includedUpdateClassifications?: WindowsUpdateClasses;
-  /** KB numbers excluded from the software update configuration. */
-  excludedKbNumbers?: string[];
-  /** KB numbers included from the software update configuration. */
-  includedKbNumbers?: string[];
-  /** Reboot setting for the software update configuration. */
-  rebootSetting?: string;
-}
-
-/** Linux specific update configuration. */
-export interface LinuxProperties {
-  /** Update classifications included in the software update configuration. */
-  includedPackageClassifications?: LinuxUpdateClasses;
-  /** packages excluded from the software update configuration. */
-  excludedPackageNameMasks?: string[];
-  /** packages included from the software update configuration. */
-  includedPackageNameMasks?: string[];
-  /** Reboot setting for the software update configuration. */
-  rebootSetting?: string;
-}
-
-/** Group specific to the update configuration. */
-export interface TargetProperties {
-  /** List of Azure queries in the software update configuration. */
-  azureQueries?: AzureQueryProperties[];
-  /** List of non Azure queries in the software update configuration. */
-  nonAzureQueries?: NonAzureQueryProperties[];
-}
-
-/** Azure query for the update configuration. */
-export interface AzureQueryProperties {
-  /** List of Subscription or Resource Group ARM Ids. */
-  scope?: string[];
-  /** List of locations to scope the query to. */
-  locations?: string[];
-  /** Tag settings for the VM. */
-  tagSettings?: TagSettingsProperties;
-}
-
-/** Tag filter information for the VM. */
-export interface TagSettingsProperties {
-  /** Dictionary of tags with its list of values. */
-  tags?: { [propertyName: string]: string[] };
-  /** Filter VMs by Any or All specified tags. */
-  filterOperator?: TagOperators;
-}
-
-/** Non Azure query for the update configuration. */
-export interface NonAzureQueryProperties {
-  /** Log Analytics Saved Search name. */
-  functionAlias?: string;
-  /** Workspace Id for Log Analytics in which the saved Search is resided. */
-  workspaceId?: string;
-}
-
-/** Definition of schedule parameters. */
-export interface SUCScheduleProperties {
-  /** Gets or sets the start time of the schedule. */
-  startTime?: Date;
-  /**
-   * Gets the start time's offset in minutes.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly startTimeOffsetMinutes?: number;
-  /** Gets or sets the end time of the schedule. */
-  expiryTime?: Date;
-  /** Gets or sets the expiry time's offset in minutes. */
-  expiryTimeOffsetMinutes?: number;
-  /** Gets or sets a value indicating whether this schedule is enabled. */
-  isEnabled?: boolean;
-  /** Gets or sets the next run time of the schedule. */
-  nextRun?: Date;
-  /** Gets or sets the next run time's offset in minutes. */
-  nextRunOffsetMinutes?: number;
-  /** Gets or sets the interval of the schedule. */
-  interval?: number;
-  /** Gets or sets the frequency of the schedule. */
-  frequency?: ScheduleFrequency;
-  /** Gets or sets the time zone of the schedule. */
-  timeZone?: string;
-  /** Gets or sets the advanced schedule. */
-  advancedSchedule?: AdvancedSchedule;
-  /** Gets or sets the creation time. */
-  creationTime?: Date;
-  /** Gets or sets the last modified time. */
-  lastModifiedTime?: Date;
-  /** Gets or sets the description. */
-  description?: string;
-}
-
-/** Task properties of the software update configuration. */
-export interface SoftwareUpdateConfigurationTasks {
-  /** Pre task properties. */
-  preTask?: TaskProperties;
-  /** Post task properties. */
-  postTask?: TaskProperties;
-}
-
-/** Task properties of the software update configuration. */
-export interface TaskProperties {
-  /** Gets or sets the parameters of the task. */
-  parameters?: { [propertyName: string]: string };
-  /** Gets or sets the name of the runbook. */
-  source?: string;
-}
-
-/** result of listing all software update configuration */
-export interface SoftwareUpdateConfigurationListResult {
-  /** outer object returned when listing all software update configurations */
-  value?: SoftwareUpdateConfigurationCollectionItem[];
-}
-
-/** Software update configuration collection item properties. */
-export interface SoftwareUpdateConfigurationCollectionItem {
-  /**
-   * Name of the software update configuration.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly name?: string;
-  /**
-   * Resource Id of the software update configuration
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly id?: string;
-  /** Update specific properties of the software update configuration. */
-  updateConfiguration?: UpdateConfiguration;
-  /** Pre and Post Tasks defined */
-  tasks?: SoftwareUpdateConfigurationTasks;
-  /** execution frequency of the schedule associated with the software update configuration */
-  frequency?: ScheduleFrequency;
-  /** the start time of the update. */
-  startTime?: Date;
-  /**
-   * Creation time of the software update configuration, which only appears in the response.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly creationTime?: Date;
-  /**
-   * Last time software update configuration was modified, which only appears in the response.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly lastModifiedTime?: Date;
-  /**
-   * Provisioning state for the software update configuration, which only appears in the response.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: string;
-  /** ext run time of the update. */
-  nextRun?: Date;
-}
-
-/** Software update configuration Run properties. */
-export interface SoftwareUpdateConfigurationRun {
-  /**
-   * Name of the software update configuration run.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly name?: string;
-  /**
-   * Resource Id of the software update configuration run
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly id?: string;
-  /** software update configuration triggered this run */
-  softwareUpdateConfiguration?: UpdateConfigurationNavigation;
-  /**
-   * Status of the software update configuration run.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly status?: string;
-  /**
-   * Configured duration for the software update configuration run.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly configuredDuration?: string;
-  /**
-   * Operating system target of the software update configuration triggered this run
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly osType?: string;
-  /**
-   * Start time of the software update configuration run.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly startTime?: Date;
-  /**
-   * End time of the software update configuration run.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly endTime?: Date;
-  /**
-   * Number of computers in the software update configuration run.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly computerCount?: number;
-  /**
-   * Number of computers with failed status.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly failedCount?: number;
-  /**
-   * Creation time of the resource, which only appears in the response.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly creationTime?: Date;
-  /**
-   * CreatedBy property, which only appears in the response.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly createdBy?: string;
-  /**
-   * Last time resource was modified, which only appears in the response.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly lastModifiedTime?: Date;
-  /**
-   * LastModifiedBy property, which only appears in the response.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly lastModifiedBy?: string;
-  /** Software update configuration tasks triggered in this run */
-  tasks?: SoftwareUpdateConfigurationRunTasks;
-}
-
-/** Software update configuration Run Navigation model. */
-export interface UpdateConfigurationNavigation {
-  /**
-   * Name of the software update configuration triggered the software update configuration run
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly name?: string;
-}
-
-/** Software update configuration run tasks model. */
-export interface SoftwareUpdateConfigurationRunTasks {
-  /** Pre task properties. */
-  preTask?: SoftwareUpdateConfigurationRunTaskProperties;
-  /** Post task properties. */
-  postTask?: SoftwareUpdateConfigurationRunTaskProperties;
-}
-
-/** Task properties of the software update configuration. */
-export interface SoftwareUpdateConfigurationRunTaskProperties {
-  /** The status of the task. */
-  status?: string;
-  /** The name of the source of the task. */
-  source?: string;
-  /** The job id of the task. */
-  jobId?: string;
-}
-
-/** result of listing all software update configuration runs */
-export interface SoftwareUpdateConfigurationRunListResult {
-  /** outer object returned when listing all software update configuration runs */
-  value?: SoftwareUpdateConfigurationRun[];
-  /** link to next page of results. */
-  nextLink?: string;
-}
-
-/** Software update configuration machine run model. */
-export interface SoftwareUpdateConfigurationMachineRun {
-  /**
-   * Name of the software update configuration machine run
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly name?: string;
-  /**
-   * Resource Id of the software update configuration machine run
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly id?: string;
-  /**
-   * name of the updated computer
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly targetComputer?: string;
-  /**
-   * type of the updated computer.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly targetComputerType?: string;
-  /** software update configuration triggered this run */
-  softwareUpdateConfiguration?: UpdateConfigurationNavigation;
-  /**
-   * Status of the software update configuration machine run.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly status?: string;
-  /**
-   * Operating system target of the software update configuration triggered this run
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly osType?: string;
-  /**
-   * correlation id of the software update configuration machine run
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly correlationId?: string;
-  /**
-   * source computer id of the software update configuration machine run
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly sourceComputerId?: string;
-  /**
-   * Start time of the software update configuration machine run.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly startTime?: Date;
-  /**
-   * End time of the software update configuration machine run.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly endTime?: Date;
-  /**
-   * configured duration for the software update configuration run.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly configuredDuration?: string;
-  /** Job associated with the software update configuration machine run */
-  job?: JobNavigation;
-  /**
-   * Creation time of the resource, which only appears in the response.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly creationTime?: Date;
-  /**
-   * createdBy property, which only appears in the response.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly createdBy?: string;
-  /**
-   * Last time resource was modified, which only appears in the response.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly lastModifiedTime?: Date;
-  /**
-   * lastModifiedBy property, which only appears in the response.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly lastModifiedBy?: string;
-  /** Details of provisioning error */
-  error?: ErrorResponse;
-}
-
-/** Software update configuration machine run job navigation properties. */
-export interface JobNavigation {
-  /**
-   * Id of the job associated with the software update configuration run
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly id?: string;
-}
-
-/** result of listing all software update configuration machine runs */
-export interface SoftwareUpdateConfigurationMachineRunListResult {
-  /** outer object returned when listing all software update configuration machine runs */
-  value?: SoftwareUpdateConfigurationMachineRun[];
-  /** link to next page of results. */
-  nextLink?: string;
-}
-
-export interface RunbookDraft {
-  /** Gets or sets whether runbook is in edit mode. */
-  inEdit?: boolean;
-  /** Gets or sets the draft runbook content link. */
-  draftContentLink?: ContentLink;
-  /** Gets or sets the creation time of the runbook draft. */
-  creationTime?: Date;
-  /** Gets or sets the last modified time of the runbook draft. */
-  lastModifiedTime?: Date;
-  /** Gets or sets the runbook draft parameters. */
-  parameters?: { [propertyName: string]: RunbookParameter };
-  /** Gets or sets the runbook output types. */
-  outputTypes?: string[];
-}
-
-/** Definition of the runbook parameter type. */
-export interface RunbookParameter {
-  /** Gets or sets the type of the parameter. */
-  type?: string;
-  /** Gets or sets a Boolean value to indicate whether the parameter is mandatory or not. */
-  isMandatory?: boolean;
-  /** Get or sets the position of the parameter. */
-  position?: number;
-  /** Gets or sets the default value of parameter. */
-  defaultValue?: string;
-}
-
-/** The response model for the undo edit runbook operation. */
-export interface RunbookDraftUndoEditResult {
-  statusCode?: HttpStatusCode;
-  requestId?: string;
-}
-
-/** The parameters supplied to the create or update runbook operation. */
-export interface RunbookCreateOrUpdateParameters {
-  /** Gets or sets the name of the resource. */
-  name?: string;
-  /** Gets or sets the location of the resource. */
-  location?: string;
-  /** Gets or sets the tags attached to the resource. */
-  tags?: { [propertyName: string]: string };
-  /** Gets or sets verbose log option. */
-  logVerbose?: boolean;
-  /** Gets or sets progress log option. */
-  logProgress?: boolean;
-  /** Gets or sets the type of the runbook. */
-  runbookType: RunbookTypeEnum;
-  /** Gets or sets the draft runbook properties. */
-  draft?: RunbookDraft;
-  /** Gets or sets the published runbook content link. */
-  publishContentLink?: ContentLink;
-  /** Gets or sets the description of the runbook. */
-  description?: string;
-  /** Gets or sets the activity-level tracing options of the runbook. */
-  logActivityTrace?: number;
-}
-
-/** The parameters supplied to the update runbook operation. */
-export interface RunbookUpdateParameters {
-  /** Gets or sets the name of the resource. */
-  name?: string;
-  /** Gets or sets the location of the resource. */
-  location?: string;
-  /** Gets or sets the tags attached to the resource. */
-  tags?: { [propertyName: string]: string };
-  /** Gets or sets the description of the runbook. */
-  description?: string;
-  /** Gets or sets verbose log option. */
-  logVerbose?: boolean;
-  /** Gets or sets progress log option. */
-  logProgress?: boolean;
-  /** Gets or sets the activity-level tracing options of the runbook. */
-  logActivityTrace?: number;
-}
-
-/** The response model for the list runbook operation. */
-export interface RunbookListResult {
-  /** Gets or sets a list of runbooks. */
-  value?: Runbook[];
-  /** Gets or sets the next link. */
-  nextLink?: string;
-}
-
-/** The parameters supplied to the create test job operation. */
-export interface TestJobCreateParameters {
-  /** Gets or sets the parameters of the test job. */
-  parameters?: { [propertyName: string]: string };
-  /** Gets or sets the runOn which specifies the group name where the job is to be executed. */
-  runOn?: string;
-}
-
-/** Definition of the test job. */
-export interface TestJob {
-  /** Gets or sets the creation time of the test job. */
-  creationTime?: Date;
-  /** Gets or sets the status of the test job. */
-  status?: string;
-  /** Gets or sets the status details of the test job. */
-  statusDetails?: string;
-  /** Gets or sets the runOn which specifies the group name where the job is to be executed. */
-  runOn?: string;
-  /** Gets or sets the start time of the test job. */
-  startTime?: Date;
-  /** Gets or sets the end time of the test job. */
-  endTime?: Date;
-  /** Gets or sets the exception of the test job. */
-  exception?: string;
-  /** Gets or sets the last modified time of the test job. */
-  lastModifiedTime?: Date;
-  /** Gets or sets the last status modified time of the test job. */
-  lastStatusModifiedTime?: Date;
-  /** Gets or sets the parameters of the test job. */
-  parameters?: { [propertyName: string]: string };
-  /** The activity-level tracing options of the runbook. */
-  logActivityTrace?: number;
-}
-
-/** The parameters supplied to the create or update webhook operation. */
-export interface WebhookCreateOrUpdateParameters {
-  /** Gets or sets the name of the webhook. */
-  name: string;
-  /** Gets or sets the value of the enabled flag of webhook. */
-  isEnabled?: boolean;
-  /** Gets or sets the uri. */
-  uri?: string;
-  /** Gets or sets the expiry time. */
-  expiryTime?: Date;
-  /** Gets or sets the parameters of the job. */
-  parameters?: { [propertyName: string]: string };
-  /** Gets or sets the runbook. */
-  runbook?: RunbookAssociationProperty;
-  /** Gets or sets the name of the hybrid worker group the webhook job will run on. */
-  runOn?: string;
-}
-
-/** The parameters supplied to the update webhook operation. */
-export interface WebhookUpdateParameters {
-  /** Gets or sets the name of the webhook. */
-  name?: string;
-  /** Gets or sets the value of the enabled flag of webhook. */
-  isEnabled?: boolean;
-  /** Gets or sets the name of the hybrid worker group the webhook job will run on. */
-  runOn?: string;
-  /** Gets or sets the parameters of the job. */
-  parameters?: { [propertyName: string]: string };
-  /** Gets or sets the description of the webhook. */
-  description?: string;
-}
-
-/** The response model for the list webhook operation. */
-export interface WebhookListResult {
-  /** Gets or sets a list of webhooks. */
-  value?: Webhook[];
-  /** Gets or sets the next link. */
-  nextLink?: string;
-}
-
-/** The parameters supplied to the create hybrid runbook worker operation. */
-export interface HybridRunbookWorkerCreateParameters {
-  /** Gets or sets the name of the resource. */
-  name?: string;
-  /** Azure Resource Manager Id for a virtual machine. */
-  vmResourceId?: string;
-}
-
-/** Parameters supplied to move hybrid worker operation. */
-export interface HybridRunbookWorkerMoveParameters {
-  /** Gets or sets the target hybrid runbook worker group. */
-  hybridRunbookWorkerGroupName?: string;
-}
-
-/** The response model for the list hybrid runbook workers. */
-export interface HybridRunbookWorkersListResult {
-  /** Gets or sets a list of hybrid runbook workers. */
-  value?: HybridRunbookWorker[];
-  /** Gets or sets the next link. */
-  nextLink?: string;
-}
-
-/** The response model for the list deleted automation account. */
-export interface DeletedAutomationAccountListResult {
-  /** Gets or sets the list of deleted automation accounts. */
-  value?: DeletedAutomationAccount[];
-}
-
-/** Definition of the deleted automation account type. */
-export interface DeletedAutomationAccount {
-  /** The resource id. */
-  id?: string;
-  /** Gets or sets name of the resource. */
-  name?: string;
-  /** The resource type. */
-  type?: string;
-  /** Gets or sets the location of the resource. */
-  location?: string;
-  /** Gets or sets the Automation Account Resource Id. */
-  automationAccountResourceId?: string;
-  /** Gets or sets the Automation Account Id. */
-  automationAccountId?: string;
-  /** Gets or sets the location of the resource. */
-  locationPropertiesLocation?: string;
-  /**
-   * Gets the deletion time.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly deletionTime?: Date;
-}
-
-/** Definition of RunAs credential to use for hybrid worker. */
-export interface RunAsCredentialAssociationProperty {
-  /** Gets or sets the name of the credential. */
-  name?: string;
-}
-
-/** The parameters supplied to the create hybrid runbook worker group operation. */
-export interface HybridRunbookWorkerGroupCreateOrUpdateParameters {
-  /** Gets or sets the name of the resource. */
-  name?: string;
-  /** Sets the credential of a worker group. */
-  credential?: RunAsCredentialAssociationProperty;
-}
-
-/** The response model for the list hybrid runbook worker groups. */
-export interface HybridRunbookWorkerGroupsListResult {
-  /** Gets or sets a list of hybrid runbook worker groups. */
-  value?: HybridRunbookWorkerGroup[];
-  /** Gets or sets the next link. */
-  nextLink?: string;
+  /** Gets or sets the version of the extension handler. */
+  version?: string;
 }
 
 /** The parameters supplied to the create or update draft runbook properties. */
@@ -2075,46 +1629,6 @@ export interface TrackedResource extends Resource {
   tags?: { [propertyName: string]: string };
   /** The Azure Region where the resource lives */
   location?: string;
-}
-
-/** Definition of the watcher type. */
-export interface Watcher extends Resource {
-  /** Gets or sets the etag of the resource. */
-  etag?: string;
-  /** Resource tags. */
-  tags?: { [propertyName: string]: string };
-  /** The geo-location where the resource lives */
-  location?: string;
-  /** Gets or sets the frequency at which the watcher is invoked. */
-  executionFrequencyInSeconds?: number;
-  /** Gets or sets the name of the script the watcher is attached to, i.e. the name of an existing runbook. */
-  scriptName?: string;
-  /** Gets or sets the parameters of the script. */
-  scriptParameters?: { [propertyName: string]: string };
-  /** Gets or sets the name of the hybrid worker group the watcher will run on. */
-  scriptRunOn?: string;
-  /**
-   * Gets the current status of the watcher.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly status?: string;
-  /**
-   * Gets or sets the creation time.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly creationTime?: Date;
-  /**
-   * Gets or sets the last modified time.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly lastModifiedTime?: Date;
-  /**
-   * Details of the user who last modified the watcher.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly lastModifiedBy?: string;
-  /** Gets or sets the description. */
-  description?: string;
 }
 
 /** Definition of hybrid runbook worker. */
@@ -2159,138 +1673,6 @@ export interface PrivateEndpointConnection extends ProxyResource {
   groupIds?: string[];
   /** Connection State of the Private Endpoint Connection. */
   privateLinkServiceConnectionState?: PrivateLinkServiceConnectionStateProperty;
-}
-
-/** A private link resource */
-export interface PrivateLinkResource extends ProxyResource {
-  /**
-   * The private link resource group id.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly groupId?: string;
-  /**
-   * The private link resource required member names.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly requiredMembers?: string[];
-}
-
-/** Definition of a DscNode */
-export interface DscNode extends ProxyResource {
-  /** Gets or sets the last seen time of the node. */
-  lastSeen?: Date;
-  /** Gets or sets the registration time of the node. */
-  registrationTime?: Date;
-  /** Gets or sets the ip of the node. */
-  ip?: string;
-  /** Gets or sets the account id of the node. */
-  accountId?: string;
-  /** Gets or sets the status of the node. */
-  status?: string;
-  /** Gets or sets the node id. */
-  nodeId?: string;
-  /** Gets or sets the etag of the resource. */
-  etag?: string;
-  /** Gets the total number of records matching filter criteria. */
-  totalCount?: number;
-  /** Gets or sets the list of extensionHandler properties for a Node. */
-  extensionHandler?: DscNodeExtensionHandlerAssociationProperty[];
-  /** Gets or sets the name of the dsc node configuration. */
-  namePropertiesNodeConfigurationName?: string;
-}
-
-/** Definition of the dsc node configuration. */
-export interface DscNodeConfiguration extends ProxyResource {
-  /** Gets or sets the last modified time. */
-  lastModifiedTime?: Date;
-  /** Gets or sets creation time. */
-  creationTime?: Date;
-  /** Gets or sets the configuration of the node. */
-  configuration?: DscConfigurationAssociationProperty;
-  /** Source of node configuration. */
-  source?: string;
-  /** Number of nodes with this node configuration assigned */
-  nodeCount?: number;
-  /** If a new build version of NodeConfiguration is required. */
-  incrementNodeConfigurationBuild?: boolean;
-}
-
-/** Definition of the Dsc Compilation job. */
-export interface DscCompilationJob extends ProxyResource {
-  /** Gets or sets the configuration. */
-  configuration?: DscConfigurationAssociationProperty;
-  /**
-   * Gets the compilation job started by.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly startedBy?: string;
-  /**
-   * Gets the id of the job.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly jobId?: string;
-  /**
-   * Gets the creation time of the job.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly creationTime?: Date;
-  /** The current provisioning state of the job. */
-  provisioningState?: JobProvisioningState;
-  /** Gets or sets the runOn which specifies the group name where the job is to be executed. */
-  runOn?: string;
-  /** Gets or sets the status of the job. */
-  status?: JobStatus;
-  /** Gets or sets the status details of the job. */
-  statusDetails?: string;
-  /**
-   * Gets the start time of the job.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly startTime?: Date;
-  /**
-   * Gets the end time of the job.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly endTime?: Date;
-  /**
-   * Gets the exception of the job.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly exception?: string;
-  /**
-   * Gets the last modified time of the job.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly lastModifiedTime?: Date;
-  /**
-   * Gets the last status modified time of the job.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly lastStatusModifiedTime?: Date;
-  /** Gets or sets the parameters of the job. */
-  parameters?: { [propertyName: string]: string };
-}
-
-/** Definition of the source control. */
-export interface SourceControl extends ProxyResource {
-  /** The repo url of the source control. */
-  repoUrl?: string;
-  /** The repo branch of the source control. Include branch as empty string for VsoTfvc. */
-  branch?: string;
-  /** The folder path of the source control. */
-  folderPath?: string;
-  /** The auto sync of the source control. Default is false. */
-  autoSync?: boolean;
-  /** The auto publish of the source control. Default is true. */
-  publishRunbook?: boolean;
-  /** The source type. Must be one of VsoGit, VsoTfvc, GitHub. */
-  sourceType?: SourceType;
-  /** The description. */
-  description?: string;
-  /** The creation time. */
-  creationTime?: Date;
-  /** The last modified time. */
-  lastModifiedTime?: Date;
 }
 
 /** Definition of the certificate. */
@@ -2368,53 +1750,20 @@ export interface Credential extends ProxyResource {
   description?: string;
 }
 
-/** Definition of the schedule. */
-export interface Schedule extends ProxyResource {
-  /** Gets or sets the start time of the schedule. */
-  startTime?: Date;
-  /**
-   * Gets the start time's offset in minutes.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly startTimeOffsetMinutes?: number;
-  /** Gets or sets the end time of the schedule. */
-  expiryTime?: Date;
-  /** Gets or sets the expiry time's offset in minutes. */
-  expiryTimeOffsetMinutes?: number;
-  /** Gets or sets a value indicating whether this schedule is enabled. */
-  isEnabled?: boolean;
-  /** Gets or sets the next run time of the schedule. */
-  nextRun?: Date;
-  /** Gets or sets the next run time's offset in minutes. */
-  nextRunOffsetMinutes?: number;
-  /** Gets or sets the interval of the schedule. */
-  interval?: any;
-  /** Gets or sets the frequency of the schedule. */
-  frequency?: ScheduleFrequency;
-  /** Gets or sets the time zone of the schedule. */
-  timeZone?: string;
-  /** Gets or sets the advanced schedule. */
-  advancedSchedule?: AdvancedSchedule;
-  /** Gets or sets the creation time. */
-  creationTime?: Date;
+/** Definition of the dsc node configuration. */
+export interface DscNodeConfiguration extends ProxyResource {
   /** Gets or sets the last modified time. */
   lastModifiedTime?: Date;
-  /** Gets or sets the description. */
-  description?: string;
-}
-
-/** Definition of the variable. */
-export interface Variable extends ProxyResource {
-  /** Gets or sets the value of the variable. */
-  value?: string;
-  /** Gets or sets the encrypted flag of the variable. */
-  isEncrypted?: boolean;
-  /** Gets or sets the creation time. */
+  /** Gets or sets creation time. */
   creationTime?: Date;
-  /** Gets or sets the last modified time. */
-  lastModifiedTime?: Date;
-  /** Gets or sets the description. */
-  description?: string;
+  /** Gets or sets the configuration of the node. */
+  configuration?: DscConfigurationAssociationProperty;
+  /** Source of node configuration. */
+  source?: string;
+  /** Number of nodes with this node configuration assigned */
+  nodeCount?: number;
+  /** If a new build version of NodeConfiguration is required. */
+  incrementNodeConfigurationBuild?: boolean;
 }
 
 /** Definition of the job. */
@@ -2445,8 +1794,11 @@ export interface Job extends ProxyResource {
   lastStatusModifiedTime?: Date;
   /** Gets or sets the parameters of the job. */
   parameters?: { [propertyName: string]: string };
-  /** The current provisioning state of the job. */
-  provisioningState?: JobProvisioningState;
+  /**
+   * The current provisioning state of the job.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: JobProvisioningState;
 }
 
 /** Job collection item properties. */
@@ -2495,58 +1847,75 @@ export interface JobCollectionItem extends ProxyResource {
   runOn?: string;
 }
 
-/** Definition of the webhook type. */
-export interface Webhook extends ProxyResource {
-  /** Gets or sets the value of the enabled flag of the webhook. */
-  isEnabled?: boolean;
-  /** Gets or sets the webhook uri. */
-  uri?: string;
-  /** Gets or sets the expiry time. */
+/** Definition of the schedule. */
+export interface Schedule extends ProxyResource {
+  /** Gets or sets the start time of the schedule. */
+  startTime?: Date;
+  /**
+   * Gets the start time's offset in minutes.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly startTimeOffsetMinutes?: number;
+  /** Gets or sets the end time of the schedule. */
   expiryTime?: Date;
-  /** Gets or sets the last invoked time. */
-  lastInvokedTime?: Date;
-  /** Gets or sets the parameters of the job that is created when the webhook calls the runbook it is associated with. */
-  parameters?: { [propertyName: string]: string };
-  /** Gets or sets the runbook the webhook is associated with. */
-  runbook?: RunbookAssociationProperty;
-  /** Gets or sets the name of the hybrid worker group the webhook job will run on. */
-  runOn?: string;
+  /** Gets or sets the expiry time's offset in minutes. */
+  expiryTimeOffsetMinutes?: number;
+  /** Gets or sets a value indicating whether this schedule is enabled. */
+  isEnabled?: boolean;
+  /** Gets or sets the next run time of the schedule. */
+  nextRun?: Date;
+  /** Gets or sets the next run time's offset in minutes. */
+  nextRunOffsetMinutes?: number;
+  /** Gets or sets the interval of the schedule. */
+  interval?: any;
+  /** Gets or sets the frequency of the schedule. */
+  frequency?: ScheduleFrequency;
+  /** Gets or sets the time zone of the schedule. */
+  timeZone?: string;
+  /** Gets or sets the advanced schedule. */
+  advancedSchedule?: AdvancedSchedule;
   /** Gets or sets the creation time. */
   creationTime?: Date;
   /** Gets or sets the last modified time. */
   lastModifiedTime?: Date;
-  /** Details of the user who last modified the Webhook */
-  lastModifiedBy?: string;
   /** Gets or sets the description. */
   description?: string;
 }
 
-/** Definition of the module type. */
-export interface Module extends TrackedResource {
-  /** Gets or sets the etag of the resource. */
-  etag?: string;
-  /** Gets or sets the isGlobal flag of the module. */
-  isGlobal?: boolean;
-  /** Gets or sets the version of the module. */
-  version?: string;
-  /** Gets or sets the size in bytes of the module. */
-  sizeInBytes?: number;
-  /** Gets or sets the activity count of the module. */
-  activityCount?: number;
-  /** Gets or sets the provisioning state of the module. */
-  provisioningState?: ModuleProvisioningState;
-  /** Gets or sets the contentLink of the module. */
-  contentLink?: ContentLink;
-  /** Gets or sets the error info of the module. */
-  error?: ModuleErrorInfo;
+/** Definition of the source control. */
+export interface SourceControl extends ProxyResource {
+  /** The repo url of the source control. */
+  repoUrl?: string;
+  /** The repo branch of the source control. Include branch as empty string for VsoTfvc. */
+  branch?: string;
+  /** The folder path of the source control. */
+  folderPath?: string;
+  /** The auto sync of the source control. Default is false. */
+  autoSync?: boolean;
+  /** The auto publish of the source control. Default is true. */
+  publishRunbook?: boolean;
+  /** The source type. Must be one of VsoGit, VsoTfvc, GitHub. */
+  sourceType?: SourceType;
+  /** The description. */
+  description?: string;
+  /** The creation time. */
+  creationTime?: Date;
+  /** The last modified time. */
+  lastModifiedTime?: Date;
+}
+
+/** Definition of the variable. */
+export interface Variable extends ProxyResource {
+  /** Gets or sets the value of the variable. */
+  value?: string;
+  /** Gets or sets the encrypted flag of the variable. */
+  isEncrypted?: boolean;
   /** Gets or sets the creation time. */
   creationTime?: Date;
   /** Gets or sets the last modified time. */
   lastModifiedTime?: Date;
   /** Gets or sets the description. */
   description?: string;
-  /** Gets or sets type of module, if its composite or not. */
-  isComposite?: boolean;
 }
 
 /** Definition of the automation account type. */
@@ -2619,6 +1988,34 @@ export interface DscConfiguration extends TrackedResource {
   description?: string;
 }
 
+/** Definition of the module type. */
+export interface Module extends TrackedResource {
+  /** Gets or sets the etag of the resource. */
+  etag?: string;
+  /** Gets or sets the isGlobal flag of the module. */
+  isGlobal?: boolean;
+  /** Gets or sets the version of the module. */
+  version?: string;
+  /** Gets or sets the size in bytes of the module. */
+  sizeInBytes?: number;
+  /** Gets or sets the activity count of the module. */
+  activityCount?: number;
+  /** Gets or sets the provisioning state of the module. */
+  provisioningState?: ModuleProvisioningState;
+  /** Gets or sets the contentLink of the module. */
+  contentLink?: ContentLink;
+  /** Gets or sets the error info of the module. */
+  error?: ModuleErrorInfo;
+  /** Gets or sets the creation time. */
+  creationTime?: Date;
+  /** Gets or sets the last modified time. */
+  lastModifiedTime?: Date;
+  /** Gets or sets the description. */
+  description?: string;
+  /** Gets or sets type of module, if its composite or not. */
+  isComposite?: boolean;
+}
+
 /** Definition of the runbook type. */
 export interface Runbook extends TrackedResource {
   /** Gets or sets the etag of the resource. */
@@ -2666,264 +2063,6 @@ export interface RunbookPublishHeaders {
   /** URL to query for status of the operation. */
   location?: string;
 }
-
-/** Known values of {@link AgentRegistrationKeyName} that the service accepts. */
-export enum KnownAgentRegistrationKeyName {
-  /** Primary */
-  Primary = "primary",
-  /** Secondary */
-  Secondary = "secondary"
-}
-
-/**
- * Defines values for AgentRegistrationKeyName. \
- * {@link KnownAgentRegistrationKeyName} can be used interchangeably with AgentRegistrationKeyName,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **primary** \
- * **secondary**
- */
-export type AgentRegistrationKeyName = string;
-
-/** Known values of {@link ContentSourceType} that the service accepts. */
-export enum KnownContentSourceType {
-  /** EmbeddedContent */
-  EmbeddedContent = "embeddedContent",
-  /** Uri */
-  Uri = "uri"
-}
-
-/**
- * Defines values for ContentSourceType. \
- * {@link KnownContentSourceType} can be used interchangeably with ContentSourceType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **embeddedContent** \
- * **uri**
- */
-export type ContentSourceType = string;
-
-/** Known values of {@link JobProvisioningState} that the service accepts. */
-export enum KnownJobProvisioningState {
-  /** Failed */
-  Failed = "Failed",
-  /** Succeeded */
-  Succeeded = "Succeeded",
-  /** Suspended */
-  Suspended = "Suspended",
-  /** Processing */
-  Processing = "Processing"
-}
-
-/**
- * Defines values for JobProvisioningState. \
- * {@link KnownJobProvisioningState} can be used interchangeably with JobProvisioningState,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Failed** \
- * **Succeeded** \
- * **Suspended** \
- * **Processing**
- */
-export type JobProvisioningState = string;
-
-/** Known values of {@link JobStatus} that the service accepts. */
-export enum KnownJobStatus {
-  /** New */
-  New = "New",
-  /** Activating */
-  Activating = "Activating",
-  /** Running */
-  Running = "Running",
-  /** Completed */
-  Completed = "Completed",
-  /** Failed */
-  Failed = "Failed",
-  /** Stopped */
-  Stopped = "Stopped",
-  /** Blocked */
-  Blocked = "Blocked",
-  /** Suspended */
-  Suspended = "Suspended",
-  /** Disconnected */
-  Disconnected = "Disconnected",
-  /** Suspending */
-  Suspending = "Suspending",
-  /** Stopping */
-  Stopping = "Stopping",
-  /** Resuming */
-  Resuming = "Resuming",
-  /** Removing */
-  Removing = "Removing"
-}
-
-/**
- * Defines values for JobStatus. \
- * {@link KnownJobStatus} can be used interchangeably with JobStatus,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **New** \
- * **Activating** \
- * **Running** \
- * **Completed** \
- * **Failed** \
- * **Stopped** \
- * **Blocked** \
- * **Suspended** \
- * **Disconnected** \
- * **Suspending** \
- * **Stopping** \
- * **Resuming** \
- * **Removing**
- */
-export type JobStatus = string;
-
-/** Known values of {@link JobStreamType} that the service accepts. */
-export enum KnownJobStreamType {
-  /** Progress */
-  Progress = "Progress",
-  /** Output */
-  Output = "Output",
-  /** Warning */
-  Warning = "Warning",
-  /** Error */
-  Error = "Error",
-  /** Debug */
-  Debug = "Debug",
-  /** Verbose */
-  Verbose = "Verbose",
-  /** Any */
-  Any = "Any"
-}
-
-/**
- * Defines values for JobStreamType. \
- * {@link KnownJobStreamType} can be used interchangeably with JobStreamType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Progress** \
- * **Output** \
- * **Warning** \
- * **Error** \
- * **Debug** \
- * **Verbose** \
- * **Any**
- */
-export type JobStreamType = string;
-
-/** Known values of {@link CountType} that the service accepts. */
-export enum KnownCountType {
-  /** Status */
-  Status = "status",
-  /** Nodeconfiguration */
-  Nodeconfiguration = "nodeconfiguration"
-}
-
-/**
- * Defines values for CountType. \
- * {@link KnownCountType} can be used interchangeably with CountType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **status** \
- * **nodeconfiguration**
- */
-export type CountType = string;
-
-/** Known values of {@link SourceType} that the service accepts. */
-export enum KnownSourceType {
-  /** VsoGit */
-  VsoGit = "VsoGit",
-  /** VsoTfvc */
-  VsoTfvc = "VsoTfvc",
-  /** GitHub */
-  GitHub = "GitHub"
-}
-
-/**
- * Defines values for SourceType. \
- * {@link KnownSourceType} can be used interchangeably with SourceType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **VsoGit** \
- * **VsoTfvc** \
- * **GitHub**
- */
-export type SourceType = string;
-
-/** Known values of {@link TokenType} that the service accepts. */
-export enum KnownTokenType {
-  /** PersonalAccessToken */
-  PersonalAccessToken = "PersonalAccessToken",
-  /** Oauth */
-  Oauth = "Oauth"
-}
-
-/**
- * Defines values for TokenType. \
- * {@link KnownTokenType} can be used interchangeably with TokenType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **PersonalAccessToken** \
- * **Oauth**
- */
-export type TokenType = string;
-
-/** Known values of {@link ProvisioningState} that the service accepts. */
-export enum KnownProvisioningState {
-  /** Completed */
-  Completed = "Completed",
-  /** Failed */
-  Failed = "Failed",
-  /** Running */
-  Running = "Running"
-}
-
-/**
- * Defines values for ProvisioningState. \
- * {@link KnownProvisioningState} can be used interchangeably with ProvisioningState,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Completed** \
- * **Failed** \
- * **Running**
- */
-export type ProvisioningState = string;
-
-/** Known values of {@link SyncType} that the service accepts. */
-export enum KnownSyncType {
-  /** PartialSync */
-  PartialSync = "PartialSync",
-  /** FullSync */
-  FullSync = "FullSync"
-}
-
-/**
- * Defines values for SyncType. \
- * {@link KnownSyncType} can be used interchangeably with SyncType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **PartialSync** \
- * **FullSync**
- */
-export type SyncType = string;
-
-/** Known values of {@link StreamType} that the service accepts. */
-export enum KnownStreamType {
-  /** Error */
-  Error = "Error",
-  /** Output */
-  Output = "Output"
-}
-
-/**
- * Defines values for StreamType. \
- * {@link KnownStreamType} can be used interchangeably with StreamType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Error** \
- * **Output**
- */
-export type StreamType = string;
 
 /** Known values of {@link SkuNameEnum} that the service accepts. */
 export enum KnownSkuNameEnum {
@@ -3024,68 +2163,23 @@ export enum KnownAutomationKeyPermissions {
  */
 export type AutomationKeyPermissions = string;
 
-/** Known values of {@link ScheduleFrequency} that the service accepts. */
-export enum KnownScheduleFrequency {
-  /** OneTime */
-  OneTime = "OneTime",
-  /** Day */
-  Day = "Day",
-  /** Hour */
-  Hour = "Hour",
-  /** Week */
-  Week = "Week",
-  /** Month */
-  Month = "Month",
-  /** The minimum allowed interval for Minute schedules is 15 minutes. */
-  Minute = "Minute"
+/** Known values of {@link ContentSourceType} that the service accepts. */
+export enum KnownContentSourceType {
+  /** EmbeddedContent */
+  EmbeddedContent = "embeddedContent",
+  /** Uri */
+  Uri = "uri"
 }
 
 /**
- * Defines values for ScheduleFrequency. \
- * {@link KnownScheduleFrequency} can be used interchangeably with ScheduleFrequency,
+ * Defines values for ContentSourceType. \
+ * {@link KnownContentSourceType} can be used interchangeably with ContentSourceType,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **OneTime** \
- * **Day** \
- * **Hour** \
- * **Week** \
- * **Month** \
- * **Minute**: The minimum allowed interval for Minute schedules is 15 minutes.
+ * **embeddedContent** \
+ * **uri**
  */
-export type ScheduleFrequency = string;
-
-/** Known values of {@link ScheduleDay} that the service accepts. */
-export enum KnownScheduleDay {
-  /** Monday */
-  Monday = "Monday",
-  /** Tuesday */
-  Tuesday = "Tuesday",
-  /** Wednesday */
-  Wednesday = "Wednesday",
-  /** Thursday */
-  Thursday = "Thursday",
-  /** Friday */
-  Friday = "Friday",
-  /** Saturday */
-  Saturday = "Saturday",
-  /** Sunday */
-  Sunday = "Sunday"
-}
-
-/**
- * Defines values for ScheduleDay. \
- * {@link KnownScheduleDay} can be used interchangeably with ScheduleDay,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Monday** \
- * **Tuesday** \
- * **Wednesday** \
- * **Thursday** \
- * **Friday** \
- * **Saturday** \
- * **Sunday**
- */
-export type ScheduleDay = string;
+export type ContentSourceType = string;
 
 /** Known values of {@link DscConfigurationState} that the service accepts. */
 export enum KnownDscConfigurationState {
@@ -3108,6 +2202,210 @@ export enum KnownDscConfigurationState {
  */
 export type DscConfigurationState = string;
 
+/** Known values of {@link WorkerType} that the service accepts. */
+export enum KnownWorkerType {
+  /** HybridV1 */
+  HybridV1 = "HybridV1",
+  /** HybridV2 */
+  HybridV2 = "HybridV2"
+}
+
+/**
+ * Defines values for WorkerType. \
+ * {@link KnownWorkerType} can be used interchangeably with WorkerType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **HybridV1** \
+ * **HybridV2**
+ */
+export type WorkerType = string;
+
+/** Known values of {@link GroupTypeEnum} that the service accepts. */
+export enum KnownGroupTypeEnum {
+  /** User */
+  User = "User",
+  /** System */
+  System = "System"
+}
+
+/**
+ * Defines values for GroupTypeEnum. \
+ * {@link KnownGroupTypeEnum} can be used interchangeably with GroupTypeEnum,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **User** \
+ * **System**
+ */
+export type GroupTypeEnum = string;
+
+/** Known values of {@link JobStatus} that the service accepts. */
+export enum KnownJobStatus {
+  /** New */
+  New = "New",
+  /** Activating */
+  Activating = "Activating",
+  /** Running */
+  Running = "Running",
+  /** Completed */
+  Completed = "Completed",
+  /** Failed */
+  Failed = "Failed",
+  /** Stopped */
+  Stopped = "Stopped",
+  /** Blocked */
+  Blocked = "Blocked",
+  /** Suspended */
+  Suspended = "Suspended",
+  /** Disconnected */
+  Disconnected = "Disconnected",
+  /** Suspending */
+  Suspending = "Suspending",
+  /** Stopping */
+  Stopping = "Stopping",
+  /** Resuming */
+  Resuming = "Resuming",
+  /** Removing */
+  Removing = "Removing"
+}
+
+/**
+ * Defines values for JobStatus. \
+ * {@link KnownJobStatus} can be used interchangeably with JobStatus,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **New** \
+ * **Activating** \
+ * **Running** \
+ * **Completed** \
+ * **Failed** \
+ * **Stopped** \
+ * **Blocked** \
+ * **Suspended** \
+ * **Disconnected** \
+ * **Suspending** \
+ * **Stopping** \
+ * **Resuming** \
+ * **Removing**
+ */
+export type JobStatus = string;
+
+/** Known values of {@link JobProvisioningState} that the service accepts. */
+export enum KnownJobProvisioningState {
+  /** Failed */
+  Failed = "Failed",
+  /** Succeeded */
+  Succeeded = "Succeeded",
+  /** Suspended */
+  Suspended = "Suspended",
+  /** Processing */
+  Processing = "Processing"
+}
+
+/**
+ * Defines values for JobProvisioningState. \
+ * {@link KnownJobProvisioningState} can be used interchangeably with JobProvisioningState,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Failed** \
+ * **Succeeded** \
+ * **Suspended** \
+ * **Processing**
+ */
+export type JobProvisioningState = string;
+
+/** Known values of {@link JobStreamType} that the service accepts. */
+export enum KnownJobStreamType {
+  /** Progress */
+  Progress = "Progress",
+  /** Output */
+  Output = "Output",
+  /** Warning */
+  Warning = "Warning",
+  /** Error */
+  Error = "Error",
+  /** Debug */
+  Debug = "Debug",
+  /** Verbose */
+  Verbose = "Verbose",
+  /** Any */
+  Any = "Any"
+}
+
+/**
+ * Defines values for JobStreamType. \
+ * {@link KnownJobStreamType} can be used interchangeably with JobStreamType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Progress** \
+ * **Output** \
+ * **Warning** \
+ * **Error** \
+ * **Debug** \
+ * **Verbose** \
+ * **Any**
+ */
+export type JobStreamType = string;
+
+/** Known values of {@link ModuleProvisioningState} that the service accepts. */
+export enum KnownModuleProvisioningState {
+  /** Created */
+  Created = "Created",
+  /** Creating */
+  Creating = "Creating",
+  /** StartingImportModuleRunbook */
+  StartingImportModuleRunbook = "StartingImportModuleRunbook",
+  /** RunningImportModuleRunbook */
+  RunningImportModuleRunbook = "RunningImportModuleRunbook",
+  /** ContentRetrieved */
+  ContentRetrieved = "ContentRetrieved",
+  /** ContentDownloaded */
+  ContentDownloaded = "ContentDownloaded",
+  /** ContentValidated */
+  ContentValidated = "ContentValidated",
+  /** ConnectionTypeImported */
+  ConnectionTypeImported = "ConnectionTypeImported",
+  /** ContentStored */
+  ContentStored = "ContentStored",
+  /** ModuleDataStored */
+  ModuleDataStored = "ModuleDataStored",
+  /** ActivitiesStored */
+  ActivitiesStored = "ActivitiesStored",
+  /** ModuleImportRunbookComplete */
+  ModuleImportRunbookComplete = "ModuleImportRunbookComplete",
+  /** Succeeded */
+  Succeeded = "Succeeded",
+  /** Failed */
+  Failed = "Failed",
+  /** Cancelled */
+  Cancelled = "Cancelled",
+  /** Updating */
+  Updating = "Updating"
+}
+
+/**
+ * Defines values for ModuleProvisioningState. \
+ * {@link KnownModuleProvisioningState} can be used interchangeably with ModuleProvisioningState,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Created** \
+ * **Creating** \
+ * **StartingImportModuleRunbook** \
+ * **RunningImportModuleRunbook** \
+ * **ContentRetrieved** \
+ * **ContentDownloaded** \
+ * **ContentValidated** \
+ * **ConnectionTypeImported** \
+ * **ContentStored** \
+ * **ModuleDataStored** \
+ * **ActivitiesStored** \
+ * **ModuleImportRunbookComplete** \
+ * **Succeeded** \
+ * **Failed** \
+ * **Cancelled** \
+ * **Updating**
+ */
+export type ModuleProvisioningState = string;
+
 /** Known values of {@link GraphRunbookType} that the service accepts. */
 export enum KnownGraphRunbookType {
   /** GraphPowerShell */
@@ -3125,69 +2423,6 @@ export enum KnownGraphRunbookType {
  * **GraphPowerShellWorkflow**
  */
 export type GraphRunbookType = string;
-
-/** Known values of {@link WindowsUpdateClasses} that the service accepts. */
-export enum KnownWindowsUpdateClasses {
-  /** Unclassified */
-  Unclassified = "Unclassified",
-  /** Critical */
-  Critical = "Critical",
-  /** Security */
-  Security = "Security",
-  /** UpdateRollup */
-  UpdateRollup = "UpdateRollup",
-  /** FeaturePack */
-  FeaturePack = "FeaturePack",
-  /** ServicePack */
-  ServicePack = "ServicePack",
-  /** Definition */
-  Definition = "Definition",
-  /** Tools */
-  Tools = "Tools",
-  /** Updates */
-  Updates = "Updates"
-}
-
-/**
- * Defines values for WindowsUpdateClasses. \
- * {@link KnownWindowsUpdateClasses} can be used interchangeably with WindowsUpdateClasses,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Unclassified** \
- * **Critical** \
- * **Security** \
- * **UpdateRollup** \
- * **FeaturePack** \
- * **ServicePack** \
- * **Definition** \
- * **Tools** \
- * **Updates**
- */
-export type WindowsUpdateClasses = string;
-
-/** Known values of {@link LinuxUpdateClasses} that the service accepts. */
-export enum KnownLinuxUpdateClasses {
-  /** Unclassified */
-  Unclassified = "Unclassified",
-  /** Critical */
-  Critical = "Critical",
-  /** Security */
-  Security = "Security",
-  /** Other */
-  Other = "Other"
-}
-
-/**
- * Defines values for LinuxUpdateClasses. \
- * {@link KnownLinuxUpdateClasses} can be used interchangeably with LinuxUpdateClasses,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Unclassified** \
- * **Critical** \
- * **Security** \
- * **Other**
- */
-export type LinuxUpdateClasses = string;
 
 /** Known values of {@link HttpStatusCode} that the service accepts. */
 export enum KnownHttpStatusCode {
@@ -3399,59 +2634,164 @@ export enum KnownRunbookState {
  */
 export type RunbookState = string;
 
-/** Known values of {@link WorkerType} that the service accepts. */
-export enum KnownWorkerType {
-  /** HybridV1 */
-  HybridV1 = "HybridV1",
-  /** HybridV2 */
-  HybridV2 = "HybridV2"
+/** Known values of {@link ScheduleFrequency} that the service accepts. */
+export enum KnownScheduleFrequency {
+  /** OneTime */
+  OneTime = "OneTime",
+  /** Day */
+  Day = "Day",
+  /** Hour */
+  Hour = "Hour",
+  /** Week */
+  Week = "Week",
+  /** Month */
+  Month = "Month",
+  /** The minimum allowed interval for Minute schedules is 15 minutes. */
+  Minute = "Minute"
 }
 
 /**
- * Defines values for WorkerType. \
- * {@link KnownWorkerType} can be used interchangeably with WorkerType,
+ * Defines values for ScheduleFrequency. \
+ * {@link KnownScheduleFrequency} can be used interchangeably with ScheduleFrequency,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **HybridV1** \
- * **HybridV2**
+ * **OneTime** \
+ * **Day** \
+ * **Hour** \
+ * **Week** \
+ * **Month** \
+ * **Minute**: The minimum allowed interval for Minute schedules is 15 minutes.
  */
-export type WorkerType = string;
+export type ScheduleFrequency = string;
 
-/** Known values of {@link GroupTypeEnum} that the service accepts. */
-export enum KnownGroupTypeEnum {
-  /** User */
-  User = "User",
-  /** System */
-  System = "System"
+/** Known values of {@link ScheduleDay} that the service accepts. */
+export enum KnownScheduleDay {
+  /** Monday */
+  Monday = "Monday",
+  /** Tuesday */
+  Tuesday = "Tuesday",
+  /** Wednesday */
+  Wednesday = "Wednesday",
+  /** Thursday */
+  Thursday = "Thursday",
+  /** Friday */
+  Friday = "Friday",
+  /** Saturday */
+  Saturday = "Saturday",
+  /** Sunday */
+  Sunday = "Sunday"
 }
 
 /**
- * Defines values for GroupTypeEnum. \
- * {@link KnownGroupTypeEnum} can be used interchangeably with GroupTypeEnum,
+ * Defines values for ScheduleDay. \
+ * {@link KnownScheduleDay} can be used interchangeably with ScheduleDay,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **User** \
- * **System**
+ * **Monday** \
+ * **Tuesday** \
+ * **Wednesday** \
+ * **Thursday** \
+ * **Friday** \
+ * **Saturday** \
+ * **Sunday**
  */
-export type GroupTypeEnum = string;
-/** Defines values for ModuleProvisioningState. */
-export type ModuleProvisioningState =
-  | "Created"
-  | "Creating"
-  | "StartingImportModuleRunbook"
-  | "RunningImportModuleRunbook"
-  | "ContentRetrieved"
-  | "ContentDownloaded"
-  | "ContentValidated"
-  | "ConnectionTypeImported"
-  | "ContentStored"
-  | "ModuleDataStored"
-  | "ActivitiesStored"
-  | "ModuleImportRunbookComplete"
-  | "Succeeded"
-  | "Failed"
-  | "Cancelled"
-  | "Updating";
+export type ScheduleDay = string;
+
+/** Known values of {@link SourceType} that the service accepts. */
+export enum KnownSourceType {
+  /** VsoGit */
+  VsoGit = "VsoGit",
+  /** VsoTfvc */
+  VsoTfvc = "VsoTfvc",
+  /** GitHub */
+  GitHub = "GitHub"
+}
+
+/**
+ * Defines values for SourceType. \
+ * {@link KnownSourceType} can be used interchangeably with SourceType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **VsoGit** \
+ * **VsoTfvc** \
+ * **GitHub**
+ */
+export type SourceType = string;
+
+/** Known values of {@link TokenType} that the service accepts. */
+export enum KnownTokenType {
+  /** PersonalAccessToken */
+  PersonalAccessToken = "PersonalAccessToken",
+  /** Oauth */
+  Oauth = "Oauth"
+}
+
+/**
+ * Defines values for TokenType. \
+ * {@link KnownTokenType} can be used interchangeably with TokenType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **PersonalAccessToken** \
+ * **Oauth**
+ */
+export type TokenType = string;
+
+/** Known values of {@link ProvisioningState} that the service accepts. */
+export enum KnownProvisioningState {
+  /** Completed */
+  Completed = "Completed",
+  /** Failed */
+  Failed = "Failed",
+  /** Running */
+  Running = "Running"
+}
+
+/**
+ * Defines values for ProvisioningState. \
+ * {@link KnownProvisioningState} can be used interchangeably with ProvisioningState,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Completed** \
+ * **Failed** \
+ * **Running**
+ */
+export type ProvisioningState = string;
+
+/** Known values of {@link SyncType} that the service accepts. */
+export enum KnownSyncType {
+  /** PartialSync */
+  PartialSync = "PartialSync",
+  /** FullSync */
+  FullSync = "FullSync"
+}
+
+/**
+ * Defines values for SyncType. \
+ * {@link KnownSyncType} can be used interchangeably with SyncType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **PartialSync** \
+ * **FullSync**
+ */
+export type SyncType = string;
+
+/** Known values of {@link StreamType} that the service accepts. */
+export enum KnownStreamType {
+  /** Error */
+  Error = "Error",
+  /** Output */
+  Output = "Output"
+}
+
+/**
+ * Defines values for StreamType. \
+ * {@link KnownStreamType} can be used interchangeably with StreamType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Error** \
+ * **Output**
+ */
+export type StreamType = string;
 /** Defines values for EncryptionKeySourceType. */
 export type EncryptionKeySourceType =
   | "Microsoft.Automation"
@@ -3462,373 +2802,6 @@ export type ResourceIdentityType =
   | "UserAssigned"
   | "SystemAssigned, UserAssigned"
   | "None";
-/** Defines values for OperatingSystemType. */
-export type OperatingSystemType = "Windows" | "Linux";
-/** Defines values for TagOperators. */
-export type TagOperators = "All" | "Any";
-
-/** Optional parameters. */
-export interface PrivateEndpointConnectionsListByAutomationAccountOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByAutomationAccount operation. */
-export type PrivateEndpointConnectionsListByAutomationAccountResponse = PrivateEndpointConnectionListResult;
-
-/** Optional parameters. */
-export interface PrivateEndpointConnectionsGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type PrivateEndpointConnectionsGetResponse = PrivateEndpointConnection;
-
-/** Optional parameters. */
-export interface PrivateEndpointConnectionsCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createOrUpdate operation. */
-export type PrivateEndpointConnectionsCreateOrUpdateResponse = PrivateEndpointConnection;
-
-/** Optional parameters. */
-export interface PrivateEndpointConnectionsDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface PrivateLinkResourcesAutomationOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the automation operation. */
-export type PrivateLinkResourcesAutomationResponse = PrivateLinkResourceListResult;
-
-/** Optional parameters. */
-export interface Python2PackageDeleteOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface Python2PackageGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type Python2PackageGetResponse = Module;
-
-/** Optional parameters. */
-export interface Python2PackageCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the createOrUpdate operation. */
-export type Python2PackageCreateOrUpdateResponse = Module;
-
-/** Optional parameters. */
-export interface Python2PackageUpdateOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the update operation. */
-export type Python2PackageUpdateResponse = Module;
-
-/** Optional parameters. */
-export interface Python2PackageListByAutomationAccountOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByAutomationAccount operation. */
-export type Python2PackageListByAutomationAccountResponse = ModuleListResult;
-
-/** Optional parameters. */
-export interface Python2PackageListByAutomationAccountNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByAutomationAccountNext operation. */
-export type Python2PackageListByAutomationAccountNextResponse = ModuleListResult;
-
-/** Optional parameters. */
-export interface AgentRegistrationInformationGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type AgentRegistrationInformationGetResponse = AgentRegistration;
-
-/** Optional parameters. */
-export interface AgentRegistrationInformationRegenerateKeyOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the regenerateKey operation. */
-export type AgentRegistrationInformationRegenerateKeyResponse = AgentRegistration;
-
-/** Optional parameters. */
-export interface DscNodeDeleteOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface DscNodeGetOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type DscNodeGetResponse = DscNode;
-
-/** Optional parameters. */
-export interface DscNodeUpdateOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the update operation. */
-export type DscNodeUpdateResponse = DscNode;
-
-/** Optional parameters. */
-export interface DscNodeListByAutomationAccountOptionalParams
-  extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. */
-  filter?: string;
-  /** The number of rows to skip. */
-  skip?: number;
-  /** The number of rows to take. */
-  top?: number;
-  /** Return total rows. */
-  inlinecount?: string;
-}
-
-/** Contains response data for the listByAutomationAccount operation. */
-export type DscNodeListByAutomationAccountResponse = DscNodeListResult;
-
-/** Optional parameters. */
-export interface DscNodeListByAutomationAccountNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByAutomationAccountNext operation. */
-export type DscNodeListByAutomationAccountNextResponse = DscNodeListResult;
-
-/** Optional parameters. */
-export interface NodeReportsListByNodeOptionalParams
-  extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. */
-  filter?: string;
-}
-
-/** Contains response data for the listByNode operation. */
-export type NodeReportsListByNodeResponse = DscNodeReportListResult;
-
-/** Optional parameters. */
-export interface NodeReportsGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type NodeReportsGetResponse = DscNodeReport;
-
-/** Optional parameters. */
-export interface NodeReportsGetContentOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getContent operation. */
-export type NodeReportsGetContentResponse = Record<string, unknown>;
-
-/** Optional parameters. */
-export interface NodeReportsListByNodeNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByNodeNext operation. */
-export type NodeReportsListByNodeNextResponse = DscNodeReportListResult;
-
-/** Optional parameters. */
-export interface DscNodeConfigurationDeleteOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface DscNodeConfigurationGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type DscNodeConfigurationGetResponse = DscNodeConfiguration;
-
-/** Optional parameters. */
-export interface DscNodeConfigurationCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface DscNodeConfigurationListByAutomationAccountOptionalParams
-  extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. */
-  filter?: string;
-  /** The number of rows to skip. */
-  skip?: number;
-  /** The number of rows to take. */
-  top?: number;
-  /** Return total rows. */
-  inlinecount?: string;
-}
-
-/** Contains response data for the listByAutomationAccount operation. */
-export type DscNodeConfigurationListByAutomationAccountResponse = DscNodeConfigurationListResult;
-
-/** Optional parameters. */
-export interface DscNodeConfigurationListByAutomationAccountNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByAutomationAccountNext operation. */
-export type DscNodeConfigurationListByAutomationAccountNextResponse = DscNodeConfigurationListResult;
-
-/** Optional parameters. */
-export interface DscCompilationJobCreateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the create operation. */
-export type DscCompilationJobCreateResponse = DscCompilationJob;
-
-/** Optional parameters. */
-export interface DscCompilationJobGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type DscCompilationJobGetResponse = DscCompilationJob;
-
-/** Optional parameters. */
-export interface DscCompilationJobListByAutomationAccountOptionalParams
-  extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. */
-  filter?: string;
-}
-
-/** Contains response data for the listByAutomationAccount operation. */
-export type DscCompilationJobListByAutomationAccountResponse = DscCompilationJobListResult;
-
-/** Optional parameters. */
-export interface DscCompilationJobGetStreamOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getStream operation. */
-export type DscCompilationJobGetStreamResponse = JobStream;
-
-/** Optional parameters. */
-export interface DscCompilationJobListByAutomationAccountNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByAutomationAccountNext operation. */
-export type DscCompilationJobListByAutomationAccountNextResponse = DscCompilationJobListResult;
-
-/** Optional parameters. */
-export interface DscCompilationJobStreamListByJobOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByJob operation. */
-export type DscCompilationJobStreamListByJobResponse = JobStreamListResult;
-
-/** Optional parameters. */
-export interface NodeCountInformationGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type NodeCountInformationGetResponse = NodeCounts;
-
-/** Optional parameters. */
-export interface SourceControlCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the createOrUpdate operation. */
-export type SourceControlCreateOrUpdateResponse = SourceControl;
-
-/** Optional parameters. */
-export interface SourceControlUpdateOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the update operation. */
-export type SourceControlUpdateResponse = SourceControl;
-
-/** Optional parameters. */
-export interface SourceControlDeleteOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface SourceControlGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type SourceControlGetResponse = SourceControl;
-
-/** Optional parameters. */
-export interface SourceControlListByAutomationAccountOptionalParams
-  extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. */
-  filter?: string;
-}
-
-/** Contains response data for the listByAutomationAccount operation. */
-export type SourceControlListByAutomationAccountResponse = SourceControlListResult;
-
-/** Optional parameters. */
-export interface SourceControlListByAutomationAccountNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByAutomationAccountNext operation. */
-export type SourceControlListByAutomationAccountNextResponse = SourceControlListResult;
-
-/** Optional parameters. */
-export interface SourceControlSyncJobCreateOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the create operation. */
-export type SourceControlSyncJobCreateResponse = SourceControlSyncJob;
-
-/** Optional parameters. */
-export interface SourceControlSyncJobGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type SourceControlSyncJobGetResponse = SourceControlSyncJobById;
-
-/** Optional parameters. */
-export interface SourceControlSyncJobListByAutomationAccountOptionalParams
-  extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. */
-  filter?: string;
-}
-
-/** Contains response data for the listByAutomationAccount operation. */
-export type SourceControlSyncJobListByAutomationAccountResponse = SourceControlSyncJobListResult;
-
-/** Optional parameters. */
-export interface SourceControlSyncJobListByAutomationAccountNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByAutomationAccountNext operation. */
-export type SourceControlSyncJobListByAutomationAccountNextResponse = SourceControlSyncJobListResult;
-
-/** Optional parameters. */
-export interface SourceControlSyncJobStreamsListBySyncJobOptionalParams
-  extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. */
-  filter?: string;
-}
-
-/** Contains response data for the listBySyncJob operation. */
-export type SourceControlSyncJobStreamsListBySyncJobResponse = SourceControlSyncJobStreamsListBySyncJob;
-
-/** Optional parameters. */
-export interface SourceControlSyncJobStreamsGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type SourceControlSyncJobStreamsGetResponse = SourceControlSyncJobStreamById;
-
-/** Optional parameters. */
-export interface SourceControlSyncJobStreamsListBySyncJobNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listBySyncJobNext operation. */
-export type SourceControlSyncJobStreamsListBySyncJobNextResponse = SourceControlSyncJobStreamsListBySyncJob;
 
 /** Optional parameters. */
 export interface AutomationAccountUpdateOptionalParams
@@ -3870,6 +2843,13 @@ export interface AutomationAccountListOptionalParams
 export type AutomationAccountListResponse = AutomationAccountListResult;
 
 /** Optional parameters. */
+export interface AutomationAccountListDeletedRunbooksOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listDeletedRunbooks operation. */
+export type AutomationAccountListDeletedRunbooksResponse = DeletedRunbookListResult;
+
+/** Optional parameters. */
 export interface AutomationAccountListByResourceGroupNextOptionalParams
   extends coreClient.OperationOptions {}
 
@@ -3882,6 +2862,13 @@ export interface AutomationAccountListNextOptionalParams
 
 /** Contains response data for the listNext operation. */
 export type AutomationAccountListNextResponse = AutomationAccountListResult;
+
+/** Optional parameters. */
+export interface AutomationAccountListDeletedRunbooksNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listDeletedRunbooksNext operation. */
+export type AutomationAccountListDeletedRunbooksNextResponse = DeletedRunbookListResult;
 
 /** Optional parameters. */
 export interface StatisticsListByAutomationAccountOptionalParams
@@ -4057,6 +3044,318 @@ export interface CredentialListByAutomationAccountNextOptionalParams
 export type CredentialListByAutomationAccountNextResponse = CredentialListResult;
 
 /** Optional parameters. */
+export interface DscConfigurationDeleteOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Optional parameters. */
+export interface DscConfigurationGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type DscConfigurationGetResponse = DscConfiguration;
+
+/** Optional parameters. */
+export interface DscConfigurationCreateOrUpdate$textOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Optional parameters. */
+export interface DscConfigurationCreateOrUpdate$jsonOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the createOrUpdate operation. */
+export type DscConfigurationCreateOrUpdateResponse = DscConfiguration;
+
+/** Optional parameters. */
+export interface DscConfigurationUpdate$textOptionalParams
+  extends coreClient.OperationOptions {
+  /** The create or update parameters for configuration. */
+  parameters?: string;
+}
+
+/** Optional parameters. */
+export interface DscConfigurationUpdate$jsonOptionalParams
+  extends coreClient.OperationOptions {
+  /** The create or update parameters for configuration. */
+  parameters?: DscConfigurationUpdateParameters;
+}
+
+/** Contains response data for the update operation. */
+export type DscConfigurationUpdateResponse = DscConfiguration;
+
+/** Optional parameters. */
+export interface DscConfigurationGetContentOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getContent operation. */
+export type DscConfigurationGetContentResponse = {
+  /** The parsed response body. */
+  body: coreRestPipeline.RequestBodyType;
+};
+
+/** Optional parameters. */
+export interface DscConfigurationListByAutomationAccountOptionalParams
+  extends coreClient.OperationOptions {
+  /** The filter to apply on the operation. */
+  filter?: string;
+  /** The number of rows to skip. */
+  skip?: number;
+  /** The number of rows to take. */
+  top?: number;
+  /** Return total rows. */
+  inlinecount?: string;
+}
+
+/** Contains response data for the listByAutomationAccount operation. */
+export type DscConfigurationListByAutomationAccountResponse = DscConfigurationListResult;
+
+/** Optional parameters. */
+export interface DscConfigurationListByAutomationAccountNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByAutomationAccountNext operation. */
+export type DscConfigurationListByAutomationAccountNextResponse = DscConfigurationListResult;
+
+/** Optional parameters. */
+export interface DscNodeConfigurationDeleteOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Optional parameters. */
+export interface DscNodeConfigurationGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type DscNodeConfigurationGetResponse = DscNodeConfiguration;
+
+/** Optional parameters. */
+export interface DscNodeConfigurationCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface DscNodeConfigurationListByAutomationAccountOptionalParams
+  extends coreClient.OperationOptions {
+  /** The filter to apply on the operation. */
+  filter?: string;
+  /** The number of rows to skip. */
+  skip?: number;
+  /** The number of rows to take. */
+  top?: number;
+  /** Return total rows. */
+  inlinecount?: string;
+}
+
+/** Contains response data for the listByAutomationAccount operation. */
+export type DscNodeConfigurationListByAutomationAccountResponse = DscNodeConfigurationListResult;
+
+/** Optional parameters. */
+export interface DscNodeConfigurationListByAutomationAccountNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByAutomationAccountNext operation. */
+export type DscNodeConfigurationListByAutomationAccountNextResponse = DscNodeConfigurationListResult;
+
+/** Optional parameters. */
+export interface HybridRunbookWorkersDeleteOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Optional parameters. */
+export interface HybridRunbookWorkersGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type HybridRunbookWorkersGetResponse = HybridRunbookWorker;
+
+/** Optional parameters. */
+export interface HybridRunbookWorkersCreateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the create operation. */
+export type HybridRunbookWorkersCreateResponse = HybridRunbookWorker;
+
+/** Optional parameters. */
+export interface HybridRunbookWorkersMoveOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Optional parameters. */
+export interface HybridRunbookWorkersListByHybridRunbookWorkerGroupOptionalParams
+  extends coreClient.OperationOptions {
+  /** The filter to apply on the operation. */
+  filter?: string;
+}
+
+/** Contains response data for the listByHybridRunbookWorkerGroup operation. */
+export type HybridRunbookWorkersListByHybridRunbookWorkerGroupResponse = HybridRunbookWorkersListResult;
+
+/** Optional parameters. */
+export interface HybridRunbookWorkersListByHybridRunbookWorkerGroupNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByHybridRunbookWorkerGroupNext operation. */
+export type HybridRunbookWorkersListByHybridRunbookWorkerGroupNextResponse = HybridRunbookWorkersListResult;
+
+/** Optional parameters. */
+export interface HybridRunbookWorkerGroupDeleteOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Optional parameters. */
+export interface HybridRunbookWorkerGroupGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type HybridRunbookWorkerGroupGetResponse = HybridRunbookWorkerGroup;
+
+/** Optional parameters. */
+export interface HybridRunbookWorkerGroupCreateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the create operation. */
+export type HybridRunbookWorkerGroupCreateResponse = HybridRunbookWorkerGroup;
+
+/** Optional parameters. */
+export interface HybridRunbookWorkerGroupUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the update operation. */
+export type HybridRunbookWorkerGroupUpdateResponse = HybridRunbookWorkerGroup;
+
+/** Optional parameters. */
+export interface HybridRunbookWorkerGroupListByAutomationAccountOptionalParams
+  extends coreClient.OperationOptions {
+  /** The filter to apply on the operation. */
+  filter?: string;
+}
+
+/** Contains response data for the listByAutomationAccount operation. */
+export type HybridRunbookWorkerGroupListByAutomationAccountResponse = HybridRunbookWorkerGroupsListResult;
+
+/** Optional parameters. */
+export interface HybridRunbookWorkerGroupListByAutomationAccountNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByAutomationAccountNext operation. */
+export type HybridRunbookWorkerGroupListByAutomationAccountNextResponse = HybridRunbookWorkerGroupsListResult;
+
+/** Optional parameters. */
+export interface JobGetOutputOptionalParams
+  extends coreClient.OperationOptions {
+  /** Identifies this specific client request. */
+  clientRequestId?: string;
+}
+
+/** Contains response data for the getOutput operation. */
+export type JobGetOutputResponse = {
+  /** The parsed response body. */
+  body: string;
+};
+
+/** Optional parameters. */
+export interface JobGetRunbookContentOptionalParams
+  extends coreClient.OperationOptions {
+  /** Identifies this specific client request. */
+  clientRequestId?: string;
+}
+
+/** Contains response data for the getRunbookContent operation. */
+export type JobGetRunbookContentResponse = {
+  /** The parsed response body. */
+  body: string;
+};
+
+/** Optional parameters. */
+export interface JobSuspendOptionalParams extends coreClient.OperationOptions {
+  /** Identifies this specific client request. */
+  clientRequestId?: string;
+}
+
+/** Optional parameters. */
+export interface JobStopOptionalParams extends coreClient.OperationOptions {
+  /** Identifies this specific client request. */
+  clientRequestId?: string;
+}
+
+/** Optional parameters. */
+export interface JobGetOptionalParams extends coreClient.OperationOptions {
+  /** Identifies this specific client request. */
+  clientRequestId?: string;
+}
+
+/** Contains response data for the get operation. */
+export type JobGetResponse = Job;
+
+/** Optional parameters. */
+export interface JobCreateOptionalParams extends coreClient.OperationOptions {
+  /** Identifies this specific client request. */
+  clientRequestId?: string;
+}
+
+/** Contains response data for the create operation. */
+export type JobCreateResponse = Job;
+
+/** Optional parameters. */
+export interface JobListByAutomationAccountOptionalParams
+  extends coreClient.OperationOptions {
+  /** The filter to apply on the operation. */
+  filter?: string;
+  /** Identifies this specific client request. */
+  clientRequestId?: string;
+}
+
+/** Contains response data for the listByAutomationAccount operation. */
+export type JobListByAutomationAccountResponse = JobListResultV2;
+
+/** Optional parameters. */
+export interface JobResumeOptionalParams extends coreClient.OperationOptions {
+  /** Identifies this specific client request. */
+  clientRequestId?: string;
+}
+
+/** Optional parameters. */
+export interface JobListByAutomationAccountNextOptionalParams
+  extends coreClient.OperationOptions {
+  /** Identifies this specific client request. */
+  clientRequestId?: string;
+}
+
+/** Contains response data for the listByAutomationAccountNext operation. */
+export type JobListByAutomationAccountNextResponse = JobListResultV2;
+
+/** Optional parameters. */
+export interface JobStreamGetOptionalParams
+  extends coreClient.OperationOptions {
+  /** Identifies this specific client request. */
+  clientRequestId?: string;
+}
+
+/** Contains response data for the get operation. */
+export type JobStreamGetResponse = JobStream;
+
+/** Optional parameters. */
+export interface JobStreamListByJobOptionalParams
+  extends coreClient.OperationOptions {
+  /** The filter to apply on the operation. */
+  filter?: string;
+  /** Identifies this specific client request. */
+  clientRequestId?: string;
+}
+
+/** Contains response data for the listByJob operation. */
+export type JobStreamListByJobResponse = JobStreamListResult;
+
+/** Optional parameters. */
+export interface JobStreamListByJobNextOptionalParams
+  extends coreClient.OperationOptions {
+  /** Identifies this specific client request. */
+  clientRequestId?: string;
+}
+
+/** Contains response data for the listByJobNext operation. */
+export type JobStreamListByJobNextResponse = JobStreamListResult;
+
+/** Optional parameters. */
 export interface JobScheduleDeleteOptionalParams
   extends coreClient.OperationOptions {}
 
@@ -4179,321 +3478,6 @@ export interface FieldsListByTypeOptionalParams
 export type FieldsListByTypeResponse = TypeFieldListResult;
 
 /** Optional parameters. */
-export interface ScheduleCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the createOrUpdate operation. */
-export type ScheduleCreateOrUpdateResponse = Schedule;
-
-/** Optional parameters. */
-export interface ScheduleUpdateOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the update operation. */
-export type ScheduleUpdateResponse = Schedule;
-
-/** Optional parameters. */
-export interface ScheduleGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type ScheduleGetResponse = Schedule;
-
-/** Optional parameters. */
-export interface ScheduleDeleteOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface ScheduleListByAutomationAccountOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByAutomationAccount operation. */
-export type ScheduleListByAutomationAccountResponse = ScheduleListResult;
-
-/** Optional parameters. */
-export interface ScheduleListByAutomationAccountNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByAutomationAccountNext operation. */
-export type ScheduleListByAutomationAccountNextResponse = ScheduleListResult;
-
-/** Optional parameters. */
-export interface VariableCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the createOrUpdate operation. */
-export type VariableCreateOrUpdateResponse = Variable;
-
-/** Optional parameters. */
-export interface VariableUpdateOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the update operation. */
-export type VariableUpdateResponse = Variable;
-
-/** Optional parameters. */
-export interface VariableDeleteOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface VariableGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type VariableGetResponse = Variable;
-
-/** Optional parameters. */
-export interface VariableListByAutomationAccountOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByAutomationAccount operation. */
-export type VariableListByAutomationAccountResponse = VariableListResult;
-
-/** Optional parameters. */
-export interface VariableListByAutomationAccountNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByAutomationAccountNext operation. */
-export type VariableListByAutomationAccountNextResponse = VariableListResult;
-
-/** Optional parameters. */
-export interface WatcherCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the createOrUpdate operation. */
-export type WatcherCreateOrUpdateResponse = Watcher;
-
-/** Optional parameters. */
-export interface WatcherGetOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type WatcherGetResponse = Watcher;
-
-/** Optional parameters. */
-export interface WatcherUpdateOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the update operation. */
-export type WatcherUpdateResponse = Watcher;
-
-/** Optional parameters. */
-export interface WatcherDeleteOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface WatcherStartOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface WatcherStopOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface WatcherListByAutomationAccountOptionalParams
-  extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. */
-  filter?: string;
-}
-
-/** Contains response data for the listByAutomationAccount operation. */
-export type WatcherListByAutomationAccountResponse = WatcherListResult;
-
-/** Optional parameters. */
-export interface WatcherListByAutomationAccountNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByAutomationAccountNext operation. */
-export type WatcherListByAutomationAccountNextResponse = WatcherListResult;
-
-/** Optional parameters. */
-export interface DscConfigurationDeleteOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface DscConfigurationGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type DscConfigurationGetResponse = DscConfiguration;
-
-/** Optional parameters. */
-export interface DscConfigurationCreateOrUpdate$textOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface DscConfigurationCreateOrUpdate$jsonOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the createOrUpdate operation. */
-export type DscConfigurationCreateOrUpdateResponse = DscConfiguration;
-
-/** Optional parameters. */
-export interface DscConfigurationUpdate$textOptionalParams
-  extends coreClient.OperationOptions {
-  /** The create or update parameters for configuration. */
-  parameters?: string;
-}
-
-/** Optional parameters. */
-export interface DscConfigurationUpdate$jsonOptionalParams
-  extends coreClient.OperationOptions {
-  /** The create or update parameters for configuration. */
-  parameters?: DscConfigurationUpdateParameters;
-}
-
-/** Contains response data for the update operation. */
-export type DscConfigurationUpdateResponse = DscConfiguration;
-
-/** Optional parameters. */
-export interface DscConfigurationGetContentOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getContent operation. */
-export type DscConfigurationGetContentResponse = {
-  /** The parsed response body. */
-  body: string;
-};
-
-/** Optional parameters. */
-export interface DscConfigurationListByAutomationAccountOptionalParams
-  extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. */
-  filter?: string;
-  /** The number of rows to skip. */
-  skip?: number;
-  /** The number of rows to take. */
-  top?: number;
-  /** Return total rows. */
-  inlinecount?: string;
-}
-
-/** Contains response data for the listByAutomationAccount operation. */
-export type DscConfigurationListByAutomationAccountResponse = DscConfigurationListResult;
-
-/** Optional parameters. */
-export interface DscConfigurationListByAutomationAccountNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByAutomationAccountNext operation. */
-export type DscConfigurationListByAutomationAccountNextResponse = DscConfigurationListResult;
-
-/** Optional parameters. */
-export interface JobGetOutputOptionalParams
-  extends coreClient.OperationOptions {
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-}
-
-/** Contains response data for the getOutput operation. */
-export type JobGetOutputResponse = {
-  /** The parsed response body. */
-  body: string;
-};
-
-/** Optional parameters. */
-export interface JobGetRunbookContentOptionalParams
-  extends coreClient.OperationOptions {
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-}
-
-/** Contains response data for the getRunbookContent operation. */
-export type JobGetRunbookContentResponse = {
-  /** The parsed response body. */
-  body: string;
-};
-
-/** Optional parameters. */
-export interface JobSuspendOptionalParams extends coreClient.OperationOptions {
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-}
-
-/** Optional parameters. */
-export interface JobStopOptionalParams extends coreClient.OperationOptions {
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-}
-
-/** Optional parameters. */
-export interface JobGetOptionalParams extends coreClient.OperationOptions {
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-}
-
-/** Contains response data for the get operation. */
-export type JobGetResponse = Job;
-
-/** Optional parameters. */
-export interface JobCreateOptionalParams extends coreClient.OperationOptions {
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-}
-
-/** Contains response data for the create operation. */
-export type JobCreateResponse = Job;
-
-/** Optional parameters. */
-export interface JobListByAutomationAccountOptionalParams
-  extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. */
-  filter?: string;
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-}
-
-/** Contains response data for the listByAutomationAccount operation. */
-export type JobListByAutomationAccountResponse = JobListResultV2;
-
-/** Optional parameters. */
-export interface JobResumeOptionalParams extends coreClient.OperationOptions {
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-}
-
-/** Optional parameters. */
-export interface JobListByAutomationAccountNextOptionalParams
-  extends coreClient.OperationOptions {
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-}
-
-/** Contains response data for the listByAutomationAccountNext operation. */
-export type JobListByAutomationAccountNextResponse = JobListResultV2;
-
-/** Optional parameters. */
-export interface JobStreamGetOptionalParams
-  extends coreClient.OperationOptions {
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-}
-
-/** Contains response data for the get operation. */
-export type JobStreamGetResponse = JobStream;
-
-/** Optional parameters. */
-export interface JobStreamListByJobOptionalParams
-  extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. */
-  filter?: string;
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-}
-
-/** Contains response data for the listByJob operation. */
-export type JobStreamListByJobResponse = JobStreamListResult;
-
-/** Optional parameters. */
-export interface JobStreamListByJobNextOptionalParams
-  extends coreClient.OperationOptions {
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-}
-
-/** Contains response data for the listByJobNext operation. */
-export type JobStreamListByJobNextResponse = JobStreamListResult;
-
-/** Optional parameters. */
 export interface OperationsListOptionalParams
   extends coreClient.OperationOptions {}
 
@@ -4508,95 +3492,82 @@ export interface ConvertGraphRunbookContentOptionalParams
 export type ConvertGraphRunbookContentResponse = GraphicalRunbookContent;
 
 /** Optional parameters. */
-export interface SoftwareUpdateConfigurationsCreateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-}
-
-/** Contains response data for the create operation. */
-export type SoftwareUpdateConfigurationsCreateResponse = SoftwareUpdateConfiguration;
+export interface Python2PackageDeleteOptionalParams
+  extends coreClient.OperationOptions {}
 
 /** Optional parameters. */
-export interface SoftwareUpdateConfigurationsGetByNameOptionalParams
-  extends coreClient.OperationOptions {
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-}
+export interface Python2PackageGetOptionalParams
+  extends coreClient.OperationOptions {}
 
-/** Contains response data for the getByName operation. */
-export type SoftwareUpdateConfigurationsGetByNameResponse = SoftwareUpdateConfiguration;
+/** Contains response data for the get operation. */
+export type Python2PackageGetResponse = Module;
 
 /** Optional parameters. */
-export interface SoftwareUpdateConfigurationsDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-}
+export interface Python2PackageCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the createOrUpdate operation. */
+export type Python2PackageCreateOrUpdateResponse = Module;
 
 /** Optional parameters. */
-export interface SoftwareUpdateConfigurationsListOptionalParams
-  extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. */
-  filter?: string;
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-}
+export interface Python2PackageUpdateOptionalParams
+  extends coreClient.OperationOptions {}
 
-/** Contains response data for the list operation. */
-export type SoftwareUpdateConfigurationsListResponse = SoftwareUpdateConfigurationListResult;
+/** Contains response data for the update operation. */
+export type Python2PackageUpdateResponse = Module;
 
 /** Optional parameters. */
-export interface SoftwareUpdateConfigurationRunsGetByIdOptionalParams
-  extends coreClient.OperationOptions {
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-}
+export interface Python2PackageListByAutomationAccountOptionalParams
+  extends coreClient.OperationOptions {}
 
-/** Contains response data for the getById operation. */
-export type SoftwareUpdateConfigurationRunsGetByIdResponse = SoftwareUpdateConfigurationRun;
+/** Contains response data for the listByAutomationAccount operation. */
+export type Python2PackageListByAutomationAccountResponse = ModuleListResult;
 
 /** Optional parameters. */
-export interface SoftwareUpdateConfigurationRunsListOptionalParams
-  extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. You can use the following filters: 'properties/osType', 'properties/status', 'properties/startTime', and 'properties/softwareUpdateConfiguration/name' */
-  filter?: string;
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-  /** Number of entries you skip before returning results */
-  skip?: string;
-  /** Maximum number of entries returned in the results collection */
-  top?: string;
-}
+export interface Python2PackageListByAutomationAccountNextOptionalParams
+  extends coreClient.OperationOptions {}
 
-/** Contains response data for the list operation. */
-export type SoftwareUpdateConfigurationRunsListResponse = SoftwareUpdateConfigurationRunListResult;
+/** Contains response data for the listByAutomationAccountNext operation. */
+export type Python2PackageListByAutomationAccountNextResponse = ModuleListResult;
 
 /** Optional parameters. */
-export interface SoftwareUpdateConfigurationMachineRunsGetByIdOptionalParams
-  extends coreClient.OperationOptions {
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-}
-
-/** Contains response data for the getById operation. */
-export type SoftwareUpdateConfigurationMachineRunsGetByIdResponse = SoftwareUpdateConfigurationMachineRun;
+export interface Python3PackageDeleteOptionalParams
+  extends coreClient.OperationOptions {}
 
 /** Optional parameters. */
-export interface SoftwareUpdateConfigurationMachineRunsListOptionalParams
-  extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. You can use the following filters: 'properties/osType', 'properties/status', 'properties/startTime', and 'properties/softwareUpdateConfiguration/name' */
-  filter?: string;
-  /** Identifies this specific client request. */
-  clientRequestId?: string;
-  /** number of entries you skip before returning results */
-  skip?: string;
-  /** Maximum number of entries returned in the results collection */
-  top?: string;
-}
+export interface Python3PackageGetOptionalParams
+  extends coreClient.OperationOptions {}
 
-/** Contains response data for the list operation. */
-export type SoftwareUpdateConfigurationMachineRunsListResponse = SoftwareUpdateConfigurationMachineRunListResult;
+/** Contains response data for the get operation. */
+export type Python3PackageGetResponse = Module;
+
+/** Optional parameters. */
+export interface Python3PackageCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the createOrUpdate operation. */
+export type Python3PackageCreateOrUpdateResponse = Module;
+
+/** Optional parameters. */
+export interface Python3PackageUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the update operation. */
+export type Python3PackageUpdateResponse = Module;
+
+/** Optional parameters. */
+export interface Python3PackageListByAutomationAccountOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByAutomationAccount operation. */
+export type Python3PackageListByAutomationAccountResponse = ModuleListResult;
+
+/** Optional parameters. */
+export interface Python3PackageListByAutomationAccountNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByAutomationAccountNext operation. */
+export type Python3PackageListByAutomationAccountNextResponse = ModuleListResult;
 
 /** Optional parameters. */
 export interface RunbookDraftGetContentOptionalParams
@@ -4759,143 +3730,231 @@ export interface TestJobSuspendOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Optional parameters. */
-export interface WebhookGenerateUriOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the generateUri operation. */
-export type WebhookGenerateUriResponse = {
-  /** The parsed response body. */
-  body: string;
-};
-
-/** Optional parameters. */
-export interface WebhookDeleteOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface WebhookGetOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type WebhookGetResponse = Webhook;
-
-/** Optional parameters. */
-export interface WebhookCreateOrUpdateOptionalParams
+export interface ScheduleCreateOrUpdateOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the createOrUpdate operation. */
-export type WebhookCreateOrUpdateResponse = Webhook;
+export type ScheduleCreateOrUpdateResponse = Schedule;
 
 /** Optional parameters. */
-export interface WebhookUpdateOptionalParams
+export interface ScheduleUpdateOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the update operation. */
-export type WebhookUpdateResponse = Webhook;
+export type ScheduleUpdateResponse = Schedule;
 
 /** Optional parameters. */
-export interface WebhookListByAutomationAccountOptionalParams
+export interface ScheduleGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type ScheduleGetResponse = Schedule;
+
+/** Optional parameters. */
+export interface ScheduleDeleteOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Optional parameters. */
+export interface ScheduleListByAutomationAccountOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByAutomationAccount operation. */
+export type ScheduleListByAutomationAccountResponse = ScheduleListResult;
+
+/** Optional parameters. */
+export interface ScheduleListByAutomationAccountNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByAutomationAccountNext operation. */
+export type ScheduleListByAutomationAccountNextResponse = ScheduleListResult;
+
+/** Optional parameters. */
+export interface SoftwareUpdateConfigurationMachineRunsGetByIdOptionalParams
+  extends coreClient.OperationOptions {
+  /** Identifies this specific client request. */
+  clientRequestId?: string;
+}
+
+/** Contains response data for the getById operation. */
+export type SoftwareUpdateConfigurationMachineRunsGetByIdResponse = SoftwareUpdateConfigurationMachineRun;
+
+/** Optional parameters. */
+export interface SoftwareUpdateConfigurationMachineRunsListOptionalParams
+  extends coreClient.OperationOptions {
+  /** The filter to apply on the operation. You can use the following filters: 'properties/osType', 'properties/status', 'properties/startTime', and 'properties/softwareUpdateConfiguration/name' */
+  filter?: string;
+  /** Identifies this specific client request. */
+  clientRequestId?: string;
+  /** number of entries you skip before returning results */
+  skip?: string;
+  /** Maximum number of entries returned in the results collection */
+  top?: string;
+}
+
+/** Contains response data for the list operation. */
+export type SoftwareUpdateConfigurationMachineRunsListResponse = SoftwareUpdateConfigurationMachineRunListResult;
+
+/** Optional parameters. */
+export interface SoftwareUpdateConfigurationRunsGetByIdOptionalParams
+  extends coreClient.OperationOptions {
+  /** Identifies this specific client request. */
+  clientRequestId?: string;
+}
+
+/** Contains response data for the getById operation. */
+export type SoftwareUpdateConfigurationRunsGetByIdResponse = SoftwareUpdateConfigurationRun;
+
+/** Optional parameters. */
+export interface SoftwareUpdateConfigurationRunsListOptionalParams
+  extends coreClient.OperationOptions {
+  /** The filter to apply on the operation. You can use the following filters: 'properties/osType', 'properties/status', 'properties/startTime', and 'properties/softwareUpdateConfiguration/name' */
+  filter?: string;
+  /** Identifies this specific client request. */
+  clientRequestId?: string;
+  /** Number of entries you skip before returning results */
+  skip?: string;
+  /** Maximum number of entries returned in the results collection */
+  top?: string;
+}
+
+/** Contains response data for the list operation. */
+export type SoftwareUpdateConfigurationRunsListResponse = SoftwareUpdateConfigurationRunListResult;
+
+/** Optional parameters. */
+export interface SourceControlCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the createOrUpdate operation. */
+export type SourceControlCreateOrUpdateResponse = SourceControl;
+
+/** Optional parameters. */
+export interface SourceControlUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the update operation. */
+export type SourceControlUpdateResponse = SourceControl;
+
+/** Optional parameters. */
+export interface SourceControlDeleteOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Optional parameters. */
+export interface SourceControlGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type SourceControlGetResponse = SourceControl;
+
+/** Optional parameters. */
+export interface SourceControlListByAutomationAccountOptionalParams
   extends coreClient.OperationOptions {
   /** The filter to apply on the operation. */
   filter?: string;
 }
 
 /** Contains response data for the listByAutomationAccount operation. */
-export type WebhookListByAutomationAccountResponse = WebhookListResult;
+export type SourceControlListByAutomationAccountResponse = SourceControlListResult;
 
 /** Optional parameters. */
-export interface WebhookListByAutomationAccountNextOptionalParams
+export interface SourceControlListByAutomationAccountNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByAutomationAccountNext operation. */
-export type WebhookListByAutomationAccountNextResponse = WebhookListResult;
+export type SourceControlListByAutomationAccountNextResponse = SourceControlListResult;
 
 /** Optional parameters. */
-export interface HybridRunbookWorkersDeleteOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface HybridRunbookWorkersGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type HybridRunbookWorkersGetResponse = HybridRunbookWorker;
-
-/** Optional parameters. */
-export interface HybridRunbookWorkersCreateOptionalParams
+export interface SourceControlSyncJobCreateOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the create operation. */
-export type HybridRunbookWorkersCreateResponse = HybridRunbookWorker;
+export type SourceControlSyncJobCreateResponse = SourceControlSyncJob;
 
 /** Optional parameters. */
-export interface HybridRunbookWorkersMoveOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface HybridRunbookWorkersListByHybridRunbookWorkerGroupOptionalParams
-  extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. */
-  filter?: string;
-}
-
-/** Contains response data for the listByHybridRunbookWorkerGroup operation. */
-export type HybridRunbookWorkersListByHybridRunbookWorkerGroupResponse = HybridRunbookWorkersListResult;
-
-/** Optional parameters. */
-export interface HybridRunbookWorkersListByHybridRunbookWorkerGroupNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByHybridRunbookWorkerGroupNext operation. */
-export type HybridRunbookWorkersListByHybridRunbookWorkerGroupNextResponse = HybridRunbookWorkersListResult;
-
-/** Optional parameters. */
-export interface DeletedAutomationAccountsListBySubscriptionOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listBySubscription operation. */
-export type DeletedAutomationAccountsListBySubscriptionResponse = DeletedAutomationAccountListResult;
-
-/** Optional parameters. */
-export interface HybridRunbookWorkerGroupDeleteOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface HybridRunbookWorkerGroupGetOptionalParams
+export interface SourceControlSyncJobGetOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
-export type HybridRunbookWorkerGroupGetResponse = HybridRunbookWorkerGroup;
+export type SourceControlSyncJobGetResponse = SourceControlSyncJobById;
 
 /** Optional parameters. */
-export interface HybridRunbookWorkerGroupCreateOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the create operation. */
-export type HybridRunbookWorkerGroupCreateResponse = HybridRunbookWorkerGroup;
-
-/** Optional parameters. */
-export interface HybridRunbookWorkerGroupUpdateOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the update operation. */
-export type HybridRunbookWorkerGroupUpdateResponse = HybridRunbookWorkerGroup;
-
-/** Optional parameters. */
-export interface HybridRunbookWorkerGroupListByAutomationAccountOptionalParams
+export interface SourceControlSyncJobListByAutomationAccountOptionalParams
   extends coreClient.OperationOptions {
   /** The filter to apply on the operation. */
   filter?: string;
 }
 
 /** Contains response data for the listByAutomationAccount operation. */
-export type HybridRunbookWorkerGroupListByAutomationAccountResponse = HybridRunbookWorkerGroupsListResult;
+export type SourceControlSyncJobListByAutomationAccountResponse = SourceControlSyncJobListResult;
 
 /** Optional parameters. */
-export interface HybridRunbookWorkerGroupListByAutomationAccountNextOptionalParams
+export interface SourceControlSyncJobListByAutomationAccountNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByAutomationAccountNext operation. */
-export type HybridRunbookWorkerGroupListByAutomationAccountNextResponse = HybridRunbookWorkerGroupsListResult;
+export type SourceControlSyncJobListByAutomationAccountNextResponse = SourceControlSyncJobListResult;
+
+/** Optional parameters. */
+export interface SourceControlSyncJobStreamsListBySyncJobOptionalParams
+  extends coreClient.OperationOptions {
+  /** The filter to apply on the operation. */
+  filter?: string;
+}
+
+/** Contains response data for the listBySyncJob operation. */
+export type SourceControlSyncJobStreamsListBySyncJobResponse = SourceControlSyncJobStreamsListBySyncJob;
+
+/** Optional parameters. */
+export interface SourceControlSyncJobStreamsGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type SourceControlSyncJobStreamsGetResponse = SourceControlSyncJobStreamById;
+
+/** Optional parameters. */
+export interface SourceControlSyncJobStreamsListBySyncJobNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listBySyncJobNext operation. */
+export type SourceControlSyncJobStreamsListBySyncJobNextResponse = SourceControlSyncJobStreamsListBySyncJob;
+
+/** Optional parameters. */
+export interface VariableCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the createOrUpdate operation. */
+export type VariableCreateOrUpdateResponse = Variable;
+
+/** Optional parameters. */
+export interface VariableUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the update operation. */
+export type VariableUpdateResponse = Variable;
+
+/** Optional parameters. */
+export interface VariableDeleteOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Optional parameters. */
+export interface VariableGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type VariableGetResponse = Variable;
+
+/** Optional parameters. */
+export interface VariableListByAutomationAccountOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByAutomationAccount operation. */
+export type VariableListByAutomationAccountResponse = VariableListResult;
+
+/** Optional parameters. */
+export interface VariableListByAutomationAccountNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByAutomationAccountNext operation. */
+export type VariableListByAutomationAccountNextResponse = VariableListResult;
 
 /** Optional parameters. */
 export interface AutomationClientOptionalParams

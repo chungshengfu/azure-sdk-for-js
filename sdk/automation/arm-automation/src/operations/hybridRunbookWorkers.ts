@@ -319,9 +319,9 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion1],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.automationAccountName,
+    Parameters.subscriptionId,
     Parameters.hybridRunbookWorkerGroupName,
     Parameters.hybridRunbookWorkerId
   ],
@@ -343,9 +343,9 @@ const getOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion1],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.automationAccountName,
+    Parameters.subscriptionId,
     Parameters.hybridRunbookWorkerGroupName,
     Parameters.hybridRunbookWorkerId
   ],
@@ -360,6 +360,9 @@ const createOperationSpec: coreClient.OperationSpec = {
     200: {
       bodyMapper: Mappers.HybridRunbookWorker
     },
+    201: {
+      bodyMapper: Mappers.HybridRunbookWorker
+    },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
@@ -368,13 +371,13 @@ const createOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion1],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.automationAccountName,
+    Parameters.subscriptionId,
     Parameters.hybridRunbookWorkerGroupName,
     Parameters.hybridRunbookWorkerId
   ],
-  headerParameters: [Parameters.accept, Parameters.contentType],
+  headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: "json",
   serializer
 };
@@ -392,13 +395,13 @@ const moveOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion1],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.automationAccountName,
+    Parameters.subscriptionId,
     Parameters.hybridRunbookWorkerGroupName,
     Parameters.hybridRunbookWorkerId
   ],
-  headerParameters: [Parameters.accept, Parameters.contentType],
+  headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: "json",
   serializer
 };
@@ -417,9 +420,9 @@ const listByHybridRunbookWorkerGroupOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.filter, Parameters.apiVersion1],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.automationAccountName,
+    Parameters.subscriptionId,
     Parameters.hybridRunbookWorkerGroupName
   ],
   headerParameters: [Parameters.accept],
@@ -438,9 +441,9 @@ const listByHybridRunbookWorkerGroupNextOperationSpec: coreClient.OperationSpec 
   },
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.automationAccountName,
+    Parameters.subscriptionId,
     Parameters.nextLink,
     Parameters.hybridRunbookWorkerGroupName
   ],
