@@ -522,7 +522,7 @@ export interface AzureDataExplorerConnectionProperties
   /** The EventHub consumer group to use when ADX reads from EventHub. Defaults to $Default. */
   eventHubConsumerGroup?: string;
   /** Specifies whether or not to record twin / relationship property and item removals, including removals of indexed or keyed values (such as map entries, array elements, etc.). This feature is de-activated unless explicitly set to 'true'. Setting this property to 'true' will generate an additional column in the property events table in ADX. */
-  recordPropertyAndItemRemovals?: RecordPropertyAndItemRemovals;
+  recordPropertyAndItemRemovals?: boolean;
 }
 
 /** Known values of {@link ProvisioningState} that the service accepts. */
@@ -887,24 +887,6 @@ export enum KnownCleanupConnectionArtifacts {
  * **false**
  */
 export type CleanupConnectionArtifacts = string;
-
-/** Known values of {@link RecordPropertyAndItemRemovals} that the service accepts. */
-export enum KnownRecordPropertyAndItemRemovals {
-  /** True */
-  True = "true",
-  /** False */
-  False = "false"
-}
-
-/**
- * Defines values for RecordPropertyAndItemRemovals. \
- * {@link KnownRecordPropertyAndItemRemovals} can be used interchangeably with RecordPropertyAndItemRemovals,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **true** \
- * **false**
- */
-export type RecordPropertyAndItemRemovals = string;
 
 /** Optional parameters. */
 export interface DigitalTwinsGetOptionalParams

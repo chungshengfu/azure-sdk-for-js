@@ -1,15 +1,13 @@
 # Release History
+    
+## 4.0.0 (2023-08-02)
+    
+**Breaking Changes**
 
-## 3.3.1 (Unreleased)
-
-### Features Added
-
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
+  - Type of parameter recordPropertyAndItemRemovals of interface AzureDataExplorerConnectionProperties is changed from RecordPropertyAndItemRemovals to boolean
+  - Removed Enum KnownRecordPropertyAndItemRemovals
+    
+    
 ## 3.3.0 (2023-03-01)
     
 **Features**

@@ -1256,11 +1256,10 @@ export const AzureDataExplorerConnectionProperties: coreClient.CompositeMapper =
         }
       },
       recordPropertyAndItemRemovals: {
-        defaultValue: "false",
         serializedName: "recordPropertyAndItemRemovals",
         nullable: true,
         type: {
-          name: "String"
+          name: "Boolean"
         }
       }
     }

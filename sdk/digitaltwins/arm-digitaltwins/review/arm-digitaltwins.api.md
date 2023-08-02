@@ -26,7 +26,7 @@ export interface AzureDataExplorerConnectionProperties extends TimeSeriesDatabas
     eventHubEndpointUri: string;
     eventHubEntityPath: string;
     eventHubNamespaceResourceId: string;
-    recordPropertyAndItemRemovals?: RecordPropertyAndItemRemovals;
+    recordPropertyAndItemRemovals?: boolean;
 }
 
 // @public (undocumented)
@@ -491,12 +491,6 @@ export enum KnownReason {
 }
 
 // @public
-export enum KnownRecordPropertyAndItemRemovals {
-    False = "false",
-    True = "true"
-}
-
-// @public
 export enum KnownTimeSeriesDatabaseConnectionState {
     Canceled = "Canceled",
     Deleted = "Deleted",
@@ -651,9 +645,6 @@ export type PublicNetworkAccess = string;
 
 // @public
 export type Reason = string;
-
-// @public
-export type RecordPropertyAndItemRemovals = string;
 
 // @public
 export interface ServiceBus extends DigitalTwinsEndpointResourceProperties {
