@@ -1,15 +1,34 @@
 # Release History
+    
+## 22.0.0 (2023-09-01)
+    
+**Features**
 
-## 21.1.1 (Unreleased)
+  - Added Type Alias DomainNameLabelScopeTypes
+  - Added Type Alias NetworkInterfaceAuxiliaryMode
+  - Added Type Alias NetworkInterfaceAuxiliarySku
+  - Interface CreationData has a new optional parameter elasticSanResourceId
+  - Interface Disk has a new optional parameter lastOwnershipUpdateTime
+  - Interface VirtualMachineNetworkInterfaceConfiguration has a new optional parameter auxiliaryMode
+  - Interface VirtualMachineNetworkInterfaceConfiguration has a new optional parameter auxiliarySku
+  - Interface VirtualMachinePublicIPAddressDnsSettingsConfiguration has a new optional parameter domainNameLabelScope
+  - Interface VirtualMachineScaleSetNetworkConfiguration has a new optional parameter auxiliaryMode
+  - Interface VirtualMachineScaleSetNetworkConfiguration has a new optional parameter auxiliarySku
+  - Interface VirtualMachineScaleSetPublicIPAddressConfigurationDnsSettings has a new optional parameter domainNameLabelScope
+  - Interface VirtualMachineScaleSetUpdateNetworkConfiguration has a new optional parameter auxiliaryMode
+  - Interface VirtualMachineScaleSetUpdateNetworkConfiguration has a new optional parameter auxiliarySku
+  - Interface VirtualMachineScaleSetVM has a new optional parameter timeCreated
+  - Added Enum KnownDomainNameLabelScopeTypes
+  - Added Enum KnownNetworkInterfaceAuxiliaryMode
+  - Added Enum KnownNetworkInterfaceAuxiliarySku
+  - Enum KnownDiskCreateOption has a new value CopyFromSanSnapshot
 
-### Features Added
+**Breaking Changes**
 
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
+  - Type of parameter diskControllerType of interface VirtualMachineScaleSetStorageProfile is changed from string to DiskControllerTypes
+  - Type of parameter diskControllerType of interface VirtualMachineScaleSetUpdateStorageProfile is changed from string to DiskControllerTypes
+    
+    
 ## 21.1.0 (2023-07-07)
     
 **Features**

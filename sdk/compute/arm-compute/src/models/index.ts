@@ -418,7 +418,8 @@ export interface VirtualMachineScaleSetStorageProfile {
   osDisk?: VirtualMachineScaleSetOSDisk;
   /** Specifies the parameters that are used to add data disks to the virtual machines in the scale set. For more information about disks, see [About disks and VHDs for Azure virtual machines](https://docs.microsoft.com/azure/virtual-machines/managed-disks-overview). */
   dataDisks?: VirtualMachineScaleSetDataDisk[];
-  diskControllerType?: string;
+  /** Specifies the disk controller type configured for the virtual machines in the scale set. Minimum api-version: 2022-08-01 */
+  diskControllerType?: DiskControllerTypes;
 }
 
 /** Describes a virtual machine scale set operating system disk. */
@@ -541,6 +542,10 @@ export interface VirtualMachineScaleSetNetworkConfiguration {
   enableIPForwarding?: boolean;
   /** Specify what happens to the network interface when the VM is deleted */
   deleteOption?: DeleteOptions;
+  /** Specifies whether the Auxiliary mode is enabled for the Network Interface resource. */
+  auxiliaryMode?: NetworkInterfaceAuxiliaryMode;
+  /** Specifies whether the Auxiliary sku is enabled for the Network Interface resource. */
+  auxiliarySku?: NetworkInterfaceAuxiliarySku;
 }
 
 /** Describes a virtual machines scale sets network configuration's DNS settings. */
@@ -595,6 +600,8 @@ export interface VirtualMachineScaleSetPublicIPAddressConfiguration {
 export interface VirtualMachineScaleSetPublicIPAddressConfigurationDnsSettings {
   /** The Domain name label.The concatenation of the domain name label and vm index will be the domain name labels of the PublicIPAddress resources that will be created */
   domainNameLabel: string;
+  /** The Domain name label scope.The concatenation of the hashed domain name label that generated according to the policy from domain name label scope and vm index will be the domain name labels of the PublicIPAddress resources that will be created */
+  domainNameLabelScope?: DomainNameLabelScopeTypes;
 }
 
 /** Contains the IP tag associated with the public IP address. */
@@ -945,7 +952,8 @@ export interface VirtualMachineScaleSetUpdateStorageProfile {
   osDisk?: VirtualMachineScaleSetUpdateOSDisk;
   /** The data disks. */
   dataDisks?: VirtualMachineScaleSetDataDisk[];
-  diskControllerType?: string;
+  /** Specifies the disk controller type configured for the virtual machines in the scale set. **Note:** You need to deallocate the virtual machines in the scale set before updating its disk controller type based on the upgrade mode configured for the scale set. Minimum api-version: 2022-08-01. */
+  diskControllerType?: DiskControllerTypes;
 }
 
 /** Describes virtual machine scale set operating system disk Update Object. This should be used for Updating VMSS OS Disk. */
@@ -998,6 +1006,10 @@ export interface VirtualMachineScaleSetUpdateNetworkConfiguration {
   enableIPForwarding?: boolean;
   /** Specify what happens to the network interface when the VM is deleted */
   deleteOption?: DeleteOptions;
+  /** Specifies whether the Auxiliary mode is enabled for the Network Interface resource. */
+  auxiliaryMode?: NetworkInterfaceAuxiliaryMode;
+  /** Specifies whether the Auxiliary sku is enabled for the Network Interface resource. */
+  auxiliarySku?: NetworkInterfaceAuxiliarySku;
 }
 
 /** Describes a virtual machine scale set network profile's IP configuration. NOTE: The subnet of a scale set may be modified as long as the original subnet and the new subnet are in the same virtual network */
@@ -1668,6 +1680,10 @@ export interface VirtualMachineNetworkInterfaceConfiguration {
   /** Specifies the IP configurations of the network interface. */
   ipConfigurations?: VirtualMachineNetworkInterfaceIPConfiguration[];
   dscpConfiguration?: SubResource;
+  /** Specifies whether the Auxiliary mode is enabled for the Network Interface resource. */
+  auxiliaryMode?: NetworkInterfaceAuxiliaryMode;
+  /** Specifies whether the Auxiliary sku is enabled for the Network Interface resource. */
+  auxiliarySku?: NetworkInterfaceAuxiliarySku;
 }
 
 /** Describes a virtual machines network configuration's DNS settings. */
@@ -1722,6 +1738,8 @@ export interface VirtualMachinePublicIPAddressConfiguration {
 export interface VirtualMachinePublicIPAddressDnsSettingsConfiguration {
   /** The Domain name label prefix of the PublicIPAddress resources that will be created. The generated name label is the concatenation of the domain name label and vm network profile unique ID. */
   domainNameLabel: string;
+  /** The Domain name label scope of the PublicIPAddress resources that will be created. The generated name label is the concatenation of the hashed domain name label with policy according to the domain name label scope and vm network profile unique ID. */
+  domainNameLabelScope?: DomainNameLabelScopeTypes;
 }
 
 /** Contains the IP tag associated with the public IP address. */
@@ -2860,6 +2878,8 @@ export interface CreationData {
   securityDataUri?: string;
   /** Set this flag to true to get a boost on the performance target of the disk deployed, see here on the respective performance target. This flag can only be set on disk creation time and cannot be disabled after enabled. */
   performancePlus?: boolean;
+  /** Required if createOption is CopyFromSanSnapshot. This is the ARM id of the source elastic san volume snapshot. */
+  elasticSanResourceId?: string;
 }
 
 /** The source image used for creating the disk. */
@@ -5105,6 +5125,11 @@ export interface VirtualMachineScaleSetVM extends Resource {
   protectionPolicy?: VirtualMachineScaleSetVMProtectionPolicy;
   /** UserData for the VM, which must be base-64 encoded. Customer should not pass any secrets in here. <br><br>Minimum api-version: 2021-03-01 */
   userData?: string;
+  /**
+   * Specifies the time at which the Virtual Machine resource was created.<br><br>Minimum api-version: 2021-11-01.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly timeCreated?: Date;
 }
 
 /** Describes a Virtual Machine. */
@@ -5562,6 +5587,11 @@ export interface Disk extends Resource {
   dataAccessAuthMode?: DataAccessAuthMode;
   /** Setting this property to true improves reliability and performance of data disks that are frequently (more than 5 times a day) by detached from one virtual machine and attached to another. This property should not be set for disks that are not detached and attached frequently as it causes the disks to not align with the fault domain of the virtual machine. */
   optimizedForFrequentAttach?: boolean;
+  /**
+   * The UTC time when the ownership state of the disk was last changed i.e., the time the disk was last attached or detached from a VM or the time when the VM to which the disk was attached was deallocated or started.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly lastOwnershipUpdateTime?: Date;
 }
 
 /** disk access resource. */
@@ -6900,6 +6930,48 @@ export enum KnownDiskDeleteOptionTypes {
  */
 export type DiskDeleteOptionTypes = string;
 
+/** Known values of {@link DiskControllerTypes} that the service accepts. */
+export enum KnownDiskControllerTypes {
+  /** Scsi */
+  Scsi = "SCSI",
+  /** NVMe */
+  NVMe = "NVMe"
+}
+
+/**
+ * Defines values for DiskControllerTypes. \
+ * {@link KnownDiskControllerTypes} can be used interchangeably with DiskControllerTypes,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **SCSI** \
+ * **NVMe**
+ */
+export type DiskControllerTypes = string;
+
+/** Known values of {@link DomainNameLabelScopeTypes} that the service accepts. */
+export enum KnownDomainNameLabelScopeTypes {
+  /** TenantReuse */
+  TenantReuse = "TenantReuse",
+  /** SubscriptionReuse */
+  SubscriptionReuse = "SubscriptionReuse",
+  /** ResourceGroupReuse */
+  ResourceGroupReuse = "ResourceGroupReuse",
+  /** NoReuse */
+  NoReuse = "NoReuse"
+}
+
+/**
+ * Defines values for DomainNameLabelScopeTypes. \
+ * {@link KnownDomainNameLabelScopeTypes} can be used interchangeably with DomainNameLabelScopeTypes,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **TenantReuse** \
+ * **SubscriptionReuse** \
+ * **ResourceGroupReuse** \
+ * **NoReuse**
+ */
+export type DomainNameLabelScopeTypes = string;
+
 /** Known values of {@link IPVersion} that the service accepts. */
 export enum KnownIPVersion {
   /** IPv4 */
@@ -6971,6 +7043,54 @@ export enum KnownPublicIPAddressSkuTier {
  * **Global**
  */
 export type PublicIPAddressSkuTier = string;
+
+/** Known values of {@link NetworkInterfaceAuxiliaryMode} that the service accepts. */
+export enum KnownNetworkInterfaceAuxiliaryMode {
+  /** None */
+  None = "None",
+  /** AcceleratedConnections */
+  AcceleratedConnections = "AcceleratedConnections",
+  /** Floating */
+  Floating = "Floating"
+}
+
+/**
+ * Defines values for NetworkInterfaceAuxiliaryMode. \
+ * {@link KnownNetworkInterfaceAuxiliaryMode} can be used interchangeably with NetworkInterfaceAuxiliaryMode,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **None** \
+ * **AcceleratedConnections** \
+ * **Floating**
+ */
+export type NetworkInterfaceAuxiliaryMode = string;
+
+/** Known values of {@link NetworkInterfaceAuxiliarySku} that the service accepts. */
+export enum KnownNetworkInterfaceAuxiliarySku {
+  /** None */
+  None = "None",
+  /** A1 */
+  A1 = "A1",
+  /** A2 */
+  A2 = "A2",
+  /** A4 */
+  A4 = "A4",
+  /** A8 */
+  A8 = "A8"
+}
+
+/**
+ * Defines values for NetworkInterfaceAuxiliarySku. \
+ * {@link KnownNetworkInterfaceAuxiliarySku} can be used interchangeably with NetworkInterfaceAuxiliarySku,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **None** \
+ * **A1** \
+ * **A2** \
+ * **A4** \
+ * **A8**
+ */
+export type NetworkInterfaceAuxiliarySku = string;
 
 /** Known values of {@link NetworkApiVersion} that the service accepts. */
 export enum KnownNetworkApiVersion {
@@ -7713,24 +7833,6 @@ export enum KnownDiskDetachOptionTypes {
  */
 export type DiskDetachOptionTypes = string;
 
-/** Known values of {@link DiskControllerTypes} that the service accepts. */
-export enum KnownDiskControllerTypes {
-  /** Scsi */
-  Scsi = "SCSI",
-  /** NVMe */
-  NVMe = "NVMe"
-}
-
-/**
- * Defines values for DiskControllerTypes. \
- * {@link KnownDiskControllerTypes} can be used interchangeably with DiskControllerTypes,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **SCSI** \
- * **NVMe**
- */
-export type DiskControllerTypes = string;
-
 /** Known values of {@link IPVersions} that the service accepts. */
 export enum KnownIPVersions {
   /** IPv4 */
@@ -8379,7 +8481,9 @@ export enum KnownDiskCreateOption {
   /** Similar to Import create option. Create a new Trusted Launch VM or Confidential VM supported disk by importing additional blob for VM guest state specified by securityDataUri in storage account specified by storageAccountId */
   ImportSecure = "ImportSecure",
   /** Similar to Upload create option. Create a new Trusted Launch VM or Confidential VM supported disk and upload using write token in both disk and VM guest state */
-  UploadPreparedSecure = "UploadPreparedSecure"
+  UploadPreparedSecure = "UploadPreparedSecure",
+  /** Create a new disk by exporting from elastic san volume snapshot */
+  CopyFromSanSnapshot = "CopyFromSanSnapshot"
 }
 
 /**
@@ -8396,7 +8500,8 @@ export enum KnownDiskCreateOption {
  * **Upload**: Create a new disk by obtaining a write token and using it to directly upload the contents of the disk. \
  * **CopyStart**: Create a new disk by using a deep copy process, where the resource creation is considered complete only after all data has been copied from the source. \
  * **ImportSecure**: Similar to Import create option. Create a new Trusted Launch VM or Confidential VM supported disk by importing additional blob for VM guest state specified by securityDataUri in storage account specified by storageAccountId \
- * **UploadPreparedSecure**: Similar to Upload create option. Create a new Trusted Launch VM or Confidential VM supported disk and upload using write token in both disk and VM guest state
+ * **UploadPreparedSecure**: Similar to Upload create option. Create a new Trusted Launch VM or Confidential VM supported disk and upload using write token in both disk and VM guest state \
+ * **CopyFromSanSnapshot**: Create a new disk by exporting from elastic san volume snapshot
  */
 export type DiskCreateOption = string;
 
