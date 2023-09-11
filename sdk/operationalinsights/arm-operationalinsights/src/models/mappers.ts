@@ -1432,7 +1432,7 @@ export const ClusterSku: coreClient.CompositeMapper = {
         serializedName: "capacity",
         type: {
           name: "Enum",
-          allowedValues: [500, 1000, 2000, 5000]
+          allowedValues: [500, 1000, 2000, 5000, 10000, 25000, 50000]
         }
       },
       name: {
@@ -1701,7 +1701,19 @@ export const WorkspaceSku: coreClient.CompositeMapper = {
         serializedName: "capacityReservationLevel",
         type: {
           name: "Enum",
-          allowedValues: [100, 200, 300, 400, 500, 1000, 2000, 5000]
+          allowedValues: [
+            100,
+            200,
+            300,
+            400,
+            500,
+            1000,
+            2000,
+            5000,
+            10000,
+            25000,
+            50000
+          ]
         }
       },
       lastSkuUpdate: {
@@ -2667,7 +2679,7 @@ export const Table: coreClient.CompositeMapper = {
       },
       totalRetentionInDays: {
         constraints: {
-          InclusiveMaximum: 2555,
+          InclusiveMaximum: 2556,
           InclusiveMinimum: 4
         },
         serializedName: "properties.totalRetentionInDays",
