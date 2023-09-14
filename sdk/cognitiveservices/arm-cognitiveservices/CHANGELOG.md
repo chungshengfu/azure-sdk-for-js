@@ -1,5 +1,75 @@
 # Release History
     
+## 7.6.0-beta.1 (2023-09-14)
+    
+**Features**
+
+  - Added operation group RaiBlocklistItemOperations
+  - Added operation group RaiBlocklistItems
+  - Added operation group RaiBlocklistOperations
+  - Added operation group RaiBlocklists
+  - Added operation group RaiContentFilters
+  - Added operation group RaiPolicies
+  - Added Interface RaiBlocklist
+  - Added Interface RaiBlocklistConfig
+  - Added Interface RaiBlocklistCreateOrUpdateOptionalParams
+  - Added Interface RaiBlocklistGetOptionalParams
+  - Added Interface RaiBlocklistItem
+  - Added Interface RaiBlocklistItemCreateOrUpdateOptionalParams
+  - Added Interface RaiBlocklistItemDeleteHeaders
+  - Added Interface RaiBlocklistItemDeleteOptionalParams
+  - Added Interface RaiBlocklistItemGetOptionalParams
+  - Added Interface RaiBlocklistItemProperties
+  - Added Interface RaiBlocklistItemsListNextOptionalParams
+  - Added Interface RaiBlocklistItemsListOptionalParams
+  - Added Interface RaiBlockListItemsResult
+  - Added Interface RaiBlocklistProperties
+  - Added Interface RaiBlockListResult
+  - Added Interface RaiBlocklistsDeleteHeaders
+  - Added Interface RaiBlocklistsDeleteOptionalParams
+  - Added Interface RaiBlocklistsListNextOptionalParams
+  - Added Interface RaiBlocklistsListOptionalParams
+  - Added Interface RaiContentFilter
+  - Added Interface RaiContentFilterListResult
+  - Added Interface RaiContentFiltersListOptionalParams
+  - Added Interface RaiPoliciesCreateOrUpdateOptionalParams
+  - Added Interface RaiPoliciesDeleteHeaders
+  - Added Interface RaiPoliciesDeleteOptionalParams
+  - Added Interface RaiPoliciesGetOptionalParams
+  - Added Interface RaiPoliciesListNextOptionalParams
+  - Added Interface RaiPoliciesListOptionalParams
+  - Added Interface RaiPolicy
+  - Added Interface RaiPolicyContentFilter
+  - Added Interface RaiPolicyListResult
+  - Added Interface RaiPolicyProperties
+  - Added Type Alias AllowedContentLevel
+  - Added Type Alias ByPassSelection
+  - Added Type Alias RaiBlocklistCreateOrUpdateResponse
+  - Added Type Alias RaiBlocklistGetResponse
+  - Added Type Alias RaiBlocklistItemCreateOrUpdateResponse
+  - Added Type Alias RaiBlocklistItemGetResponse
+  - Added Type Alias RaiBlocklistItemsListNextResponse
+  - Added Type Alias RaiBlocklistItemsListResponse
+  - Added Type Alias RaiBlocklistsListNextResponse
+  - Added Type Alias RaiBlocklistsListResponse
+  - Added Type Alias RaiContentFiltersListResponse
+  - Added Type Alias RaiContentFilterType
+  - Added Type Alias RaiPoliciesCreateOrUpdateResponse
+  - Added Type Alias RaiPoliciesGetResponse
+  - Added Type Alias RaiPoliciesListNextResponse
+  - Added Type Alias RaiPoliciesListResponse
+  - Added Type Alias RaiPolicyContentSource
+  - Added Type Alias RaiPolicyMode
+  - Added Type Alias RaiPolicyType
+  - Interface NetworkRuleSet has a new optional parameter bypass
+  - Added Enum KnownAllowedContentLevel
+  - Added Enum KnownByPassSelection
+  - Added Enum KnownRaiContentFilterType
+  - Added Enum KnownRaiPolicyContentSource
+  - Added Enum KnownRaiPolicyMode
+  - Added Enum KnownRaiPolicyType
+    
+    
 ## 7.5.0 (2023-07-06)
     
 **Features**

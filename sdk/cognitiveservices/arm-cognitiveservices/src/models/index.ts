@@ -190,6 +190,8 @@ export interface SkuChangeInfo {
 export interface NetworkRuleSet {
   /** The default action when no rule from ipRules and from virtualNetworkRules match. This is only used after the bypass property has been evaluated. */
   defaultAction?: NetworkRuleAction;
+  /** Setting for trusted services. */
+  bypass?: ByPassSelection;
   /** The list of IP address rules. */
   ipRules?: IpRule[];
   /** The list of virtual network rules. */
@@ -941,6 +943,103 @@ export interface CommitmentPeriod {
   readonly endDate?: string;
 }
 
+/** The list of cognitive services RaiPolicies. */
+export interface RaiPolicyListResult {
+  /** The link used to get the next page of RaiPolicy. */
+  nextLink?: string;
+  /** The list of RaiPolicy. */
+  value?: RaiPolicy[];
+}
+
+/** Azure OpenAI Content Filters properties. */
+export interface RaiPolicyProperties {
+  /**
+   * Content Filters policy type.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly policyType?: RaiPolicyType;
+  /** Content Filters mode. */
+  mode?: RaiPolicyMode;
+  /** Name of the base Content Filters. */
+  basePolicyName?: string;
+  /** The list of blocklists for prompt. */
+  promptBlocklists?: RaiBlocklistConfig[];
+  /** The list of blocklists for completion. */
+  completionBlocklists?: RaiBlocklistConfig[];
+  /** The list of Content Filters. */
+  contentFilters?: RaiPolicyContentFilter[];
+}
+
+/** Azure OpenAI blocklist config. */
+export interface RaiBlocklistConfig {
+  /** Name of ContentFilter. */
+  blocklistName?: string;
+  /** If blocking would occur. */
+  blocking?: boolean;
+}
+
+/** Azure OpenAI Content Filter. */
+export interface RaiPolicyContentFilter {
+  /** Name of ContentFilter. */
+  policyName?: string;
+  /** If the ContentFilter is enabled. */
+  enabled?: boolean;
+  /** Level at which content is filtered. */
+  allowedContentLevel?: AllowedContentLevel;
+  /** If blocking would occur. */
+  blocking?: boolean;
+  /** Content source to apply the Content Filters. */
+  source?: RaiPolicyContentSource;
+}
+
+/** The list of cognitive services RAI Blocklists. */
+export interface RaiBlockListResult {
+  /** The link used to get the next page of Raiblocklists. */
+  nextLink?: string;
+  /** The list of RaiBlocklist. */
+  value?: RaiBlocklist[];
+}
+
+/** RAI Custom Blocklist properties. */
+export interface RaiBlocklistProperties {
+  /** Description of the block list. */
+  description?: string;
+}
+
+/** The list of cognitive services RAI Blocklist Items. */
+export interface RaiBlockListItemsResult {
+  /** The link used to get the next page of RaiBlocklistItems. */
+  nextLink?: string;
+  /** The list of RaiBlocklistItems. */
+  value?: RaiBlocklistItem[];
+}
+
+/** RAI Custom Blocklist Item properties. */
+export interface RaiBlocklistItemProperties {
+  /** Pattern to match against. */
+  pattern?: string;
+  /** If the pattern is a regex pattern. */
+  isRegex?: boolean;
+}
+
+/** The list of Content Filters. */
+export interface RaiContentFilterListResult {
+  /** The link used to get the next page of Content Filters. */
+  nextLink?: string;
+  /** The list of RaiContentFilter. */
+  value?: RaiContentFilter[];
+}
+
+/** Azure OpenAI Content Filter. */
+export interface RaiContentFilter {
+  /** Name of Content Filter. */
+  policyName?: string;
+  /** Description of Content Filter. */
+  description?: string;
+  /** Content Filter type. */
+  filterType?: RaiContentFilterType;
+}
+
 /** The object being used to update tags of a resource, in general used for PATCH operations. */
 export interface PatchResourceTags {
   /** Resource tags. */
@@ -1083,6 +1182,54 @@ export interface CommitmentPlan extends ProxyResource {
   properties?: CommitmentPlanProperties;
 }
 
+/** Cognitive Services RaiPolicy. */
+export interface RaiPolicy extends ProxyResource {
+  /**
+   * Metadata pertaining to creation and last modification of the resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly systemData?: SystemData;
+  /**
+   * Resource Etag.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly etag?: string;
+  /** Properties of Cognitive Services RaiPolicy. */
+  properties?: RaiPolicyProperties;
+}
+
+/** Cognitive Services RaiBlocklist. */
+export interface RaiBlocklist extends ProxyResource {
+  /**
+   * Metadata pertaining to creation and last modification of the resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly systemData?: SystemData;
+  /**
+   * Resource Etag.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly etag?: string;
+  /** Properties of Cognitive Services RaiBlocklist. */
+  properties?: RaiBlocklistProperties;
+}
+
+/** Cognitive Services RaiBlocklist Item. */
+export interface RaiBlocklistItem extends ProxyResource {
+  /**
+   * Metadata pertaining to creation and last modification of the resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly systemData?: SystemData;
+  /**
+   * Resource Etag.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly etag?: string;
+  /** Properties of Cognitive Services RaiBlocklist Item. */
+  properties?: RaiBlocklistItemProperties;
+}
+
 /** The commitment plan association. */
 export interface CommitmentPlanAccountAssociation extends ProxyResource {
   /**
@@ -1111,6 +1258,21 @@ export interface CommitmentPlansDeletePlanHeaders {
 
 /** Defines headers for CommitmentPlans_deleteAssociation operation. */
 export interface CommitmentPlansDeleteAssociationHeaders {
+  location?: string;
+}
+
+/** Defines headers for RaiPolicies_delete operation. */
+export interface RaiPoliciesDeleteHeaders {
+  location?: string;
+}
+
+/** Defines headers for RaiBlocklists_delete operation. */
+export interface RaiBlocklistsDeleteHeaders {
+  location?: string;
+}
+
+/** Defines headers for RaiBlocklistItem_delete operation. */
+export interface RaiBlocklistItemDeleteHeaders {
   location?: string;
 }
 
@@ -1215,6 +1377,24 @@ export enum KnownNetworkRuleAction {
  * **Deny**
  */
 export type NetworkRuleAction = string;
+
+/** Known values of {@link ByPassSelection} that the service accepts. */
+export enum KnownByPassSelection {
+  /** None */
+  None = "None",
+  /** AzureServices */
+  AzureServices = "AzureServices"
+}
+
+/**
+ * Defines values for ByPassSelection. \
+ * {@link KnownByPassSelection} can be used interchangeably with ByPassSelection,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **None** \
+ * **AzureServices**
+ */
+export type ByPassSelection = string;
 
 /** Known values of {@link KeySource} that the service accepts. */
 export enum KnownKeySource {
@@ -1596,6 +1776,102 @@ export enum KnownCommitmentPlanProvisioningState {
  * **Canceled**
  */
 export type CommitmentPlanProvisioningState = string;
+
+/** Known values of {@link RaiPolicyType} that the service accepts. */
+export enum KnownRaiPolicyType {
+  /** UserManaged */
+  UserManaged = "UserManaged",
+  /** SystemManaged */
+  SystemManaged = "SystemManaged"
+}
+
+/**
+ * Defines values for RaiPolicyType. \
+ * {@link KnownRaiPolicyType} can be used interchangeably with RaiPolicyType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **UserManaged** \
+ * **SystemManaged**
+ */
+export type RaiPolicyType = string;
+
+/** Known values of {@link RaiPolicyMode} that the service accepts. */
+export enum KnownRaiPolicyMode {
+  /** Default */
+  Default = "Default",
+  /** Deferred */
+  Deferred = "Deferred",
+  /** Blocking */
+  Blocking = "Blocking"
+}
+
+/**
+ * Defines values for RaiPolicyMode. \
+ * {@link KnownRaiPolicyMode} can be used interchangeably with RaiPolicyMode,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Default** \
+ * **Deferred** \
+ * **Blocking**
+ */
+export type RaiPolicyMode = string;
+
+/** Known values of {@link AllowedContentLevel} that the service accepts. */
+export enum KnownAllowedContentLevel {
+  /** Low */
+  Low = "Low",
+  /** Medium */
+  Medium = "Medium",
+  /** High */
+  High = "High"
+}
+
+/**
+ * Defines values for AllowedContentLevel. \
+ * {@link KnownAllowedContentLevel} can be used interchangeably with AllowedContentLevel,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Low** \
+ * **Medium** \
+ * **High**
+ */
+export type AllowedContentLevel = string;
+
+/** Known values of {@link RaiPolicyContentSource} that the service accepts. */
+export enum KnownRaiPolicyContentSource {
+  /** Prompt */
+  Prompt = "Prompt",
+  /** Completion */
+  Completion = "Completion"
+}
+
+/**
+ * Defines values for RaiPolicyContentSource. \
+ * {@link KnownRaiPolicyContentSource} can be used interchangeably with RaiPolicyContentSource,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Prompt** \
+ * **Completion**
+ */
+export type RaiPolicyContentSource = string;
+
+/** Known values of {@link RaiContentFilterType} that the service accepts. */
+export enum KnownRaiContentFilterType {
+  /** MultiLevel */
+  MultiLevel = "MultiLevel",
+  /** Switch */
+  Switch = "Switch"
+}
+
+/**
+ * Defines values for RaiContentFilterType. \
+ * {@link KnownRaiContentFilterType} can be used interchangeably with RaiContentFilterType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **MultiLevel** \
+ * **Switch**
+ */
+export type RaiContentFilterType = string;
 /** Defines values for ResourceIdentityType. */
 export type ResourceIdentityType =
   | "None"
@@ -2068,6 +2344,124 @@ export interface CommitmentPlansListAssociationsNextOptionalParams
 
 /** Contains response data for the listAssociationsNext operation. */
 export type CommitmentPlansListAssociationsNextResponse = CommitmentPlanAccountAssociationListResult;
+
+/** Optional parameters. */
+export interface RaiPoliciesListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type RaiPoliciesListResponse = RaiPolicyListResult;
+
+/** Optional parameters. */
+export interface RaiPoliciesGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type RaiPoliciesGetResponse = RaiPolicy;
+
+/** Optional parameters. */
+export interface RaiPoliciesCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the createOrUpdate operation. */
+export type RaiPoliciesCreateOrUpdateResponse = RaiPolicy;
+
+/** Optional parameters. */
+export interface RaiPoliciesDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface RaiPoliciesListNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listNext operation. */
+export type RaiPoliciesListNextResponse = RaiPolicyListResult;
+
+/** Optional parameters. */
+export interface RaiBlocklistsListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type RaiBlocklistsListResponse = RaiBlockListResult;
+
+/** Optional parameters. */
+export interface RaiBlocklistsDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface RaiBlocklistsListNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listNext operation. */
+export type RaiBlocklistsListNextResponse = RaiBlockListResult;
+
+/** Optional parameters. */
+export interface RaiBlocklistItemsListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type RaiBlocklistItemsListResponse = RaiBlockListItemsResult;
+
+/** Optional parameters. */
+export interface RaiBlocklistItemsListNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listNext operation. */
+export type RaiBlocklistItemsListNextResponse = RaiBlockListItemsResult;
+
+/** Optional parameters. */
+export interface RaiBlocklistGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type RaiBlocklistGetResponse = RaiBlocklist;
+
+/** Optional parameters. */
+export interface RaiBlocklistCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the createOrUpdate operation. */
+export type RaiBlocklistCreateOrUpdateResponse = RaiBlocklist;
+
+/** Optional parameters. */
+export interface RaiBlocklistItemGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type RaiBlocklistItemGetResponse = RaiBlocklistItem;
+
+/** Optional parameters. */
+export interface RaiBlocklistItemCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the createOrUpdate operation. */
+export type RaiBlocklistItemCreateOrUpdateResponse = RaiBlocklistItem;
+
+/** Optional parameters. */
+export interface RaiBlocklistItemDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface RaiContentFiltersListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type RaiContentFiltersListResponse = RaiContentFilterListResult;
 
 /** Optional parameters. */
 export interface CognitiveServicesManagementClientOptionalParams

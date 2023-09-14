@@ -235,6 +235,9 @@ export type AccountsUpdateResponse = Account;
 export type ActionType = string;
 
 // @public
+export type AllowedContentLevel = string;
+
+// @public
 export interface ApiKeys {
     key1?: string;
     key2?: string;
@@ -259,6 +262,9 @@ export interface ApiProperties {
 export interface AzureEntityResource extends Resource {
     readonly etag?: string;
 }
+
+// @public
+export type ByPassSelection = string;
 
 // @public
 export interface CallRateLimit {
@@ -332,6 +338,18 @@ export class CognitiveServicesManagementClient extends coreClient.ServiceClient 
     privateEndpointConnections: PrivateEndpointConnections;
     // (undocumented)
     privateLinkResources: PrivateLinkResources;
+    // (undocumented)
+    raiBlocklistItemOperations: RaiBlocklistItemOperations;
+    // (undocumented)
+    raiBlocklistItems: RaiBlocklistItems;
+    // (undocumented)
+    raiBlocklistOperations: RaiBlocklistOperations;
+    // (undocumented)
+    raiBlocklists: RaiBlocklists;
+    // (undocumented)
+    raiContentFilters: RaiContentFilters;
+    // (undocumented)
+    raiPolicies: RaiPolicies;
     // (undocumented)
     resourceSkus: ResourceSkus;
     // (undocumented)
@@ -850,6 +868,19 @@ export enum KnownActionType {
 }
 
 // @public
+export enum KnownAllowedContentLevel {
+    High = "High",
+    Low = "Low",
+    Medium = "Medium"
+}
+
+// @public
+export enum KnownByPassSelection {
+    AzureServices = "AzureServices",
+    None = "None"
+}
+
+// @public
 export enum KnownCommitmentPlanProvisioningState {
     Accepted = "Accepted",
     Canceled = "Canceled",
@@ -967,6 +998,31 @@ export enum KnownQuotaUsageStatus {
 }
 
 // @public
+export enum KnownRaiContentFilterType {
+    MultiLevel = "MultiLevel",
+    Switch = "Switch"
+}
+
+// @public
+export enum KnownRaiPolicyContentSource {
+    Completion = "Completion",
+    Prompt = "Prompt"
+}
+
+// @public
+export enum KnownRaiPolicyMode {
+    Blocking = "Blocking",
+    Default = "Default",
+    Deferred = "Deferred"
+}
+
+// @public
+export enum KnownRaiPolicyType {
+    SystemManaged = "SystemManaged",
+    UserManaged = "UserManaged"
+}
+
+// @public
 export enum KnownResourceSkuRestrictionsReasonCode {
     NotAvailableForSubscription = "NotAvailableForSubscription",
     QuotaId = "QuotaId"
@@ -1067,6 +1123,7 @@ export type NetworkRuleAction = string;
 
 // @public
 export interface NetworkRuleSet {
+    bypass?: ByPassSelection;
     defaultAction?: NetworkRuleAction;
     ipRules?: IpRule[];
     virtualNetworkRules?: VirtualNetworkRule[];
@@ -1258,6 +1315,273 @@ export interface QuotaLimit {
 
 // @public
 export type QuotaUsageStatus = string;
+
+// @public
+export interface RaiBlocklist extends ProxyResource {
+    readonly etag?: string;
+    properties?: RaiBlocklistProperties;
+    readonly systemData?: SystemData;
+}
+
+// @public
+export interface RaiBlocklistConfig {
+    blocking?: boolean;
+    blocklistName?: string;
+}
+
+// @public
+export interface RaiBlocklistCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type RaiBlocklistCreateOrUpdateResponse = RaiBlocklist;
+
+// @public
+export interface RaiBlocklistGetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type RaiBlocklistGetResponse = RaiBlocklist;
+
+// @public
+export interface RaiBlocklistItem extends ProxyResource {
+    readonly etag?: string;
+    properties?: RaiBlocklistItemProperties;
+    readonly systemData?: SystemData;
+}
+
+// @public
+export interface RaiBlocklistItemCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type RaiBlocklistItemCreateOrUpdateResponse = RaiBlocklistItem;
+
+// @public
+export interface RaiBlocklistItemDeleteHeaders {
+    // (undocumented)
+    location?: string;
+}
+
+// @public
+export interface RaiBlocklistItemDeleteOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export interface RaiBlocklistItemGetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type RaiBlocklistItemGetResponse = RaiBlocklistItem;
+
+// @public
+export interface RaiBlocklistItemOperations {
+    beginDelete(resourceGroupName: string, accountName: string, raiBlocklistName: string, raiBlocklistItemName: string, options?: RaiBlocklistItemDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
+    beginDeleteAndWait(resourceGroupName: string, accountName: string, raiBlocklistName: string, raiBlocklistItemName: string, options?: RaiBlocklistItemDeleteOptionalParams): Promise<void>;
+    createOrUpdate(resourceGroupName: string, accountName: string, raiBlocklistName: string, raiBlocklistItemName: string, raiBlocklistItem: RaiBlocklistItem, options?: RaiBlocklistItemCreateOrUpdateOptionalParams): Promise<RaiBlocklistItemCreateOrUpdateResponse>;
+    get(resourceGroupName: string, accountName: string, raiBlocklistName: string, raiBlocklistItemName: string, options?: RaiBlocklistItemGetOptionalParams): Promise<RaiBlocklistItemGetResponse>;
+}
+
+// @public
+export interface RaiBlocklistItemProperties {
+    isRegex?: boolean;
+    pattern?: string;
+}
+
+// @public
+export interface RaiBlocklistItems {
+    list(resourceGroupName: string, accountName: string, raiBlocklistName: string, options?: RaiBlocklistItemsListOptionalParams): PagedAsyncIterableIterator<RaiBlocklistItem>;
+}
+
+// @public
+export interface RaiBlocklistItemsListNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type RaiBlocklistItemsListNextResponse = RaiBlockListItemsResult;
+
+// @public
+export interface RaiBlocklistItemsListOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type RaiBlocklistItemsListResponse = RaiBlockListItemsResult;
+
+// @public
+export interface RaiBlockListItemsResult {
+    nextLink?: string;
+    value?: RaiBlocklistItem[];
+}
+
+// @public
+export interface RaiBlocklistOperations {
+    createOrUpdate(resourceGroupName: string, accountName: string, raiBlocklistName: string, raiBlocklist: RaiBlocklist, options?: RaiBlocklistCreateOrUpdateOptionalParams): Promise<RaiBlocklistCreateOrUpdateResponse>;
+    get(resourceGroupName: string, accountName: string, raiBlocklistName: string, options?: RaiBlocklistGetOptionalParams): Promise<RaiBlocklistGetResponse>;
+}
+
+// @public
+export interface RaiBlocklistProperties {
+    description?: string;
+}
+
+// @public
+export interface RaiBlockListResult {
+    nextLink?: string;
+    value?: RaiBlocklist[];
+}
+
+// @public
+export interface RaiBlocklists {
+    beginDelete(resourceGroupName: string, accountName: string, raiBlocklistName: string, options?: RaiBlocklistsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
+    beginDeleteAndWait(resourceGroupName: string, accountName: string, raiBlocklistName: string, options?: RaiBlocklistsDeleteOptionalParams): Promise<void>;
+    list(resourceGroupName: string, accountName: string, options?: RaiBlocklistsListOptionalParams): PagedAsyncIterableIterator<RaiBlocklist>;
+}
+
+// @public
+export interface RaiBlocklistsDeleteHeaders {
+    // (undocumented)
+    location?: string;
+}
+
+// @public
+export interface RaiBlocklistsDeleteOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export interface RaiBlocklistsListNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type RaiBlocklistsListNextResponse = RaiBlockListResult;
+
+// @public
+export interface RaiBlocklistsListOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type RaiBlocklistsListResponse = RaiBlockListResult;
+
+// @public
+export interface RaiContentFilter {
+    description?: string;
+    filterType?: RaiContentFilterType;
+    policyName?: string;
+}
+
+// @public
+export interface RaiContentFilterListResult {
+    nextLink?: string;
+    value?: RaiContentFilter[];
+}
+
+// @public
+export interface RaiContentFilters {
+    list(location: string, options?: RaiContentFiltersListOptionalParams): Promise<RaiContentFiltersListResponse>;
+}
+
+// @public
+export interface RaiContentFiltersListOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type RaiContentFiltersListResponse = RaiContentFilterListResult;
+
+// @public
+export type RaiContentFilterType = string;
+
+// @public
+export interface RaiPolicies {
+    beginDelete(resourceGroupName: string, accountName: string, raiPolicyName: string, options?: RaiPoliciesDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
+    beginDeleteAndWait(resourceGroupName: string, accountName: string, raiPolicyName: string, options?: RaiPoliciesDeleteOptionalParams): Promise<void>;
+    createOrUpdate(resourceGroupName: string, accountName: string, raiPolicyName: string, raiPolicy: RaiPolicy, options?: RaiPoliciesCreateOrUpdateOptionalParams): Promise<RaiPoliciesCreateOrUpdateResponse>;
+    get(resourceGroupName: string, accountName: string, raiPolicyName: string, options?: RaiPoliciesGetOptionalParams): Promise<RaiPoliciesGetResponse>;
+    list(resourceGroupName: string, accountName: string, options?: RaiPoliciesListOptionalParams): PagedAsyncIterableIterator<RaiPolicy>;
+}
+
+// @public
+export interface RaiPoliciesCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type RaiPoliciesCreateOrUpdateResponse = RaiPolicy;
+
+// @public
+export interface RaiPoliciesDeleteHeaders {
+    // (undocumented)
+    location?: string;
+}
+
+// @public
+export interface RaiPoliciesDeleteOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export interface RaiPoliciesGetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type RaiPoliciesGetResponse = RaiPolicy;
+
+// @public
+export interface RaiPoliciesListNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type RaiPoliciesListNextResponse = RaiPolicyListResult;
+
+// @public
+export interface RaiPoliciesListOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type RaiPoliciesListResponse = RaiPolicyListResult;
+
+// @public
+export interface RaiPolicy extends ProxyResource {
+    readonly etag?: string;
+    properties?: RaiPolicyProperties;
+    readonly systemData?: SystemData;
+}
+
+// @public
+export interface RaiPolicyContentFilter {
+    allowedContentLevel?: AllowedContentLevel;
+    blocking?: boolean;
+    enabled?: boolean;
+    policyName?: string;
+    source?: RaiPolicyContentSource;
+}
+
+// @public
+export type RaiPolicyContentSource = string;
+
+// @public
+export interface RaiPolicyListResult {
+    nextLink?: string;
+    value?: RaiPolicy[];
+}
+
+// @public
+export type RaiPolicyMode = string;
+
+// @public
+export interface RaiPolicyProperties {
+    basePolicyName?: string;
+    completionBlocklists?: RaiBlocklistConfig[];
+    contentFilters?: RaiPolicyContentFilter[];
+    mode?: RaiPolicyMode;
+    readonly policyType?: RaiPolicyType;
+    promptBlocklists?: RaiBlocklistConfig[];
+}
+
+// @public
+export type RaiPolicyType = string;
 
 // @public
 export interface RegenerateKeyParameters {
