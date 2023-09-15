@@ -1991,9 +1991,12 @@ export interface BastionHost extends Resource {
     enableTunneling?: boolean;
     readonly etag?: string;
     ipConfigurations?: BastionHostIPConfiguration[];
+    // (undocumented)
+    networkAcls?: BastionHostPropertiesFormatNetworkAcls;
     readonly provisioningState?: ProvisioningState;
     scaleUnits?: number;
     sku?: Sku;
+    virtualNetwork?: SubResource;
 }
 
 // @public
@@ -2011,6 +2014,11 @@ export interface BastionHostIPConfiguration extends SubResource {
 export interface BastionHostListResult {
     nextLink?: string;
     value?: BastionHost[];
+}
+
+// @public (undocumented)
+export interface BastionHostPropertiesFormatNetworkAcls {
+    ipRules?: IPRule[];
 }
 
 // @public
@@ -4767,6 +4775,7 @@ export interface FirewallPolicy extends Resource {
     intrusionDetection?: FirewallPolicyIntrusionDetection;
     readonly provisioningState?: ProvisioningState;
     readonly ruleCollectionGroups?: SubResource[];
+    readonly size?: string;
     sku?: FirewallPolicySku;
     snat?: FirewallPolicySnat;
     sql?: FirewallPolicySQL;
@@ -4981,6 +4990,7 @@ export interface FirewallPolicyRuleCollectionGroup extends SubResource {
     priority?: number;
     readonly provisioningState?: ProvisioningState;
     ruleCollections?: FirewallPolicyRuleCollectionUnion[];
+    readonly size?: string;
     readonly type?: string;
 }
 
@@ -5087,6 +5097,7 @@ export interface FlowLog extends Resource {
     readonly etag?: string;
     flowAnalyticsConfiguration?: TrafficAnalyticsProperties;
     format?: FlowLogFormatParameters;
+    identity?: ResultIdentityObjectForUserAssigned;
     readonly provisioningState?: ProvisioningState;
     retentionPolicy?: RetentionPolicyParameters;
     storageId?: string;
@@ -5104,10 +5115,22 @@ export interface FlowLogFormatParameters {
 export type FlowLogFormatType = string;
 
 // @public
-export interface FlowLogInformation {
+export interface FlowLogInformationRequest {
     enabled: boolean;
     flowAnalyticsConfiguration?: TrafficAnalyticsProperties;
     format?: FlowLogFormatParameters;
+    identity?: RequestIdentityObjectForUserAssigned;
+    retentionPolicy?: RetentionPolicyParameters;
+    storageId: string;
+    targetResourceId: string;
+}
+
+// @public
+export interface FlowLogInformationResponse {
+    enabled: boolean;
+    flowAnalyticsConfiguration?: TrafficAnalyticsProperties;
+    format?: FlowLogFormatParameters;
+    identity?: ResultIdentityObjectForUserAssigned;
     retentionPolicy?: RetentionPolicyParameters;
     storageId: string;
     targetResourceId: string;
@@ -5885,6 +5908,11 @@ export type IpGroupsUpdateGroupsResponse = IpGroup;
 // @public
 export interface IPPrefixesList {
     ipPrefixes?: string[];
+}
+
+// @public (undocumented)
+export interface IPRule {
+    addressPrefix?: string;
 }
 
 // @public
@@ -9884,8 +9912,8 @@ export interface NetworkWatchers {
     beginGetVMSecurityRulesAndWait(resourceGroupName: string, networkWatcherName: string, parameters: SecurityGroupViewParameters, options?: NetworkWatchersGetVMSecurityRulesOptionalParams): Promise<NetworkWatchersGetVMSecurityRulesResponse>;
     beginListAvailableProviders(resourceGroupName: string, networkWatcherName: string, parameters: AvailableProvidersListParameters, options?: NetworkWatchersListAvailableProvidersOptionalParams): Promise<SimplePollerLike<OperationState<NetworkWatchersListAvailableProvidersResponse>, NetworkWatchersListAvailableProvidersResponse>>;
     beginListAvailableProvidersAndWait(resourceGroupName: string, networkWatcherName: string, parameters: AvailableProvidersListParameters, options?: NetworkWatchersListAvailableProvidersOptionalParams): Promise<NetworkWatchersListAvailableProvidersResponse>;
-    beginSetFlowLogConfiguration(resourceGroupName: string, networkWatcherName: string, parameters: FlowLogInformation, options?: NetworkWatchersSetFlowLogConfigurationOptionalParams): Promise<SimplePollerLike<OperationState<NetworkWatchersSetFlowLogConfigurationResponse>, NetworkWatchersSetFlowLogConfigurationResponse>>;
-    beginSetFlowLogConfigurationAndWait(resourceGroupName: string, networkWatcherName: string, parameters: FlowLogInformation, options?: NetworkWatchersSetFlowLogConfigurationOptionalParams): Promise<NetworkWatchersSetFlowLogConfigurationResponse>;
+    beginSetFlowLogConfiguration(resourceGroupName: string, networkWatcherName: string, parameters: FlowLogInformationRequest, options?: NetworkWatchersSetFlowLogConfigurationOptionalParams): Promise<SimplePollerLike<OperationState<NetworkWatchersSetFlowLogConfigurationResponse>, NetworkWatchersSetFlowLogConfigurationResponse>>;
+    beginSetFlowLogConfigurationAndWait(resourceGroupName: string, networkWatcherName: string, parameters: FlowLogInformationRequest, options?: NetworkWatchersSetFlowLogConfigurationOptionalParams): Promise<NetworkWatchersSetFlowLogConfigurationResponse>;
     beginVerifyIPFlow(resourceGroupName: string, networkWatcherName: string, parameters: VerificationIPFlowParameters, options?: NetworkWatchersVerifyIPFlowOptionalParams): Promise<SimplePollerLike<OperationState<NetworkWatchersVerifyIPFlowResponse>, NetworkWatchersVerifyIPFlowResponse>>;
     beginVerifyIPFlowAndWait(resourceGroupName: string, networkWatcherName: string, parameters: VerificationIPFlowParameters, options?: NetworkWatchersVerifyIPFlowOptionalParams): Promise<NetworkWatchersVerifyIPFlowResponse>;
     createOrUpdate(resourceGroupName: string, networkWatcherName: string, parameters: NetworkWatcher, options?: NetworkWatchersCreateOrUpdateOptionalParams): Promise<NetworkWatchersCreateOrUpdateResponse>;
@@ -9934,7 +9962,7 @@ export interface NetworkWatchersGetFlowLogStatusOptionalParams extends coreClien
 }
 
 // @public
-export type NetworkWatchersGetFlowLogStatusResponse = FlowLogInformation;
+export type NetworkWatchersGetFlowLogStatusResponse = FlowLogInformationResponse;
 
 // @public
 export interface NetworkWatchersGetNetworkConfigurationDiagnosticOptionalParams extends coreClient.OperationOptions {
@@ -10025,7 +10053,7 @@ export interface NetworkWatchersSetFlowLogConfigurationOptionalParams extends co
 }
 
 // @public
-export type NetworkWatchersSetFlowLogConfigurationResponse = FlowLogInformation;
+export type NetworkWatchersSetFlowLogConfigurationResponse = FlowLogInformationResponse;
 
 // @public
 export interface NetworkWatchersUpdateTagsOptionalParams extends coreClient.OperationOptions {
@@ -11500,6 +11528,12 @@ export interface ReferencedPublicIpAddress {
 }
 
 // @public
+export interface RequestIdentityObjectForUserAssigned {
+    type?: ResourceIdentityType;
+    userAssignedIdentities?: Record<string, unknown>;
+}
+
+// @public
 export interface Resource {
     id?: string;
     location?: string;
@@ -11544,6 +11578,14 @@ export interface ResourceNavigationLinksListResult {
 // @public
 export interface ResourceSet {
     subscriptions?: string[];
+}
+
+// @public
+export interface ResultIdentityObjectForUserAssigned {
+    type?: ResourceIdentityType;
+    userAssignedIdentities?: {
+        [propertyName: string]: UserIdentityProperties;
+    };
 }
 
 // @public
@@ -12749,6 +12791,7 @@ export interface Subnet extends SubResource {
     addressPrefix?: string;
     addressPrefixes?: string[];
     applicationGatewayIPConfigurations?: ApplicationGatewayIPConfiguration[];
+    defaultOutboundAccess?: boolean;
     delegations?: Delegation[];
     readonly etag?: string;
     ipAllocations?: SubResource[];
@@ -13088,6 +13131,12 @@ export type UsageUnit = string;
 
 // @public
 export type UseHubGateway = string;
+
+// @public (undocumented)
+export interface UserIdentityProperties {
+    readonly clientId?: string;
+    readonly principalId?: string;
+}
 
 // @public
 export type VerbosityLevel = string;
@@ -13640,6 +13689,7 @@ export interface VirtualNetworkGateway extends Resource {
     adminState?: AdminState;
     allowRemoteVnetTraffic?: boolean;
     allowVirtualWanTraffic?: boolean;
+    autoScaleConfiguration?: VirtualNetworkGatewayAutoScaleConfiguration;
     bgpSettings?: BgpSettings;
     customRoutes?: AddressSpace;
     disableIPSecReplayProtection?: boolean;
@@ -13662,6 +13712,17 @@ export interface VirtualNetworkGateway extends Resource {
     vpnClientConfiguration?: VpnClientConfiguration;
     vpnGatewayGeneration?: VpnGatewayGeneration;
     vpnType?: VpnType;
+}
+
+// @public (undocumented)
+export interface VirtualNetworkGatewayAutoScaleBounds {
+    max?: number;
+    min?: number;
+}
+
+// @public
+export interface VirtualNetworkGatewayAutoScaleConfiguration {
+    bounds?: VirtualNetworkGatewayAutoScaleBounds;
 }
 
 // @public

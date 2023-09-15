@@ -38,7 +38,7 @@ import {
   QueryTroubleshootingParameters,
   NetworkWatchersGetTroubleshootingResultOptionalParams,
   NetworkWatchersGetTroubleshootingResultResponse,
-  FlowLogInformation,
+  FlowLogInformationRequest,
   NetworkWatchersSetFlowLogConfigurationOptionalParams,
   NetworkWatchersSetFlowLogConfigurationResponse,
   FlowLogStatusParameters,
@@ -314,7 +314,7 @@ export interface NetworkWatchers {
   beginSetFlowLogConfiguration(
     resourceGroupName: string,
     networkWatcherName: string,
-    parameters: FlowLogInformation,
+    parameters: FlowLogInformationRequest,
     options?: NetworkWatchersSetFlowLogConfigurationOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -332,7 +332,7 @@ export interface NetworkWatchers {
   beginSetFlowLogConfigurationAndWait(
     resourceGroupName: string,
     networkWatcherName: string,
-    parameters: FlowLogInformation,
+    parameters: FlowLogInformationRequest,
     options?: NetworkWatchersSetFlowLogConfigurationOptionalParams
   ): Promise<NetworkWatchersSetFlowLogConfigurationResponse>;
   /**

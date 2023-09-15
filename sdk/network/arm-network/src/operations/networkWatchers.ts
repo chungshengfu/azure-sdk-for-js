@@ -50,7 +50,7 @@ import {
   QueryTroubleshootingParameters,
   NetworkWatchersGetTroubleshootingResultOptionalParams,
   NetworkWatchersGetTroubleshootingResultResponse,
-  FlowLogInformation,
+  FlowLogInformationRequest,
   NetworkWatchersSetFlowLogConfigurationOptionalParams,
   NetworkWatchersSetFlowLogConfigurationResponse,
   FlowLogStatusParameters,
@@ -841,7 +841,7 @@ export class NetworkWatchersImpl implements NetworkWatchers {
   async beginSetFlowLogConfiguration(
     resourceGroupName: string,
     networkWatcherName: string,
-    parameters: FlowLogInformation,
+    parameters: FlowLogInformationRequest,
     options?: NetworkWatchersSetFlowLogConfigurationOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -915,7 +915,7 @@ export class NetworkWatchersImpl implements NetworkWatchers {
   async beginSetFlowLogConfigurationAndWait(
     resourceGroupName: string,
     networkWatcherName: string,
-    parameters: FlowLogInformation,
+    parameters: FlowLogInformationRequest,
     options?: NetworkWatchersSetFlowLogConfigurationOptionalParams
   ): Promise<NetworkWatchersSetFlowLogConfigurationResponse> {
     const poller = await this.beginSetFlowLogConfiguration(
@@ -1755,16 +1755,16 @@ const setFlowLogConfigurationOperationSpec: coreClient.OperationSpec = {
   httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.FlowLogInformation
+      bodyMapper: Mappers.FlowLogInformationResponse
     },
     201: {
-      bodyMapper: Mappers.FlowLogInformation
+      bodyMapper: Mappers.FlowLogInformationResponse
     },
     202: {
-      bodyMapper: Mappers.FlowLogInformation
+      bodyMapper: Mappers.FlowLogInformationResponse
     },
     204: {
-      bodyMapper: Mappers.FlowLogInformation
+      bodyMapper: Mappers.FlowLogInformationResponse
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -1788,16 +1788,16 @@ const getFlowLogStatusOperationSpec: coreClient.OperationSpec = {
   httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.FlowLogInformation
+      bodyMapper: Mappers.FlowLogInformationResponse
     },
     201: {
-      bodyMapper: Mappers.FlowLogInformation
+      bodyMapper: Mappers.FlowLogInformationResponse
     },
     202: {
-      bodyMapper: Mappers.FlowLogInformation
+      bodyMapper: Mappers.FlowLogInformationResponse
     },
     204: {
-      bodyMapper: Mappers.FlowLogInformation
+      bodyMapper: Mappers.FlowLogInformationResponse
     },
     default: {
       bodyMapper: Mappers.ErrorResponse

@@ -1,15 +1,32 @@
 # Release History
+    
+## 33.0.0 (2023-09-15)
+    
+**Features**
 
-## 32.1.1 (Unreleased)
+  - Added Interface BastionHostPropertiesFormatNetworkAcls
+  - Added Interface FlowLogInformationRequest
+  - Added Interface FlowLogInformationResponse
+  - Added Interface IPRule
+  - Added Interface RequestIdentityObjectForUserAssigned
+  - Added Interface ResultIdentityObjectForUserAssigned
+  - Added Interface UserIdentityProperties
+  - Added Interface VirtualNetworkGatewayAutoScaleBounds
+  - Added Interface VirtualNetworkGatewayAutoScaleConfiguration
+  - Interface BastionHost has a new optional parameter networkAcls
+  - Interface BastionHost has a new optional parameter virtualNetwork
+  - Interface FirewallPolicy has a new optional parameter size
+  - Interface FirewallPolicyRuleCollectionGroup has a new optional parameter size
+  - Interface FlowLog has a new optional parameter identity
+  - Interface Subnet has a new optional parameter defaultOutboundAccess
+  - Interface VirtualNetworkGateway has a new optional parameter autoScaleConfiguration
 
-### Features Added
+**Breaking Changes**
 
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
+  - Operation NetworkWatchers.beginSetFlowLogConfiguration has a new signature
+  - Operation NetworkWatchers.beginSetFlowLogConfigurationAndWait has a new signature
+    
+    
 ## 32.1.0 (2023-08-08)
     
 **Features**

@@ -216,6 +216,27 @@ export interface TrafficAnalyticsConfigurationProperties {
   trafficAnalyticsInterval?: number;
 }
 
+/** Identity for the resource. */
+export interface ResultIdentityObjectForUserAssigned {
+  /** The type of identity used for the resource. The type 'UserAssigned' includes set of user assigned identities. The type 'None' will remove any identities from the flowlog. */
+  type?: ResourceIdentityType;
+  /** The list of user identities associated with resource. The user identity dictionary key references will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'. */
+  userAssignedIdentities?: { [propertyName: string]: UserIdentityProperties };
+}
+
+export interface UserIdentityProperties {
+  /**
+   * The principal id of user assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly principalId?: string;
+  /**
+   * The client id of user assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly clientId?: string;
+}
+
 /** The service endpoint properties. */
 export interface ServiceEndpointPropertiesFormat {
   /** The type of the endpoint service. */
@@ -968,6 +989,16 @@ export interface AzureWebCategoryListResult {
   value?: AzureWebCategory[];
   /** URL to get the next set of results. */
   nextLink?: string;
+}
+
+export interface BastionHostPropertiesFormatNetworkAcls {
+  /** Sets the IP ACL rules for Developer Bastion Host. */
+  ipRules?: IPRule[];
+}
+
+export interface IPRule {
+  /** Specifies the IP or IP range in CIDR format. Only IPV4 address is allowed. */
+  addressPrefix?: string;
 }
 
 /** The sku of this Bastion Host. */
@@ -3094,11 +3125,39 @@ export interface QueryTroubleshootingParameters {
 }
 
 /** Information on the configuration of flow log and traffic analytics (optional) . */
-export interface FlowLogInformation {
+export interface FlowLogInformationRequest {
   /** The ID of the resource to configure for flow log and traffic analytics (optional) . */
   targetResourceId: string;
   /** Parameters that define the configuration of traffic analytics. */
   flowAnalyticsConfiguration?: TrafficAnalyticsProperties;
+  /** Identity of the workspace */
+  identity?: RequestIdentityObjectForUserAssigned;
+  /** ID of the storage account which is used to store the flow log. */
+  storageId: string;
+  /** Flag to enable/disable flow logging. */
+  enabled: boolean;
+  /** Parameters that define the retention policy for flow log. */
+  retentionPolicy?: RetentionPolicyParameters;
+  /** Parameters that define the flow log format. */
+  format?: FlowLogFormatParameters;
+}
+
+/** Identity for the resource. */
+export interface RequestIdentityObjectForUserAssigned {
+  /** The type of identity used for the resource. The type 'UserAssigned' includes set of user assigned identities. The type 'None' will remove any identities from the flowlog. */
+  type?: ResourceIdentityType;
+  /** The list of user identities associated with resource. The user identity dictionary key references will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'. */
+  userAssignedIdentities?: Record<string, unknown>;
+}
+
+/** Information on the configuration of flow log and traffic analytics (optional) . */
+export interface FlowLogInformationResponse {
+  /** The ID of the resource to configure for flow log and traffic analytics (optional) . */
+  targetResourceId: string;
+  /** Parameters that define the configuration of traffic analytics. */
+  flowAnalyticsConfiguration?: TrafficAnalyticsProperties;
+  /** Identity of the workspace */
+  identity?: ResultIdentityObjectForUserAssigned;
   /** ID of the storage account which is used to store the flow log. */
   storageId: string;
   /** Flag to enable/disable flow logging. */
@@ -4490,6 +4549,19 @@ export interface VirtualNetworkDdosProtectionStatusResult {
   value?: PublicIpDdosProtectionStatusResult[];
   /** The URL to get the next set of results. */
   nextLink?: string;
+}
+
+/** Virtual Network Gateway Autoscale Configuration details */
+export interface VirtualNetworkGatewayAutoScaleConfiguration {
+  /** The bounds of the autoscale configuration */
+  bounds?: VirtualNetworkGatewayAutoScaleBounds;
+}
+
+export interface VirtualNetworkGatewayAutoScaleBounds {
+  /** Minimum scale Units for Autoscale configuration */
+  min?: number;
+  /** Maximum Scale Units for Autoscale configuration */
+  max?: number;
 }
 
 /** VirtualNetworkGatewaySku details. */
@@ -6563,6 +6635,8 @@ export interface Subnet extends SubResource {
   privateLinkServiceNetworkPolicies?: VirtualNetworkPrivateLinkServiceNetworkPolicies;
   /** Application gateway IP configurations of virtual network resource. */
   applicationGatewayIPConfigurations?: ApplicationGatewayIPConfiguration[];
+  /** Set this property to false to disable default outbound connectivity for all VMs in the subnet. This property can only be set at the time of subnet creation and cannot be updated for an existing subnet. */
+  defaultOutboundAccess?: boolean;
 }
 
 /** Frontend IP address of the load balancer. */
@@ -7814,6 +7888,11 @@ export interface FirewallPolicyRuleCollectionGroup extends SubResource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly type?: string;
+  /**
+   * A read-only string that represents the size of the FirewallPolicyRuleCollectionGroupProperties in MB. (ex 1.2MB)
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly size?: string;
   /** Priority of the Firewall Policy Rule Collection Group resource. */
   priority?: number;
   /** Group of Firewall Policy rule collections. */
@@ -9105,6 +9184,8 @@ export interface FlowLog extends Resource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly etag?: string;
+  /** Identity of the workspace */
+  identity?: ResultIdentityObjectForUserAssigned;
   /** ID of network security group to which flow log will be applied. */
   targetResourceId?: string;
   /**
@@ -9559,6 +9640,9 @@ export interface BastionHost extends Resource {
   ipConfigurations?: BastionHostIPConfiguration[];
   /** FQDN for the endpoint on which bastion host is accessible. */
   dnsName?: string;
+  /** Reference to an existing virtual network required for Developer Bastion Host only. */
+  virtualNetwork?: SubResource;
+  networkAcls?: BastionHostPropertiesFormatNetworkAcls;
   /**
    * The provisioning state of the bastion host resource.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -9935,6 +10019,11 @@ export interface FirewallPolicy extends Resource {
   readonly etag?: string;
   /** The identity of the firewall policy. */
   identity?: ManagedServiceIdentity;
+  /**
+   * A read-only string that represents the size of the FirewallPolicyPropertiesFormat in MB. (ex 0.5MB)
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly size?: string;
   /**
    * List of references to FirewallPolicyRuleCollectionGroups.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -10403,6 +10492,8 @@ export interface VirtualNetworkGateway extends Resource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly etag?: string;
+  /** Autoscale configuration for virutal network gateway */
+  autoScaleConfiguration?: VirtualNetworkGatewayAutoScaleConfiguration;
   /** IP configurations for virtual network gateway. */
   ipConfigurations?: VirtualNetworkGatewayIPConfiguration[];
   /** The type of this virtual network gateway. */
@@ -16471,18 +16562,18 @@ export enum KnownHubVirtualNetworkConnectionStatus {
  * **NotConnected**
  */
 export type HubVirtualNetworkConnectionStatus = string;
-/** Defines values for PublicIpAddressDnsSettingsDomainNameLabelScope. */
-export type PublicIpAddressDnsSettingsDomainNameLabelScope =
-  | "TenantReuse"
-  | "SubscriptionReuse"
-  | "ResourceGroupReuse"
-  | "NoReuse";
 /** Defines values for ResourceIdentityType. */
 export type ResourceIdentityType =
   | "SystemAssigned"
   | "UserAssigned"
   | "SystemAssigned, UserAssigned"
   | "None";
+/** Defines values for PublicIpAddressDnsSettingsDomainNameLabelScope. */
+export type PublicIpAddressDnsSettingsDomainNameLabelScope =
+  | "TenantReuse"
+  | "SubscriptionReuse"
+  | "ResourceGroupReuse"
+  | "NoReuse";
 /** Defines values for SlotType. */
 export type SlotType = "Production" | "Staging";
 /** Defines values for FirewallPolicyIdpsSignatureMode. */
@@ -20005,7 +20096,7 @@ export interface NetworkWatchersSetFlowLogConfigurationOptionalParams
 }
 
 /** Contains response data for the setFlowLogConfiguration operation. */
-export type NetworkWatchersSetFlowLogConfigurationResponse = FlowLogInformation;
+export type NetworkWatchersSetFlowLogConfigurationResponse = FlowLogInformationResponse;
 
 /** Optional parameters. */
 export interface NetworkWatchersGetFlowLogStatusOptionalParams
@@ -20017,7 +20108,7 @@ export interface NetworkWatchersGetFlowLogStatusOptionalParams
 }
 
 /** Contains response data for the getFlowLogStatus operation. */
-export type NetworkWatchersGetFlowLogStatusResponse = FlowLogInformation;
+export type NetworkWatchersGetFlowLogStatusResponse = FlowLogInformationResponse;
 
 /** Optional parameters. */
 export interface NetworkWatchersCheckConnectivityOptionalParams

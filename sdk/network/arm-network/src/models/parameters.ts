@@ -81,7 +81,7 @@ import {
   SecurityGroupViewParameters as SecurityGroupViewParametersMapper,
   TroubleshootingParameters as TroubleshootingParametersMapper,
   QueryTroubleshootingParameters as QueryTroubleshootingParametersMapper,
-  FlowLogInformation as FlowLogInformationMapper,
+  FlowLogInformationRequest as FlowLogInformationRequestMapper,
   FlowLogStatusParameters as FlowLogStatusParametersMapper,
   ConnectivityParameters as ConnectivityParametersMapper,
   AzureReachabilityReportParameters as AzureReachabilityReportParametersMapper,
@@ -204,7 +204,7 @@ export const applicationGatewayName: OperationURLParameter = {
 export const apiVersion: OperationQueryParameter = {
   parameterPath: "apiVersion",
   mapper: {
-    defaultValue: "2023-04-01",
+    defaultValue: "2023-05-01",
     isConstant: true,
     serializedName: "api-version",
     type: {
@@ -1440,7 +1440,7 @@ export const parameters51: OperationParameter = {
 
 export const parameters52: OperationParameter = {
   parameterPath: "parameters",
-  mapper: FlowLogInformationMapper
+  mapper: FlowLogInformationRequestMapper
 };
 
 export const parameters53: OperationParameter = {
