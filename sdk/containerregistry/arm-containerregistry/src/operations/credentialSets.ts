@@ -8,7 +8,7 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { AgentPools } from "../operationsInterfaces";
+import { CredentialSets } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
@@ -20,30 +20,29 @@ import {
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
-  AgentPool,
-  AgentPoolsListNextOptionalParams,
-  AgentPoolsListOptionalParams,
-  AgentPoolsListResponse,
-  AgentPoolsGetOptionalParams,
-  AgentPoolsGetResponse,
-  AgentPoolsCreateOptionalParams,
-  AgentPoolsCreateResponse,
-  AgentPoolsDeleteOptionalParams,
-  AgentPoolUpdateParameters,
-  AgentPoolsUpdateOptionalParams,
-  AgentPoolsUpdateResponse,
-  AgentPoolsGetQueueStatusOptionalParams,
-  AgentPoolsGetQueueStatusResponse,
-  AgentPoolsListNextResponse
+  CredentialSet,
+  CredentialSetsListNextOptionalParams,
+  CredentialSetsListOptionalParams,
+  CredentialSetsListResponse,
+  CredentialSetsGetOptionalParams,
+  CredentialSetsGetResponse,
+  CredentialSetsCreateOptionalParams,
+  CredentialSetsCreateResponse,
+  CredentialSetsDeleteOptionalParams,
+  CredentialSetsDeleteResponse,
+  CredentialSetUpdateParameters,
+  CredentialSetsUpdateOptionalParams,
+  CredentialSetsUpdateResponse,
+  CredentialSetsListNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing AgentPools operations. */
-export class AgentPoolsImpl implements AgentPools {
+/** Class containing CredentialSets operations. */
+export class CredentialSetsImpl implements CredentialSets {
   private readonly client: ContainerRegistryManagementClient;
 
   /**
-   * Initialize a new instance of the class AgentPools class.
+   * Initialize a new instance of the class CredentialSets class.
    * @param client Reference to the service client
    */
   constructor(client: ContainerRegistryManagementClient) {
@@ -51,16 +50,16 @@ export class AgentPoolsImpl implements AgentPools {
   }
 
   /**
-   * Lists all the agent pools for a specified container registry.
-   * @param resourceGroupName The name of the resource group to which the container registry belongs.
+   * Lists all credential set resources for the specified container registry.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param registryName The name of the container registry.
    * @param options The options parameters.
    */
   public list(
     resourceGroupName: string,
     registryName: string,
-    options?: AgentPoolsListOptionalParams
-  ): PagedAsyncIterableIterator<AgentPool> {
+    options?: CredentialSetsListOptionalParams
+  ): PagedAsyncIterableIterator<CredentialSet> {
     const iter = this.listPagingAll(resourceGroupName, registryName, options);
     return {
       next() {
@@ -86,10 +85,10 @@ export class AgentPoolsImpl implements AgentPools {
   private async *listPagingPage(
     resourceGroupName: string,
     registryName: string,
-    options?: AgentPoolsListOptionalParams,
+    options?: CredentialSetsListOptionalParams,
     settings?: PageSettings
-  ): AsyncIterableIterator<AgentPool[]> {
-    let result: AgentPoolsListResponse;
+  ): AsyncIterableIterator<CredentialSet[]> {
+    let result: CredentialSetsListResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
       result = await this._list(resourceGroupName, registryName, options);
@@ -115,8 +114,8 @@ export class AgentPoolsImpl implements AgentPools {
   private async *listPagingAll(
     resourceGroupName: string,
     registryName: string,
-    options?: AgentPoolsListOptionalParams
-  ): AsyncIterableIterator<AgentPool> {
+    options?: CredentialSetsListOptionalParams
+  ): AsyncIterableIterator<CredentialSet> {
     for await (const page of this.listPagingPage(
       resourceGroupName,
       registryName,
@@ -127,334 +126,16 @@ export class AgentPoolsImpl implements AgentPools {
   }
 
   /**
-   * Gets the detailed information for a given agent pool.
-   * @param resourceGroupName The name of the resource group to which the container registry belongs.
-   * @param registryName The name of the container registry.
-   * @param agentPoolName The name of the agent pool.
-   * @param options The options parameters.
-   */
-  get(
-    resourceGroupName: string,
-    registryName: string,
-    agentPoolName: string,
-    options?: AgentPoolsGetOptionalParams
-  ): Promise<AgentPoolsGetResponse> {
-    return this.client.sendOperationRequest(
-      { resourceGroupName, registryName, agentPoolName, options },
-      getOperationSpec
-    );
-  }
-
-  /**
-   * Creates an agent pool for a container registry with the specified parameters.
-   * @param resourceGroupName The name of the resource group to which the container registry belongs.
-   * @param registryName The name of the container registry.
-   * @param agentPoolName The name of the agent pool.
-   * @param agentPool The parameters of an agent pool that needs to scheduled.
-   * @param options The options parameters.
-   */
-  async beginCreate(
-    resourceGroupName: string,
-    registryName: string,
-    agentPoolName: string,
-    agentPool: AgentPool,
-    options?: AgentPoolsCreateOptionalParams
-  ): Promise<
-    SimplePollerLike<
-      OperationState<AgentPoolsCreateResponse>,
-      AgentPoolsCreateResponse
-    >
-  > {
-    const directSendOperation = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ): Promise<AgentPoolsCreateResponse> => {
-      return this.client.sendOperationRequest(args, spec);
-    };
-    const sendOperationFn = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
-      const providedCallback = args.options?.onResponse;
-      const callback: coreClient.RawResponseCallback = (
-        rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
-      ) => {
-        currentRawResponse = rawResponse;
-        providedCallback?.(rawResponse, flatResponse);
-      };
-      const updatedArgs = {
-        ...args,
-        options: {
-          ...args.options,
-          onResponse: callback
-        }
-      };
-      const flatResponse = await directSendOperation(updatedArgs, spec);
-      return {
-        flatResponse,
-        rawResponse: {
-          statusCode: currentRawResponse!.status,
-          body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
-      };
-    };
-
-    const lro = createLroSpec({
-      sendOperationFn,
-      args: {
-        resourceGroupName,
-        registryName,
-        agentPoolName,
-        agentPool,
-        options
-      },
-      spec: createOperationSpec
-    });
-    const poller = await createHttpPoller<
-      AgentPoolsCreateResponse,
-      OperationState<AgentPoolsCreateResponse>
-    >(lro, {
-      restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs
-    });
-    await poller.poll();
-    return poller;
-  }
-
-  /**
-   * Creates an agent pool for a container registry with the specified parameters.
-   * @param resourceGroupName The name of the resource group to which the container registry belongs.
-   * @param registryName The name of the container registry.
-   * @param agentPoolName The name of the agent pool.
-   * @param agentPool The parameters of an agent pool that needs to scheduled.
-   * @param options The options parameters.
-   */
-  async beginCreateAndWait(
-    resourceGroupName: string,
-    registryName: string,
-    agentPoolName: string,
-    agentPool: AgentPool,
-    options?: AgentPoolsCreateOptionalParams
-  ): Promise<AgentPoolsCreateResponse> {
-    const poller = await this.beginCreate(
-      resourceGroupName,
-      registryName,
-      agentPoolName,
-      agentPool,
-      options
-    );
-    return poller.pollUntilDone();
-  }
-
-  /**
-   * Deletes a specified agent pool resource.
-   * @param resourceGroupName The name of the resource group to which the container registry belongs.
-   * @param registryName The name of the container registry.
-   * @param agentPoolName The name of the agent pool.
-   * @param options The options parameters.
-   */
-  async beginDelete(
-    resourceGroupName: string,
-    registryName: string,
-    agentPoolName: string,
-    options?: AgentPoolsDeleteOptionalParams
-  ): Promise<SimplePollerLike<OperationState<void>, void>> {
-    const directSendOperation = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ): Promise<void> => {
-      return this.client.sendOperationRequest(args, spec);
-    };
-    const sendOperationFn = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
-      const providedCallback = args.options?.onResponse;
-      const callback: coreClient.RawResponseCallback = (
-        rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
-      ) => {
-        currentRawResponse = rawResponse;
-        providedCallback?.(rawResponse, flatResponse);
-      };
-      const updatedArgs = {
-        ...args,
-        options: {
-          ...args.options,
-          onResponse: callback
-        }
-      };
-      const flatResponse = await directSendOperation(updatedArgs, spec);
-      return {
-        flatResponse,
-        rawResponse: {
-          statusCode: currentRawResponse!.status,
-          body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
-      };
-    };
-
-    const lro = createLroSpec({
-      sendOperationFn,
-      args: { resourceGroupName, registryName, agentPoolName, options },
-      spec: deleteOperationSpec
-    });
-    const poller = await createHttpPoller<void, OperationState<void>>(lro, {
-      restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs
-    });
-    await poller.poll();
-    return poller;
-  }
-
-  /**
-   * Deletes a specified agent pool resource.
-   * @param resourceGroupName The name of the resource group to which the container registry belongs.
-   * @param registryName The name of the container registry.
-   * @param agentPoolName The name of the agent pool.
-   * @param options The options parameters.
-   */
-  async beginDeleteAndWait(
-    resourceGroupName: string,
-    registryName: string,
-    agentPoolName: string,
-    options?: AgentPoolsDeleteOptionalParams
-  ): Promise<void> {
-    const poller = await this.beginDelete(
-      resourceGroupName,
-      registryName,
-      agentPoolName,
-      options
-    );
-    return poller.pollUntilDone();
-  }
-
-  /**
-   * Updates an agent pool with the specified parameters.
-   * @param resourceGroupName The name of the resource group to which the container registry belongs.
-   * @param registryName The name of the container registry.
-   * @param agentPoolName The name of the agent pool.
-   * @param updateParameters The parameters for updating an agent pool.
-   * @param options The options parameters.
-   */
-  async beginUpdate(
-    resourceGroupName: string,
-    registryName: string,
-    agentPoolName: string,
-    updateParameters: AgentPoolUpdateParameters,
-    options?: AgentPoolsUpdateOptionalParams
-  ): Promise<
-    SimplePollerLike<
-      OperationState<AgentPoolsUpdateResponse>,
-      AgentPoolsUpdateResponse
-    >
-  > {
-    const directSendOperation = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ): Promise<AgentPoolsUpdateResponse> => {
-      return this.client.sendOperationRequest(args, spec);
-    };
-    const sendOperationFn = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
-      const providedCallback = args.options?.onResponse;
-      const callback: coreClient.RawResponseCallback = (
-        rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
-      ) => {
-        currentRawResponse = rawResponse;
-        providedCallback?.(rawResponse, flatResponse);
-      };
-      const updatedArgs = {
-        ...args,
-        options: {
-          ...args.options,
-          onResponse: callback
-        }
-      };
-      const flatResponse = await directSendOperation(updatedArgs, spec);
-      return {
-        flatResponse,
-        rawResponse: {
-          statusCode: currentRawResponse!.status,
-          body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
-      };
-    };
-
-    const lro = createLroSpec({
-      sendOperationFn,
-      args: {
-        resourceGroupName,
-        registryName,
-        agentPoolName,
-        updateParameters,
-        options
-      },
-      spec: updateOperationSpec
-    });
-    const poller = await createHttpPoller<
-      AgentPoolsUpdateResponse,
-      OperationState<AgentPoolsUpdateResponse>
-    >(lro, {
-      restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs
-    });
-    await poller.poll();
-    return poller;
-  }
-
-  /**
-   * Updates an agent pool with the specified parameters.
-   * @param resourceGroupName The name of the resource group to which the container registry belongs.
-   * @param registryName The name of the container registry.
-   * @param agentPoolName The name of the agent pool.
-   * @param updateParameters The parameters for updating an agent pool.
-   * @param options The options parameters.
-   */
-  async beginUpdateAndWait(
-    resourceGroupName: string,
-    registryName: string,
-    agentPoolName: string,
-    updateParameters: AgentPoolUpdateParameters,
-    options?: AgentPoolsUpdateOptionalParams
-  ): Promise<AgentPoolsUpdateResponse> {
-    const poller = await this.beginUpdate(
-      resourceGroupName,
-      registryName,
-      agentPoolName,
-      updateParameters,
-      options
-    );
-    return poller.pollUntilDone();
-  }
-
-  /**
-   * Lists all the agent pools for a specified container registry.
-   * @param resourceGroupName The name of the resource group to which the container registry belongs.
+   * Lists all credential set resources for the specified container registry.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param registryName The name of the container registry.
    * @param options The options parameters.
    */
   private _list(
     resourceGroupName: string,
     registryName: string,
-    options?: AgentPoolsListOptionalParams
-  ): Promise<AgentPoolsListResponse> {
+    options?: CredentialSetsListOptionalParams
+  ): Promise<CredentialSetsListResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, registryName, options },
       listOperationSpec
@@ -462,27 +143,337 @@ export class AgentPoolsImpl implements AgentPools {
   }
 
   /**
-   * Gets the count of queued runs for a given agent pool.
-   * @param resourceGroupName The name of the resource group to which the container registry belongs.
+   * Gets the properties of the specified credential set resource.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param registryName The name of the container registry.
-   * @param agentPoolName The name of the agent pool.
+   * @param credentialSetName The name of the credential set.
    * @param options The options parameters.
    */
-  getQueueStatus(
+  get(
     resourceGroupName: string,
     registryName: string,
-    agentPoolName: string,
-    options?: AgentPoolsGetQueueStatusOptionalParams
-  ): Promise<AgentPoolsGetQueueStatusResponse> {
+    credentialSetName: string,
+    options?: CredentialSetsGetOptionalParams
+  ): Promise<CredentialSetsGetResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, registryName, agentPoolName, options },
-      getQueueStatusOperationSpec
+      { resourceGroupName, registryName, credentialSetName, options },
+      getOperationSpec
     );
   }
 
   /**
+   * Creates a credential set for a container registry with the specified parameters.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param credentialSetName The name of the credential set.
+   * @param credentialSetCreateParameters The parameters for creating a credential set.
+   * @param options The options parameters.
+   */
+  async beginCreate(
+    resourceGroupName: string,
+    registryName: string,
+    credentialSetName: string,
+    credentialSetCreateParameters: CredentialSet,
+    options?: CredentialSetsCreateOptionalParams
+  ): Promise<
+    SimplePollerLike<
+      OperationState<CredentialSetsCreateResponse>,
+      CredentialSetsCreateResponse
+    >
+  > {
+    const directSendOperation = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ): Promise<CredentialSetsCreateResponse> => {
+      return this.client.sendOperationRequest(args, spec);
+    };
+    const sendOperationFn = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ) => {
+      let currentRawResponse:
+        | coreClient.FullOperationResponse
+        | undefined = undefined;
+      const providedCallback = args.options?.onResponse;
+      const callback: coreClient.RawResponseCallback = (
+        rawResponse: coreClient.FullOperationResponse,
+        flatResponse: unknown
+      ) => {
+        currentRawResponse = rawResponse;
+        providedCallback?.(rawResponse, flatResponse);
+      };
+      const updatedArgs = {
+        ...args,
+        options: {
+          ...args.options,
+          onResponse: callback
+        }
+      };
+      const flatResponse = await directSendOperation(updatedArgs, spec);
+      return {
+        flatResponse,
+        rawResponse: {
+          statusCode: currentRawResponse!.status,
+          body: currentRawResponse!.parsedBody,
+          headers: currentRawResponse!.headers.toJSON()
+        }
+      };
+    };
+
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: {
+        resourceGroupName,
+        registryName,
+        credentialSetName,
+        credentialSetCreateParameters,
+        options
+      },
+      spec: createOperationSpec
+    });
+    const poller = await createHttpPoller<
+      CredentialSetsCreateResponse,
+      OperationState<CredentialSetsCreateResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "azure-async-operation"
+    });
+    await poller.poll();
+    return poller;
+  }
+
+  /**
+   * Creates a credential set for a container registry with the specified parameters.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param credentialSetName The name of the credential set.
+   * @param credentialSetCreateParameters The parameters for creating a credential set.
+   * @param options The options parameters.
+   */
+  async beginCreateAndWait(
+    resourceGroupName: string,
+    registryName: string,
+    credentialSetName: string,
+    credentialSetCreateParameters: CredentialSet,
+    options?: CredentialSetsCreateOptionalParams
+  ): Promise<CredentialSetsCreateResponse> {
+    const poller = await this.beginCreate(
+      resourceGroupName,
+      registryName,
+      credentialSetName,
+      credentialSetCreateParameters,
+      options
+    );
+    return poller.pollUntilDone();
+  }
+
+  /**
+   * Deletes a credential set from a container registry.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param credentialSetName The name of the credential set.
+   * @param options The options parameters.
+   */
+  async beginDelete(
+    resourceGroupName: string,
+    registryName: string,
+    credentialSetName: string,
+    options?: CredentialSetsDeleteOptionalParams
+  ): Promise<
+    SimplePollerLike<
+      OperationState<CredentialSetsDeleteResponse>,
+      CredentialSetsDeleteResponse
+    >
+  > {
+    const directSendOperation = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ): Promise<CredentialSetsDeleteResponse> => {
+      return this.client.sendOperationRequest(args, spec);
+    };
+    const sendOperationFn = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ) => {
+      let currentRawResponse:
+        | coreClient.FullOperationResponse
+        | undefined = undefined;
+      const providedCallback = args.options?.onResponse;
+      const callback: coreClient.RawResponseCallback = (
+        rawResponse: coreClient.FullOperationResponse,
+        flatResponse: unknown
+      ) => {
+        currentRawResponse = rawResponse;
+        providedCallback?.(rawResponse, flatResponse);
+      };
+      const updatedArgs = {
+        ...args,
+        options: {
+          ...args.options,
+          onResponse: callback
+        }
+      };
+      const flatResponse = await directSendOperation(updatedArgs, spec);
+      return {
+        flatResponse,
+        rawResponse: {
+          statusCode: currentRawResponse!.status,
+          body: currentRawResponse!.parsedBody,
+          headers: currentRawResponse!.headers.toJSON()
+        }
+      };
+    };
+
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: { resourceGroupName, registryName, credentialSetName, options },
+      spec: deleteOperationSpec
+    });
+    const poller = await createHttpPoller<
+      CredentialSetsDeleteResponse,
+      OperationState<CredentialSetsDeleteResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "location"
+    });
+    await poller.poll();
+    return poller;
+  }
+
+  /**
+   * Deletes a credential set from a container registry.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param credentialSetName The name of the credential set.
+   * @param options The options parameters.
+   */
+  async beginDeleteAndWait(
+    resourceGroupName: string,
+    registryName: string,
+    credentialSetName: string,
+    options?: CredentialSetsDeleteOptionalParams
+  ): Promise<CredentialSetsDeleteResponse> {
+    const poller = await this.beginDelete(
+      resourceGroupName,
+      registryName,
+      credentialSetName,
+      options
+    );
+    return poller.pollUntilDone();
+  }
+
+  /**
+   * Updates a credential set for a container registry with the specified parameters.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param credentialSetName The name of the credential set.
+   * @param credentialSetUpdateParameters The parameters for updating a credential set.
+   * @param options The options parameters.
+   */
+  async beginUpdate(
+    resourceGroupName: string,
+    registryName: string,
+    credentialSetName: string,
+    credentialSetUpdateParameters: CredentialSetUpdateParameters,
+    options?: CredentialSetsUpdateOptionalParams
+  ): Promise<
+    SimplePollerLike<
+      OperationState<CredentialSetsUpdateResponse>,
+      CredentialSetsUpdateResponse
+    >
+  > {
+    const directSendOperation = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ): Promise<CredentialSetsUpdateResponse> => {
+      return this.client.sendOperationRequest(args, spec);
+    };
+    const sendOperationFn = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ) => {
+      let currentRawResponse:
+        | coreClient.FullOperationResponse
+        | undefined = undefined;
+      const providedCallback = args.options?.onResponse;
+      const callback: coreClient.RawResponseCallback = (
+        rawResponse: coreClient.FullOperationResponse,
+        flatResponse: unknown
+      ) => {
+        currentRawResponse = rawResponse;
+        providedCallback?.(rawResponse, flatResponse);
+      };
+      const updatedArgs = {
+        ...args,
+        options: {
+          ...args.options,
+          onResponse: callback
+        }
+      };
+      const flatResponse = await directSendOperation(updatedArgs, spec);
+      return {
+        flatResponse,
+        rawResponse: {
+          statusCode: currentRawResponse!.status,
+          body: currentRawResponse!.parsedBody,
+          headers: currentRawResponse!.headers.toJSON()
+        }
+      };
+    };
+
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: {
+        resourceGroupName,
+        registryName,
+        credentialSetName,
+        credentialSetUpdateParameters,
+        options
+      },
+      spec: updateOperationSpec
+    });
+    const poller = await createHttpPoller<
+      CredentialSetsUpdateResponse,
+      OperationState<CredentialSetsUpdateResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "azure-async-operation"
+    });
+    await poller.poll();
+    return poller;
+  }
+
+  /**
+   * Updates a credential set for a container registry with the specified parameters.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param credentialSetName The name of the credential set.
+   * @param credentialSetUpdateParameters The parameters for updating a credential set.
+   * @param options The options parameters.
+   */
+  async beginUpdateAndWait(
+    resourceGroupName: string,
+    registryName: string,
+    credentialSetName: string,
+    credentialSetUpdateParameters: CredentialSetUpdateParameters,
+    options?: CredentialSetsUpdateOptionalParams
+  ): Promise<CredentialSetsUpdateResponse> {
+    const poller = await this.beginUpdate(
+      resourceGroupName,
+      registryName,
+      credentialSetName,
+      credentialSetUpdateParameters,
+      options
+    );
+    return poller.pollUntilDone();
+  }
+
+  /**
    * ListNext
-   * @param resourceGroupName The name of the resource group to which the container registry belongs.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param registryName The name of the container registry.
    * @param nextLink The nextLink from the previous successful call to the List method.
    * @param options The options parameters.
@@ -491,8 +482,8 @@ export class AgentPoolsImpl implements AgentPools {
     resourceGroupName: string,
     registryName: string,
     nextLink: string,
-    options?: AgentPoolsListNextOptionalParams
-  ): Promise<AgentPoolsListNextResponse> {
+    options?: CredentialSetsListNextOptionalParams
+  ): Promise<CredentialSetsListNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, registryName, nextLink, options },
       listNextOperationSpec
@@ -502,164 +493,149 @@ export class AgentPoolsImpl implements AgentPools {
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const getOperationSpec: coreClient.OperationSpec = {
+const listOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/agentPools/{agentPoolName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/credentialSets",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.AgentPool
+      bodyMapper: Mappers.CredentialSetListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  queryParameters: [Parameters.apiVersion1],
+  queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.registryName
+  ],
+  headerParameters: [Parameters.accept],
+  serializer
+};
+const getOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/credentialSets/{credentialSetName}",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.CredentialSet
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
     Parameters.registryName,
-    Parameters.resourceGroupName1,
-    Parameters.agentPoolName
+    Parameters.credentialSetName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const createOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/agentPools/{agentPoolName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/credentialSets/{credentialSetName}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.AgentPool
+      bodyMapper: Mappers.CredentialSet
     },
     201: {
-      bodyMapper: Mappers.AgentPool
+      bodyMapper: Mappers.CredentialSet
     },
     202: {
-      bodyMapper: Mappers.AgentPool
+      bodyMapper: Mappers.CredentialSet
     },
     204: {
-      bodyMapper: Mappers.AgentPool
+      bodyMapper: Mappers.CredentialSet
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.agentPool,
-  queryParameters: [Parameters.apiVersion1],
+  requestBody: Parameters.credentialSetCreateParameters,
+  queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
+    Parameters.resourceGroupName,
     Parameters.registryName,
-    Parameters.resourceGroupName1,
-    Parameters.agentPoolName
+    Parameters.credentialSetName
   ],
-  headerParameters: [Parameters.contentType, Parameters.accept],
+  headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
   serializer
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/agentPools/{agentPoolName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/credentialSets/{credentialSetName}",
   httpMethod: "DELETE",
   responses: {
-    200: {},
-    201: {},
-    202: {},
-    204: {},
+    200: {
+      headersMapper: Mappers.CredentialSetsDeleteHeaders
+    },
+    201: {
+      headersMapper: Mappers.CredentialSetsDeleteHeaders
+    },
+    202: {
+      headersMapper: Mappers.CredentialSetsDeleteHeaders
+    },
+    204: {
+      headersMapper: Mappers.CredentialSetsDeleteHeaders
+    },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  queryParameters: [Parameters.apiVersion1],
+  queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
+    Parameters.resourceGroupName,
     Parameters.registryName,
-    Parameters.resourceGroupName1,
-    Parameters.agentPoolName
+    Parameters.credentialSetName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const updateOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/agentPools/{agentPoolName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/credentialSets/{credentialSetName}",
   httpMethod: "PATCH",
   responses: {
     200: {
-      bodyMapper: Mappers.AgentPool
+      bodyMapper: Mappers.CredentialSet
     },
     201: {
-      bodyMapper: Mappers.AgentPool
+      bodyMapper: Mappers.CredentialSet
     },
     202: {
-      bodyMapper: Mappers.AgentPool
+      bodyMapper: Mappers.CredentialSet
     },
     204: {
-      bodyMapper: Mappers.AgentPool
+      bodyMapper: Mappers.CredentialSet
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.updateParameters,
-  queryParameters: [Parameters.apiVersion1],
+  requestBody: Parameters.credentialSetUpdateParameters,
+  queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
+    Parameters.resourceGroupName,
     Parameters.registryName,
-    Parameters.resourceGroupName1,
-    Parameters.agentPoolName
+    Parameters.credentialSetName
   ],
-  headerParameters: [Parameters.contentType, Parameters.accept],
+  headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
-};
-const listOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/agentPools",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: Mappers.AgentPoolListResult
-    },
-    default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
-  },
-  queryParameters: [Parameters.apiVersion1],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.registryName,
-    Parameters.resourceGroupName1
-  ],
-  headerParameters: [Parameters.accept],
-  serializer
-};
-const getQueueStatusOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/agentPools/{agentPoolName}/listQueueStatus",
-  httpMethod: "POST",
-  responses: {
-    200: {
-      bodyMapper: Mappers.AgentPoolQueueStatus
-    },
-    default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
-  },
-  queryParameters: [Parameters.apiVersion1],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.registryName,
-    Parameters.resourceGroupName1,
-    Parameters.agentPoolName
-  ],
-  headerParameters: [Parameters.accept],
   serializer
 };
 const listNextOperationSpec: coreClient.OperationSpec = {
@@ -667,7 +643,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.AgentPoolListResult
+      bodyMapper: Mappers.CredentialSetListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -676,8 +652,8 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
+    Parameters.resourceGroupName,
     Parameters.registryName,
-    Parameters.resourceGroupName1,
     Parameters.nextLink
   ],
   headerParameters: [Parameters.accept],
