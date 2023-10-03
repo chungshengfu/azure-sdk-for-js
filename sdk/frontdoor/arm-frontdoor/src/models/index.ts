@@ -38,6 +38,28 @@ export interface PolicySettings {
   customBlockResponseBody?: string;
   /** Describes if policy managed rules will inspect the request body content. */
   requestBodyCheck?: PolicyRequestBodyCheck;
+  /** Defines rules to scrub sensitive fields in Web Application Firewall logs */
+  logScrubbing?: PolicySettingsLogScrubbing;
+}
+
+/** Defines rules to scrub sensitive fields in Web Application Firewall logs */
+export interface PolicySettingsLogScrubbing {
+  /** State of the log scrub config. Default value is Enabled. */
+  state?: WebApplicationFirewallScrubbingState;
+  /** List of log scrub rules applied to Web Application Firewall logs. */
+  scrubbingRules?: WebApplicationFirewallScrubbingRules[];
+}
+
+/** Defines contents of a log scrub rules. */
+export interface WebApplicationFirewallScrubbingRules {
+  /** The variable to be scrubbed from the logs. */
+  matchVariable: ScrubbingRuleEntryMatchVariable;
+  /** Comparison type to use for matching with the variable value in log. */
+  selectorMatchOperator: ScrubbingRuleEntryMatchOperator;
+  /** Match against a specific key from the QueryString, PostArgs, RequestHeader or Cookies variables in the log. Default value is null. */
+  selector?: string;
+  /** Defines the state of log scrubbing rule. Default value is Enabled. */
+  state?: ScrubbingRuleEntryState;
 }
 
 /** Defines contents of custom rules */
@@ -1383,6 +1405,93 @@ export enum KnownPolicyRequestBodyCheck {
  * **Enabled**
  */
 export type PolicyRequestBodyCheck = string;
+
+/** Known values of {@link WebApplicationFirewallScrubbingState} that the service accepts. */
+export enum KnownWebApplicationFirewallScrubbingState {
+  /** Enabled */
+  Enabled = "Enabled",
+  /** Disabled */
+  Disabled = "Disabled"
+}
+
+/**
+ * Defines values for WebApplicationFirewallScrubbingState. \
+ * {@link KnownWebApplicationFirewallScrubbingState} can be used interchangeably with WebApplicationFirewallScrubbingState,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Enabled** \
+ * **Disabled**
+ */
+export type WebApplicationFirewallScrubbingState = string;
+
+/** Known values of {@link ScrubbingRuleEntryMatchVariable} that the service accepts. */
+export enum KnownScrubbingRuleEntryMatchVariable {
+  /** RequestIPAddress */
+  RequestIPAddress = "RequestIPAddress",
+  /** RequestUri */
+  RequestUri = "RequestUri",
+  /** QueryStringArgNames */
+  QueryStringArgNames = "QueryStringArgNames",
+  /** RequestHeaderNames */
+  RequestHeaderNames = "RequestHeaderNames",
+  /** RequestCookieNames */
+  RequestCookieNames = "RequestCookieNames",
+  /** RequestBodyPostArgNames */
+  RequestBodyPostArgNames = "RequestBodyPostArgNames",
+  /** RequestBodyJsonArgNames */
+  RequestBodyJsonArgNames = "RequestBodyJsonArgNames"
+}
+
+/**
+ * Defines values for ScrubbingRuleEntryMatchVariable. \
+ * {@link KnownScrubbingRuleEntryMatchVariable} can be used interchangeably with ScrubbingRuleEntryMatchVariable,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **RequestIPAddress** \
+ * **RequestUri** \
+ * **QueryStringArgNames** \
+ * **RequestHeaderNames** \
+ * **RequestCookieNames** \
+ * **RequestBodyPostArgNames** \
+ * **RequestBodyJsonArgNames**
+ */
+export type ScrubbingRuleEntryMatchVariable = string;
+
+/** Known values of {@link ScrubbingRuleEntryMatchOperator} that the service accepts. */
+export enum KnownScrubbingRuleEntryMatchOperator {
+  /** EqualsAny */
+  EqualsAny = "EqualsAny",
+  /** Equals */
+  Equals = "Equals"
+}
+
+/**
+ * Defines values for ScrubbingRuleEntryMatchOperator. \
+ * {@link KnownScrubbingRuleEntryMatchOperator} can be used interchangeably with ScrubbingRuleEntryMatchOperator,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **EqualsAny** \
+ * **Equals**
+ */
+export type ScrubbingRuleEntryMatchOperator = string;
+
+/** Known values of {@link ScrubbingRuleEntryState} that the service accepts. */
+export enum KnownScrubbingRuleEntryState {
+  /** Enabled */
+  Enabled = "Enabled",
+  /** Disabled */
+  Disabled = "Disabled"
+}
+
+/**
+ * Defines values for ScrubbingRuleEntryState. \
+ * {@link KnownScrubbingRuleEntryState} can be used interchangeably with ScrubbingRuleEntryState,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Enabled** \
+ * **Disabled**
+ */
+export type ScrubbingRuleEntryState = string;
 
 /** Known values of {@link CustomRuleEnabledState} that the service accepts. */
 export enum KnownCustomRuleEnabledState {

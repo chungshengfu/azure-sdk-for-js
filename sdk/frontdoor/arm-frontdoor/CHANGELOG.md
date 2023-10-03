@@ -1,15 +1,26 @@
 # Release History
+    
+## 6.0.0 (2023-10-03)
+    
+**Features**
 
-## 5.2.1 (Unreleased)
+  - Added Interface PolicySettingsLogScrubbing
+  - Added Interface WebApplicationFirewallScrubbingRules
+  - Added Type Alias ScrubbingRuleEntryMatchOperator
+  - Added Type Alias ScrubbingRuleEntryMatchVariable
+  - Added Type Alias ScrubbingRuleEntryState
+  - Added Type Alias WebApplicationFirewallScrubbingState
+  - Interface PolicySettings has a new optional parameter logScrubbing
+  - Added Enum KnownScrubbingRuleEntryMatchOperator
+  - Added Enum KnownScrubbingRuleEntryMatchVariable
+  - Added Enum KnownScrubbingRuleEntryState
+  - Added Enum KnownWebApplicationFirewallScrubbingState
 
-### Features Added
+**Breaking Changes**
 
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
+  - Class FrontDoorManagementClient has a new signature
+    
+    
 ## 5.2.0 (2023-05-09)
     
 **Features**
@@ -73,4 +84,4 @@ To understand the detail of the change, please refer to [Changelog](https://aka.
 
 To migrate the existing applications to the latest version, please refer to [Migration Guide](https://aka.ms/js-track2-migration-guide).
 
-To learn more, please refer to our documentation [Quick Start](https://aka.ms/azsdk/js/mgmt/quickstart ).
+To learn more, please refer to our documentation [Quick Start](https://aka.ms/js-track2-quickstart).

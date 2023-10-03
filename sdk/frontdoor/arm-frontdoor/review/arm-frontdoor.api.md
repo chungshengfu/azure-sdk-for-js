@@ -343,6 +343,7 @@ export class FrontDoorManagementClient extends coreClient.ServiceClient {
     // (undocumented)
     $host: string;
     constructor(credentials: coreAuth.TokenCredential, subscriptionId: string, options?: FrontDoorManagementClientOptionalParams);
+    constructor(credentials: coreAuth.TokenCredential, options?: FrontDoorManagementClientOptionalParams);
     // (undocumented)
     endpoints: Endpoints;
     // (undocumented)
@@ -368,7 +369,7 @@ export class FrontDoorManagementClient extends coreClient.ServiceClient {
     // (undocumented)
     rulesEngines: RulesEngines;
     // (undocumented)
-    subscriptionId: string;
+    subscriptionId?: string;
 }
 
 // @public
@@ -996,6 +997,29 @@ export enum KnownRuleType {
 }
 
 // @public
+export enum KnownScrubbingRuleEntryMatchOperator {
+    Equals = "Equals",
+    EqualsAny = "EqualsAny"
+}
+
+// @public
+export enum KnownScrubbingRuleEntryMatchVariable {
+    QueryStringArgNames = "QueryStringArgNames",
+    RequestBodyJsonArgNames = "RequestBodyJsonArgNames",
+    RequestBodyPostArgNames = "RequestBodyPostArgNames",
+    RequestCookieNames = "RequestCookieNames",
+    RequestHeaderNames = "RequestHeaderNames",
+    RequestIPAddress = "RequestIPAddress",
+    RequestUri = "RequestUri"
+}
+
+// @public
+export enum KnownScrubbingRuleEntryState {
+    Disabled = "Disabled",
+    Enabled = "Enabled"
+}
+
+// @public
 export enum KnownSessionAffinityEnabledState {
     Disabled = "Disabled",
     Enabled = "Enabled"
@@ -1046,6 +1070,12 @@ export enum KnownTransformType {
     Uppercase = "Uppercase",
     UrlDecode = "UrlDecode",
     UrlEncode = "UrlEncode"
+}
+
+// @public
+export enum KnownWebApplicationFirewallScrubbingState {
+    Disabled = "Disabled",
+    Enabled = "Enabled"
 }
 
 // @public
@@ -1392,9 +1422,16 @@ export interface PolicySettings {
     customBlockResponseBody?: string;
     customBlockResponseStatusCode?: number;
     enabledState?: PolicyEnabledState;
+    logScrubbing?: PolicySettingsLogScrubbing;
     mode?: PolicyMode;
     redirectUrl?: string;
     requestBodyCheck?: PolicyRequestBodyCheck;
+}
+
+// @public
+export interface PolicySettingsLogScrubbing {
+    scrubbingRules?: WebApplicationFirewallScrubbingRules[];
+    state?: WebApplicationFirewallScrubbingState;
 }
 
 // @public
@@ -1672,6 +1709,15 @@ export interface RulesEngineUpdateParameters {
 export type RuleType = string;
 
 // @public
+export type ScrubbingRuleEntryMatchOperator = string;
+
+// @public
+export type ScrubbingRuleEntryMatchVariable = string;
+
+// @public
+export type ScrubbingRuleEntryState = string;
+
+// @public
 export interface SecurityPolicyLink {
     id?: string;
 }
@@ -1762,6 +1808,17 @@ export interface WebApplicationFirewallPolicyList {
     nextLink?: string;
     readonly value?: WebApplicationFirewallPolicy[];
 }
+
+// @public
+export interface WebApplicationFirewallScrubbingRules {
+    matchVariable: ScrubbingRuleEntryMatchVariable;
+    selector?: string;
+    selectorMatchOperator: ScrubbingRuleEntryMatchOperator;
+    state?: ScrubbingRuleEntryState;
+}
+
+// @public
+export type WebApplicationFirewallScrubbingState = string;
 
 // (No @packageDocumentation comment for this package)
 

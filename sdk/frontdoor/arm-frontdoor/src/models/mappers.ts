@@ -81,6 +81,75 @@ export const PolicySettings: coreClient.CompositeMapper = {
         type: {
           name: "String"
         }
+      },
+      logScrubbing: {
+        serializedName: "logScrubbing",
+        type: {
+          name: "Composite",
+          className: "PolicySettingsLogScrubbing"
+        }
+      }
+    }
+  }
+};
+
+export const PolicySettingsLogScrubbing: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "PolicySettingsLogScrubbing",
+    modelProperties: {
+      state: {
+        serializedName: "state",
+        type: {
+          name: "String"
+        }
+      },
+      scrubbingRules: {
+        serializedName: "scrubbingRules",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "WebApplicationFirewallScrubbingRules"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+export const WebApplicationFirewallScrubbingRules: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "WebApplicationFirewallScrubbingRules",
+    modelProperties: {
+      matchVariable: {
+        serializedName: "matchVariable",
+        required: true,
+        type: {
+          name: "String"
+        }
+      },
+      selectorMatchOperator: {
+        serializedName: "selectorMatchOperator",
+        required: true,
+        type: {
+          name: "String"
+        }
+      },
+      selector: {
+        serializedName: "selector",
+        type: {
+          name: "String"
+        }
+      },
+      state: {
+        serializedName: "state",
+        type: {
+          name: "String"
+        }
       }
     }
   }
