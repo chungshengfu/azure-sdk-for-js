@@ -931,12 +931,21 @@ export type CommunityGalleriesGetResponse = CommunityGallery;
 
 // @public
 export interface CommunityGallery extends PirCommunityGalleryResource {
+    artifactTags?: {
+        [propertyName: string]: string;
+    };
+    communityMetadata?: CommunityGalleryMetadata;
+    disclaimer?: string;
 }
 
 // @public
 export interface CommunityGalleryImage extends PirCommunityGalleryResource {
     architecture?: Architecture;
+    artifactTags?: {
+        [propertyName: string]: string;
+    };
     disallowed?: Disallowed;
+    disclaimer?: string;
     endOfLifeDate?: Date;
     eula?: string;
     features?: GalleryImageFeature[];
@@ -991,6 +1000,10 @@ export type CommunityGalleryImagesListResponse = CommunityGalleryImageList;
 
 // @public
 export interface CommunityGalleryImageVersion extends PirCommunityGalleryResource {
+    artifactTags?: {
+        [propertyName: string]: string;
+    };
+    disclaimer?: string;
     endOfLifeDate?: Date;
     excludeFromLatest?: boolean;
     publishedDate?: Date;
@@ -1036,6 +1049,15 @@ export interface CommunityGalleryInfo {
     eula?: string;
     publicNamePrefix?: string;
     readonly publicNames?: string[];
+    publisherContact?: string;
+    publisherUri?: string;
+}
+
+// @public
+export interface CommunityGalleryMetadata {
+    eula?: string;
+    privacyStatementUri?: string;
+    publicNames?: string[];
     publisherContact?: string;
     publisherUri?: string;
 }
@@ -1186,7 +1208,6 @@ export type CopyCompletionErrorReason = string;
 // @public
 export interface CreationData {
     createOption: DiskCreateOption;
-    elasticSanResourceId?: string;
     galleryImageReference?: ImageDiskReference;
     imageReference?: ImageDiskReference;
     logicalSectorSize?: number;
@@ -1518,7 +1539,6 @@ export interface Disk extends Resource {
     encryptionSettingsCollection?: EncryptionSettingsCollection;
     extendedLocation?: ExtendedLocation;
     hyperVGeneration?: HyperVGeneration;
-    readonly lastOwnershipUpdateTime?: Date;
     readonly managedBy?: string;
     readonly managedByExtended?: string[];
     maxShares?: number;
@@ -2083,12 +2103,6 @@ export interface DiskUpdate {
 }
 
 // @public
-export type DomainNameLabelScopeTypes = string;
-
-// @public
-export type EdgeZoneStorageAccountType = string;
-
-// @public
 export interface Encryption {
     diskEncryptionSetId?: string;
     type?: EncryptionType;
@@ -2127,6 +2141,14 @@ export interface EncryptionSettingsElement {
 export type EncryptionType = string;
 
 // @public
+export interface ExecutedValidation {
+    executionTime?: Date;
+    status?: string;
+    type?: string;
+    version?: string;
+}
+
+// @public
 export type ExecutionState = string;
 
 // @public
@@ -2158,9 +2180,6 @@ export interface Extension {
     name?: string;
     properties?: CloudServiceExtensionProperties;
 }
-
-// @public
-export type FileFormat = string;
 
 // @public
 export interface Galleries {
@@ -2637,6 +2656,7 @@ export interface GalleryImageVersion extends Resource {
     readonly replicationStatus?: ReplicationStatus;
     safetyProfile?: GalleryImageVersionSafetyProfile;
     storageProfile?: GalleryImageVersionStorageProfile;
+    readonly validationsProfile?: ValidationsProfile;
 }
 
 // @public
@@ -2727,6 +2747,7 @@ export interface GalleryImageVersionUpdate extends UpdateResourceDefinition {
     readonly replicationStatus?: ReplicationStatus;
     safetyProfile?: GalleryImageVersionSafetyProfile;
     storageProfile?: GalleryImageVersionStorageProfile;
+    readonly validationsProfile?: ValidationsProfile;
 }
 
 // @public
@@ -2766,7 +2787,7 @@ export interface GalleryTargetExtendedLocation {
     extendedLocation?: GalleryExtendedLocation;
     extendedLocationReplicaCount?: number;
     name?: string;
-    storageAccountType?: EdgeZoneStorageAccountType;
+    storageAccountType?: StorageAccountType;
 }
 
 // @public
@@ -2787,7 +2808,6 @@ export interface GrantAccessData {
     // (undocumented)
     access: AccessLevel;
     durationInSeconds: number;
-    fileFormat?: FileFormat;
     getSecureVMGuestStateSAS?: boolean;
 }
 
@@ -3154,7 +3174,6 @@ export enum KnownDiskControllerTypes {
 export enum KnownDiskCreateOption {
     Attach = "Attach",
     Copy = "Copy",
-    CopyFromSanSnapshot = "CopyFromSanSnapshot",
     CopyStart = "CopyStart",
     Empty = "Empty",
     FromImage = "FromImage",
@@ -3230,22 +3249,6 @@ export enum KnownDiskStorageAccountTypes {
 }
 
 // @public
-export enum KnownDomainNameLabelScopeTypes {
-    NoReuse = "NoReuse",
-    ResourceGroupReuse = "ResourceGroupReuse",
-    SubscriptionReuse = "SubscriptionReuse",
-    TenantReuse = "TenantReuse"
-}
-
-// @public
-export enum KnownEdgeZoneStorageAccountType {
-    PremiumLRS = "Premium_LRS",
-    StandardLRS = "Standard_LRS",
-    StandardSSDLRS = "StandardSSD_LRS",
-    StandardZRS = "Standard_ZRS"
-}
-
-// @public
 export enum KnownEncryptionType {
     EncryptionAtRestWithCustomerKey = "EncryptionAtRestWithCustomerKey",
     EncryptionAtRestWithPlatformAndCustomerKeys = "EncryptionAtRestWithPlatformAndCustomerKeys",
@@ -3292,12 +3295,6 @@ export enum KnownExtendedLocationType {
 // @public
 export enum KnownExtendedLocationTypes {
     EdgeZone = "EdgeZone"
-}
-
-// @public
-export enum KnownFileFormat {
-    VHD = "VHD",
-    Vhdx = "VHDX"
 }
 
 // @public
@@ -3395,22 +3392,6 @@ export enum KnownNetworkAccessPolicy {
 // @public
 export enum KnownNetworkApiVersion {
     TwoThousandTwenty1101 = "2020-11-01"
-}
-
-// @public
-export enum KnownNetworkInterfaceAuxiliaryMode {
-    AcceleratedConnections = "AcceleratedConnections",
-    Floating = "Floating",
-    None = "None"
-}
-
-// @public
-export enum KnownNetworkInterfaceAuxiliarySku {
-    A1 = "A1",
-    A2 = "A2",
-    A4 = "A4",
-    A8 = "A8",
-    None = "None"
 }
 
 // @public
@@ -3545,7 +3526,8 @@ export enum KnownReplicationState {
 
 // @public
 export enum KnownReplicationStatusTypes {
-    ReplicationStatus = "ReplicationStatus"
+    ReplicationStatus = "ReplicationStatus",
+    ValidationProfile = "ValidationProfile"
 }
 
 // @public
@@ -3627,6 +3609,7 @@ export enum KnownSnapshotStorageAccountTypes {
 export enum KnownStorageAccountType {
     PremiumLRS = "Premium_LRS",
     StandardLRS = "Standard_LRS",
+    StandardSSDLRS = "StandardSSD_LRS",
     StandardZRS = "Standard_ZRS"
 }
 
@@ -4074,12 +4057,6 @@ export type NetworkAccessPolicy = string;
 export type NetworkApiVersion = string;
 
 // @public
-export type NetworkInterfaceAuxiliaryMode = string;
-
-// @public
-export type NetworkInterfaceAuxiliarySku = string;
-
-// @public
 export interface NetworkInterfaceReference extends SubResource {
     deleteOption?: DeleteOptions;
     primary?: boolean;
@@ -4301,6 +4278,12 @@ export interface Plan {
     product?: string;
     promotionCode?: string;
     publisher?: string;
+}
+
+// @public
+export interface PlatformAttribute {
+    name?: string;
+    value?: string;
 }
 
 // @public
@@ -5139,6 +5122,9 @@ export type SharedGalleriesListResponse = SharedGalleryList;
 
 // @public
 export interface SharedGallery extends PirSharedGalleryResource {
+    readonly artifactTags?: {
+        [propertyName: string]: string;
+    };
 }
 
 // @public
@@ -5158,6 +5144,9 @@ export type SharedGalleryHostCaching = string;
 // @public
 export interface SharedGalleryImage extends PirSharedGalleryResource {
     architecture?: Architecture;
+    artifactTags?: {
+        [propertyName: string]: string;
+    };
     disallowed?: Disallowed;
     endOfLifeDate?: Date;
     eula?: string;
@@ -5207,6 +5196,9 @@ export type SharedGalleryImagesListResponse = SharedGalleryImageList;
 
 // @public
 export interface SharedGalleryImageVersion extends PirSharedGalleryResource {
+    artifactTags?: {
+        [propertyName: string]: string;
+    };
     endOfLifeDate?: Date;
     excludeFromLatest?: boolean;
     publishedDate?: Date;
@@ -5791,6 +5783,13 @@ export interface UserAssignedIdentitiesValue {
 }
 
 // @public
+export interface ValidationsProfile {
+    executedValidations?: ExecutedValidation[];
+    platformAttributes?: PlatformAttribute[];
+    validationEtag?: string;
+}
+
+// @public
 export interface VaultCertificate {
     certificateStore?: string;
     certificateUrl?: string;
@@ -6233,8 +6232,6 @@ export interface VirtualMachineListResult {
 
 // @public
 export interface VirtualMachineNetworkInterfaceConfiguration {
-    auxiliaryMode?: NetworkInterfaceAuxiliaryMode;
-    auxiliarySku?: NetworkInterfaceAuxiliarySku;
     deleteOption?: DeleteOptions;
     disableTcpStateTracking?: boolean;
     dnsSettings?: VirtualMachineNetworkInterfaceDnsSettingsConfiguration;
@@ -6292,7 +6289,6 @@ export interface VirtualMachinePublicIPAddressConfiguration {
 // @public
 export interface VirtualMachinePublicIPAddressDnsSettingsConfiguration {
     domainNameLabel: string;
-    domainNameLabelScope?: DomainNameLabelScopeTypes;
 }
 
 // @public
@@ -6728,8 +6724,6 @@ export interface VirtualMachineScaleSetManagedDiskParameters {
 
 // @public
 export interface VirtualMachineScaleSetNetworkConfiguration {
-    auxiliaryMode?: NetworkInterfaceAuxiliaryMode;
-    auxiliarySku?: NetworkInterfaceAuxiliarySku;
     deleteOption?: DeleteOptions;
     disableTcpStateTracking?: boolean;
     dnsSettings?: VirtualMachineScaleSetNetworkConfigurationDnsSettings;
@@ -6797,7 +6791,6 @@ export interface VirtualMachineScaleSetPublicIPAddressConfiguration {
 // @public
 export interface VirtualMachineScaleSetPublicIPAddressConfigurationDnsSettings {
     domainNameLabel: string;
-    domainNameLabelScope?: DomainNameLabelScopeTypes;
 }
 
 // @public
@@ -7159,8 +7152,6 @@ export interface VirtualMachineScaleSetUpdateIPConfiguration {
 
 // @public
 export interface VirtualMachineScaleSetUpdateNetworkConfiguration {
-    auxiliaryMode?: NetworkInterfaceAuxiliaryMode;
-    auxiliarySku?: NetworkInterfaceAuxiliarySku;
     deleteOption?: DeleteOptions;
     disableTcpStateTracking?: boolean;
     dnsSettings?: VirtualMachineScaleSetNetworkConfigurationDnsSettings;
@@ -7254,7 +7245,6 @@ export interface VirtualMachineScaleSetVM extends Resource {
     securityProfile?: SecurityProfile;
     readonly sku?: Sku;
     storageProfile?: StorageProfile;
-    readonly timeCreated?: Date;
     userData?: string;
     readonly vmId?: string;
     readonly zones?: string[];

@@ -541,10 +541,6 @@ export interface VirtualMachineScaleSetNetworkConfiguration {
   enableIPForwarding?: boolean;
   /** Specify what happens to the network interface when the VM is deleted */
   deleteOption?: DeleteOptions;
-  /** Specifies whether the Auxiliary mode is enabled for the Network Interface resource. */
-  auxiliaryMode?: NetworkInterfaceAuxiliaryMode;
-  /** Specifies whether the Auxiliary sku is enabled for the Network Interface resource. */
-  auxiliarySku?: NetworkInterfaceAuxiliarySku;
 }
 
 /** Describes a virtual machines scale sets network configuration's DNS settings. */
@@ -599,8 +595,6 @@ export interface VirtualMachineScaleSetPublicIPAddressConfiguration {
 export interface VirtualMachineScaleSetPublicIPAddressConfigurationDnsSettings {
   /** The Domain name label.The concatenation of the domain name label and vm index will be the domain name labels of the PublicIPAddress resources that will be created */
   domainNameLabel: string;
-  /** The Domain name label scope.The concatenation of the hashed domain name label that generated according to the policy from domain name label scope and vm index will be the domain name labels of the PublicIPAddress resources that will be created */
-  domainNameLabelScope?: DomainNameLabelScopeTypes;
 }
 
 /** Contains the IP tag associated with the public IP address. */
@@ -1004,10 +998,6 @@ export interface VirtualMachineScaleSetUpdateNetworkConfiguration {
   enableIPForwarding?: boolean;
   /** Specify what happens to the network interface when the VM is deleted */
   deleteOption?: DeleteOptions;
-  /** Specifies whether the Auxiliary mode is enabled for the Network Interface resource. */
-  auxiliaryMode?: NetworkInterfaceAuxiliaryMode;
-  /** Specifies whether the Auxiliary sku is enabled for the Network Interface resource. */
-  auxiliarySku?: NetworkInterfaceAuxiliarySku;
 }
 
 /** Describes a virtual machine scale set network profile's IP configuration. NOTE: The subnet of a scale set may be modified as long as the original subnet and the new subnet are in the same virtual network */
@@ -1678,10 +1668,6 @@ export interface VirtualMachineNetworkInterfaceConfiguration {
   /** Specifies the IP configurations of the network interface. */
   ipConfigurations?: VirtualMachineNetworkInterfaceIPConfiguration[];
   dscpConfiguration?: SubResource;
-  /** Specifies whether the Auxiliary mode is enabled for the Network Interface resource. */
-  auxiliaryMode?: NetworkInterfaceAuxiliaryMode;
-  /** Specifies whether the Auxiliary sku is enabled for the Network Interface resource. */
-  auxiliarySku?: NetworkInterfaceAuxiliarySku;
 }
 
 /** Describes a virtual machines network configuration's DNS settings. */
@@ -1736,8 +1722,6 @@ export interface VirtualMachinePublicIPAddressConfiguration {
 export interface VirtualMachinePublicIPAddressDnsSettingsConfiguration {
   /** The Domain name label prefix of the PublicIPAddress resources that will be created. The generated name label is the concatenation of the domain name label and vm network profile unique ID. */
   domainNameLabel: string;
-  /** The Domain name label scope of the PublicIPAddress resources that will be created. The generated name label is the concatenation of the hashed domain name label with policy according to the domain name label scope and vm network profile unique ID. */
-  domainNameLabelScope?: DomainNameLabelScopeTypes;
 }
 
 /** Contains the IP tag associated with the public IP address. */
@@ -2876,8 +2860,6 @@ export interface CreationData {
   securityDataUri?: string;
   /** Set this flag to true to get a boost on the performance target of the disk deployed, see here on the respective performance target. This flag can only be set on disk creation time and cannot be disabled after enabled. */
   performancePlus?: boolean;
-  /** Required if createOption is CopyFromSanSnapshot. This is the ARM id of the source elastic san volume snapshot. */
-  elasticSanResourceId?: string;
 }
 
 /** The source image used for creating the disk. */
@@ -3028,8 +3010,6 @@ export interface GrantAccessData {
   durationInSeconds: number;
   /** Set this flag to true to get additional SAS for VM guest state */
   getSecureVMGuestStateSAS?: boolean;
-  /** Used to specify the file format when making request for SAS on a VHDX file format snapshot */
-  fileFormat?: FileFormat;
 }
 
 /** A disk access SAS uri. */
@@ -3523,7 +3503,7 @@ export interface GalleryIdentifier {
 
 /** Profile for gallery sharing to subscription or tenant */
 export interface SharingProfile {
-  /** This property allows you to specify the permission of sharing gallery. <br><br> Possible values are: <br><br> **Private** <br><br> **Groups** <br><br> **Community** */
+  /** This property allows you to specify the permission of sharing gallery. Possible values are: **Private,** **Groups,** **Community.** */
   permissions?: GallerySharingPermissionTypes;
   /**
    * A list of sharing profile groups.
@@ -3536,7 +3516,7 @@ export interface SharingProfile {
 
 /** Group of the gallery sharing profile */
 export interface SharingProfileGroup {
-  /** This property allows you to specify the type of sharing group. <br><br> Possible values are: <br><br> **Subscriptions** <br><br> **AADTenants** */
+  /** This property allows you to specify the type of sharing group. Possible values are: **Subscriptions,** **AADTenants.** */
   type?: SharingProfileGroupTypes;
   /** A list of subscription/tenant ids the gallery is aimed to be shared to. */
   ids?: string[];
@@ -3732,7 +3712,7 @@ export interface GalleryTargetExtendedLocation {
   /** The number of replicas of the Image Version to be created per extended location. This property is updatable. */
   extendedLocationReplicaCount?: number;
   /** Specifies the storage account type to be used to store the image. This property is not updatable. */
-  storageAccountType?: EdgeZoneStorageAccountType;
+  storageAccountType?: StorageAccountType;
   /** Optional. Allows users to provide customer managed keys for encrypting the OS and data disks in the gallery artifact. */
   encryption?: EncryptionImages;
 }
@@ -3823,6 +3803,36 @@ export interface RegionalReplicationStatus {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly progress?: number;
+}
+
+/** This is the validations profile of a Gallery Image Version. */
+export interface ValidationsProfile {
+  /** The published time of the image version */
+  validationEtag?: string;
+  /** This specifies the list of executedValidations of the image version metadata */
+  executedValidations?: ExecutedValidation[];
+  /** This specifies the list of platformAttributes of the image version metadata */
+  platformAttributes?: PlatformAttribute[];
+}
+
+/** This specifies the executedValidation property of ValidationsProfile. */
+export interface ExecutedValidation {
+  /** This property specifies the type of image version validation. This field cannot be empty if providing version. */
+  type?: string;
+  /** This property specifies the status of the validationProfile of the image version that is succeeded or failed. */
+  status?: string;
+  /** This property specifies the valid version of the validation type. It defined the current version of the type. */
+  version?: string;
+  /** This property specifies the timestamp of the validation when the image version was created. */
+  executionTime?: Date;
+}
+
+/** This specifies the executedValidation property of ValidationsProfile. */
+export interface PlatformAttribute {
+  /** This property specifies the type of defined set of source. Supported names are source_image_publisher, source_image_offer or source_image_sku or source_image_version */
+  name?: string;
+  /** This property specifies the value of the corresponding source_image_publisher, source_image_offer or source_image_sku or source_image_version */
+  value?: string;
 }
 
 /** A custom action that can be performed with a Gallery Application Version. */
@@ -3918,7 +3928,7 @@ export interface GalleryApplicationVersionList {
 
 /** Specifies information about the gallery sharing profile update. */
 export interface SharingUpdate {
-  /** This property allows you to specify the operation type of gallery sharing update. <br><br> Possible values are: <br><br> **Add** <br><br> **Remove** <br><br> **Reset** */
+  /** This property allows you to specify the operation type of gallery sharing update. Possible values are: **Add,** **Remove,** **Reset.** */
   operationType: SharingUpdateOperationTypes;
   /** A list of sharing profile groups. */
   groups?: SharingProfileGroup[];
@@ -3979,6 +3989,20 @@ export interface SharedGalleryDiskImage {
   readonly diskSizeGB?: number;
   /** The host caching of the disk. Valid values are 'None', 'ReadOnly', and 'ReadWrite' */
   hostCaching?: SharedGalleryHostCaching;
+}
+
+/** The metadata of community gallery. */
+export interface CommunityGalleryMetadata {
+  /** The publisher uri of this community gallery. */
+  publisherUri?: string;
+  /** The publisher contact of this community gallery. */
+  publisherContact?: string;
+  /** The eula of this community gallery. */
+  eula?: string;
+  /** A list of public names the gallery has. */
+  publicNames?: string[];
+  /** The privacyStatementUri of this community gallery. */
+  privacyStatementUri?: string;
 }
 
 /** Base information about the community gallery resource in pir. */
@@ -4701,7 +4725,7 @@ export interface ImageReference extends SubResource {
 }
 
 /** Describes the parameter of customer managed disk encryption set resource id that can be specified for disk. **Note:** The disk encryption set resource id can only be specified for managed disk. Please refer https://aka.ms/mdssewithcmkoverview for more details. */
-export interface DiskEncryptionSetParameters extends SubResource { }
+export interface DiskEncryptionSetParameters extends SubResource {}
 
 /** The parameters of a managed disk. */
 export interface ManagedDiskParameters extends SubResource {
@@ -5123,11 +5147,6 @@ export interface VirtualMachineScaleSetVM extends Resource {
   protectionPolicy?: VirtualMachineScaleSetVMProtectionPolicy;
   /** UserData for the VM, which must be base-64 encoded. Customer should not pass any secrets in here. <br><br>Minimum api-version: 2021-03-01 */
   userData?: string;
-  /**
-   * Specifies the time at which the Virtual Machine resource was created.<br><br>Minimum api-version: 2021-11-01.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly timeCreated?: Date;
 }
 
 /** Describes a Virtual Machine. */
@@ -5585,11 +5604,6 @@ export interface Disk extends Resource {
   dataAccessAuthMode?: DataAccessAuthMode;
   /** Setting this property to true improves reliability and performance of data disks that are frequently (more than 5 times a day) by detached from one virtual machine and attached to another. This property should not be set for disks that are not detached and attached frequently as it causes the disks to not align with the fault domain of the virtual machine. */
   optimizedForFrequentAttach?: boolean;
-  /**
-   * The UTC time when the ownership state of the disk was last changed i.e., the time the disk was last attached or detached from a VM or the time when the VM to which the disk was attached was deallocated or started.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly lastOwnershipUpdateTime?: Date;
 }
 
 /** disk access resource. */
@@ -5756,7 +5770,7 @@ export interface GalleryImage extends Resource {
   privacyStatementUri?: string;
   /** The release note uri. */
   releaseNoteUri?: string;
-  /** This property allows you to specify the type of the OS that is included in the disk when creating a VM from a managed image. <br><br> Possible values are: <br><br> **Windows** <br><br> **Linux** */
+  /** This property allows you to specify the type of the OS that is included in the disk when creating a VM from a managed image. Possible values are: **Windows,** **Linux.** */
   osType?: OperatingSystemTypes;
   /** This property allows the user to specify whether the virtual machines created under this image are 'Generalized' or 'Specialized'. */
   osState?: OperatingSystemStateTypes;
@@ -5779,7 +5793,7 @@ export interface GalleryImage extends Resource {
   readonly provisioningState?: GalleryProvisioningState;
   /** A list of gallery image features. */
   features?: GalleryImageFeature[];
-  /** The architecture of the image. Applicable to OS disks only. */
+  /** CPU architecture supported by an OS disk. */
   architecture?: Architecture;
 }
 
@@ -5801,6 +5815,11 @@ export interface GalleryImageVersion extends Resource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly replicationStatus?: ReplicationStatus;
+  /**
+   * This is the validations profile of a Gallery Image Version.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly validationsProfile?: ValidationsProfile;
 }
 
 /** Specifies information about the gallery Application Definition that you want to create or update. */
@@ -5815,7 +5834,7 @@ export interface GalleryApplication extends Resource {
   releaseNoteUri?: string;
   /** The end of life date of the gallery Application Definition. This property can be used for decommissioning purposes. This property is updatable. */
   endOfLifeDate?: Date;
-  /** This property allows you to specify the supported type of the OS that application is built for. <br><br> Possible values are: <br><br> **Windows** <br><br> **Linux** */
+  /** This property allows you to specify the supported type of the OS that application is built for. Possible values are: **Windows,** **Linux.** */
   supportedOSType?: OperatingSystemTypes;
   /** A list of custom actions that can be performed with all of the Gallery Application Versions within this Gallery Application. */
   customActions?: GalleryApplicationCustomAction[];
@@ -5989,7 +6008,7 @@ export interface AvailabilitySetUpdate extends UpdateResource {
 }
 
 /** Specifies information about the proximity placement group. */
-export interface ProximityPlacementGroupUpdate extends UpdateResource { }
+export interface ProximityPlacementGroupUpdate extends UpdateResource {}
 
 /** Specifies information about the dedicated host group that the dedicated host should be assigned to. Only tags may be updated. */
 export interface DedicatedHostGroupUpdate extends UpdateResource {
@@ -6197,7 +6216,7 @@ export interface VirtualMachineRunCommandUpdate extends UpdateResource {
 
 /** Describes a Virtual Machine Scale Set VM Reimage Parameters. */
 export interface VirtualMachineScaleSetVMReimageParameters
-  extends VirtualMachineReimageParameters { }
+  extends VirtualMachineReimageParameters {}
 
 /** The instance view of a dedicated host that includes the name of the dedicated host. It is used for the response to the instance view of a dedicated host group. */
 export interface DedicatedHostInstanceViewWithName
@@ -6264,7 +6283,7 @@ export interface RequestRateByIntervalInput extends LogAnalyticsInputBase {
 }
 
 /** Api request input for LogAnalytics getThrottledRequests Api. */
-export interface ThrottledRequestsInput extends LogAnalyticsInputBase { }
+export interface ThrottledRequestsInput extends LogAnalyticsInputBase {}
 
 /** Describes the properties of a Run Command. */
 export interface RunCommandDocument extends RunCommandDocumentBase {
@@ -6368,7 +6387,7 @@ export interface GalleryImageUpdate extends UpdateResourceDefinition {
   privacyStatementUri?: string;
   /** The release note uri. */
   releaseNoteUri?: string;
-  /** This property allows you to specify the type of the OS that is included in the disk when creating a VM from a managed image. <br><br> Possible values are: <br><br> **Windows** <br><br> **Linux** */
+  /** This property allows you to specify the type of the OS that is included in the disk when creating a VM from a managed image. Possible values are: **Windows,** **Linux.** */
   osType?: OperatingSystemTypes;
   /** This property allows the user to specify whether the virtual machines created under this image are 'Generalized' or 'Specialized'. */
   osState?: OperatingSystemStateTypes;
@@ -6391,7 +6410,7 @@ export interface GalleryImageUpdate extends UpdateResourceDefinition {
   readonly provisioningState?: GalleryProvisioningState;
   /** A list of gallery image features. */
   features?: GalleryImageFeature[];
-  /** The architecture of the image. Applicable to OS disks only. */
+  /** CPU architecture supported by an OS disk. */
   architecture?: Architecture;
 }
 
@@ -6413,6 +6432,11 @@ export interface GalleryImageVersionUpdate extends UpdateResourceDefinition {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly replicationStatus?: ReplicationStatus;
+  /**
+   * This is the validations profile of a Gallery Image Version.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly validationsProfile?: ValidationsProfile;
 }
 
 /** Specifies information about the gallery Application Definition that you want to update. */
@@ -6427,7 +6451,7 @@ export interface GalleryApplicationUpdate extends UpdateResourceDefinition {
   releaseNoteUri?: string;
   /** The end of life date of the gallery Application Definition. This property can be used for decommissioning purposes. This property is updatable. */
   endOfLifeDate?: Date;
-  /** This property allows you to specify the supported type of the OS that application is built for. <br><br> Possible values are: <br><br> **Windows** <br><br> **Linux** */
+  /** This property allows you to specify the supported type of the OS that application is built for. Possible values are: **Windows,** **Linux.** */
   supportedOSType?: OperatingSystemTypes;
   /** A list of custom actions that can be performed with all of the Gallery Application Versions within this Gallery Application. */
   customActions?: GalleryApplicationCustomAction[];
@@ -6454,7 +6478,7 @@ export interface GalleryApplicationVersionUpdate
 
 /** The publishing profile of a gallery image Version. */
 export interface GalleryImageVersionPublishingProfile
-  extends GalleryArtifactPublishingProfileBase { }
+  extends GalleryArtifactPublishingProfileBase {}
 
 /** The publishing profile of a gallery image version. */
 export interface GalleryApplicationVersionPublishingProfile
@@ -6500,7 +6524,7 @@ export interface GalleryDiskImageSource extends GalleryArtifactVersionSource {
 }
 
 /** This is the OS disk image. */
-export interface GalleryOSDiskImage extends GalleryDiskImage { }
+export interface GalleryOSDiskImage extends GalleryDiskImage {}
 
 /** This is the data disk image. */
 export interface GalleryDataDiskImage extends GalleryDiskImage {
@@ -6525,7 +6549,7 @@ export interface GalleryImageVersionSafetyProfile
 
 /** The safety profile of the Gallery Application Version. */
 export interface GalleryApplicationVersionSafetyProfile
-  extends GalleryArtifactSafetyProfileBase { }
+  extends GalleryArtifactSafetyProfileBase {}
 
 /** Base information about the shared gallery resource in pir. */
 export interface PirSharedGalleryResource extends PirResource {
@@ -6534,7 +6558,7 @@ export interface PirSharedGalleryResource extends PirResource {
 }
 
 /** This is the OS disk image. */
-export interface SharedGalleryOSDiskImage extends SharedGalleryDiskImage { }
+export interface SharedGalleryOSDiskImage extends SharedGalleryDiskImage {}
 
 /** This is the data disk image. */
 export interface SharedGalleryDataDiskImage extends SharedGalleryDiskImage {
@@ -6543,11 +6567,18 @@ export interface SharedGalleryDataDiskImage extends SharedGalleryDiskImage {
 }
 
 /** Specifies information about the Community Gallery that you want to create or update. */
-export interface CommunityGallery extends PirCommunityGalleryResource { }
+export interface CommunityGallery extends PirCommunityGalleryResource {
+  /** The disclaimer for a community gallery resource. */
+  disclaimer?: string;
+  /** The artifact tags of a community gallery resource. */
+  artifactTags?: { [propertyName: string]: string };
+  /** The metadata of community gallery. */
+  communityMetadata?: CommunityGalleryMetadata;
+}
 
 /** Specifies information about the gallery image definition that you want to create or update. */
 export interface CommunityGalleryImage extends PirCommunityGalleryResource {
-  /** This property allows you to specify the type of the OS that is included in the disk when creating a VM from a managed image. <br><br> Possible values are: <br><br> **Windows** <br><br> **Linux** */
+  /** This property allows you to specify the type of the OS that is included in the disk when creating a VM from a managed image. Possible values are: **Windows,** **Linux.** */
   osType?: OperatingSystemTypes;
   /** This property allows the user to specify whether the virtual machines created under this image are 'Generalized' or 'Specialized'. */
   osState?: OperatingSystemStateTypes;
@@ -6565,12 +6596,16 @@ export interface CommunityGalleryImage extends PirCommunityGalleryResource {
   features?: GalleryImageFeature[];
   /** Describes the gallery image definition purchase plan. This is used by marketplace images. */
   purchasePlan?: ImagePurchasePlan;
-  /** The architecture of the image. Applicable to OS disks only. */
+  /** CPU architecture supported by an OS disk. */
   architecture?: Architecture;
   /** Privacy statement uri for the current community gallery image. */
   privacyStatementUri?: string;
   /** End-user license agreement for the current community gallery image. */
   eula?: string;
+  /** The disclaimer for a community gallery resource. */
+  disclaimer?: string;
+  /** The artifact tags of a community gallery resource. */
+  artifactTags?: { [propertyName: string]: string };
 }
 
 /** Specifies information about the gallery image version that you want to create or update. */
@@ -6584,6 +6619,10 @@ export interface CommunityGalleryImageVersion
   excludeFromLatest?: boolean;
   /** Describes the storage profile of the image version. */
   storageProfile?: SharedGalleryImageVersionStorageProfile;
+  /** The disclaimer for a community gallery resource. */
+  disclaimer?: string;
+  /** The artifact tags of a community gallery resource. */
+  artifactTags?: { [propertyName: string]: string };
 }
 
 /** Describes a Virtual Machine Image. */
@@ -6614,11 +6653,17 @@ export interface VirtualMachineScaleSetReimageParameters
 }
 
 /** Specifies information about the Shared Gallery that you want to create or update. */
-export interface SharedGallery extends PirSharedGalleryResource { }
+export interface SharedGallery extends PirSharedGalleryResource {
+  /**
+   * The artifact tags of a shared gallery resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly artifactTags?: { [propertyName: string]: string };
+}
 
 /** Specifies information about the gallery image definition that you want to create or update. */
 export interface SharedGalleryImage extends PirSharedGalleryResource {
-  /** This property allows you to specify the type of the OS that is included in the disk when creating a VM from a managed image. <br><br> Possible values are: <br><br> **Windows** <br><br> **Linux** */
+  /** This property allows you to specify the type of the OS that is included in the disk when creating a VM from a managed image. Possible values are: **Windows,** **Linux.** */
   osType?: OperatingSystemTypes;
   /** This property allows the user to specify whether the virtual machines created under this image are 'Generalized' or 'Specialized'. */
   osState?: OperatingSystemStateTypes;
@@ -6636,12 +6681,14 @@ export interface SharedGalleryImage extends PirSharedGalleryResource {
   features?: GalleryImageFeature[];
   /** Describes the gallery image definition purchase plan. This is used by marketplace images. */
   purchasePlan?: ImagePurchasePlan;
-  /** The architecture of the image. Applicable to OS disks only. */
+  /** CPU architecture supported by an OS disk. */
   architecture?: Architecture;
   /** Privacy statement uri for the current community gallery image. */
   privacyStatementUri?: string;
   /** End-user license agreement for the current community gallery image. */
   eula?: string;
+  /** The artifact tags of a shared gallery resource. */
+  artifactTags?: { [propertyName: string]: string };
 }
 
 /** Specifies information about the gallery image version that you want to create or update. */
@@ -6654,6 +6701,8 @@ export interface SharedGalleryImageVersion extends PirSharedGalleryResource {
   excludeFromLatest?: boolean;
   /** Describes the storage profile of the image version. */
   storageProfile?: SharedGalleryImageVersionStorageProfile;
+  /** The artifact tags of a shared gallery resource. */
+  artifactTags?: { [propertyName: string]: string };
 }
 
 /** Defines headers for VirtualMachineScaleSets_reapply operation. */
@@ -6928,30 +6977,6 @@ export enum KnownDiskDeleteOptionTypes {
  */
 export type DiskDeleteOptionTypes = string;
 
-/** Known values of {@link DomainNameLabelScopeTypes} that the service accepts. */
-export enum KnownDomainNameLabelScopeTypes {
-  /** TenantReuse */
-  TenantReuse = "TenantReuse",
-  /** SubscriptionReuse */
-  SubscriptionReuse = "SubscriptionReuse",
-  /** ResourceGroupReuse */
-  ResourceGroupReuse = "ResourceGroupReuse",
-  /** NoReuse */
-  NoReuse = "NoReuse"
-}
-
-/**
- * Defines values for DomainNameLabelScopeTypes. \
- * {@link KnownDomainNameLabelScopeTypes} can be used interchangeably with DomainNameLabelScopeTypes,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **TenantReuse** \
- * **SubscriptionReuse** \
- * **ResourceGroupReuse** \
- * **NoReuse**
- */
-export type DomainNameLabelScopeTypes = string;
-
 /** Known values of {@link IPVersion} that the service accepts. */
 export enum KnownIPVersion {
   /** IPv4 */
@@ -7023,54 +7048,6 @@ export enum KnownPublicIPAddressSkuTier {
  * **Global**
  */
 export type PublicIPAddressSkuTier = string;
-
-/** Known values of {@link NetworkInterfaceAuxiliaryMode} that the service accepts. */
-export enum KnownNetworkInterfaceAuxiliaryMode {
-  /** None */
-  None = "None",
-  /** AcceleratedConnections */
-  AcceleratedConnections = "AcceleratedConnections",
-  /** Floating */
-  Floating = "Floating"
-}
-
-/**
- * Defines values for NetworkInterfaceAuxiliaryMode. \
- * {@link KnownNetworkInterfaceAuxiliaryMode} can be used interchangeably with NetworkInterfaceAuxiliaryMode,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **None** \
- * **AcceleratedConnections** \
- * **Floating**
- */
-export type NetworkInterfaceAuxiliaryMode = string;
-
-/** Known values of {@link NetworkInterfaceAuxiliarySku} that the service accepts. */
-export enum KnownNetworkInterfaceAuxiliarySku {
-  /** None */
-  None = "None",
-  /** A1 */
-  A1 = "A1",
-  /** A2 */
-  A2 = "A2",
-  /** A4 */
-  A4 = "A4",
-  /** A8 */
-  A8 = "A8"
-}
-
-/**
- * Defines values for NetworkInterfaceAuxiliarySku. \
- * {@link KnownNetworkInterfaceAuxiliarySku} can be used interchangeably with NetworkInterfaceAuxiliarySku,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **None** \
- * **A1** \
- * **A2** \
- * **A4** \
- * **A8**
- */
-export type NetworkInterfaceAuxiliarySku = string;
 
 /** Known values of {@link NetworkApiVersion} that the service accepts. */
 export enum KnownNetworkApiVersion {
@@ -8479,9 +8456,7 @@ export enum KnownDiskCreateOption {
   /** Similar to Import create option. Create a new Trusted Launch VM or Confidential VM supported disk by importing additional blob for VM guest state specified by securityDataUri in storage account specified by storageAccountId */
   ImportSecure = "ImportSecure",
   /** Similar to Upload create option. Create a new Trusted Launch VM or Confidential VM supported disk and upload using write token in both disk and VM guest state */
-  UploadPreparedSecure = "UploadPreparedSecure",
-  /** Create a new disk by exporting from elastic san volume snapshot */
-  CopyFromSanSnapshot = "CopyFromSanSnapshot"
+  UploadPreparedSecure = "UploadPreparedSecure"
 }
 
 /**
@@ -8498,8 +8473,7 @@ export enum KnownDiskCreateOption {
  * **Upload**: Create a new disk by obtaining a write token and using it to directly upload the contents of the disk. \
  * **CopyStart**: Create a new disk by using a deep copy process, where the resource creation is considered complete only after all data has been copied from the source. \
  * **ImportSecure**: Similar to Import create option. Create a new Trusted Launch VM or Confidential VM supported disk by importing additional blob for VM guest state specified by securityDataUri in storage account specified by storageAccountId \
- * **UploadPreparedSecure**: Similar to Upload create option. Create a new Trusted Launch VM or Confidential VM supported disk and upload using write token in both disk and VM guest state \
- * **CopyFromSanSnapshot**: Create a new disk by exporting from elastic san volume snapshot
+ * **UploadPreparedSecure**: Similar to Upload create option. Create a new Trusted Launch VM or Confidential VM supported disk and upload using write token in both disk and VM guest state
  */
 export type DiskCreateOption = string;
 
@@ -8661,24 +8635,6 @@ export enum KnownAccessLevel {
  * **Write**
  */
 export type AccessLevel = string;
-
-/** Known values of {@link FileFormat} that the service accepts. */
-export enum KnownFileFormat {
-  /** A VHD file is a disk image file in the Virtual Hard Disk file format. */
-  VHD = "VHD",
-  /** A VHDX file is a disk image file in the Virtual Hard Disk v2 file format. */
-  Vhdx = "VHDX"
-}
-
-/**
- * Defines values for FileFormat. \
- * {@link KnownFileFormat} can be used interchangeably with FileFormat,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **VHD**: A VHD file is a disk image file in the Virtual Hard Disk file format. \
- * **VHDX**: A VHDX file is a disk image file in the Virtual Hard Disk v2 file format.
- */
-export type FileFormat = string;
 
 /** Known values of {@link PrivateEndpointServiceConnectionStatus} that the service accepts. */
 export enum KnownPrivateEndpointServiceConnectionStatus {
@@ -8951,7 +8907,9 @@ export enum KnownStorageAccountType {
   /** StandardZRS */
   StandardZRS = "Standard_ZRS",
   /** PremiumLRS */
-  PremiumLRS = "Premium_LRS"
+  PremiumLRS = "Premium_LRS",
+  /** StandardSSDLRS */
+  StandardSSDLRS = "StandardSSD_LRS"
 }
 
 /**
@@ -8961,7 +8919,8 @@ export enum KnownStorageAccountType {
  * ### Known values supported by the service
  * **Standard_LRS** \
  * **Standard_ZRS** \
- * **Premium_LRS**
+ * **Premium_LRS** \
+ * **StandardSSD_LRS**
  */
 export type StorageAccountType = string;
 
@@ -9021,30 +8980,6 @@ export enum KnownGalleryExtendedLocationType {
  * **Unknown**
  */
 export type GalleryExtendedLocationType = string;
-
-/** Known values of {@link EdgeZoneStorageAccountType} that the service accepts. */
-export enum KnownEdgeZoneStorageAccountType {
-  /** StandardLRS */
-  StandardLRS = "Standard_LRS",
-  /** StandardZRS */
-  StandardZRS = "Standard_ZRS",
-  /** StandardSSDLRS */
-  StandardSSDLRS = "StandardSSD_LRS",
-  /** PremiumLRS */
-  PremiumLRS = "Premium_LRS"
-}
-
-/**
- * Defines values for EdgeZoneStorageAccountType. \
- * {@link KnownEdgeZoneStorageAccountType} can be used interchangeably with EdgeZoneStorageAccountType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Standard_LRS** \
- * **Standard_ZRS** \
- * **StandardSSD_LRS** \
- * **Premium_LRS**
- */
-export type EdgeZoneStorageAccountType = string;
 
 /** Known values of {@link PolicyViolationCategory} that the service accepts. */
 export enum KnownPolicyViolationCategory {
@@ -9121,7 +9056,9 @@ export type ReplicationState = string;
 /** Known values of {@link ReplicationStatusTypes} that the service accepts. */
 export enum KnownReplicationStatusTypes {
   /** ReplicationStatus */
-  ReplicationStatus = "ReplicationStatus"
+  ReplicationStatus = "ReplicationStatus",
+  /** ValidationProfile */
+  ValidationProfile = "ValidationProfile"
 }
 
 /**
@@ -9129,7 +9066,8 @@ export enum KnownReplicationStatusTypes {
  * {@link KnownReplicationStatusTypes} can be used interchangeably with ReplicationStatusTypes,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **ReplicationStatus**
+ * **ReplicationStatus** \
+ * **ValidationProfile**
  */
 export type ReplicationStatusTypes = string;
 
@@ -9324,34 +9262,34 @@ export type GalleryApplicationCustomActionParameterType =
 
 /** Optional parameters. */
 export interface OperationsListOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type OperationsListResponse = ComputeOperationListResult;
 
 /** Optional parameters. */
-export interface UsageListOptionalParams extends coreClient.OperationOptions { }
+export interface UsageListOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type UsageListResponse = ListUsagesResult;
 
 /** Optional parameters. */
 export interface UsageListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type UsageListNextResponse = ListUsagesResult;
 
 /** Optional parameters. */
 export interface VirtualMachineSizesListOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type VirtualMachineSizesListResponse = VirtualMachineSizeListResult;
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetsListByLocationOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByLocation operation. */
 export type VirtualMachineScaleSetsListByLocationResponse = VirtualMachineScaleSetListResult;
@@ -9427,35 +9365,35 @@ export interface VirtualMachineScaleSetsDeleteInstancesOptionalParams
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetsGetInstanceViewOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the getInstanceView operation. */
 export type VirtualMachineScaleSetsGetInstanceViewResponse = VirtualMachineScaleSetInstanceView;
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetsListOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type VirtualMachineScaleSetsListResponse = VirtualMachineScaleSetListResult;
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetsListAllOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listAll operation. */
 export type VirtualMachineScaleSetsListAllResponse = VirtualMachineScaleSetListWithLinkResult;
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetsListSkusOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listSkus operation. */
 export type VirtualMachineScaleSetsListSkusResponse = VirtualMachineScaleSetListSkusResult;
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetsGetOSUpgradeHistoryOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the getOSUpgradeHistory operation. */
 export type VirtualMachineScaleSetsGetOSUpgradeHistoryResponse = VirtualMachineScaleSetListOSUpgradeHistory;
@@ -9571,7 +9509,7 @@ export type VirtualMachineScaleSetsForceRecoveryServiceFabricPlatformUpdateDomai
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetsConvertToSinglePlacementGroupOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetsSetOrchestrationServiceStateOptionalParams
@@ -9584,35 +9522,35 @@ export interface VirtualMachineScaleSetsSetOrchestrationServiceStateOptionalPara
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetsListByLocationNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByLocationNext operation. */
 export type VirtualMachineScaleSetsListByLocationNextResponse = VirtualMachineScaleSetListResult;
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetsListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type VirtualMachineScaleSetsListNextResponse = VirtualMachineScaleSetListResult;
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetsListAllNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listAllNext operation. */
 export type VirtualMachineScaleSetsListAllNextResponse = VirtualMachineScaleSetListWithLinkResult;
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetsListSkusNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listSkusNext operation. */
 export type VirtualMachineScaleSetsListSkusNextResponse = VirtualMachineScaleSetListSkusResult;
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetsGetOSUpgradeHistoryNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the getOSUpgradeHistoryNext operation. */
 export type VirtualMachineScaleSetsGetOSUpgradeHistoryNextResponse = VirtualMachineScaleSetListOSUpgradeHistory;
@@ -9662,14 +9600,14 @@ export type VirtualMachineScaleSetExtensionsGetResponse = VirtualMachineScaleSet
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetExtensionsListOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type VirtualMachineScaleSetExtensionsListResponse = VirtualMachineScaleSetExtensionListResult;
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetExtensionsListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type VirtualMachineScaleSetExtensionsListNextResponse = VirtualMachineScaleSetExtensionListResult;
@@ -9703,7 +9641,7 @@ export interface VirtualMachineScaleSetRollingUpgradesStartExtensionUpgradeOptio
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetRollingUpgradesGetLatestOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the getLatest operation. */
 export type VirtualMachineScaleSetRollingUpgradesGetLatestResponse = RollingUpgradeStatusInfo;
@@ -9825,7 +9763,7 @@ export type VirtualMachineScaleSetVMsGetResponse = VirtualMachineScaleSetVM;
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetVMsGetInstanceViewOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the getInstanceView operation. */
 export type VirtualMachineScaleSetVMsGetInstanceViewResponse = VirtualMachineScaleSetVMInstanceView;
@@ -9903,7 +9841,7 @@ export interface VirtualMachineScaleSetVMsPerformMaintenanceOptionalParams
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetVMsSimulateEvictionOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetVMsRunCommandOptionalParams
@@ -9919,7 +9857,7 @@ export type VirtualMachineScaleSetVMsRunCommandResponse = RunCommandResult;
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetVMsListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type VirtualMachineScaleSetVMsListNextResponse = VirtualMachineScaleSetVMListResult;
@@ -9979,7 +9917,7 @@ export type VirtualMachineExtensionsListResponse = VirtualMachineExtensionsListR
 
 /** Optional parameters. */
 export interface VirtualMachinesListByLocationOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByLocation operation. */
 export type VirtualMachinesListByLocationResponse = VirtualMachineListResult;
@@ -10043,7 +9981,7 @@ export type VirtualMachinesGetResponse = VirtualMachine;
 
 /** Optional parameters. */
 export interface VirtualMachinesInstanceViewOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the instanceView operation. */
 export type VirtualMachinesInstanceViewResponse = VirtualMachineInstanceView;
@@ -10070,7 +10008,7 @@ export interface VirtualMachinesDeallocateOptionalParams
 
 /** Optional parameters. */
 export interface VirtualMachinesGeneralizeOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Optional parameters. */
 export interface VirtualMachinesListOptionalParams
@@ -10100,7 +10038,7 @@ export type VirtualMachinesListAllResponse = VirtualMachineListResult;
 
 /** Optional parameters. */
 export interface VirtualMachinesListAvailableSizesOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listAvailableSizes operation. */
 export type VirtualMachinesListAvailableSizesResponse = VirtualMachineSizeListResult;
@@ -10184,7 +10122,7 @@ export interface VirtualMachinesPerformMaintenanceOptionalParams
 
 /** Optional parameters. */
 export interface VirtualMachinesSimulateEvictionOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Optional parameters. */
 export interface VirtualMachinesAssessPatchesOptionalParams
@@ -10224,28 +10162,28 @@ export type VirtualMachinesRunCommandResponse = RunCommandResult;
 
 /** Optional parameters. */
 export interface VirtualMachinesListByLocationNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByLocationNext operation. */
 export type VirtualMachinesListByLocationNextResponse = VirtualMachineListResult;
 
 /** Optional parameters. */
 export interface VirtualMachinesListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type VirtualMachinesListNextResponse = VirtualMachineListResult;
 
 /** Optional parameters. */
 export interface VirtualMachinesListAllNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listAllNext operation. */
 export type VirtualMachinesListAllNextResponse = VirtualMachineListResult;
 
 /** Optional parameters. */
 export interface VirtualMachineImagesGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type VirtualMachineImagesGetResponse = VirtualMachineImage;
@@ -10264,35 +10202,35 @@ export type VirtualMachineImagesListResponse = VirtualMachineImageResource[];
 
 /** Optional parameters. */
 export interface VirtualMachineImagesListOffersOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listOffers operation. */
 export type VirtualMachineImagesListOffersResponse = VirtualMachineImageResource[];
 
 /** Optional parameters. */
 export interface VirtualMachineImagesListPublishersOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listPublishers operation. */
 export type VirtualMachineImagesListPublishersResponse = VirtualMachineImageResource[];
 
 /** Optional parameters. */
 export interface VirtualMachineImagesListSkusOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listSkus operation. */
 export type VirtualMachineImagesListSkusResponse = VirtualMachineImageResource[];
 
 /** Optional parameters. */
 export interface VirtualMachineImagesListByEdgeZoneOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByEdgeZone operation. */
 export type VirtualMachineImagesListByEdgeZoneResponse = VmImagesInEdgeZoneListResult;
 
 /** Optional parameters. */
 export interface VirtualMachineImagesEdgeZoneGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type VirtualMachineImagesEdgeZoneGetResponse = VirtualMachineImage;
@@ -10313,35 +10251,35 @@ export type VirtualMachineImagesEdgeZoneListResponse = VirtualMachineImageResour
 
 /** Optional parameters. */
 export interface VirtualMachineImagesEdgeZoneListOffersOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listOffers operation. */
 export type VirtualMachineImagesEdgeZoneListOffersResponse = VirtualMachineImageResource[];
 
 /** Optional parameters. */
 export interface VirtualMachineImagesEdgeZoneListPublishersOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listPublishers operation. */
 export type VirtualMachineImagesEdgeZoneListPublishersResponse = VirtualMachineImageResource[];
 
 /** Optional parameters. */
 export interface VirtualMachineImagesEdgeZoneListSkusOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listSkus operation. */
 export type VirtualMachineImagesEdgeZoneListSkusResponse = VirtualMachineImageResource[];
 
 /** Optional parameters. */
 export interface VirtualMachineExtensionImagesGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type VirtualMachineExtensionImagesGetResponse = VirtualMachineExtensionImage;
 
 /** Optional parameters. */
 export interface VirtualMachineExtensionImagesListTypesOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listTypes operation. */
 export type VirtualMachineExtensionImagesListTypesResponse = VirtualMachineExtensionImage[];
@@ -10360,25 +10298,25 @@ export type VirtualMachineExtensionImagesListVersionsResponse = VirtualMachineEx
 
 /** Optional parameters. */
 export interface AvailabilitySetsCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the createOrUpdate operation. */
 export type AvailabilitySetsCreateOrUpdateResponse = AvailabilitySet;
 
 /** Optional parameters. */
 export interface AvailabilitySetsUpdateOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the update operation. */
 export type AvailabilitySetsUpdateResponse = AvailabilitySet;
 
 /** Optional parameters. */
 export interface AvailabilitySetsDeleteOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Optional parameters. */
 export interface AvailabilitySetsGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type AvailabilitySetsGetResponse = AvailabilitySet;
@@ -10395,49 +10333,49 @@ export type AvailabilitySetsListBySubscriptionResponse = AvailabilitySetListResu
 
 /** Optional parameters. */
 export interface AvailabilitySetsListOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type AvailabilitySetsListResponse = AvailabilitySetListResult;
 
 /** Optional parameters. */
 export interface AvailabilitySetsListAvailableSizesOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listAvailableSizes operation. */
 export type AvailabilitySetsListAvailableSizesResponse = VirtualMachineSizeListResult;
 
 /** Optional parameters. */
 export interface AvailabilitySetsListBySubscriptionNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listBySubscriptionNext operation. */
 export type AvailabilitySetsListBySubscriptionNextResponse = AvailabilitySetListResult;
 
 /** Optional parameters. */
 export interface AvailabilitySetsListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type AvailabilitySetsListNextResponse = AvailabilitySetListResult;
 
 /** Optional parameters. */
 export interface ProximityPlacementGroupsCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the createOrUpdate operation. */
 export type ProximityPlacementGroupsCreateOrUpdateResponse = ProximityPlacementGroup;
 
 /** Optional parameters. */
 export interface ProximityPlacementGroupsUpdateOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the update operation. */
 export type ProximityPlacementGroupsUpdateResponse = ProximityPlacementGroup;
 
 /** Optional parameters. */
 export interface ProximityPlacementGroupsDeleteOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Optional parameters. */
 export interface ProximityPlacementGroupsGetOptionalParams
@@ -10451,49 +10389,49 @@ export type ProximityPlacementGroupsGetResponse = ProximityPlacementGroup;
 
 /** Optional parameters. */
 export interface ProximityPlacementGroupsListBySubscriptionOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listBySubscription operation. */
 export type ProximityPlacementGroupsListBySubscriptionResponse = ProximityPlacementGroupListResult;
 
 /** Optional parameters. */
 export interface ProximityPlacementGroupsListByResourceGroupOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroup operation. */
 export type ProximityPlacementGroupsListByResourceGroupResponse = ProximityPlacementGroupListResult;
 
 /** Optional parameters. */
 export interface ProximityPlacementGroupsListBySubscriptionNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listBySubscriptionNext operation. */
 export type ProximityPlacementGroupsListBySubscriptionNextResponse = ProximityPlacementGroupListResult;
 
 /** Optional parameters. */
 export interface ProximityPlacementGroupsListByResourceGroupNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroupNext operation. */
 export type ProximityPlacementGroupsListByResourceGroupNextResponse = ProximityPlacementGroupListResult;
 
 /** Optional parameters. */
 export interface DedicatedHostGroupsCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the createOrUpdate operation. */
 export type DedicatedHostGroupsCreateOrUpdateResponse = DedicatedHostGroup;
 
 /** Optional parameters. */
 export interface DedicatedHostGroupsUpdateOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the update operation. */
 export type DedicatedHostGroupsUpdateResponse = DedicatedHostGroup;
 
 /** Optional parameters. */
 export interface DedicatedHostGroupsDeleteOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Optional parameters. */
 export interface DedicatedHostGroupsGetOptionalParams
@@ -10507,28 +10445,28 @@ export type DedicatedHostGroupsGetResponse = DedicatedHostGroup;
 
 /** Optional parameters. */
 export interface DedicatedHostGroupsListByResourceGroupOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroup operation. */
 export type DedicatedHostGroupsListByResourceGroupResponse = DedicatedHostGroupListResult;
 
 /** Optional parameters. */
 export interface DedicatedHostGroupsListBySubscriptionOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listBySubscription operation. */
 export type DedicatedHostGroupsListBySubscriptionResponse = DedicatedHostGroupListResult;
 
 /** Optional parameters. */
 export interface DedicatedHostGroupsListByResourceGroupNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroupNext operation. */
 export type DedicatedHostGroupsListByResourceGroupNextResponse = DedicatedHostGroupListResult;
 
 /** Optional parameters. */
 export interface DedicatedHostGroupsListBySubscriptionNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listBySubscriptionNext operation. */
 export type DedicatedHostGroupsListBySubscriptionNextResponse = DedicatedHostGroupListResult;
@@ -10578,7 +10516,7 @@ export type DedicatedHostsGetResponse = DedicatedHost;
 
 /** Optional parameters. */
 export interface DedicatedHostsListByHostGroupOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByHostGroup operation. */
 export type DedicatedHostsListByHostGroupResponse = DedicatedHostListResult;
@@ -10594,74 +10532,74 @@ export interface DedicatedHostsRestartOptionalParams
 
 /** Optional parameters. */
 export interface DedicatedHostsListAvailableSizesOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listAvailableSizes operation. */
 export type DedicatedHostsListAvailableSizesResponse = DedicatedHostSizeListResult;
 
 /** Optional parameters. */
 export interface DedicatedHostsListByHostGroupNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByHostGroupNext operation. */
 export type DedicatedHostsListByHostGroupNextResponse = DedicatedHostListResult;
 
 /** Optional parameters. */
 export interface SshPublicKeysListBySubscriptionOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listBySubscription operation. */
 export type SshPublicKeysListBySubscriptionResponse = SshPublicKeysGroupListResult;
 
 /** Optional parameters. */
 export interface SshPublicKeysListByResourceGroupOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroup operation. */
 export type SshPublicKeysListByResourceGroupResponse = SshPublicKeysGroupListResult;
 
 /** Optional parameters. */
 export interface SshPublicKeysCreateOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the create operation. */
 export type SshPublicKeysCreateResponse = SshPublicKeyResource;
 
 /** Optional parameters. */
 export interface SshPublicKeysUpdateOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the update operation. */
 export type SshPublicKeysUpdateResponse = SshPublicKeyResource;
 
 /** Optional parameters. */
 export interface SshPublicKeysDeleteOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Optional parameters. */
 export interface SshPublicKeysGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type SshPublicKeysGetResponse = SshPublicKeyResource;
 
 /** Optional parameters. */
 export interface SshPublicKeysGenerateKeyPairOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the generateKeyPair operation. */
 export type SshPublicKeysGenerateKeyPairResponse = SshPublicKeyGenerateKeyPairResult;
 
 /** Optional parameters. */
 export interface SshPublicKeysListBySubscriptionNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listBySubscriptionNext operation. */
 export type SshPublicKeysListBySubscriptionNextResponse = SshPublicKeysGroupListResult;
 
 /** Optional parameters. */
 export interface SshPublicKeysListByResourceGroupNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroupNext operation. */
 export type SshPublicKeysListByResourceGroupNextResponse = SshPublicKeysGroupListResult;
@@ -10710,41 +10648,41 @@ export type ImagesGetResponse = Image;
 
 /** Optional parameters. */
 export interface ImagesListByResourceGroupOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroup operation. */
 export type ImagesListByResourceGroupResponse = ImageListResult;
 
 /** Optional parameters. */
-export interface ImagesListOptionalParams extends coreClient.OperationOptions { }
+export interface ImagesListOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type ImagesListResponse = ImageListResult;
 
 /** Optional parameters. */
 export interface ImagesListByResourceGroupNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroupNext operation. */
 export type ImagesListByResourceGroupNextResponse = ImageListResult;
 
 /** Optional parameters. */
 export interface ImagesListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type ImagesListNextResponse = ImageListResult;
 
 /** Optional parameters. */
 export interface RestorePointCollectionsCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the createOrUpdate operation. */
 export type RestorePointCollectionsCreateOrUpdateResponse = RestorePointCollection;
 
 /** Optional parameters. */
 export interface RestorePointCollectionsUpdateOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the update operation. */
 export type RestorePointCollectionsUpdateResponse = RestorePointCollection;
@@ -10770,28 +10708,28 @@ export type RestorePointCollectionsGetResponse = RestorePointCollection;
 
 /** Optional parameters. */
 export interface RestorePointCollectionsListOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type RestorePointCollectionsListResponse = RestorePointCollectionListResult;
 
 /** Optional parameters. */
 export interface RestorePointCollectionsListAllOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listAll operation. */
 export type RestorePointCollectionsListAllResponse = RestorePointCollectionListResult;
 
 /** Optional parameters. */
 export interface RestorePointCollectionsListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type RestorePointCollectionsListNextResponse = RestorePointCollectionListResult;
 
 /** Optional parameters. */
 export interface RestorePointCollectionsListAllNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listAllNext operation. */
 export type RestorePointCollectionsListAllNextResponse = RestorePointCollectionListResult;
@@ -10829,21 +10767,21 @@ export type RestorePointsGetResponse = RestorePoint;
 
 /** Optional parameters. */
 export interface CapacityReservationGroupsCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the createOrUpdate operation. */
 export type CapacityReservationGroupsCreateOrUpdateResponse = CapacityReservationGroup;
 
 /** Optional parameters. */
 export interface CapacityReservationGroupsUpdateOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the update operation. */
 export type CapacityReservationGroupsUpdateResponse = CapacityReservationGroup;
 
 /** Optional parameters. */
 export interface CapacityReservationGroupsDeleteOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Optional parameters. */
 export interface CapacityReservationGroupsGetOptionalParams
@@ -10877,14 +10815,14 @@ export type CapacityReservationGroupsListBySubscriptionResponse = CapacityReserv
 
 /** Optional parameters. */
 export interface CapacityReservationGroupsListByResourceGroupNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroupNext operation. */
 export type CapacityReservationGroupsListByResourceGroupNextResponse = CapacityReservationGroupListResult;
 
 /** Optional parameters. */
 export interface CapacityReservationGroupsListBySubscriptionNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listBySubscriptionNext operation. */
 export type CapacityReservationGroupsListBySubscriptionNextResponse = CapacityReservationGroupListResult;
@@ -10934,14 +10872,14 @@ export type CapacityReservationsGetResponse = CapacityReservation;
 
 /** Optional parameters. */
 export interface CapacityReservationsListByCapacityReservationGroupOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByCapacityReservationGroup operation. */
 export type CapacityReservationsListByCapacityReservationGroupResponse = CapacityReservationListResult;
 
 /** Optional parameters. */
 export interface CapacityReservationsListByCapacityReservationGroupNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByCapacityReservationGroupNext operation. */
 export type CapacityReservationsListByCapacityReservationGroupNextResponse = CapacityReservationListResult;
@@ -10972,14 +10910,14 @@ export type LogAnalyticsExportThrottledRequestsResponse = LogAnalyticsOperationR
 
 /** Optional parameters. */
 export interface VirtualMachineRunCommandsListOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type VirtualMachineRunCommandsListResponse = RunCommandListResult;
 
 /** Optional parameters. */
 export interface VirtualMachineRunCommandsGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type VirtualMachineRunCommandsGetResponse = RunCommandDocument;
@@ -11039,14 +10977,14 @@ export type VirtualMachineRunCommandsListByVirtualMachineResponse = VirtualMachi
 
 /** Optional parameters. */
 export interface VirtualMachineRunCommandsListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type VirtualMachineRunCommandsListNextResponse = RunCommandListResult;
 
 /** Optional parameters. */
 export interface VirtualMachineRunCommandsListByVirtualMachineNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByVirtualMachineNext operation. */
 export type VirtualMachineRunCommandsListByVirtualMachineNextResponse = VirtualMachineRunCommandsListResult;
@@ -11106,7 +11044,7 @@ export type VirtualMachineScaleSetVMRunCommandsListResponse = VirtualMachineRunC
 
 /** Optional parameters. */
 export interface VirtualMachineScaleSetVMRunCommandsListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type VirtualMachineScaleSetVMRunCommandsListNextResponse = VirtualMachineRunCommandsListResult;
@@ -11135,7 +11073,7 @@ export interface DisksUpdateOptionalParams extends coreClient.OperationOptions {
 export type DisksUpdateResponse = Disk;
 
 /** Optional parameters. */
-export interface DisksGetOptionalParams extends coreClient.OperationOptions { }
+export interface DisksGetOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type DisksGetResponse = Disk;
@@ -11150,13 +11088,13 @@ export interface DisksDeleteOptionalParams extends coreClient.OperationOptions {
 
 /** Optional parameters. */
 export interface DisksListByResourceGroupOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroup operation. */
 export type DisksListByResourceGroupResponse = DiskList;
 
 /** Optional parameters. */
-export interface DisksListOptionalParams extends coreClient.OperationOptions { }
+export interface DisksListOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type DisksListResponse = DiskList;
@@ -11184,14 +11122,14 @@ export interface DisksRevokeAccessOptionalParams
 
 /** Optional parameters. */
 export interface DisksListByResourceGroupNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroupNext operation. */
 export type DisksListByResourceGroupNextResponse = DiskList;
 
 /** Optional parameters. */
 export interface DisksListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type DisksListNextResponse = DiskList;
@@ -11222,7 +11160,7 @@ export type DiskAccessesUpdateResponse = DiskAccess;
 
 /** Optional parameters. */
 export interface DiskAccessesGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type DiskAccessesGetResponse = DiskAccess;
@@ -11238,21 +11176,21 @@ export interface DiskAccessesDeleteOptionalParams
 
 /** Optional parameters. */
 export interface DiskAccessesListByResourceGroupOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroup operation. */
 export type DiskAccessesListByResourceGroupResponse = DiskAccessList;
 
 /** Optional parameters. */
 export interface DiskAccessesListOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type DiskAccessesListResponse = DiskAccessList;
 
 /** Optional parameters. */
 export interface DiskAccessesGetPrivateLinkResourcesOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the getPrivateLinkResources operation. */
 export type DiskAccessesGetPrivateLinkResourcesResponse = PrivateLinkResourceListResult;
@@ -11271,7 +11209,7 @@ export type DiskAccessesUpdateAPrivateEndpointConnectionResponse = PrivateEndpoi
 
 /** Optional parameters. */
 export interface DiskAccessesGetAPrivateEndpointConnectionOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the getAPrivateEndpointConnection operation. */
 export type DiskAccessesGetAPrivateEndpointConnectionResponse = PrivateEndpointConnection;
@@ -11287,28 +11225,28 @@ export interface DiskAccessesDeleteAPrivateEndpointConnectionOptionalParams
 
 /** Optional parameters. */
 export interface DiskAccessesListPrivateEndpointConnectionsOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listPrivateEndpointConnections operation. */
 export type DiskAccessesListPrivateEndpointConnectionsResponse = PrivateEndpointConnectionListResult;
 
 /** Optional parameters. */
 export interface DiskAccessesListByResourceGroupNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroupNext operation. */
 export type DiskAccessesListByResourceGroupNextResponse = DiskAccessList;
 
 /** Optional parameters. */
 export interface DiskAccessesListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type DiskAccessesListNextResponse = DiskAccessList;
 
 /** Optional parameters. */
 export interface DiskAccessesListPrivateEndpointConnectionsNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listPrivateEndpointConnectionsNext operation. */
 export type DiskAccessesListPrivateEndpointConnectionsNextResponse = PrivateEndpointConnectionListResult;
@@ -11339,7 +11277,7 @@ export type DiskEncryptionSetsUpdateResponse = DiskEncryptionSet;
 
 /** Optional parameters. */
 export interface DiskEncryptionSetsGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type DiskEncryptionSetsGetResponse = DiskEncryptionSet;
@@ -11355,56 +11293,56 @@ export interface DiskEncryptionSetsDeleteOptionalParams
 
 /** Optional parameters. */
 export interface DiskEncryptionSetsListByResourceGroupOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroup operation. */
 export type DiskEncryptionSetsListByResourceGroupResponse = DiskEncryptionSetList;
 
 /** Optional parameters. */
 export interface DiskEncryptionSetsListOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type DiskEncryptionSetsListResponse = DiskEncryptionSetList;
 
 /** Optional parameters. */
 export interface DiskEncryptionSetsListAssociatedResourcesOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listAssociatedResources operation. */
 export type DiskEncryptionSetsListAssociatedResourcesResponse = ResourceUriList;
 
 /** Optional parameters. */
 export interface DiskEncryptionSetsListByResourceGroupNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroupNext operation. */
 export type DiskEncryptionSetsListByResourceGroupNextResponse = DiskEncryptionSetList;
 
 /** Optional parameters. */
 export interface DiskEncryptionSetsListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type DiskEncryptionSetsListNextResponse = DiskEncryptionSetList;
 
 /** Optional parameters. */
 export interface DiskEncryptionSetsListAssociatedResourcesNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listAssociatedResourcesNext operation. */
 export type DiskEncryptionSetsListAssociatedResourcesNextResponse = ResourceUriList;
 
 /** Optional parameters. */
 export interface DiskRestorePointGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type DiskRestorePointGetResponse = DiskRestorePoint;
 
 /** Optional parameters. */
 export interface DiskRestorePointListByRestorePointOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByRestorePoint operation. */
 export type DiskRestorePointListByRestorePointResponse = DiskRestorePointList;
@@ -11432,7 +11370,7 @@ export interface DiskRestorePointRevokeAccessOptionalParams
 
 /** Optional parameters. */
 export interface DiskRestorePointListByRestorePointNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByRestorePointNext operation. */
 export type DiskRestorePointListByRestorePointNextResponse = DiskRestorePointList;
@@ -11463,7 +11401,7 @@ export type SnapshotsUpdateResponse = Snapshot;
 
 /** Optional parameters. */
 export interface SnapshotsGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type SnapshotsGetResponse = Snapshot;
@@ -11479,14 +11417,14 @@ export interface SnapshotsDeleteOptionalParams
 
 /** Optional parameters. */
 export interface SnapshotsListByResourceGroupOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroup operation. */
 export type SnapshotsListByResourceGroupResponse = SnapshotList;
 
 /** Optional parameters. */
 export interface SnapshotsListOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type SnapshotsListResponse = SnapshotList;
@@ -11514,14 +11452,14 @@ export interface SnapshotsRevokeAccessOptionalParams
 
 /** Optional parameters. */
 export interface SnapshotsListByResourceGroupNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroupNext operation. */
 export type SnapshotsListByResourceGroupNextResponse = SnapshotList;
 
 /** Optional parameters. */
 export interface SnapshotsListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type SnapshotsListNextResponse = SnapshotList;
@@ -11540,7 +11478,7 @@ export type ResourceSkusListResponse = ResourceSkusResult;
 
 /** Optional parameters. */
 export interface ResourceSkusListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type ResourceSkusListNextResponse = ResourceSkusResult;
@@ -11592,28 +11530,28 @@ export interface GalleriesDeleteOptionalParams
 
 /** Optional parameters. */
 export interface GalleriesListByResourceGroupOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroup operation. */
 export type GalleriesListByResourceGroupResponse = GalleryList;
 
 /** Optional parameters. */
 export interface GalleriesListOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type GalleriesListResponse = GalleryList;
 
 /** Optional parameters. */
 export interface GalleriesListByResourceGroupNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroupNext operation. */
 export type GalleriesListByResourceGroupNextResponse = GalleryList;
 
 /** Optional parameters. */
 export interface GalleriesListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type GalleriesListNextResponse = GalleryList;
@@ -11644,7 +11582,7 @@ export type GalleryImagesUpdateResponse = GalleryImage;
 
 /** Optional parameters. */
 export interface GalleryImagesGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type GalleryImagesGetResponse = GalleryImage;
@@ -11660,14 +11598,14 @@ export interface GalleryImagesDeleteOptionalParams
 
 /** Optional parameters. */
 export interface GalleryImagesListByGalleryOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByGallery operation. */
 export type GalleryImagesListByGalleryResponse = GalleryImageList;
 
 /** Optional parameters. */
 export interface GalleryImagesListByGalleryNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByGalleryNext operation. */
 export type GalleryImagesListByGalleryNextResponse = GalleryImageList;
@@ -11717,14 +11655,14 @@ export interface GalleryImageVersionsDeleteOptionalParams
 
 /** Optional parameters. */
 export interface GalleryImageVersionsListByGalleryImageOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByGalleryImage operation. */
 export type GalleryImageVersionsListByGalleryImageResponse = GalleryImageVersionList;
 
 /** Optional parameters. */
 export interface GalleryImageVersionsListByGalleryImageNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByGalleryImageNext operation. */
 export type GalleryImageVersionsListByGalleryImageNextResponse = GalleryImageVersionList;
@@ -11755,7 +11693,7 @@ export type GalleryApplicationsUpdateResponse = GalleryApplication;
 
 /** Optional parameters. */
 export interface GalleryApplicationsGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type GalleryApplicationsGetResponse = GalleryApplication;
@@ -11771,14 +11709,14 @@ export interface GalleryApplicationsDeleteOptionalParams
 
 /** Optional parameters. */
 export interface GalleryApplicationsListByGalleryOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByGallery operation. */
 export type GalleryApplicationsListByGalleryResponse = GalleryApplicationList;
 
 /** Optional parameters. */
 export interface GalleryApplicationsListByGalleryNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByGalleryNext operation. */
 export type GalleryApplicationsListByGalleryNextResponse = GalleryApplicationList;
@@ -11828,14 +11766,14 @@ export interface GalleryApplicationVersionsDeleteOptionalParams
 
 /** Optional parameters. */
 export interface GalleryApplicationVersionsListByGalleryApplicationOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByGalleryApplication operation. */
 export type GalleryApplicationVersionsListByGalleryApplicationResponse = GalleryApplicationVersionList;
 
 /** Optional parameters. */
 export interface GalleryApplicationVersionsListByGalleryApplicationNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByGalleryApplicationNext operation. */
 export type GalleryApplicationVersionsListByGalleryApplicationNextResponse = GalleryApplicationVersionList;
@@ -11864,14 +11802,14 @@ export type SharedGalleriesListResponse = SharedGalleryList;
 
 /** Optional parameters. */
 export interface SharedGalleriesGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type SharedGalleriesGetResponse = SharedGallery;
 
 /** Optional parameters. */
 export interface SharedGalleriesListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type SharedGalleriesListNextResponse = SharedGalleryList;
@@ -11888,14 +11826,14 @@ export type SharedGalleryImagesListResponse = SharedGalleryImageList;
 
 /** Optional parameters. */
 export interface SharedGalleryImagesGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type SharedGalleryImagesGetResponse = SharedGalleryImage;
 
 /** Optional parameters. */
 export interface SharedGalleryImagesListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type SharedGalleryImagesListNextResponse = SharedGalleryImageList;
@@ -11912,63 +11850,63 @@ export type SharedGalleryImageVersionsListResponse = SharedGalleryImageVersionLi
 
 /** Optional parameters. */
 export interface SharedGalleryImageVersionsGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type SharedGalleryImageVersionsGetResponse = SharedGalleryImageVersion;
 
 /** Optional parameters. */
 export interface SharedGalleryImageVersionsListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type SharedGalleryImageVersionsListNextResponse = SharedGalleryImageVersionList;
 
 /** Optional parameters. */
 export interface CommunityGalleriesGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type CommunityGalleriesGetResponse = CommunityGallery;
 
 /** Optional parameters. */
 export interface CommunityGalleryImagesGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type CommunityGalleryImagesGetResponse = CommunityGalleryImage;
 
 /** Optional parameters. */
 export interface CommunityGalleryImagesListOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type CommunityGalleryImagesListResponse = CommunityGalleryImageList;
 
 /** Optional parameters. */
 export interface CommunityGalleryImagesListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type CommunityGalleryImagesListNextResponse = CommunityGalleryImageList;
 
 /** Optional parameters. */
 export interface CommunityGalleryImageVersionsGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type CommunityGalleryImageVersionsGetResponse = CommunityGalleryImageVersion;
 
 /** Optional parameters. */
 export interface CommunityGalleryImageVersionsListOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type CommunityGalleryImageVersionsListResponse = CommunityGalleryImageVersionList;
 
 /** Optional parameters. */
 export interface CommunityGalleryImageVersionsListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type CommunityGalleryImageVersionsListNextResponse = CommunityGalleryImageVersionList;
@@ -11994,7 +11932,7 @@ export type CloudServiceRoleInstancesGetResponse = RoleInstance;
 
 /** Optional parameters. */
 export interface CloudServiceRoleInstancesGetInstanceViewOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the getInstanceView operation. */
 export type CloudServiceRoleInstancesGetInstanceViewResponse = RoleInstanceView;
@@ -12038,7 +11976,7 @@ export interface CloudServiceRoleInstancesRebuildOptionalParams
 
 /** Optional parameters. */
 export interface CloudServiceRoleInstancesGetRemoteDesktopFileOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the getRemoteDesktopFile operation. */
 export type CloudServiceRoleInstancesGetRemoteDesktopFileResponse = {
@@ -12060,28 +11998,28 @@ export type CloudServiceRoleInstancesGetRemoteDesktopFileResponse = {
 
 /** Optional parameters. */
 export interface CloudServiceRoleInstancesListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type CloudServiceRoleInstancesListNextResponse = RoleInstanceListResult;
 
 /** Optional parameters. */
 export interface CloudServiceRolesGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type CloudServiceRolesGetResponse = CloudServiceRole;
 
 /** Optional parameters. */
 export interface CloudServiceRolesListOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type CloudServiceRolesListResponse = CloudServiceRoleListResult;
 
 /** Optional parameters. */
 export interface CloudServiceRolesListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type CloudServiceRolesListNextResponse = CloudServiceRoleListResult;
@@ -12125,28 +12063,28 @@ export interface CloudServicesDeleteOptionalParams
 
 /** Optional parameters. */
 export interface CloudServicesGetOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type CloudServicesGetResponse = CloudService;
 
 /** Optional parameters. */
 export interface CloudServicesGetInstanceViewOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the getInstanceView operation. */
 export type CloudServicesGetInstanceViewResponse = CloudServiceInstanceView;
 
 /** Optional parameters. */
 export interface CloudServicesListAllOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listAll operation. */
 export type CloudServicesListAllResponse = CloudServiceListResult;
 
 /** Optional parameters. */
 export interface CloudServicesListOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type CloudServicesListResponse = CloudServiceListResult;
@@ -12215,14 +12153,14 @@ export interface CloudServicesDeleteInstancesOptionalParams
 
 /** Optional parameters. */
 export interface CloudServicesListAllNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listAllNext operation. */
 export type CloudServicesListAllNextResponse = CloudServiceListResult;
 
 /** Optional parameters. */
 export interface CloudServicesListNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type CloudServicesListNextResponse = CloudServiceListResult;
@@ -12240,63 +12178,63 @@ export interface CloudServicesUpdateDomainWalkUpdateDomainOptionalParams
 
 /** Optional parameters. */
 export interface CloudServicesUpdateDomainGetUpdateDomainOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the getUpdateDomain operation. */
 export type CloudServicesUpdateDomainGetUpdateDomainResponse = UpdateDomain;
 
 /** Optional parameters. */
 export interface CloudServicesUpdateDomainListUpdateDomainsOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listUpdateDomains operation. */
 export type CloudServicesUpdateDomainListUpdateDomainsResponse = UpdateDomainListResult;
 
 /** Optional parameters. */
 export interface CloudServicesUpdateDomainListUpdateDomainsNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listUpdateDomainsNext operation. */
 export type CloudServicesUpdateDomainListUpdateDomainsNextResponse = UpdateDomainListResult;
 
 /** Optional parameters. */
 export interface CloudServiceOperatingSystemsGetOSVersionOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the getOSVersion operation. */
 export type CloudServiceOperatingSystemsGetOSVersionResponse = OSVersion;
 
 /** Optional parameters. */
 export interface CloudServiceOperatingSystemsListOSVersionsOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listOSVersions operation. */
 export type CloudServiceOperatingSystemsListOSVersionsResponse = OSVersionListResult;
 
 /** Optional parameters. */
 export interface CloudServiceOperatingSystemsGetOSFamilyOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the getOSFamily operation. */
 export type CloudServiceOperatingSystemsGetOSFamilyResponse = OSFamily;
 
 /** Optional parameters. */
 export interface CloudServiceOperatingSystemsListOSFamiliesOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listOSFamilies operation. */
 export type CloudServiceOperatingSystemsListOSFamiliesResponse = OSFamilyListResult;
 
 /** Optional parameters. */
 export interface CloudServiceOperatingSystemsListOSVersionsNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listOSVersionsNext operation. */
 export type CloudServiceOperatingSystemsListOSVersionsNextResponse = OSVersionListResult;
 
 /** Optional parameters. */
 export interface CloudServiceOperatingSystemsListOSFamiliesNextOptionalParams
-  extends coreClient.OperationOptions { }
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listOSFamiliesNext operation. */
 export type CloudServiceOperatingSystemsListOSFamiliesNextResponse = OSFamilyListResult;
