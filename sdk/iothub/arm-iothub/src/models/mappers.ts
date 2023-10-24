@@ -306,10 +306,24 @@ export const IotHubProperties: coreClient.CompositeMapper = {
           name: "String"
         }
       },
+      deviceStreams: {
+        serializedName: "deviceStreams",
+        type: {
+          name: "Composite",
+          className: "IotHubPropertiesDeviceStreams"
+        }
+      },
       features: {
         serializedName: "features",
         type: {
           name: "String"
+        }
+      },
+      encryption: {
+        serializedName: "encryption",
+        type: {
+          name: "Composite",
+          className: "EncryptionPropertiesDescription"
         }
       },
       locations: {
@@ -329,6 +343,19 @@ export const IotHubProperties: coreClient.CompositeMapper = {
         serializedName: "enableDataResidency",
         type: {
           name: "Boolean"
+        }
+      },
+      rootCertificate: {
+        serializedName: "rootCertificate",
+        type: {
+          name: "Composite",
+          className: "RootCertificateProperties"
+        }
+      },
+      ipVersion: {
+        serializedName: "ipVersion",
+        type: {
+          name: "String"
         }
       }
     }
@@ -1089,7 +1116,6 @@ export const RoutingCosmosDBSqlApiProperties: coreClient.CompositeMapper = {
       },
       id: {
         serializedName: "id",
-        readOnly: true,
         type: {
           name: "String"
         }
@@ -1448,6 +1474,75 @@ export const FeedbackProperties: coreClient.CompositeMapper = {
   }
 };
 
+export const IotHubPropertiesDeviceStreams: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "IotHubPropertiesDeviceStreams",
+    modelProperties: {
+      streamingEndpoints: {
+        serializedName: "streamingEndpoints",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+export const EncryptionPropertiesDescription: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "EncryptionPropertiesDescription",
+    modelProperties: {
+      keySource: {
+        serializedName: "keySource",
+        type: {
+          name: "String"
+        }
+      },
+      keyVaultProperties: {
+        serializedName: "keyVaultProperties",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "KeyVaultKeyProperties"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+export const KeyVaultKeyProperties: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "KeyVaultKeyProperties",
+    modelProperties: {
+      keyIdentifier: {
+        serializedName: "keyIdentifier",
+        type: {
+          name: "String"
+        }
+      },
+      identity: {
+        serializedName: "identity",
+        type: {
+          name: "Composite",
+          className: "ManagedIdentity"
+        }
+      }
+    }
+  }
+};
+
 export const IotHubLocationDescription: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -1463,6 +1558,28 @@ export const IotHubLocationDescription: coreClient.CompositeMapper = {
         serializedName: "role",
         type: {
           name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const RootCertificateProperties: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "RootCertificateProperties",
+    modelProperties: {
+      enableRootCertificateV2: {
+        serializedName: "enableRootCertificateV2",
+        type: {
+          name: "Boolean"
+        }
+      },
+      lastUpdatedTimeUtc: {
+        serializedName: "lastUpdatedTimeUtc",
+        readOnly: true,
+        type: {
+          name: "DateTime"
         }
       }
     }
@@ -3091,6 +3208,326 @@ export const GroupIdInformationProperties: coreClient.CompositeMapper = {
   }
 };
 
+export const NetworkSecurityPerimeterConfigurationListResult: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "NetworkSecurityPerimeterConfigurationListResult",
+    modelProperties: {
+      value: {
+        serializedName: "value",
+        readOnly: true,
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "NetworkSecurityPerimeterConfiguration"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+export const NSPConfigPerimeter: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "NSPConfigPerimeter",
+    modelProperties: {
+      id: {
+        serializedName: "id",
+        type: {
+          name: "String"
+        }
+      },
+      perimeterGuid: {
+        serializedName: "perimeterGuid",
+        type: {
+          name: "String"
+        }
+      },
+      location: {
+        serializedName: "location",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const NSPConfigAssociation: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "NSPConfigAssociation",
+    modelProperties: {
+      name: {
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      },
+      accessMode: {
+        serializedName: "accessMode",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const NSPConfigProfile: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "NSPConfigProfile",
+    modelProperties: {
+      name: {
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      },
+      accessRulesVersion: {
+        serializedName: "accessRulesVersion",
+        type: {
+          name: "String"
+        }
+      },
+      accessRules: {
+        serializedName: "accessRules",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "NSPConfigAccessRule"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+export const NSPConfigAccessRule: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "NSPConfigAccessRule",
+    modelProperties: {
+      name: {
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      },
+      properties: {
+        serializedName: "properties",
+        type: {
+          name: "Composite",
+          className: "NSPConfigAccessRuleProperties"
+        }
+      }
+    }
+  }
+};
+
+export const NSPConfigAccessRuleProperties: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "NSPConfigAccessRuleProperties",
+    modelProperties: {
+      direction: {
+        serializedName: "direction",
+        type: {
+          name: "String"
+        }
+      },
+      addressPrefixes: {
+        serializedName: "addressPrefixes",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      fullyQualifiedDomainNames: {
+        serializedName: "fullyQualifiedDomainNames",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      subscriptions: {
+        serializedName: "subscriptions",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      networkSecurityPerimeters: {
+        serializedName: "networkSecurityPerimeters",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "NSPConfigNetworkSecurityPerimeterRule"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+export const NSPConfigNetworkSecurityPerimeterRule: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "NSPConfigNetworkSecurityPerimeterRule",
+    modelProperties: {
+      id: {
+        serializedName: "id",
+        type: {
+          name: "String"
+        }
+      },
+      perimeterGuid: {
+        serializedName: "perimeterGuid",
+        type: {
+          name: "String"
+        }
+      },
+      location: {
+        serializedName: "location",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const NSPProvisioningIssue: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "NSPProvisioningIssue",
+    modelProperties: {
+      name: {
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      },
+      properties: {
+        serializedName: "properties",
+        type: {
+          name: "Composite",
+          className: "NSPProvisioningIssueProperties"
+        }
+      }
+    }
+  }
+};
+
+export const NSPProvisioningIssueProperties: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "NSPProvisioningIssueProperties",
+    modelProperties: {
+      issueType: {
+        serializedName: "issueType",
+        type: {
+          name: "String"
+        }
+      },
+      severity: {
+        serializedName: "severity",
+        type: {
+          name: "String"
+        }
+      },
+      description: {
+        serializedName: "description",
+        type: {
+          name: "String"
+        }
+      },
+      suggestedResourceIds: {
+        serializedName: "suggestedResourceIds",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      suggestedAccessRules: {
+        serializedName: "suggestedAccessRules",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+export const ProxyResource: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "ProxyResource",
+    modelProperties: {
+      id: {
+        serializedName: "id",
+        readOnly: true,
+        type: {
+          name: "String"
+        }
+      },
+      name: {
+        serializedName: "name",
+        readOnly: true,
+        type: {
+          name: "String"
+        }
+      },
+      type: {
+        serializedName: "type",
+        readOnly: true,
+        type: {
+          name: "String"
+        }
+      },
+      location: {
+        serializedName: "location",
+        readOnly: true,
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
 export const CertificateBodyDescription: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -3156,6 +3593,85 @@ export const IotHubDescription: coreClient.CompositeMapper = {
   }
 };
 
+export const NetworkSecurityPerimeterConfiguration: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "NetworkSecurityPerimeterConfiguration",
+    modelProperties: {
+      ...ProxyResource.type.modelProperties,
+      provisioningState: {
+        serializedName: "properties.provisioningState",
+        type: {
+          name: "String"
+        }
+      },
+      networkSecurityPerimeter: {
+        serializedName: "properties.networkSecurityPerimeter",
+        type: {
+          name: "Composite",
+          className: "NSPConfigPerimeter"
+        }
+      },
+      resourceAssociation: {
+        serializedName: "properties.resourceAssociation",
+        type: {
+          name: "Composite",
+          className: "NSPConfigAssociation"
+        }
+      },
+      profile: {
+        serializedName: "properties.profile",
+        type: {
+          name: "Composite",
+          className: "NSPConfigProfile"
+        }
+      },
+      provisioningIssues: {
+        serializedName: "properties.provisioningIssues",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "NSPProvisioningIssue"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+export const IotHubResourceCreateOrUpdateHeaders: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "IotHubResourceCreateOrUpdateHeaders",
+    modelProperties: {
+      azureAsyncOperation: {
+        serializedName: "azure-asyncoperation",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const IotHubResourceUpdateHeaders: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "IotHubResourceUpdateHeaders",
+    modelProperties: {
+      azureAsyncOperation: {
+        serializedName: "azure-asyncoperation",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
 export const IotHubResourceDeleteHeaders: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -3163,12 +3679,6 @@ export const IotHubResourceDeleteHeaders: coreClient.CompositeMapper = {
     modelProperties: {
       azureAsyncOperation: {
         serializedName: "azure-asyncoperation",
-        type: {
-          name: "String"
-        }
-      },
-      location: {
-        serializedName: "location",
         type: {
           name: "String"
         }
@@ -3198,6 +3708,21 @@ export const IotHubManualFailoverHeaders: coreClient.CompositeMapper = {
   }
 };
 
+export const PrivateEndpointConnectionsUpdateHeaders: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "PrivateEndpointConnectionsUpdateHeaders",
+    modelProperties: {
+      azureAsyncOperation: {
+        serializedName: "azure-asyncoperation",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
 export const PrivateEndpointConnectionsDeleteHeaders: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -3205,12 +3730,6 @@ export const PrivateEndpointConnectionsDeleteHeaders: coreClient.CompositeMapper
     modelProperties: {
       azureAsyncOperation: {
         serializedName: "azure-asyncoperation",
-        type: {
-          name: "String"
-        }
-      },
-      location: {
-        serializedName: "location",
         type: {
           name: "String"
         }

@@ -1,15 +1,51 @@
 # Release History
+    
+## 7.0.0-beta.1 (2023-10-24)
+    
+**Features**
 
-## 6.3.1 (Unreleased)
+  - Added operation group NetworkSecurityPerimeterConfigurations
+  - Added Interface EncryptionPropertiesDescription
+  - Added Interface IotHubPropertiesDeviceStreams
+  - Added Interface IotHubResourceCreateOrUpdateHeaders
+  - Added Interface IotHubResourceUpdateHeaders
+  - Added Interface KeyVaultKeyProperties
+  - Added Interface NetworkSecurityPerimeterConfiguration
+  - Added Interface NetworkSecurityPerimeterConfigurationListResult
+  - Added Interface NetworkSecurityPerimeterConfigurationsGetOptionalParams
+  - Added Interface NetworkSecurityPerimeterConfigurationsListByIotHubOptionalParams
+  - Added Interface NetworkSecurityPerimeterConfigurationsReconcileOptionalParams
+  - Added Interface NSPConfigAccessRule
+  - Added Interface NSPConfigAccessRuleProperties
+  - Added Interface NSPConfigAssociation
+  - Added Interface NSPConfigNetworkSecurityPerimeterRule
+  - Added Interface NSPConfigPerimeter
+  - Added Interface NSPConfigProfile
+  - Added Interface NSPProvisioningIssue
+  - Added Interface NSPProvisioningIssueProperties
+  - Added Interface PrivateEndpointConnectionsUpdateHeaders
+  - Added Interface ProxyResource
+  - Added Interface RootCertificateProperties
+  - Added Type Alias IpVersion
+  - Added Type Alias NetworkSecurityPerimeterConfigurationsGetResponse
+  - Added Type Alias NetworkSecurityPerimeterConfigurationsListByIotHubResponse
+  - Added Type Alias NetworkSecurityPerimeterConfigurationsReconcileResponse
+  - Interface IotHubProperties has a new optional parameter deviceStreams
+  - Interface IotHubProperties has a new optional parameter encryption
+  - Interface IotHubProperties has a new optional parameter ipVersion
+  - Interface IotHubProperties has a new optional parameter rootCertificate
+  - Add parameters of IotHubResourceUpdateHeaders to TypeAlias IotHubResourceUpdateResponse
+  - Added Enum KnownIpVersion
+  - Enum KnownPublicNetworkAccess has a new value SecuredByPerimeter
+  - Enum KnownRoutingSource has a new value DigitalTwinChangeEvents
+  - Enum KnownRoutingSource has a new value MqttBrokerMessages
 
-### Features Added
+**Breaking Changes**
 
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
+  - Interface IotHubResourceDeleteHeaders no longer has parameter location
+  - Interface PrivateEndpointConnectionsDeleteHeaders no longer has parameter location
+    
+    
 ## 6.3.0 (2023-09-15)
     
 **Features**
@@ -59,4 +95,4 @@ To understand the detail of the change, please refer to [Changelog](https://aka.
 
 To migrate the existing applications to the latest version, please refer to [Migration Guide](https://aka.ms/js-track2-migration-guide).
 
-To learn more, please refer to our documentation [Quick Start](https://aka.ms/azsdk/js/mgmt/quickstart ).
+To learn more, please refer to our documentation [Quick Start](https://aka.ms/js-track2-quickstart).

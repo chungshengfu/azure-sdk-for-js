@@ -8956,6 +8956,37 @@ packages:
       code-block-writer: 12.0.0
     dev: false
 
+  /ts-node@10.9.1(@types/node@16.18.55)(typescript@5.0.4):
+    resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
+    hasBin: true
+    peerDependencies:
+      '@swc/core': '>=1.2.50'
+      '@swc/wasm': '>=1.2.50'
+      '@types/node': '*'
+      typescript: '>=2.7'
+    peerDependenciesMeta:
+      '@swc/core':
+        optional: true
+      '@swc/wasm':
+        optional: true
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.9
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 16.18.55
+      acorn: 8.10.0
+      acorn-walk: 8.2.0
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.2
+      make-error: 1.3.6
+      typescript: 5.0.4
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
+    dev: false
+
   /ts-node@10.9.1(@types/node@16.18.55)(typescript@5.2.2):
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
     hasBin: true
@@ -13405,7 +13436,7 @@ packages:
     dev: false
 
   file:projects/arm-iothub.tgz:
-    resolution: {integrity: sha512-zDGm39CQk/VbJOyeYHUFFfqdAdN9JiccLZbUY8XpyXVsWy9DffaUYUYQVMd59JA8P/DbN4+riUSY16r2zg7JLQ==, tarball: file:projects/arm-iothub.tgz}
+    resolution: {integrity: sha512-cHYc+cIvhu2WbmTSO2X07MJ+TgM2Rr6ct3WEtB9ZGdaD0XocttdVZAUA4vHWppk6ofDKu75w3RjlgEeOd65zRQ==, tarball: file:projects/arm-iothub.tgz}
     name: '@rush-temp/arm-iothub'
     version: 0.0.0
     dependencies:
@@ -13415,18 +13446,20 @@ packages:
       '@rollup/plugin-multi-entry': 6.0.0(rollup@2.79.1)
       '@rollup/plugin-node-resolve': 13.3.0(rollup@2.79.1)
       '@types/chai': 4.3.6
+      '@types/mocha': 10.0.2
       '@types/node': 16.18.55
       chai: 4.3.10
       cross-env: 7.0.3
       dotenv: 16.3.1
+      esm: 3.2.25
       mkdirp: 2.1.6
       mocha: 10.2.0
-      rimraf: 3.0.2
+      rimraf: 5.0.5
       rollup: 2.79.1
       rollup-plugin-sourcemaps: 0.6.3(@types/node@16.18.55)(rollup@2.79.1)
-      ts-node: 10.9.1(@types/node@16.18.55)(typescript@5.2.2)
+      ts-node: 10.9.1(@types/node@16.18.55)(typescript@5.0.4)
       tslib: 2.6.2
-      typescript: 5.2.2
+      typescript: 5.0.4
       uglify-js: 3.17.4
     transitivePeerDependencies:
       - '@swc/core'
@@ -20028,7 +20061,7 @@ packages:
     dev: false
 
   file:projects/openai.tgz:
-    resolution: {integrity: sha512-HPJq35LqAc0O4ZWamZunXj5BkVfVNdv2w1RdY2uw64qwsyHfDNFl2AQ9RSGn9HxJtZopAmf93tueLSiARnjQsg==, tarball: file:projects/openai.tgz}
+    resolution: {integrity: sha512-xYnrqVPQaBXxwvLxAX32bPmxIQyZCHNlUmtJoOMxe1ij2h7Mki4+y4OTBA7UVwgqfHWd2FzEClwuZGomo0LpwQ==, tarball: file:projects/openai.tgz}
     name: '@rush-temp/openai'
     version: 0.0.0
     dependencies:

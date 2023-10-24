@@ -21,7 +21,8 @@ import {
   CertificatesImpl,
   IotHubImpl,
   PrivateLinkResourcesOperationsImpl,
-  PrivateEndpointConnectionsImpl
+  PrivateEndpointConnectionsImpl,
+  NetworkSecurityPerimeterConfigurationsImpl
 } from "./operations";
 import {
   Operations,
@@ -30,7 +31,8 @@ import {
   Certificates,
   IotHub,
   PrivateLinkResourcesOperations,
-  PrivateEndpointConnections
+  PrivateEndpointConnections,
+  NetworkSecurityPerimeterConfigurations
 } from "./operationsInterfaces";
 import { IotHubClientOptionalParams } from "./models";
 
@@ -66,7 +68,7 @@ export class IotHubClient extends coreClient.ServiceClient {
       credential: credentials
     };
 
-    const packageDetails = `azsdk-js-arm-iothub/6.3.1`;
+    const packageDetails = `azsdk-js-arm-iothub/7.0.0-beta.1`;
     const userAgentPrefix =
       options.userAgentOptions && options.userAgentOptions.userAgentPrefix
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
@@ -119,7 +121,7 @@ export class IotHubClient extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
-    this.apiVersion = options.apiVersion || "2023-06-30";
+    this.apiVersion = options.apiVersion || "2023-07-15-preview";
     this.operations = new OperationsImpl(this);
     this.iotHubResource = new IotHubResourceImpl(this);
     this.resourceProviderCommon = new ResourceProviderCommonImpl(this);
@@ -129,6 +131,9 @@ export class IotHubClient extends coreClient.ServiceClient {
       this
     );
     this.privateEndpointConnections = new PrivateEndpointConnectionsImpl(this);
+    this.networkSecurityPerimeterConfigurations = new NetworkSecurityPerimeterConfigurationsImpl(
+      this
+    );
     this.addCustomApiVersionPolicy(options.apiVersion);
   }
 
@@ -167,4 +172,5 @@ export class IotHubClient extends coreClient.ServiceClient {
   iotHub: IotHub;
   privateLinkResourcesOperations: PrivateLinkResourcesOperations;
   privateEndpointConnections: PrivateEndpointConnections;
+  networkSecurityPerimeterConfigurations: NetworkSecurityPerimeterConfigurations;
 }

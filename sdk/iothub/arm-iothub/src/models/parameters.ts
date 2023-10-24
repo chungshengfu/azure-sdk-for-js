@@ -53,7 +53,7 @@ export const $host: OperationURLParameter = {
 export const apiVersion: OperationQueryParameter = {
   parameterPath: "apiVersion",
   mapper: {
-    defaultValue: "2023-06-30",
+    defaultValue: "2023-07-15-preview",
     isConstant: true,
     serializedName: "api-version",
     type: {
@@ -289,4 +289,15 @@ export const privateEndpointConnectionName: OperationURLParameter = {
 export const privateEndpointConnection: OperationParameter = {
   parameterPath: "privateEndpointConnection",
   mapper: PrivateEndpointConnectionMapper
+};
+
+export const nspConfigName: OperationURLParameter = {
+  parameterPath: "nspConfigName",
+  mapper: {
+    serializedName: "nspConfigName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
 };
