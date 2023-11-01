@@ -1,14 +1,20 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+import { Paged } from "@azure/core-paging";
+
 /** A container for the rules that govern how jobs are classified. */
-export interface ClassificationPolicy {
+export interface ClassificationPolicyOutput {
+  /** Concurrency Token. */
+  readonly etag: string;
+  /** Unique identifier of this policy. */
+  readonly id: string;
   /** Friendly name of this policy. */
   name?: string;
   /** The fallback queue to select if the queue selector doesn't find a match. */
   fallbackQueueId?: string;
   /** The queue selector attachments used to resolve a queue for a given job. */
-  queueSelectorAttachments?: Array<QueueSelectorAttachment>;
+  queueSelectorAttachments?: Array<QueueSelectorAttachmentOutput>;
   /**
    * A rule of one of the following types:
    *
@@ -24,16 +30,16 @@ export interface ClassificationPolicy {
    * WebhookRule: A rule providing a binding to a webserver following
    * OAuth2.0 authentication protocol.
    */
-  prioritizationRule?: RouterRule;
+  prioritizationRule?: RouterRuleOutput;
   /** The worker selector attachments used to attach worker selectors to a given job. */
-  workerSelectorAttachments?: Array<WorkerSelectorAttachment>;
+  workerSelectorAttachments?: Array<WorkerSelectorAttachmentOutput>;
 }
 
 /**
  * An attachment of queue selectors to resolve a queue to a job from a
  * classification policy
  */
-export interface QueueSelectorAttachmentParent {
+export interface QueueSelectorAttachmentOutputParent {
   kind: string;
 }
 
@@ -41,8 +47,8 @@ export interface QueueSelectorAttachmentParent {
  * Describes a set of queue selectors that will be attached if the given condition
  * resolves to true
  */
-export interface ConditionalQueueSelectorAttachment
-  extends QueueSelectorAttachmentParent {
+export interface ConditionalQueueSelectorAttachmentOutput
+  extends QueueSelectorAttachmentOutputParent {
   /**
    * A rule of one of the following types:
    *
@@ -58,9 +64,9 @@ export interface ConditionalQueueSelectorAttachment
    * WebhookRule: A rule providing a binding to a webserver following
    * OAuth2.0 authentication protocol.
    */
-  condition: RouterRule;
+  condition: RouterRuleOutput;
   /** The queue selectors to attach */
-  queueSelectors: Array<RouterQueueSelector>;
+  queueSelectors: Array<RouterQueueSelectorOutput>;
   /** The type discriminator describing the type of queue selector attachment */
   kind: "conditional";
 }
@@ -80,18 +86,18 @@ export interface ConditionalQueueSelectorAttachment
  * WebhookRule: A rule providing a binding to a webserver following
  * OAuth2.0 authentication protocol.
  */
-export interface RouterRuleParent {
+export interface RouterRuleOutputParent {
   kind: string;
 }
 
 /** A rule that return the same labels as the input labels. */
-export interface DirectMapRouterRule extends RouterRuleParent {
+export interface DirectMapRouterRuleOutput extends RouterRuleOutputParent {
   /** The type discriminator describing a sub-type of Rule */
   kind: "direct-map-rule";
 }
 
 /** A rule providing inline expression rules. */
-export interface ExpressionRouterRule extends RouterRuleParent {
+export interface ExpressionRouterRuleOutput extends RouterRuleOutputParent {
   /**
    * The expression language to compile to and execute
    *
@@ -108,17 +114,17 @@ export interface ExpressionRouterRule extends RouterRuleParent {
 }
 
 /** A rule providing a binding to an HTTP Triggered Azure Function. */
-export interface FunctionRouterRule extends RouterRuleParent {
+export interface FunctionRouterRuleOutput extends RouterRuleOutputParent {
   /** URL for Azure Function */
   functionUri: string;
   /** Credentials used to access Azure function rule */
-  credential?: FunctionRouterRuleCredential;
+  credential?: FunctionRouterRuleCredentialOutput;
   /** The type discriminator describing a sub-type of Rule */
   kind: "azure-function-rule";
 }
 
 /** Credentials used to access Azure function rule */
-export interface FunctionRouterRuleCredential {
+export interface FunctionRouterRuleCredentialOutput {
   /** (Optional) Access key scoped to a particular function */
   functionKey?: string;
   /**
@@ -139,15 +145,15 @@ export interface FunctionRouterRuleCredential {
  * A rule providing static rules that always return the same result, regardless of
  * input.
  */
-export interface StaticRouterRule extends RouterRuleParent {
+export interface StaticRouterRuleOutput extends RouterRuleOutputParent {
   /** The static value this rule always returns. */
-  value?: unknown;
+  value?: any;
   /** The type discriminator describing a sub-type of Rule */
   kind: "static-rule";
 }
 
 /** A rule providing a binding to an external web server. */
-export interface WebhookRouterRule extends RouterRuleParent {
+export interface WebhookRouterRuleOutput extends RouterRuleOutputParent {
   /** Uri for Authorization Server. */
   authorizationServerUri?: string;
   /**
@@ -155,7 +161,7 @@ export interface WebhookRouterRule extends RouterRuleParent {
    * Reference:
    * https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/
    */
-  clientCredential?: OAuth2WebhookClientCredential;
+  clientCredential?: OAuth2WebhookClientCredentialOutput;
   /** Uri for Contoso's Web Server. */
   webhookUri?: string;
   /** The type discriminator describing a sub-type of Rule */
@@ -167,7 +173,7 @@ export interface WebhookRouterRule extends RouterRuleParent {
  * Reference:
  * https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/
  */
-export interface OAuth2WebhookClientCredential {
+export interface OAuth2WebhookClientCredentialOutput {
   /** ClientId for Contoso Authorization server. */
   clientId?: string;
   /** Client secret for Contoso Authorization server. */
@@ -178,7 +184,7 @@ export interface OAuth2WebhookClientCredential {
  * Describes a condition that must be met against a set of labels for queue
  * selection
  */
-export interface RouterQueueSelector {
+export interface RouterQueueSelectorOutput {
   /** The label key to query against */
   key: string;
   /**
@@ -189,15 +195,15 @@ export interface RouterQueueSelector {
    */
   labelOperator: string;
   /** The value to compare against the actual label value with the given operator */
-  value?: unknown;
+  value?: any;
 }
 
 /**
  * Attaches a queue selector where the value is passed through from the job label
  * with the same key
  */
-export interface PassThroughQueueSelectorAttachment
-  extends QueueSelectorAttachmentParent {
+export interface PassThroughQueueSelectorAttachmentOutput
+  extends QueueSelectorAttachmentOutputParent {
   /** The label key to query against */
   key: string;
   /**
@@ -211,8 +217,8 @@ export interface PassThroughQueueSelectorAttachment
 }
 
 /** Attaches queue selectors to a job when the RouterRule is resolved */
-export interface RuleEngineQueueSelectorAttachment
-  extends QueueSelectorAttachmentParent {
+export interface RuleEngineQueueSelectorAttachmentOutput
+  extends QueueSelectorAttachmentOutputParent {
   /**
    * A rule of one of the following types:
    *
@@ -228,19 +234,19 @@ export interface RuleEngineQueueSelectorAttachment
    * WebhookRule: A rule providing a binding to a webserver following
    * OAuth2.0 authentication protocol.
    */
-  rule: RouterRule;
+  rule: RouterRuleOutput;
   /** The type discriminator describing the type of queue selector attachment */
   kind: "rule-engine";
 }
 
 /** Describes a queue selector that will be attached to the job */
-export interface StaticQueueSelectorAttachment
-  extends QueueSelectorAttachmentParent {
+export interface StaticQueueSelectorAttachmentOutput
+  extends QueueSelectorAttachmentOutputParent {
   /**
    * Describes a condition that must be met against a set of labels for queue
    * selection
    */
-  queueSelector: RouterQueueSelector;
+  queueSelector: RouterQueueSelectorOutput;
   /** The type discriminator describing the type of queue selector attachment */
   kind: "static";
 }
@@ -249,10 +255,10 @@ export interface StaticQueueSelectorAttachment
  * Describes multiple sets of queue selectors, of which one will be selected and
  * attached according to a weighting
  */
-export interface WeightedAllocationQueueSelectorAttachment
-  extends QueueSelectorAttachmentParent {
+export interface WeightedAllocationQueueSelectorAttachmentOutput
+  extends QueueSelectorAttachmentOutputParent {
   /** A collection of percentage based weighted allocations. */
-  allocations: Array<QueueWeightedAllocation>;
+  allocations: Array<QueueWeightedAllocationOutput>;
   /** The type discriminator describing the type of queue selector attachment */
   kind: "weighted-allocation-queue-selector";
 }
@@ -261,18 +267,18 @@ export interface WeightedAllocationQueueSelectorAttachment
  * Contains the weight percentage and queue selectors to be applied if selected
  * for weighted distributions.
  */
-export interface QueueWeightedAllocation {
+export interface QueueWeightedAllocationOutput {
   /** The percentage of this weight, expressed as a fraction of 1. */
   weight: number;
   /**
    * A collection of queue selectors that will be applied if this allocation is
    * selected.
    */
-  queueSelectors: Array<RouterQueueSelector>;
+  queueSelectors: Array<RouterQueueSelectorOutput>;
 }
 
 /** An attachment which attaches worker selectors to a job */
-export interface WorkerSelectorAttachmentParent {
+export interface WorkerSelectorAttachmentOutputParent {
   kind: string;
 }
 
@@ -280,8 +286,8 @@ export interface WorkerSelectorAttachmentParent {
  * Describes a set of worker selectors that will be attached if the given
  * condition resolves to true
  */
-export interface ConditionalWorkerSelectorAttachment
-  extends WorkerSelectorAttachmentParent {
+export interface ConditionalWorkerSelectorAttachmentOutput
+  extends WorkerSelectorAttachmentOutputParent {
   /**
    * A rule of one of the following types:
    *
@@ -297,9 +303,9 @@ export interface ConditionalWorkerSelectorAttachment
    * WebhookRule: A rule providing a binding to a webserver following
    * OAuth2.0 authentication protocol.
    */
-  condition: RouterRule;
+  condition: RouterRuleOutput;
   /** The worker selectors to attach */
-  workerSelectors: Array<RouterWorkerSelector>;
+  workerSelectors: Array<RouterWorkerSelectorOutput>;
   /** The type discriminator describing the type of worker selector attachment */
   kind: "conditional";
 }
@@ -308,7 +314,7 @@ export interface ConditionalWorkerSelectorAttachment
  * Describes a condition that must be met against a set of labels for worker
  * selection
  */
-export interface RouterWorkerSelector {
+export interface RouterWorkerSelectorOutput {
   /** The label key to query against */
   key: string;
   /**
@@ -319,19 +325,27 @@ export interface RouterWorkerSelector {
    */
   labelOperator: string;
   /** The value to compare against the actual label value with the given operator */
-  value?: unknown;
+  value?: any;
   /** Describes how long this label selector is valid in seconds. */
   expiresAfterSeconds?: number;
   /** Pushes the job to the front of the queue as long as this selector is active. */
   expedite?: boolean;
+  /**
+   * The status of the worker selector.
+   *
+   * Possible values: active, expired
+   */
+  readonly status?: string;
+  /** The time at which this worker selector expires in UTC */
+  readonly expiresAt?: string;
 }
 
 /**
  * Attaches a worker selector where the value is passed through from the job label
  * with the same key
  */
-export interface PassThroughWorkerSelectorAttachment
-  extends WorkerSelectorAttachmentParent {
+export interface PassThroughWorkerSelectorAttachmentOutput
+  extends WorkerSelectorAttachmentOutputParent {
   /** The label key to query against */
   key: string;
   /**
@@ -347,8 +361,8 @@ export interface PassThroughWorkerSelectorAttachment
 }
 
 /** Attaches worker selectors to a job when a RouterRule is resolved */
-export interface RuleEngineWorkerSelectorAttachment
-  extends WorkerSelectorAttachmentParent {
+export interface RuleEngineWorkerSelectorAttachmentOutput
+  extends WorkerSelectorAttachmentOutputParent {
   /**
    * A rule of one of the following types:
    *
@@ -364,19 +378,19 @@ export interface RuleEngineWorkerSelectorAttachment
    * WebhookRule: A rule providing a binding to a webserver following
    * OAuth2.0 authentication protocol.
    */
-  rule: RouterRule;
+  rule: RouterRuleOutput;
   /** The type discriminator describing the type of worker selector attachment */
   kind: "rule-engine";
 }
 
 /** Describes a worker selector that will be attached to the job */
-export interface StaticWorkerSelectorAttachment
-  extends WorkerSelectorAttachmentParent {
+export interface StaticWorkerSelectorAttachmentOutput
+  extends WorkerSelectorAttachmentOutputParent {
   /**
    * Describes a condition that must be met against a set of labels for worker
    * selection
    */
-  workerSelector: RouterWorkerSelector;
+  workerSelector: RouterWorkerSelectorOutput;
   /** The type discriminator describing the type of worker selector attachment */
   kind: "static";
 }
@@ -385,10 +399,10 @@ export interface StaticWorkerSelectorAttachment
  * Describes multiple sets of worker selectors, of which one will be selected and
  * attached according to a weighting
  */
-export interface WeightedAllocationWorkerSelectorAttachment
-  extends WorkerSelectorAttachmentParent {
+export interface WeightedAllocationWorkerSelectorAttachmentOutput
+  extends WorkerSelectorAttachmentOutputParent {
   /** A collection of percentage based weighted allocations. */
-  allocations: Array<WorkerWeightedAllocation>;
+  allocations: Array<WorkerWeightedAllocationOutput>;
   /** The type discriminator describing the type of worker selector attachment */
   kind: "weighted-allocation-worker-selector";
 }
@@ -397,18 +411,25 @@ export interface WeightedAllocationWorkerSelectorAttachment
  * Contains the weight percentage and worker selectors to be applied if selected
  * for weighted distributions.
  */
-export interface WorkerWeightedAllocation {
+export interface WorkerWeightedAllocationOutput {
   /** The percentage of this weight, expressed as a fraction of 1. */
   weight: number;
   /**
    * A collection of worker selectors that will be applied if this allocation is
    * selected.
    */
-  workerSelectors: Array<RouterWorkerSelector>;
+  workerSelectors: Array<RouterWorkerSelectorOutput>;
 }
 
+/** Provides the 'If-*' headers to enable conditional (cached) responses for JobRouter. */
+export interface RouterConditionalRequestHeadersOutput {}
+
 /** Policy governing how jobs are distributed to workers */
-export interface DistributionPolicy {
+export interface DistributionPolicyOutput {
+  /** Concurrency Token. */
+  readonly etag: string;
+  /** The unique identifier of the policy. */
+  readonly id: string;
   /** The human readable name of the policy. */
   name?: string;
   /**
@@ -417,11 +438,11 @@ export interface DistributionPolicy {
    */
   offerExpiresAfterSeconds?: number;
   /** Abstract base class for defining a distribution mode */
-  mode?: DistributionMode;
+  mode?: DistributionModeOutput;
 }
 
 /** Abstract base class for defining a distribution mode */
-export interface DistributionModeParent {
+export interface DistributionModeOutputParent {
   /** Governs the minimum desired number of active concurrent offers a job can have. */
   minConcurrentOffers?: number;
   /** Governs the maximum number of active concurrent offers a job can have. */
@@ -441,7 +462,7 @@ export interface DistributionModeParent {
 }
 
 /** Jobs are distributed to the worker with the strongest abilities available. */
-export interface BestWorkerMode extends DistributionModeParent {
+export interface BestWorkerModeOutput extends DistributionModeOutputParent {
   /**
    * A rule of one of the following types:
    *
@@ -457,12 +478,12 @@ export interface BestWorkerMode extends DistributionModeParent {
    * WebhookRule: A rule providing a binding to a webserver following
    * OAuth2.0 authentication protocol.
    */
-  scoringRule?: RouterRule;
+  scoringRule?: RouterRuleOutput;
   /**
    * Encapsulates all options that can be passed as parameters for scoring rule with
    * BestWorkerMode
    */
-  scoringRuleOptions?: ScoringRuleOptions;
+  scoringRuleOptions?: ScoringRuleOptionsOutput;
   /** The type discriminator describing a sub-type of Mode */
   kind: "best-worker";
 }
@@ -471,7 +492,7 @@ export interface BestWorkerMode extends DistributionModeParent {
  * Encapsulates all options that can be passed as parameters for scoring rule with
  * BestWorkerMode
  */
-export interface ScoringRuleOptions {
+export interface ScoringRuleOptionsOutput {
   /**
    * (Optional) Set batch size when AllowScoringBatchOfWorkers is set to true.
    * Defaults to 20 if not configured.
@@ -507,7 +528,7 @@ export interface ScoringRuleOptions {
 }
 
 /** Jobs are directed to the worker who has been idle longest. */
-export interface LongestIdleMode extends DistributionModeParent {
+export interface LongestIdleModeOutput extends DistributionModeOutputParent {
   /** The type discriminator describing a sub-type of Mode */
   kind: "longest-idle";
 }
@@ -516,36 +537,41 @@ export interface LongestIdleMode extends DistributionModeParent {
  * Jobs are distributed in order to workers, starting with the worker that is
  * after the last worker to receive a job.
  */
-export interface RoundRobinMode extends DistributionModeParent {
+export interface RoundRobinModeOutput extends DistributionModeOutputParent {
   /** The type discriminator describing a sub-type of Mode */
   kind: "round-robin";
 }
 
 /** A policy that defines actions to execute when exception are triggered. */
-export interface ExceptionPolicy {
+export interface ExceptionPolicyOutput {
+  /** Concurrency Token. */
+  readonly etag: string;
+  /** The Id of the exception policy */
+  readonly id: string;
   /** (Optional) The name of the exception policy. */
   name?: string;
   /** (Optional) A collection of exception rules on the exception policy. */
-  exceptionRules?: Array<ExceptionRule>;
+  exceptionRules?: Array<ExceptionRuleOutput>;
 }
 
 /** A rule that defines actions to execute upon a specific trigger. */
-export interface ExceptionRule {
+export interface ExceptionRuleOutput {
   /** Id of the exception rule. */
   id: string;
   /** The trigger for this exception rule */
-  trigger: ExceptionTrigger;
+  trigger: ExceptionTriggerOutput;
   /** A collection of actions to perform once the exception is triggered. */
-  actions: Array<ExceptionAction>;
+  actions: Array<ExceptionActionOutput>;
 }
 
 /** The trigger for this exception rule */
-export interface ExceptionTriggerParent {
+export interface ExceptionTriggerOutputParent {
   kind: string;
 }
 
 /** Trigger for an exception action on exceeding queue length */
-export interface QueueLengthExceptionTrigger extends ExceptionTriggerParent {
+export interface QueueLengthExceptionTriggerOutput
+  extends ExceptionTriggerOutputParent {
   /** Threshold of number of jobs ahead in the queue to for this trigger to fire. */
   threshold: number;
   /** The type discriminator describing a sub-type of ExceptionTrigger */
@@ -553,7 +579,8 @@ export interface QueueLengthExceptionTrigger extends ExceptionTriggerParent {
 }
 
 /** Trigger for an exception action on exceeding wait time */
-export interface WaitTimeExceptionTrigger extends ExceptionTriggerParent {
+export interface WaitTimeExceptionTriggerOutput
+  extends ExceptionTriggerOutputParent {
   /** Threshold for wait time for this trigger. */
   thresholdSeconds: number;
   /** The type discriminator describing a sub-type of ExceptionTrigger */
@@ -561,12 +588,15 @@ export interface WaitTimeExceptionTrigger extends ExceptionTriggerParent {
 }
 
 /** The action to take when the exception is triggered */
-export interface ExceptionActionParent {
+export interface ExceptionActionOutputParent {
+  /** Unique Id of the exception action */
+  readonly id?: string;
   kind: string;
 }
 
 /** An action that marks a job as cancelled */
-export interface CancelExceptionAction extends ExceptionActionParent {
+export interface CancelExceptionActionOutput
+  extends ExceptionActionOutputParent {
   /**
    * (Optional) A note that will be appended to the jobs' Notes collection with the
    * current timestamp.
@@ -585,19 +615,21 @@ export interface CancelExceptionAction extends ExceptionActionParent {
  * An action that manually reclassifies a job by providing the queue, priority and
  * worker selectors.
  */
-export interface ManualReclassifyExceptionAction extends ExceptionActionParent {
+export interface ManualReclassifyExceptionActionOutput
+  extends ExceptionActionOutputParent {
   /** Updated QueueId. */
   queueId?: string;
   /** Updated Priority. */
   priority?: number;
   /** Updated WorkerSelectors. */
-  workerSelectors?: Array<RouterWorkerSelector>;
+  workerSelectors?: Array<RouterWorkerSelectorOutput>;
   /** The type discriminator describing a sub-type of ExceptionAction */
   kind: "manual-reclassify";
 }
 
 /** An action that modifies labels on a job and then reclassifies it */
-export interface ReclassifyExceptionAction extends ExceptionActionParent {
+export interface ReclassifyExceptionActionOutput
+  extends ExceptionActionOutputParent {
   /**
    * (optional) The new classification policy that will determine queue, priority
    * and worker selectors.
@@ -607,13 +639,17 @@ export interface ReclassifyExceptionAction extends ExceptionActionParent {
    * (optional) Dictionary containing the labels to update (or add if not existing)
    * in key-value pairs
    */
-  labelsToUpsert?: Record<string, unknown>;
+  labelsToUpsert?: Record<string, any>;
   /** The type discriminator describing a sub-type of ExceptionAction */
   kind: "reclassify";
 }
 
 /** A queue that can contain jobs to be routed. */
-export interface RouterQueue {
+export interface RouterQueueOutput {
+  /** Concurrency Token. */
+  readonly etag: string;
+  /** The Id of this queue */
+  readonly id: string;
   /** The name of this queue. */
   name?: string;
   /**
@@ -625,7 +661,7 @@ export interface RouterQueue {
    * A set of key/value pairs that are identifying attributes used by the rules
    * engines to make decisions.
    */
-  labels?: Record<string, unknown>;
+  labels?: Record<string, any>;
   /**
    * (Optional) The ID of the exception policy that determines various job
    * escalation rules.
@@ -634,9 +670,21 @@ export interface RouterQueue {
 }
 
 /** A unit of work to be routed */
-export interface RouterJob {
+export interface RouterJobOutput {
+  /** Concurrency Token. */
+  readonly etag: string;
+  /** The id of the job. */
+  readonly id: string;
   /** Reference to an external parent context, eg. call ID. */
   channelReference?: string;
+  /**
+   * The status of the Job.
+   *
+   * Possible values: pendingClassification, queued, assigned, completed, closed, cancelled, classificationFailed, created, pendingSchedule, scheduled, scheduleFailed, waitingForActivation
+   */
+  readonly status?: string;
+  /** The time a job was queued in UTC. */
+  readonly enqueuedAt?: string;
   /** The channel identifier. eg. voice, chat, etc. */
   channelId?: string;
   /** The Id of the Classification policy used for classifying a job. */
@@ -651,16 +699,28 @@ export interface RouterJob {
    * A collection of manually specified label selectors, which a worker must satisfy
    * in order to process this job.
    */
-  requestedWorkerSelectors?: Array<RouterWorkerSelector>;
+  requestedWorkerSelectors?: Array<RouterWorkerSelectorOutput>;
+  /**
+   * A collection of label selectors attached by a classification policy, which a
+   * worker must satisfy in order to process this job.
+   */
+  readonly attachedWorkerSelectors?: Array<RouterWorkerSelectorOutput>;
   /**
    * A set of key/value pairs that are identifying attributes used by the rules
    * engines to make decisions.
    */
-  labels?: Record<string, unknown>;
+  labels?: Record<string, any>;
+  /**
+   * A collection of the assignments of the job.
+   * Key is AssignmentId.
+   */
+  readonly assignments?: Record<string, RouterJobAssignmentOutput>;
   /** A set of non-identifying attributes attached to this job */
-  tags?: Record<string, unknown>;
+  tags?: Record<string, any>;
   /** Notes attached to a job, sorted by timestamp */
-  notes?: Array<RouterJobNote>;
+  notes?: Array<RouterJobNoteOutput>;
+  /** If set, job will be scheduled to be enqueued at a given time */
+  readonly scheduledAt?: string;
   /**
    * The matching mode to be applied to this job.
    *
@@ -675,29 +735,29 @@ export interface RouterJob {
    * SuspendMode: Used when matching workers
    * to a job needs to be suspended.
    */
-  matchingMode?: JobMatchingMode;
+  matchingMode?: JobMatchingModeOutput;
 }
 
 /** Assignment details of a job to a worker */
-export interface RouterJobAssignment {
+export interface RouterJobAssignmentOutput {
   /** The Id of the job assignment. */
   assignmentId: string;
   /** The Id of the Worker assigned to the job. */
   workerId?: string;
   /** The assignment time of the job in UTC. */
-  assignedAt: Date | string;
+  assignedAt: string;
   /** The time the job was marked as completed after being assigned in UTC. */
-  completedAt?: Date | string;
+  completedAt?: string;
   /** The time the job was marked as closed after being completed in UTC. */
-  closedAt?: Date | string;
+  closedAt?: string;
 }
 
 /** A note attached to a job. */
-export interface RouterJobNote {
+export interface RouterJobNoteOutput {
   /** The message contained in the note. */
   message: string;
   /** The time at which the note was added in UTC. If not provided, will default to the current time. */
-  addedAt?: Date | string;
+  addedAt?: string;
 }
 
 /**
@@ -714,7 +774,7 @@ export interface RouterJobNote {
  * SuspendMode: Used when matching workers
  * to a job needs to be suspended.
  */
-export interface JobMatchingModeParent {
+export interface JobMatchingModeOutputParent {
   kind: string;
 }
 
@@ -724,102 +784,88 @@ export interface JobMatchingModeParent {
  * At the specified time, matching worker to a job will not start
  * automatically.
  */
-export interface ScheduleAndSuspendMode extends JobMatchingModeParent {
+export interface ScheduleAndSuspendModeOutput
+  extends JobMatchingModeOutputParent {
   /** Scheduled time. */
-  scheduleAt: Date | string;
+  scheduleAt: string;
   /** The type discriminator describing ScheduleAndSuspendMode */
   kind: "schedule-and-suspend";
 }
 
 /** Describes a matching mode where matching worker to a job is automatically started after job is queued successfully. */
-export interface QueueAndMatchMode extends JobMatchingModeParent {
+export interface QueueAndMatchModeOutput extends JobMatchingModeOutputParent {
   /** The type discriminator describing QueueAndMatchMode */
   kind: "queue-and-match";
 }
 
 /** Describes a matching mode where matching worker to a job is suspended. */
-export interface SuspendMode extends JobMatchingModeParent {
+export interface SuspendModeOutput extends JobMatchingModeOutputParent {
   /** The type discriminator describing SuspendMode */
   kind: "suspend";
 }
 
-/** Request payload for reclassifying jobs */
-export interface ReclassifyJobOptions extends Record<string, string> {}
-
-/** Request payload for deleting a job */
-export interface CancelJobOptions {
-  /**
-   * (Optional) A note that will be appended to the jobs' Notes collection with the
-   * current timestamp.
-   */
-  note?: string;
-  /**
-   * Indicates the outcome of the job, populate this field with your own custom
-   * values.
-   * If not provided, default value of "Cancelled" is set.
-   */
-  dispositionCode?: string;
+/** Position and estimated wait time for a job. */
+export interface RouterJobPositionDetailsOutput {
+  /** Id of the job these details are about. */
+  jobId: string;
+  /** Position of the job in question within that queue. */
+  position: number;
+  /** Id of the queue this job is enqueued in. */
+  queueId: string;
+  /** Length of the queue: total number of enqueued jobs. */
+  queueLength: number;
+  /** Estimated wait time of the job rounded up to the nearest minute */
+  estimatedWaitTimeMinutes: number;
 }
 
-/** Request payload for completing jobs */
-export interface CompleteJobOptions {
-  /** The assignment within the job to complete. */
+/** Response payload after a job has been successfully unassigned. */
+export interface UnassignJobResultOutput {
+  /** The Id of the job unassigned. */
+  jobId: string;
+  /** The number of times a job is unassigned. At a maximum 3. */
+  unassignmentCount: number;
+}
+
+/**
+ * Response containing Id's for the worker, job, and assignment from an accepted
+ * offer
+ */
+export interface AcceptJobOfferResultOutput {
+  /** The assignment Id that assigns a worker that has accepted an offer to a job. */
   assignmentId: string;
-  /**
-   * (Optional) A note that will be appended to the jobs' Notes collection with the
-   * current timestamp.
-   */
-  note?: string;
+  /** The Id of the job assigned. */
+  jobId: string;
+  /** The Id of the worker that has been assigned this job. */
+  workerId: string;
 }
 
-/** Request payload for closing jobs */
-export interface CloseJobOptions {
-  /** The assignment within which the job is to be closed. */
-  assignmentId: string;
+/** Statistics for the queue */
+export interface RouterQueueStatisticsOutput {
+  /** Id of the queue these details are about. */
+  queueId: string;
+  /** Length of the queue: total number of enqueued jobs. */
+  length: number;
   /**
-   * Indicates the outcome of the job, populate this field with your own custom
-   * values.
+   * The estimated wait time of this queue rounded up to the nearest minute, grouped
+   * by job priority
    */
-  dispositionCode?: string;
-  /**
-   * If not provided, worker capacity is released immediately along with a
-   * JobClosedEvent notification.
-   * If provided, worker capacity is released along
-   * with a JobClosedEvent notification at a future time in UTC.
-   */
-  closeAt?: Date | string;
-  /**
-   * (Optional) A note that will be appended to the jobs' Notes collection with the
-   * current timestamp.
-   */
-  note?: string;
-}
-
-/** Request payload for unassigning a job. */
-export interface UnassignJobOptions {
-  /**
-   * If SuspendMatching is true, then the job is not queued for re-matching with a
-   * worker.
-   */
-  suspendMatching?: boolean;
-}
-
-/** Request payload for declining offers */
-export interface DeclineJobOfferOptions {
-  /**
-   * If the RetryOfferAt is not provided, then this job will not be offered again to
-   * the worker who declined this job unless
-   * the worker is de-registered and
-   * re-registered.  If a RetryOfferAt time is provided, then the job will be
-   * re-matched to
-   * eligible workers at the retry time in UTC.  The worker that
-   * declined the job will also be eligible for the job at that time.
-   */
-  retryOfferAt?: Date | string;
+  estimatedWaitTimeMinutes?: Record<string, number>;
+  /** The wait time of the job that has been enqueued in this queue for the longest. */
+  longestJobWaitTimeMinutes?: number;
 }
 
 /** An entity for jobs to be routed to */
-export interface RouterWorker {
+export interface RouterWorkerOutput {
+  /** Concurrency Token. */
+  readonly etag: string;
+  /** Id of the worker. */
+  readonly id: string;
+  /**
+   * The current state of the worker.
+   *
+   * Possible values: active, draining, inactive
+   */
+  readonly state?: string;
   /** The queue(s) that this worker can receive work from. */
   queues?: string[];
   /** The total capacity score this worker has to manage multiple concurrent jobs. */
@@ -828,17 +874,26 @@ export interface RouterWorker {
    * A set of key/value pairs that are identifying attributes used by the rules
    * engines to make decisions.
    */
-  labels?: Record<string, unknown>;
+  labels?: Record<string, any>;
   /** A set of non-identifying attributes attached to this worker. */
-  tags?: Record<string, unknown>;
+  tags?: Record<string, any>;
   /** The channel(s) this worker can handle and their impact on the workers capacity. */
-  channels?: Array<RouterChannel>;
+  channels?: Array<RouterChannelOutput>;
+  /** A list of active offers issued to this worker. */
+  readonly offers?: Array<RouterJobOfferOutput>;
+  /** A list of assigned jobs attached to this worker. */
+  readonly assignedJobs?: Array<RouterWorkerAssignmentOutput>;
+  /**
+   * A value indicating the workers capacity. A value of '1' means all capacity is
+   * consumed. A value of '0' means no capacity is currently consumed.
+   */
+  readonly loadRatio?: number;
   /** A flag indicating this worker is open to receive offers or not. */
   availableForOffers?: boolean;
 }
 
 /** Represents the capacity a job in this channel will consume from a worker */
-export interface RouterChannel {
+export interface RouterChannelOutput {
   /** Id of the channel. */
   channelId: string;
   /**
@@ -851,7 +906,7 @@ export interface RouterChannel {
 }
 
 /** An offer of a job to a worker */
-export interface RouterJobOffer {
+export interface RouterJobOfferOutput {
   /** The Id of the offer. */
   offerId: string;
   /** The Id of the job. */
@@ -859,13 +914,13 @@ export interface RouterJobOffer {
   /** The capacity cost consumed by the job offer. */
   capacityCost: number;
   /** The time the offer was created in UTC. */
-  offeredAt?: Date | string;
+  offeredAt?: string;
   /** The time that the offer will expire in UTC. */
-  expiresAt?: Date | string;
+  expiresAt?: string;
 }
 
 /** The assignment for a worker to a job */
-export interface RouterWorkerAssignment {
+export interface RouterWorkerAssignmentOutput {
   /** The Id of the assignment. */
   assignmentId: string;
   /** The Id of the Job assigned. */
@@ -873,19 +928,19 @@ export interface RouterWorkerAssignment {
   /** The amount of capacity this assignment has consumed on the worker. */
   capacityCost: number;
   /** The assignment time of the job in UTC. */
-  assignedAt: Date | string;
+  assignedAt: string;
 }
 
 /**
  * An attachment of queue selectors to resolve a queue to a job from a
  * classification policy
  */
-export type QueueSelectorAttachment =
-  | ConditionalQueueSelectorAttachment
-  | PassThroughQueueSelectorAttachment
-  | RuleEngineQueueSelectorAttachment
-  | StaticQueueSelectorAttachment
-  | WeightedAllocationQueueSelectorAttachment;
+export type QueueSelectorAttachmentOutput =
+  | ConditionalQueueSelectorAttachmentOutput
+  | PassThroughQueueSelectorAttachmentOutput
+  | RuleEngineQueueSelectorAttachmentOutput
+  | StaticQueueSelectorAttachmentOutput
+  | WeightedAllocationQueueSelectorAttachmentOutput;
 /**
  * A rule of one of the following types:
  *
@@ -901,33 +956,33 @@ export type QueueSelectorAttachment =
  * WebhookRule: A rule providing a binding to a webserver following
  * OAuth2.0 authentication protocol.
  */
-export type RouterRule =
-  | DirectMapRouterRule
-  | ExpressionRouterRule
-  | FunctionRouterRule
-  | StaticRouterRule
-  | WebhookRouterRule;
+export type RouterRuleOutput =
+  | DirectMapRouterRuleOutput
+  | ExpressionRouterRuleOutput
+  | FunctionRouterRuleOutput
+  | StaticRouterRuleOutput
+  | WebhookRouterRuleOutput;
 /** An attachment which attaches worker selectors to a job */
-export type WorkerSelectorAttachment =
-  | ConditionalWorkerSelectorAttachment
-  | PassThroughWorkerSelectorAttachment
-  | RuleEngineWorkerSelectorAttachment
-  | StaticWorkerSelectorAttachment
-  | WeightedAllocationWorkerSelectorAttachment;
+export type WorkerSelectorAttachmentOutput =
+  | ConditionalWorkerSelectorAttachmentOutput
+  | PassThroughWorkerSelectorAttachmentOutput
+  | RuleEngineWorkerSelectorAttachmentOutput
+  | StaticWorkerSelectorAttachmentOutput
+  | WeightedAllocationWorkerSelectorAttachmentOutput;
 /** Abstract base class for defining a distribution mode */
-export type DistributionMode =
-  | BestWorkerMode
-  | LongestIdleMode
-  | RoundRobinMode;
+export type DistributionModeOutput =
+  | BestWorkerModeOutput
+  | LongestIdleModeOutput
+  | RoundRobinModeOutput;
 /** The trigger for this exception rule */
-export type ExceptionTrigger =
-  | QueueLengthExceptionTrigger
-  | WaitTimeExceptionTrigger;
+export type ExceptionTriggerOutput =
+  | QueueLengthExceptionTriggerOutput
+  | WaitTimeExceptionTriggerOutput;
 /** The action to take when the exception is triggered */
-export type ExceptionAction =
-  | CancelExceptionAction
-  | ManualReclassifyExceptionAction
-  | ReclassifyExceptionAction;
+export type ExceptionActionOutput =
+  | CancelExceptionActionOutput
+  | ManualReclassifyExceptionActionOutput
+  | ReclassifyExceptionActionOutput;
 /**
  * The matching mode to be applied to this job.
  *
@@ -942,7 +997,19 @@ export type ExceptionAction =
  * SuspendMode: Used when matching workers
  * to a job needs to be suspended.
  */
-export type JobMatchingMode =
-  | ScheduleAndSuspendMode
-  | QueueAndMatchMode
-  | SuspendMode;
+export type JobMatchingModeOutput =
+  | ScheduleAndSuspendModeOutput
+  | QueueAndMatchModeOutput
+  | SuspendModeOutput;
+/** A paged collection of classification policies. */
+export type PagedClassificationPolicyOutput = Paged<ClassificationPolicyOutput>;
+/** A paged collection of distribution policies. */
+export type PagedDistributionPolicyOutput = Paged<DistributionPolicyOutput>;
+/** A paged collection of exception policies. */
+export type PagedExceptionPolicyOutput = Paged<ExceptionPolicyOutput>;
+/** A paged collection of queues. */
+export type PagedRouterQueueOutput = Paged<RouterQueueOutput>;
+/** A paged collection of jobs. */
+export type PagedRouterJobOutput = Paged<RouterJobOutput>;
+/** A paged collection of workers. */
+export type PagedRouterWorkerOutput = Paged<RouterWorkerOutput>;
