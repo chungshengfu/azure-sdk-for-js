@@ -585,6 +585,59 @@ export const AutomaticRepairsPolicy: coreClient.CompositeMapper = {
   }
 };
 
+export const ResiliencyPolicy: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "ResiliencyPolicy",
+    modelProperties: {
+      resilientVMCreationPolicy: {
+        serializedName: "resilientVMCreationPolicy",
+        type: {
+          name: "Composite",
+          className: "ResilientVMCreationPolicy"
+        }
+      },
+      resilientVMDeletionPolicy: {
+        serializedName: "resilientVMDeletionPolicy",
+        type: {
+          name: "Composite",
+          className: "ResilientVMDeletionPolicy"
+        }
+      }
+    }
+  }
+};
+
+export const ResilientVMCreationPolicy: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "ResilientVMCreationPolicy",
+    modelProperties: {
+      enabled: {
+        serializedName: "enabled",
+        type: {
+          name: "Boolean"
+        }
+      }
+    }
+  }
+};
+
+export const ResilientVMDeletionPolicy: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "ResilientVMDeletionPolicy",
+    modelProperties: {
+      enabled: {
+        serializedName: "enabled",
+        type: {
+          name: "Boolean"
+        }
+      }
+    }
+  }
+};
+
 export const VirtualMachineScaleSetVMProfile: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -12803,6 +12856,13 @@ export const VirtualMachineScaleSet: coreClient.CompositeMapper = {
           className: "AutomaticRepairsPolicy"
         }
       },
+      resiliencyPolicy: {
+        serializedName: "properties.resiliencyPolicy",
+        type: {
+          name: "Composite",
+          className: "ResiliencyPolicy"
+        }
+      },
       virtualMachineProfile: {
         serializedName: "properties.virtualMachineProfile",
         type: {
@@ -14980,6 +15040,13 @@ export const VirtualMachineScaleSetUpdate: coreClient.CompositeMapper = {
         type: {
           name: "Composite",
           className: "AutomaticRepairsPolicy"
+        }
+      },
+      resiliencyPolicy: {
+        serializedName: "properties.resiliencyPolicy",
+        type: {
+          name: "Composite",
+          className: "ResiliencyPolicy"
         }
       },
       virtualMachineProfile: {

@@ -4566,6 +4566,22 @@ export interface RequestRateByIntervalInput extends LogAnalyticsInputBase {
 }
 
 // @public
+export interface ResiliencyPolicy {
+    resilientVMCreationPolicy?: ResilientVMCreationPolicy;
+    resilientVMDeletionPolicy?: ResilientVMDeletionPolicy;
+}
+
+// @public
+export interface ResilientVMCreationPolicy {
+    enabled?: boolean;
+}
+
+// @public
+export interface ResilientVMDeletionPolicy {
+    enabled?: boolean;
+}
+
+// @public
 export interface Resource {
     readonly id?: string;
     location: string;
@@ -6516,6 +6532,7 @@ export interface VirtualMachineScaleSet extends Resource {
     priorityMixPolicy?: PriorityMixPolicy;
     readonly provisioningState?: string;
     proximityPlacementGroup?: SubResource;
+    resiliencyPolicy?: ResiliencyPolicy;
     scaleInPolicy?: ScaleInPolicy;
     singlePlacementGroup?: boolean;
     sku?: Sku;
@@ -7136,6 +7153,7 @@ export interface VirtualMachineScaleSetUpdate extends UpdateResource {
     plan?: Plan;
     priorityMixPolicy?: PriorityMixPolicy;
     proximityPlacementGroup?: SubResource;
+    resiliencyPolicy?: ResiliencyPolicy;
     scaleInPolicy?: ScaleInPolicy;
     singlePlacementGroup?: boolean;
     sku?: Sku;
