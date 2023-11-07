@@ -710,6 +710,9 @@ dependencies:
   '@rush-temp/arm-workloads':
     specifier: file:./projects/arm-workloads.tgz
     version: file:projects/arm-workloads.tgz
+  '@rush-temp/arm-workloads-sapvirtualinstance':
+    specifier: file:./projects/arm-workloads-sapvirtualinstance.tgz
+    version: file:projects/arm-workloads-sapvirtualinstance.tgz
   '@rush-temp/arm-workspaces':
     specifier: file:./projects/arm-workspaces.tgz
     version: file:projects/arm-workspaces.tgz
@@ -4495,7 +4498,7 @@ packages:
     dependencies:
       semver: 7.5.4
       shelljs: 0.8.5
-      typescript: 5.4.0-dev.20231106
+      typescript: 5.4.0-dev.20231107
     dev: false
 
   /eastasianwidth@0.2.0:
@@ -9272,8 +9275,8 @@ packages:
     hasBin: true
     dev: false
 
-  /typescript@5.4.0-dev.20231106:
-    resolution: {integrity: sha512-Uxjjt7meOHOSXpQJkiObTPUXfQKqSkdcMQOV+ZAjo3U1w/D/1Qah5Pdg0x/jt/fIA6laCNWLogS+QiaT5HOohw==}
+  /typescript@5.4.0-dev.20231107:
+    resolution: {integrity: sha512-4bQlfsyFjzZMo1bSLEkFJEcvuQ64pgE0S/BpdWu16lYsQOfJZtntZIyWdED3h+e96IMtVgrC6sxzfPZhj4J/dw==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: false
@@ -15998,6 +16001,33 @@ packages:
       mkdirp: 1.0.4
       mocha: 10.2.0
       rimraf: 3.0.2
+      ts-node: 10.9.1(@types/node@18.18.8)(typescript@5.2.2)
+      tslib: 2.6.2
+      typescript: 5.2.2
+      uglify-js: 3.17.4
+    transitivePeerDependencies:
+      - '@swc/core'
+      - '@swc/wasm'
+      - supports-color
+    dev: false
+
+  file:projects/arm-workloads-sapvirtualinstance.tgz:
+    resolution: {integrity: sha512-ED9OvzefRPY88RLgE7Nxff+fI1woykJle/0jYf+egVWpL3dNGskv8TbxNZeat6R3+8BEdcDZ7y6rj4fFAPuIJw==, tarball: file:projects/arm-workloads-sapvirtualinstance.tgz}
+    name: '@rush-temp/arm-workloads-sapvirtualinstance'
+    version: 0.0.0
+    dependencies:
+      '@azure/identity': 3.3.2
+      '@microsoft/api-extractor': 7.38.2(@types/node@18.18.8)
+      '@types/chai': 4.3.9
+      '@types/mocha': 10.0.3
+      '@types/node': 18.18.8
+      chai: 4.3.10
+      cross-env: 7.0.3
+      dotenv: 16.3.1
+      esm: 3.2.25
+      mkdirp: 2.1.6
+      mocha: 10.2.0
+      rimraf: 5.0.5
       ts-node: 10.9.1(@types/node@18.18.8)(typescript@5.2.2)
       tslib: 2.6.2
       typescript: 5.2.2
