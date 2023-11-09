@@ -1,15 +1,31 @@
 # Release History
+    
+## 15.0.0 (2023-11-09)
+    
+**Features**
 
-## 14.0.1 (Unreleased)
+  - Added Interface DiagnosticData_2
+  - Added Enum KnownWorkflowState
 
-### Features Added
+**Breaking Changes**
 
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
+  - Removed operation group AppServiceCertificateOrders
+  - Removed operation group CertificateOrdersDiagnostics
+  - Removed operation group CertificateRegistrationProvider
+  - Removed operation group DomainRegistrationProvider
+  - Removed operation group Domains
+  - Removed operation group TopLevelDomains
+  - Class WebSiteManagementClient has a new signature
+  - Type of parameter dataset of interface DetectorResponse is changed from DiagnosticData[] to DiagnosticData_2[]
+  - Class WebSiteManagementClient no longer has parameter appServiceCertificateOrders
+  - Class WebSiteManagementClient no longer has parameter certificateOrdersDiagnostics
+  - Class WebSiteManagementClient no longer has parameter certificateRegistrationProvider
+  - Class WebSiteManagementClient no longer has parameter domainRegistrationProvider
+  - Class WebSiteManagementClient no longer has parameter domains
+  - Class WebSiteManagementClient no longer has parameter topLevelDomains
+  - Removed Enum KnownResourceNotRenewableReason
+    
+    
 ## 14.0.0 (2023-03-10)
     
 **Features**
@@ -747,4 +763,4 @@ To understand the detail of the change, please refer to [Changelog](https://aka.
 
 To migrate the existing applications to the latest version, please refer to [Migration Guide](https://aka.ms/js-track2-migration-guide).
 
-To learn more, please refer to our documentation [Quick Start](https://aka.ms/azsdk/js/mgmt/quickstart ).
+To learn more, please refer to our documentation [Quick Start](https://aka.ms/js-track2-quickstart).

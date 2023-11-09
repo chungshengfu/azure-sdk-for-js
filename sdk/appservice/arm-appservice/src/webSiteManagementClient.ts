@@ -17,12 +17,6 @@ import * as coreAuth from "@azure/core-auth";
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "./pagingHelper";
 import {
-  AppServiceCertificateOrdersImpl,
-  CertificateOrdersDiagnosticsImpl,
-  CertificateRegistrationProviderImpl,
-  DomainsImpl,
-  TopLevelDomainsImpl,
-  DomainRegistrationProviderImpl,
   AppServiceEnvironmentsImpl,
   AppServicePlansImpl,
   CertificatesImpl,
@@ -48,12 +42,6 @@ import {
   WorkflowVersionsImpl
 } from "./operations";
 import {
-  AppServiceCertificateOrders,
-  CertificateOrdersDiagnostics,
-  CertificateRegistrationProvider,
-  Domains,
-  TopLevelDomains,
-  DomainRegistrationProvider,
   AppServiceEnvironments,
   AppServicePlans,
   Certificates,
@@ -143,7 +131,7 @@ import {
 /// <reference lib="esnext.asynciterable" />
 export class WebSiteManagementClient extends coreClient.ServiceClient {
   $host: string;
-  subscriptionId: string;
+  subscriptionId?: string;
   apiVersion: string;
 
   /**
@@ -157,12 +145,26 @@ export class WebSiteManagementClient extends coreClient.ServiceClient {
     credentials: coreAuth.TokenCredential,
     subscriptionId: string,
     options?: WebSiteManagementClientOptionalParams
+  );
+  constructor(
+    credentials: coreAuth.TokenCredential,
+    options?: WebSiteManagementClientOptionalParams
+  );
+  constructor(
+    credentials: coreAuth.TokenCredential,
+    subscriptionIdOrOptions?: WebSiteManagementClientOptionalParams | string,
+    options?: WebSiteManagementClientOptionalParams
   ) {
     if (credentials === undefined) {
       throw new Error("'credentials' cannot be null");
     }
-    if (subscriptionId === undefined) {
-      throw new Error("'subscriptionId' cannot be null");
+
+    let subscriptionId: string | undefined;
+
+    if (typeof subscriptionIdOrOptions === "string") {
+      subscriptionId = subscriptionIdOrOptions;
+    } else if (typeof subscriptionIdOrOptions === "object") {
+      options = subscriptionIdOrOptions;
     }
 
     // Initializing default values for options
@@ -174,7 +176,7 @@ export class WebSiteManagementClient extends coreClient.ServiceClient {
       credential: credentials
     };
 
-    const packageDetails = `azsdk-js-arm-appservice/14.0.1`;
+    const packageDetails = `azsdk-js-arm-appservice/15.0.0`;
     const userAgentPrefix =
       options.userAgentOptions && options.userAgentOptions.userAgentPrefix
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
@@ -227,19 +229,7 @@ export class WebSiteManagementClient extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
-    this.apiVersion = options.apiVersion || "2022-09-01";
-    this.appServiceCertificateOrders = new AppServiceCertificateOrdersImpl(
-      this
-    );
-    this.certificateOrdersDiagnostics = new CertificateOrdersDiagnosticsImpl(
-      this
-    );
-    this.certificateRegistrationProvider = new CertificateRegistrationProviderImpl(
-      this
-    );
-    this.domains = new DomainsImpl(this);
-    this.topLevelDomains = new TopLevelDomainsImpl(this);
-    this.domainRegistrationProvider = new DomainRegistrationProviderImpl(this);
+    this.apiVersion = options.apiVersion || "2023-01-01";
     this.appServiceEnvironments = new AppServiceEnvironmentsImpl(this);
     this.appServicePlans = new AppServicePlansImpl(this);
     this.certificates = new CertificatesImpl(this);
@@ -989,12 +979,6 @@ export class WebSiteManagementClient extends coreClient.ServiceClient {
     );
   }
 
-  appServiceCertificateOrders: AppServiceCertificateOrders;
-  certificateOrdersDiagnostics: CertificateOrdersDiagnostics;
-  certificateRegistrationProvider: CertificateRegistrationProvider;
-  domains: Domains;
-  topLevelDomains: TopLevelDomains;
-  domainRegistrationProvider: DomainRegistrationProvider;
   appServiceEnvironments: AppServiceEnvironments;
   appServicePlans: AppServicePlans;
   certificates: Certificates;
@@ -1272,7 +1256,7 @@ const verifyHostingEnvironmentVnetOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultErrorResponse
     }
   },
-  requestBody: Parameters.parameters1,
+  requestBody: Parameters.parameters,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host, Parameters.subscriptionId],
   headerParameters: [Parameters.accept, Parameters.contentType],
