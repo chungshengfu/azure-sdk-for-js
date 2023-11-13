@@ -423,7 +423,7 @@ export interface RoutingCosmosDBSqlApiProperties {
 export interface RouteProperties {
   /** The name of the route. The name can only include alphanumeric characters, periods, underscores, hyphens, has a maximum length of 64 characters, and must be unique. */
   name: string;
-  /** The source that the routing rule is to be applied to, such as DeviceMessages. */
+  /** The source to which the routing rule is to be applied to. For example, DeviceMessages */
   source: RoutingSource;
   /** The condition that is evaluated to apply the routing rule. If no condition is provided, it evaluates to true by default. For grammar, see: https://docs.microsoft.com/azure/iot-hub/iot-hub-devguide-query-language */
   condition?: string;
@@ -885,7 +885,7 @@ export interface Name {
 
 /** Input for testing all routes */
 export interface TestAllRoutesInput {
-  /** Routing source */
+  /** The source to which the routing rule is to be applied to. For example, DeviceMessages */
   routingSource?: RoutingSource;
   /** Routing message */
   message?: RoutingMessage;
@@ -1374,10 +1374,10 @@ export type RoutingStorageContainerPropertiesEncoding = string;
 
 /** Known values of {@link RoutingSource} that the service accepts. */
 export enum KnownRoutingSource {
-  /** Invalid */
-  Invalid = "Invalid",
   /** DeviceMessages */
   DeviceMessages = "DeviceMessages",
+  /** Invalid */
+  Invalid = "Invalid",
   /** TwinChangeEvents */
   TwinChangeEvents = "TwinChangeEvents",
   /** DeviceLifecycleEvents */
@@ -1393,8 +1393,8 @@ export enum KnownRoutingSource {
  * {@link KnownRoutingSource} can be used interchangeably with RoutingSource,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Invalid** \
  * **DeviceMessages** \
+ * **Invalid** \
  * **TwinChangeEvents** \
  * **DeviceLifecycleEvents** \
  * **DeviceJobLifecycleEvents** \
