@@ -19,6 +19,13 @@ export const CertificateRequest: coreClient.CompositeMapper = {
           name: "Composite",
           className: "RawCertificateData"
         }
+      },
+      certificateCreateOptions: {
+        serializedName: "certificateCreateOptions",
+        type: {
+          name: "Composite",
+          className: "CertificateRequestCertificateCreateOptions"
+        }
       }
     }
   }
@@ -39,6 +46,21 @@ export const RawCertificateData: coreClient.CompositeMapper = {
         serializedName: "certificate",
         type: {
           name: "ByteArray"
+        }
+      }
+    }
+  }
+};
+
+export const CertificateRequestCertificateCreateOptions: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CertificateRequestCertificateCreateOptions",
+    modelProperties: {
+      validityInHours: {
+        serializedName: "validityInHours",
+        type: {
+          name: "Number"
         }
       }
     }

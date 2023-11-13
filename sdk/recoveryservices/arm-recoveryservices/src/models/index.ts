@@ -17,6 +17,7 @@ export type ResourceCertificateDetailsUnion =
 export interface CertificateRequest {
   /** Raw certificate data. */
   properties?: RawCertificateData;
+  certificateCreateOptions?: CertificateRequestCertificateCreateOptions;
 }
 
 /** Raw certificate data. */
@@ -25,6 +26,10 @@ export interface RawCertificateData {
   authType?: AuthType;
   /** The base64 encoded certificate raw data string */
   certificate?: Uint8Array;
+}
+
+export interface CertificateRequestCertificateCreateOptions {
+  validityInHours?: number;
 }
 
 /** Certificate corresponding to a vault that can be used by clients to register themselves with the vault. */

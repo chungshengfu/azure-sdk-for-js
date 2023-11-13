@@ -44,7 +44,15 @@ export interface CapabilitiesResponseProperties {
 
 // @public
 export interface CertificateRequest {
+    // (undocumented)
+    certificateCreateOptions?: CertificateRequestCertificateCreateOptions;
     properties?: RawCertificateData;
+}
+
+// @public (undocumented)
+export interface CertificateRequestCertificateCreateOptions {
+    // (undocumented)
+    validityInHours?: number;
 }
 
 // @public
