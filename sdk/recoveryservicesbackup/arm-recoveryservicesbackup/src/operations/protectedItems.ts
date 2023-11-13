@@ -12,6 +12,12 @@ import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { RecoveryServicesBackupClient } from "../recoveryServicesBackupClient";
 import {
+  SimplePollerLike,
+  OperationState,
+  createHttpPoller
+} from "@azure/core-lro";
+import { createLroSpec } from "../lroImpl";
+import {
   ProtectedItemsGetOptionalParams,
   ProtectedItemsGetResponse,
   ProtectedItemResource,
@@ -78,7 +84,7 @@ export class ProtectedItemsImpl implements ProtectedItems {
    * @param parameters resource backed up item
    * @param options The options parameters.
    */
-  createOrUpdate(
+  async beginCreateOrUpdate(
     vaultName: string,
     resourceGroupName: string,
     fabricName: string,
@@ -86,9 +92,54 @@ export class ProtectedItemsImpl implements ProtectedItems {
     protectedItemName: string,
     parameters: ProtectedItemResource,
     options?: ProtectedItemsCreateOrUpdateOptionalParams
-  ): Promise<ProtectedItemsCreateOrUpdateResponse> {
-    return this.client.sendOperationRequest(
-      {
+  ): Promise<
+    SimplePollerLike<
+      OperationState<ProtectedItemsCreateOrUpdateResponse>,
+      ProtectedItemsCreateOrUpdateResponse
+    >
+  > {
+    const directSendOperation = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ): Promise<ProtectedItemsCreateOrUpdateResponse> => {
+      return this.client.sendOperationRequest(args, spec);
+    };
+    const sendOperationFn = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ) => {
+      let currentRawResponse:
+        | coreClient.FullOperationResponse
+        | undefined = undefined;
+      const providedCallback = args.options?.onResponse;
+      const callback: coreClient.RawResponseCallback = (
+        rawResponse: coreClient.FullOperationResponse,
+        flatResponse: unknown
+      ) => {
+        currentRawResponse = rawResponse;
+        providedCallback?.(rawResponse, flatResponse);
+      };
+      const updatedArgs = {
+        ...args,
+        options: {
+          ...args.options,
+          onResponse: callback
+        }
+      };
+      const flatResponse = await directSendOperation(updatedArgs, spec);
+      return {
+        flatResponse,
+        rawResponse: {
+          statusCode: currentRawResponse!.status,
+          body: currentRawResponse!.parsedBody,
+          headers: currentRawResponse!.headers.toJSON()
+        }
+      };
+    };
+
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: {
         vaultName,
         resourceGroupName,
         fabricName,
@@ -97,8 +148,52 @@ export class ProtectedItemsImpl implements ProtectedItems {
         parameters,
         options
       },
-      createOrUpdateOperationSpec
+      spec: createOrUpdateOperationSpec
+    });
+    const poller = await createHttpPoller<
+      ProtectedItemsCreateOrUpdateResponse,
+      OperationState<ProtectedItemsCreateOrUpdateResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "azure-async-operation"
+    });
+    await poller.poll();
+    return poller;
+  }
+
+  /**
+   * Enables backup of an item or to modifies the backup policy information of an already backed up item.
+   * This is an
+   * asynchronous operation. To know the status of the operation, call the GetItemOperationResult API.
+   * @param vaultName The name of the recovery services vault.
+   * @param resourceGroupName The name of the resource group where the recovery services vault is
+   *                          present.
+   * @param fabricName Fabric name associated with the backup item.
+   * @param containerName Container name associated with the backup item.
+   * @param protectedItemName Item name to be backed up.
+   * @param parameters resource backed up item
+   * @param options The options parameters.
+   */
+  async beginCreateOrUpdateAndWait(
+    vaultName: string,
+    resourceGroupName: string,
+    fabricName: string,
+    containerName: string,
+    protectedItemName: string,
+    parameters: ProtectedItemResource,
+    options?: ProtectedItemsCreateOrUpdateOptionalParams
+  ): Promise<ProtectedItemsCreateOrUpdateResponse> {
+    const poller = await this.beginCreateOrUpdate(
+      vaultName,
+      resourceGroupName,
+      fabricName,
+      containerName,
+      protectedItemName,
+      parameters,
+      options
     );
+    return poller.pollUntilDone();
   }
 
   /**
@@ -113,16 +208,56 @@ export class ProtectedItemsImpl implements ProtectedItems {
    * @param protectedItemName Backed up item to be deleted.
    * @param options The options parameters.
    */
-  delete(
+  async beginDelete(
     vaultName: string,
     resourceGroupName: string,
     fabricName: string,
     containerName: string,
     protectedItemName: string,
     options?: ProtectedItemsDeleteOptionalParams
-  ): Promise<void> {
-    return this.client.sendOperationRequest(
-      {
+  ): Promise<SimplePollerLike<OperationState<void>, void>> {
+    const directSendOperation = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ): Promise<void> => {
+      return this.client.sendOperationRequest(args, spec);
+    };
+    const sendOperationFn = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ) => {
+      let currentRawResponse:
+        | coreClient.FullOperationResponse
+        | undefined = undefined;
+      const providedCallback = args.options?.onResponse;
+      const callback: coreClient.RawResponseCallback = (
+        rawResponse: coreClient.FullOperationResponse,
+        flatResponse: unknown
+      ) => {
+        currentRawResponse = rawResponse;
+        providedCallback?.(rawResponse, flatResponse);
+      };
+      const updatedArgs = {
+        ...args,
+        options: {
+          ...args.options,
+          onResponse: callback
+        }
+      };
+      const flatResponse = await directSendOperation(updatedArgs, spec);
+      return {
+        flatResponse,
+        rawResponse: {
+          statusCode: currentRawResponse!.status,
+          body: currentRawResponse!.parsedBody,
+          headers: currentRawResponse!.headers.toJSON()
+        }
+      };
+    };
+
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: {
         vaultName,
         resourceGroupName,
         fabricName,
@@ -130,8 +265,46 @@ export class ProtectedItemsImpl implements ProtectedItems {
         protectedItemName,
         options
       },
-      deleteOperationSpec
+      spec: deleteOperationSpec
+    });
+    const poller = await createHttpPoller<void, OperationState<void>>(lro, {
+      restoreFrom: options?.resumeFrom,
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "azure-async-operation"
+    });
+    await poller.poll();
+    return poller;
+  }
+
+  /**
+   * Used to disable backup of an item within a container. This is an asynchronous operation. To know the
+   * status of the
+   * request, call the GetItemOperationResult API.
+   * @param vaultName The name of the recovery services vault.
+   * @param resourceGroupName The name of the resource group where the recovery services vault is
+   *                          present.
+   * @param fabricName Fabric name associated with the backed up item.
+   * @param containerName Container name associated with the backed up item.
+   * @param protectedItemName Backed up item to be deleted.
+   * @param options The options parameters.
+   */
+  async beginDeleteAndWait(
+    vaultName: string,
+    resourceGroupName: string,
+    fabricName: string,
+    containerName: string,
+    protectedItemName: string,
+    options?: ProtectedItemsDeleteOptionalParams
+  ): Promise<void> {
+    const poller = await this.beginDelete(
+      vaultName,
+      resourceGroupName,
+      fabricName,
+      containerName,
+      protectedItemName,
+      options
     );
+    return poller.pollUntilDone();
   }
 }
 // Operation Specifications
@@ -170,7 +343,15 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
     200: {
       bodyMapper: Mappers.ProtectedItemResource
     },
-    202: {},
+    201: {
+      bodyMapper: Mappers.ProtectedItemResource
+    },
+    202: {
+      bodyMapper: Mappers.ProtectedItemResource
+    },
+    204: {
+      bodyMapper: Mappers.ProtectedItemResource
+    },
     default: {
       bodyMapper: Mappers.CloudError
     }
@@ -196,6 +377,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   httpMethod: "DELETE",
   responses: {
     200: {},
+    201: {},
     202: {},
     204: {},
     default: {

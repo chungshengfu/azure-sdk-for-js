@@ -6,6 +6,7 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
+import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   ProtectionContainersGetOptionalParams,
   ProtectionContainersGetResponse,
@@ -48,7 +49,33 @@ export interface ProtectionContainers {
    * @param parameters Request body for operation
    * @param options The options parameters.
    */
-  register(
+  beginRegister(
+    vaultName: string,
+    resourceGroupName: string,
+    fabricName: string,
+    containerName: string,
+    parameters: ProtectionContainerResource,
+    options?: ProtectionContainersRegisterOptionalParams
+  ): Promise<
+    SimplePollerLike<
+      OperationState<ProtectionContainersRegisterResponse>,
+      ProtectionContainersRegisterResponse
+    >
+  >;
+  /**
+   * Registers the container with Recovery Services vault.
+   * This is an asynchronous operation. To track the operation status, use location header to call get
+   * latest status of
+   * the operation.
+   * @param vaultName The name of the recovery services vault.
+   * @param resourceGroupName The name of the resource group where the recovery services vault is
+   *                          present.
+   * @param fabricName Fabric name associated with the container.
+   * @param containerName Name of the container to be registered.
+   * @param parameters Request body for operation
+   * @param options The options parameters.
+   */
+  beginRegisterAndWait(
     vaultName: string,
     resourceGroupName: string,
     fabricName: string,
@@ -69,7 +96,27 @@ export interface ProtectionContainers {
    *                      Vault.
    * @param options The options parameters.
    */
-  unregister(
+  beginUnregister(
+    vaultName: string,
+    resourceGroupName: string,
+    fabricName: string,
+    containerName: string,
+    options?: ProtectionContainersUnregisterOptionalParams
+  ): Promise<SimplePollerLike<OperationState<void>, void>>;
+  /**
+   * Unregisters the given container from your Recovery Services Vault. This is an asynchronous
+   * operation. To determine
+   * whether the backend service has finished processing the request, call Get Container Operation Result
+   * API.
+   * @param vaultName The name of the recovery services vault.
+   * @param resourceGroupName The name of the resource group where the recovery services vault is
+   *                          present.
+   * @param fabricName Name of the fabric where the container belongs.
+   * @param containerName Name of the container which needs to be unregistered from the Recovery Services
+   *                      Vault.
+   * @param options The options parameters.
+   */
+  beginUnregisterAndWait(
     vaultName: string,
     resourceGroupName: string,
     fabricName: string,

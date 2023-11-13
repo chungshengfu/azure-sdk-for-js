@@ -6,6 +6,7 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
+import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   ProtectedItemsGetOptionalParams,
   ProtectedItemsGetResponse,
@@ -50,7 +51,34 @@ export interface ProtectedItems {
    * @param parameters resource backed up item
    * @param options The options parameters.
    */
-  createOrUpdate(
+  beginCreateOrUpdate(
+    vaultName: string,
+    resourceGroupName: string,
+    fabricName: string,
+    containerName: string,
+    protectedItemName: string,
+    parameters: ProtectedItemResource,
+    options?: ProtectedItemsCreateOrUpdateOptionalParams
+  ): Promise<
+    SimplePollerLike<
+      OperationState<ProtectedItemsCreateOrUpdateResponse>,
+      ProtectedItemsCreateOrUpdateResponse
+    >
+  >;
+  /**
+   * Enables backup of an item or to modifies the backup policy information of an already backed up item.
+   * This is an
+   * asynchronous operation. To know the status of the operation, call the GetItemOperationResult API.
+   * @param vaultName The name of the recovery services vault.
+   * @param resourceGroupName The name of the resource group where the recovery services vault is
+   *                          present.
+   * @param fabricName Fabric name associated with the backup item.
+   * @param containerName Container name associated with the backup item.
+   * @param protectedItemName Item name to be backed up.
+   * @param parameters resource backed up item
+   * @param options The options parameters.
+   */
+  beginCreateOrUpdateAndWait(
     vaultName: string,
     resourceGroupName: string,
     fabricName: string,
@@ -71,7 +99,27 @@ export interface ProtectedItems {
    * @param protectedItemName Backed up item to be deleted.
    * @param options The options parameters.
    */
-  delete(
+  beginDelete(
+    vaultName: string,
+    resourceGroupName: string,
+    fabricName: string,
+    containerName: string,
+    protectedItemName: string,
+    options?: ProtectedItemsDeleteOptionalParams
+  ): Promise<SimplePollerLike<OperationState<void>, void>>;
+  /**
+   * Used to disable backup of an item within a container. This is an asynchronous operation. To know the
+   * status of the
+   * request, call the GetItemOperationResult API.
+   * @param vaultName The name of the recovery services vault.
+   * @param resourceGroupName The name of the resource group where the recovery services vault is
+   *                          present.
+   * @param fabricName Fabric name associated with the backed up item.
+   * @param containerName Container name associated with the backed up item.
+   * @param protectedItemName Backed up item to be deleted.
+   * @param options The options parameters.
+   */
+  beginDeleteAndWait(
     vaultName: string,
     resourceGroupName: string,
     fabricName: string,
