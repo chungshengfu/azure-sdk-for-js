@@ -686,16 +686,16 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.parameters59,
+  requestBody: Parameters.parameters15,
   queryParameters: [Parameters.apiVersion, Parameters.migrate],
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
-    Parameters.subscriptionId,
     Parameters.networkWatcherName,
+    Parameters.subscriptionId,
     Parameters.connectionMonitorName
   ],
-  headerParameters: [Parameters.accept, Parameters.contentType],
+  headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: "json",
   serializer
 };
@@ -715,8 +715,8 @@ const getOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
-    Parameters.subscriptionId,
     Parameters.networkWatcherName,
+    Parameters.subscriptionId,
     Parameters.connectionMonitorName
   ],
   headerParameters: [Parameters.accept],
@@ -739,8 +739,8 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
-    Parameters.subscriptionId,
     Parameters.networkWatcherName,
+    Parameters.subscriptionId,
     Parameters.connectionMonitorName
   ],
   headerParameters: [Parameters.accept],
@@ -763,11 +763,11 @@ const updateTagsOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
-    Parameters.subscriptionId,
     Parameters.networkWatcherName,
+    Parameters.subscriptionId,
     Parameters.connectionMonitorName
   ],
-  headerParameters: [Parameters.accept, Parameters.contentType],
+  headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: "json",
   serializer
 };
@@ -788,8 +788,8 @@ const stopOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
-    Parameters.subscriptionId,
     Parameters.networkWatcherName,
+    Parameters.subscriptionId,
     Parameters.connectionMonitorName
   ],
   headerParameters: [Parameters.accept],
@@ -812,8 +812,8 @@ const startOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
-    Parameters.subscriptionId,
     Parameters.networkWatcherName,
+    Parameters.subscriptionId,
     Parameters.connectionMonitorName
   ],
   headerParameters: [Parameters.accept],
@@ -844,8 +844,8 @@ const queryOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
-    Parameters.subscriptionId,
     Parameters.networkWatcherName,
+    Parameters.subscriptionId,
     Parameters.connectionMonitorName
   ],
   headerParameters: [Parameters.accept],
@@ -867,8 +867,8 @@ const listOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
-    Parameters.subscriptionId,
-    Parameters.networkWatcherName
+    Parameters.networkWatcherName,
+    Parameters.subscriptionId
   ],
   headerParameters: [Parameters.accept],
   serializer

@@ -1,15 +1,449 @@
 # Release History
+    
+## 33.0.0-beta.1 (2023-11-17)
+    
+**Features**
 
-## 32.2.1 (Unreleased)
+  - Added Interface ConnectionMonitorEndpointLocationDetails
+  - Added Interface ProxyResource
+  - Interface ConnectionMonitorEndpoint has a new optional parameter locationDetails
+  - Interface ConnectionMonitorEndpoint has a new optional parameter subscriptionId
+  - Interface NetworkManagementClientOptionalParams has a new optional parameter apiVersion
+  - Enum KnownEndpointType has a new value AzureArcNetwork
 
-### Features Added
+**Breaking Changes**
 
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
+  - Removed operation group AdminRuleCollections
+  - Removed operation group AdminRules
+  - Removed operation group ApplicationGatewayPrivateEndpointConnections
+  - Removed operation group ApplicationGatewayPrivateLinkResources
+  - Removed operation group ApplicationGateways
+  - Removed operation group ApplicationGatewayWafDynamicManifests
+  - Removed operation group ApplicationGatewayWafDynamicManifestsDefault
+  - Removed operation group ApplicationSecurityGroups
+  - Removed operation group AvailableDelegations
+  - Removed operation group AvailableEndpointServices
+  - Removed operation group AvailablePrivateEndpointTypes
+  - Removed operation group AvailableResourceGroupDelegations
+  - Removed operation group AvailableServiceAliases
+  - Removed operation group AzureFirewallFqdnTags
+  - Removed operation group AzureFirewalls
+  - Removed operation group BastionHosts
+  - Removed operation group BgpServiceCommunities
+  - Removed operation group ConfigurationPolicyGroups
+  - Removed operation group ConnectivityConfigurations
+  - Removed operation group CustomIPPrefixes
+  - Removed operation group DdosCustomPolicies
+  - Removed operation group DdosProtectionPlans
+  - Removed operation group DefaultSecurityRules
+  - Removed operation group DscpConfigurationOperations
+  - Removed operation group ExpressRouteCircuitAuthorizations
+  - Removed operation group ExpressRouteCircuitConnections
+  - Removed operation group ExpressRouteCircuitPeerings
+  - Removed operation group ExpressRouteCircuits
+  - Removed operation group ExpressRouteConnections
+  - Removed operation group ExpressRouteCrossConnectionPeerings
+  - Removed operation group ExpressRouteCrossConnections
+  - Removed operation group ExpressRouteGateways
+  - Removed operation group ExpressRouteLinks
+  - Removed operation group ExpressRoutePortAuthorizations
+  - Removed operation group ExpressRoutePorts
+  - Removed operation group ExpressRoutePortsLocations
+  - Removed operation group ExpressRouteProviderPortsLocation
+  - Removed operation group ExpressRouteServiceProviders
+  - Removed operation group FirewallPolicies
+  - Removed operation group FirewallPolicyIdpsSignatures
+  - Removed operation group FirewallPolicyIdpsSignaturesFilterValues
+  - Removed operation group FirewallPolicyIdpsSignaturesOverrides
+  - Removed operation group FirewallPolicyRuleCollectionGroups
+  - Removed operation group HubRouteTables
+  - Removed operation group HubVirtualNetworkConnections
+  - Removed operation group InboundNatRules
+  - Removed operation group InboundSecurityRuleOperations
+  - Removed operation group IpAllocations
+  - Removed operation group IpGroups
+  - Removed operation group LoadBalancerBackendAddressPools
+  - Removed operation group LoadBalancerFrontendIPConfigurations
+  - Removed operation group LoadBalancerLoadBalancingRules
+  - Removed operation group LoadBalancerNetworkInterfaces
+  - Removed operation group LoadBalancerOutboundRules
+  - Removed operation group LoadBalancerProbes
+  - Removed operation group LoadBalancers
+  - Removed operation group LocalNetworkGateways
+  - Removed operation group ManagementGroupNetworkManagerConnections
+  - Removed operation group NatGateways
+  - Removed operation group NatRules
+  - Removed operation group NetworkGroups
+  - Removed operation group NetworkInterfaceIPConfigurations
+  - Removed operation group NetworkInterfaceLoadBalancers
+  - Removed operation group NetworkInterfaces
+  - Removed operation group NetworkInterfaceTapConfigurations
+  - Removed operation group NetworkManagerCommits
+  - Removed operation group NetworkManagerDeploymentStatusOperations
+  - Removed operation group NetworkManagers
+  - Removed operation group NetworkProfiles
+  - Removed operation group NetworkSecurityGroups
+  - Removed operation group NetworkVirtualApplianceConnections
+  - Removed operation group NetworkVirtualAppliances
+  - Removed operation group Operations
+  - Removed operation group P2SVpnGateways
+  - Removed operation group PeerExpressRouteCircuitConnections
+  - Removed operation group PrivateDnsZoneGroups
+  - Removed operation group PrivateEndpoints
+  - Removed operation group PrivateLinkServices
+  - Removed operation group PublicIPAddresses
+  - Removed operation group PublicIPPrefixes
+  - Removed operation group ResourceNavigationLinks
+  - Removed operation group RouteFilterRules
+  - Removed operation group RouteFilters
+  - Removed operation group RouteMaps
+  - Removed operation group Routes
+  - Removed operation group RouteTables
+  - Removed operation group RoutingIntentOperations
+  - Removed operation group ScopeConnections
+  - Removed operation group SecurityAdminConfigurations
+  - Removed operation group SecurityPartnerProviders
+  - Removed operation group SecurityRules
+  - Removed operation group ServiceAssociationLinks
+  - Removed operation group ServiceEndpointPolicies
+  - Removed operation group ServiceEndpointPolicyDefinitions
+  - Removed operation group ServiceTagInformationOperations
+  - Removed operation group ServiceTags
+  - Removed operation group StaticMembers
+  - Removed operation group Subnets
+  - Removed operation group SubscriptionNetworkManagerConnections
+  - Removed operation group Usages
+  - Removed operation group VipSwap
+  - Removed operation group VirtualApplianceSites
+  - Removed operation group VirtualApplianceSkus
+  - Removed operation group VirtualHubBgpConnection
+  - Removed operation group VirtualHubBgpConnections
+  - Removed operation group VirtualHubIpConfiguration
+  - Removed operation group VirtualHubRouteTableV2S
+  - Removed operation group VirtualHubs
+  - Removed operation group VirtualNetworkGatewayConnections
+  - Removed operation group VirtualNetworkGatewayNatRules
+  - Removed operation group VirtualNetworkGateways
+  - Removed operation group VirtualNetworkPeerings
+  - Removed operation group VirtualNetworks
+  - Removed operation group VirtualNetworkTaps
+  - Removed operation group VirtualRouterPeerings
+  - Removed operation group VirtualRouters
+  - Removed operation group VirtualWans
+  - Removed operation group VpnConnections
+  - Removed operation group VpnGateways
+  - Removed operation group VpnLinkConnections
+  - Removed operation group VpnServerConfigurations
+  - Removed operation group VpnServerConfigurationsAssociatedWithVirtualWan
+  - Removed operation group VpnSiteLinkConnections
+  - Removed operation group VpnSiteLinks
+  - Removed operation group VpnSites
+  - Removed operation group VpnSitesConfiguration
+  - Removed operation group WebApplicationFirewallPolicies
+  - Removed operation group WebCategories
+  - Class NetworkManagementClient has a new signature
+  - Class NetworkManagementClient no longer has parameter adminRuleCollections
+  - Class NetworkManagementClient no longer has parameter adminRules
+  - Class NetworkManagementClient no longer has parameter applicationGatewayPrivateEndpointConnections
+  - Class NetworkManagementClient no longer has parameter applicationGatewayPrivateLinkResources
+  - Class NetworkManagementClient no longer has parameter applicationGateways
+  - Class NetworkManagementClient no longer has parameter applicationGatewayWafDynamicManifests
+  - Class NetworkManagementClient no longer has parameter applicationGatewayWafDynamicManifestsDefault
+  - Class NetworkManagementClient no longer has parameter applicationSecurityGroups
+  - Class NetworkManagementClient no longer has parameter availableDelegations
+  - Class NetworkManagementClient no longer has parameter availableEndpointServices
+  - Class NetworkManagementClient no longer has parameter availablePrivateEndpointTypes
+  - Class NetworkManagementClient no longer has parameter availableResourceGroupDelegations
+  - Class NetworkManagementClient no longer has parameter availableServiceAliases
+  - Class NetworkManagementClient no longer has parameter azureFirewallFqdnTags
+  - Class NetworkManagementClient no longer has parameter azureFirewalls
+  - Class NetworkManagementClient no longer has parameter bastionHosts
+  - Class NetworkManagementClient no longer has parameter bgpServiceCommunities
+  - Class NetworkManagementClient no longer has parameter configurationPolicyGroups
+  - Class NetworkManagementClient no longer has parameter connectivityConfigurations
+  - Class NetworkManagementClient no longer has parameter customIPPrefixes
+  - Class NetworkManagementClient no longer has parameter ddosCustomPolicies
+  - Class NetworkManagementClient no longer has parameter ddosProtectionPlans
+  - Class NetworkManagementClient no longer has parameter defaultSecurityRules
+  - Class NetworkManagementClient no longer has parameter dscpConfigurationOperations
+  - Class NetworkManagementClient no longer has parameter expressRouteCircuitAuthorizations
+  - Class NetworkManagementClient no longer has parameter expressRouteCircuitConnections
+  - Class NetworkManagementClient no longer has parameter expressRouteCircuitPeerings
+  - Class NetworkManagementClient no longer has parameter expressRouteCircuits
+  - Class NetworkManagementClient no longer has parameter expressRouteConnections
+  - Class NetworkManagementClient no longer has parameter expressRouteCrossConnectionPeerings
+  - Class NetworkManagementClient no longer has parameter expressRouteCrossConnections
+  - Class NetworkManagementClient no longer has parameter expressRouteGateways
+  - Class NetworkManagementClient no longer has parameter expressRouteLinks
+  - Class NetworkManagementClient no longer has parameter expressRoutePortAuthorizations
+  - Class NetworkManagementClient no longer has parameter expressRoutePorts
+  - Class NetworkManagementClient no longer has parameter expressRoutePortsLocations
+  - Class NetworkManagementClient no longer has parameter expressRouteProviderPortsLocation
+  - Class NetworkManagementClient no longer has parameter expressRouteServiceProviders
+  - Class NetworkManagementClient no longer has parameter firewallPolicies
+  - Class NetworkManagementClient no longer has parameter firewallPolicyIdpsSignatures
+  - Class NetworkManagementClient no longer has parameter firewallPolicyIdpsSignaturesFilterValues
+  - Class NetworkManagementClient no longer has parameter firewallPolicyIdpsSignaturesOverrides
+  - Class NetworkManagementClient no longer has parameter firewallPolicyRuleCollectionGroups
+  - Class NetworkManagementClient no longer has parameter hubRouteTables
+  - Class NetworkManagementClient no longer has parameter hubVirtualNetworkConnections
+  - Class NetworkManagementClient no longer has parameter inboundNatRules
+  - Class NetworkManagementClient no longer has parameter inboundSecurityRuleOperations
+  - Class NetworkManagementClient no longer has parameter ipAllocations
+  - Class NetworkManagementClient no longer has parameter ipGroups
+  - Class NetworkManagementClient no longer has parameter loadBalancerBackendAddressPools
+  - Class NetworkManagementClient no longer has parameter loadBalancerFrontendIPConfigurations
+  - Class NetworkManagementClient no longer has parameter loadBalancerLoadBalancingRules
+  - Class NetworkManagementClient no longer has parameter loadBalancerNetworkInterfaces
+  - Class NetworkManagementClient no longer has parameter loadBalancerOutboundRules
+  - Class NetworkManagementClient no longer has parameter loadBalancerProbes
+  - Class NetworkManagementClient no longer has parameter loadBalancers
+  - Class NetworkManagementClient no longer has parameter localNetworkGateways
+  - Class NetworkManagementClient no longer has parameter managementGroupNetworkManagerConnections
+  - Class NetworkManagementClient no longer has parameter natGateways
+  - Class NetworkManagementClient no longer has parameter natRules
+  - Class NetworkManagementClient no longer has parameter networkGroups
+  - Class NetworkManagementClient no longer has parameter networkInterfaceIPConfigurations
+  - Class NetworkManagementClient no longer has parameter networkInterfaceLoadBalancers
+  - Class NetworkManagementClient no longer has parameter networkInterfaces
+  - Class NetworkManagementClient no longer has parameter networkInterfaceTapConfigurations
+  - Class NetworkManagementClient no longer has parameter networkManagerCommits
+  - Class NetworkManagementClient no longer has parameter networkManagerDeploymentStatusOperations
+  - Class NetworkManagementClient no longer has parameter networkManagers
+  - Class NetworkManagementClient no longer has parameter networkProfiles
+  - Class NetworkManagementClient no longer has parameter networkSecurityGroups
+  - Class NetworkManagementClient no longer has parameter networkVirtualApplianceConnections
+  - Class NetworkManagementClient no longer has parameter networkVirtualAppliances
+  - Class NetworkManagementClient no longer has parameter operations
+  - Class NetworkManagementClient no longer has parameter p2SVpnGateways
+  - Class NetworkManagementClient no longer has parameter peerExpressRouteCircuitConnections
+  - Class NetworkManagementClient no longer has parameter privateDnsZoneGroups
+  - Class NetworkManagementClient no longer has parameter privateEndpoints
+  - Class NetworkManagementClient no longer has parameter privateLinkServices
+  - Class NetworkManagementClient no longer has parameter publicIPAddresses
+  - Class NetworkManagementClient no longer has parameter publicIPPrefixes
+  - Class NetworkManagementClient no longer has parameter resourceNavigationLinks
+  - Class NetworkManagementClient no longer has parameter routeFilterRules
+  - Class NetworkManagementClient no longer has parameter routeFilters
+  - Class NetworkManagementClient no longer has parameter routeMaps
+  - Class NetworkManagementClient no longer has parameter routes
+  - Class NetworkManagementClient no longer has parameter routeTables
+  - Class NetworkManagementClient no longer has parameter routingIntentOperations
+  - Class NetworkManagementClient no longer has parameter scopeConnections
+  - Class NetworkManagementClient no longer has parameter securityAdminConfigurations
+  - Class NetworkManagementClient no longer has parameter securityPartnerProviders
+  - Class NetworkManagementClient no longer has parameter securityRules
+  - Class NetworkManagementClient no longer has parameter serviceAssociationLinks
+  - Class NetworkManagementClient no longer has parameter serviceEndpointPolicies
+  - Class NetworkManagementClient no longer has parameter serviceEndpointPolicyDefinitions
+  - Class NetworkManagementClient no longer has parameter serviceTagInformationOperations
+  - Class NetworkManagementClient no longer has parameter serviceTags
+  - Class NetworkManagementClient no longer has parameter staticMembers
+  - Class NetworkManagementClient no longer has parameter subnets
+  - Class NetworkManagementClient no longer has parameter subscriptionNetworkManagerConnections
+  - Class NetworkManagementClient no longer has parameter usages
+  - Class NetworkManagementClient no longer has parameter vipSwap
+  - Class NetworkManagementClient no longer has parameter virtualApplianceSites
+  - Class NetworkManagementClient no longer has parameter virtualApplianceSkus
+  - Class NetworkManagementClient no longer has parameter virtualHubBgpConnection
+  - Class NetworkManagementClient no longer has parameter virtualHubBgpConnections
+  - Class NetworkManagementClient no longer has parameter virtualHubIpConfiguration
+  - Class NetworkManagementClient no longer has parameter virtualHubRouteTableV2S
+  - Class NetworkManagementClient no longer has parameter virtualHubs
+  - Class NetworkManagementClient no longer has parameter virtualNetworkGatewayConnections
+  - Class NetworkManagementClient no longer has parameter virtualNetworkGatewayNatRules
+  - Class NetworkManagementClient no longer has parameter virtualNetworkGateways
+  - Class NetworkManagementClient no longer has parameter virtualNetworkPeerings
+  - Class NetworkManagementClient no longer has parameter virtualNetworks
+  - Class NetworkManagementClient no longer has parameter virtualNetworkTaps
+  - Class NetworkManagementClient no longer has parameter virtualRouterPeerings
+  - Class NetworkManagementClient no longer has parameter virtualRouters
+  - Class NetworkManagementClient no longer has parameter virtualWans
+  - Class NetworkManagementClient no longer has parameter vpnConnections
+  - Class NetworkManagementClient no longer has parameter vpnGateways
+  - Class NetworkManagementClient no longer has parameter vpnLinkConnections
+  - Class NetworkManagementClient no longer has parameter vpnServerConfigurations
+  - Class NetworkManagementClient no longer has parameter vpnServerConfigurationsAssociatedWithVirtualWan
+  - Class NetworkManagementClient no longer has parameter vpnSiteLinkConnections
+  - Class NetworkManagementClient no longer has parameter vpnSiteLinks
+  - Class NetworkManagementClient no longer has parameter vpnSites
+  - Class NetworkManagementClient no longer has parameter vpnSitesConfiguration
+  - Class NetworkManagementClient no longer has parameter webApplicationFirewallPolicies
+  - Class NetworkManagementClient no longer has parameter webCategories
+  - Parameter subscriptionId of class NetworkManagementClient is now required
+  - Removed Enum KnownActionType
+  - Removed Enum KnownAddressPrefixType
+  - Removed Enum KnownAdminRuleKind
+  - Removed Enum KnownAdminState
+  - Removed Enum KnownApplicationGatewayBackendHealthServerHealth
+  - Removed Enum KnownApplicationGatewayClientRevocationOptions
+  - Removed Enum KnownApplicationGatewayCookieBasedAffinity
+  - Removed Enum KnownApplicationGatewayCustomErrorStatusCode
+  - Removed Enum KnownApplicationGatewayFirewallMode
+  - Removed Enum KnownApplicationGatewayFirewallRateLimitDuration
+  - Removed Enum KnownApplicationGatewayFirewallUserSessionVariable
+  - Removed Enum KnownApplicationGatewayLoadDistributionAlgorithm
+  - Removed Enum KnownApplicationGatewayOperationalState
+  - Removed Enum KnownApplicationGatewayProtocol
+  - Removed Enum KnownApplicationGatewayRedirectType
+  - Removed Enum KnownApplicationGatewayRequestRoutingRuleType
+  - Removed Enum KnownApplicationGatewayRuleSetStatusOptions
+  - Removed Enum KnownApplicationGatewaySkuName
+  - Removed Enum KnownApplicationGatewaySslCipherSuite
+  - Removed Enum KnownApplicationGatewaySslPolicyName
+  - Removed Enum KnownApplicationGatewaySslPolicyType
+  - Removed Enum KnownApplicationGatewaySslProtocol
+  - Removed Enum KnownApplicationGatewayTier
+  - Removed Enum KnownApplicationGatewayTierTypes
+  - Removed Enum KnownApplicationGatewayWafRuleActionTypes
+  - Removed Enum KnownApplicationGatewayWafRuleStateTypes
+  - Removed Enum KnownAuthorizationUseStatus
+  - Removed Enum KnownAutoLearnPrivateRangesMode
+  - Removed Enum KnownAzureFirewallApplicationRuleProtocolType
+  - Removed Enum KnownAzureFirewallNatRCActionType
+  - Removed Enum KnownAzureFirewallNetworkRuleProtocol
+  - Removed Enum KnownAzureFirewallPacketCaptureFlagsType
+  - Removed Enum KnownAzureFirewallRCActionType
+  - Removed Enum KnownAzureFirewallSkuName
+  - Removed Enum KnownAzureFirewallSkuTier
+  - Removed Enum KnownAzureFirewallThreatIntelMode
+  - Removed Enum KnownBastionConnectProtocol
+  - Removed Enum KnownBastionHostSkuName
+  - Removed Enum KnownBgpPeerState
+  - Removed Enum KnownCircuitConnectionStatus
+  - Removed Enum KnownCommissionedState
+  - Removed Enum KnownConfigurationType
+  - Removed Enum KnownConnectivityTopology
+  - Removed Enum KnownCustomIpPrefixType
+  - Removed Enum KnownDdosSettingsProtectionMode
+  - Removed Enum KnownDeleteExistingPeering
+  - Removed Enum KnownDeleteOptions
+  - Removed Enum KnownDeploymentStatus
+  - Removed Enum KnownDhGroup
+  - Removed Enum KnownEffectiveAdminRuleKind
+  - Removed Enum KnownEffectiveRouteSource
+  - Removed Enum KnownEffectiveRouteState
+  - Removed Enum KnownExpressRouteCircuitPeeringAdvertisedPublicPrefixState
+  - Removed Enum KnownExpressRouteCircuitPeeringState
+  - Removed Enum KnownExpressRouteCircuitSkuFamily
+  - Removed Enum KnownExpressRouteCircuitSkuTier
+  - Removed Enum KnownExpressRouteLinkAdminState
+  - Removed Enum KnownExpressRouteLinkConnectorType
+  - Removed Enum KnownExpressRouteLinkMacSecCipher
+  - Removed Enum KnownExpressRouteLinkMacSecSciState
+  - Removed Enum KnownExpressRoutePeeringState
+  - Removed Enum KnownExpressRoutePeeringType
+  - Removed Enum KnownExpressRoutePortAuthorizationUseStatus
+  - Removed Enum KnownExpressRoutePortsBillingType
+  - Removed Enum KnownExpressRoutePortsEncapsulation
+  - Removed Enum KnownFirewallPolicyFilterRuleCollectionActionType
+  - Removed Enum KnownFirewallPolicyIdpsQuerySortOrder
+  - Removed Enum KnownFirewallPolicyIntrusionDetectionProtocol
+  - Removed Enum KnownFirewallPolicyIntrusionDetectionStateType
+  - Removed Enum KnownFirewallPolicyNatRuleCollectionActionType
+  - Removed Enum KnownFirewallPolicyRuleApplicationProtocolType
+  - Removed Enum KnownFirewallPolicyRuleCollectionType
+  - Removed Enum KnownFirewallPolicyRuleNetworkProtocol
+  - Removed Enum KnownFirewallPolicyRuleType
+  - Removed Enum KnownFirewallPolicySkuTier
+  - Removed Enum KnownGatewayLoadBalancerTunnelInterfaceType
+  - Removed Enum KnownGatewayLoadBalancerTunnelProtocol
+  - Removed Enum KnownGeo
+  - Removed Enum KnownGroupConnectivity
+  - Removed Enum KnownHubBgpConnectionStatus
+  - Removed Enum KnownHubRoutingPreference
+  - Removed Enum KnownHubVirtualNetworkConnectionStatus
+  - Removed Enum KnownIkeEncryption
+  - Removed Enum KnownIkeIntegrity
+  - Removed Enum KnownInboundSecurityRulesProtocol
+  - Removed Enum KnownIpAllocationType
+  - Removed Enum KnownIpsecEncryption
+  - Removed Enum KnownIpsecIntegrity
+  - Removed Enum KnownIsGlobal
+  - Removed Enum KnownIsWorkloadProtected
+  - Removed Enum KnownLoadBalancerBackendAddressAdminState
+  - Removed Enum KnownLoadBalancerOutboundRuleProtocol
+  - Removed Enum KnownLoadBalancerSkuName
+  - Removed Enum KnownLoadBalancerSkuTier
+  - Removed Enum KnownLoadDistribution
+  - Removed Enum KnownManagedRuleEnabledState
+  - Removed Enum KnownNatGatewaySkuName
+  - Removed Enum KnownNetworkIntentPolicyBasedService
+  - Removed Enum KnownNetworkInterfaceAuxiliaryMode
+  - Removed Enum KnownNetworkInterfaceAuxiliarySku
+  - Removed Enum KnownNetworkInterfaceMigrationPhase
+  - Removed Enum KnownNetworkInterfaceNicType
+  - Removed Enum KnownNextStep
+  - Removed Enum KnownOfficeTrafficCategory
+  - Removed Enum KnownOwaspCrsExclusionEntryMatchVariable
+  - Removed Enum KnownOwaspCrsExclusionEntrySelectorMatchOperator
+  - Removed Enum KnownPfsGroup
+  - Removed Enum KnownPreferredRoutingGateway
+  - Removed Enum KnownProbeProtocol
+  - Removed Enum KnownProcessorArchitecture
+  - Removed Enum KnownProtocolType
+  - Removed Enum KnownPublicIPAddressMigrationPhase
+  - Removed Enum KnownPublicIPAddressSkuName
+  - Removed Enum KnownPublicIPAddressSkuTier
+  - Removed Enum KnownPublicIPPrefixSkuName
+  - Removed Enum KnownPublicIPPrefixSkuTier
+  - Removed Enum KnownRouteFilterRuleType
+  - Removed Enum KnownRouteMapActionType
+  - Removed Enum KnownRouteMapMatchCondition
+  - Removed Enum KnownRouteNextHopType
+  - Removed Enum KnownRoutingState
+  - Removed Enum KnownScopeConnectionState
+  - Removed Enum KnownScrubbingRuleEntryMatchOperator
+  - Removed Enum KnownScrubbingRuleEntryMatchVariable
+  - Removed Enum KnownScrubbingRuleEntryState
+  - Removed Enum KnownSecurityConfigurationRuleAccess
+  - Removed Enum KnownSecurityConfigurationRuleDirection
+  - Removed Enum KnownSecurityConfigurationRuleProtocol
+  - Removed Enum KnownSecurityPartnerProviderConnectionStatus
+  - Removed Enum KnownSecurityProviderName
+  - Removed Enum KnownServiceProviderProvisioningState
+  - Removed Enum KnownSyncMode
+  - Removed Enum KnownSyncRemoteAddressSpace
+  - Removed Enum KnownTransportProtocol
+  - Removed Enum KnownTunnelConnectionStatus
+  - Removed Enum KnownUsageUnit
+  - Removed Enum KnownUseHubGateway
+  - Removed Enum KnownVirtualNetworkEncryptionEnforcement
+  - Removed Enum KnownVirtualNetworkGatewayConnectionMode
+  - Removed Enum KnownVirtualNetworkGatewayConnectionProtocol
+  - Removed Enum KnownVirtualNetworkGatewayConnectionStatus
+  - Removed Enum KnownVirtualNetworkGatewayConnectionType
+  - Removed Enum KnownVirtualNetworkGatewaySkuName
+  - Removed Enum KnownVirtualNetworkGatewaySkuTier
+  - Removed Enum KnownVirtualNetworkGatewayType
+  - Removed Enum KnownVirtualNetworkPeeringLevel
+  - Removed Enum KnownVirtualNetworkPeeringState
+  - Removed Enum KnownVirtualNetworkPrivateEndpointNetworkPolicies
+  - Removed Enum KnownVirtualNetworkPrivateLinkServiceNetworkPolicies
+  - Removed Enum KnownVirtualWanSecurityProviderType
+  - Removed Enum KnownVnetLocalRouteOverrideCriteria
+  - Removed Enum KnownVpnAuthenticationType
+  - Removed Enum KnownVpnClientProtocol
+  - Removed Enum KnownVpnConnectionStatus
+  - Removed Enum KnownVpnGatewayGeneration
+  - Removed Enum KnownVpnGatewayTunnelingProtocol
+  - Removed Enum KnownVpnLinkConnectionMode
+  - Removed Enum KnownVpnNatRuleMode
+  - Removed Enum KnownVpnNatRuleType
+  - Removed Enum KnownVpnPolicyMemberAttributeType
+  - Removed Enum KnownVpnType
+  - Removed Enum KnownWebApplicationFirewallAction
+  - Removed Enum KnownWebApplicationFirewallEnabledState
+  - Removed Enum KnownWebApplicationFirewallMatchVariable
+  - Removed Enum KnownWebApplicationFirewallMode
+  - Removed Enum KnownWebApplicationFirewallOperator
+  - Removed Enum KnownWebApplicationFirewallPolicyResourceState
+  - Removed Enum KnownWebApplicationFirewallRuleType
+  - Removed Enum KnownWebApplicationFirewallScrubbingState
+  - Removed Enum KnownWebApplicationFirewallState
+  - Removed Enum KnownWebApplicationFirewallTransform
+    
+    
 ## 32.2.0 (2023-09-07)
     
 **Features**
@@ -901,4 +1335,4 @@ To understand the detail of the change, please refer to [Changelog](https://aka.
 
 To migrate the existing applications to the latest version, please refer to [Migration Guide](https://aka.ms/js-track2-migration-guide).
 
-To learn more, please refer to our documentation [Quick Start](https://aka.ms/azsdk/js/mgmt/quickstart ).
+To learn more, please refer to our documentation [Quick Start](https://aka.ms/js-track2-quickstart).

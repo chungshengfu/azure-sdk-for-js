@@ -429,16 +429,16 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.parameters60,
+  requestBody: Parameters.parameters16,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
-    Parameters.subscriptionId,
     Parameters.networkWatcherName,
+    Parameters.subscriptionId,
     Parameters.flowLogName
   ],
-  headerParameters: [Parameters.accept, Parameters.contentType],
+  headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: "json",
   serializer
 };
@@ -459,11 +459,11 @@ const updateTagsOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
-    Parameters.subscriptionId,
     Parameters.networkWatcherName,
+    Parameters.subscriptionId,
     Parameters.flowLogName
   ],
-  headerParameters: [Parameters.accept, Parameters.contentType],
+  headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: "json",
   serializer
 };
@@ -483,8 +483,8 @@ const getOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
-    Parameters.subscriptionId,
     Parameters.networkWatcherName,
+    Parameters.subscriptionId,
     Parameters.flowLogName
   ],
   headerParameters: [Parameters.accept],
@@ -507,8 +507,8 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
-    Parameters.subscriptionId,
     Parameters.networkWatcherName,
+    Parameters.subscriptionId,
     Parameters.flowLogName
   ],
   headerParameters: [Parameters.accept],
@@ -530,8 +530,8 @@ const listOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
-    Parameters.subscriptionId,
-    Parameters.networkWatcherName
+    Parameters.networkWatcherName,
+    Parameters.subscriptionId
   ],
   headerParameters: [Parameters.accept],
   serializer
@@ -550,9 +550,9 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
+    Parameters.networkWatcherName,
     Parameters.subscriptionId,
-    Parameters.nextLink,
-    Parameters.networkWatcherName
+    Parameters.nextLink
   ],
   headerParameters: [Parameters.accept],
   serializer
