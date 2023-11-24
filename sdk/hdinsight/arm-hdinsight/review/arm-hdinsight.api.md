@@ -310,7 +310,7 @@ export interface ClusterDefinition {
         [propertyName: string]: string;
     };
     configurations?: Record<string, unknown>;
-    kind?: string;
+    kind?: ClusterKind;
 }
 
 // @public
@@ -357,6 +357,9 @@ export interface ClusterIdentity {
         [propertyName: string]: UserAssignedIdentity;
     };
 }
+
+// @public
+export type ClusterKind = string;
 
 // @public
 export interface ClusterListPersistedScriptActionsResult {
@@ -840,6 +843,15 @@ export enum KnownAsyncOperationState {
 }
 
 // @public
+export enum KnownClusterKind {
+    Hadoop = "HADOOP",
+    Hbase = "HBASE",
+    Interactivehive = "INTERACTIVEHIVE",
+    Kafka = "KAFKA",
+    Spark = "SPARK"
+}
+
+// @public
 export enum KnownCreatedByType {
     Application = "Application",
     Key = "Key",
@@ -891,6 +903,12 @@ export enum KnownJsonWebKeyEncryptionAlgorithm {
 export enum KnownOSType {
     Linux = "Linux",
     Windows = "Windows"
+}
+
+// @public
+export enum KnownOutboundDependenciesManagedType {
+    External = "External",
+    Managed = "Managed"
 }
 
 // @public
@@ -1058,6 +1076,7 @@ export interface NameAvailabilityCheckResult {
 
 // @public
 export interface NetworkProperties {
+    outboundDependenciesManagedType?: OutboundDependenciesManagedType;
     privateLink?: PrivateLink;
     resourceProviderConnection?: ResourceProviderConnection;
 }
@@ -1114,6 +1133,9 @@ export interface OsProfile {
 
 // @public
 export type OSType = string;
+
+// @public
+export type OutboundDependenciesManagedType = string;
 
 // @public
 export interface PrivateEndpoint {

@@ -424,7 +424,7 @@ export interface ClusterDefinition {
   /** The link to the blueprint. */
   blueprint?: string;
   /** The type of cluster. */
-  kind?: string;
+  kind?: ClusterKind;
   /** The versions of different services in the cluster. */
   componentVersion?: { [propertyName: string]: string };
   /** The cluster configurations. */
@@ -526,6 +526,8 @@ export interface EncryptionInTransitProperties {
 
 /** The network properties. */
 export interface NetworkProperties {
+  /** A value to describe how the outbound dependencies of a HDInsight cluster are managed. 'Managed' means that the outbound dependencies are managed by the HDInsight service. 'External' means that the outbound dependencies are managed by a customer specific solution. */
+  outboundDependenciesManagedType?: OutboundDependenciesManagedType;
   /** The direction for the resource provider connection. */
   resourceProviderConnection?: ResourceProviderConnection;
   /** Indicates whether or not private link is enabled. */
@@ -1577,6 +1579,33 @@ export enum KnownTier {
  */
 export type Tier = string;
 
+/** Known values of {@link ClusterKind} that the service accepts. */
+export enum KnownClusterKind {
+  /** Hadoop */
+  Hadoop = "HADOOP",
+  /** Hbase */
+  Hbase = "HBASE",
+  /** Kafka */
+  Kafka = "KAFKA",
+  /** Interactivehive */
+  Interactivehive = "INTERACTIVEHIVE",
+  /** Spark */
+  Spark = "SPARK"
+}
+
+/**
+ * Defines values for ClusterKind. \
+ * {@link KnownClusterKind} can be used interchangeably with ClusterKind,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **HADOOP** \
+ * **HBASE** \
+ * **KAFKA** \
+ * **INTERACTIVEHIVE** \
+ * **SPARK**
+ */
+export type ClusterKind = string;
+
 /** Known values of {@link DirectoryType} that the service accepts. */
 export enum KnownDirectoryType {
   /** ActiveDirectory */
@@ -1612,6 +1641,24 @@ export enum KnownJsonWebKeyEncryptionAlgorithm {
  * **RSA1_5**
  */
 export type JsonWebKeyEncryptionAlgorithm = string;
+
+/** Known values of {@link OutboundDependenciesManagedType} that the service accepts. */
+export enum KnownOutboundDependenciesManagedType {
+  /** Managed */
+  Managed = "Managed",
+  /** External */
+  External = "External"
+}
+
+/**
+ * Defines values for OutboundDependenciesManagedType. \
+ * {@link KnownOutboundDependenciesManagedType} can be used interchangeably with OutboundDependenciesManagedType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Managed** \
+ * **External**
+ */
+export type OutboundDependenciesManagedType = string;
 
 /** Known values of {@link ResourceProviderConnection} that the service accepts. */
 export enum KnownResourceProviderConnection {

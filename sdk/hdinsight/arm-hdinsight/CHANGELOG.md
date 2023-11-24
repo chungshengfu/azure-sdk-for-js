@@ -1,10 +1,19 @@
 # Release History
     
-## 1.3.0-beta.1 (2023-07-06)
+## 2.0.0-beta.1 (2023-11-24)
     
 **Features**
 
+  - Added Type Alias ClusterKind
+  - Added Type Alias OutboundDependenciesManagedType
+  - Interface NetworkProperties has a new optional parameter outboundDependenciesManagedType
   - Interface StorageAccount has a new optional parameter enableSecureChannel
+  - Added Enum KnownClusterKind
+  - Added Enum KnownOutboundDependenciesManagedType
+
+**Breaking Changes**
+
+  - Type of parameter kind of interface ClusterDefinition is changed from string to ClusterKind
     
 ## 1.2.1 (2023-01-10)
 
@@ -37,4 +46,4 @@
 
 ## 1.1.0 (2021-12-29)
 
-The package of @azure/arm-hdinsight is using our next generation design principles. To learn more, please refer to our documentation [Quick Start](https://aka.ms/azsdk/js/mgmt/quickstart ).
+The package of @azure/arm-hdinsight is using our next generation design principles. To learn more, please refer to our documentation [Quick Start](https://aka.ms/js-track2-quickstart).
