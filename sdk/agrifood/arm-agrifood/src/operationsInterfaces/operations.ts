@@ -13,7 +13,7 @@ import { Operation, OperationsListOptionalParams } from "../models";
 /** Interface representing a Operations. */
 export interface Operations {
   /**
-   * Lists the available operations of Microsoft.AgFoodPlatform resource provider.
+   * List the operations for the provider
    * @param options The options parameters.
    */
   list(

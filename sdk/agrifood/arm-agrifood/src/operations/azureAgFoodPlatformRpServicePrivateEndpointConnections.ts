@@ -8,31 +8,38 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { Extensions } from "../operationsInterfaces";
+import { AzureAgFoodPlatformRpServicePrivateEndpointConnections } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { AgriFoodMgmtClient } from "../agriFoodMgmtClient";
 import {
-  Extension,
-  ExtensionsListByDataManagerForAgricultureNextOptionalParams,
-  ExtensionsListByDataManagerForAgricultureOptionalParams,
-  ExtensionsListByDataManagerForAgricultureResponse,
-  ExtensionsGetOptionalParams,
-  ExtensionsGetResponse,
-  ExtensionsCreateOrUpdateOptionalParams,
-  ExtensionsCreateOrUpdateResponse,
-  ExtensionsDeleteOptionalParams,
-  ExtensionsListByDataManagerForAgricultureNextResponse
+  SimplePollerLike,
+  OperationState,
+  createHttpPoller
+} from "@azure/core-lro";
+import { createLroSpec } from "../lroImpl";
+import {
+  AzureAgFoodPlatformRPServicePrivateEndpointConnection,
+  AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureNextOptionalParams,
+  AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureOptionalParams,
+  AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureResponse,
+  AzureAgFoodPlatformRpServicePrivateEndpointConnectionsGetOptionalParams,
+  AzureAgFoodPlatformRpServicePrivateEndpointConnectionsGetResponse,
+  AzureAgFoodPlatformRpServicePrivateEndpointConnectionsCreateOrUpdateOptionalParams,
+  AzureAgFoodPlatformRpServicePrivateEndpointConnectionsCreateOrUpdateResponse,
+  AzureAgFoodPlatformRpServicePrivateEndpointConnectionsDeleteOptionalParams,
+  AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing Extensions operations. */
-export class ExtensionsImpl implements Extensions {
+/** Class containing AzureAgFoodPlatformRpServicePrivateEndpointConnections operations. */
+export class AzureAgFoodPlatformRpServicePrivateEndpointConnectionsImpl
+  implements AzureAgFoodPlatformRpServicePrivateEndpointConnections {
   private readonly client: AgriFoodMgmtClient;
 
   /**
-   * Initialize a new instance of the class Extensions class.
+   * Initialize a new instance of the class AzureAgFoodPlatformRpServicePrivateEndpointConnections class.
    * @param client Reference to the service client
    */
   constructor(client: AgriFoodMgmtClient) {
@@ -40,7 +47,7 @@ export class ExtensionsImpl implements Extensions {
   }
 
   /**
-   * Get installed extensions details.
+   * Get list of Private endpoint connections.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param dataManagerForAgricultureResourceName DataManagerForAgriculture resource name.
    * @param options The options parameters.
@@ -48,8 +55,10 @@ export class ExtensionsImpl implements Extensions {
   public listByDataManagerForAgriculture(
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
-    options?: ExtensionsListByDataManagerForAgricultureOptionalParams
-  ): PagedAsyncIterableIterator<Extension> {
+    options?: AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureOptionalParams
+  ): PagedAsyncIterableIterator<
+    AzureAgFoodPlatformRPServicePrivateEndpointConnection
+  > {
     const iter = this.listByDataManagerForAgriculturePagingAll(
       resourceGroupName,
       dataManagerForAgricultureResourceName,
@@ -79,10 +88,12 @@ export class ExtensionsImpl implements Extensions {
   private async *listByDataManagerForAgriculturePagingPage(
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
-    options?: ExtensionsListByDataManagerForAgricultureOptionalParams,
+    options?: AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureOptionalParams,
     settings?: PageSettings
-  ): AsyncIterableIterator<Extension[]> {
-    let result: ExtensionsListByDataManagerForAgricultureResponse;
+  ): AsyncIterableIterator<
+    AzureAgFoodPlatformRPServicePrivateEndpointConnection[]
+  > {
+    let result: AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
       result = await this._listByDataManagerForAgriculture(
@@ -112,8 +123,10 @@ export class ExtensionsImpl implements Extensions {
   private async *listByDataManagerForAgriculturePagingAll(
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
-    options?: ExtensionsListByDataManagerForAgricultureOptionalParams
-  ): AsyncIterableIterator<Extension> {
+    options?: AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureOptionalParams
+  ): AsyncIterableIterator<
+    AzureAgFoodPlatformRPServicePrivateEndpointConnection
+  > {
     for await (const page of this.listByDataManagerForAgriculturePagingPage(
       resourceGroupName,
       dataManagerForAgricultureResourceName,
@@ -124,7 +137,7 @@ export class ExtensionsImpl implements Extensions {
   }
 
   /**
-   * Get installed extensions details.
+   * Get list of Private endpoint connections.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param dataManagerForAgricultureResourceName DataManagerForAgriculture resource name.
    * @param options The options parameters.
@@ -132,8 +145,10 @@ export class ExtensionsImpl implements Extensions {
   private _listByDataManagerForAgriculture(
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
-    options?: ExtensionsListByDataManagerForAgricultureOptionalParams
-  ): Promise<ExtensionsListByDataManagerForAgricultureResponse> {
+    options?: AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureOptionalParams
+  ): Promise<
+    AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureResponse
+  > {
     return this.client.sendOperationRequest(
       { resourceGroupName, dataManagerForAgricultureResourceName, options },
       listByDataManagerForAgricultureOperationSpec
@@ -141,23 +156,25 @@ export class ExtensionsImpl implements Extensions {
   }
 
   /**
-   * Get installed extension details by extension id.
+   * Get Private endpoint connection object.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param dataManagerForAgricultureResourceName DataManagerForAgriculture resource name.
-   * @param extensionId Id of extension resource.
+   * @param privateEndpointConnectionName Private endpoint connection name.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
-    extensionId: string,
-    options?: ExtensionsGetOptionalParams
-  ): Promise<ExtensionsGetResponse> {
+    privateEndpointConnectionName: string,
+    options?: AzureAgFoodPlatformRpServicePrivateEndpointConnectionsGetOptionalParams
+  ): Promise<
+    AzureAgFoodPlatformRpServicePrivateEndpointConnectionsGetResponse
+  > {
     return this.client.sendOperationRequest(
       {
         resourceGroupName,
         dataManagerForAgricultureResourceName,
-        extensionId,
+        privateEndpointConnectionName,
         options
       },
       getOperationSpec
@@ -165,27 +182,27 @@ export class ExtensionsImpl implements Extensions {
   }
 
   /**
-   * Install or Update extension. Additional Api Properties are merged patch and if the extension is
-   * updated to a new version then the obsolete entries will be auto deleted from Additional Api
-   * Properties.
+   * Approves or Rejects a Private endpoint connection request.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param dataManagerForAgricultureResourceName DataManagerForAgriculture resource name.
-   * @param extensionId Id of extension resource.
+   * @param privateEndpointConnectionName Private endpoint connection name.
    * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
-    extensionId: string,
-    resource: Extension,
-    options?: ExtensionsCreateOrUpdateOptionalParams
-  ): Promise<ExtensionsCreateOrUpdateResponse> {
+    privateEndpointConnectionName: string,
+    resource: AzureAgFoodPlatformRPServicePrivateEndpointConnection,
+    options?: AzureAgFoodPlatformRpServicePrivateEndpointConnectionsCreateOrUpdateOptionalParams
+  ): Promise<
+    AzureAgFoodPlatformRpServicePrivateEndpointConnectionsCreateOrUpdateResponse
+  > {
     return this.client.sendOperationRequest(
       {
         resourceGroupName,
         dataManagerForAgricultureResourceName,
-        extensionId,
+        privateEndpointConnectionName,
         resource,
         options
       },
@@ -194,27 +211,96 @@ export class ExtensionsImpl implements Extensions {
   }
 
   /**
-   * Uninstall extension.
+   * Delete Private endpoint connection request.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param dataManagerForAgricultureResourceName DataManagerForAgriculture resource name.
-   * @param extensionId Id of extension resource.
+   * @param privateEndpointConnectionName Private endpoint connection name.
    * @param options The options parameters.
    */
-  delete(
+  async beginDelete(
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
-    extensionId: string,
-    options?: ExtensionsDeleteOptionalParams
-  ): Promise<void> {
-    return this.client.sendOperationRequest(
-      {
+    privateEndpointConnectionName: string,
+    options?: AzureAgFoodPlatformRpServicePrivateEndpointConnectionsDeleteOptionalParams
+  ): Promise<SimplePollerLike<OperationState<void>, void>> {
+    const directSendOperation = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ): Promise<void> => {
+      return this.client.sendOperationRequest(args, spec);
+    };
+    const sendOperationFn = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ) => {
+      let currentRawResponse:
+        | coreClient.FullOperationResponse
+        | undefined = undefined;
+      const providedCallback = args.options?.onResponse;
+      const callback: coreClient.RawResponseCallback = (
+        rawResponse: coreClient.FullOperationResponse,
+        flatResponse: unknown
+      ) => {
+        currentRawResponse = rawResponse;
+        providedCallback?.(rawResponse, flatResponse);
+      };
+      const updatedArgs = {
+        ...args,
+        options: {
+          ...args.options,
+          onResponse: callback
+        }
+      };
+      const flatResponse = await directSendOperation(updatedArgs, spec);
+      return {
+        flatResponse,
+        rawResponse: {
+          statusCode: currentRawResponse!.status,
+          body: currentRawResponse!.parsedBody,
+          headers: currentRawResponse!.headers.toJSON()
+        }
+      };
+    };
+
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: {
         resourceGroupName,
         dataManagerForAgricultureResourceName,
-        extensionId,
+        privateEndpointConnectionName,
         options
       },
-      deleteOperationSpec
+      spec: deleteOperationSpec
+    });
+    const poller = await createHttpPoller<void, OperationState<void>>(lro, {
+      restoreFrom: options?.resumeFrom,
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "location"
+    });
+    await poller.poll();
+    return poller;
+  }
+
+  /**
+   * Delete Private endpoint connection request.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param dataManagerForAgricultureResourceName DataManagerForAgriculture resource name.
+   * @param privateEndpointConnectionName Private endpoint connection name.
+   * @param options The options parameters.
+   */
+  async beginDeleteAndWait(
+    resourceGroupName: string,
+    dataManagerForAgricultureResourceName: string,
+    privateEndpointConnectionName: string,
+    options?: AzureAgFoodPlatformRpServicePrivateEndpointConnectionsDeleteOptionalParams
+  ): Promise<void> {
+    const poller = await this.beginDelete(
+      resourceGroupName,
+      dataManagerForAgricultureResourceName,
+      privateEndpointConnectionName,
+      options
     );
+    return poller.pollUntilDone();
   }
 
   /**
@@ -229,8 +315,10 @@ export class ExtensionsImpl implements Extensions {
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
     nextLink: string,
-    options?: ExtensionsListByDataManagerForAgricultureNextOptionalParams
-  ): Promise<ExtensionsListByDataManagerForAgricultureNextResponse> {
+    options?: AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureNextOptionalParams
+  ): Promise<
+    AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureNextResponse
+  > {
     return this.client.sendOperationRequest(
       {
         resourceGroupName,
@@ -247,23 +335,18 @@ const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listByDataManagerForAgricultureOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AgFoodPlatform/farmBeats/{dataManagerForAgricultureResourceName}/extensions",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AgFoodPlatform/farmBeats/{dataManagerForAgricultureResourceName}/privateEndpointConnections",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ExtensionListResult
+      bodyMapper:
+        Mappers.AzureAgFoodPlatformRPServicePrivateEndpointConnectionListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  queryParameters: [
-    Parameters.apiVersion,
-    Parameters.extensionCategories,
-    Parameters.maxPageSize,
-    Parameters.skipToken,
-    Parameters.extensionIds
-  ],
+  queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId1,
@@ -275,11 +358,11 @@ const listByDataManagerForAgricultureOperationSpec: coreClient.OperationSpec = {
 };
 const getOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AgFoodPlatform/farmBeats/{dataManagerForAgricultureResourceName}/extensions/{extensionId}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AgFoodPlatform/farmBeats/{dataManagerForAgricultureResourceName}/privateEndpointConnections/{privateEndpointConnectionName}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.Extension
+      bodyMapper: Mappers.AzureAgFoodPlatformRPServicePrivateEndpointConnection
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -291,34 +374,34 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.dataManagerForAgricultureResourceName,
-    Parameters.extensionId
+    Parameters.privateEndpointConnectionName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const createOrUpdateOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AgFoodPlatform/farmBeats/{dataManagerForAgricultureResourceName}/extensions/{extensionId}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AgFoodPlatform/farmBeats/{dataManagerForAgricultureResourceName}/privateEndpointConnections/{privateEndpointConnectionName}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.Extension
+      bodyMapper: Mappers.AzureAgFoodPlatformRPServicePrivateEndpointConnection
     },
     201: {
-      bodyMapper: Mappers.Extension
+      bodyMapper: Mappers.AzureAgFoodPlatformRPServicePrivateEndpointConnection
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.resource2,
+  requestBody: Parameters.resource3,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.dataManagerForAgricultureResourceName,
-    Parameters.extensionId
+    Parameters.privateEndpointConnectionName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -326,10 +409,12 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AgFoodPlatform/farmBeats/{dataManagerForAgricultureResourceName}/extensions/{extensionId}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AgFoodPlatform/farmBeats/{dataManagerForAgricultureResourceName}/privateEndpointConnections/{privateEndpointConnectionName}",
   httpMethod: "DELETE",
   responses: {
     200: {},
+    201: {},
+    202: {},
     204: {},
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -341,7 +426,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.dataManagerForAgricultureResourceName,
-    Parameters.extensionId
+    Parameters.privateEndpointConnectionName
   ],
   headerParameters: [Parameters.accept],
   serializer
@@ -351,7 +436,8 @@ const listByDataManagerForAgricultureNextOperationSpec: coreClient.OperationSpec
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ExtensionListResult
+      bodyMapper:
+        Mappers.AzureAgFoodPlatformRPServicePrivateEndpointConnectionListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse

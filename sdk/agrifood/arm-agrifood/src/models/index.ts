@@ -8,6 +8,47 @@
 
 import * as coreClient from "@azure/core-client";
 
+export type AuthCredentialsUnion =
+  | AuthCredentials
+  | ApiKeyAuthCredentials
+  | OAuthClientCredentials;
+
+/** The response of a DataManagerForAgricultureExtension list operation. */
+export interface DataManagerForAgricultureExtensionListResult {
+  /** The DataManagerForAgricultureExtension items on this page */
+  value: DataManagerForAgricultureExtension[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** Model to capture detailed information for Data Manager For AgricultureExtensions. */
+export interface DetailedInformation {
+  /** ApiName available for the Data Manager For Agriculture Extension. */
+  apiName?: string;
+  /** Extension provider's API documentation link. */
+  apiDocsLink?: string;
+  /** Type of Api in Extension. */
+  apiType?: string;
+  /** List of customParameters. */
+  customParameters?: string[];
+  /** List of platformParameters. */
+  platformParameters?: string[];
+  /** List of defaultParameters. */
+  apiDefaultInputParameters?: string[];
+  /** Unit systems info for the data provider. */
+  unitsSupported?: UnitSystemsInfo;
+  /** List of apiInputParameters. */
+  apiInputParameters?: string[];
+}
+
+/** Unit systems info for the data provider. */
+export interface UnitSystemsInfo {
+  /** UnitSystem key sent as part of ProviderInput. */
+  key: string;
+  /** List of unit systems supported by this data provider. */
+  values: string[];
+}
+
 /** Common fields that are returned in the response for all Azure Resource Manager resources */
 export interface Resource {
   /**
@@ -97,154 +138,17 @@ export interface ErrorAdditionalInfo {
   readonly info?: Record<string, unknown>;
 }
 
-/** Paged response contains list of requested objects and a URL link to get the next set of results. */
-export interface ExtensionListResponse {
-  /** List of requested objects. */
-  value?: Extension[];
-  /**
-   * Continuation link (absolute URI) to the next page of results in the list.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
+/** The response of a DataManagerForAgricultureSolution list operation. */
+export interface DataManagerForAgricultureSolutionListResult {
+  /** The DataManagerForAgricultureSolution items on this page */
+  value: DataManagerForAgricultureSolution[];
+  /** The link to the next page of items */
+  nextLink?: string;
 }
 
-/** Paged response contains list of requested objects and a URL link to get the next set of results. */
-export interface FarmBeatsExtensionListResponse {
-  /** List of requested objects. */
-  value?: FarmBeatsExtension[];
-  /**
-   * Continuation link (absolute URI) to the next page of results in the list.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** Model to capture detailed information for farmBeatsExtensions. */
-export interface DetailedInformation {
-  /** ApiName available for the farmBeatsExtension. */
-  apiName?: string;
-  /** List of customParameters. */
-  customParameters?: string[];
-  /** List of platformParameters. */
-  platformParameters?: string[];
-  /** Unit systems info for the data provider. */
-  unitsSupported?: UnitSystemsInfo;
-  /** List of apiInputParameters. */
-  apiInputParameters?: string[];
-}
-
-/** Unit systems info for the data provider. */
-export interface UnitSystemsInfo {
-  /** UnitSystem key sent as part of ProviderInput. */
-  key: string;
-  /** List of unit systems supported by this data provider. */
-  values: string[];
-}
-
-/** Identity for the resource. */
-export interface Identity {
-  /**
-   * The principal ID of resource identity.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly principalId?: string;
-  /**
-   * The tenant ID of resource.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly tenantId?: string;
-  /** The identity type. */
-  type?: "SystemAssigned";
-}
-
-/** Sensor integration request model. */
-export interface SensorIntegration {
-  /** Sensor integration enable state. Allowed values are True, None */
-  enabled?: string;
-  /**
-   * Sensor integration instance provisioning state.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: ProvisioningState;
-  /** Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.). */
-  provisioningInfo?: ErrorResponse;
-}
-
-/** The Private Endpoint resource. */
-export interface PrivateEndpoint {
-  /**
-   * The ARM identifier for Private Endpoint
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly id?: string;
-}
-
-/** A collection of information about the state of the connection between service consumer and provider. */
-export interface PrivateLinkServiceConnectionState {
-  /** Indicates whether the connection has been Approved/Rejected/Removed by the owner of the service. */
-  status?: PrivateEndpointServiceConnectionStatus;
-  /** The reason for approval/rejection of the connection. */
-  description?: string;
-  /** A message indicating if changes on the service provider require any updates on the consumer. */
-  actionsRequired?: string;
-}
-
-/** FarmBeats update request. */
-export interface FarmBeatsUpdateRequestModel {
-  /** Geo-location where the resource lives. */
-  location?: string;
-  /** Identity for the resource. */
-  identity?: Identity;
-  /** FarmBeats ARM Resource properties. */
-  properties?: FarmBeatsUpdateProperties;
-  /** Resource tags. */
-  tags?: { [propertyName: string]: string };
-}
-
-/** FarmBeats ARM Resource properties. */
-export interface FarmBeatsUpdateProperties {
-  /** Sensor integration request model. */
-  sensorIntegration?: SensorIntegration;
-  /** Property to allow or block public traffic for an Azure FarmBeats resource. */
-  publicNetworkAccess?: PublicNetworkAccess;
-}
-
-/** Paged response contains list of requested objects and a URL link to get the next set of results. */
-export interface FarmBeatsListResponse {
-  /** List of requested objects. */
-  value?: FarmBeats[];
-  /**
-   * Continuation link (absolute URI) to the next page of results in the list.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/**
- * Arm async operation class.
- * Ref: https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/async-operations.
- */
-export interface ArmAsyncOperation {
-  /** Status of the async operation. */
-  status?: string;
-}
-
-/** The check availability request body. */
-export interface CheckNameAvailabilityRequest {
-  /** The name of the resource for which availability needs to be checked. */
-  name?: string;
-  /** The resource type. */
-  type?: string;
-}
-
-/** The check availability result. */
-export interface CheckNameAvailabilityResponse {
-  /** Indicates if the resource name is available. */
-  nameAvailable?: boolean;
-  /** The reason why the given name is not available. */
-  reason?: CheckNameAvailabilityReason;
-  /** Detailed reason why the given name is available. */
-  message?: string;
+export interface MarketplaceOfferDetails {
+  saasOfferId?: string;
+  publisherId?: string;
 }
 
 /** A list of REST API operations supported by an Azure Resource Provider. It contains an URL link to get the next set of results. */
@@ -311,33 +215,264 @@ export interface OperationDisplay {
   readonly description?: string;
 }
 
-/** List of private endpoint connection associated with the specified storage account */
-export interface PrivateEndpointConnectionListResult {
-  /** Array of private endpoint connections */
-  value?: PrivateEndpointConnection[];
+/** The check availability request body. */
+export interface CheckNameAvailabilityRequest {
+  /** The name of the resource for which availability needs to be checked. */
+  name?: string;
+  /** The resource type. */
+  type?: string;
 }
 
-/** A list of private link resources */
-export interface PrivateLinkResourceListResult {
-  /** Array of private link resources */
-  value?: PrivateLinkResource[];
+/** The check availability result. */
+export interface CheckNameAvailabilityResponse {
+  /** Indicates if the resource name is available. */
+  nameAvailable?: boolean;
+  /** The reason why the given name is not available. */
+  reason?: CheckNameAvailabilityReason;
+  /** Detailed reason why the given name is available. */
+  message?: string;
+}
+
+/** A response containing error details. */
+export interface AzureCoreFoundationsErrorResponse {
+  /** The error object. */
+  error: AzureCoreFoundationsError;
+}
+
+/** The error object. */
+export interface AzureCoreFoundationsError {
+  /** One of a server-defined set of error codes. */
+  code: string;
+  /** A human-readable representation of the error. */
+  message: string;
+  /** The target of the error. */
+  target?: string;
+  /** An array of details about specific errors that led to this reported error. */
+  details?: AzureCoreFoundationsError[];
+  /** An object containing more specific information than the current object about the error. */
+  innererror?: AzureCoreFoundationsInnerError;
+}
+
+/** An object containing more specific information about the error. As per Microsoft One API guidelines - https://github.com/Microsoft/api-guidelines/blob/vNext/Guidelines.md#7102-error-condition-responses. */
+export interface AzureCoreFoundationsInnerError {
+  /** One of a server-defined set of error codes. */
+  code?: string;
+  /** Inner error. */
+  innererror?: AzureCoreFoundationsInnerError;
+}
+
+/** The response of a DataManagerForAgriculture list operation. */
+export interface DataManagerForAgricultureListResult {
+  /** The DataManagerForAgriculture items on this page */
+  value: DataManagerForAgriculture[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** Sensor integration request model. */
+export interface SensorIntegration {
+  /** Sensor integration enable state. */
+  enabled?: string;
+  /**
+   * Sensor integration instance provisioning state.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ProvisioningState;
+  /** Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.). */
+  provisioningInfo?: ErrorResponse;
+}
+
+/** Properties of the private endpoint connection. */
+export interface PrivateEndpointConnectionProperties {
+  /**
+   * The group ids for the private endpoint resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly groupIds?: string[];
+  /** The private endpoint resource. */
+  privateEndpoint?: PrivateEndpoint;
+  /** A collection of information about the state of the connection between service consumer and provider. */
+  privateLinkServiceConnectionState: PrivateLinkServiceConnectionState;
+  /** The provisioning state of the private endpoint connection resource. */
+  provisioningState?: PrivateEndpointConnectionProvisioningState;
+}
+
+/** The private endpoint resource. */
+export interface PrivateEndpoint {
+  /**
+   * The ARM identifier for private endpoint.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly id?: string;
+}
+
+/** A collection of information about the state of the connection between service consumer and provider. */
+export interface PrivateLinkServiceConnectionState {
+  /** Indicates whether the connection has been Approved/Rejected/Removed by the owner of the service. */
+  status?: PrivateEndpointServiceConnectionStatus;
+  /** The reason for approval/rejection of the connection. */
+  description?: string;
+  /** A message indicating if changes on the service provider require any updates on the consumer. */
+  actionsRequired?: string;
+}
+
+/** Managed service identity (system assigned and/or user assigned identities) */
+export interface ManagedServiceIdentity {
+  /**
+   * The service principal ID of the system assigned identity. This property will only be provided for a system assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly principalId?: string;
+  /**
+   * The tenant ID of the system assigned identity. This property will only be provided for a system assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly tenantId?: string;
+  /** Type of managed service identity (where both SystemAssigned and UserAssigned types are allowed). */
+  type: ManagedServiceIdentityType;
+  /** The set of user assigned identities associated with the resource. The userAssignedIdentities dictionary keys will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}. The dictionary values can be empty objects ({}) in requests. */
+  userAssignedIdentities?: { [propertyName: string]: UserAssignedIdentity };
+}
+
+/** User assigned identity properties */
+export interface UserAssignedIdentity {
+  /**
+   * The principal ID of the assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly principalId?: string;
+  /**
+   * The client ID of the assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly clientId?: string;
+}
+
+/**
+ * Arm async operation class.
+ * Ref: https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/async-operations.
+ */
+export interface ArmAsyncOperation {
+  /** Status of the async operation. */
+  status?: string;
+  /**
+   * Arm async operation error class.
+   * Ref: https://github.com/Azure/azure-resource-manager-rpc/blob/master/v1.0/async-api-reference.md#azure-asyncoperation-resource-format.
+   */
+  error?: ArmAsyncOperationError;
+}
+
+/**
+ * Arm async operation error class.
+ * Ref: https://github.com/Azure/azure-resource-manager-rpc/blob/master/v1.0/async-api-reference.md#azure-asyncoperation-resource-format.
+ */
+export interface ArmAsyncOperationError {
+  /** Status of the async operation. */
+  code?: string;
+  /** Status of the async operation. */
+  message?: string;
+}
+
+/** The type used for update operations of the DataManagerForAgriculture. */
+export interface DataManagerForAgricultureUpdate {
+  /** The managed service identities assigned to this resource. */
+  identity?: ManagedServiceIdentity;
+  /** Resource tags. */
+  tags?: { [propertyName: string]: string };
+  /** Sensor integration request model. */
+  sensorIntegration?: SensorIntegration;
+  /** Property to allow or block public traffic for an Azure Data Manager For Agriculture resource. */
+  publicNetworkAccess?: PublicNetworkAccess;
+}
+
+/** The response of a DataConnector list operation. */
+export interface DataConnectorListResult {
+  /** The DataConnector items on this page */
+  value: DataConnector[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** AuthCredentials abstract base class for Auth Purpose. */
+export interface AuthCredentials {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  kind: "ApiKeyAuthCredentials" | "OAuthClientCredentials";
+}
+
+/** The response of a Extension list operation. */
+export interface ExtensionListResult {
+  /** The Extension items on this page */
+  value: Extension[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** Api properties. */
+export interface ApiProperties {
+  /** Interval in minutes for which the weather data for the api needs to be refreshed. */
+  apiFreshnessTimeInMinutes?: number;
+}
+
+/** The response of a AzureAgFoodPlatformRPServicePrivateEndpointConnection list operation. */
+export interface AzureAgFoodPlatformRPServicePrivateEndpointConnectionListResult {
+  /** The AzureAgFoodPlatformRPServicePrivateEndpointConnection items on this page */
+  value: AzureAgFoodPlatformRPServicePrivateEndpointConnection[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The response of a AzureAgFoodPlatformRPServicePrivateLinkResource list operation. */
+export interface AzureAgFoodPlatformRPServicePrivateLinkResourceListResult {
+  /** The AzureAgFoodPlatformRPServicePrivateLinkResource items on this page */
+  value: AzureAgFoodPlatformRPServicePrivateLinkResource[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The response of a Solution list operation. */
+export interface SolutionListResult {
+  /** The Solution items on this page */
+  value: Solution[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** Properties of the key vault. */
+export interface KeyVaultProperties {
+  /** Uri of the key vault. */
+  keyVaultUri: string;
+  /** Name of Key Vault key. */
+  keyName: string;
+  /** Version of Key Vault key. */
+  keyVersion: string;
+}
+
+/** Extension Installation Request Body. */
+export interface ExtensionInstallationRequest {
+  /** Extension Version. */
+  extensionVersion?: string;
+  /** Additional Api Properties. */
+  additionalApiProperties?: { [propertyName: string]: ApiProperties };
+}
+
+/** Identity for the resource. */
+export interface Identity {
+  /**
+   * The principal ID of resource identity. The value must be an UUID.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly principalId?: string;
+  /**
+   * The tenant ID of resource. The value must be an UUID.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly tenantId?: string;
+  /** The identity type. */
+  type?: "SystemAssigned";
 }
 
 /** The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location */
 export interface ProxyResource extends Resource {}
-
-/** The Private Endpoint Connection resource. */
-export interface PrivateEndpointConnection extends Resource {
-  /** The resource of private end point. */
-  privateEndpoint?: PrivateEndpoint;
-  /** A collection of information about the state of the connection between service consumer and provider. */
-  privateLinkServiceConnectionState?: PrivateLinkServiceConnectionState;
-  /**
-   * The provisioning state of the private endpoint connection resource.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: PrivateEndpointConnectionProvisioningState;
-}
 
 /** The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location' */
 export interface TrackedResource extends Resource {
@@ -347,20 +482,153 @@ export interface TrackedResource extends Resource {
   location: string;
 }
 
-/** A private link resource */
-export interface PrivateLinkResource extends Resource {
+/** ApiKeyAuthCredentials class for ApiKey based Auth. */
+export interface ApiKeyAuthCredentials extends AuthCredentials {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  kind: "ApiKeyAuthCredentials";
+  /** Properties of the key vault. */
+  apiKey: KeyVaultProperties;
+}
+
+/** OAuthClientCredentials for clientId clientSecret auth. */
+export interface OAuthClientCredentials extends AuthCredentials {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  kind: "OAuthClientCredentials";
+  /** ClientId associated with the provider. */
+  clientId: string;
+  /** Properties of the key vault. */
+  clientSecret: KeyVaultProperties;
+}
+
+/** DataManagerForAgriculture extension resource. */
+export interface DataManagerForAgricultureExtension extends ProxyResource {
   /**
-   * The private link resource group id.
+   * Target ResourceType of the Data Manager For Agriculture Extension.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly groupId?: string;
+  readonly targetResourceType?: string;
   /**
-   * The private link resource required member names.
+   * Data Manager For Agriculture Extension ID.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly requiredMembers?: string[];
-  /** The private link resource Private link DNS zone name. */
-  requiredZoneNames?: string[];
+  readonly farmBeatsExtensionId?: string;
+  /**
+   * Data Manager For Agriculture Extension name.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly farmBeatsExtensionName?: string;
+  /**
+   * Data Manager For Agriculture Extension version.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly farmBeatsExtensionVersion?: string;
+  /**
+   * Publisher ID.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly publisherId?: string;
+  /**
+   * Textual description.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly description?: string;
+  /**
+   * Category of the extension. e.g. weather/sensor/satellite.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly extensionCategory?: string;
+  /**
+   * Data Manager For Agriculture Extension auth link.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly extensionAuthLink?: string;
+  /**
+   * Data Manager For Agriculture Extension api docs link.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly extensionApiDocsLink?: string;
+  /**
+   * Detailed information which shows summary of requested data.
+   * Used in descriptive get extension metadata call.
+   * Information for weather category per api included are apisSupported,
+   * customParameters, PlatformParameters and Units supported.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly detailedInformation?: DetailedInformation[];
+}
+
+/** DataManagerForAgriculture solution resource. */
+export interface DataManagerForAgricultureSolution extends ProxyResource {
+  /**
+   * Solution Partner Id.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly partnerId?: string;
+  /**
+   * Solution Partner Tenant Id.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly partnerTenantId?: string;
+  /**
+   * Gets scope of the Data manager For Agriculture data access that's required for processing solution request to partner.
+   * Example: For gdd they might need weatherScope and satelliteScope.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly dataAccessScopes?: string[];
+  marketplaceOfferDetails?: MarketplaceOfferDetails;
+  /**
+   * Gets api-version Swagger Document Dictionary to capture all api-versions of swagger exposed by partner to Data Manager For Agriculture.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly openApiSpecsDictionary?: { [propertyName: string]: any };
+  /**
+   * Application id of the multi tenant application to be used by partner to access Data Manager For Agriculture data.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly accessFBApplicationId?: string;
+  /**
+   * Application id of the SaaS multi tenant application.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly saaSApplicationId?: string;
+  /**
+   * List of ActionIds needed to make the SaaS multi tenant application access relevant fb data.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly actionIds?: string[];
+  /**
+   * Role Id of the SaaS multi tenant application to access relevant fb data.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly roleId?: string;
+  /**
+   * Role Name of the SaaS multi tenant application to access relevant fb data.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly roleName?: string;
+  /**
+   * Application name of the multi tenant application to be used by partner to access Data Manager For Agriculture Data.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly accessFBApplicationName?: string;
+}
+
+/** The private endpoint connection resource */
+export interface AzureResourceManagerPrivateEndpointConnection
+  extends ProxyResource {
+  /** The private endpoint connection properties */
+  properties?: PrivateEndpointConnectionProperties;
+}
+
+/** DataConnector Model. */
+export interface DataConnector extends ProxyResource {
+  /**
+   * The ETag value to implement optimistic concurrency.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly eTag?: string;
+  /** AuthCredentials abstract base class for Auth Purpose. */
+  credentials?: AuthCredentialsUnion;
 }
 
 /** Extension resource. */
@@ -395,97 +663,127 @@ export interface Extension extends ProxyResource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly extensionApiDocsLink?: string;
+  /**
+   * Additional Api Properties.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly additionalApiProperties?: { [propertyName: string]: ApiProperties };
 }
 
-/** FarmBeats extension resource. */
-export interface FarmBeatsExtension extends ProxyResource {
+/** The private endpoint connection resource. */
+export interface AzureAgFoodPlatformRPServicePrivateEndpointConnection
+  extends ProxyResource {
   /**
-   * Target ResourceType of the farmBeatsExtension.
+   * The group ids for the private endpoint resource.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly targetResourceType?: string;
+  readonly groupIds?: string[];
+  /** The private endpoint resource. */
+  privateEndpoint?: PrivateEndpoint;
+  /** A collection of information about the state of the connection between service consumer and provider. */
+  privateLinkServiceConnectionState?: PrivateLinkServiceConnectionState;
   /**
-   * FarmBeatsExtension ID.
+   * The provisioning state of the private endpoint connection resource.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly farmBeatsExtensionId?: string;
-  /**
-   * FarmBeatsExtension name.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly farmBeatsExtensionName?: string;
-  /**
-   * FarmBeatsExtension version.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly farmBeatsExtensionVersion?: string;
-  /**
-   * Publisher ID.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly publisherId?: string;
-  /**
-   * Textual description.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly description?: string;
-  /**
-   * Category of the extension. e.g. weather/sensor/satellite.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly extensionCategory?: string;
-  /**
-   * FarmBeatsExtension auth link.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly extensionAuthLink?: string;
-  /**
-   * FarmBeatsExtension api docs link.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly extensionApiDocsLink?: string;
-  /**
-   * Detailed information which shows summary of requested data.
-   * Used in descriptive get extension metadata call.
-   * Information for weather category per api included are apisSupported,
-   * customParameters, PlatformParameters and Units supported.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly detailedInformation?: DetailedInformation[];
+  readonly provisioningState?: PrivateEndpointConnectionProvisioningState;
 }
 
-/** FarmBeats ARM Resource. */
-export interface FarmBeats extends TrackedResource {
-  /** Identity for the resource. */
-  identity?: Identity;
+/** A private link resource. */
+export interface AzureAgFoodPlatformRPServicePrivateLinkResource
+  extends ProxyResource {
   /**
-   * Uri of the FarmBeats instance.
+   * The private link resource group id.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly groupId?: string;
+  /**
+   * The private link resource required member names.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly requiredMembers?: string[];
+  /** The private link resource private link DNS zone name. */
+  requiredZoneNames?: string[];
+}
+
+/** Solution resource. */
+export interface Solution extends ProxyResource {
+  /**
+   * The ETag value to implement optimistic concurrency.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly eTag?: string;
+  /**
+   * Partner Id of the Solution.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly partnerId?: string;
+  /** SaaS subscriptionId of the installed SaaS application. */
+  saasSubscriptionId?: string;
+  /** SaaS subscription name of the installed SaaS application. */
+  saasSubscriptionName?: string;
+  /** SaaS application Marketplace Publisher Id. */
+  marketplacePublisherId?: string;
+  /** SaaS application Plan Id. */
+  planId?: string;
+  /** Role Assignment Id. */
+  roleAssignmentId?: string;
+  /** SaaS application Offer Id. */
+  offerId?: string;
+  /** SaaS application Term Id. */
+  termId?: string;
+}
+
+/** Data Manager For Agriculture ARM Resource. */
+export interface DataManagerForAgriculture extends TrackedResource {
+  /** The managed service identities assigned to this resource. */
+  identity?: ManagedServiceIdentity;
+  /**
+   * Uri of the Data Manager For Agriculture instance.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly instanceUri?: string;
   /**
-   * FarmBeats instance provisioning state.
+   * Data Manager For Agriculture instance provisioning state.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly provisioningState?: ProvisioningState;
   /** Sensor integration request model. */
   sensorIntegration?: SensorIntegration;
-  /** Property to allow or block public traffic for an Azure FarmBeats resource. */
+  /** Property to allow or block public traffic for an Azure Data Manager For Agriculture resource. */
   publicNetworkAccess?: PublicNetworkAccess;
   /**
-   * The Private Endpoint Connection resource.
+   * Private endpoints.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly privateEndpointConnections?: PrivateEndpointConnection;
+  readonly privateEndpointConnections?: AzureResourceManagerPrivateEndpointConnection[];
 }
 
-/** Defines headers for FarmBeatsModels_update operation. */
-export interface FarmBeatsModelsUpdateHeaders {
+/** Defines headers for CheckNameAvailabilityOperations_checkNameAvailability operation. */
+export interface CheckNameAvailabilityOperationsCheckNameAvailabilityExceptionHeaders {
+  /** String error code indicating what went wrong. */
+  xMsErrorCode?: string;
+}
+
+/** Defines headers for DataManagerForAgricultures_update operation. */
+export interface DataManagerForAgriculturesUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
   location?: string;
 }
 
-/** Defines headers for PrivateEndpointConnections_delete operation. */
-export interface PrivateEndpointConnectionsDeleteHeaders {
+/** Defines headers for OperationResultsOperations_get operation. */
+export interface OperationResultsOperationsGetExceptionHeaders {
+  /** String error code indicating what went wrong. */
+  xMsErrorCode?: string;
+}
+
+/** Defines headers for AzureAgFoodPlatformRpServicePrivateEndpointConnections_delete operation. */
+export interface AzureAgFoodPlatformRpServicePrivateEndpointConnectionsDeleteHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
   location?: string;
 }
 
@@ -513,6 +811,60 @@ export enum KnownCreatedByType {
  */
 export type CreatedByType = string;
 
+/** Known values of {@link Origin} that the service accepts. */
+export enum KnownOrigin {
+  /** User */
+  User = "user",
+  /** System */
+  System = "system",
+  /** UserSystem */
+  UserSystem = "user,system"
+}
+
+/**
+ * Defines values for Origin. \
+ * {@link KnownOrigin} can be used interchangeably with Origin,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **user** \
+ * **system** \
+ * **user,system**
+ */
+export type Origin = string;
+
+/** Known values of {@link ActionType} that the service accepts. */
+export enum KnownActionType {
+  /** Internal */
+  Internal = "Internal"
+}
+
+/**
+ * Defines values for ActionType. \
+ * {@link KnownActionType} can be used interchangeably with ActionType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Internal**
+ */
+export type ActionType = string;
+
+/** Known values of {@link CheckNameAvailabilityReason} that the service accepts. */
+export enum KnownCheckNameAvailabilityReason {
+  /** Invalid */
+  Invalid = "Invalid",
+  /** AlreadyExists */
+  AlreadyExists = "AlreadyExists"
+}
+
+/**
+ * Defines values for CheckNameAvailabilityReason. \
+ * {@link KnownCheckNameAvailabilityReason} can be used interchangeably with CheckNameAvailabilityReason,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Invalid** \
+ * **AlreadyExists**
+ */
+export type CheckNameAvailabilityReason = string;
+
 /** Known values of {@link ProvisioningState} that the service accepts. */
 export enum KnownProvisioningState {
   /** Creating */
@@ -524,7 +876,9 @@ export enum KnownProvisioningState {
   /** Succeeded */
   Succeeded = "Succeeded",
   /** Failed */
-  Failed = "Failed"
+  Failed = "Failed",
+  /** Running */
+  Running = "Running"
 }
 
 /**
@@ -536,7 +890,8 @@ export enum KnownProvisioningState {
  * **Updating** \
  * **Deleting** \
  * **Succeeded** \
- * **Failed**
+ * **Failed** \
+ * **Running**
  */
 export type ProvisioningState = string;
 
@@ -544,8 +899,8 @@ export type ProvisioningState = string;
 export enum KnownPublicNetworkAccess {
   /** Enabled */
   Enabled = "Enabled",
-  /** Hybrid */
-  Hybrid = "Hybrid"
+  /** Disabled */
+  Disabled = "Disabled"
 }
 
 /**
@@ -554,7 +909,7 @@ export enum KnownPublicNetworkAccess {
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
  * **Enabled** \
- * **Hybrid**
+ * **Disabled**
  */
 export type PublicNetworkAccess = string;
 
@@ -603,275 +958,128 @@ export enum KnownPrivateEndpointConnectionProvisioningState {
  */
 export type PrivateEndpointConnectionProvisioningState = string;
 
-/** Known values of {@link CheckNameAvailabilityReason} that the service accepts. */
-export enum KnownCheckNameAvailabilityReason {
-  /** Invalid */
-  Invalid = "Invalid",
-  /** AlreadyExists */
-  AlreadyExists = "AlreadyExists"
+/** Known values of {@link ManagedServiceIdentityType} that the service accepts. */
+export enum KnownManagedServiceIdentityType {
+  /** None */
+  None = "None",
+  /** SystemAssigned */
+  SystemAssigned = "SystemAssigned",
+  /** UserAssigned */
+  UserAssigned = "UserAssigned",
+  /** SystemAssignedUserAssigned */
+  SystemAssignedUserAssigned = "SystemAssigned, UserAssigned"
 }
 
 /**
- * Defines values for CheckNameAvailabilityReason. \
- * {@link KnownCheckNameAvailabilityReason} can be used interchangeably with CheckNameAvailabilityReason,
+ * Defines values for ManagedServiceIdentityType. \
+ * {@link KnownManagedServiceIdentityType} can be used interchangeably with ManagedServiceIdentityType,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Invalid** \
- * **AlreadyExists**
+ * **None** \
+ * **SystemAssigned** \
+ * **UserAssigned** \
+ * **SystemAssigned, UserAssigned**
  */
-export type CheckNameAvailabilityReason = string;
+export type ManagedServiceIdentityType = string;
 
-/** Known values of {@link Origin} that the service accepts. */
-export enum KnownOrigin {
-  /** User */
-  User = "user",
-  /** System */
-  System = "system",
-  /** UserSystem */
-  UserSystem = "user,system"
+/** Known values of {@link AuthCredentialsKind} that the service accepts. */
+export enum KnownAuthCredentialsKind {
+  /** OAuthClientCredentials */
+  OAuthClientCredentials = "OAuthClientCredentials",
+  /** ApiKeyAuthCredentials */
+  ApiKeyAuthCredentials = "ApiKeyAuthCredentials"
 }
 
 /**
- * Defines values for Origin. \
- * {@link KnownOrigin} can be used interchangeably with Origin,
+ * Defines values for AuthCredentialsKind. \
+ * {@link KnownAuthCredentialsKind} can be used interchangeably with AuthCredentialsKind,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **user** \
- * **system** \
- * **user,system**
+ * **OAuthClientCredentials** \
+ * **ApiKeyAuthCredentials**
  */
-export type Origin = string;
+export type AuthCredentialsKind = string;
 
-/** Known values of {@link ActionType} that the service accepts. */
-export enum KnownActionType {
-  /** Internal */
-  Internal = "Internal"
+/** Known values of {@link Versions} that the service accepts. */
+export enum KnownVersions {
+  /** V20230601Preview */
+  V20230601Preview = "2023-06-01-preview"
 }
 
 /**
- * Defines values for ActionType. \
- * {@link KnownActionType} can be used interchangeably with ActionType,
+ * Defines values for Versions. \
+ * {@link KnownVersions} can be used interchangeably with Versions,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Internal**
+ * **2023-06-01-preview**
  */
-export type ActionType = string;
+export type Versions = string;
 
 /** Optional parameters. */
-export interface ExtensionsCreateOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the create operation. */
-export type ExtensionsCreateResponse = Extension;
-
-/** Optional parameters. */
-export interface ExtensionsGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type ExtensionsGetResponse = Extension;
-
-/** Optional parameters. */
-export interface ExtensionsUpdateOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the update operation. */
-export type ExtensionsUpdateResponse = Extension;
-
-/** Optional parameters. */
-export interface ExtensionsDeleteOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface ExtensionsListByFarmBeatsOptionalParams
+export interface DataManagerForAgricultureExtensionsListByTenantOptionalParams
   extends coreClient.OperationOptions {
-  /** Installed extension ids. */
-  extensionIds?: string[];
-  /** Installed extension categories. */
-  extensionCategories?: string[];
-  /**
-   * Maximum number of items needed (inclusive).
-   * Minimum = 10, Maximum = 1000, Default value = 50.
-   */
-  maxPageSize?: number;
-  /** Skip token for getting next set of results. */
-  skipToken?: string;
-}
-
-/** Contains response data for the listByFarmBeats operation. */
-export type ExtensionsListByFarmBeatsResponse = ExtensionListResponse;
-
-/** Optional parameters. */
-export interface ExtensionsListByFarmBeatsNextOptionalParams
-  extends coreClient.OperationOptions {
-  /** Installed extension ids. */
-  extensionIds?: string[];
-  /** Installed extension categories. */
-  extensionCategories?: string[];
-  /**
-   * Maximum number of items needed (inclusive).
-   * Minimum = 10, Maximum = 1000, Default value = 50.
-   */
-  maxPageSize?: number;
-  /** Skip token for getting next set of results. */
-  skipToken?: string;
-}
-
-/** Contains response data for the listByFarmBeatsNext operation. */
-export type ExtensionsListByFarmBeatsNextResponse = ExtensionListResponse;
-
-/** Optional parameters. */
-export interface FarmBeatsExtensionsListOptionalParams
-  extends coreClient.OperationOptions {
+  /** DataManagerForAgricultureExtension ids. */
+  farmBeatsExtensionIds?: string[];
+  /** DataManagerForAgriculture extension names. */
+  farmBeatsExtensionNames?: string[];
   /** Extension categories. */
   extensionCategories?: string[];
+  /** Publisher ids. */
+  publisherIds?: string[];
   /**
    * Maximum number of items needed (inclusive).
    * Minimum = 10, Maximum = 1000, Default value = 50.
    */
   maxPageSize?: number;
-  /** FarmBeatsExtension ids. */
-  farmBeatsExtensionIds?: string[];
-  /** FarmBeats extension names. */
-  farmBeatsExtensionNames?: string[];
-  /** Publisher ids. */
-  publisherIds?: string[];
 }
 
-/** Contains response data for the list operation. */
-export type FarmBeatsExtensionsListResponse = FarmBeatsExtensionListResponse;
+/** Contains response data for the listByTenant operation. */
+export type DataManagerForAgricultureExtensionsListByTenantResponse = DataManagerForAgricultureExtensionListResult;
 
 /** Optional parameters. */
-export interface FarmBeatsExtensionsGetOptionalParams
+export interface DataManagerForAgricultureExtensionsGetOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
-export type FarmBeatsExtensionsGetResponse = FarmBeatsExtension;
+export type DataManagerForAgricultureExtensionsGetResponse = DataManagerForAgricultureExtension;
 
 /** Optional parameters. */
-export interface FarmBeatsExtensionsListNextOptionalParams
+export interface DataManagerForAgricultureExtensionsListByTenantNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByTenantNext operation. */
+export type DataManagerForAgricultureExtensionsListByTenantNextResponse = DataManagerForAgricultureExtensionListResult;
+
+/** Optional parameters. */
+export interface DataManagerForAgricultureSolutionsListByTenantOptionalParams
   extends coreClient.OperationOptions {
-  /** Extension categories. */
-  extensionCategories?: string[];
   /**
    * Maximum number of items needed (inclusive).
    * Minimum = 10, Maximum = 1000, Default value = 50.
    */
   maxPageSize?: number;
-  /** FarmBeatsExtension ids. */
-  farmBeatsExtensionIds?: string[];
-  /** FarmBeats extension names. */
-  farmBeatsExtensionNames?: string[];
-  /** Publisher ids. */
-  publisherIds?: string[];
+  /** Ids of Data Manager For Agriculture Solutions which the customer requests to fetch. */
+  farmBeatsSolutionIds?: string[];
+  /** Names of Data Manager For Agriculture Solutions which the customer requests to fetch. */
+  farmBeatsSolutionNames?: string[];
 }
 
-/** Contains response data for the listNext operation. */
-export type FarmBeatsExtensionsListNextResponse = FarmBeatsExtensionListResponse;
+/** Contains response data for the listByTenant operation. */
+export type DataManagerForAgricultureSolutionsListByTenantResponse = DataManagerForAgricultureSolutionListResult;
 
 /** Optional parameters. */
-export interface FarmBeatsModelsGetOptionalParams
+export interface DataManagerForAgricultureSolutionsGetOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
-export type FarmBeatsModelsGetResponse = FarmBeats;
+export type DataManagerForAgricultureSolutionsGetResponse = DataManagerForAgricultureSolution;
 
 /** Optional parameters. */
-export interface FarmBeatsModelsCreateOrUpdateOptionalParams
+export interface DataManagerForAgricultureSolutionsListByTenantNextOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the createOrUpdate operation. */
-export type FarmBeatsModelsCreateOrUpdateResponse = FarmBeats;
-
-/** Optional parameters. */
-export interface FarmBeatsModelsUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the update operation. */
-export type FarmBeatsModelsUpdateResponse = FarmBeats;
-
-/** Optional parameters. */
-export interface FarmBeatsModelsDeleteOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface FarmBeatsModelsListBySubscriptionOptionalParams
-  extends coreClient.OperationOptions {
-  /**
-   * Maximum number of items needed (inclusive).
-   * Minimum = 10, Maximum = 1000, Default value = 50.
-   */
-  maxPageSize?: number;
-  /** Skip token for getting next set of results. */
-  skipToken?: string;
-}
-
-/** Contains response data for the listBySubscription operation. */
-export type FarmBeatsModelsListBySubscriptionResponse = FarmBeatsListResponse;
-
-/** Optional parameters. */
-export interface FarmBeatsModelsListByResourceGroupOptionalParams
-  extends coreClient.OperationOptions {
-  /**
-   * Maximum number of items needed (inclusive).
-   * Minimum = 10, Maximum = 1000, Default value = 50.
-   */
-  maxPageSize?: number;
-  /** Continuation token for getting next set of results. */
-  skipToken?: string;
-}
-
-/** Contains response data for the listByResourceGroup operation. */
-export type FarmBeatsModelsListByResourceGroupResponse = FarmBeatsListResponse;
-
-/** Optional parameters. */
-export interface FarmBeatsModelsGetOperationResultOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getOperationResult operation. */
-export type FarmBeatsModelsGetOperationResultResponse = ArmAsyncOperation;
-
-/** Optional parameters. */
-export interface FarmBeatsModelsListBySubscriptionNextOptionalParams
-  extends coreClient.OperationOptions {
-  /**
-   * Maximum number of items needed (inclusive).
-   * Minimum = 10, Maximum = 1000, Default value = 50.
-   */
-  maxPageSize?: number;
-  /** Skip token for getting next set of results. */
-  skipToken?: string;
-}
-
-/** Contains response data for the listBySubscriptionNext operation. */
-export type FarmBeatsModelsListBySubscriptionNextResponse = FarmBeatsListResponse;
-
-/** Optional parameters. */
-export interface FarmBeatsModelsListByResourceGroupNextOptionalParams
-  extends coreClient.OperationOptions {
-  /**
-   * Maximum number of items needed (inclusive).
-   * Minimum = 10, Maximum = 1000, Default value = 50.
-   */
-  maxPageSize?: number;
-  /** Continuation token for getting next set of results. */
-  skipToken?: string;
-}
-
-/** Contains response data for the listByResourceGroupNext operation. */
-export type FarmBeatsModelsListByResourceGroupNextResponse = FarmBeatsListResponse;
-
-/** Optional parameters. */
-export interface LocationsCheckNameAvailabilityOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the checkNameAvailability operation. */
-export type LocationsCheckNameAvailabilityResponse = CheckNameAvailabilityResponse;
+/** Contains response data for the listByTenantNext operation. */
+export type DataManagerForAgricultureSolutionsListByTenantNextResponse = DataManagerForAgricultureSolutionListResult;
 
 /** Optional parameters. */
 export interface OperationsListOptionalParams
@@ -888,21 +1096,192 @@ export interface OperationsListNextOptionalParams
 export type OperationsListNextResponse = OperationListResult;
 
 /** Optional parameters. */
-export interface PrivateEndpointConnectionsCreateOrUpdateOptionalParams
+export interface CheckNameAvailabilityOperationsCheckNameAvailabilityOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the createOrUpdate operation. */
-export type PrivateEndpointConnectionsCreateOrUpdateResponse = PrivateEndpointConnection;
+/** Contains response data for the checkNameAvailability operation. */
+export type CheckNameAvailabilityOperationsCheckNameAvailabilityResponse = CheckNameAvailabilityResponse;
 
 /** Optional parameters. */
-export interface PrivateEndpointConnectionsGetOptionalParams
+export interface DataManagerForAgriculturesListBySubscriptionOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listBySubscription operation. */
+export type DataManagerForAgriculturesListBySubscriptionResponse = DataManagerForAgricultureListResult;
+
+/** Optional parameters. */
+export interface DataManagerForAgriculturesListByResourceGroupOptionalParams
+  extends coreClient.OperationOptions {
+  /**
+   * Maximum number of items needed (inclusive).
+   * Minimum = 10, Maximum = 1000, Default value = 50.
+   */
+  maxPageSize?: number;
+  /** Continuation token for getting next set of results. */
+  skipToken?: string;
+}
+
+/** Contains response data for the listByResourceGroup operation. */
+export type DataManagerForAgriculturesListByResourceGroupResponse = DataManagerForAgricultureListResult;
+
+/** Optional parameters. */
+export interface DataManagerForAgriculturesGetOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
-export type PrivateEndpointConnectionsGetResponse = PrivateEndpointConnection;
+export type DataManagerForAgriculturesGetResponse = DataManagerForAgriculture;
 
 /** Optional parameters. */
-export interface PrivateEndpointConnectionsDeleteOptionalParams
+export interface DataManagerForAgriculturesCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the createOrUpdate operation. */
+export type DataManagerForAgriculturesCreateOrUpdateResponse = DataManagerForAgriculture;
+
+/** Optional parameters. */
+export interface DataManagerForAgriculturesUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the update operation. */
+export type DataManagerForAgriculturesUpdateResponse = DataManagerForAgriculture;
+
+/** Optional parameters. */
+export interface DataManagerForAgriculturesDeleteOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Optional parameters. */
+export interface DataManagerForAgriculturesListBySubscriptionNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listBySubscriptionNext operation. */
+export type DataManagerForAgriculturesListBySubscriptionNextResponse = DataManagerForAgricultureListResult;
+
+/** Optional parameters. */
+export interface DataManagerForAgriculturesListByResourceGroupNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroupNext operation. */
+export type DataManagerForAgriculturesListByResourceGroupNextResponse = DataManagerForAgricultureListResult;
+
+/** Optional parameters. */
+export interface OperationResultsOperationsGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type OperationResultsOperationsGetResponse = ArmAsyncOperation;
+
+/** Optional parameters. */
+export interface DataConnectorsListByDataManagerForAgricultureOptionalParams
+  extends coreClient.OperationOptions {
+  /**
+   * Maximum number of items needed (inclusive).
+   * Minimum = 10, Maximum = 1000, Default value = 50.
+   */
+  maxPageSize?: number;
+  /** Continuation token for getting next set of results. */
+  skipToken?: string;
+}
+
+/** Contains response data for the listByDataManagerForAgriculture operation. */
+export type DataConnectorsListByDataManagerForAgricultureResponse = DataConnectorListResult;
+
+/** Optional parameters. */
+export interface DataConnectorsGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type DataConnectorsGetResponse = DataConnector;
+
+/** Optional parameters. */
+export interface DataConnectorsCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the createOrUpdate operation. */
+export type DataConnectorsCreateOrUpdateResponse = DataConnector;
+
+/** Optional parameters. */
+export interface DataConnectorsDeleteOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Optional parameters. */
+export interface DataConnectorsListByDataManagerForAgricultureNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByDataManagerForAgricultureNext operation. */
+export type DataConnectorsListByDataManagerForAgricultureNextResponse = DataConnectorListResult;
+
+/** Optional parameters. */
+export interface ExtensionsListByDataManagerForAgricultureOptionalParams
+  extends coreClient.OperationOptions {
+  /** Installed extension categories. */
+  extensionCategories?: string[];
+  /**
+   * Maximum number of items needed (inclusive).
+   * Minimum = 10, Maximum = 1000, Default value = 50.
+   */
+  maxPageSize?: number;
+  /** Skip token for getting next set of results. */
+  skipToken?: string;
+  /** Installed extension ids. */
+  extensionIds?: string[];
+}
+
+/** Contains response data for the listByDataManagerForAgriculture operation. */
+export type ExtensionsListByDataManagerForAgricultureResponse = ExtensionListResult;
+
+/** Optional parameters. */
+export interface ExtensionsGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type ExtensionsGetResponse = Extension;
+
+/** Optional parameters. */
+export interface ExtensionsCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the createOrUpdate operation. */
+export type ExtensionsCreateOrUpdateResponse = Extension;
+
+/** Optional parameters. */
+export interface ExtensionsDeleteOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Optional parameters. */
+export interface ExtensionsListByDataManagerForAgricultureNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByDataManagerForAgricultureNext operation. */
+export type ExtensionsListByDataManagerForAgricultureNextResponse = ExtensionListResult;
+
+/** Optional parameters. */
+export interface AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByDataManagerForAgriculture operation. */
+export type AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureResponse = AzureAgFoodPlatformRPServicePrivateEndpointConnectionListResult;
+
+/** Optional parameters. */
+export interface AzureAgFoodPlatformRpServicePrivateEndpointConnectionsGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type AzureAgFoodPlatformRpServicePrivateEndpointConnectionsGetResponse = AzureAgFoodPlatformRPServicePrivateEndpointConnection;
+
+/** Optional parameters. */
+export interface AzureAgFoodPlatformRpServicePrivateEndpointConnectionsCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the createOrUpdate operation. */
+export type AzureAgFoodPlatformRpServicePrivateEndpointConnectionsCreateOrUpdateResponse = AzureAgFoodPlatformRPServicePrivateEndpointConnection;
+
+/** Optional parameters. */
+export interface AzureAgFoodPlatformRpServicePrivateEndpointConnectionsDeleteOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
@@ -911,25 +1290,93 @@ export interface PrivateEndpointConnectionsDeleteOptionalParams
 }
 
 /** Optional parameters. */
-export interface PrivateEndpointConnectionsListByResourceOptionalParams
+export interface AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureNextOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the listByResource operation. */
-export type PrivateEndpointConnectionsListByResourceResponse = PrivateEndpointConnectionListResult;
+/** Contains response data for the listByDataManagerForAgricultureNext operation. */
+export type AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureNextResponse = AzureAgFoodPlatformRPServicePrivateEndpointConnectionListResult;
 
 /** Optional parameters. */
-export interface PrivateLinkResourcesListByResourceOptionalParams
+export interface AzureAgFoodPlatformRpServicePrivateLinkResourcesListByDataManagerForAgricultureOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the listByResource operation. */
-export type PrivateLinkResourcesListByResourceResponse = PrivateLinkResourceListResult;
+/** Contains response data for the listByDataManagerForAgriculture operation. */
+export type AzureAgFoodPlatformRpServicePrivateLinkResourcesListByDataManagerForAgricultureResponse = AzureAgFoodPlatformRPServicePrivateLinkResourceListResult;
 
 /** Optional parameters. */
-export interface PrivateLinkResourcesGetOptionalParams
+export interface AzureAgFoodPlatformRpServicePrivateLinkResourcesGetOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
-export type PrivateLinkResourcesGetResponse = PrivateLinkResource;
+export type AzureAgFoodPlatformRpServicePrivateLinkResourcesGetResponse = AzureAgFoodPlatformRPServicePrivateLinkResource;
+
+/** Optional parameters. */
+export interface AzureAgFoodPlatformRpServicePrivateLinkResourcesListByDataManagerForAgricultureNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByDataManagerForAgricultureNext operation. */
+export type AzureAgFoodPlatformRpServicePrivateLinkResourcesListByDataManagerForAgricultureNextResponse = AzureAgFoodPlatformRPServicePrivateLinkResourceListResult;
+
+/** Optional parameters. */
+export interface SolutionsListByDataManagerForAgricultureOptionalParams
+  extends coreClient.OperationOptions {
+  /**
+   * Maximum number of items needed (inclusive).
+   * Minimum = 10, Maximum = 1000, Default value = 50.
+   */
+  maxPageSize?: number;
+  /** Skip token for getting next set of results. */
+  skipToken?: string;
+  /** Installed Solution ids. */
+  solutionIds?: string[];
+  /** Ids of the resource. */
+  ids?: string[];
+  /** Names of the resource. */
+  names?: string[];
+  /**
+   * Filters on key-value pairs within the Properties object.
+   * eg. "{testKey} eq {testValue}".
+   */
+  propertyFilters?: string[];
+  /** Statuses of the resource. */
+  statuses?: string[];
+  /** Minimum creation date of resource (inclusive). */
+  minCreatedDateTime?: Date;
+  /** Maximum creation date of resource (inclusive). */
+  maxCreatedDateTime?: Date;
+  /** Minimum last modified date of resource (inclusive). */
+  minLastModifiedDateTime?: Date;
+  /** Maximum last modified date of resource (inclusive). */
+  maxLastModifiedDateTime?: Date;
+}
+
+/** Contains response data for the listByDataManagerForAgriculture operation. */
+export type SolutionsListByDataManagerForAgricultureResponse = SolutionListResult;
+
+/** Optional parameters. */
+export interface SolutionsGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type SolutionsGetResponse = Solution;
+
+/** Optional parameters. */
+export interface SolutionsCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the createOrUpdate operation. */
+export type SolutionsCreateOrUpdateResponse = Solution;
+
+/** Optional parameters. */
+export interface SolutionsDeleteOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Optional parameters. */
+export interface SolutionsListByDataManagerForAgricultureNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByDataManagerForAgricultureNext operation. */
+export type SolutionsListByDataManagerForAgricultureNextResponse = SolutionListResult;
 
 /** Optional parameters. */
 export interface AgriFoodMgmtClientOptionalParams

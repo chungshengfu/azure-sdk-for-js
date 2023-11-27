@@ -6,10 +6,14 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-export * from "./extensions";
-export * from "./farmBeatsExtensions";
-export * from "./farmBeatsModels";
-export * from "./locations";
+export * from "./dataManagerForAgricultureExtensions";
+export * from "./dataManagerForAgricultureSolutions";
 export * from "./operations";
-export * from "./privateEndpointConnections";
-export * from "./privateLinkResources";
+export * from "./checkNameAvailabilityOperations";
+export * from "./dataManagerForAgricultures";
+export * from "./operationResultsOperations";
+export * from "./dataConnectors";
+export * from "./extensions";
+export * from "./azureAgFoodPlatformRpServicePrivateEndpointConnections";
+export * from "./azureAgFoodPlatformRpServicePrivateLinkResources";
+export * from "./solutions";

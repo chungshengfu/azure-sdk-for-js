@@ -8,20 +8,20 @@
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
-  Extension,
-  ExtensionsListByDataManagerForAgricultureOptionalParams,
-  ExtensionsGetOptionalParams,
-  ExtensionsGetResponse,
-  ExtensionsCreateOrUpdateOptionalParams,
-  ExtensionsCreateOrUpdateResponse,
-  ExtensionsDeleteOptionalParams
+  Solution,
+  SolutionsListByDataManagerForAgricultureOptionalParams,
+  SolutionsGetOptionalParams,
+  SolutionsGetResponse,
+  SolutionsCreateOrUpdateOptionalParams,
+  SolutionsCreateOrUpdateResponse,
+  SolutionsDeleteOptionalParams
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Interface representing a Extensions. */
-export interface Extensions {
+/** Interface representing a Solutions. */
+export interface Solutions {
   /**
-   * Get installed extensions details.
+   * Get installed Solutions details.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param dataManagerForAgricultureResourceName DataManagerForAgriculture resource name.
    * @param options The options parameters.
@@ -29,49 +29,47 @@ export interface Extensions {
   listByDataManagerForAgriculture(
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
-    options?: ExtensionsListByDataManagerForAgricultureOptionalParams
-  ): PagedAsyncIterableIterator<Extension>;
+    options?: SolutionsListByDataManagerForAgricultureOptionalParams
+  ): PagedAsyncIterableIterator<Solution>;
   /**
-   * Get installed extension details by extension id.
+   * Get installed Solution details by Solution id.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param dataManagerForAgricultureResourceName DataManagerForAgriculture resource name.
-   * @param extensionId Id of extension resource.
+   * @param solutionId SolutionId for Data Manager For Agriculture Resource.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
-    extensionId: string,
-    options?: ExtensionsGetOptionalParams
-  ): Promise<ExtensionsGetResponse>;
+    solutionId: string,
+    options?: SolutionsGetOptionalParams
+  ): Promise<SolutionsGetResponse>;
   /**
-   * Install or Update extension. Additional Api Properties are merged patch and if the extension is
-   * updated to a new version then the obsolete entries will be auto deleted from Additional Api
-   * Properties.
+   * Install Or Update Solution.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param dataManagerForAgricultureResourceName DataManagerForAgriculture resource name.
-   * @param extensionId Id of extension resource.
+   * @param solutionId SolutionId for Data Manager For Agriculture Resource.
    * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
-    extensionId: string,
-    resource: Extension,
-    options?: ExtensionsCreateOrUpdateOptionalParams
-  ): Promise<ExtensionsCreateOrUpdateResponse>;
+    solutionId: string,
+    resource: Solution,
+    options?: SolutionsCreateOrUpdateOptionalParams
+  ): Promise<SolutionsCreateOrUpdateResponse>;
   /**
-   * Uninstall extension.
+   * Uninstall Solution.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param dataManagerForAgricultureResourceName DataManagerForAgriculture resource name.
-   * @param extensionId Id of extension resource.
+   * @param solutionId SolutionId for Data Manager For Agriculture Resource.
    * @param options The options parameters.
    */
   delete(
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
-    extensionId: string,
-    options?: ExtensionsDeleteOptionalParams
+    solutionId: string,
+    options?: SolutionsDeleteOptionalParams
   ): Promise<void>;
 }

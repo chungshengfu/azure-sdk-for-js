@@ -6,9 +6,9 @@
 
 import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
+import { OperationState } from '@azure/core-lro';
 import { PagedAsyncIterableIterator } from '@azure/core-paging';
-import { PollerLike } from '@azure/core-lro';
-import { PollOperationState } from '@azure/core-lro';
+import { SimplePollerLike } from '@azure/core-lro';
 
 // @public
 export type ActionType = string;
@@ -18,24 +18,33 @@ export class AgriFoodMgmtClient extends coreClient.ServiceClient {
     // (undocumented)
     $host: string;
     constructor(credentials: coreAuth.TokenCredential, subscriptionId: string, options?: AgriFoodMgmtClientOptionalParams);
+    constructor(credentials: coreAuth.TokenCredential, options?: AgriFoodMgmtClientOptionalParams);
     // (undocumented)
     apiVersion: string;
     // (undocumented)
+    azureAgFoodPlatformRpServicePrivateEndpointConnections: AzureAgFoodPlatformRpServicePrivateEndpointConnections;
+    // (undocumented)
+    azureAgFoodPlatformRpServicePrivateLinkResources: AzureAgFoodPlatformRpServicePrivateLinkResources;
+    // (undocumented)
+    checkNameAvailabilityOperations: CheckNameAvailabilityOperations;
+    // (undocumented)
+    dataConnectors: DataConnectors;
+    // (undocumented)
+    dataManagerForAgricultureExtensions: DataManagerForAgricultureExtensions;
+    // (undocumented)
+    dataManagerForAgricultures: DataManagerForAgricultures;
+    // (undocumented)
+    dataManagerForAgricultureSolutions: DataManagerForAgricultureSolutions;
+    // (undocumented)
     extensions: Extensions;
     // (undocumented)
-    farmBeatsExtensions: FarmBeatsExtensions;
-    // (undocumented)
-    farmBeatsModels: FarmBeatsModels;
-    // (undocumented)
-    locations: Locations;
+    operationResultsOperations: OperationResultsOperations;
     // (undocumented)
     operations: Operations;
     // (undocumented)
-    privateEndpointConnections: PrivateEndpointConnections;
+    solutions: Solutions;
     // (undocumented)
-    privateLinkResources: PrivateLinkResources;
-    // (undocumented)
-    subscriptionId: string;
+    subscriptionId?: string;
 }
 
 // @public
@@ -46,9 +55,183 @@ export interface AgriFoodMgmtClientOptionalParams extends coreClient.ServiceClie
 }
 
 // @public
+export interface ApiKeyAuthCredentials extends AuthCredentials {
+    apiKey: KeyVaultProperties;
+    kind: "ApiKeyAuthCredentials";
+}
+
+// @public
+export interface ApiProperties {
+    apiFreshnessTimeInMinutes?: number;
+}
+
+// @public
 export interface ArmAsyncOperation {
+    error?: ArmAsyncOperationError;
     status?: string;
 }
+
+// @public
+export interface ArmAsyncOperationError {
+    code?: string;
+    message?: string;
+}
+
+// @public
+export interface AuthCredentials {
+    kind: "ApiKeyAuthCredentials" | "OAuthClientCredentials";
+}
+
+// @public
+export type AuthCredentialsKind = string;
+
+// @public (undocumented)
+export type AuthCredentialsUnion = AuthCredentials | ApiKeyAuthCredentials | OAuthClientCredentials;
+
+// @public
+export interface AzureAgFoodPlatformRPServicePrivateEndpointConnection extends ProxyResource {
+    readonly groupIds?: string[];
+    privateEndpoint?: PrivateEndpoint;
+    privateLinkServiceConnectionState?: PrivateLinkServiceConnectionState;
+    readonly provisioningState?: PrivateEndpointConnectionProvisioningState;
+}
+
+// @public
+export interface AzureAgFoodPlatformRPServicePrivateEndpointConnectionListResult {
+    nextLink?: string;
+    value: AzureAgFoodPlatformRPServicePrivateEndpointConnection[];
+}
+
+// @public
+export interface AzureAgFoodPlatformRpServicePrivateEndpointConnections {
+    beginDelete(resourceGroupName: string, dataManagerForAgricultureResourceName: string, privateEndpointConnectionName: string, options?: AzureAgFoodPlatformRpServicePrivateEndpointConnectionsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
+    beginDeleteAndWait(resourceGroupName: string, dataManagerForAgricultureResourceName: string, privateEndpointConnectionName: string, options?: AzureAgFoodPlatformRpServicePrivateEndpointConnectionsDeleteOptionalParams): Promise<void>;
+    createOrUpdate(resourceGroupName: string, dataManagerForAgricultureResourceName: string, privateEndpointConnectionName: string, resource: AzureAgFoodPlatformRPServicePrivateEndpointConnection, options?: AzureAgFoodPlatformRpServicePrivateEndpointConnectionsCreateOrUpdateOptionalParams): Promise<AzureAgFoodPlatformRpServicePrivateEndpointConnectionsCreateOrUpdateResponse>;
+    get(resourceGroupName: string, dataManagerForAgricultureResourceName: string, privateEndpointConnectionName: string, options?: AzureAgFoodPlatformRpServicePrivateEndpointConnectionsGetOptionalParams): Promise<AzureAgFoodPlatformRpServicePrivateEndpointConnectionsGetResponse>;
+    listByDataManagerForAgriculture(resourceGroupName: string, dataManagerForAgricultureResourceName: string, options?: AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureOptionalParams): PagedAsyncIterableIterator<AzureAgFoodPlatformRPServicePrivateEndpointConnection>;
+}
+
+// @public
+export interface AzureAgFoodPlatformRpServicePrivateEndpointConnectionsCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type AzureAgFoodPlatformRpServicePrivateEndpointConnectionsCreateOrUpdateResponse = AzureAgFoodPlatformRPServicePrivateEndpointConnection;
+
+// @public
+export interface AzureAgFoodPlatformRpServicePrivateEndpointConnectionsDeleteHeaders {
+    location?: string;
+    retryAfter?: number;
+}
+
+// @public
+export interface AzureAgFoodPlatformRpServicePrivateEndpointConnectionsDeleteOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export interface AzureAgFoodPlatformRpServicePrivateEndpointConnectionsGetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type AzureAgFoodPlatformRpServicePrivateEndpointConnectionsGetResponse = AzureAgFoodPlatformRPServicePrivateEndpointConnection;
+
+// @public
+export interface AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureNextResponse = AzureAgFoodPlatformRPServicePrivateEndpointConnectionListResult;
+
+// @public
+export interface AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type AzureAgFoodPlatformRpServicePrivateEndpointConnectionsListByDataManagerForAgricultureResponse = AzureAgFoodPlatformRPServicePrivateEndpointConnectionListResult;
+
+// @public
+export interface AzureAgFoodPlatformRPServicePrivateLinkResource extends ProxyResource {
+    readonly groupId?: string;
+    readonly requiredMembers?: string[];
+    requiredZoneNames?: string[];
+}
+
+// @public
+export interface AzureAgFoodPlatformRPServicePrivateLinkResourceListResult {
+    nextLink?: string;
+    value: AzureAgFoodPlatformRPServicePrivateLinkResource[];
+}
+
+// @public
+export interface AzureAgFoodPlatformRpServicePrivateLinkResources {
+    get(resourceGroupName: string, dataManagerForAgricultureResourceName: string, subResourceName: string, options?: AzureAgFoodPlatformRpServicePrivateLinkResourcesGetOptionalParams): Promise<AzureAgFoodPlatformRpServicePrivateLinkResourcesGetResponse>;
+    listByDataManagerForAgriculture(resourceGroupName: string, dataManagerForAgricultureResourceName: string, options?: AzureAgFoodPlatformRpServicePrivateLinkResourcesListByDataManagerForAgricultureOptionalParams): PagedAsyncIterableIterator<AzureAgFoodPlatformRPServicePrivateLinkResource>;
+}
+
+// @public
+export interface AzureAgFoodPlatformRpServicePrivateLinkResourcesGetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type AzureAgFoodPlatformRpServicePrivateLinkResourcesGetResponse = AzureAgFoodPlatformRPServicePrivateLinkResource;
+
+// @public
+export interface AzureAgFoodPlatformRpServicePrivateLinkResourcesListByDataManagerForAgricultureNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type AzureAgFoodPlatformRpServicePrivateLinkResourcesListByDataManagerForAgricultureNextResponse = AzureAgFoodPlatformRPServicePrivateLinkResourceListResult;
+
+// @public
+export interface AzureAgFoodPlatformRpServicePrivateLinkResourcesListByDataManagerForAgricultureOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type AzureAgFoodPlatformRpServicePrivateLinkResourcesListByDataManagerForAgricultureResponse = AzureAgFoodPlatformRPServicePrivateLinkResourceListResult;
+
+// @public
+export interface AzureCoreFoundationsError {
+    code: string;
+    details?: AzureCoreFoundationsError[];
+    innererror?: AzureCoreFoundationsInnerError;
+    message: string;
+    target?: string;
+}
+
+// @public
+export interface AzureCoreFoundationsErrorResponse {
+    error: AzureCoreFoundationsError;
+}
+
+// @public
+export interface AzureCoreFoundationsInnerError {
+    code?: string;
+    innererror?: AzureCoreFoundationsInnerError;
+}
+
+// @public
+export interface AzureResourceManagerPrivateEndpointConnection extends ProxyResource {
+    properties?: PrivateEndpointConnectionProperties;
+}
+
+// @public
+export interface CheckNameAvailabilityOperations {
+    checkNameAvailability(subscriptionId: string, nameAvailabilityRequest: CheckNameAvailabilityRequest, options?: CheckNameAvailabilityOperationsCheckNameAvailabilityOptionalParams): Promise<CheckNameAvailabilityOperationsCheckNameAvailabilityResponse>;
+}
+
+// @public
+export interface CheckNameAvailabilityOperationsCheckNameAvailabilityExceptionHeaders {
+    xMsErrorCode?: string;
+}
+
+// @public
+export interface CheckNameAvailabilityOperationsCheckNameAvailabilityOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type CheckNameAvailabilityOperationsCheckNameAvailabilityResponse = CheckNameAvailabilityResponse;
 
 // @public
 export type CheckNameAvailabilityReason = string;
@@ -70,9 +253,272 @@ export interface CheckNameAvailabilityResponse {
 export type CreatedByType = string;
 
 // @public
+export interface DataConnector extends ProxyResource {
+    credentials?: AuthCredentialsUnion;
+    readonly eTag?: string;
+}
+
+// @public
+export interface DataConnectorListResult {
+    nextLink?: string;
+    value: DataConnector[];
+}
+
+// @public
+export interface DataConnectors {
+    createOrUpdate(resourceGroupName: string, dataManagerForAgricultureResourceName: string, dataConnectorName: string, resource: DataConnector, options?: DataConnectorsCreateOrUpdateOptionalParams): Promise<DataConnectorsCreateOrUpdateResponse>;
+    delete(resourceGroupName: string, dataManagerForAgricultureResourceName: string, dataConnectorName: string, options?: DataConnectorsDeleteOptionalParams): Promise<void>;
+    get(resourceGroupName: string, dataManagerForAgricultureResourceName: string, dataConnectorName: string, options?: DataConnectorsGetOptionalParams): Promise<DataConnectorsGetResponse>;
+    listByDataManagerForAgriculture(resourceGroupName: string, dataManagerForAgricultureResourceName: string, options?: DataConnectorsListByDataManagerForAgricultureOptionalParams): PagedAsyncIterableIterator<DataConnector>;
+}
+
+// @public
+export interface DataConnectorsCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type DataConnectorsCreateOrUpdateResponse = DataConnector;
+
+// @public
+export interface DataConnectorsDeleteOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export interface DataConnectorsGetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type DataConnectorsGetResponse = DataConnector;
+
+// @public
+export interface DataConnectorsListByDataManagerForAgricultureNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type DataConnectorsListByDataManagerForAgricultureNextResponse = DataConnectorListResult;
+
+// @public
+export interface DataConnectorsListByDataManagerForAgricultureOptionalParams extends coreClient.OperationOptions {
+    maxPageSize?: number;
+    skipToken?: string;
+}
+
+// @public
+export type DataConnectorsListByDataManagerForAgricultureResponse = DataConnectorListResult;
+
+// @public
+export interface DataManagerForAgriculture extends TrackedResource {
+    identity?: ManagedServiceIdentity;
+    readonly instanceUri?: string;
+    readonly privateEndpointConnections?: AzureResourceManagerPrivateEndpointConnection[];
+    readonly provisioningState?: ProvisioningState;
+    publicNetworkAccess?: PublicNetworkAccess;
+    sensorIntegration?: SensorIntegration;
+}
+
+// @public
+export interface DataManagerForAgricultureExtension extends ProxyResource {
+    readonly description?: string;
+    readonly detailedInformation?: DetailedInformation[];
+    readonly extensionApiDocsLink?: string;
+    readonly extensionAuthLink?: string;
+    readonly extensionCategory?: string;
+    readonly farmBeatsExtensionId?: string;
+    readonly farmBeatsExtensionName?: string;
+    readonly farmBeatsExtensionVersion?: string;
+    readonly publisherId?: string;
+    readonly targetResourceType?: string;
+}
+
+// @public
+export interface DataManagerForAgricultureExtensionListResult {
+    nextLink?: string;
+    value: DataManagerForAgricultureExtension[];
+}
+
+// @public
+export interface DataManagerForAgricultureExtensions {
+    get(dataManagerForAgricultureExtensionId: string, options?: DataManagerForAgricultureExtensionsGetOptionalParams): Promise<DataManagerForAgricultureExtensionsGetResponse>;
+    listByTenant(options?: DataManagerForAgricultureExtensionsListByTenantOptionalParams): PagedAsyncIterableIterator<DataManagerForAgricultureExtension>;
+}
+
+// @public
+export interface DataManagerForAgricultureExtensionsGetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type DataManagerForAgricultureExtensionsGetResponse = DataManagerForAgricultureExtension;
+
+// @public
+export interface DataManagerForAgricultureExtensionsListByTenantNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type DataManagerForAgricultureExtensionsListByTenantNextResponse = DataManagerForAgricultureExtensionListResult;
+
+// @public
+export interface DataManagerForAgricultureExtensionsListByTenantOptionalParams extends coreClient.OperationOptions {
+    extensionCategories?: string[];
+    farmBeatsExtensionIds?: string[];
+    farmBeatsExtensionNames?: string[];
+    maxPageSize?: number;
+    publisherIds?: string[];
+}
+
+// @public
+export type DataManagerForAgricultureExtensionsListByTenantResponse = DataManagerForAgricultureExtensionListResult;
+
+// @public
+export interface DataManagerForAgricultureListResult {
+    nextLink?: string;
+    value: DataManagerForAgriculture[];
+}
+
+// @public
+export interface DataManagerForAgricultures {
+    beginUpdate(resourceGroupName: string, dataManagerForAgricultureResourceName: string, properties: DataManagerForAgricultureUpdate, options?: DataManagerForAgriculturesUpdateOptionalParams): Promise<SimplePollerLike<OperationState<DataManagerForAgriculturesUpdateResponse>, DataManagerForAgriculturesUpdateResponse>>;
+    beginUpdateAndWait(resourceGroupName: string, dataManagerForAgricultureResourceName: string, properties: DataManagerForAgricultureUpdate, options?: DataManagerForAgriculturesUpdateOptionalParams): Promise<DataManagerForAgriculturesUpdateResponse>;
+    createOrUpdate(resourceGroupName: string, dataManagerForAgricultureResourceName: string, resource: DataManagerForAgriculture, options?: DataManagerForAgriculturesCreateOrUpdateOptionalParams): Promise<DataManagerForAgriculturesCreateOrUpdateResponse>;
+    delete(resourceGroupName: string, dataManagerForAgricultureResourceName: string, options?: DataManagerForAgriculturesDeleteOptionalParams): Promise<void>;
+    get(resourceGroupName: string, dataManagerForAgricultureResourceName: string, options?: DataManagerForAgriculturesGetOptionalParams): Promise<DataManagerForAgriculturesGetResponse>;
+    listByResourceGroup(resourceGroupName: string, options?: DataManagerForAgriculturesListByResourceGroupOptionalParams): PagedAsyncIterableIterator<DataManagerForAgriculture>;
+    listBySubscription(options?: DataManagerForAgriculturesListBySubscriptionOptionalParams): PagedAsyncIterableIterator<DataManagerForAgriculture>;
+}
+
+// @public
+export interface DataManagerForAgriculturesCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type DataManagerForAgriculturesCreateOrUpdateResponse = DataManagerForAgriculture;
+
+// @public
+export interface DataManagerForAgriculturesDeleteOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export interface DataManagerForAgriculturesGetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type DataManagerForAgriculturesGetResponse = DataManagerForAgriculture;
+
+// @public
+export interface DataManagerForAgriculturesListByResourceGroupNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type DataManagerForAgriculturesListByResourceGroupNextResponse = DataManagerForAgricultureListResult;
+
+// @public
+export interface DataManagerForAgriculturesListByResourceGroupOptionalParams extends coreClient.OperationOptions {
+    maxPageSize?: number;
+    skipToken?: string;
+}
+
+// @public
+export type DataManagerForAgriculturesListByResourceGroupResponse = DataManagerForAgricultureListResult;
+
+// @public
+export interface DataManagerForAgriculturesListBySubscriptionNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type DataManagerForAgriculturesListBySubscriptionNextResponse = DataManagerForAgricultureListResult;
+
+// @public
+export interface DataManagerForAgriculturesListBySubscriptionOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type DataManagerForAgriculturesListBySubscriptionResponse = DataManagerForAgricultureListResult;
+
+// @public
+export interface DataManagerForAgricultureSolution extends ProxyResource {
+    readonly accessFBApplicationId?: string;
+    readonly accessFBApplicationName?: string;
+    readonly actionIds?: string[];
+    readonly dataAccessScopes?: string[];
+    // (undocumented)
+    marketplaceOfferDetails?: MarketplaceOfferDetails;
+    readonly openApiSpecsDictionary?: {
+        [propertyName: string]: any;
+    };
+    readonly partnerId?: string;
+    readonly partnerTenantId?: string;
+    readonly roleId?: string;
+    readonly roleName?: string;
+    readonly saaSApplicationId?: string;
+}
+
+// @public
+export interface DataManagerForAgricultureSolutionListResult {
+    nextLink?: string;
+    value: DataManagerForAgricultureSolution[];
+}
+
+// @public
+export interface DataManagerForAgricultureSolutions {
+    get(dataManagerForAgricultureSolutionId: string, options?: DataManagerForAgricultureSolutionsGetOptionalParams): Promise<DataManagerForAgricultureSolutionsGetResponse>;
+    listByTenant(options?: DataManagerForAgricultureSolutionsListByTenantOptionalParams): PagedAsyncIterableIterator<DataManagerForAgricultureSolution>;
+}
+
+// @public
+export interface DataManagerForAgricultureSolutionsGetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type DataManagerForAgricultureSolutionsGetResponse = DataManagerForAgricultureSolution;
+
+// @public
+export interface DataManagerForAgricultureSolutionsListByTenantNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type DataManagerForAgricultureSolutionsListByTenantNextResponse = DataManagerForAgricultureSolutionListResult;
+
+// @public
+export interface DataManagerForAgricultureSolutionsListByTenantOptionalParams extends coreClient.OperationOptions {
+    farmBeatsSolutionIds?: string[];
+    farmBeatsSolutionNames?: string[];
+    maxPageSize?: number;
+}
+
+// @public
+export type DataManagerForAgricultureSolutionsListByTenantResponse = DataManagerForAgricultureSolutionListResult;
+
+// @public
+export interface DataManagerForAgriculturesUpdateHeaders {
+    location?: string;
+    retryAfter?: number;
+}
+
+// @public
+export interface DataManagerForAgriculturesUpdateOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type DataManagerForAgriculturesUpdateResponse = DataManagerForAgriculture;
+
+// @public
+export interface DataManagerForAgricultureUpdate {
+    identity?: ManagedServiceIdentity;
+    publicNetworkAccess?: PublicNetworkAccess;
+    sensorIntegration?: SensorIntegration;
+    tags?: {
+        [propertyName: string]: string;
+    };
+}
+
+// @public
 export interface DetailedInformation {
+    apiDefaultInputParameters?: string[];
+    apiDocsLink?: string;
     apiInputParameters?: string[];
     apiName?: string;
+    apiType?: string;
     customParameters?: string[];
     platformParameters?: string[];
     unitsSupported?: UnitSystemsInfo;
@@ -100,6 +546,9 @@ export interface ErrorResponse {
 
 // @public
 export interface Extension extends ProxyResource {
+    readonly additionalApiProperties?: {
+        [propertyName: string]: ApiProperties;
+    };
     readonly eTag?: string;
     readonly extensionApiDocsLink?: string;
     readonly extensionAuthLink?: string;
@@ -109,26 +558,33 @@ export interface Extension extends ProxyResource {
 }
 
 // @public
-export interface ExtensionListResponse {
-    readonly nextLink?: string;
-    value?: Extension[];
+export interface ExtensionInstallationRequest {
+    additionalApiProperties?: {
+        [propertyName: string]: ApiProperties;
+    };
+    extensionVersion?: string;
+}
+
+// @public
+export interface ExtensionListResult {
+    nextLink?: string;
+    value: Extension[];
 }
 
 // @public
 export interface Extensions {
-    create(resourceGroupName: string, farmBeatsResourceName: string, extensionId: string, options?: ExtensionsCreateOptionalParams): Promise<ExtensionsCreateResponse>;
-    delete(resourceGroupName: string, farmBeatsResourceName: string, extensionId: string, options?: ExtensionsDeleteOptionalParams): Promise<void>;
-    get(resourceGroupName: string, farmBeatsResourceName: string, extensionId: string, options?: ExtensionsGetOptionalParams): Promise<ExtensionsGetResponse>;
-    listByFarmBeats(resourceGroupName: string, farmBeatsResourceName: string, options?: ExtensionsListByFarmBeatsOptionalParams): PagedAsyncIterableIterator<Extension>;
-    update(resourceGroupName: string, farmBeatsResourceName: string, extensionId: string, options?: ExtensionsUpdateOptionalParams): Promise<ExtensionsUpdateResponse>;
+    createOrUpdate(resourceGroupName: string, dataManagerForAgricultureResourceName: string, extensionId: string, resource: Extension, options?: ExtensionsCreateOrUpdateOptionalParams): Promise<ExtensionsCreateOrUpdateResponse>;
+    delete(resourceGroupName: string, dataManagerForAgricultureResourceName: string, extensionId: string, options?: ExtensionsDeleteOptionalParams): Promise<void>;
+    get(resourceGroupName: string, dataManagerForAgricultureResourceName: string, extensionId: string, options?: ExtensionsGetOptionalParams): Promise<ExtensionsGetResponse>;
+    listByDataManagerForAgriculture(resourceGroupName: string, dataManagerForAgricultureResourceName: string, options?: ExtensionsListByDataManagerForAgricultureOptionalParams): PagedAsyncIterableIterator<Extension>;
 }
 
 // @public
-export interface ExtensionsCreateOptionalParams extends coreClient.OperationOptions {
+export interface ExtensionsCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type ExtensionsCreateResponse = Extension;
+export type ExtensionsCreateOrUpdateResponse = Extension;
 
 // @public
 export interface ExtensionsDeleteOptionalParams extends coreClient.OperationOptions {
@@ -142,7 +598,14 @@ export interface ExtensionsGetOptionalParams extends coreClient.OperationOptions
 export type ExtensionsGetResponse = Extension;
 
 // @public
-export interface ExtensionsListByFarmBeatsNextOptionalParams extends coreClient.OperationOptions {
+export interface ExtensionsListByDataManagerForAgricultureNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type ExtensionsListByDataManagerForAgricultureNextResponse = ExtensionListResult;
+
+// @public
+export interface ExtensionsListByDataManagerForAgricultureOptionalParams extends coreClient.OperationOptions {
     extensionCategories?: string[];
     extensionIds?: string[];
     maxPageSize?: number;
@@ -150,202 +613,7 @@ export interface ExtensionsListByFarmBeatsNextOptionalParams extends coreClient.
 }
 
 // @public
-export type ExtensionsListByFarmBeatsNextResponse = ExtensionListResponse;
-
-// @public
-export interface ExtensionsListByFarmBeatsOptionalParams extends coreClient.OperationOptions {
-    extensionCategories?: string[];
-    extensionIds?: string[];
-    maxPageSize?: number;
-    skipToken?: string;
-}
-
-// @public
-export type ExtensionsListByFarmBeatsResponse = ExtensionListResponse;
-
-// @public
-export interface ExtensionsUpdateOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type ExtensionsUpdateResponse = Extension;
-
-// @public
-export interface FarmBeats extends TrackedResource {
-    identity?: Identity;
-    readonly instanceUri?: string;
-    readonly privateEndpointConnections?: PrivateEndpointConnection;
-    readonly provisioningState?: ProvisioningState;
-    publicNetworkAccess?: PublicNetworkAccess;
-    sensorIntegration?: SensorIntegration;
-}
-
-// @public
-export interface FarmBeatsExtension extends ProxyResource {
-    readonly description?: string;
-    readonly detailedInformation?: DetailedInformation[];
-    readonly extensionApiDocsLink?: string;
-    readonly extensionAuthLink?: string;
-    readonly extensionCategory?: string;
-    readonly farmBeatsExtensionId?: string;
-    readonly farmBeatsExtensionName?: string;
-    readonly farmBeatsExtensionVersion?: string;
-    readonly publisherId?: string;
-    readonly targetResourceType?: string;
-}
-
-// @public
-export interface FarmBeatsExtensionListResponse {
-    readonly nextLink?: string;
-    value?: FarmBeatsExtension[];
-}
-
-// @public
-export interface FarmBeatsExtensions {
-    get(farmBeatsExtensionId: string, options?: FarmBeatsExtensionsGetOptionalParams): Promise<FarmBeatsExtensionsGetResponse>;
-    list(options?: FarmBeatsExtensionsListOptionalParams): PagedAsyncIterableIterator<FarmBeatsExtension>;
-}
-
-// @public
-export interface FarmBeatsExtensionsGetOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type FarmBeatsExtensionsGetResponse = FarmBeatsExtension;
-
-// @public
-export interface FarmBeatsExtensionsListNextOptionalParams extends coreClient.OperationOptions {
-    extensionCategories?: string[];
-    farmBeatsExtensionIds?: string[];
-    farmBeatsExtensionNames?: string[];
-    maxPageSize?: number;
-    publisherIds?: string[];
-}
-
-// @public
-export type FarmBeatsExtensionsListNextResponse = FarmBeatsExtensionListResponse;
-
-// @public
-export interface FarmBeatsExtensionsListOptionalParams extends coreClient.OperationOptions {
-    extensionCategories?: string[];
-    farmBeatsExtensionIds?: string[];
-    farmBeatsExtensionNames?: string[];
-    maxPageSize?: number;
-    publisherIds?: string[];
-}
-
-// @public
-export type FarmBeatsExtensionsListResponse = FarmBeatsExtensionListResponse;
-
-// @public
-export interface FarmBeatsListResponse {
-    readonly nextLink?: string;
-    value?: FarmBeats[];
-}
-
-// @public
-export interface FarmBeatsModels {
-    beginUpdate(resourceGroupName: string, farmBeatsResourceName: string, body: FarmBeatsUpdateRequestModel, options?: FarmBeatsModelsUpdateOptionalParams): Promise<PollerLike<PollOperationState<FarmBeatsModelsUpdateResponse>, FarmBeatsModelsUpdateResponse>>;
-    beginUpdateAndWait(resourceGroupName: string, farmBeatsResourceName: string, body: FarmBeatsUpdateRequestModel, options?: FarmBeatsModelsUpdateOptionalParams): Promise<FarmBeatsModelsUpdateResponse>;
-    createOrUpdate(resourceGroupName: string, farmBeatsResourceName: string, body: FarmBeats, options?: FarmBeatsModelsCreateOrUpdateOptionalParams): Promise<FarmBeatsModelsCreateOrUpdateResponse>;
-    delete(resourceGroupName: string, farmBeatsResourceName: string, options?: FarmBeatsModelsDeleteOptionalParams): Promise<void>;
-    get(resourceGroupName: string, farmBeatsResourceName: string, options?: FarmBeatsModelsGetOptionalParams): Promise<FarmBeatsModelsGetResponse>;
-    getOperationResult(resourceGroupName: string, farmBeatsResourceName: string, operationResultsId: string, options?: FarmBeatsModelsGetOperationResultOptionalParams): Promise<FarmBeatsModelsGetOperationResultResponse>;
-    listByResourceGroup(resourceGroupName: string, options?: FarmBeatsModelsListByResourceGroupOptionalParams): PagedAsyncIterableIterator<FarmBeats>;
-    listBySubscription(options?: FarmBeatsModelsListBySubscriptionOptionalParams): PagedAsyncIterableIterator<FarmBeats>;
-}
-
-// @public
-export interface FarmBeatsModelsCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type FarmBeatsModelsCreateOrUpdateResponse = FarmBeats;
-
-// @public
-export interface FarmBeatsModelsDeleteOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export interface FarmBeatsModelsGetOperationResultOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type FarmBeatsModelsGetOperationResultResponse = ArmAsyncOperation;
-
-// @public
-export interface FarmBeatsModelsGetOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type FarmBeatsModelsGetResponse = FarmBeats;
-
-// @public
-export interface FarmBeatsModelsListByResourceGroupNextOptionalParams extends coreClient.OperationOptions {
-    maxPageSize?: number;
-    skipToken?: string;
-}
-
-// @public
-export type FarmBeatsModelsListByResourceGroupNextResponse = FarmBeatsListResponse;
-
-// @public
-export interface FarmBeatsModelsListByResourceGroupOptionalParams extends coreClient.OperationOptions {
-    maxPageSize?: number;
-    skipToken?: string;
-}
-
-// @public
-export type FarmBeatsModelsListByResourceGroupResponse = FarmBeatsListResponse;
-
-// @public
-export interface FarmBeatsModelsListBySubscriptionNextOptionalParams extends coreClient.OperationOptions {
-    maxPageSize?: number;
-    skipToken?: string;
-}
-
-// @public
-export type FarmBeatsModelsListBySubscriptionNextResponse = FarmBeatsListResponse;
-
-// @public
-export interface FarmBeatsModelsListBySubscriptionOptionalParams extends coreClient.OperationOptions {
-    maxPageSize?: number;
-    skipToken?: string;
-}
-
-// @public
-export type FarmBeatsModelsListBySubscriptionResponse = FarmBeatsListResponse;
-
-// @public
-export interface FarmBeatsModelsUpdateHeaders {
-    // (undocumented)
-    location?: string;
-}
-
-// @public
-export interface FarmBeatsModelsUpdateOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type FarmBeatsModelsUpdateResponse = FarmBeats;
-
-// @public
-export interface FarmBeatsUpdateProperties {
-    publicNetworkAccess?: PublicNetworkAccess;
-    sensorIntegration?: SensorIntegration;
-}
-
-// @public
-export interface FarmBeatsUpdateRequestModel {
-    identity?: Identity;
-    location?: string;
-    properties?: FarmBeatsUpdateProperties;
-    tags?: {
-        [propertyName: string]: string;
-    };
-}
+export type ExtensionsListByDataManagerForAgricultureResponse = ExtensionListResult;
 
 // @public
 export function getContinuationToken(page: unknown): string | undefined;
@@ -358,8 +626,21 @@ export interface Identity {
 }
 
 // @public
+export interface KeyVaultProperties {
+    keyName: string;
+    keyVaultUri: string;
+    keyVersion: string;
+}
+
+// @public
 export enum KnownActionType {
     Internal = "Internal"
+}
+
+// @public
+export enum KnownAuthCredentialsKind {
+    ApiKeyAuthCredentials = "ApiKeyAuthCredentials",
+    OAuthClientCredentials = "OAuthClientCredentials"
 }
 
 // @public
@@ -374,6 +655,14 @@ export enum KnownCreatedByType {
     Key = "Key",
     ManagedIdentity = "ManagedIdentity",
     User = "User"
+}
+
+// @public
+export enum KnownManagedServiceIdentityType {
+    None = "None",
+    SystemAssigned = "SystemAssigned",
+    SystemAssignedUserAssigned = "SystemAssigned, UserAssigned",
+    UserAssigned = "UserAssigned"
 }
 
 // @public
@@ -403,27 +692,49 @@ export enum KnownProvisioningState {
     Creating = "Creating",
     Deleting = "Deleting",
     Failed = "Failed",
+    Running = "Running",
     Succeeded = "Succeeded",
     Updating = "Updating"
 }
 
 // @public
 export enum KnownPublicNetworkAccess {
-    Enabled = "Enabled",
-    Hybrid = "Hybrid"
+    Disabled = "Disabled",
+    Enabled = "Enabled"
 }
 
 // @public
-export interface Locations {
-    checkNameAvailability(body: CheckNameAvailabilityRequest, options?: LocationsCheckNameAvailabilityOptionalParams): Promise<LocationsCheckNameAvailabilityResponse>;
+export enum KnownVersions {
+    V20230601Preview = "2023-06-01-preview"
 }
 
 // @public
-export interface LocationsCheckNameAvailabilityOptionalParams extends coreClient.OperationOptions {
+export interface ManagedServiceIdentity {
+    readonly principalId?: string;
+    readonly tenantId?: string;
+    type: ManagedServiceIdentityType;
+    userAssignedIdentities?: {
+        [propertyName: string]: UserAssignedIdentity;
+    };
 }
 
 // @public
-export type LocationsCheckNameAvailabilityResponse = CheckNameAvailabilityResponse;
+export type ManagedServiceIdentityType = string;
+
+// @public (undocumented)
+export interface MarketplaceOfferDetails {
+    // (undocumented)
+    publisherId?: string;
+    // (undocumented)
+    saasOfferId?: string;
+}
+
+// @public
+export interface OAuthClientCredentials extends AuthCredentials {
+    clientId: string;
+    clientSecret: KeyVaultProperties;
+    kind: "OAuthClientCredentials";
+}
 
 // @public
 export interface Operation {
@@ -447,6 +758,23 @@ export interface OperationListResult {
     readonly nextLink?: string;
     readonly value?: Operation[];
 }
+
+// @public
+export interface OperationResultsOperations {
+    get(subscriptionId: string, locations: string, operationResultsId: string, options?: OperationResultsOperationsGetOptionalParams): Promise<OperationResultsOperationsGetResponse>;
+}
+
+// @public
+export interface OperationResultsOperationsGetExceptionHeaders {
+    xMsErrorCode?: string;
+}
+
+// @public
+export interface OperationResultsOperationsGetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type OperationResultsOperationsGetResponse = ArmAsyncOperation;
 
 // @public
 export interface Operations {
@@ -476,96 +804,18 @@ export interface PrivateEndpoint {
 }
 
 // @public
-export interface PrivateEndpointConnection extends Resource {
+export interface PrivateEndpointConnectionProperties {
+    readonly groupIds?: string[];
     privateEndpoint?: PrivateEndpoint;
-    privateLinkServiceConnectionState?: PrivateLinkServiceConnectionState;
-    readonly provisioningState?: PrivateEndpointConnectionProvisioningState;
-}
-
-// @public
-export interface PrivateEndpointConnectionListResult {
-    value?: PrivateEndpointConnection[];
+    privateLinkServiceConnectionState: PrivateLinkServiceConnectionState;
+    provisioningState?: PrivateEndpointConnectionProvisioningState;
 }
 
 // @public
 export type PrivateEndpointConnectionProvisioningState = string;
 
 // @public
-export interface PrivateEndpointConnections {
-    beginDelete(resourceGroupName: string, farmBeatsResourceName: string, privateEndpointConnectionName: string, options?: PrivateEndpointConnectionsDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
-    beginDeleteAndWait(resourceGroupName: string, farmBeatsResourceName: string, privateEndpointConnectionName: string, options?: PrivateEndpointConnectionsDeleteOptionalParams): Promise<void>;
-    createOrUpdate(resourceGroupName: string, farmBeatsResourceName: string, privateEndpointConnectionName: string, body: PrivateEndpointConnection, options?: PrivateEndpointConnectionsCreateOrUpdateOptionalParams): Promise<PrivateEndpointConnectionsCreateOrUpdateResponse>;
-    get(resourceGroupName: string, farmBeatsResourceName: string, privateEndpointConnectionName: string, options?: PrivateEndpointConnectionsGetOptionalParams): Promise<PrivateEndpointConnectionsGetResponse>;
-    listByResource(resourceGroupName: string, farmBeatsResourceName: string, options?: PrivateEndpointConnectionsListByResourceOptionalParams): PagedAsyncIterableIterator<PrivateEndpointConnection>;
-}
-
-// @public
-export interface PrivateEndpointConnectionsCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type PrivateEndpointConnectionsCreateOrUpdateResponse = PrivateEndpointConnection;
-
-// @public
-export interface PrivateEndpointConnectionsDeleteHeaders {
-    // (undocumented)
-    location?: string;
-}
-
-// @public
-export interface PrivateEndpointConnectionsDeleteOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export interface PrivateEndpointConnectionsGetOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type PrivateEndpointConnectionsGetResponse = PrivateEndpointConnection;
-
-// @public
-export interface PrivateEndpointConnectionsListByResourceOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type PrivateEndpointConnectionsListByResourceResponse = PrivateEndpointConnectionListResult;
-
-// @public
 export type PrivateEndpointServiceConnectionStatus = string;
-
-// @public
-export interface PrivateLinkResource extends Resource {
-    readonly groupId?: string;
-    readonly requiredMembers?: string[];
-    requiredZoneNames?: string[];
-}
-
-// @public
-export interface PrivateLinkResourceListResult {
-    value?: PrivateLinkResource[];
-}
-
-// @public
-export interface PrivateLinkResources {
-    get(resourceGroupName: string, farmBeatsResourceName: string, subResourceName: string, options?: PrivateLinkResourcesGetOptionalParams): Promise<PrivateLinkResourcesGetResponse>;
-    listByResource(resourceGroupName: string, farmBeatsResourceName: string, options?: PrivateLinkResourcesListByResourceOptionalParams): PagedAsyncIterableIterator<PrivateLinkResource>;
-}
-
-// @public
-export interface PrivateLinkResourcesGetOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type PrivateLinkResourcesGetResponse = PrivateLinkResource;
-
-// @public
-export interface PrivateLinkResourcesListByResourceOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type PrivateLinkResourcesListByResourceResponse = PrivateLinkResourceListResult;
 
 // @public
 export interface PrivateLinkServiceConnectionState {
@@ -600,6 +850,76 @@ export interface SensorIntegration {
 }
 
 // @public
+export interface Solution extends ProxyResource {
+    readonly eTag?: string;
+    marketplacePublisherId?: string;
+    offerId?: string;
+    readonly partnerId?: string;
+    planId?: string;
+    roleAssignmentId?: string;
+    saasSubscriptionId?: string;
+    saasSubscriptionName?: string;
+    termId?: string;
+}
+
+// @public
+export interface SolutionListResult {
+    nextLink?: string;
+    value: Solution[];
+}
+
+// @public
+export interface Solutions {
+    createOrUpdate(resourceGroupName: string, dataManagerForAgricultureResourceName: string, solutionId: string, resource: Solution, options?: SolutionsCreateOrUpdateOptionalParams): Promise<SolutionsCreateOrUpdateResponse>;
+    delete(resourceGroupName: string, dataManagerForAgricultureResourceName: string, solutionId: string, options?: SolutionsDeleteOptionalParams): Promise<void>;
+    get(resourceGroupName: string, dataManagerForAgricultureResourceName: string, solutionId: string, options?: SolutionsGetOptionalParams): Promise<SolutionsGetResponse>;
+    listByDataManagerForAgriculture(resourceGroupName: string, dataManagerForAgricultureResourceName: string, options?: SolutionsListByDataManagerForAgricultureOptionalParams): PagedAsyncIterableIterator<Solution>;
+}
+
+// @public
+export interface SolutionsCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type SolutionsCreateOrUpdateResponse = Solution;
+
+// @public
+export interface SolutionsDeleteOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export interface SolutionsGetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type SolutionsGetResponse = Solution;
+
+// @public
+export interface SolutionsListByDataManagerForAgricultureNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type SolutionsListByDataManagerForAgricultureNextResponse = SolutionListResult;
+
+// @public
+export interface SolutionsListByDataManagerForAgricultureOptionalParams extends coreClient.OperationOptions {
+    ids?: string[];
+    maxCreatedDateTime?: Date;
+    maxLastModifiedDateTime?: Date;
+    maxPageSize?: number;
+    minCreatedDateTime?: Date;
+    minLastModifiedDateTime?: Date;
+    names?: string[];
+    propertyFilters?: string[];
+    skipToken?: string;
+    solutionIds?: string[];
+    statuses?: string[];
+}
+
+// @public
+export type SolutionsListByDataManagerForAgricultureResponse = SolutionListResult;
+
+// @public
 export interface SystemData {
     createdAt?: Date;
     createdBy?: string;
@@ -622,6 +942,15 @@ export interface UnitSystemsInfo {
     key: string;
     values: string[];
 }
+
+// @public
+export interface UserAssignedIdentity {
+    readonly clientId?: string;
+    readonly principalId?: string;
+}
+
+// @public
+export type Versions = string;
 
 // (No @packageDocumentation comment for this package)
 

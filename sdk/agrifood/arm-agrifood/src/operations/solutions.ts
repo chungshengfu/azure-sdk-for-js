@@ -8,31 +8,31 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { Extensions } from "../operationsInterfaces";
+import { Solutions } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { AgriFoodMgmtClient } from "../agriFoodMgmtClient";
 import {
-  Extension,
-  ExtensionsListByDataManagerForAgricultureNextOptionalParams,
-  ExtensionsListByDataManagerForAgricultureOptionalParams,
-  ExtensionsListByDataManagerForAgricultureResponse,
-  ExtensionsGetOptionalParams,
-  ExtensionsGetResponse,
-  ExtensionsCreateOrUpdateOptionalParams,
-  ExtensionsCreateOrUpdateResponse,
-  ExtensionsDeleteOptionalParams,
-  ExtensionsListByDataManagerForAgricultureNextResponse
+  Solution,
+  SolutionsListByDataManagerForAgricultureNextOptionalParams,
+  SolutionsListByDataManagerForAgricultureOptionalParams,
+  SolutionsListByDataManagerForAgricultureResponse,
+  SolutionsGetOptionalParams,
+  SolutionsGetResponse,
+  SolutionsCreateOrUpdateOptionalParams,
+  SolutionsCreateOrUpdateResponse,
+  SolutionsDeleteOptionalParams,
+  SolutionsListByDataManagerForAgricultureNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing Extensions operations. */
-export class ExtensionsImpl implements Extensions {
+/** Class containing Solutions operations. */
+export class SolutionsImpl implements Solutions {
   private readonly client: AgriFoodMgmtClient;
 
   /**
-   * Initialize a new instance of the class Extensions class.
+   * Initialize a new instance of the class Solutions class.
    * @param client Reference to the service client
    */
   constructor(client: AgriFoodMgmtClient) {
@@ -40,7 +40,7 @@ export class ExtensionsImpl implements Extensions {
   }
 
   /**
-   * Get installed extensions details.
+   * Get installed Solutions details.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param dataManagerForAgricultureResourceName DataManagerForAgriculture resource name.
    * @param options The options parameters.
@@ -48,8 +48,8 @@ export class ExtensionsImpl implements Extensions {
   public listByDataManagerForAgriculture(
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
-    options?: ExtensionsListByDataManagerForAgricultureOptionalParams
-  ): PagedAsyncIterableIterator<Extension> {
+    options?: SolutionsListByDataManagerForAgricultureOptionalParams
+  ): PagedAsyncIterableIterator<Solution> {
     const iter = this.listByDataManagerForAgriculturePagingAll(
       resourceGroupName,
       dataManagerForAgricultureResourceName,
@@ -79,10 +79,10 @@ export class ExtensionsImpl implements Extensions {
   private async *listByDataManagerForAgriculturePagingPage(
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
-    options?: ExtensionsListByDataManagerForAgricultureOptionalParams,
+    options?: SolutionsListByDataManagerForAgricultureOptionalParams,
     settings?: PageSettings
-  ): AsyncIterableIterator<Extension[]> {
-    let result: ExtensionsListByDataManagerForAgricultureResponse;
+  ): AsyncIterableIterator<Solution[]> {
+    let result: SolutionsListByDataManagerForAgricultureResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
       result = await this._listByDataManagerForAgriculture(
@@ -112,8 +112,8 @@ export class ExtensionsImpl implements Extensions {
   private async *listByDataManagerForAgriculturePagingAll(
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
-    options?: ExtensionsListByDataManagerForAgricultureOptionalParams
-  ): AsyncIterableIterator<Extension> {
+    options?: SolutionsListByDataManagerForAgricultureOptionalParams
+  ): AsyncIterableIterator<Solution> {
     for await (const page of this.listByDataManagerForAgriculturePagingPage(
       resourceGroupName,
       dataManagerForAgricultureResourceName,
@@ -124,7 +124,7 @@ export class ExtensionsImpl implements Extensions {
   }
 
   /**
-   * Get installed extensions details.
+   * Get installed Solutions details.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param dataManagerForAgricultureResourceName DataManagerForAgriculture resource name.
    * @param options The options parameters.
@@ -132,8 +132,8 @@ export class ExtensionsImpl implements Extensions {
   private _listByDataManagerForAgriculture(
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
-    options?: ExtensionsListByDataManagerForAgricultureOptionalParams
-  ): Promise<ExtensionsListByDataManagerForAgricultureResponse> {
+    options?: SolutionsListByDataManagerForAgricultureOptionalParams
+  ): Promise<SolutionsListByDataManagerForAgricultureResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, dataManagerForAgricultureResourceName, options },
       listByDataManagerForAgricultureOperationSpec
@@ -141,23 +141,23 @@ export class ExtensionsImpl implements Extensions {
   }
 
   /**
-   * Get installed extension details by extension id.
+   * Get installed Solution details by Solution id.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param dataManagerForAgricultureResourceName DataManagerForAgriculture resource name.
-   * @param extensionId Id of extension resource.
+   * @param solutionId SolutionId for Data Manager For Agriculture Resource.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
-    extensionId: string,
-    options?: ExtensionsGetOptionalParams
-  ): Promise<ExtensionsGetResponse> {
+    solutionId: string,
+    options?: SolutionsGetOptionalParams
+  ): Promise<SolutionsGetResponse> {
     return this.client.sendOperationRequest(
       {
         resourceGroupName,
         dataManagerForAgricultureResourceName,
-        extensionId,
+        solutionId,
         options
       },
       getOperationSpec
@@ -165,27 +165,25 @@ export class ExtensionsImpl implements Extensions {
   }
 
   /**
-   * Install or Update extension. Additional Api Properties are merged patch and if the extension is
-   * updated to a new version then the obsolete entries will be auto deleted from Additional Api
-   * Properties.
+   * Install Or Update Solution.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param dataManagerForAgricultureResourceName DataManagerForAgriculture resource name.
-   * @param extensionId Id of extension resource.
+   * @param solutionId SolutionId for Data Manager For Agriculture Resource.
    * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
-    extensionId: string,
-    resource: Extension,
-    options?: ExtensionsCreateOrUpdateOptionalParams
-  ): Promise<ExtensionsCreateOrUpdateResponse> {
+    solutionId: string,
+    resource: Solution,
+    options?: SolutionsCreateOrUpdateOptionalParams
+  ): Promise<SolutionsCreateOrUpdateResponse> {
     return this.client.sendOperationRequest(
       {
         resourceGroupName,
         dataManagerForAgricultureResourceName,
-        extensionId,
+        solutionId,
         resource,
         options
       },
@@ -194,23 +192,23 @@ export class ExtensionsImpl implements Extensions {
   }
 
   /**
-   * Uninstall extension.
+   * Uninstall Solution.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param dataManagerForAgricultureResourceName DataManagerForAgriculture resource name.
-   * @param extensionId Id of extension resource.
+   * @param solutionId SolutionId for Data Manager For Agriculture Resource.
    * @param options The options parameters.
    */
   delete(
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
-    extensionId: string,
-    options?: ExtensionsDeleteOptionalParams
+    solutionId: string,
+    options?: SolutionsDeleteOptionalParams
   ): Promise<void> {
     return this.client.sendOperationRequest(
       {
         resourceGroupName,
         dataManagerForAgricultureResourceName,
-        extensionId,
+        solutionId,
         options
       },
       deleteOperationSpec
@@ -229,8 +227,8 @@ export class ExtensionsImpl implements Extensions {
     resourceGroupName: string,
     dataManagerForAgricultureResourceName: string,
     nextLink: string,
-    options?: ExtensionsListByDataManagerForAgricultureNextOptionalParams
-  ): Promise<ExtensionsListByDataManagerForAgricultureNextResponse> {
+    options?: SolutionsListByDataManagerForAgricultureNextOptionalParams
+  ): Promise<SolutionsListByDataManagerForAgricultureNextResponse> {
     return this.client.sendOperationRequest(
       {
         resourceGroupName,
@@ -247,11 +245,11 @@ const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listByDataManagerForAgricultureOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AgFoodPlatform/farmBeats/{dataManagerForAgricultureResourceName}/extensions",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AgFoodPlatform/farmBeats/{dataManagerForAgricultureResourceName}/solutions",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ExtensionListResult
+      bodyMapper: Mappers.SolutionListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -259,10 +257,17 @@ const listByDataManagerForAgricultureOperationSpec: coreClient.OperationSpec = {
   },
   queryParameters: [
     Parameters.apiVersion,
-    Parameters.extensionCategories,
     Parameters.maxPageSize,
     Parameters.skipToken,
-    Parameters.extensionIds
+    Parameters.solutionIds,
+    Parameters.ids,
+    Parameters.names,
+    Parameters.propertyFilters,
+    Parameters.statuses,
+    Parameters.minCreatedDateTime,
+    Parameters.maxCreatedDateTime,
+    Parameters.minLastModifiedDateTime,
+    Parameters.maxLastModifiedDateTime
   ],
   urlParameters: [
     Parameters.$host,
@@ -275,11 +280,11 @@ const listByDataManagerForAgricultureOperationSpec: coreClient.OperationSpec = {
 };
 const getOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AgFoodPlatform/farmBeats/{dataManagerForAgricultureResourceName}/extensions/{extensionId}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AgFoodPlatform/farmBeats/{dataManagerForAgricultureResourceName}/solutions/{solutionId}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.Extension
+      bodyMapper: Mappers.Solution
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -291,34 +296,34 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.dataManagerForAgricultureResourceName,
-    Parameters.extensionId
+    Parameters.solutionId
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const createOrUpdateOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AgFoodPlatform/farmBeats/{dataManagerForAgricultureResourceName}/extensions/{extensionId}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AgFoodPlatform/farmBeats/{dataManagerForAgricultureResourceName}/solutions/{solutionId}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.Extension
+      bodyMapper: Mappers.Solution
     },
     201: {
-      bodyMapper: Mappers.Extension
+      bodyMapper: Mappers.Solution
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.resource2,
+  requestBody: Parameters.resource4,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.dataManagerForAgricultureResourceName,
-    Parameters.extensionId
+    Parameters.solutionId
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -326,7 +331,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AgFoodPlatform/farmBeats/{dataManagerForAgricultureResourceName}/extensions/{extensionId}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AgFoodPlatform/farmBeats/{dataManagerForAgricultureResourceName}/solutions/{solutionId}",
   httpMethod: "DELETE",
   responses: {
     200: {},
@@ -341,7 +346,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.dataManagerForAgricultureResourceName,
-    Parameters.extensionId
+    Parameters.solutionId
   ],
   headerParameters: [Parameters.accept],
   serializer
@@ -351,7 +356,7 @@ const listByDataManagerForAgricultureNextOperationSpec: coreClient.OperationSpec
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ExtensionListResult
+      bodyMapper: Mappers.SolutionListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse

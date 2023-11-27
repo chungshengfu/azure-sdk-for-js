@@ -15,29 +15,37 @@ import {
 } from "@azure/core-rest-pipeline";
 import * as coreAuth from "@azure/core-auth";
 import {
-  ExtensionsImpl,
-  FarmBeatsExtensionsImpl,
-  FarmBeatsModelsImpl,
-  LocationsImpl,
+  DataManagerForAgricultureExtensionsImpl,
+  DataManagerForAgricultureSolutionsImpl,
   OperationsImpl,
-  PrivateEndpointConnectionsImpl,
-  PrivateLinkResourcesImpl
+  CheckNameAvailabilityOperationsImpl,
+  DataManagerForAgriculturesImpl,
+  OperationResultsOperationsImpl,
+  DataConnectorsImpl,
+  ExtensionsImpl,
+  AzureAgFoodPlatformRpServicePrivateEndpointConnectionsImpl,
+  AzureAgFoodPlatformRpServicePrivateLinkResourcesImpl,
+  SolutionsImpl
 } from "./operations";
 import {
-  Extensions,
-  FarmBeatsExtensions,
-  FarmBeatsModels,
-  Locations,
+  DataManagerForAgricultureExtensions,
+  DataManagerForAgricultureSolutions,
   Operations,
-  PrivateEndpointConnections,
-  PrivateLinkResources
+  CheckNameAvailabilityOperations,
+  DataManagerForAgricultures,
+  OperationResultsOperations,
+  DataConnectors,
+  Extensions,
+  AzureAgFoodPlatformRpServicePrivateEndpointConnections,
+  AzureAgFoodPlatformRpServicePrivateLinkResources,
+  Solutions
 } from "./operationsInterfaces";
 import { AgriFoodMgmtClientOptionalParams } from "./models";
 
 export class AgriFoodMgmtClient extends coreClient.ServiceClient {
   $host: string;
-  subscriptionId: string;
   apiVersion: string;
+  subscriptionId?: string;
 
   /**
    * Initializes a new instance of the AgriFoodMgmtClient class.
@@ -49,12 +57,26 @@ export class AgriFoodMgmtClient extends coreClient.ServiceClient {
     credentials: coreAuth.TokenCredential,
     subscriptionId: string,
     options?: AgriFoodMgmtClientOptionalParams
+  );
+  constructor(
+    credentials: coreAuth.TokenCredential,
+    options?: AgriFoodMgmtClientOptionalParams
+  );
+  constructor(
+    credentials: coreAuth.TokenCredential,
+    subscriptionIdOrOptions?: AgriFoodMgmtClientOptionalParams | string,
+    options?: AgriFoodMgmtClientOptionalParams
   ) {
     if (credentials === undefined) {
       throw new Error("'credentials' cannot be null");
     }
-    if (subscriptionId === undefined) {
-      throw new Error("'subscriptionId' cannot be null");
+
+    let subscriptionId: string | undefined;
+
+    if (typeof subscriptionIdOrOptions === "string") {
+      subscriptionId = subscriptionIdOrOptions;
+    } else if (typeof subscriptionIdOrOptions === "object") {
+      options = subscriptionIdOrOptions;
     }
 
     // Initializing default values for options
@@ -119,14 +141,28 @@ export class AgriFoodMgmtClient extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
-    this.apiVersion = options.apiVersion || "2021-09-01-preview";
-    this.extensions = new ExtensionsImpl(this);
-    this.farmBeatsExtensions = new FarmBeatsExtensionsImpl(this);
-    this.farmBeatsModels = new FarmBeatsModelsImpl(this);
-    this.locations = new LocationsImpl(this);
+    this.apiVersion = options.apiVersion || "2023-06-01-preview";
+    this.dataManagerForAgricultureExtensions = new DataManagerForAgricultureExtensionsImpl(
+      this
+    );
+    this.dataManagerForAgricultureSolutions = new DataManagerForAgricultureSolutionsImpl(
+      this
+    );
     this.operations = new OperationsImpl(this);
-    this.privateEndpointConnections = new PrivateEndpointConnectionsImpl(this);
-    this.privateLinkResources = new PrivateLinkResourcesImpl(this);
+    this.checkNameAvailabilityOperations = new CheckNameAvailabilityOperationsImpl(
+      this
+    );
+    this.dataManagerForAgricultures = new DataManagerForAgriculturesImpl(this);
+    this.operationResultsOperations = new OperationResultsOperationsImpl(this);
+    this.dataConnectors = new DataConnectorsImpl(this);
+    this.extensions = new ExtensionsImpl(this);
+    this.azureAgFoodPlatformRpServicePrivateEndpointConnections = new AzureAgFoodPlatformRpServicePrivateEndpointConnectionsImpl(
+      this
+    );
+    this.azureAgFoodPlatformRpServicePrivateLinkResources = new AzureAgFoodPlatformRpServicePrivateLinkResourcesImpl(
+      this
+    );
+    this.solutions = new SolutionsImpl(this);
     this.addCustomApiVersionPolicy(options.apiVersion);
   }
 
@@ -158,11 +194,15 @@ export class AgriFoodMgmtClient extends coreClient.ServiceClient {
     this.pipeline.addPolicy(apiVersionPolicy);
   }
 
-  extensions: Extensions;
-  farmBeatsExtensions: FarmBeatsExtensions;
-  farmBeatsModels: FarmBeatsModels;
-  locations: Locations;
+  dataManagerForAgricultureExtensions: DataManagerForAgricultureExtensions;
+  dataManagerForAgricultureSolutions: DataManagerForAgricultureSolutions;
   operations: Operations;
-  privateEndpointConnections: PrivateEndpointConnections;
-  privateLinkResources: PrivateLinkResources;
+  checkNameAvailabilityOperations: CheckNameAvailabilityOperations;
+  dataManagerForAgricultures: DataManagerForAgricultures;
+  operationResultsOperations: OperationResultsOperations;
+  dataConnectors: DataConnectors;
+  extensions: Extensions;
+  azureAgFoodPlatformRpServicePrivateEndpointConnections: AzureAgFoodPlatformRpServicePrivateEndpointConnections;
+  azureAgFoodPlatformRpServicePrivateLinkResources: AzureAgFoodPlatformRpServicePrivateLinkResources;
+  solutions: Solutions;
 }

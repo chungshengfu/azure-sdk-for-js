@@ -6,23 +6,24 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-import { Locations } from "../operationsInterfaces";
+import { CheckNameAvailabilityOperations } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { AgriFoodMgmtClient } from "../agriFoodMgmtClient";
 import {
   CheckNameAvailabilityRequest,
-  LocationsCheckNameAvailabilityOptionalParams,
-  LocationsCheckNameAvailabilityResponse
+  CheckNameAvailabilityOperationsCheckNameAvailabilityOptionalParams,
+  CheckNameAvailabilityOperationsCheckNameAvailabilityResponse
 } from "../models";
 
-/** Class containing Locations operations. */
-export class LocationsImpl implements Locations {
+/** Class containing CheckNameAvailabilityOperations operations. */
+export class CheckNameAvailabilityOperationsImpl
+  implements CheckNameAvailabilityOperations {
   private readonly client: AgriFoodMgmtClient;
 
   /**
-   * Initialize a new instance of the class Locations class.
+   * Initialize a new instance of the class CheckNameAvailabilityOperations class.
    * @param client Reference to the service client
    */
   constructor(client: AgriFoodMgmtClient) {
@@ -31,15 +32,17 @@ export class LocationsImpl implements Locations {
 
   /**
    * Checks the name availability of the resource with requested resource name.
-   * @param body NameAvailabilityRequest object.
+   * @param subscriptionId The ID of the target subscription. The value must be an UUID.
+   * @param nameAvailabilityRequest NameAvailabilityRequest object.
    * @param options The options parameters.
    */
   checkNameAvailability(
-    body: CheckNameAvailabilityRequest,
-    options?: LocationsCheckNameAvailabilityOptionalParams
-  ): Promise<LocationsCheckNameAvailabilityResponse> {
+    subscriptionId: string,
+    nameAvailabilityRequest: CheckNameAvailabilityRequest,
+    options?: CheckNameAvailabilityOperationsCheckNameAvailabilityOptionalParams
+  ): Promise<CheckNameAvailabilityOperationsCheckNameAvailabilityResponse> {
     return this.client.sendOperationRequest(
-      { body, options },
+      { subscriptionId, nameAvailabilityRequest, options },
       checkNameAvailabilityOperationSpec
     );
   }
@@ -56,10 +59,12 @@ const checkNameAvailabilityOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.CheckNameAvailabilityResponse
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
+      bodyMapper: Mappers.AzureCoreFoundationsErrorResponse,
+      headersMapper:
+        Mappers.CheckNameAvailabilityOperationsCheckNameAvailabilityExceptionHeaders
     }
   },
-  requestBody: Parameters.body2,
+  requestBody: Parameters.nameAvailabilityRequest,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host, Parameters.subscriptionId],
   headerParameters: [Parameters.accept, Parameters.contentType],
