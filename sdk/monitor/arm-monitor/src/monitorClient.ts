@@ -8,78 +8,24 @@
 
 import * as coreClient from "@azure/core-client";
 import * as coreRestPipeline from "@azure/core-rest-pipeline";
+import {
+  PipelineRequest,
+  PipelineResponse,
+  SendRequest
+} from "@azure/core-rest-pipeline";
 import * as coreAuth from "@azure/core-auth";
 import {
-  AutoscaleSettingsImpl,
-  PredictiveMetricImpl,
-  OperationsImpl,
-  AlertRuleIncidentsImpl,
-  AlertRulesImpl,
-  LogProfilesImpl,
-  DiagnosticSettingsImpl,
-  DiagnosticSettingsCategoryImpl,
-  ActionGroupsImpl,
-  ActivityLogsImpl,
-  EventCategoriesImpl,
-  TenantActivityLogsImpl,
   MetricDefinitionsImpl,
-  MetricsOperationsImpl,
-  BaselinesImpl,
-  MetricAlertsImpl,
-  MetricAlertsStatusImpl,
-  ScheduledQueryRulesImpl,
-  MetricNamespacesImpl,
-  VMInsightsImpl,
-  PrivateLinkScopesImpl,
-  PrivateLinkScopeOperationStatusImpl,
-  PrivateLinkResourcesImpl,
-  PrivateEndpointConnectionsImpl,
-  PrivateLinkScopedResourcesImpl,
-  ActivityLogAlertsImpl,
-  DataCollectionEndpointsImpl,
-  DataCollectionRuleAssociationsImpl,
-  DataCollectionRulesImpl,
-  AzureMonitorWorkspacesImpl,
-  MonitorOperationsImpl
+  MetricsImpl,
+  OperationsImpl
 } from "./operations";
-import {
-  AutoscaleSettings,
-  PredictiveMetric,
-  Operations,
-  AlertRuleIncidents,
-  AlertRules,
-  LogProfiles,
-  DiagnosticSettings,
-  DiagnosticSettingsCategory,
-  ActionGroups,
-  ActivityLogs,
-  EventCategories,
-  TenantActivityLogs,
-  MetricDefinitions,
-  MetricsOperations,
-  Baselines,
-  MetricAlerts,
-  MetricAlertsStatus,
-  ScheduledQueryRules,
-  MetricNamespaces,
-  VMInsights,
-  PrivateLinkScopes,
-  PrivateLinkScopeOperationStatus,
-  PrivateLinkResources,
-  PrivateEndpointConnections,
-  PrivateLinkScopedResources,
-  ActivityLogAlerts,
-  DataCollectionEndpoints,
-  DataCollectionRuleAssociations,
-  DataCollectionRules,
-  AzureMonitorWorkspaces,
-  MonitorOperations
-} from "./operationsInterfaces";
+import { MetricDefinitions, Metrics, Operations } from "./operationsInterfaces";
 import { MonitorClientOptionalParams } from "./models";
 
 export class MonitorClient extends coreClient.ServiceClient {
   $host: string;
-  subscriptionId: string;
+  subscriptionId?: string;
+  apiVersion: string;
 
   /**
    * Initializes a new instance of the MonitorClient class.
@@ -91,12 +37,26 @@ export class MonitorClient extends coreClient.ServiceClient {
     credentials: coreAuth.TokenCredential,
     subscriptionId: string,
     options?: MonitorClientOptionalParams
+  );
+  constructor(
+    credentials: coreAuth.TokenCredential,
+    options?: MonitorClientOptionalParams
+  );
+  constructor(
+    credentials: coreAuth.TokenCredential,
+    subscriptionIdOrOptions?: MonitorClientOptionalParams | string,
+    options?: MonitorClientOptionalParams
   ) {
     if (credentials === undefined) {
       throw new Error("'credentials' cannot be null");
     }
-    if (subscriptionId === undefined) {
-      throw new Error("'subscriptionId' cannot be null");
+
+    let subscriptionId: string | undefined;
+
+    if (typeof subscriptionIdOrOptions === "string") {
+      subscriptionId = subscriptionIdOrOptions;
+    } else if (typeof subscriptionIdOrOptions === "object") {
+      options = subscriptionIdOrOptions;
     }
 
     // Initializing default values for options
@@ -108,7 +68,7 @@ export class MonitorClient extends coreClient.ServiceClient {
       credential: credentials
     };
 
-    const packageDetails = `azsdk-js-arm-monitor/8.0.0-beta.5`;
+    const packageDetails = `azsdk-js-arm-monitor/8.0.0`;
     const userAgentPrefix =
       options.userAgentOptions && options.userAgentOptions.userAgentPrefix
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
@@ -161,72 +121,42 @@ export class MonitorClient extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
-    this.autoscaleSettings = new AutoscaleSettingsImpl(this);
-    this.predictiveMetric = new PredictiveMetricImpl(this);
-    this.operations = new OperationsImpl(this);
-    this.alertRuleIncidents = new AlertRuleIncidentsImpl(this);
-    this.alertRules = new AlertRulesImpl(this);
-    this.logProfiles = new LogProfilesImpl(this);
-    this.diagnosticSettings = new DiagnosticSettingsImpl(this);
-    this.diagnosticSettingsCategory = new DiagnosticSettingsCategoryImpl(this);
-    this.actionGroups = new ActionGroupsImpl(this);
-    this.activityLogs = new ActivityLogsImpl(this);
-    this.eventCategories = new EventCategoriesImpl(this);
-    this.tenantActivityLogs = new TenantActivityLogsImpl(this);
+    this.apiVersion = options.apiVersion || "2023-11-01";
     this.metricDefinitions = new MetricDefinitionsImpl(this);
-    this.metricsOperations = new MetricsOperationsImpl(this);
-    this.baselines = new BaselinesImpl(this);
-    this.metricAlerts = new MetricAlertsImpl(this);
-    this.metricAlertsStatus = new MetricAlertsStatusImpl(this);
-    this.scheduledQueryRules = new ScheduledQueryRulesImpl(this);
-    this.metricNamespaces = new MetricNamespacesImpl(this);
-    this.vMInsights = new VMInsightsImpl(this);
-    this.privateLinkScopes = new PrivateLinkScopesImpl(this);
-    this.privateLinkScopeOperationStatus = new PrivateLinkScopeOperationStatusImpl(
-      this
-    );
-    this.privateLinkResources = new PrivateLinkResourcesImpl(this);
-    this.privateEndpointConnections = new PrivateEndpointConnectionsImpl(this);
-    this.privateLinkScopedResources = new PrivateLinkScopedResourcesImpl(this);
-    this.activityLogAlerts = new ActivityLogAlertsImpl(this);
-    this.dataCollectionEndpoints = new DataCollectionEndpointsImpl(this);
-    this.dataCollectionRuleAssociations = new DataCollectionRuleAssociationsImpl(
-      this
-    );
-    this.dataCollectionRules = new DataCollectionRulesImpl(this);
-    this.azureMonitorWorkspaces = new AzureMonitorWorkspacesImpl(this);
-    this.monitorOperations = new MonitorOperationsImpl(this);
+    this.metrics = new MetricsImpl(this);
+    this.operations = new OperationsImpl(this);
+    this.addCustomApiVersionPolicy(options.apiVersion);
   }
 
-  autoscaleSettings: AutoscaleSettings;
-  predictiveMetric: PredictiveMetric;
-  operations: Operations;
-  alertRuleIncidents: AlertRuleIncidents;
-  alertRules: AlertRules;
-  logProfiles: LogProfiles;
-  diagnosticSettings: DiagnosticSettings;
-  diagnosticSettingsCategory: DiagnosticSettingsCategory;
-  actionGroups: ActionGroups;
-  activityLogs: ActivityLogs;
-  eventCategories: EventCategories;
-  tenantActivityLogs: TenantActivityLogs;
+  /** A function that adds a policy that sets the api-version (or equivalent) to reflect the library version. */
+  private addCustomApiVersionPolicy(apiVersion?: string) {
+    if (!apiVersion) {
+      return;
+    }
+    const apiVersionPolicy = {
+      name: "CustomApiVersionPolicy",
+      async sendRequest(
+        request: PipelineRequest,
+        next: SendRequest
+      ): Promise<PipelineResponse> {
+        const param = request.url.split("?");
+        if (param.length > 1) {
+          const newParams = param[1].split("&").map((item) => {
+            if (item.indexOf("api-version") > -1) {
+              return "api-version=" + apiVersion;
+            } else {
+              return item;
+            }
+          });
+          request.url = param[0] + "?" + newParams.join("&");
+        }
+        return next(request);
+      }
+    };
+    this.pipeline.addPolicy(apiVersionPolicy);
+  }
+
   metricDefinitions: MetricDefinitions;
-  metricsOperations: MetricsOperations;
-  baselines: Baselines;
-  metricAlerts: MetricAlerts;
-  metricAlertsStatus: MetricAlertsStatus;
-  scheduledQueryRules: ScheduledQueryRules;
-  metricNamespaces: MetricNamespaces;
-  vMInsights: VMInsights;
-  privateLinkScopes: PrivateLinkScopes;
-  privateLinkScopeOperationStatus: PrivateLinkScopeOperationStatus;
-  privateLinkResources: PrivateLinkResources;
-  privateEndpointConnections: PrivateEndpointConnections;
-  privateLinkScopedResources: PrivateLinkScopedResources;
-  activityLogAlerts: ActivityLogAlerts;
-  dataCollectionEndpoints: DataCollectionEndpoints;
-  dataCollectionRuleAssociations: DataCollectionRuleAssociations;
-  dataCollectionRules: DataCollectionRules;
-  azureMonitorWorkspaces: AzureMonitorWorkspaces;
-  monitorOperations: MonitorOperations;
+  metrics: Metrics;
+  operations: Operations;
 }
