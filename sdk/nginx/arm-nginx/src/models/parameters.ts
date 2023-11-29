@@ -134,17 +134,6 @@ export const nextLink: OperationURLParameter = {
   skipEncoding: true
 };
 
-export const configurationName: OperationURLParameter = {
-  parameterPath: "configurationName",
-  mapper: {
-    serializedName: "configurationName",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
 export const body1: OperationParameter = {
   parameterPath: ["options", "body"],
   mapper: NginxConfigurationMapper

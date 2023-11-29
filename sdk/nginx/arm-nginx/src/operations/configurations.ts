@@ -142,18 +142,15 @@ export class ConfigurationsImpl implements Configurations {
    * Get the NGINX configuration of given NGINX deployment
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param deploymentName The name of targeted NGINX deployment
-   * @param configurationName The name of configuration, only 'default' is supported value due to the
-   *                          singleton of NGINX conf
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     deploymentName: string,
-    configurationName: string,
     options?: ConfigurationsGetOptionalParams
   ): Promise<ConfigurationsGetResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, deploymentName, configurationName, options },
+      { resourceGroupName, deploymentName, options },
       getOperationSpec
     );
   }
@@ -162,14 +159,11 @@ export class ConfigurationsImpl implements Configurations {
    * Create or update the NGINX configuration for given NGINX deployment
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param deploymentName The name of targeted NGINX deployment
-   * @param configurationName The name of configuration, only 'default' is supported value due to the
-   *                          singleton of NGINX conf
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
     deploymentName: string,
-    configurationName: string,
     options?: ConfigurationsCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -218,7 +212,7 @@ export class ConfigurationsImpl implements Configurations {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, deploymentName, configurationName, options },
+      args: { resourceGroupName, deploymentName, options },
       spec: createOrUpdateOperationSpec
     });
     const poller = await createHttpPoller<
@@ -237,20 +231,16 @@ export class ConfigurationsImpl implements Configurations {
    * Create or update the NGINX configuration for given NGINX deployment
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param deploymentName The name of targeted NGINX deployment
-   * @param configurationName The name of configuration, only 'default' is supported value due to the
-   *                          singleton of NGINX conf
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     deploymentName: string,
-    configurationName: string,
     options?: ConfigurationsCreateOrUpdateOptionalParams
   ): Promise<ConfigurationsCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
       deploymentName,
-      configurationName,
       options
     );
     return poller.pollUntilDone();
@@ -260,14 +250,11 @@ export class ConfigurationsImpl implements Configurations {
    * Reset the NGINX configuration of given NGINX deployment to default
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param deploymentName The name of targeted NGINX deployment
-   * @param configurationName The name of configuration, only 'default' is supported value due to the
-   *                          singleton of NGINX conf
    * @param options The options parameters.
    */
   async beginDelete(
     resourceGroupName: string,
     deploymentName: string,
-    configurationName: string,
     options?: ConfigurationsDeleteOptionalParams
   ): Promise<SimplePollerLike<OperationState<void>, void>> {
     const directSendOperation = async (
@@ -311,7 +298,7 @@ export class ConfigurationsImpl implements Configurations {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, deploymentName, configurationName, options },
+      args: { resourceGroupName, deploymentName, options },
       spec: deleteOperationSpec
     });
     const poller = await createHttpPoller<void, OperationState<void>>(lro, {
@@ -326,20 +313,16 @@ export class ConfigurationsImpl implements Configurations {
    * Reset the NGINX configuration of given NGINX deployment to default
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param deploymentName The name of targeted NGINX deployment
-   * @param configurationName The name of configuration, only 'default' is supported value due to the
-   *                          singleton of NGINX conf
    * @param options The options parameters.
    */
   async beginDeleteAndWait(
     resourceGroupName: string,
     deploymentName: string,
-    configurationName: string,
     options?: ConfigurationsDeleteOptionalParams
   ): Promise<void> {
     const poller = await this.beginDelete(
       resourceGroupName,
       deploymentName,
-      configurationName,
       options
     );
     return poller.pollUntilDone();
@@ -391,7 +374,7 @@ const listOperationSpec: coreClient.OperationSpec = {
 };
 const getOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Nginx.NginxPlus/nginxDeployments/{deploymentName}/configurations/{configurationName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Nginx.NginxPlus/nginxDeployments/{deploymentName}/configurations/default",
   httpMethod: "GET",
   responses: {
     200: {
@@ -406,15 +389,14 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.deploymentName,
-    Parameters.configurationName
+    Parameters.deploymentName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const createOrUpdateOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Nginx.NginxPlus/nginxDeployments/{deploymentName}/configurations/{configurationName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Nginx.NginxPlus/nginxDeployments/{deploymentName}/configurations/default",
   httpMethod: "PUT",
   responses: {
     200: {
@@ -439,8 +421,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.deploymentName,
-    Parameters.configurationName
+    Parameters.deploymentName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -448,7 +429,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Nginx.NginxPlus/nginxDeployments/{deploymentName}/configurations/{configurationName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Nginx.NginxPlus/nginxDeployments/{deploymentName}/configurations/default",
   httpMethod: "DELETE",
   responses: {
     200: {},
@@ -464,8 +445,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.deploymentName,
-    Parameters.configurationName
+    Parameters.deploymentName
   ],
   headerParameters: [Parameters.accept],
   serializer

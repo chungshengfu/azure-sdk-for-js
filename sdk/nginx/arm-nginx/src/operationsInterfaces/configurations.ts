@@ -36,28 +36,22 @@ export interface Configurations {
    * Get the NGINX configuration of given NGINX deployment
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param deploymentName The name of targeted NGINX deployment
-   * @param configurationName The name of configuration, only 'default' is supported value due to the
-   *                          singleton of NGINX conf
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     deploymentName: string,
-    configurationName: string,
     options?: ConfigurationsGetOptionalParams
   ): Promise<ConfigurationsGetResponse>;
   /**
    * Create or update the NGINX configuration for given NGINX deployment
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param deploymentName The name of targeted NGINX deployment
-   * @param configurationName The name of configuration, only 'default' is supported value due to the
-   *                          singleton of NGINX conf
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     deploymentName: string,
-    configurationName: string,
     options?: ConfigurationsCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -69,42 +63,33 @@ export interface Configurations {
    * Create or update the NGINX configuration for given NGINX deployment
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param deploymentName The name of targeted NGINX deployment
-   * @param configurationName The name of configuration, only 'default' is supported value due to the
-   *                          singleton of NGINX conf
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     deploymentName: string,
-    configurationName: string,
     options?: ConfigurationsCreateOrUpdateOptionalParams
   ): Promise<ConfigurationsCreateOrUpdateResponse>;
   /**
    * Reset the NGINX configuration of given NGINX deployment to default
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param deploymentName The name of targeted NGINX deployment
-   * @param configurationName The name of configuration, only 'default' is supported value due to the
-   *                          singleton of NGINX conf
    * @param options The options parameters.
    */
   beginDelete(
     resourceGroupName: string,
     deploymentName: string,
-    configurationName: string,
     options?: ConfigurationsDeleteOptionalParams
   ): Promise<SimplePollerLike<OperationState<void>, void>>;
   /**
    * Reset the NGINX configuration of given NGINX deployment to default
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param deploymentName The name of targeted NGINX deployment
-   * @param configurationName The name of configuration, only 'default' is supported value due to the
-   *                          singleton of NGINX conf
    * @param options The options parameters.
    */
   beginDeleteAndWait(
     resourceGroupName: string,
     deploymentName: string,
-    configurationName: string,
     options?: ConfigurationsDeleteOptionalParams
   ): Promise<void>;
 }

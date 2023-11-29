@@ -59,11 +59,11 @@ export type CertificatesListResponse = NginxCertificateListResponse;
 
 // @public
 export interface Configurations {
-    beginCreateOrUpdate(resourceGroupName: string, deploymentName: string, configurationName: string, options?: ConfigurationsCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<ConfigurationsCreateOrUpdateResponse>, ConfigurationsCreateOrUpdateResponse>>;
-    beginCreateOrUpdateAndWait(resourceGroupName: string, deploymentName: string, configurationName: string, options?: ConfigurationsCreateOrUpdateOptionalParams): Promise<ConfigurationsCreateOrUpdateResponse>;
-    beginDelete(resourceGroupName: string, deploymentName: string, configurationName: string, options?: ConfigurationsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
-    beginDeleteAndWait(resourceGroupName: string, deploymentName: string, configurationName: string, options?: ConfigurationsDeleteOptionalParams): Promise<void>;
-    get(resourceGroupName: string, deploymentName: string, configurationName: string, options?: ConfigurationsGetOptionalParams): Promise<ConfigurationsGetResponse>;
+    beginCreateOrUpdate(resourceGroupName: string, deploymentName: string, options?: ConfigurationsCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<ConfigurationsCreateOrUpdateResponse>, ConfigurationsCreateOrUpdateResponse>>;
+    beginCreateOrUpdateAndWait(resourceGroupName: string, deploymentName: string, options?: ConfigurationsCreateOrUpdateOptionalParams): Promise<ConfigurationsCreateOrUpdateResponse>;
+    beginDelete(resourceGroupName: string, deploymentName: string, options?: ConfigurationsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
+    beginDeleteAndWait(resourceGroupName: string, deploymentName: string, options?: ConfigurationsDeleteOptionalParams): Promise<void>;
+    get(resourceGroupName: string, deploymentName: string, options?: ConfigurationsGetOptionalParams): Promise<ConfigurationsGetResponse>;
     list(resourceGroupName: string, deploymentName: string, options?: ConfigurationsListOptionalParams): PagedAsyncIterableIterator<NginxConfiguration>;
 }
 

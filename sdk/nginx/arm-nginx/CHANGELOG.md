@@ -1,15 +1,16 @@
 # Release History
+    
+## 4.0.0 (2023-11-29)
+    
+**Breaking Changes**
 
-## 3.0.1 (Unreleased)
-
-### Features Added
-
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
+  - Operation Configurations.beginCreateOrUpdate has a new signature
+  - Operation Configurations.beginCreateOrUpdateAndWait has a new signature
+  - Operation Configurations.beginDelete has a new signature
+  - Operation Configurations.beginDeleteAndWait has a new signature
+  - Operation Configurations.get has a new signature
+    
+    
 ## 3.0.0 (2023-11-09)
     
 **Features**
