@@ -8,102 +8,73 @@
 
 import * as coreClient from "@azure/core-client";
 
-/** Represents the SKU name and Azure pricing tier for Analysis Services resource. */
-export interface ResourceSku {
-  /** Name of the SKU level. */
-  name: string;
-  /** The name of the Azure pricing tier to which the SKU applies. */
-  tier?: SkuTier;
-  /** The number of instances in the read only query pool. */
-  capacity?: number;
-}
-
-/** An object that represents a set of mutable Analysis Services resource properties. */
-export interface AnalysisServicesServerMutableProperties {
-  /** A collection of AS server administrators */
-  asAdministrators?: ServerAdministrators;
-  /** The SAS container URI to the backup container. */
-  backupBlobContainerUri?: string;
-  /** The gateway details configured for the AS server. */
-  gatewayDetails?: GatewayDetails;
-  /** The firewall settings for the AS server. */
-  ipV4FirewallSettings?: IPv4FirewallSettings;
-  /** How the read-write server's participation in the query pool is controlled.<br/>It can have the following values: <ul><li>readOnly - indicates that the read-write server is intended not to participate in query operations</li><li>all - indicates that the read-write server can participate in query operations</li></ul>Specifying readOnly when capacity is 1 results in error. */
-  querypoolConnectionMode?: ConnectionMode;
-  /** The managed mode of the server (0 = not managed, 1 = managed). */
-  managedMode?: ManagedMode;
-  /** The server monitor mode for AS server */
-  serverMonitorMode?: ServerMonitorMode;
-}
-
-/** An array of administrator user identities. */
-export interface ServerAdministrators {
-  /** An array of administrator user identities. */
-  members?: string[];
-}
-
-/** The gateway details. */
-export interface GatewayDetails {
-  /** Gateway resource to be associated with the server. */
-  gatewayResourceId?: string;
+/** A list of REST API operations supported by an Azure Resource Provider. It contains an URL link to get the next set of results. */
+export interface OperationListResult {
   /**
-   * Gateway object id from in the DMTS cluster for the gateway resource.
+   * List of operations supported by the resource provider
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly gatewayObjectId?: string;
+  readonly value?: Operation[];
   /**
-   * Uri of the DMTS cluster.
+   * URL to get the next set of operation list results (if there are any).
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly dmtsClusterUri?: string;
+  readonly nextLink?: string;
 }
 
-/** An array of firewall rules. */
-export interface IPv4FirewallSettings {
-  /** An array of firewall rules. */
-  firewallRules?: IPv4FirewallRule[];
-  /** The indicator of enabling PBI service. */
-  enablePowerBIService?: boolean;
-}
-
-/** The detail of firewall rule. */
-export interface IPv4FirewallRule {
-  /** The rule name. */
-  firewallRuleName?: string;
-  /** The start range of IPv4. */
-  rangeStart?: string;
-  /** The end range of IPv4. */
-  rangeEnd?: string;
-}
-
-/** Represents an instance of an Analysis Services resource. */
-export interface Resource {
+/** Details of a REST API operation, returned from the Resource Provider Operations API */
+export interface Operation {
   /**
-   * An identifier that represents the Analysis Services resource.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly id?: string;
-  /**
-   * The name of the Analysis Services resource.
+   * The name of the operation, as per Resource-Based Access Control (RBAC). Examples: "Microsoft.Compute/virtualMachines/write", "Microsoft.Compute/virtualMachines/capture/action"
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly name?: string;
   /**
-   * The type of the Analysis Services resource.
+   * Whether the operation applies to data-plane. This is "true" for data-plane operations and "false" for ARM/control-plane operations.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly type?: string;
-  /** Location of the Analysis Services resource. */
-  location: string;
-  /** The SKU of the Analysis Services resource. */
-  sku: ResourceSku;
-  /** Key-value pairs of additional resource provisioning properties. */
-  tags?: { [propertyName: string]: string };
+  readonly isDataAction?: boolean;
+  /** Localized display information for this particular operation. */
+  display?: OperationDisplay;
+  /**
+   * The intended executor of the operation; as in Resource Based Access Control (RBAC) and audit logs UX. Default value is "user,system"
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly origin?: Origin;
+  /**
+   * Enum. Indicates the action type. "Internal" refers to actions that are for internal only APIs.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly actionType?: ActionType;
 }
 
-/** Describes the format of Error response. */
+/** Localized display information for this particular operation. */
+export interface OperationDisplay {
+  /**
+   * The localized friendly form of the resource provider name, e.g. "Microsoft Monitoring Insights" or "Microsoft Compute".
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provider?: string;
+  /**
+   * The localized friendly name of the resource type related to this operation. E.g. "Virtual Machines" or "Job Schedule Collections".
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly resource?: string;
+  /**
+   * The concise, localized friendly name for the operation; suitable for dropdowns. E.g. "Create or Update Virtual Machine", "Restart Virtual Machine".
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly operation?: string;
+  /**
+   * The short, localized friendly description of the operation; suitable for tool tips and detailed views.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly description?: string;
+}
+
+/** Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.). */
 export interface ErrorResponse {
-  /** The error object */
+  /** The error object. */
   error?: ErrorDetail;
 }
 
@@ -124,21 +95,6 @@ export interface ErrorDetail {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly target?: string;
-  /**
-   * The error sub code
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly subCode?: number;
-  /**
-   * The http status code
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly httpStatusCode?: number;
-  /**
-   * the timestamp for the error.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly timeStamp?: string;
   /**
    * The error details.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -165,38 +121,92 @@ export interface ErrorAdditionalInfo {
   readonly info?: Record<string, unknown>;
 }
 
-/** Provision request specification */
-export interface AnalysisServicesServerUpdateParameters {
-  /** The SKU of the Analysis Services resource. */
-  sku?: ResourceSku;
-  /** Key-value pairs of additional provisioning properties. */
-  tags?: { [propertyName: string]: string };
-  /** A collection of AS server administrators */
-  asAdministrators?: ServerAdministrators;
-  /** The SAS container URI to the backup container. */
-  backupBlobContainerUri?: string;
-  /** The gateway details configured for the AS server. */
-  gatewayDetails?: GatewayDetails;
-  /** The firewall settings for the AS server. */
-  ipV4FirewallSettings?: IPv4FirewallSettings;
-  /** How the read-write server's participation in the query pool is controlled.<br/>It can have the following values: <ul><li>readOnly - indicates that the read-write server is intended not to participate in query operations</li><li>all - indicates that the read-write server can participate in query operations</li></ul>Specifying readOnly when capacity is 1 results in error. */
-  querypoolConnectionMode?: ConnectionMode;
-  /** The managed mode of the server (0 = not managed, 1 = managed). */
-  managedMode?: ManagedMode;
-  /** The server monitor mode for AS server */
-  serverMonitorMode?: ServerMonitorMode;
-}
-
-/** An array of Analysis Services resources. */
-export interface AnalysisServicesServers {
-  /** An array of Analysis Services resources. */
+/** The response of a AnalysisServicesServer list operation. */
+export interface AnalysisServicesServerListResult {
+  /** The AnalysisServicesServer items on this page */
   value: AnalysisServicesServer[];
+  /** The link to the next page of items */
+  nextLink?: string;
 }
 
-/** An object that represents enumerating SKUs for new resources. */
-export interface SkuEnumerationForNewResourceResult {
-  /** The collection of available SKUs for new resources. */
-  value?: ResourceSku[];
+/** The SKU (Stock Keeping Unit) assigned to this resource. */
+export interface AzureResourceManagerResourceSku {
+  /** The SKU (Stock Keeping Unit) assigned to this resource. */
+  sku?: Sku;
+}
+
+/** The resource model definition representing SKU */
+export interface Sku {
+  /** The name of the SKU. Ex - P3. It is typically a letter+number code */
+  name: string;
+  /** This field is required to be implemented by the Resource Provider if the service has more than one tier, but is not required on a PUT. */
+  tier?: SkuTier;
+  /** The SKU size. When the name field is the combination of tier and some other value, this would be the standalone code. */
+  size?: string;
+  /** If the service has different generations of hardware, for the same SKU, then that can be captured here. */
+  family?: string;
+  /** If the SKU supports scale out/in then the capacity integer should be included. If scale out/in is not possible for the resource this may be omitted. */
+  capacity?: number;
+}
+
+/** Common fields that are returned in the response for all Azure Resource Manager resources */
+export interface Resource {
+  /**
+   * Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly id?: string;
+  /**
+   * The name of the resource
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /**
+   * The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly type?: string;
+  /**
+   * Azure Resource Manager metadata containing createdBy and modifiedBy information.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly systemData?: SystemData;
+}
+
+/** Metadata pertaining to creation and last modification of the resource. */
+export interface SystemData {
+  /** The identity that created the resource. */
+  createdBy?: string;
+  /** The type of identity that created the resource. */
+  createdByType?: CreatedByType;
+  /** The timestamp of resource creation (UTC). */
+  createdAt?: Date;
+  /** The identity that last modified the resource. */
+  lastModifiedBy?: string;
+  /** The type of identity that last modified the resource. */
+  lastModifiedByType?: CreatedByType;
+  /** The timestamp of resource last modification (UTC) */
+  lastModifiedAt?: Date;
+}
+
+/** The type used for update operations of the AnalysisServicesServer. */
+export interface AnalysisServicesServerUpdate {
+  /** Resource tags. */
+  tags?: { [propertyName: string]: string };
+  /** The SKU of the Analysis Services resource. */
+  sku?: AzureResourceManagerResourceSkuUpdate;
+}
+
+/** The SKU (Stock Keeping Unit) assigned to this resource. */
+export interface AzureResourceManagerResourceSkuUpdate {
+  /** The SKU (Stock Keeping Unit) assigned to this resource. */
+  sku?: Sku;
+}
+
+/** Status of gateway is live. */
+export interface GatewayListStatusLive {
+  /** Live message of list gateway. Status: 0 - Live */
+  status?: 0;
 }
 
 /** An object that represents enumerating SKUs for existing resources. */
@@ -208,21 +218,37 @@ export interface SkuEnumerationForExistingResourceResult {
 /** An object that represents SKU details for existing resources. */
 export interface SkuDetailsForExistingResource {
   /** The SKU in SKU details for existing resources. */
-  sku?: ResourceSku;
+  sku?: AzureResourceManagerResourceSku;
   /** The resource type. */
   resourceType?: string;
 }
 
-/** Status of gateway is live. */
-export interface GatewayListStatusLive {
-  /** Live message of list gateway. Status: 0 - Live */
-  status?: 0;
+/** A response containing error details. */
+export interface AzureCoreFoundationsErrorResponse {
+  /** The error object. */
+  error: AzureCoreFoundationsError;
 }
 
-/** Status of gateway is error. */
-export interface GatewayListStatusError {
-  /** Error of the list gateway status. */
-  error?: ErrorDetail;
+/** The error object. */
+export interface AzureCoreFoundationsError {
+  /** One of a server-defined set of error codes. */
+  code: string;
+  /** A human-readable representation of the error. */
+  message: string;
+  /** The target of the error. */
+  target?: string;
+  /** An array of details about specific errors that led to this reported error. */
+  details?: AzureCoreFoundationsError[];
+  /** An object containing more specific information than the current object about the error. */
+  innererror?: AzureCoreFoundationsInnerError;
+}
+
+/** An object containing more specific information about the error. As per Microsoft One API guidelines - https://github.com/Microsoft/api-guidelines/blob/vNext/Guidelines.md#7102-error-condition-responses. */
+export interface AzureCoreFoundationsInnerError {
+  /** One of a server-defined set of error codes. */
+  code?: string;
+  /** Inner error. */
+  innererror?: AzureCoreFoundationsInnerError;
 }
 
 /** Details of server name request body. */
@@ -243,96 +269,71 @@ export interface CheckServerNameAvailabilityResult {
   message?: string;
 }
 
-/** The status of operation. */
-export interface OperationStatus {
-  /** The operation Id. */
-  id?: string;
-  /** The operation name. */
-  name?: string;
-  /** The start time of the operation. */
-  startTime?: string;
-  /** The end time of the operation. */
-  endTime?: string;
-  /** The status of the operation. */
-  status?: string;
-  /** The error detail of the operation if any. */
-  error?: ErrorDetail;
-}
-
-/** Result of listing consumption operations. It contains a list of operations and a URL link to get the next set of results. */
-export interface OperationListResult {
+/** The gateway details. */
+export interface GatewayDetails {
+  /** Gateway resource to be associated with the server. */
+  gatewayResourceId?: string;
   /**
-   * List of analysis services operations supported by the Microsoft.AnalysisServices resource provider.
+   * Gateway object id from in the DMTS cluster for the gateway resource.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly value?: Operation[];
+  readonly gatewayObjectId?: string;
   /**
-   * URL to get the next set of operation list results if there are any.
+   * Uri of the DMTS cluster.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly nextLink?: string;
+  readonly dmtsClusterUri?: string;
 }
 
-/** A Consumption REST API operation. */
-export interface Operation {
+/** The detail of firewall rule. */
+export interface IPv4FirewallRule {
+  /** The rule name. */
+  firewallRuleName?: string;
+  /** The start range of IPv4. */
+  rangeStart?: string;
+  /** The end range of IPv4. */
+  rangeEnd?: string;
+}
+
+/** An array of firewall rules. */
+export interface IPv4FirewallSettings {
+  /** An array of firewall rules. */
+  firewallRules?: IPv4FirewallRule[];
+  /** The indicator of enabling PBI service. */
+  enablePowerBIService?: boolean;
+}
+
+/** The log metric specification for exposing performance metrics to shoebox. */
+export interface LogSpecifications {
   /**
-   * Operation name: {provider}/{resource}/{operation}.
+   * The name of metric.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly name?: string;
-  /** The object that represents the operation. */
-  display?: OperationDisplay;
   /**
-   * The origin
+   * The displayed name of log.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly origin?: string;
-  /** Additional properties to expose performance metrics to shoebox. */
-  properties?: OperationProperties;
+  readonly displayName?: string;
+  /**
+   * The blob duration for the log.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly blobDuration?: string;
 }
 
-/** The object that represents the operation. */
-export interface OperationDisplay {
+/** Metric dimension. */
+export interface MetricDimensions {
   /**
-   * Service provider: Microsoft.Consumption.
+   * Dimension name.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly provider?: string;
+  readonly name?: string;
   /**
-   * Resource on which the operation is performed: UsageDetail, etc.
+   * Dimension display name.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly resource?: string;
-  /**
-   * Operation type: Read, write, delete, etc.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly operation?: string;
-  /**
-   * Description of the operation object.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly description?: string;
-}
-
-/** Additional properties to expose performance metrics to shoebox. */
-export interface OperationProperties {
-  /** Performance metrics to shoebox. */
-  serviceSpecification?: OperationPropertiesServiceSpecification;
-}
-
-/** Performance metrics to shoebox. */
-export interface OperationPropertiesServiceSpecification {
-  /**
-   * The metric specifications.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly metricSpecifications?: MetricSpecifications[];
-  /**
-   * The log specifications.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly logSpecifications?: LogSpecifications[];
+  readonly displayName?: string;
 }
 
 /** Available operation metric specification for exposing performance metrics to shoebox. */
@@ -369,77 +370,56 @@ export interface MetricSpecifications {
   readonly dimensions?: MetricDimensions[];
 }
 
-/** Metric dimension. */
-export interface MetricDimensions {
-  /**
-   * Dimension name.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly name?: string;
-  /**
-   * Dimension display name.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly displayName?: string;
+/** Additional properties to expose performance metrics to shoebox. */
+export interface OperationProperties {
+  /** Performance metrics to shoebox. */
+  serviceSpecification?: OperationPropertiesServiceSpecification;
 }
 
-/** The log metric specification for exposing performance metrics to shoebox. */
-export interface LogSpecifications {
+/** Performance metrics to shoebox. */
+export interface OperationPropertiesServiceSpecification {
   /**
-   * The name of metric.
+   * The metric specifications.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly name?: string;
+  readonly metricSpecifications?: MetricSpecifications[];
   /**
-   * The displayed name of log.
+   * The log specifications.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly displayName?: string;
-  /**
-   * The blob duration for the log.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly blobDuration?: string;
+  readonly logSpecifications?: LogSpecifications[];
 }
 
-/** Properties of Analysis Services resource. */
-export interface AnalysisServicesServerProperties
-  extends AnalysisServicesServerMutableProperties {
-  /**
-   * The current state of Analysis Services resource. The state is to indicate more states outside of resource provisioning.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly state?: State;
-  /**
-   * The current deployment state of Analysis Services resource. The provisioningState is to indicate states for resource provisioning.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: ProvisioningState;
-  /**
-   * The full name of the Analysis Services resource.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly serverFullName?: string;
-  /** The SKU of the Analysis Services resource. */
-  sku?: ResourceSku;
+/** The status of operation. */
+export interface OperationStatus {
+  /** The operation Id. */
+  id?: string;
+  /** The operation name. */
+  name?: string;
+  /** The start time of the operation. */
+  startTime?: string;
+  /** The end time of the operation. */
+  endTime?: string;
+  /** The status of the operation. */
+  status?: string;
+}
+
+/** An array of administrator user identities. */
+export interface ServerAdministrators {
+  /** An array of administrator user identities. */
+  members?: string[];
+}
+
+/** The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location' */
+export interface TrackedResource extends Resource {
+  /** Resource tags. */
+  tags?: { [propertyName: string]: string };
+  /** The geo-location where the resource lives */
+  location: string;
 }
 
 /** Represents an instance of an Analysis Services resource. */
-export interface AnalysisServicesServer extends Resource {
-  /** A collection of AS server administrators */
-  asAdministrators?: ServerAdministrators;
-  /** The SAS container URI to the backup container. */
-  backupBlobContainerUri?: string;
-  /** The gateway details configured for the AS server. */
-  gatewayDetails?: GatewayDetails;
-  /** The firewall settings for the AS server. */
-  ipV4FirewallSettings?: IPv4FirewallSettings;
-  /** How the read-write server's participation in the query pool is controlled.<br/>It can have the following values: <ul><li>readOnly - indicates that the read-write server is intended not to participate in query operations</li><li>all - indicates that the read-write server can participate in query operations</li></ul>Specifying readOnly when capacity is 1 results in error. */
-  querypoolConnectionMode?: ConnectionMode;
-  /** The managed mode of the server (0 = not managed, 1 = managed). */
-  managedMode?: ManagedMode;
-  /** The server monitor mode for AS server */
-  serverMonitorMode?: ServerMonitorMode;
+export interface AnalysisServicesServer extends TrackedResource {
   /**
    * The current state of Analysis Services resource. The state is to indicate more states outside of resource provisioning.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -456,8 +436,88 @@ export interface AnalysisServicesServer extends Resource {
    */
   readonly serverFullName?: string;
   /** The SKU of the Analysis Services resource. */
-  skuPropertiesSku?: ResourceSku;
+  sku?: AzureResourceManagerResourceSku;
 }
+
+/** Defines headers for AnalysisServicesServers_create operation. */
+export interface AnalysisServicesServersCreateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for AnalysisServicesServers_update operation. */
+export interface AnalysisServicesServersUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for AnalysisServicesServers_delete operation. */
+export interface AnalysisServicesServersDeleteHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for AnalysisServicesServers_resume operation. */
+export interface AnalysisServicesServersResumeHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for AnalysisServicesServers_listSkusForExisting operation. */
+export interface AnalysisServicesServersListSkusForExistingExceptionHeaders {
+  /** String error code indicating what went wrong. */
+  xMsErrorCode?: string;
+}
+
+/** Defines headers for AnalysisServicesServers_suspend operation. */
+export interface AnalysisServicesServersSuspendHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Known values of {@link Origin} that the service accepts. */
+export enum KnownOrigin {
+  /** User */
+  User = "user",
+  /** System */
+  System = "system",
+  /** UserSystem */
+  UserSystem = "user,system"
+}
+
+/**
+ * Defines values for Origin. \
+ * {@link KnownOrigin} can be used interchangeably with Origin,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **user** \
+ * **system** \
+ * **user,system**
+ */
+export type Origin = string;
+
+/** Known values of {@link ActionType} that the service accepts. */
+export enum KnownActionType {
+  /** Internal */
+  Internal = "Internal"
+}
+
+/**
+ * Defines values for ActionType. \
+ * {@link KnownActionType} can be used interchangeably with ActionType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Internal**
+ */
+export type ActionType = string;
 
 /** Known values of {@link State} that the service accepts. */
 export enum KnownState {
@@ -555,147 +615,48 @@ export enum KnownProvisioningState {
  */
 export type ProvisioningState = string;
 
-/** Known values of {@link SkuTier} that the service accepts. */
-export enum KnownSkuTier {
-  /** Development */
-  Development = "Development",
-  /** Basic */
-  Basic = "Basic",
-  /** Standard */
-  Standard = "Standard"
+/** Known values of {@link CreatedByType} that the service accepts. */
+export enum KnownCreatedByType {
+  /** User */
+  User = "User",
+  /** Application */
+  Application = "Application",
+  /** ManagedIdentity */
+  ManagedIdentity = "ManagedIdentity",
+  /** Key */
+  Key = "Key"
 }
 
 /**
- * Defines values for SkuTier. \
- * {@link KnownSkuTier} can be used interchangeably with SkuTier,
+ * Defines values for CreatedByType. \
+ * {@link KnownCreatedByType} can be used interchangeably with CreatedByType,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Development** \
- * **Basic** \
- * **Standard**
+ * **User** \
+ * **Application** \
+ * **ManagedIdentity** \
+ * **Key**
  */
-export type SkuTier = string;
+export type CreatedByType = string;
+
+/** Known values of {@link Versions} that the service accepts. */
+export enum KnownVersions {
+  /** V20170801 */
+  V20170801 = "2017-08-01"
+}
+
+/**
+ * Defines values for Versions. \
+ * {@link KnownVersions} can be used interchangeably with Versions,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **2017-08-01**
+ */
+export type Versions = string;
+/** Defines values for SkuTier. */
+export type SkuTier = "Free" | "Basic" | "Standard" | "Premium" | "Development";
 /** Defines values for ConnectionMode. */
 export type ConnectionMode = "All" | "ReadOnly";
-/** Defines values for ManagedMode. */
-export type ManagedMode = 0 | 1;
-/** Defines values for ServerMonitorMode. */
-export type ServerMonitorMode = 0 | 1;
-
-/** Optional parameters. */
-export interface ServersGetDetailsOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getDetails operation. */
-export type ServersGetDetailsResponse = AnalysisServicesServer;
-
-/** Optional parameters. */
-export interface ServersCreateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the create operation. */
-export type ServersCreateResponse = AnalysisServicesServer;
-
-/** Optional parameters. */
-export interface ServersDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface ServersUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the update operation. */
-export type ServersUpdateResponse = AnalysisServicesServer;
-
-/** Optional parameters. */
-export interface ServersSuspendOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface ServersResumeOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface ServersListByResourceGroupOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByResourceGroup operation. */
-export type ServersListByResourceGroupResponse = AnalysisServicesServers;
-
-/** Optional parameters. */
-export interface ServersListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type ServersListResponse = AnalysisServicesServers;
-
-/** Optional parameters. */
-export interface ServersListSkusForNewOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listSkusForNew operation. */
-export type ServersListSkusForNewResponse = SkuEnumerationForNewResourceResult;
-
-/** Optional parameters. */
-export interface ServersListSkusForExistingOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listSkusForExisting operation. */
-export type ServersListSkusForExistingResponse = SkuEnumerationForExistingResourceResult;
-
-/** Optional parameters. */
-export interface ServersListGatewayStatusOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listGatewayStatus operation. */
-export type ServersListGatewayStatusResponse = GatewayListStatusLive;
-
-/** Optional parameters. */
-export interface ServersDissociateGatewayOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface ServersCheckNameAvailabilityOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the checkNameAvailability operation. */
-export type ServersCheckNameAvailabilityResponse = CheckServerNameAvailabilityResult;
-
-/** Optional parameters. */
-export interface ServersListOperationResultsOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface ServersListOperationStatusesOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listOperationStatuses operation. */
-export type ServersListOperationStatusesResponse = OperationStatus;
 
 /** Optional parameters. */
 export interface OperationsListOptionalParams
@@ -710,6 +671,108 @@ export interface OperationsListNextOptionalParams
 
 /** Contains response data for the listNext operation. */
 export type OperationsListNextResponse = OperationListResult;
+
+/** Optional parameters. */
+export interface AnalysisServicesServersListByResourceGroupOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroup operation. */
+export type AnalysisServicesServersListByResourceGroupResponse = AnalysisServicesServerListResult;
+
+/** Optional parameters. */
+export interface AnalysisServicesServersGetDetailsOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getDetails operation. */
+export type AnalysisServicesServersGetDetailsResponse = AnalysisServicesServer;
+
+/** Optional parameters. */
+export interface AnalysisServicesServersCreateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the create operation. */
+export type AnalysisServicesServersCreateResponse = AnalysisServicesServer;
+
+/** Optional parameters. */
+export interface AnalysisServicesServersUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the update operation. */
+export type AnalysisServicesServersUpdateResponse = AnalysisServicesServer;
+
+/** Optional parameters. */
+export interface AnalysisServicesServersDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface AnalysisServicesServersDissociateGatewayOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the dissociateGateway operation. */
+export type AnalysisServicesServersDissociateGatewayResponse = Record<
+  string,
+  unknown
+>;
+
+/** Optional parameters. */
+export interface AnalysisServicesServersListGatewayStatusOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listGatewayStatus operation. */
+export type AnalysisServicesServersListGatewayStatusResponse = GatewayListStatusLive;
+
+/** Optional parameters. */
+export interface AnalysisServicesServersResumeOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the resume operation. */
+export type AnalysisServicesServersResumeResponse = Record<string, unknown>;
+
+/** Optional parameters. */
+export interface AnalysisServicesServersListSkusForExistingOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listSkusForExisting operation. */
+export type AnalysisServicesServersListSkusForExistingResponse = SkuEnumerationForExistingResourceResult;
+
+/** Optional parameters. */
+export interface AnalysisServicesServersSuspendOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the suspend operation. */
+export type AnalysisServicesServersSuspendResponse = Record<string, unknown>;
+
+/** Optional parameters. */
+export interface AnalysisServicesServersListByResourceGroupNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroupNext operation. */
+export type AnalysisServicesServersListByResourceGroupNextResponse = AnalysisServicesServerListResult;
 
 /** Optional parameters. */
 export interface AzureAnalysisServicesOptionalParams

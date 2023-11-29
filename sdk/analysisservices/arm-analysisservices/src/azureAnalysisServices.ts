@@ -14,32 +14,45 @@ import {
   SendRequest
 } from "@azure/core-rest-pipeline";
 import * as coreAuth from "@azure/core-auth";
-import { ServersImpl, OperationsImpl } from "./operations";
-import { Servers, Operations } from "./operationsInterfaces";
+import { OperationsImpl, AnalysisServicesServersImpl } from "./operations";
+import { Operations, AnalysisServicesServers } from "./operationsInterfaces";
 import { AzureAnalysisServicesOptionalParams } from "./models";
 
 export class AzureAnalysisServices extends coreClient.ServiceClient {
   $host: string;
   apiVersion: string;
-  subscriptionId: string;
+  subscriptionId?: string;
 
   /**
    * Initializes a new instance of the AzureAnalysisServices class.
    * @param credentials Subscription credentials which uniquely identify client subscription.
-   * @param subscriptionId A unique identifier for a Microsoft Azure subscription. The subscription ID
-   *                       forms part of the URI for every service call.
+   * @param subscriptionId The ID of the target subscription.
    * @param options The parameter options
    */
   constructor(
     credentials: coreAuth.TokenCredential,
     subscriptionId: string,
     options?: AzureAnalysisServicesOptionalParams
+  );
+  constructor(
+    credentials: coreAuth.TokenCredential,
+    options?: AzureAnalysisServicesOptionalParams
+  );
+  constructor(
+    credentials: coreAuth.TokenCredential,
+    subscriptionIdOrOptions?: AzureAnalysisServicesOptionalParams | string,
+    options?: AzureAnalysisServicesOptionalParams
   ) {
     if (credentials === undefined) {
       throw new Error("'credentials' cannot be null");
     }
-    if (subscriptionId === undefined) {
-      throw new Error("'subscriptionId' cannot be null");
+
+    let subscriptionId: string | undefined;
+
+    if (typeof subscriptionIdOrOptions === "string") {
+      subscriptionId = subscriptionIdOrOptions;
+    } else if (typeof subscriptionIdOrOptions === "object") {
+      options = subscriptionIdOrOptions;
     }
 
     // Initializing default values for options
@@ -51,7 +64,7 @@ export class AzureAnalysisServices extends coreClient.ServiceClient {
       credential: credentials
     };
 
-    const packageDetails = `azsdk-js-arm-analysisservices/4.1.4`;
+    const packageDetails = `azsdk-js-arm-analysisservices/5.0.0`;
     const userAgentPrefix =
       options.userAgentOptions && options.userAgentOptions.userAgentPrefix
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
@@ -105,8 +118,8 @@ export class AzureAnalysisServices extends coreClient.ServiceClient {
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
     this.apiVersion = options.apiVersion || "2017-08-01";
-    this.servers = new ServersImpl(this);
     this.operations = new OperationsImpl(this);
+    this.analysisServicesServers = new AnalysisServicesServersImpl(this);
     this.addCustomApiVersionPolicy(options.apiVersion);
   }
 
@@ -138,6 +151,6 @@ export class AzureAnalysisServices extends coreClient.ServiceClient {
     this.pipeline.addPolicy(apiVersionPolicy);
   }
 
-  servers: Servers;
   operations: Operations;
+  analysisServicesServers: AnalysisServicesServers;
 }

@@ -6,59 +6,167 @@
 
 import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
+import { OperationState } from '@azure/core-lro';
 import { PagedAsyncIterableIterator } from '@azure/core-paging';
-import { PollerLike } from '@azure/core-lro';
-import { PollOperationState } from '@azure/core-lro';
+import { SimplePollerLike } from '@azure/core-lro';
 
 // @public
-export interface AnalysisServicesServer extends Resource {
-    asAdministrators?: ServerAdministrators;
-    backupBlobContainerUri?: string;
-    gatewayDetails?: GatewayDetails;
-    ipV4FirewallSettings?: IPv4FirewallSettings;
-    managedMode?: ManagedMode;
+export type ActionType = string;
+
+// @public
+export interface AnalysisServicesServer extends TrackedResource {
     readonly provisioningState?: ProvisioningState;
-    querypoolConnectionMode?: ConnectionMode;
     readonly serverFullName?: string;
-    serverMonitorMode?: ServerMonitorMode;
-    skuPropertiesSku?: ResourceSku;
+    sku?: AzureResourceManagerResourceSku;
     readonly state?: State;
 }
 
 // @public
-export interface AnalysisServicesServerMutableProperties {
-    asAdministrators?: ServerAdministrators;
-    backupBlobContainerUri?: string;
-    gatewayDetails?: GatewayDetails;
-    ipV4FirewallSettings?: IPv4FirewallSettings;
-    managedMode?: ManagedMode;
-    querypoolConnectionMode?: ConnectionMode;
-    serverMonitorMode?: ServerMonitorMode;
-}
-
-// @public
-export interface AnalysisServicesServerProperties extends AnalysisServicesServerMutableProperties {
-    readonly provisioningState?: ProvisioningState;
-    readonly serverFullName?: string;
-    sku?: ResourceSku;
-    readonly state?: State;
-}
-
-// @public
-export interface AnalysisServicesServers {
+export interface AnalysisServicesServerListResult {
+    nextLink?: string;
     value: AnalysisServicesServer[];
 }
 
 // @public
-export interface AnalysisServicesServerUpdateParameters {
-    asAdministrators?: ServerAdministrators;
-    backupBlobContainerUri?: string;
-    gatewayDetails?: GatewayDetails;
-    ipV4FirewallSettings?: IPv4FirewallSettings;
-    managedMode?: ManagedMode;
-    querypoolConnectionMode?: ConnectionMode;
-    serverMonitorMode?: ServerMonitorMode;
-    sku?: ResourceSku;
+export interface AnalysisServicesServers {
+    beginCreate(resourceGroupName: string, serverName: string, resource: AnalysisServicesServer, options?: AnalysisServicesServersCreateOptionalParams): Promise<SimplePollerLike<OperationState<AnalysisServicesServersCreateResponse>, AnalysisServicesServersCreateResponse>>;
+    beginCreateAndWait(resourceGroupName: string, serverName: string, resource: AnalysisServicesServer, options?: AnalysisServicesServersCreateOptionalParams): Promise<AnalysisServicesServersCreateResponse>;
+    beginDelete(resourceGroupName: string, serverName: string, options?: AnalysisServicesServersDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
+    beginDeleteAndWait(resourceGroupName: string, serverName: string, options?: AnalysisServicesServersDeleteOptionalParams): Promise<void>;
+    beginResume(resourceGroupName: string, serverName: string, body: Record<string, unknown>, options?: AnalysisServicesServersResumeOptionalParams): Promise<SimplePollerLike<OperationState<AnalysisServicesServersResumeResponse>, AnalysisServicesServersResumeResponse>>;
+    beginResumeAndWait(resourceGroupName: string, serverName: string, body: Record<string, unknown>, options?: AnalysisServicesServersResumeOptionalParams): Promise<AnalysisServicesServersResumeResponse>;
+    beginSuspend(resourceGroupName: string, serverName: string, body: Record<string, unknown>, options?: AnalysisServicesServersSuspendOptionalParams): Promise<SimplePollerLike<OperationState<AnalysisServicesServersSuspendResponse>, AnalysisServicesServersSuspendResponse>>;
+    beginSuspendAndWait(resourceGroupName: string, serverName: string, body: Record<string, unknown>, options?: AnalysisServicesServersSuspendOptionalParams): Promise<AnalysisServicesServersSuspendResponse>;
+    beginUpdate(resourceGroupName: string, serverName: string, properties: AnalysisServicesServerUpdate, options?: AnalysisServicesServersUpdateOptionalParams): Promise<SimplePollerLike<OperationState<AnalysisServicesServersUpdateResponse>, AnalysisServicesServersUpdateResponse>>;
+    beginUpdateAndWait(resourceGroupName: string, serverName: string, properties: AnalysisServicesServerUpdate, options?: AnalysisServicesServersUpdateOptionalParams): Promise<AnalysisServicesServersUpdateResponse>;
+    dissociateGateway(resourceGroupName: string, serverName: string, body: Record<string, unknown>, options?: AnalysisServicesServersDissociateGatewayOptionalParams): Promise<AnalysisServicesServersDissociateGatewayResponse>;
+    getDetails(resourceGroupName: string, serverName: string, options?: AnalysisServicesServersGetDetailsOptionalParams): Promise<AnalysisServicesServersGetDetailsResponse>;
+    listByResourceGroup(resourceGroupName: string, options?: AnalysisServicesServersListByResourceGroupOptionalParams): PagedAsyncIterableIterator<AnalysisServicesServer>;
+    listGatewayStatus(resourceGroupName: string, serverName: string, body: Record<string, unknown>, options?: AnalysisServicesServersListGatewayStatusOptionalParams): Promise<AnalysisServicesServersListGatewayStatusResponse>;
+    listSkusForExisting(resourceGroupName: string, serverName: string, subscriptionId: string, options?: AnalysisServicesServersListSkusForExistingOptionalParams): Promise<AnalysisServicesServersListSkusForExistingResponse>;
+}
+
+// @public
+export interface AnalysisServicesServersCreateHeaders {
+    retryAfter?: number;
+}
+
+// @public
+export interface AnalysisServicesServersCreateOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type AnalysisServicesServersCreateResponse = AnalysisServicesServer;
+
+// @public
+export interface AnalysisServicesServersDeleteHeaders {
+    location?: string;
+    retryAfter?: number;
+}
+
+// @public
+export interface AnalysisServicesServersDeleteOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export interface AnalysisServicesServersDissociateGatewayOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type AnalysisServicesServersDissociateGatewayResponse = Record<string, unknown>;
+
+// @public
+export interface AnalysisServicesServersGetDetailsOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type AnalysisServicesServersGetDetailsResponse = AnalysisServicesServer;
+
+// @public
+export interface AnalysisServicesServersListByResourceGroupNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type AnalysisServicesServersListByResourceGroupNextResponse = AnalysisServicesServerListResult;
+
+// @public
+export interface AnalysisServicesServersListByResourceGroupOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type AnalysisServicesServersListByResourceGroupResponse = AnalysisServicesServerListResult;
+
+// @public
+export interface AnalysisServicesServersListGatewayStatusOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type AnalysisServicesServersListGatewayStatusResponse = GatewayListStatusLive;
+
+// @public
+export interface AnalysisServicesServersListSkusForExistingExceptionHeaders {
+    xMsErrorCode?: string;
+}
+
+// @public
+export interface AnalysisServicesServersListSkusForExistingOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type AnalysisServicesServersListSkusForExistingResponse = SkuEnumerationForExistingResourceResult;
+
+// @public
+export interface AnalysisServicesServersResumeHeaders {
+    location?: string;
+    retryAfter?: number;
+}
+
+// @public
+export interface AnalysisServicesServersResumeOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type AnalysisServicesServersResumeResponse = Record<string, unknown>;
+
+// @public
+export interface AnalysisServicesServersSuspendHeaders {
+    location?: string;
+    retryAfter?: number;
+}
+
+// @public
+export interface AnalysisServicesServersSuspendOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type AnalysisServicesServersSuspendResponse = Record<string, unknown>;
+
+// @public
+export interface AnalysisServicesServersUpdateHeaders {
+    location?: string;
+    retryAfter?: number;
+}
+
+// @public
+export interface AnalysisServicesServersUpdateOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type AnalysisServicesServersUpdateResponse = AnalysisServicesServer;
+
+// @public
+export interface AnalysisServicesServerUpdate {
+    sku?: AzureResourceManagerResourceSkuUpdate;
     tags?: {
         [propertyName: string]: string;
     };
@@ -69,14 +177,15 @@ export class AzureAnalysisServices extends coreClient.ServiceClient {
     // (undocumented)
     $host: string;
     constructor(credentials: coreAuth.TokenCredential, subscriptionId: string, options?: AzureAnalysisServicesOptionalParams);
+    constructor(credentials: coreAuth.TokenCredential, options?: AzureAnalysisServicesOptionalParams);
+    // (undocumented)
+    analysisServicesServers: AnalysisServicesServers;
     // (undocumented)
     apiVersion: string;
     // (undocumented)
     operations: Operations;
     // (undocumented)
-    servers: Servers;
-    // (undocumented)
-    subscriptionId: string;
+    subscriptionId?: string;
 }
 
 // @public
@@ -84,6 +193,36 @@ export interface AzureAnalysisServicesOptionalParams extends coreClient.ServiceC
     $host?: string;
     apiVersion?: string;
     endpoint?: string;
+}
+
+// @public
+export interface AzureCoreFoundationsError {
+    code: string;
+    details?: AzureCoreFoundationsError[];
+    innererror?: AzureCoreFoundationsInnerError;
+    message: string;
+    target?: string;
+}
+
+// @public
+export interface AzureCoreFoundationsErrorResponse {
+    error: AzureCoreFoundationsError;
+}
+
+// @public
+export interface AzureCoreFoundationsInnerError {
+    code?: string;
+    innererror?: AzureCoreFoundationsInnerError;
+}
+
+// @public
+export interface AzureResourceManagerResourceSku {
+    sku?: Sku;
+}
+
+// @public
+export interface AzureResourceManagerResourceSkuUpdate {
+    sku?: Sku;
 }
 
 // @public
@@ -103,6 +242,9 @@ export interface CheckServerNameAvailabilityResult {
 export type ConnectionMode = "All" | "ReadOnly";
 
 // @public
+export type CreatedByType = string;
+
+// @public
 export interface ErrorAdditionalInfo {
     readonly info?: Record<string, unknown>;
     readonly type?: string;
@@ -113,11 +255,8 @@ export interface ErrorDetail {
     readonly additionalInfo?: ErrorAdditionalInfo[];
     readonly code?: string;
     readonly details?: ErrorDetail[];
-    readonly httpStatusCode?: number;
     readonly message?: string;
-    readonly subCode?: number;
     readonly target?: string;
-    readonly timeStamp?: string;
 }
 
 // @public
@@ -130,11 +269,6 @@ export interface GatewayDetails {
     readonly dmtsClusterUri?: string;
     readonly gatewayObjectId?: string;
     gatewayResourceId?: string;
-}
-
-// @public
-export interface GatewayListStatusError {
-    error?: ErrorDetail;
 }
 
 // @public
@@ -159,6 +293,26 @@ export interface IPv4FirewallSettings {
 }
 
 // @public
+export enum KnownActionType {
+    Internal = "Internal"
+}
+
+// @public
+export enum KnownCreatedByType {
+    Application = "Application",
+    Key = "Key",
+    ManagedIdentity = "ManagedIdentity",
+    User = "User"
+}
+
+// @public
+export enum KnownOrigin {
+    System = "system",
+    User = "user",
+    UserSystem = "user,system"
+}
+
+// @public
 export enum KnownProvisioningState {
     Deleting = "Deleting",
     Failed = "Failed",
@@ -172,13 +326,6 @@ export enum KnownProvisioningState {
     Suspended = "Suspended",
     Suspending = "Suspending",
     Updating = "Updating"
-}
-
-// @public
-export enum KnownSkuTier {
-    Basic = "Basic",
-    Development = "Development",
-    Standard = "Standard"
 }
 
 // @public
@@ -198,14 +345,16 @@ export enum KnownState {
 }
 
 // @public
+export enum KnownVersions {
+    V20170801 = "2017-08-01"
+}
+
+// @public
 export interface LogSpecifications {
     readonly blobDuration?: string;
     readonly displayName?: string;
     readonly name?: string;
 }
-
-// @public
-export type ManagedMode = 0 | 1;
 
 // @public
 export interface MetricDimensions {
@@ -225,10 +374,11 @@ export interface MetricSpecifications {
 
 // @public
 export interface Operation {
+    readonly actionType?: ActionType;
     display?: OperationDisplay;
+    readonly isDataAction?: boolean;
     readonly name?: string;
-    readonly origin?: string;
-    properties?: OperationProperties;
+    readonly origin?: Origin;
 }
 
 // @public
@@ -278,7 +428,6 @@ export type OperationsListResponse = OperationListResult;
 // @public
 export interface OperationStatus {
     endTime?: string;
-    error?: ErrorDetail;
     id?: string;
     name?: string;
     startTime?: string;
@@ -286,25 +435,17 @@ export interface OperationStatus {
 }
 
 // @public
+export type Origin = string;
+
+// @public
 export type ProvisioningState = string;
 
 // @public
 export interface Resource {
     readonly id?: string;
-    location: string;
     readonly name?: string;
-    sku: ResourceSku;
-    tags?: {
-        [propertyName: string]: string;
-    };
+    readonly systemData?: SystemData;
     readonly type?: string;
-}
-
-// @public
-export interface ResourceSku {
-    capacity?: number;
-    name: string;
-    tier?: SkuTier;
 }
 
 // @public
@@ -313,136 +454,18 @@ export interface ServerAdministrators {
 }
 
 // @public
-export type ServerMonitorMode = 0 | 1;
-
-// @public
-export interface Servers {
-    beginCreate(resourceGroupName: string, serverName: string, serverParameters: AnalysisServicesServer, options?: ServersCreateOptionalParams): Promise<PollerLike<PollOperationState<ServersCreateResponse>, ServersCreateResponse>>;
-    beginCreateAndWait(resourceGroupName: string, serverName: string, serverParameters: AnalysisServicesServer, options?: ServersCreateOptionalParams): Promise<ServersCreateResponse>;
-    beginDelete(resourceGroupName: string, serverName: string, options?: ServersDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
-    beginDeleteAndWait(resourceGroupName: string, serverName: string, options?: ServersDeleteOptionalParams): Promise<void>;
-    beginResume(resourceGroupName: string, serverName: string, options?: ServersResumeOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
-    beginResumeAndWait(resourceGroupName: string, serverName: string, options?: ServersResumeOptionalParams): Promise<void>;
-    beginSuspend(resourceGroupName: string, serverName: string, options?: ServersSuspendOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
-    beginSuspendAndWait(resourceGroupName: string, serverName: string, options?: ServersSuspendOptionalParams): Promise<void>;
-    beginUpdate(resourceGroupName: string, serverName: string, serverUpdateParameters: AnalysisServicesServerUpdateParameters, options?: ServersUpdateOptionalParams): Promise<PollerLike<PollOperationState<ServersUpdateResponse>, ServersUpdateResponse>>;
-    beginUpdateAndWait(resourceGroupName: string, serverName: string, serverUpdateParameters: AnalysisServicesServerUpdateParameters, options?: ServersUpdateOptionalParams): Promise<ServersUpdateResponse>;
-    checkNameAvailability(location: string, serverParameters: CheckServerNameAvailabilityParameters, options?: ServersCheckNameAvailabilityOptionalParams): Promise<ServersCheckNameAvailabilityResponse>;
-    dissociateGateway(resourceGroupName: string, serverName: string, options?: ServersDissociateGatewayOptionalParams): Promise<void>;
-    getDetails(resourceGroupName: string, serverName: string, options?: ServersGetDetailsOptionalParams): Promise<ServersGetDetailsResponse>;
-    list(options?: ServersListOptionalParams): PagedAsyncIterableIterator<AnalysisServicesServer>;
-    listByResourceGroup(resourceGroupName: string, options?: ServersListByResourceGroupOptionalParams): PagedAsyncIterableIterator<AnalysisServicesServer>;
-    listGatewayStatus(resourceGroupName: string, serverName: string, options?: ServersListGatewayStatusOptionalParams): Promise<ServersListGatewayStatusResponse>;
-    listOperationResults(location: string, operationId: string, options?: ServersListOperationResultsOptionalParams): Promise<void>;
-    listOperationStatuses(location: string, operationId: string, options?: ServersListOperationStatusesOptionalParams): Promise<ServersListOperationStatusesResponse>;
-    listSkusForExisting(resourceGroupName: string, serverName: string, options?: ServersListSkusForExistingOptionalParams): Promise<ServersListSkusForExistingResponse>;
-    listSkusForNew(options?: ServersListSkusForNewOptionalParams): Promise<ServersListSkusForNewResponse>;
+export interface Sku {
+    capacity?: number;
+    family?: string;
+    name: string;
+    size?: string;
+    tier?: SkuTier;
 }
-
-// @public
-export interface ServersCheckNameAvailabilityOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type ServersCheckNameAvailabilityResponse = CheckServerNameAvailabilityResult;
-
-// @public
-export interface ServersCreateOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type ServersCreateResponse = AnalysisServicesServer;
-
-// @public
-export interface ServersDeleteOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export interface ServersDissociateGatewayOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export interface ServersGetDetailsOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type ServersGetDetailsResponse = AnalysisServicesServer;
-
-// @public
-export interface ServersListByResourceGroupOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type ServersListByResourceGroupResponse = AnalysisServicesServers;
-
-// @public
-export interface ServersListGatewayStatusOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type ServersListGatewayStatusResponse = GatewayListStatusLive;
-
-// @public
-export interface ServersListOperationResultsOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export interface ServersListOperationStatusesOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type ServersListOperationStatusesResponse = OperationStatus;
-
-// @public
-export interface ServersListOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type ServersListResponse = AnalysisServicesServers;
-
-// @public
-export interface ServersListSkusForExistingOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type ServersListSkusForExistingResponse = SkuEnumerationForExistingResourceResult;
-
-// @public
-export interface ServersListSkusForNewOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type ServersListSkusForNewResponse = SkuEnumerationForNewResourceResult;
-
-// @public
-export interface ServersResumeOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export interface ServersSuspendOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export interface ServersUpdateOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type ServersUpdateResponse = AnalysisServicesServer;
 
 // @public
 export interface SkuDetailsForExistingResource {
     resourceType?: string;
-    sku?: ResourceSku;
+    sku?: AzureResourceManagerResourceSku;
 }
 
 // @public
@@ -451,15 +474,31 @@ export interface SkuEnumerationForExistingResourceResult {
 }
 
 // @public
-export interface SkuEnumerationForNewResourceResult {
-    value?: ResourceSku[];
-}
-
-// @public
-export type SkuTier = string;
+export type SkuTier = "Free" | "Basic" | "Standard" | "Premium" | "Development";
 
 // @public
 export type State = string;
+
+// @public
+export interface SystemData {
+    createdAt?: Date;
+    createdBy?: string;
+    createdByType?: CreatedByType;
+    lastModifiedAt?: Date;
+    lastModifiedBy?: string;
+    lastModifiedByType?: CreatedByType;
+}
+
+// @public
+export interface TrackedResource extends Resource {
+    location: string;
+    tags?: {
+        [propertyName: string]: string;
+    };
+}
+
+// @public
+export type Versions = string;
 
 // (No @packageDocumentation comment for this package)
 

@@ -13,8 +13,7 @@ import {
 } from "@azure/core-client";
 import {
   AnalysisServicesServer as AnalysisServicesServerMapper,
-  AnalysisServicesServerUpdateParameters as AnalysisServicesServerUpdateParametersMapper,
-  CheckServerNameAvailabilityParameters as CheckServerNameAvailabilityParametersMapper
+  AnalysisServicesServerUpdate as AnalysisServicesServerUpdateMapper
 } from "../models/mappers";
 
 export const accept: OperationParameter = {
@@ -41,11 +40,48 @@ export const $host: OperationURLParameter = {
   skipEncoding: true
 };
 
+export const apiVersion: OperationQueryParameter = {
+  parameterPath: "apiVersion",
+  mapper: {
+    defaultValue: "2017-08-01",
+    isConstant: true,
+    serializedName: "api-version",
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const nextLink: OperationURLParameter = {
+  parameterPath: "nextLink",
+  mapper: {
+    serializedName: "nextLink",
+    required: true,
+    type: {
+      name: "String"
+    }
+  },
+  skipEncoding: true
+};
+
+export const subscriptionId: OperationURLParameter = {
+  parameterPath: "subscriptionId",
+  mapper: {
+    constraints: {
+      MinLength: 1
+    },
+    serializedName: "subscriptionId",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
 export const resourceGroupName: OperationURLParameter = {
   parameterPath: "resourceGroupName",
   mapper: {
     constraints: {
-      Pattern: new RegExp("^[-\\w\\._\\(\\)]+$"),
       MaxLength: 90,
       MinLength: 1
     },
@@ -73,29 +109,6 @@ export const serverName: OperationURLParameter = {
   }
 };
 
-export const apiVersion: OperationQueryParameter = {
-  parameterPath: "apiVersion",
-  mapper: {
-    defaultValue: "2017-08-01",
-    isConstant: true,
-    serializedName: "api-version",
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const subscriptionId: OperationURLParameter = {
-  parameterPath: "subscriptionId",
-  mapper: {
-    serializedName: "subscriptionId",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
 export const contentType: OperationParameter = {
   parameterPath: ["options", "contentType"],
   mapper: {
@@ -108,25 +121,37 @@ export const contentType: OperationParameter = {
   }
 };
 
-export const serverParameters: OperationParameter = {
-  parameterPath: "serverParameters",
+export const resource: OperationParameter = {
+  parameterPath: "resource",
   mapper: AnalysisServicesServerMapper
 };
 
-export const serverUpdateParameters: OperationParameter = {
-  parameterPath: "serverUpdateParameters",
-  mapper: AnalysisServicesServerUpdateParametersMapper
+export const properties: OperationParameter = {
+  parameterPath: "properties",
+  mapper: AnalysisServicesServerUpdateMapper
 };
 
-export const serverParameters1: OperationParameter = {
-  parameterPath: "serverParameters",
-  mapper: CheckServerNameAvailabilityParametersMapper
-};
-
-export const location: OperationURLParameter = {
-  parameterPath: "location",
+export const body: OperationParameter = {
+  parameterPath: "body",
   mapper: {
-    serializedName: "location",
+    serializedName: "body",
+    required: true,
+    type: {
+      name: "Dictionary",
+      value: { type: { name: "any" } }
+    }
+  }
+};
+
+export const resourceGroupName1: OperationURLParameter = {
+  parameterPath: "resourceGroupName",
+  mapper: {
+    constraints: {
+      Pattern: new RegExp("^[-\\w\\._\\(\\)]+$"),
+      MaxLength: 90,
+      MinLength: 1
+    },
+    serializedName: "resourceGroupName",
     required: true,
     type: {
       name: "String"
@@ -134,25 +159,13 @@ export const location: OperationURLParameter = {
   }
 };
 
-export const operationId: OperationURLParameter = {
-  parameterPath: "operationId",
+export const subscriptionId1: OperationURLParameter = {
+  parameterPath: "subscriptionId",
   mapper: {
-    serializedName: "operationId",
+    serializedName: "subscriptionId",
     required: true,
     type: {
       name: "String"
     }
   }
-};
-
-export const nextLink: OperationURLParameter = {
-  parameterPath: "nextLink",
-  mapper: {
-    serializedName: "nextLink",
-    required: true,
-    type: {
-      name: "String"
-    }
-  },
-  skipEncoding: true
 };
