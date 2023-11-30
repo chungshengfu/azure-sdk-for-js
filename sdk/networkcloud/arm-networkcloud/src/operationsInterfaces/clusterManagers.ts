@@ -55,13 +55,11 @@ export interface ClusterManagers {
    * Create a new cluster manager or update properties of the cluster manager if it exists.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterManagerName The name of the cluster manager.
-   * @param clusterManagerParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     clusterManagerName: string,
-    clusterManagerParameters: ClusterManager,
     options?: ClusterManagersCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -73,13 +71,11 @@ export interface ClusterManagers {
    * Create a new cluster manager or update properties of the cluster manager if it exists.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterManagerName The name of the cluster manager.
-   * @param clusterManagerParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     clusterManagerName: string,
-    clusterManagerParameters: ClusterManager,
     options?: ClusterManagersCreateOrUpdateOptionalParams
   ): Promise<ClusterManagersCreateOrUpdateResponse>;
   /**

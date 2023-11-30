@@ -55,13 +55,11 @@ export interface L2Networks {
    * Create a new layer 2 (L2) network or update the properties of the existing network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param l2NetworkName The name of the L2 network.
-   * @param l2NetworkParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     l2NetworkName: string,
-    l2NetworkParameters: L2Network,
     options?: L2NetworksCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -73,13 +71,11 @@ export interface L2Networks {
    * Create a new layer 2 (L2) network or update the properties of the existing network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param l2NetworkName The name of the L2 network.
-   * @param l2NetworkParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     l2NetworkName: string,
-    l2NetworkParameters: L2Network,
     options?: L2NetworksCreateOrUpdateOptionalParams
   ): Promise<L2NetworksCreateOrUpdateResponse>;
   /**

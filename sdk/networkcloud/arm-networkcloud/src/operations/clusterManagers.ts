@@ -223,13 +223,11 @@ export class ClusterManagersImpl implements ClusterManagers {
    * Create a new cluster manager or update properties of the cluster manager if it exists.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterManagerName The name of the cluster manager.
-   * @param clusterManagerParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
     clusterManagerName: string,
-    clusterManagerParameters: ClusterManager,
     options?: ClusterManagersCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -278,12 +276,7 @@ export class ClusterManagersImpl implements ClusterManagers {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: {
-        resourceGroupName,
-        clusterManagerName,
-        clusterManagerParameters,
-        options
-      },
+      args: { resourceGroupName, clusterManagerName, options },
       spec: createOrUpdateOperationSpec
     });
     const poller = await createHttpPoller<
@@ -302,19 +295,16 @@ export class ClusterManagersImpl implements ClusterManagers {
    * Create a new cluster manager or update properties of the cluster manager if it exists.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterManagerName The name of the cluster manager.
-   * @param clusterManagerParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     clusterManagerName: string,
-    clusterManagerParameters: ClusterManager,
     options?: ClusterManagersCreateOrUpdateOptionalParams
   ): Promise<ClusterManagersCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
       clusterManagerName,
-      clusterManagerParameters,
       options
     );
     return poller.pollUntilDone();

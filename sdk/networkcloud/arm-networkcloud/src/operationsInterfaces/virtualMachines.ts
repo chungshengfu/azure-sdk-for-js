@@ -19,6 +19,10 @@ import {
   VirtualMachinesDeleteOptionalParams,
   VirtualMachinesUpdateOptionalParams,
   VirtualMachinesUpdateResponse,
+  VirtualMachinesAttachVolumeOptionalParams,
+  VirtualMachinesAttachVolumeResponse,
+  VirtualMachinesDetachVolumeOptionalParams,
+  VirtualMachinesDetachVolumeResponse,
   VirtualMachinesPowerOffOptionalParams,
   VirtualMachinesPowerOffResponse,
   VirtualMachinesReimageOptionalParams,
@@ -63,13 +67,11 @@ export interface VirtualMachines {
    * Create a new virtual machine or update the properties of the existing virtual machine.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param virtualMachineName The name of the virtual machine.
-   * @param virtualMachineParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     virtualMachineName: string,
-    virtualMachineParameters: VirtualMachine,
     options?: VirtualMachinesCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -81,13 +83,11 @@ export interface VirtualMachines {
    * Create a new virtual machine or update the properties of the existing virtual machine.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param virtualMachineName The name of the virtual machine.
-   * @param virtualMachineParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     virtualMachineName: string,
-    virtualMachineParameters: VirtualMachine,
     options?: VirtualMachinesCreateOrUpdateOptionalParams
   ): Promise<VirtualMachinesCreateOrUpdateResponse>;
   /**
@@ -141,6 +141,60 @@ export interface VirtualMachines {
     virtualMachineName: string,
     options?: VirtualMachinesUpdateOptionalParams
   ): Promise<VirtualMachinesUpdateResponse>;
+  /**
+   * Attach volume to the provided virtual machine.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param virtualMachineName The name of the virtual machine.
+   * @param options The options parameters.
+   */
+  beginAttachVolume(
+    resourceGroupName: string,
+    virtualMachineName: string,
+    options?: VirtualMachinesAttachVolumeOptionalParams
+  ): Promise<
+    SimplePollerLike<
+      OperationState<VirtualMachinesAttachVolumeResponse>,
+      VirtualMachinesAttachVolumeResponse
+    >
+  >;
+  /**
+   * Attach volume to the provided virtual machine.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param virtualMachineName The name of the virtual machine.
+   * @param options The options parameters.
+   */
+  beginAttachVolumeAndWait(
+    resourceGroupName: string,
+    virtualMachineName: string,
+    options?: VirtualMachinesAttachVolumeOptionalParams
+  ): Promise<VirtualMachinesAttachVolumeResponse>;
+  /**
+   * Detach volume from the provided virtual machine.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param virtualMachineName The name of the virtual machine.
+   * @param options The options parameters.
+   */
+  beginDetachVolume(
+    resourceGroupName: string,
+    virtualMachineName: string,
+    options?: VirtualMachinesDetachVolumeOptionalParams
+  ): Promise<
+    SimplePollerLike<
+      OperationState<VirtualMachinesDetachVolumeResponse>,
+      VirtualMachinesDetachVolumeResponse
+    >
+  >;
+  /**
+   * Detach volume from the provided virtual machine.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param virtualMachineName The name of the virtual machine.
+   * @param options The options parameters.
+   */
+  beginDetachVolumeAndWait(
+    resourceGroupName: string,
+    virtualMachineName: string,
+    options?: VirtualMachinesDetachVolumeOptionalParams
+  ): Promise<VirtualMachinesDetachVolumeResponse>;
   /**
    * Power off the provided virtual machine.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.

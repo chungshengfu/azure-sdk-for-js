@@ -10,7 +10,8 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   BmcKeySet,
-  BmcKeySetsListByClusterOptionalParams,
+  BmcKeySetsListBySubscriptionOptionalParams,
+  BmcKeySetsListByResourceGroupOptionalParams,
   BmcKeySetsGetOptionalParams,
   BmcKeySetsGetResponse,
   BmcKeySetsCreateOrUpdateOptionalParams,
@@ -24,15 +25,25 @@ import {
 /** Interface representing a BmcKeySets. */
 export interface BmcKeySets {
   /**
-   * Get a list of baseboard management controller key sets for the provided cluster.
+   * Get a list of baseboard management controller key sets of the cluster in the provided subscription.
+   * @param clusterName The name of the cluster.
+   * @param options The options parameters.
+   */
+  listBySubscription(
+    clusterName: string,
+    options?: BmcKeySetsListBySubscriptionOptionalParams
+  ): PagedAsyncIterableIterator<BmcKeySet>;
+  /**
+   * Get a list of baseboard management controller key sets of the cluster in the provided resource
+   * group.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
    * @param options The options parameters.
    */
-  listByCluster(
+  listByResourceGroup(
     resourceGroupName: string,
     clusterName: string,
-    options?: BmcKeySetsListByClusterOptionalParams
+    options?: BmcKeySetsListByResourceGroupOptionalParams
   ): PagedAsyncIterableIterator<BmcKeySet>;
   /**
    * Get baseboard management controller key set of the provided cluster.
@@ -53,14 +64,12 @@ export interface BmcKeySets {
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
    * @param bmcKeySetName The name of the baseboard management controller key set.
-   * @param bmcKeySetParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     clusterName: string,
     bmcKeySetName: string,
-    bmcKeySetParameters: BmcKeySet,
     options?: BmcKeySetsCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -74,14 +83,12 @@ export interface BmcKeySets {
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
    * @param bmcKeySetName The name of the baseboard management controller key set.
-   * @param bmcKeySetParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     clusterName: string,
     bmcKeySetName: string,
-    bmcKeySetParameters: BmcKeySet,
     options?: BmcKeySetsCreateOrUpdateOptionalParams
   ): Promise<BmcKeySetsCreateOrUpdateResponse>;
   /**

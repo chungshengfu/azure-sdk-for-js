@@ -20,7 +20,11 @@ import {
   CloudServicesNetworksImpl,
   ClusterManagersImpl,
   ClustersImpl,
-  KubernetesClustersImpl,
+  BareMetalMachineKeySetsImpl,
+  BmcKeySetsImpl,
+  MetricsConfigurationsImpl,
+  DefaultCniNetworksImpl,
+  HybridAksClustersImpl,
   L2NetworksImpl,
   L3NetworksImpl,
   RackSkusImpl,
@@ -28,12 +32,8 @@ import {
   StorageAppliancesImpl,
   TrunkedNetworksImpl,
   VirtualMachinesImpl,
-  VolumesImpl,
-  BareMetalMachineKeySetsImpl,
-  BmcKeySetsImpl,
-  MetricsConfigurationsImpl,
-  AgentPoolsImpl,
-  ConsolesImpl
+  ConsolesImpl,
+  VolumesImpl
 } from "./operations";
 import {
   Operations,
@@ -41,7 +41,11 @@ import {
   CloudServicesNetworks,
   ClusterManagers,
   Clusters,
-  KubernetesClusters,
+  BareMetalMachineKeySets,
+  BmcKeySets,
+  MetricsConfigurations,
+  DefaultCniNetworks,
+  HybridAksClusters,
   L2Networks,
   L3Networks,
   RackSkus,
@@ -49,12 +53,8 @@ import {
   StorageAppliances,
   TrunkedNetworks,
   VirtualMachines,
-  Volumes,
-  BareMetalMachineKeySets,
-  BmcKeySets,
-  MetricsConfigurations,
-  AgentPools,
-  Consoles
+  Consoles,
+  Volumes
 } from "./operationsInterfaces";
 import { NetworkCloudOptionalParams } from "./models";
 
@@ -66,7 +66,7 @@ export class NetworkCloud extends coreClient.ServiceClient {
   /**
    * Initializes a new instance of the NetworkCloud class.
    * @param credentials Subscription credentials which uniquely identify client subscription.
-   * @param subscriptionId The ID of the target subscription. The value must be an UUID.
+   * @param subscriptionId The ID of the target subscription.
    * @param options The parameter options
    */
   constructor(
@@ -90,7 +90,7 @@ export class NetworkCloud extends coreClient.ServiceClient {
       credential: credentials
     };
 
-    const packageDetails = `azsdk-js-arm-networkcloud/1.0.0`;
+    const packageDetails = `azsdk-js-arm-networkcloud/2.0.0-beta.1`;
     const userAgentPrefix =
       options.userAgentOptions && options.userAgentOptions.userAgentPrefix
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
@@ -143,13 +143,17 @@ export class NetworkCloud extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
-    this.apiVersion = options.apiVersion || "2023-07-01";
+    this.apiVersion = options.apiVersion || "2022-12-12-preview";
     this.operations = new OperationsImpl(this);
     this.bareMetalMachines = new BareMetalMachinesImpl(this);
     this.cloudServicesNetworks = new CloudServicesNetworksImpl(this);
     this.clusterManagers = new ClusterManagersImpl(this);
     this.clusters = new ClustersImpl(this);
-    this.kubernetesClusters = new KubernetesClustersImpl(this);
+    this.bareMetalMachineKeySets = new BareMetalMachineKeySetsImpl(this);
+    this.bmcKeySets = new BmcKeySetsImpl(this);
+    this.metricsConfigurations = new MetricsConfigurationsImpl(this);
+    this.defaultCniNetworks = new DefaultCniNetworksImpl(this);
+    this.hybridAksClusters = new HybridAksClustersImpl(this);
     this.l2Networks = new L2NetworksImpl(this);
     this.l3Networks = new L3NetworksImpl(this);
     this.rackSkus = new RackSkusImpl(this);
@@ -157,12 +161,8 @@ export class NetworkCloud extends coreClient.ServiceClient {
     this.storageAppliances = new StorageAppliancesImpl(this);
     this.trunkedNetworks = new TrunkedNetworksImpl(this);
     this.virtualMachines = new VirtualMachinesImpl(this);
-    this.volumes = new VolumesImpl(this);
-    this.bareMetalMachineKeySets = new BareMetalMachineKeySetsImpl(this);
-    this.bmcKeySets = new BmcKeySetsImpl(this);
-    this.metricsConfigurations = new MetricsConfigurationsImpl(this);
-    this.agentPools = new AgentPoolsImpl(this);
     this.consoles = new ConsolesImpl(this);
+    this.volumes = new VolumesImpl(this);
     this.addCustomApiVersionPolicy(options.apiVersion);
   }
 
@@ -199,7 +199,11 @@ export class NetworkCloud extends coreClient.ServiceClient {
   cloudServicesNetworks: CloudServicesNetworks;
   clusterManagers: ClusterManagers;
   clusters: Clusters;
-  kubernetesClusters: KubernetesClusters;
+  bareMetalMachineKeySets: BareMetalMachineKeySets;
+  bmcKeySets: BmcKeySets;
+  metricsConfigurations: MetricsConfigurations;
+  defaultCniNetworks: DefaultCniNetworks;
+  hybridAksClusters: HybridAksClusters;
   l2Networks: L2Networks;
   l3Networks: L3Networks;
   rackSkus: RackSkus;
@@ -207,10 +211,6 @@ export class NetworkCloud extends coreClient.ServiceClient {
   storageAppliances: StorageAppliances;
   trunkedNetworks: TrunkedNetworks;
   virtualMachines: VirtualMachines;
-  volumes: Volumes;
-  bareMetalMachineKeySets: BareMetalMachineKeySets;
-  bmcKeySets: BmcKeySets;
-  metricsConfigurations: MetricsConfigurations;
-  agentPools: AgentPools;
   consoles: Consoles;
+  volumes: Volumes;
 }

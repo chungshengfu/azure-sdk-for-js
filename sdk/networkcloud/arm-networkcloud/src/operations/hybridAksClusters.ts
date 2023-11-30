@@ -8,7 +8,7 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { BareMetalMachineKeySets } from "../operationsInterfaces";
+import { HybridAksClusters } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
@@ -20,31 +20,33 @@ import {
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
-  BareMetalMachineKeySet,
-  BareMetalMachineKeySetsListBySubscriptionNextOptionalParams,
-  BareMetalMachineKeySetsListBySubscriptionOptionalParams,
-  BareMetalMachineKeySetsListBySubscriptionResponse,
-  BareMetalMachineKeySetsListByResourceGroupNextOptionalParams,
-  BareMetalMachineKeySetsListByResourceGroupOptionalParams,
-  BareMetalMachineKeySetsListByResourceGroupResponse,
-  BareMetalMachineKeySetsGetOptionalParams,
-  BareMetalMachineKeySetsGetResponse,
-  BareMetalMachineKeySetsCreateOrUpdateOptionalParams,
-  BareMetalMachineKeySetsCreateOrUpdateResponse,
-  BareMetalMachineKeySetsDeleteOptionalParams,
-  BareMetalMachineKeySetsUpdateOptionalParams,
-  BareMetalMachineKeySetsUpdateResponse,
-  BareMetalMachineKeySetsListBySubscriptionNextResponse,
-  BareMetalMachineKeySetsListByResourceGroupNextResponse
+  HybridAksCluster,
+  HybridAksClustersListBySubscriptionNextOptionalParams,
+  HybridAksClustersListBySubscriptionOptionalParams,
+  HybridAksClustersListBySubscriptionResponse,
+  HybridAksClustersListByResourceGroupNextOptionalParams,
+  HybridAksClustersListByResourceGroupOptionalParams,
+  HybridAksClustersListByResourceGroupResponse,
+  HybridAksClustersGetOptionalParams,
+  HybridAksClustersGetResponse,
+  HybridAksClustersCreateOrUpdateOptionalParams,
+  HybridAksClustersCreateOrUpdateResponse,
+  HybridAksClustersDeleteOptionalParams,
+  HybridAksClustersUpdateOptionalParams,
+  HybridAksClustersUpdateResponse,
+  HybridAksClustersRestartNodeOptionalParams,
+  HybridAksClustersRestartNodeResponse,
+  HybridAksClustersListBySubscriptionNextResponse,
+  HybridAksClustersListByResourceGroupNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing BareMetalMachineKeySets operations. */
-export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
+/** Class containing HybridAksClusters operations. */
+export class HybridAksClustersImpl implements HybridAksClusters {
   private readonly client: NetworkCloud;
 
   /**
-   * Initialize a new instance of the class BareMetalMachineKeySets class.
+   * Initialize a new instance of the class HybridAksClusters class.
    * @param client Reference to the service client
    */
   constructor(client: NetworkCloud) {
@@ -52,15 +54,14 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
   }
 
   /**
-   * Get a list of bare metal machine key sets of the cluster in the provided subscription.
-   * @param clusterName The name of the cluster.
+   * Get a list of additional details related to Hybrid AKS provisioned clusters in the provided
+   * subscription.
    * @param options The options parameters.
    */
   public listBySubscription(
-    clusterName: string,
-    options?: BareMetalMachineKeySetsListBySubscriptionOptionalParams
-  ): PagedAsyncIterableIterator<BareMetalMachineKeySet> {
-    const iter = this.listBySubscriptionPagingAll(clusterName, options);
+    options?: HybridAksClustersListBySubscriptionOptionalParams
+  ): PagedAsyncIterableIterator<HybridAksCluster> {
+    const iter = this.listBySubscriptionPagingAll(options);
     return {
       next() {
         return iter.next();
@@ -72,35 +73,26 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
         if (settings?.maxPageSize) {
           throw new Error("maxPageSize is not supported by this operation.");
         }
-        return this.listBySubscriptionPagingPage(
-          clusterName,
-          options,
-          settings
-        );
+        return this.listBySubscriptionPagingPage(options, settings);
       }
     };
   }
 
   private async *listBySubscriptionPagingPage(
-    clusterName: string,
-    options?: BareMetalMachineKeySetsListBySubscriptionOptionalParams,
+    options?: HybridAksClustersListBySubscriptionOptionalParams,
     settings?: PageSettings
-  ): AsyncIterableIterator<BareMetalMachineKeySet[]> {
-    let result: BareMetalMachineKeySetsListBySubscriptionResponse;
+  ): AsyncIterableIterator<HybridAksCluster[]> {
+    let result: HybridAksClustersListBySubscriptionResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._listBySubscription(clusterName, options);
+      result = await this._listBySubscription(options);
       let page = result.value || [];
       continuationToken = result.nextLink;
       setContinuationToken(page, continuationToken);
       yield page;
     }
     while (continuationToken) {
-      result = await this._listBySubscriptionNext(
-        clusterName,
-        continuationToken,
-        options
-      );
+      result = await this._listBySubscriptionNext(continuationToken, options);
       continuationToken = result.nextLink;
       let page = result.value || [];
       setContinuationToken(page, continuationToken);
@@ -109,33 +101,23 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
   }
 
   private async *listBySubscriptionPagingAll(
-    clusterName: string,
-    options?: BareMetalMachineKeySetsListBySubscriptionOptionalParams
-  ): AsyncIterableIterator<BareMetalMachineKeySet> {
-    for await (const page of this.listBySubscriptionPagingPage(
-      clusterName,
-      options
-    )) {
+    options?: HybridAksClustersListBySubscriptionOptionalParams
+  ): AsyncIterableIterator<HybridAksCluster> {
+    for await (const page of this.listBySubscriptionPagingPage(options)) {
       yield* page;
     }
   }
 
   /**
-   * Get a list of bare metal machine key sets of the cluster in the provided resource group.
+   * Get a list of additional details for Hybrid AKS provisioned clusters in the provided resource group.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
    * @param options The options parameters.
    */
   public listByResourceGroup(
     resourceGroupName: string,
-    clusterName: string,
-    options?: BareMetalMachineKeySetsListByResourceGroupOptionalParams
-  ): PagedAsyncIterableIterator<BareMetalMachineKeySet> {
-    const iter = this.listByResourceGroupPagingAll(
-      resourceGroupName,
-      clusterName,
-      options
-    );
+    options?: HybridAksClustersListByResourceGroupOptionalParams
+  ): PagedAsyncIterableIterator<HybridAksCluster> {
+    const iter = this.listByResourceGroupPagingAll(resourceGroupName, options);
     return {
       next() {
         return iter.next();
@@ -149,7 +131,6 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
         }
         return this.listByResourceGroupPagingPage(
           resourceGroupName,
-          clusterName,
           options,
           settings
         );
@@ -159,18 +140,13 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
 
   private async *listByResourceGroupPagingPage(
     resourceGroupName: string,
-    clusterName: string,
-    options?: BareMetalMachineKeySetsListByResourceGroupOptionalParams,
+    options?: HybridAksClustersListByResourceGroupOptionalParams,
     settings?: PageSettings
-  ): AsyncIterableIterator<BareMetalMachineKeySet[]> {
-    let result: BareMetalMachineKeySetsListByResourceGroupResponse;
+  ): AsyncIterableIterator<HybridAksCluster[]> {
+    let result: HybridAksClustersListByResourceGroupResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._listByResourceGroup(
-        resourceGroupName,
-        clusterName,
-        options
-      );
+      result = await this._listByResourceGroup(resourceGroupName, options);
       let page = result.value || [];
       continuationToken = result.nextLink;
       setContinuationToken(page, continuationToken);
@@ -179,7 +155,6 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
     while (continuationToken) {
       result = await this._listByResourceGroupNext(
         resourceGroupName,
-        clusterName,
         continuationToken,
         options
       );
@@ -192,12 +167,10 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
 
   private async *listByResourceGroupPagingAll(
     resourceGroupName: string,
-    clusterName: string,
-    options?: BareMetalMachineKeySetsListByResourceGroupOptionalParams
-  ): AsyncIterableIterator<BareMetalMachineKeySet> {
+    options?: HybridAksClustersListByResourceGroupOptionalParams
+  ): AsyncIterableIterator<HybridAksCluster> {
     for await (const page of this.listByResourceGroupPagingPage(
       resourceGroupName,
-      clusterName,
       options
     )) {
       yield* page;
@@ -205,78 +178,74 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
   }
 
   /**
-   * Get a list of bare metal machine key sets of the cluster in the provided subscription.
-   * @param clusterName The name of the cluster.
+   * Get a list of additional details related to Hybrid AKS provisioned clusters in the provided
+   * subscription.
    * @param options The options parameters.
    */
   private _listBySubscription(
-    clusterName: string,
-    options?: BareMetalMachineKeySetsListBySubscriptionOptionalParams
-  ): Promise<BareMetalMachineKeySetsListBySubscriptionResponse> {
+    options?: HybridAksClustersListBySubscriptionOptionalParams
+  ): Promise<HybridAksClustersListBySubscriptionResponse> {
     return this.client.sendOperationRequest(
-      { clusterName, options },
+      { options },
       listBySubscriptionOperationSpec
     );
   }
 
   /**
-   * Get a list of bare metal machine key sets of the cluster in the provided resource group.
+   * Get a list of additional details for Hybrid AKS provisioned clusters in the provided resource group.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
    * @param options The options parameters.
    */
   private _listByResourceGroup(
     resourceGroupName: string,
-    clusterName: string,
-    options?: BareMetalMachineKeySetsListByResourceGroupOptionalParams
-  ): Promise<BareMetalMachineKeySetsListByResourceGroupResponse> {
+    options?: HybridAksClustersListByResourceGroupOptionalParams
+  ): Promise<HybridAksClustersListByResourceGroupResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, clusterName, options },
+      { resourceGroupName, options },
       listByResourceGroupOperationSpec
     );
   }
 
   /**
-   * Get bare metal machine key set of the provided cluster.
+   * Get the additional details related to the provided Hybrid AKS provisioned cluster.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
-   * @param bareMetalMachineKeySetName The name of the bare metal machine key set.
+   * @param hybridAksClusterName The name of the Hybrid AKS cluster.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
-    clusterName: string,
-    bareMetalMachineKeySetName: string,
-    options?: BareMetalMachineKeySetsGetOptionalParams
-  ): Promise<BareMetalMachineKeySetsGetResponse> {
+    hybridAksClusterName: string,
+    options?: HybridAksClustersGetOptionalParams
+  ): Promise<HybridAksClustersGetResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, clusterName, bareMetalMachineKeySetName, options },
+      { resourceGroupName, hybridAksClusterName, options },
       getOperationSpec
     );
   }
 
   /**
-   * Create a new bare metal machine key set or update the existing one for the provided cluster.
+   * Create new additional details related to the Hybrid AKS provisioned cluster or update the existing
+   * one.
+   * All customer initiated requests will be rejected as the life cycle of this resource is managed by
+   * the system.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
-   * @param bareMetalMachineKeySetName The name of the bare metal machine key set.
+   * @param hybridAksClusterName The name of the Hybrid AKS cluster.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
-    clusterName: string,
-    bareMetalMachineKeySetName: string,
-    options?: BareMetalMachineKeySetsCreateOrUpdateOptionalParams
+    hybridAksClusterName: string,
+    options?: HybridAksClustersCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
-      OperationState<BareMetalMachineKeySetsCreateOrUpdateResponse>,
-      BareMetalMachineKeySetsCreateOrUpdateResponse
+      OperationState<HybridAksClustersCreateOrUpdateResponse>,
+      HybridAksClustersCreateOrUpdateResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
-    ): Promise<BareMetalMachineKeySetsCreateOrUpdateResponse> => {
+    ): Promise<HybridAksClustersCreateOrUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -314,17 +283,12 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: {
-        resourceGroupName,
-        clusterName,
-        bareMetalMachineKeySetName,
-        options
-      },
+      args: { resourceGroupName, hybridAksClusterName, options },
       spec: createOrUpdateOperationSpec
     });
     const poller = await createHttpPoller<
-      BareMetalMachineKeySetsCreateOrUpdateResponse,
-      OperationState<BareMetalMachineKeySetsCreateOrUpdateResponse>
+      HybridAksClustersCreateOrUpdateResponse,
+      OperationState<HybridAksClustersCreateOrUpdateResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
@@ -335,39 +299,39 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
   }
 
   /**
-   * Create a new bare metal machine key set or update the existing one for the provided cluster.
+   * Create new additional details related to the Hybrid AKS provisioned cluster or update the existing
+   * one.
+   * All customer initiated requests will be rejected as the life cycle of this resource is managed by
+   * the system.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
-   * @param bareMetalMachineKeySetName The name of the bare metal machine key set.
+   * @param hybridAksClusterName The name of the Hybrid AKS cluster.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
-    clusterName: string,
-    bareMetalMachineKeySetName: string,
-    options?: BareMetalMachineKeySetsCreateOrUpdateOptionalParams
-  ): Promise<BareMetalMachineKeySetsCreateOrUpdateResponse> {
+    hybridAksClusterName: string,
+    options?: HybridAksClustersCreateOrUpdateOptionalParams
+  ): Promise<HybridAksClustersCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
-      clusterName,
-      bareMetalMachineKeySetName,
+      hybridAksClusterName,
       options
     );
     return poller.pollUntilDone();
   }
 
   /**
-   * Delete the bare metal machine key set of the provided cluster.
+   * Delete the additional details related to the provided Hybrid AKS provisioned cluster.
+   * All customer initiated requests will be rejected as the life cycle of this resource is managed by
+   * the system.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
-   * @param bareMetalMachineKeySetName The name of the bare metal machine key set.
+   * @param hybridAksClusterName The name of the Hybrid AKS cluster.
    * @param options The options parameters.
    */
   async beginDelete(
     resourceGroupName: string,
-    clusterName: string,
-    bareMetalMachineKeySetName: string,
-    options?: BareMetalMachineKeySetsDeleteOptionalParams
+    hybridAksClusterName: string,
+    options?: HybridAksClustersDeleteOptionalParams
   ): Promise<SimplePollerLike<OperationState<void>, void>> {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
@@ -410,12 +374,7 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: {
-        resourceGroupName,
-        clusterName,
-        bareMetalMachineKeySetName,
-        options
-      },
+      args: { resourceGroupName, hybridAksClusterName, options },
       spec: deleteOperationSpec
     });
     const poller = await createHttpPoller<void, OperationState<void>>(lro, {
@@ -428,50 +387,63 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
   }
 
   /**
-   * Delete the bare metal machine key set of the provided cluster.
+   * Delete the additional details related to the provided Hybrid AKS provisioned cluster.
+   * All customer initiated requests will be rejected as the life cycle of this resource is managed by
+   * the system.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
-   * @param bareMetalMachineKeySetName The name of the bare metal machine key set.
+   * @param hybridAksClusterName The name of the Hybrid AKS cluster.
    * @param options The options parameters.
    */
   async beginDeleteAndWait(
     resourceGroupName: string,
-    clusterName: string,
-    bareMetalMachineKeySetName: string,
-    options?: BareMetalMachineKeySetsDeleteOptionalParams
+    hybridAksClusterName: string,
+    options?: HybridAksClustersDeleteOptionalParams
   ): Promise<void> {
     const poller = await this.beginDelete(
       resourceGroupName,
-      clusterName,
-      bareMetalMachineKeySetName,
+      hybridAksClusterName,
       options
     );
     return poller.pollUntilDone();
   }
 
   /**
-   * Patch properties of bare metal machine key set for the provided cluster, or update the tags
-   * associated with it. Properties and tag updates can be done independently.
+   * Update tags associated with the additional details related to the Hybrid AKS provisioned cluster.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
-   * @param bareMetalMachineKeySetName The name of the bare metal machine key set.
+   * @param hybridAksClusterName The name of the Hybrid AKS cluster.
    * @param options The options parameters.
    */
-  async beginUpdate(
+  update(
     resourceGroupName: string,
-    clusterName: string,
-    bareMetalMachineKeySetName: string,
-    options?: BareMetalMachineKeySetsUpdateOptionalParams
+    hybridAksClusterName: string,
+    options?: HybridAksClustersUpdateOptionalParams
+  ): Promise<HybridAksClustersUpdateResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, hybridAksClusterName, options },
+      updateOperationSpec
+    );
+  }
+
+  /**
+   * Restart a targeted node of a Hybrid AKS cluster.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param hybridAksClusterName The name of the Hybrid AKS cluster.
+   * @param options The options parameters.
+   */
+  async beginRestartNode(
+    resourceGroupName: string,
+    hybridAksClusterName: string,
+    options?: HybridAksClustersRestartNodeOptionalParams
   ): Promise<
     SimplePollerLike<
-      OperationState<BareMetalMachineKeySetsUpdateResponse>,
-      BareMetalMachineKeySetsUpdateResponse
+      OperationState<HybridAksClustersRestartNodeResponse>,
+      HybridAksClustersRestartNodeResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
-    ): Promise<BareMetalMachineKeySetsUpdateResponse> => {
+    ): Promise<HybridAksClustersRestartNodeResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -509,17 +481,12 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: {
-        resourceGroupName,
-        clusterName,
-        bareMetalMachineKeySetName,
-        options
-      },
-      spec: updateOperationSpec
+      args: { resourceGroupName, hybridAksClusterName, options },
+      spec: restartNodeOperationSpec
     });
     const poller = await createHttpPoller<
-      BareMetalMachineKeySetsUpdateResponse,
-      OperationState<BareMetalMachineKeySetsUpdateResponse>
+      HybridAksClustersRestartNodeResponse,
+      OperationState<HybridAksClustersRestartNodeResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
@@ -530,23 +497,19 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
   }
 
   /**
-   * Patch properties of bare metal machine key set for the provided cluster, or update the tags
-   * associated with it. Properties and tag updates can be done independently.
+   * Restart a targeted node of a Hybrid AKS cluster.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
-   * @param bareMetalMachineKeySetName The name of the bare metal machine key set.
+   * @param hybridAksClusterName The name of the Hybrid AKS cluster.
    * @param options The options parameters.
    */
-  async beginUpdateAndWait(
+  async beginRestartNodeAndWait(
     resourceGroupName: string,
-    clusterName: string,
-    bareMetalMachineKeySetName: string,
-    options?: BareMetalMachineKeySetsUpdateOptionalParams
-  ): Promise<BareMetalMachineKeySetsUpdateResponse> {
-    const poller = await this.beginUpdate(
+    hybridAksClusterName: string,
+    options?: HybridAksClustersRestartNodeOptionalParams
+  ): Promise<HybridAksClustersRestartNodeResponse> {
+    const poller = await this.beginRestartNode(
       resourceGroupName,
-      clusterName,
-      bareMetalMachineKeySetName,
+      hybridAksClusterName,
       options
     );
     return poller.pollUntilDone();
@@ -554,17 +517,15 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
 
   /**
    * ListBySubscriptionNext
-   * @param clusterName The name of the cluster.
    * @param nextLink The nextLink from the previous successful call to the ListBySubscription method.
    * @param options The options parameters.
    */
   private _listBySubscriptionNext(
-    clusterName: string,
     nextLink: string,
-    options?: BareMetalMachineKeySetsListBySubscriptionNextOptionalParams
-  ): Promise<BareMetalMachineKeySetsListBySubscriptionNextResponse> {
+    options?: HybridAksClustersListBySubscriptionNextOptionalParams
+  ): Promise<HybridAksClustersListBySubscriptionNextResponse> {
     return this.client.sendOperationRequest(
-      { clusterName, nextLink, options },
+      { nextLink, options },
       listBySubscriptionNextOperationSpec
     );
   }
@@ -572,18 +533,16 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
   /**
    * ListByResourceGroupNext
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
    * @param nextLink The nextLink from the previous successful call to the ListByResourceGroup method.
    * @param options The options parameters.
    */
   private _listByResourceGroupNext(
     resourceGroupName: string,
-    clusterName: string,
     nextLink: string,
-    options?: BareMetalMachineKeySetsListByResourceGroupNextOptionalParams
-  ): Promise<BareMetalMachineKeySetsListByResourceGroupNextResponse> {
+    options?: HybridAksClustersListByResourceGroupNextOptionalParams
+  ): Promise<HybridAksClustersListByResourceGroupNextResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, clusterName, nextLink, options },
+      { resourceGroupName, nextLink, options },
       listByResourceGroupNextOperationSpec
     );
   }
@@ -593,32 +552,28 @@ const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listBySubscriptionOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/clusters/{clusterName}/bareMetalMachineKeySets",
+    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/hybridAksClusters",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.BareMetalMachineKeySetList
+      bodyMapper: Mappers.HybridAksClusterList
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.clusterName
-  ],
+  urlParameters: [Parameters.$host, Parameters.subscriptionId],
   headerParameters: [Parameters.accept],
   serializer
 };
 const listByResourceGroupOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusters/{clusterName}/bareMetalMachineKeySets",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/hybridAksClusters",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.BareMetalMachineKeySetList
+      bodyMapper: Mappers.HybridAksClusterList
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -628,19 +583,18 @@ const listByResourceGroupOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.clusterName
+    Parameters.resourceGroupName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const getOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusters/{clusterName}/bareMetalMachineKeySets/{bareMetalMachineKeySetName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/hybridAksClusters/{hybridAksClusterName}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.BareMetalMachineKeySet
+      bodyMapper: Mappers.HybridAksCluster
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -651,41 +605,39 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.clusterName,
-    Parameters.bareMetalMachineKeySetName
+    Parameters.hybridAksClusterName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const createOrUpdateOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusters/{clusterName}/bareMetalMachineKeySets/{bareMetalMachineKeySetName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/hybridAksClusters/{hybridAksClusterName}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.BareMetalMachineKeySet
+      bodyMapper: Mappers.HybridAksCluster
     },
     201: {
-      bodyMapper: Mappers.BareMetalMachineKeySet
+      bodyMapper: Mappers.HybridAksCluster
     },
     202: {
-      bodyMapper: Mappers.BareMetalMachineKeySet
+      bodyMapper: Mappers.HybridAksCluster
     },
     204: {
-      bodyMapper: Mappers.BareMetalMachineKeySet
+      bodyMapper: Mappers.HybridAksCluster
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.bareMetalMachineKeySetParameters,
+  requestBody: Parameters.hybridAksClusterParameters,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.clusterName,
-    Parameters.bareMetalMachineKeySetName
+    Parameters.hybridAksClusterName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -693,7 +645,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusters/{clusterName}/bareMetalMachineKeySets/{bareMetalMachineKeySetName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/hybridAksClusters/{hybridAksClusterName}",
   httpMethod: "DELETE",
   responses: {
     200: {},
@@ -709,41 +661,63 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.clusterName,
-    Parameters.bareMetalMachineKeySetName
+    Parameters.hybridAksClusterName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const updateOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusters/{clusterName}/bareMetalMachineKeySets/{bareMetalMachineKeySetName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/hybridAksClusters/{hybridAksClusterName}",
   httpMethod: "PATCH",
   responses: {
     200: {
-      bodyMapper: Mappers.BareMetalMachineKeySet
-    },
-    201: {
-      bodyMapper: Mappers.BareMetalMachineKeySet
-    },
-    202: {
-      bodyMapper: Mappers.BareMetalMachineKeySet
-    },
-    204: {
-      bodyMapper: Mappers.BareMetalMachineKeySet
+      bodyMapper: Mappers.HybridAksCluster
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.bareMetalMachineKeySetUpdateParameters,
+  requestBody: Parameters.hybridAksClusterUpdateParameters,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.clusterName,
-    Parameters.bareMetalMachineKeySetName
+    Parameters.hybridAksClusterName
+  ],
+  headerParameters: [Parameters.accept, Parameters.contentType],
+  mediaType: "json",
+  serializer
+};
+const restartNodeOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/hybridAksClusters/{hybridAksClusterName}/restartNode",
+  httpMethod: "POST",
+  responses: {
+    200: {
+      headersMapper: Mappers.HybridAksClustersRestartNodeHeaders
+    },
+    201: {
+      headersMapper: Mappers.HybridAksClustersRestartNodeHeaders
+    },
+    202: {
+      headersMapper: Mappers.HybridAksClustersRestartNodeHeaders
+    },
+    204: {
+      headersMapper: Mappers.HybridAksClustersRestartNodeHeaders
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  requestBody: Parameters.hybridAksClusterRestartNodeParameters,
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.hybridAksClusterName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -754,7 +728,7 @@ const listBySubscriptionNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.BareMetalMachineKeySetList
+      bodyMapper: Mappers.HybridAksClusterList
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -763,8 +737,7 @@ const listBySubscriptionNextOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.nextLink,
-    Parameters.subscriptionId,
-    Parameters.clusterName
+    Parameters.subscriptionId
   ],
   headerParameters: [Parameters.accept],
   serializer
@@ -774,7 +747,7 @@ const listByResourceGroupNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.BareMetalMachineKeySetList
+      bodyMapper: Mappers.HybridAksClusterList
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -784,8 +757,7 @@ const listByResourceGroupNextOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.nextLink,
     Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.clusterName
+    Parameters.resourceGroupName
   ],
   headerParameters: [Parameters.accept],
   serializer

@@ -225,13 +225,11 @@ export class RacksImpl implements Racks {
    * the system.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param rackName The name of the rack.
-   * @param rackParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
     rackName: string,
-    rackParameters: Rack,
     options?: RacksCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -280,7 +278,7 @@ export class RacksImpl implements Racks {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, rackName, rackParameters, options },
+      args: { resourceGroupName, rackName, options },
       spec: createOrUpdateOperationSpec
     });
     const poller = await createHttpPoller<
@@ -301,19 +299,16 @@ export class RacksImpl implements Racks {
    * the system.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param rackName The name of the rack.
-   * @param rackParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     rackName: string,
-    rackParameters: Rack,
     options?: RacksCreateOrUpdateOptionalParams
   ): Promise<RacksCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
       rackName,
-      rackParameters,
       options
     );
     return poller.pollUntilDone();
@@ -466,7 +461,7 @@ export class RacksImpl implements Racks {
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "location"
     });
     await poller.poll();
     return poller;

@@ -21,7 +21,6 @@ import {
   ClustersUpdateResponse,
   ClustersDeployOptionalParams,
   ClustersDeployResponse,
-  ClusterUpdateVersionParameters,
   ClustersUpdateVersionOptionalParams,
   ClustersUpdateVersionResponse
 } from "../models";
@@ -60,13 +59,11 @@ export interface Clusters {
    * Create a new cluster or update the properties of the cluster if it exists.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
-   * @param clusterParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     clusterName: string,
-    clusterParameters: Cluster,
     options?: ClustersCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -78,13 +75,11 @@ export interface Clusters {
    * Create a new cluster or update the properties of the cluster if it exists.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
-   * @param clusterParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     clusterName: string,
-    clusterParameters: Cluster,
     options?: ClustersCreateOrUpdateOptionalParams
   ): Promise<ClustersCreateOrUpdateResponse>;
   /**
@@ -169,13 +164,11 @@ export interface Clusters {
    * Update the version of the provided cluster to one of the available supported versions.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
-   * @param clusterUpdateVersionParameters The request body.
    * @param options The options parameters.
    */
   beginUpdateVersion(
     resourceGroupName: string,
     clusterName: string,
-    clusterUpdateVersionParameters: ClusterUpdateVersionParameters,
     options?: ClustersUpdateVersionOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -187,13 +180,11 @@ export interface Clusters {
    * Update the version of the provided cluster to one of the available supported versions.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
-   * @param clusterUpdateVersionParameters The request body.
    * @param options The options parameters.
    */
   beginUpdateVersionAndWait(
     resourceGroupName: string,
     clusterName: string,
-    clusterUpdateVersionParameters: ClusterUpdateVersionParameters,
     options?: ClustersUpdateVersionOptionalParams
   ): Promise<ClustersUpdateVersionResponse>;
 }

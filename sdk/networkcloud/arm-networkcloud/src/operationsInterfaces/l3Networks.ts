@@ -55,13 +55,11 @@ export interface L3Networks {
    * Create a new layer 3 (L3) network or update the properties of the existing network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param l3NetworkName The name of the L3 network.
-   * @param l3NetworkParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     l3NetworkName: string,
-    l3NetworkParameters: L3Network,
     options?: L3NetworksCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -73,13 +71,11 @@ export interface L3Networks {
    * Create a new layer 3 (L3) network or update the properties of the existing network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param l3NetworkName The name of the L3 network.
-   * @param l3NetworkParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     l3NetworkName: string,
-    l3NetworkParameters: L3Network,
     options?: L3NetworksCreateOrUpdateOptionalParams
   ): Promise<L3NetworksCreateOrUpdateResponse>;
   /**

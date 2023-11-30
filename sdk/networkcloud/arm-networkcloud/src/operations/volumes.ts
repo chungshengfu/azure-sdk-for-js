@@ -223,13 +223,11 @@ export class VolumesImpl implements Volumes {
    * Create a new volume or update the properties of the existing one.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param volumeName The name of the volume.
-   * @param volumeParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
     volumeName: string,
-    volumeParameters: Volume,
     options?: VolumesCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -278,7 +276,7 @@ export class VolumesImpl implements Volumes {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, volumeName, volumeParameters, options },
+      args: { resourceGroupName, volumeName, options },
       spec: createOrUpdateOperationSpec
     });
     const poller = await createHttpPoller<
@@ -297,19 +295,16 @@ export class VolumesImpl implements Volumes {
    * Create a new volume or update the properties of the existing one.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param volumeName The name of the volume.
-   * @param volumeParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     volumeName: string,
-    volumeParameters: Volume,
     options?: VolumesCreateOrUpdateOptionalParams
   ): Promise<VolumesCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
       volumeName,
-      volumeParameters,
       options
     );
     return poller.pollUntilDone();

@@ -8,7 +8,7 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { BareMetalMachineKeySets } from "../operationsInterfaces";
+import { DefaultCniNetworks } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
@@ -20,31 +20,31 @@ import {
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
-  BareMetalMachineKeySet,
-  BareMetalMachineKeySetsListBySubscriptionNextOptionalParams,
-  BareMetalMachineKeySetsListBySubscriptionOptionalParams,
-  BareMetalMachineKeySetsListBySubscriptionResponse,
-  BareMetalMachineKeySetsListByResourceGroupNextOptionalParams,
-  BareMetalMachineKeySetsListByResourceGroupOptionalParams,
-  BareMetalMachineKeySetsListByResourceGroupResponse,
-  BareMetalMachineKeySetsGetOptionalParams,
-  BareMetalMachineKeySetsGetResponse,
-  BareMetalMachineKeySetsCreateOrUpdateOptionalParams,
-  BareMetalMachineKeySetsCreateOrUpdateResponse,
-  BareMetalMachineKeySetsDeleteOptionalParams,
-  BareMetalMachineKeySetsUpdateOptionalParams,
-  BareMetalMachineKeySetsUpdateResponse,
-  BareMetalMachineKeySetsListBySubscriptionNextResponse,
-  BareMetalMachineKeySetsListByResourceGroupNextResponse
+  DefaultCniNetwork,
+  DefaultCniNetworksListBySubscriptionNextOptionalParams,
+  DefaultCniNetworksListBySubscriptionOptionalParams,
+  DefaultCniNetworksListBySubscriptionResponse,
+  DefaultCniNetworksListByResourceGroupNextOptionalParams,
+  DefaultCniNetworksListByResourceGroupOptionalParams,
+  DefaultCniNetworksListByResourceGroupResponse,
+  DefaultCniNetworksGetOptionalParams,
+  DefaultCniNetworksGetResponse,
+  DefaultCniNetworksCreateOrUpdateOptionalParams,
+  DefaultCniNetworksCreateOrUpdateResponse,
+  DefaultCniNetworksDeleteOptionalParams,
+  DefaultCniNetworksUpdateOptionalParams,
+  DefaultCniNetworksUpdateResponse,
+  DefaultCniNetworksListBySubscriptionNextResponse,
+  DefaultCniNetworksListByResourceGroupNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing BareMetalMachineKeySets operations. */
-export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
+/** Class containing DefaultCniNetworks operations. */
+export class DefaultCniNetworksImpl implements DefaultCniNetworks {
   private readonly client: NetworkCloud;
 
   /**
-   * Initialize a new instance of the class BareMetalMachineKeySets class.
+   * Initialize a new instance of the class DefaultCniNetworks class.
    * @param client Reference to the service client
    */
   constructor(client: NetworkCloud) {
@@ -52,15 +52,13 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
   }
 
   /**
-   * Get a list of bare metal machine key sets of the cluster in the provided subscription.
-   * @param clusterName The name of the cluster.
+   * Get a list of default CNI networks in the provided subscription.
    * @param options The options parameters.
    */
   public listBySubscription(
-    clusterName: string,
-    options?: BareMetalMachineKeySetsListBySubscriptionOptionalParams
-  ): PagedAsyncIterableIterator<BareMetalMachineKeySet> {
-    const iter = this.listBySubscriptionPagingAll(clusterName, options);
+    options?: DefaultCniNetworksListBySubscriptionOptionalParams
+  ): PagedAsyncIterableIterator<DefaultCniNetwork> {
+    const iter = this.listBySubscriptionPagingAll(options);
     return {
       next() {
         return iter.next();
@@ -72,35 +70,26 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
         if (settings?.maxPageSize) {
           throw new Error("maxPageSize is not supported by this operation.");
         }
-        return this.listBySubscriptionPagingPage(
-          clusterName,
-          options,
-          settings
-        );
+        return this.listBySubscriptionPagingPage(options, settings);
       }
     };
   }
 
   private async *listBySubscriptionPagingPage(
-    clusterName: string,
-    options?: BareMetalMachineKeySetsListBySubscriptionOptionalParams,
+    options?: DefaultCniNetworksListBySubscriptionOptionalParams,
     settings?: PageSettings
-  ): AsyncIterableIterator<BareMetalMachineKeySet[]> {
-    let result: BareMetalMachineKeySetsListBySubscriptionResponse;
+  ): AsyncIterableIterator<DefaultCniNetwork[]> {
+    let result: DefaultCniNetworksListBySubscriptionResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._listBySubscription(clusterName, options);
+      result = await this._listBySubscription(options);
       let page = result.value || [];
       continuationToken = result.nextLink;
       setContinuationToken(page, continuationToken);
       yield page;
     }
     while (continuationToken) {
-      result = await this._listBySubscriptionNext(
-        clusterName,
-        continuationToken,
-        options
-      );
+      result = await this._listBySubscriptionNext(continuationToken, options);
       continuationToken = result.nextLink;
       let page = result.value || [];
       setContinuationToken(page, continuationToken);
@@ -109,33 +98,23 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
   }
 
   private async *listBySubscriptionPagingAll(
-    clusterName: string,
-    options?: BareMetalMachineKeySetsListBySubscriptionOptionalParams
-  ): AsyncIterableIterator<BareMetalMachineKeySet> {
-    for await (const page of this.listBySubscriptionPagingPage(
-      clusterName,
-      options
-    )) {
+    options?: DefaultCniNetworksListBySubscriptionOptionalParams
+  ): AsyncIterableIterator<DefaultCniNetwork> {
+    for await (const page of this.listBySubscriptionPagingPage(options)) {
       yield* page;
     }
   }
 
   /**
-   * Get a list of bare metal machine key sets of the cluster in the provided resource group.
+   * Get a list of default CNI networks in the provided resource group.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
    * @param options The options parameters.
    */
   public listByResourceGroup(
     resourceGroupName: string,
-    clusterName: string,
-    options?: BareMetalMachineKeySetsListByResourceGroupOptionalParams
-  ): PagedAsyncIterableIterator<BareMetalMachineKeySet> {
-    const iter = this.listByResourceGroupPagingAll(
-      resourceGroupName,
-      clusterName,
-      options
-    );
+    options?: DefaultCniNetworksListByResourceGroupOptionalParams
+  ): PagedAsyncIterableIterator<DefaultCniNetwork> {
+    const iter = this.listByResourceGroupPagingAll(resourceGroupName, options);
     return {
       next() {
         return iter.next();
@@ -149,7 +128,6 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
         }
         return this.listByResourceGroupPagingPage(
           resourceGroupName,
-          clusterName,
           options,
           settings
         );
@@ -159,18 +137,13 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
 
   private async *listByResourceGroupPagingPage(
     resourceGroupName: string,
-    clusterName: string,
-    options?: BareMetalMachineKeySetsListByResourceGroupOptionalParams,
+    options?: DefaultCniNetworksListByResourceGroupOptionalParams,
     settings?: PageSettings
-  ): AsyncIterableIterator<BareMetalMachineKeySet[]> {
-    let result: BareMetalMachineKeySetsListByResourceGroupResponse;
+  ): AsyncIterableIterator<DefaultCniNetwork[]> {
+    let result: DefaultCniNetworksListByResourceGroupResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._listByResourceGroup(
-        resourceGroupName,
-        clusterName,
-        options
-      );
+      result = await this._listByResourceGroup(resourceGroupName, options);
       let page = result.value || [];
       continuationToken = result.nextLink;
       setContinuationToken(page, continuationToken);
@@ -179,7 +152,6 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
     while (continuationToken) {
       result = await this._listByResourceGroupNext(
         resourceGroupName,
-        clusterName,
         continuationToken,
         options
       );
@@ -192,12 +164,10 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
 
   private async *listByResourceGroupPagingAll(
     resourceGroupName: string,
-    clusterName: string,
-    options?: BareMetalMachineKeySetsListByResourceGroupOptionalParams
-  ): AsyncIterableIterator<BareMetalMachineKeySet> {
+    options?: DefaultCniNetworksListByResourceGroupOptionalParams
+  ): AsyncIterableIterator<DefaultCniNetwork> {
     for await (const page of this.listByResourceGroupPagingPage(
       resourceGroupName,
-      clusterName,
       options
     )) {
       yield* page;
@@ -205,78 +175,70 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
   }
 
   /**
-   * Get a list of bare metal machine key sets of the cluster in the provided subscription.
-   * @param clusterName The name of the cluster.
+   * Get a list of default CNI networks in the provided subscription.
    * @param options The options parameters.
    */
   private _listBySubscription(
-    clusterName: string,
-    options?: BareMetalMachineKeySetsListBySubscriptionOptionalParams
-  ): Promise<BareMetalMachineKeySetsListBySubscriptionResponse> {
+    options?: DefaultCniNetworksListBySubscriptionOptionalParams
+  ): Promise<DefaultCniNetworksListBySubscriptionResponse> {
     return this.client.sendOperationRequest(
-      { clusterName, options },
+      { options },
       listBySubscriptionOperationSpec
     );
   }
 
   /**
-   * Get a list of bare metal machine key sets of the cluster in the provided resource group.
+   * Get a list of default CNI networks in the provided resource group.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
    * @param options The options parameters.
    */
   private _listByResourceGroup(
     resourceGroupName: string,
-    clusterName: string,
-    options?: BareMetalMachineKeySetsListByResourceGroupOptionalParams
-  ): Promise<BareMetalMachineKeySetsListByResourceGroupResponse> {
+    options?: DefaultCniNetworksListByResourceGroupOptionalParams
+  ): Promise<DefaultCniNetworksListByResourceGroupResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, clusterName, options },
+      { resourceGroupName, options },
       listByResourceGroupOperationSpec
     );
   }
 
   /**
-   * Get bare metal machine key set of the provided cluster.
+   * Get properties of the provided default CNI network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
-   * @param bareMetalMachineKeySetName The name of the bare metal machine key set.
+   * @param defaultCniNetworkName The name of the default CNI network.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
-    clusterName: string,
-    bareMetalMachineKeySetName: string,
-    options?: BareMetalMachineKeySetsGetOptionalParams
-  ): Promise<BareMetalMachineKeySetsGetResponse> {
+    defaultCniNetworkName: string,
+    options?: DefaultCniNetworksGetOptionalParams
+  ): Promise<DefaultCniNetworksGetResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, clusterName, bareMetalMachineKeySetName, options },
+      { resourceGroupName, defaultCniNetworkName, options },
       getOperationSpec
     );
   }
 
   /**
-   * Create a new bare metal machine key set or update the existing one for the provided cluster.
+   * Create a new default CNI network or update the properties of the existing default CNI network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
-   * @param bareMetalMachineKeySetName The name of the bare metal machine key set.
+   * @param defaultCniNetworkName The name of the default CNI network.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
-    clusterName: string,
-    bareMetalMachineKeySetName: string,
-    options?: BareMetalMachineKeySetsCreateOrUpdateOptionalParams
+    defaultCniNetworkName: string,
+    options?: DefaultCniNetworksCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
-      OperationState<BareMetalMachineKeySetsCreateOrUpdateResponse>,
-      BareMetalMachineKeySetsCreateOrUpdateResponse
+      OperationState<DefaultCniNetworksCreateOrUpdateResponse>,
+      DefaultCniNetworksCreateOrUpdateResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
-    ): Promise<BareMetalMachineKeySetsCreateOrUpdateResponse> => {
+    ): Promise<DefaultCniNetworksCreateOrUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -314,17 +276,12 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: {
-        resourceGroupName,
-        clusterName,
-        bareMetalMachineKeySetName,
-        options
-      },
+      args: { resourceGroupName, defaultCniNetworkName, options },
       spec: createOrUpdateOperationSpec
     });
     const poller = await createHttpPoller<
-      BareMetalMachineKeySetsCreateOrUpdateResponse,
-      OperationState<BareMetalMachineKeySetsCreateOrUpdateResponse>
+      DefaultCniNetworksCreateOrUpdateResponse,
+      OperationState<DefaultCniNetworksCreateOrUpdateResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
@@ -335,39 +292,34 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
   }
 
   /**
-   * Create a new bare metal machine key set or update the existing one for the provided cluster.
+   * Create a new default CNI network or update the properties of the existing default CNI network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
-   * @param bareMetalMachineKeySetName The name of the bare metal machine key set.
+   * @param defaultCniNetworkName The name of the default CNI network.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
-    clusterName: string,
-    bareMetalMachineKeySetName: string,
-    options?: BareMetalMachineKeySetsCreateOrUpdateOptionalParams
-  ): Promise<BareMetalMachineKeySetsCreateOrUpdateResponse> {
+    defaultCniNetworkName: string,
+    options?: DefaultCniNetworksCreateOrUpdateOptionalParams
+  ): Promise<DefaultCniNetworksCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
-      clusterName,
-      bareMetalMachineKeySetName,
+      defaultCniNetworkName,
       options
     );
     return poller.pollUntilDone();
   }
 
   /**
-   * Delete the bare metal machine key set of the provided cluster.
+   * Delete the provided default CNI network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
-   * @param bareMetalMachineKeySetName The name of the bare metal machine key set.
+   * @param defaultCniNetworkName The name of the default CNI network.
    * @param options The options parameters.
    */
   async beginDelete(
     resourceGroupName: string,
-    clusterName: string,
-    bareMetalMachineKeySetName: string,
-    options?: BareMetalMachineKeySetsDeleteOptionalParams
+    defaultCniNetworkName: string,
+    options?: DefaultCniNetworksDeleteOptionalParams
   ): Promise<SimplePollerLike<OperationState<void>, void>> {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
@@ -410,12 +362,7 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: {
-        resourceGroupName,
-        clusterName,
-        bareMetalMachineKeySetName,
-        options
-      },
+      args: { resourceGroupName, defaultCniNetworkName, options },
       spec: deleteOperationSpec
     });
     const poller = await createHttpPoller<void, OperationState<void>>(lro, {
@@ -428,143 +375,52 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
   }
 
   /**
-   * Delete the bare metal machine key set of the provided cluster.
+   * Delete the provided default CNI network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
-   * @param bareMetalMachineKeySetName The name of the bare metal machine key set.
+   * @param defaultCniNetworkName The name of the default CNI network.
    * @param options The options parameters.
    */
   async beginDeleteAndWait(
     resourceGroupName: string,
-    clusterName: string,
-    bareMetalMachineKeySetName: string,
-    options?: BareMetalMachineKeySetsDeleteOptionalParams
+    defaultCniNetworkName: string,
+    options?: DefaultCniNetworksDeleteOptionalParams
   ): Promise<void> {
     const poller = await this.beginDelete(
       resourceGroupName,
-      clusterName,
-      bareMetalMachineKeySetName,
+      defaultCniNetworkName,
       options
     );
     return poller.pollUntilDone();
   }
 
   /**
-   * Patch properties of bare metal machine key set for the provided cluster, or update the tags
-   * associated with it. Properties and tag updates can be done independently.
+   * Update tags associated with the provided default CNI network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
-   * @param bareMetalMachineKeySetName The name of the bare metal machine key set.
+   * @param defaultCniNetworkName The name of the default CNI network.
    * @param options The options parameters.
    */
-  async beginUpdate(
+  update(
     resourceGroupName: string,
-    clusterName: string,
-    bareMetalMachineKeySetName: string,
-    options?: BareMetalMachineKeySetsUpdateOptionalParams
-  ): Promise<
-    SimplePollerLike<
-      OperationState<BareMetalMachineKeySetsUpdateResponse>,
-      BareMetalMachineKeySetsUpdateResponse
-    >
-  > {
-    const directSendOperation = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ): Promise<BareMetalMachineKeySetsUpdateResponse> => {
-      return this.client.sendOperationRequest(args, spec);
-    };
-    const sendOperationFn = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
-      const providedCallback = args.options?.onResponse;
-      const callback: coreClient.RawResponseCallback = (
-        rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
-      ) => {
-        currentRawResponse = rawResponse;
-        providedCallback?.(rawResponse, flatResponse);
-      };
-      const updatedArgs = {
-        ...args,
-        options: {
-          ...args.options,
-          onResponse: callback
-        }
-      };
-      const flatResponse = await directSendOperation(updatedArgs, spec);
-      return {
-        flatResponse,
-        rawResponse: {
-          statusCode: currentRawResponse!.status,
-          body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
-      };
-    };
-
-    const lro = createLroSpec({
-      sendOperationFn,
-      args: {
-        resourceGroupName,
-        clusterName,
-        bareMetalMachineKeySetName,
-        options
-      },
-      spec: updateOperationSpec
-    });
-    const poller = await createHttpPoller<
-      BareMetalMachineKeySetsUpdateResponse,
-      OperationState<BareMetalMachineKeySetsUpdateResponse>
-    >(lro, {
-      restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "location"
-    });
-    await poller.poll();
-    return poller;
-  }
-
-  /**
-   * Patch properties of bare metal machine key set for the provided cluster, or update the tags
-   * associated with it. Properties and tag updates can be done independently.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
-   * @param bareMetalMachineKeySetName The name of the bare metal machine key set.
-   * @param options The options parameters.
-   */
-  async beginUpdateAndWait(
-    resourceGroupName: string,
-    clusterName: string,
-    bareMetalMachineKeySetName: string,
-    options?: BareMetalMachineKeySetsUpdateOptionalParams
-  ): Promise<BareMetalMachineKeySetsUpdateResponse> {
-    const poller = await this.beginUpdate(
-      resourceGroupName,
-      clusterName,
-      bareMetalMachineKeySetName,
-      options
+    defaultCniNetworkName: string,
+    options?: DefaultCniNetworksUpdateOptionalParams
+  ): Promise<DefaultCniNetworksUpdateResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, defaultCniNetworkName, options },
+      updateOperationSpec
     );
-    return poller.pollUntilDone();
   }
 
   /**
    * ListBySubscriptionNext
-   * @param clusterName The name of the cluster.
    * @param nextLink The nextLink from the previous successful call to the ListBySubscription method.
    * @param options The options parameters.
    */
   private _listBySubscriptionNext(
-    clusterName: string,
     nextLink: string,
-    options?: BareMetalMachineKeySetsListBySubscriptionNextOptionalParams
-  ): Promise<BareMetalMachineKeySetsListBySubscriptionNextResponse> {
+    options?: DefaultCniNetworksListBySubscriptionNextOptionalParams
+  ): Promise<DefaultCniNetworksListBySubscriptionNextResponse> {
     return this.client.sendOperationRequest(
-      { clusterName, nextLink, options },
+      { nextLink, options },
       listBySubscriptionNextOperationSpec
     );
   }
@@ -572,18 +428,16 @@ export class BareMetalMachineKeySetsImpl implements BareMetalMachineKeySets {
   /**
    * ListByResourceGroupNext
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterName The name of the cluster.
    * @param nextLink The nextLink from the previous successful call to the ListByResourceGroup method.
    * @param options The options parameters.
    */
   private _listByResourceGroupNext(
     resourceGroupName: string,
-    clusterName: string,
     nextLink: string,
-    options?: BareMetalMachineKeySetsListByResourceGroupNextOptionalParams
-  ): Promise<BareMetalMachineKeySetsListByResourceGroupNextResponse> {
+    options?: DefaultCniNetworksListByResourceGroupNextOptionalParams
+  ): Promise<DefaultCniNetworksListByResourceGroupNextResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, clusterName, nextLink, options },
+      { resourceGroupName, nextLink, options },
       listByResourceGroupNextOperationSpec
     );
   }
@@ -593,32 +447,28 @@ const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listBySubscriptionOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/clusters/{clusterName}/bareMetalMachineKeySets",
+    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/defaultCniNetworks",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.BareMetalMachineKeySetList
+      bodyMapper: Mappers.DefaultCniNetworkList
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.clusterName
-  ],
+  urlParameters: [Parameters.$host, Parameters.subscriptionId],
   headerParameters: [Parameters.accept],
   serializer
 };
 const listByResourceGroupOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusters/{clusterName}/bareMetalMachineKeySets",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/defaultCniNetworks",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.BareMetalMachineKeySetList
+      bodyMapper: Mappers.DefaultCniNetworkList
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -628,19 +478,18 @@ const listByResourceGroupOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.clusterName
+    Parameters.resourceGroupName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const getOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusters/{clusterName}/bareMetalMachineKeySets/{bareMetalMachineKeySetName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/defaultCniNetworks/{defaultCniNetworkName}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.BareMetalMachineKeySet
+      bodyMapper: Mappers.DefaultCniNetwork
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -651,41 +500,39 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.clusterName,
-    Parameters.bareMetalMachineKeySetName
+    Parameters.defaultCniNetworkName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const createOrUpdateOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusters/{clusterName}/bareMetalMachineKeySets/{bareMetalMachineKeySetName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/defaultCniNetworks/{defaultCniNetworkName}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.BareMetalMachineKeySet
+      bodyMapper: Mappers.DefaultCniNetwork
     },
     201: {
-      bodyMapper: Mappers.BareMetalMachineKeySet
+      bodyMapper: Mappers.DefaultCniNetwork
     },
     202: {
-      bodyMapper: Mappers.BareMetalMachineKeySet
+      bodyMapper: Mappers.DefaultCniNetwork
     },
     204: {
-      bodyMapper: Mappers.BareMetalMachineKeySet
+      bodyMapper: Mappers.DefaultCniNetwork
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.bareMetalMachineKeySetParameters,
+  requestBody: Parameters.defaultCniNetworkParameters,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.clusterName,
-    Parameters.bareMetalMachineKeySetName
+    Parameters.defaultCniNetworkName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -693,7 +540,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusters/{clusterName}/bareMetalMachineKeySets/{bareMetalMachineKeySetName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/defaultCniNetworks/{defaultCniNetworkName}",
   httpMethod: "DELETE",
   responses: {
     200: {},
@@ -709,41 +556,30 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.clusterName,
-    Parameters.bareMetalMachineKeySetName
+    Parameters.defaultCniNetworkName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const updateOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusters/{clusterName}/bareMetalMachineKeySets/{bareMetalMachineKeySetName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/defaultCniNetworks/{defaultCniNetworkName}",
   httpMethod: "PATCH",
   responses: {
     200: {
-      bodyMapper: Mappers.BareMetalMachineKeySet
-    },
-    201: {
-      bodyMapper: Mappers.BareMetalMachineKeySet
-    },
-    202: {
-      bodyMapper: Mappers.BareMetalMachineKeySet
-    },
-    204: {
-      bodyMapper: Mappers.BareMetalMachineKeySet
+      bodyMapper: Mappers.DefaultCniNetwork
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.bareMetalMachineKeySetUpdateParameters,
+  requestBody: Parameters.defaultCniNetworkUpdateParameters,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.clusterName,
-    Parameters.bareMetalMachineKeySetName
+    Parameters.defaultCniNetworkName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -754,7 +590,7 @@ const listBySubscriptionNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.BareMetalMachineKeySetList
+      bodyMapper: Mappers.DefaultCniNetworkList
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -763,8 +599,7 @@ const listBySubscriptionNextOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.nextLink,
-    Parameters.subscriptionId,
-    Parameters.clusterName
+    Parameters.subscriptionId
   ],
   headerParameters: [Parameters.accept],
   serializer
@@ -774,7 +609,7 @@ const listByResourceGroupNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.BareMetalMachineKeySetList
+      bodyMapper: Mappers.DefaultCniNetworkList
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -784,8 +619,7 @@ const listByResourceGroupNextOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.nextLink,
     Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.clusterName
+    Parameters.resourceGroupName
   ],
   headerParameters: [Parameters.accept],
   serializer

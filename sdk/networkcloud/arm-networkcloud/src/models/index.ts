@@ -190,11 +190,8 @@ export interface HardwareInventoryNetworkInterface {
 
 /** Type Deprecated. Will be removed in an upcoming version. Nic represents the network interface card details. */
 export interface Nic {
-  /**
-   * The information about the device connected to this NIC.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly lldpNeighbor?: LldpNeighbor;
+  /** Type Deprecated. Will be removed in an upcoming version. LldpNeighbor represents the details about the device connected to the NIC. */
+  lldpNeighbor?: LldpNeighbor;
   /**
    * The MAC address associated with this NIC.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -248,7 +245,7 @@ export interface HardwareValidationStatus {
 /** Common fields that are returned in the response for all Azure Resource Manager resources */
 export interface Resource {
   /**
-   * Fully qualified resource ID for the resource. E.g. "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}"
+   * Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly id?: string;
@@ -349,7 +346,7 @@ export interface ClusterList {
 
 /** RackDefinition represents details regarding the rack. */
 export interface RackDefinition {
-  /** The zone name used for this rack when created. Availability zones are used for workload placement. */
+  /** The zone name used for this rack when created. */
   availabilityZone?: string;
   /** The unordered list of bare metal machine configuration. */
   bareMetalMachineConfigurationData?: BareMetalMachineConfigurationData[];
@@ -372,7 +369,7 @@ export interface BareMetalMachineConfigurationData {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly bmcConnectionString?: string;
-  /** The credentials of the baseboard management controller on this bare metal machine. */
+  /** AdministrativeCredentials represents the admin credentials for the device requiring password-based authentication. */
   bmcCredentials: AdministrativeCredentials;
   /** The MAC address of the BMC for this machine. */
   bmcMacAddress: string;
@@ -393,7 +390,7 @@ export interface BareMetalMachineConfigurationData {
 
 /** StorageApplianceConfigurationData represents configuration for the storage application. */
 export interface StorageApplianceConfigurationData {
-  /** The credentials of the administrative interface on this storage appliance. */
+  /** AdministrativeCredentials represents the admin credentials for the device requiring password-based authentication. */
   adminCredentials: AdministrativeCredentials;
   /** The slot that storage appliance is in the rack based on the BOM configuration. */
   rackSlot: number;
@@ -479,338 +476,195 @@ export interface ValidationThreshold {
   value: number;
 }
 
-/** KubernetesClusterList represents a list of Kubernetes clusters. */
-export interface KubernetesClusterList {
+/** BareMetalMachineKeySetList represents a list of bare metal machine key sets. */
+export interface BareMetalMachineKeySetList {
   /** The link used to get the next page of operations. */
   nextLink?: string;
-  /** The list of additional details related to Kubernetes clusters. */
-  value?: KubernetesCluster[];
+  /** The list of bare metal machine key sets. */
+  value?: BareMetalMachineKeySet[];
 }
 
-/** AadConfiguration represents the Azure Active Directory Integration properties. */
-export interface AadConfiguration {
-  /** The list of Azure Active Directory group object IDs that will have an administrative role on the Kubernetes cluster. */
-  adminGroupObjectIds: string[];
+/** KeySetUser represents the properties of the user in the key set. */
+export interface KeySetUser {
+  /** The Azure Active Directory user name (email name). */
+  azureUserName: string;
+  /** The free-form description for this user. */
+  description?: string;
+  /** SshPublicKey represents the public key used to authenticate with the virtual machine through SSH. */
+  sshPublicKey: SshPublicKey;
 }
 
-/** AdministratorConfiguration represents the administrative credentials that will be applied to the control plane and agent pool nodes in Kubernetes clusters. */
-export interface AdministratorConfiguration {
-  /** The user name for the administrator that will be applied to the operating systems that run Kubernetes nodes. If not supplied, a user name will be chosen by the service. */
-  adminUsername?: string;
-  /** The SSH configuration for the operating systems that run the nodes in the Kubernetes cluster. In some cases, specification of public keys may be required to produce a working environment. */
-  sshPublicKeys?: SshPublicKey[];
-}
-
-/** SshPublicKey represents the public key used to authenticate with a resource through SSH. */
+/** SshPublicKey represents the public key used to authenticate with the virtual machine through SSH. */
 export interface SshPublicKey {
-  /** The SSH public key data. */
+  /** The public ssh key of the user. */
   keyData: string;
 }
 
-/** AvailableUpgrade represents an upgrade available for a Kubernetes cluster. */
-export interface AvailableUpgrade {
+/** KeySetUserStatus represents the status of the key set user. */
+export interface KeySetUserStatus {
   /**
-   * The version lifecycle indicator.
+   * The Azure Active Directory user name (email name).
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly availabilityLifecycle?: AvailabilityLifecycle;
+  readonly azureUserName?: string;
   /**
-   * The version available for upgrading.
+   * The indicator of whether the user is currently deployed for access.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly version?: string;
-}
-
-/** ControlPlaneNodeConfiguration represents the selection of virtual machines and size of the control plane for a Kubernetes cluster. */
-export interface ControlPlaneNodeConfiguration {
-  /** The administrator credentials to be used for the nodes in the control plane. */
-  administratorConfiguration?: AdministratorConfiguration;
-  /** The list of availability zones of the Network Cloud cluster to be used for the provisioning of nodes in the control plane. If not specified, all availability zones will be used. */
-  availabilityZones?: string[];
-  /** The number of virtual machines that use this configuration. */
-  count: number;
-  /** The name of the VM SKU supplied during creation. */
-  vmSkuName: string;
-}
-
-/** FeatureStatus contains information regarding a Kubernetes cluster feature. */
-export interface FeatureStatus {
+  readonly status?: BareMetalMachineKeySetUserSetupStatus;
   /**
-   * The status representing the state of this feature.
+   * The additional information describing the current status of this user, if any available.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly detailedStatus?: FeatureDetailedStatus;
+  readonly statusMessage?: string;
+}
+
+/** BmcKeySetList represents a list of baseboard management controller key sets. */
+export interface BmcKeySetList {
+  /** The link used to get the next page of operations. */
+  nextLink?: string;
+  /** The list of baseboard management controller key sets. */
+  value?: BmcKeySet[];
+}
+
+/** ClusterMetricsConfigurationList represents a list of metrics configuration of the cluster. */
+export interface ClusterMetricsConfigurationList {
+  /** The link used to get the next page of operations. */
+  nextLink?: string;
+  /** The list of metrics configurations. */
+  value?: ClusterMetricsConfiguration[];
+}
+
+/** DefaultCniNetworkList represents a list of default CNI networks. */
+export interface DefaultCniNetworkList {
+  /** The link used to get the next page of operations. */
+  nextLink?: string;
+  /** The list of default CNI networks. */
+  value?: DefaultCniNetwork[];
+}
+
+/** CniBgpConfiguration represents the Calico BGP configuration. */
+export interface CniBgpConfiguration {
+  /** The list of BgpPeer entities that the Hybrid AKS cluster will peer with in addition to peering that occurs automatically with the switch fabric. */
+  bgpPeers?: BgpPeer[];
   /**
-   * The descriptive message about the current detailed status.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
+   * The list of prefix community advertisement properties. Each prefix community specifies a prefix, and the
+   * communities that should be associated with that prefix when it is announced.
    */
-  readonly detailedStatusMessage?: string;
+  communityAdvertisements?: CommunityAdvertisement[];
+  /** The password of the Calico node mesh. It defaults to a randomly-generated string when not provided. */
+  nodeMeshPassword?: string;
+  /** The subnet blocks in CIDR format for Kubernetes service external IPs to be advertised over BGP. */
+  serviceExternalPrefixes?: string[];
   /**
-   * The name of the feature.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
+   * The subnet blocks in CIDR format for Kubernetes load balancers. Load balancer IPs will only be advertised if they
+   * are within one of these blocks.
    */
-  readonly name?: string;
-  /**
-   * The version of the feature.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly version?: string;
+  serviceLoadBalancerPrefixes?: string[];
 }
 
-/** InitialAgentPoolConfiguration specifies the configuration of a pool of virtual machines that are initially defined with a Kubernetes cluster. */
-export interface InitialAgentPoolConfiguration {
-  /** The administrator credentials to be used for the nodes in this agent pool. */
-  administratorConfiguration?: AdministratorConfiguration;
-  /** The configurations that will be applied to each agent in this agent pool. */
-  agentOptions?: AgentOptions;
-  /** The configuration of networks being attached to the agent pool for use by the workloads that run on this Kubernetes cluster. */
-  attachedNetworkConfiguration?: AttachedNetworkConfiguration;
-  /** The list of availability zones of the Network Cloud cluster used for the provisioning of nodes in this agent pool. If not specified, all availability zones will be used. */
-  availabilityZones?: string[];
-  /** The number of virtual machines that use this configuration. */
-  count: number;
-  /** The labels applied to the nodes in this agent pool. */
-  labels?: KubernetesLabel[];
-  /** The selection of how this agent pool is utilized, either as a system pool or a user pool. System pools run the features and critical services for the Kubernetes Cluster, while user pools are dedicated to user workloads. Every Kubernetes cluster must contain at least one system node pool with at least one node. */
-  mode: AgentPoolMode;
-  /** The name that will be used for the agent pool resource representing this agent pool. */
-  name: string;
-  /** The taints applied to the nodes in this agent pool. */
-  taints?: KubernetesLabel[];
-  /** The configuration of the agent pool. */
-  upgradeSettings?: AgentPoolUpgradeSettings;
-  /** The name of the VM SKU that determines the size of resources allocated for node VMs. */
-  vmSkuName: string;
-}
-
-/** AgentOptions are configurations that will be applied to each agent in an agent pool. */
-export interface AgentOptions {
-  /** The number of hugepages to allocate. */
-  hugepagesCount: number;
-  /** The size of the hugepages to allocate. */
-  hugepagesSize?: HugepagesSize;
-}
-
-/** AttachedNetworkConfiguration represents the set of workload networks to attach to a resource. */
-export interface AttachedNetworkConfiguration {
-  /** The list of Layer 2 Networks and related configuration for attachment. */
-  l2Networks?: L2NetworkAttachmentConfiguration[];
-  /** The list of Layer 3 Networks and related configuration for attachment. */
-  l3Networks?: L3NetworkAttachmentConfiguration[];
-  /** The list of Trunked Networks and related configuration for attachment. */
-  trunkedNetworks?: TrunkedNetworkAttachmentConfiguration[];
-}
-
-/** L2NetworkAttachmentConfiguration represents the configuration of the attachment of a Layer 2 network. */
-export interface L2NetworkAttachmentConfiguration {
-  /** The resource ID of the network that is being configured for attachment. */
-  networkId: string;
-  /** The indicator of how this network will be utilized by the Kubernetes cluster. */
-  pluginType?: KubernetesPluginType;
-}
-
-/** L3NetworkAttachmentConfiguration represents the configuration of the attachment of a Layer 3 network. */
-export interface L3NetworkAttachmentConfiguration {
-  /** The indication of whether this network will or will not perform IP address management and allocate IP addresses when attached. */
-  ipamEnabled?: L3NetworkConfigurationIpamEnabled;
-  /** The resource ID of the network that is being configured for attachment. */
-  networkId: string;
-  /** The indicator of how this network will be utilized by the Kubernetes cluster. */
-  pluginType?: KubernetesPluginType;
-}
-
-/** TrunkedNetworkAttachmentConfiguration represents the configuration of the attachment of a trunked network. */
-export interface TrunkedNetworkAttachmentConfiguration {
-  /** The resource ID of the network that is being configured for attachment. */
-  networkId: string;
-  /** The indicator of how this network will be utilized by the Kubernetes cluster. */
-  pluginType?: KubernetesPluginType;
-}
-
-/** KubernetesLabel represents a single entry for a Kubernetes label or taint such as those used on a node or pod. */
-export interface KubernetesLabel {
-  /** The name of the label or taint. */
-  key: string;
-  /** The value of the label or taint. */
-  value: string;
-}
-
-/** AgentPoolUpgradeSettings specifies the upgrade settings for an agent pool. */
-export interface AgentPoolUpgradeSettings {
-  /** The maximum number or percentage of nodes that are surged during upgrade. This can either be set to an integer (e.g. '5') or a percentage (e.g. '50%'). If a percentage is specified, it is the percentage of the total agent pool size at the time of the upgrade. For percentages, fractional nodes are rounded up. If not specified, the default is 1. */
-  maxSurge?: string;
-}
-
-/** NetworkConfiguration specifies the Kubernetes cluster network related configuration. */
-export interface NetworkConfiguration {
-  /** The configuration of networks being attached to the cluster for use by the workloads that run on this Kubernetes cluster. */
-  attachedNetworkConfiguration?: AttachedNetworkConfiguration;
-  /** The configuration of the BGP service load balancer for this Kubernetes cluster. */
-  bgpServiceLoadBalancerConfiguration?: BgpServiceLoadBalancerConfiguration;
-  /** The resource ID of the associated Cloud Services network. */
-  cloudServicesNetworkId: string;
-  /** The resource ID of the Layer 3 network that is used for creation of the Container Networking Interface network. */
-  cniNetworkId: string;
-  /** The IP address assigned to the Kubernetes DNS service. It must be within the Kubernetes service address range specified in service CIDR. */
-  dnsServiceIp?: string;
-  /** The CIDR notation IP ranges from which to assign pod IPs. One IPv4 CIDR is expected for single-stack networking. Two CIDRs, one for each IP family (IPv4/IPv6), is expected for dual-stack networking. */
-  podCidrs?: string[];
-  /** The CIDR notation IP ranges from which to assign service IPs. One IPv4 CIDR is expected for single-stack networking. Two CIDRs, one for each IP family (IPv4/IPv6), is expected for dual-stack networking. */
-  serviceCidrs?: string[];
-}
-
-/** BgpServiceLoadBalancerConfiguration represents the configuration of a BGP service load balancer. */
-export interface BgpServiceLoadBalancerConfiguration {
-  /** The association of IP address pools to the communities and peers, allowing for announcement of IPs. */
-  bgpAdvertisements?: BgpAdvertisement[];
-  /** The list of additional BgpPeer entities that the Kubernetes cluster will peer with. All peering must be explicitly defined. */
-  bgpPeers?: ServiceLoadBalancerBgpPeer[];
-  /** The indicator to specify if the load balancer peers with the network fabric. */
-  fabricPeeringEnabled?: FabricPeeringEnabled;
-  /** The list of pools of IP addresses that can be allocated to Load Balancer services. */
-  ipAddressPools?: IpAddressPool[];
-}
-
-/** BgpAdvertisement represents the association of IP address pools to the communities and peers. */
-export interface BgpAdvertisement {
-  /** The indicator of if this advertisement is also made to the network fabric associated with the Network Cloud Cluster. This field is ignored if fabricPeeringEnabled is set to False. */
-  advertiseToFabric?: AdvertiseToFabric;
-  /** The names of the BGP communities to be associated with the announcement, utilizing a BGP community string in 1234:1234 format. */
-  communities?: string[];
-  /** The names of the IP address pools associated with this announcement. */
-  ipAddressPools: string[];
-  /** The names of the BGP peers to limit this advertisement to. If no values are specified, all BGP peers will receive this advertisement. */
-  peers?: string[];
-}
-
-/** ServiceLoadBalancerBgpPeer represents the configuration of the BGP service load balancer for the Kubernetes cluster. */
-export interface ServiceLoadBalancerBgpPeer {
-  /** The indicator of BFD enablement for this BgpPeer. */
-  bfdEnabled?: BfdEnabled;
-  /** The indicator to enable multi-hop peering support. */
-  bgpMultiHop?: BgpMultiHop;
-  /** The requested BGP hold time value. This field uses ISO 8601 duration format, for example P1H. */
-  holdTime?: string;
-  /** The requested BGP keepalive time value. This field uses ISO 8601 duration format, for example P1H. */
-  keepAliveTime?: string;
-  /** The autonomous system number used for the local end of the BGP session. */
-  myAsn?: number;
-  /** The name used to identify this BGP peer for association with a BGP advertisement. */
-  name: string;
-  /** The authentication password for routers enforcing TCP MD5 authenticated sessions. */
+/** BgpPeer represents the IP address and ASN(Autonomous System Number) to peer with Hybrid AKS cluster. */
+export interface BgpPeer {
+  /** The ASN (Autonomous System Number) of the BGP peer. */
+  asNumber: number;
+  /** The password for this peering neighbor. It defaults to no password if not specified. */
   password?: string;
-  /** The IPv4 or IPv6 address used to connect this BGP session. */
-  peerAddress: string;
-  /** The autonomous system number expected from the remote end of the BGP session. */
-  peerAsn: number;
-  /** The port used to connect this BGP session. */
-  peerPort?: number;
+  /** The IPv4 or IPv6 address to peer with the associated CNI Network. The IP version type will drive a peering with the same version type from the Default CNI Network. For example, IPv4 to IPv4 or IPv6 to IPv6. */
+  peerIp: string;
 }
 
-/** IpAddressPool represents a pool of IP addresses that can be allocated to a service. */
-export interface IpAddressPool {
-  /** The list of IP address ranges. Each range can be a either a subnet in CIDR format or an explicit start-end range of IP addresses. */
-  addresses: string[];
-  /** The indicator to determine if automatic allocation from the pool should occur. */
-  autoAssign?: BfdEnabled;
-  /** The name used to identify this IP address pool for association with a BGP advertisement. */
-  name: string;
-  /** The indicator to prevent the use of IP addresses ending with .0 and .255 for this pool. Enabling this option will only use IP addresses between .1 and .254 inclusive. */
-  onlyUseHostIps?: BfdEnabled;
+/** CommunityAdvertisement represents the prefix and the communities that should be associated with that prefix. */
+export interface CommunityAdvertisement {
+  /** The list of community strings to announce with this prefix. */
+  communities: string[];
+  /** The subnet in CIDR format for which properties should be advertised. */
+  subnetPrefix: string;
 }
 
-/** KubernetesClusterNode represents the details of a node in a Kubernetes cluster. */
-export interface KubernetesClusterNode {
+/** HybridAksClusterList represents a list of Hybrid AKS clusters. */
+export interface HybridAksClusterList {
+  /** The link used to get the next page of operations. */
+  nextLink?: string;
+  /** The list of additional details related to Hybrid AKS clusters. */
+  value?: HybridAksCluster[];
+}
+
+/** NodeConfiguration contains configuration for a VM associated with a node. */
+export interface NodeConfiguration {
   /**
-   * The resource ID of the agent pool that this node belongs to. This value is not represented on control plane nodes.
+   * The resource ID of the agent pool that contains the nodes in this configuration.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly agentPoolId?: string;
   /**
-   * The availability zone this node is running within.
+   * The name of the agent pool that contains the nodes in this configuration.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly availabilityZone?: string;
+  readonly agentPoolName?: string;
+  /**
+   * The number of CPU cores in the virtual machine.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly cpuCores?: number;
+  /**
+   * The root disk size of the virtual machine in GB.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly diskSizeGB?: number;
+  /**
+   * The memory size of the virtual machine in GB.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly memorySizeGB?: number;
+  /**
+   * Field deprecated, use agentPoolName instead. This field will be removed in a future version but will reflect the name of the agent pool that contains the nodes in this configuration.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly nodePoolName?: string;
+  /**
+   * The list of nodes that utilize this configuration.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly nodes?: Node[];
+  /**
+   * The number of virtual machines that use this configuration.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly vmCount?: number;
+  /**
+   * The name of the VM size supplied during the creation of the cluster.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly vmSize?: string;
+}
+
+/** Node denotes the list of node that utilizes configuration. */
+export interface Node {
   /**
    * The resource ID of the bare metal machine that hosts this node.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly bareMetalMachineId?: string;
   /**
-   * The number of CPU cores configured for this node, derived from the VM SKU specified.
+   * The machine image last used to deploy this node.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly cpuCores?: number;
+  readonly imageId?: string;
   /**
-   * The detailed state of this node.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly detailedStatus?: KubernetesClusterNodeDetailedStatus;
-  /**
-   * The descriptive message about the current detailed status.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly detailedStatusMessage?: string;
-  /**
-   * The size of the disk configured for this node.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly diskSizeGB?: number;
-  /**
-   * The machine image used to deploy this node.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly image?: string;
-  /**
-   * The currently running version of Kubernetes and bundled features running on this node.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly kubernetesVersion?: string;
-  /**
-   * The list of labels on this node that have been assigned to the agent pool containing this node.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly labels?: KubernetesLabel[];
-  /**
-   * The amount of memory configured for this node, derived from the vm SKU specified.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly memorySizeGB?: number;
-  /**
-   * The mode of the agent pool containing this node. Not applicable for control plane nodes.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly mode?: AgentPoolMode;
-  /**
-   * The name of this node, as realized in the Kubernetes cluster.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly name?: string;
-  /**
-   * The NetworkAttachments made to this node.
+   * The list of network attachments to the virtual machine.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly networkAttachments?: NetworkAttachment[];
   /**
-   * The power state of this node.
+   * The name of this node, as realized in the Hybrid AKS cluster.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly powerState?: KubernetesNodePowerState;
+  readonly nodeName?: string;
   /**
-   * The role of this node in the cluster.
+   * The power state (On | Off) of the node.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly role?: KubernetesNodeRole;
-  /**
-   * The list of taints that have been assigned to the agent pool containing this node.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly taints?: KubernetesLabel[];
-  /**
-   * The VM SKU name that was used to create this cluster node.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly vmSkuName?: string;
+  readonly powerState?: HybridAksClusterMachinePowerState;
 }
 
 /** NetworkAttachment represents the single network attachment. */
@@ -1078,7 +932,7 @@ export interface VirtualMachinePlacementHint {
 
 /** StorageProfile represents information about a disk. */
 export interface StorageProfile {
-  /** The disk to use with this virtual machine. */
+  /** OsDisk represents configuration of the boot disk. */
   osDisk: OsDisk;
   /** The resource IDs of volumes that are requested to be attached to the virtual machine. */
   volumeAttachments?: string[];
@@ -1102,6 +956,14 @@ export interface ImageRepositoryCredentials {
   registryUrl: string;
   /** The username used to access an image in the target repository. */
   username: string;
+}
+
+/** ConsoleList represents a list of virtual machine consoles. */
+export interface ConsoleList {
+  /** The link used to get the next page of operations. */
+  nextLink?: string;
+  /** The list of virtual machine consoles. */
+  value?: Console[];
 }
 
 /** VolumeList represents a list of volumes. */
@@ -1129,31 +991,6 @@ export interface BareMetalMachineCordonParameters {
   evacuate?: BareMetalMachineEvacuate;
 }
 
-/** The current status of an async operation. */
-export interface OperationStatusResult {
-  /** Fully qualified ID for the async operation. */
-  id?: string;
-  /**
-   * Fully qualified ID of the resource against which the original async operation was started.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly resourceId?: string;
-  /** Name of the async operation. */
-  name?: string;
-  /** Operation status. */
-  status: string;
-  /** Percent of the operation that is complete. */
-  percentComplete?: number;
-  /** The start time of the operation. */
-  startTime?: Date;
-  /** The end time of the operation. */
-  endTime?: Date;
-  /** The operations list. */
-  operations?: OperationStatusResult[];
-  /** If present, details of the operation error. */
-  error?: ErrorDetail;
-}
-
 /** BareMetalMachinePowerOffParameters represents the body of the request to power off bare metal machine. */
 export interface BareMetalMachinePowerOffParameters {
   /** The indicator of whether to skip the graceful OS shutdown and power off the bare metal machine immediately. */
@@ -1162,7 +999,7 @@ export interface BareMetalMachinePowerOffParameters {
 
 /** BareMetalMachineReplaceParameters represents the body of the request to physically swap a bare metal machine for another. */
 export interface BareMetalMachineReplaceParameters {
-  /** The credentials of the baseboard management controller on this bare metal machine. */
+  /** AdministrativeCredentials represents the admin credentials for the device requiring password-based authentication. */
   bmcCredentials?: AdministrativeCredentials;
   /** The MAC address of the BMC device. */
   bmcMacAddress?: string;
@@ -1217,6 +1054,12 @@ export interface BareMetalMachineRunReadCommandsParameters {
   limitTimeSeconds: number;
 }
 
+/** BareMetalMachineValidateHardwareParameters represents the body of the request to validate the physical hardware of a bare metal machine. */
+export interface BareMetalMachineValidateHardwareParameters {
+  /** The category of hardware validation to perform. */
+  validationCategory: BareMetalMachineHardwareValidationCategory;
+}
+
 /** CloudServicesNetworkPatchParameters represents the body of the request to patch the cloud services network. */
 export interface CloudServicesNetworkPatchParameters {
   /** The Azure resource tags that will replace the existing ones. */
@@ -1237,56 +1080,19 @@ export interface ClusterManagerPatchParameters {
 export interface ClusterPatchParameters {
   /** The Azure resource tags that will replace the existing ones. */
   tags?: { [propertyName: string]: string };
-  /** The rack definition that is intended to reflect only a single rack in a single rack cluster, or an aggregator rack in a multi-rack cluster. */
+  /** RackDefinition represents details regarding the rack. */
   aggregatorOrSingleRackDefinition?: RackDefinition;
   /** The customer-provided location information to identify where the cluster resides. */
   clusterLocation?: string;
-  /** The service principal to be used by the cluster during Arc Appliance installation. */
+  /** ServicePrincipalInformation represents the details of the service principal to be used by the cluster during Arc Appliance installation. */
   clusterServicePrincipal?: ServicePrincipalInformation;
-  /** The validation threshold indicating the allowable failures of compute machines during environment validation and deployment. */
+  /** ValidationThreshold indicates allowed machine and node hardware and deployment failures. */
   computeDeploymentThreshold?: ValidationThreshold;
   /**
    * The list of rack definitions for the compute racks in a multi-rack
    * cluster, or an empty list in a single-rack cluster.
    */
   computeRackDefinitions?: RackDefinition[];
-}
-
-/** BareMetalMachineKeySetList represents a list of bare metal machine key sets. */
-export interface BareMetalMachineKeySetList {
-  /** The link used to get the next page of operations. */
-  nextLink?: string;
-  /** The list of bare metal machine key sets. */
-  value?: BareMetalMachineKeySet[];
-}
-
-/** KeySetUser represents the properties of the user in the key set. */
-export interface KeySetUser {
-  /** The user name that will be used for access. */
-  azureUserName: string;
-  /** The free-form description for this user. */
-  description?: string;
-  /** The SSH public key that will be provisioned for user access. The user is expected to have the corresponding SSH private key for logging in. */
-  sshPublicKey: SshPublicKey;
-}
-
-/** KeySetUserStatus represents the status of the key set user. */
-export interface KeySetUserStatus {
-  /**
-   * The user name that will be used for access.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly azureUserName?: string;
-  /**
-   * The indicator of whether the user is currently deployed for access.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly status?: BareMetalMachineKeySetUserSetupStatus;
-  /**
-   * The additional information describing the current status of this user, if any available.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly statusMessage?: string;
 }
 
 /** BareMetalMachineKeySetPatchParameters represents the body of the request to patch the bare metal machine key set. */
@@ -1299,14 +1105,6 @@ export interface BareMetalMachineKeySetPatchParameters {
   jumpHostsAllowed?: string[];
   /** The unique list of permitted users. */
   userList?: KeySetUser[];
-}
-
-/** BmcKeySetList represents a list of baseboard management controller key sets. */
-export interface BmcKeySetList {
-  /** The link used to get the next page of operations. */
-  nextLink?: string;
-  /** The list of baseboard management controller key sets. */
-  value?: BmcKeySet[];
 }
 
 /** BmcKeySetPatchParameters represents the body of the request to patch the baseboard management controller key set. */
@@ -1325,14 +1123,6 @@ export interface ClusterDeployParameters {
   skipValidationsForMachines?: string[];
 }
 
-/** ClusterMetricsConfigurationList represents a list of metrics configuration of the cluster. */
-export interface ClusterMetricsConfigurationList {
-  /** The link used to get the next page of operations. */
-  nextLink?: string;
-  /** The list of metrics configurations. */
-  value?: ClusterMetricsConfiguration[];
-}
-
 /** ClusterMetricsConfigurationPatchParameters represents the body of the request to patch the metrics configuration of cluster. */
 export interface ClusterMetricsConfigurationPatchParameters {
   /** The Azure resource tags that will replace the existing ones. */
@@ -1346,45 +1136,23 @@ export interface ClusterMetricsConfigurationPatchParameters {
 /** ClusterUpdateVersionParameters represents the body of the request to update cluster version. */
 export interface ClusterUpdateVersionParameters {
   /** The version to be applied to the cluster during update. */
-  targetClusterVersion: string;
+  targetClusterVersion?: string;
 }
 
-/** KubernetesClusterPatchParameters represents the body of the request to patch the Hybrid AKS cluster. */
-export interface KubernetesClusterPatchParameters {
+/** DefaultCniNetworkPatchParameters represents the body of the request to patch the Default CNI network. */
+export interface DefaultCniNetworkPatchParameters {
   /** The Azure resource tags that will replace the existing ones. */
   tags?: { [propertyName: string]: string };
-  /** The defining characteristics of the control plane that can be patched for this Kubernetes cluster. */
-  controlPlaneNodeConfiguration?: ControlPlaneNodePatchConfiguration;
-  /** The Kubernetes version for this cluster. Accepts n.n, n.n.n, and n.n.n-n format. The interpreted version used will be resolved into this field after creation or update. */
-  kubernetesVersion?: string;
 }
 
-/** ControlPlaneNodePatchConfiguration represents the properties of the control plane that can be patched for this Kubernetes cluster. */
-export interface ControlPlaneNodePatchConfiguration {
-  /** The number of virtual machines that use this configuration. */
-  count?: number;
-}
-
-/** AgentPoolList represents a list of Kubernetes cluster agent pools. */
-export interface AgentPoolList {
-  /** The link used to get the next page of operations. */
-  nextLink?: string;
-  /** The list of agent pools. */
-  value?: AgentPool[];
-}
-
-/** AgentPoolPatchParameters represents the body of the request to patch the Kubernetes cluster agent pool. */
-export interface AgentPoolPatchParameters {
+/** HybridAksClusterPatchParameters represents the body of the request to patch the Hybrid AKS cluster. */
+export interface HybridAksClusterPatchParameters {
   /** The Azure resource tags that will replace the existing ones. */
   tags?: { [propertyName: string]: string };
-  /** The number of virtual machines that use this configuration. */
-  count?: number;
-  /** The configuration of the agent pool. */
-  upgradeSettings?: AgentPoolUpgradeSettings;
 }
 
-/** KubernetesClusterRestartNodeParameters represents the body of the request to restart the node of a Kubernetes cluster. */
-export interface KubernetesClusterRestartNodeParameters {
+/** HybridAksClusterRestartNodeParameters represents the body of the request to restart the node of a Hybrid AKS cluster. */
+export interface HybridAksClusterRestartNodeParameters {
   /** The name of the node to restart. */
   nodeName: string;
 }
@@ -1425,6 +1193,31 @@ export interface StorageApplianceEnableRemoteVendorManagementParameters {
   supportEndpoints?: string[];
 }
 
+/** StorageApplianceRunReadCommandsParameters represents the body of request containing list of read-only commands to run for a storage appliance. */
+export interface StorageApplianceRunReadCommandsParameters {
+  /** The list of read-only commands to run. */
+  commands: StorageApplianceCommandSpecification[];
+  /**
+   * The maximum time the commands are allowed to run.
+   * If the execution time exceeds the maximum, the script will be stopped, any output produced until then will be captured, and the exit code matching a timeout will be returned (252).
+   */
+  limitTimeSeconds: number;
+}
+
+/** StorageApplianceCommandSpecification represents the read-only command and optional arguments to execute against a storage appliance. */
+export interface StorageApplianceCommandSpecification {
+  /** The list of string arguments that will be passed to the script in order as separate arguments. */
+  arguments?: string[];
+  /** The read-only command to execute against the storage appliance. */
+  command: string;
+}
+
+/** StorageApplianceValidateHardwareParameters represents the body of the request to validate the physical hardware of a storage appliance. */
+export interface StorageApplianceValidateHardwareParameters {
+  /** The category of hardware validation to perform. */
+  validationCategory: StorageApplianceHardwareValidationCategory;
+}
+
 /** TrunkedNetworkPatchParameters represents the body of the request to patch the Trunked network. */
 export interface TrunkedNetworkPatchParameters {
   /** The Azure resource tags that will replace the existing ones. */
@@ -1435,27 +1228,25 @@ export interface TrunkedNetworkPatchParameters {
 export interface VirtualMachinePatchParameters {
   /** The Azure resource tags that will replace the existing ones. */
   tags?: { [propertyName: string]: string };
-  /** The credentials used to login to the image repository that has access to the specified image. */
+  /** ImageRepositoryCredentials represents the credentials used to login to the image repository. */
   vmImageRepositoryCredentials?: ImageRepositoryCredentials;
 }
 
-/** ConsoleList represents a list of virtual machine consoles. */
-export interface ConsoleList {
-  /** The link used to get the next page of operations. */
-  nextLink?: string;
-  /** The list of virtual machine consoles. */
-  value?: Console[];
+/** VirtualMachineVolumeParameters represents the body of the request to handle attachment and detachment of volumes for the virtual machine. */
+export interface VirtualMachineVolumeParameters {
+  /** The resource ID of the volume. */
+  volumeId: string;
 }
 
 /** ConsolePatchParameters represents the body of the request to patch the virtual machine console. */
 export interface ConsolePatchParameters {
   /** The Azure resource tags that will replace the existing ones. */
   tags?: { [propertyName: string]: string };
+  /** The duration this console access will be allowed for the user. The values are specified in ISO8601 duration format. */
+  duration?: string;
   /** The credentials used to login to the image repository that has access to the specified image. */
   enabled?: ConsoleEnabled;
-  /** The date and time after which the key will be disallowed access. */
-  expiration?: Date;
-  /** The SSH public key that will be provisioned for user access. The user is expected to have the corresponding SSH private key for logging in. */
+  /** SshPublicKey represents the public key used to authenticate with the virtual machine through SSH. */
   sshPublicKey?: SshPublicKey;
 }
 
@@ -1469,30 +1260,6 @@ export interface VirtualMachinePowerOffParameters {
 export interface VolumePatchParameters {
   /** The Azure resource tags that will replace the existing ones. */
   tags?: { [propertyName: string]: string };
-}
-
-/** AgentPoolConfiguration specifies the configuration of a pool of nodes. */
-export interface AgentPoolConfiguration {
-  /** The administrator credentials to be used for the nodes in this agent pool. */
-  administratorConfiguration?: AdministratorConfiguration;
-  /** The configurations that will be applied to each agent in this agent pool. */
-  agentOptions?: AgentOptions;
-  /** The configuration of networks being attached to the agent pool for use by the workloads that run on this Kubernetes cluster. */
-  attachedNetworkConfiguration?: AttachedNetworkConfiguration;
-  /** The list of availability zones of the Network Cloud cluster used for the provisioning of nodes in this agent pool. If not specified, all availability zones will be used. */
-  availabilityZones?: string[];
-  /** The number of virtual machines that use this configuration. */
-  count: number;
-  /** The labels applied to the nodes in this agent pool. */
-  labels?: KubernetesLabel[];
-  /** The selection of how this agent pool is utilized, either as a system pool or a user pool. System pools run the features and critical services for the Kubernetes Cluster, while user pools are dedicated to user workloads. Every Kubernetes cluster must contain at least one system node pool with at least one node. */
-  mode: AgentPoolMode;
-  /** The taints applied to the nodes in this agent pool. */
-  taints?: KubernetesLabel[];
-  /** The configuration of the agent pool. */
-  upgradeSettings?: AgentPoolUpgradeSettings;
-  /** The name of the VM SKU that determines the size of resources allocated for node VMs. */
-  vmSkuName: string;
 }
 
 /** TagsParameter represents the resource tags. */
@@ -1557,14 +1324,9 @@ export interface RackSku extends Resource {
 export interface BareMetalMachine extends TrackedResource {
   /** The extended location of the cluster associated with the resource. */
   extendedLocation: ExtendedLocation;
-  /**
-   * The list of resource IDs for the other Microsoft.NetworkCloud resources that have attached this network.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly associatedResourceIds?: string[];
   /** The connection string for the baseboard management controller including IP address and protocol. */
   bmcConnectionString: string;
-  /** The credentials of the baseboard management controller on this bare metal machine. */
+  /** AdministrativeCredentials represents the admin credentials for the device requiring password-based authentication. */
   bmcCredentials: AdministrativeCredentials;
   /** The MAC address of the BMC device. */
   bmcMacAddress: string;
@@ -1590,18 +1352,12 @@ export interface BareMetalMachine extends TrackedResource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly detailedStatusMessage?: string;
+  /** HardwareInventory represents the hardware configuration of this machine as exposed to the customer, including information acquired from the model/sku information and from the ironic inspector. */
+  hardwareInventory?: HardwareInventory;
+  /** HardwareValidationStatus represents the latest hardware validation details performed for this bare metal machine. */
+  hardwareValidationStatus?: HardwareValidationStatus;
   /**
-   * The hardware inventory, including information acquired from the model/sku information and from the ironic inspector.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly hardwareInventory?: HardwareInventory;
-  /**
-   * The details of the latest hardware validation performed for this bare metal machine.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly hardwareValidationStatus?: HardwareValidationStatus;
-  /**
-   * Field Deprecated. These fields will be empty/omitted. The list of the resource IDs for the HybridAksClusters that have nodes hosted on this bare metal machine.
+   * The list of the resource IDs for the HybridAksClusters that have nodes hosted on this bare metal machine.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly hybridAksClustersAssociatedIds?: string[];
@@ -1663,7 +1419,7 @@ export interface BareMetalMachine extends TrackedResource {
    */
   readonly serviceTag?: string;
   /**
-   * Field Deprecated. These fields will be empty/omitted. The list of the resource IDs for the VirtualMachines that are hosted on this bare metal machine.
+   * The list of the resource IDs for the VirtualMachines that are hosted on this bare metal machine.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly virtualMachinesAssociatedIds?: string[];
@@ -1680,11 +1436,6 @@ export interface CloudServicesNetwork extends TrackedResource {
   extendedLocation: ExtendedLocation;
   /** The list of egress endpoints. This allows for connection from a Hybrid AKS cluster to the specified endpoint. */
   additionalEgressEndpoints?: EgressEndpoint[];
-  /**
-   * The list of resource IDs for the other Microsoft.NetworkCloud resources that have attached this network.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly associatedResourceIds?: string[];
   /**
    * The resource ID of the Network Cloud cluster this cloud services network is associated with.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -1708,7 +1459,7 @@ export interface CloudServicesNetwork extends TrackedResource {
    */
   readonly enabledEgressEndpoints?: EgressEndpoint[];
   /**
-   * Field Deprecated. These fields will be empty/omitted. The list of Hybrid AKS cluster resource IDs that are associated with this cloud services network.
+   * The list of Hybrid AKS cluster resource IDs that are associated with this cloud services network.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly hybridAksClustersAssociatedIds?: string[];
@@ -1723,7 +1474,7 @@ export interface CloudServicesNetwork extends TrackedResource {
    */
   readonly provisioningState?: CloudServicesNetworkProvisioningState;
   /**
-   * Field Deprecated. These fields will be empty/omitted. The list of virtual machine resource IDs, excluding any Hybrid AKS virtual machines, that are currently using this cloud services network.
+   * The list of virtual machine resource IDs, excluding any Hybrid AKS virtual machines, that are currently using this cloud services network.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly virtualMachinesAssociatedIds?: string[];
@@ -1755,7 +1506,8 @@ export interface ClusterManager extends TrackedResource {
   /** The configuration of the managed resource group associated with the resource. */
   managedResourceGroupConfiguration?: ManagedResourceGroupConfiguration;
   /**
-   * The extended location (custom location) that represents the cluster manager's control plane location. This extended location is used when creating cluster and rack manifest resources.
+   * The extended location (custom location) that represents the cluster manager's control plane location.
+   *  This extended location is used when creating cluster and rack manifest resources.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly managerExtendedLocation?: ExtendedLocation;
@@ -1772,27 +1524,25 @@ export interface ClusterManager extends TrackedResource {
 export interface Cluster extends TrackedResource {
   /** The extended location of the cluster manager associated with the cluster. */
   extendedLocation: ExtendedLocation;
-  /** The rack definition that is intended to reflect only a single rack in a single rack cluster, or an aggregator rack in a multi-rack cluster. */
+  /** RackDefinition represents details regarding the rack. */
   aggregatorOrSingleRackDefinition: RackDefinition;
   /** The resource ID of the Log Analytics Workspace that will be used for storing relevant logs. */
-  analyticsWorkspaceId?: string;
+  analyticsWorkspaceId: string;
   /**
    * The list of cluster runtime version upgrades available for this cluster.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly availableUpgradeVersions?: ClusterAvailableUpgradeVersion[];
-  /**
-   * The capacity supported by this cluster.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly clusterCapacity?: ClusterCapacity;
+  /** ClusterCapacity represents various details regarding compute capacity. */
+  clusterCapacity?: ClusterCapacity;
   /**
    * The latest heartbeat status between the cluster manager and the cluster.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly clusterConnectionStatus?: ClusterConnectionStatus;
   /**
-   * The extended location (custom location) that represents the cluster's control plane location. This extended location is used to route the requests of child objects of the cluster that are handled by the platform operator.
+   * The extended location (custom location) that represents the cluster's control plane location.
+   * This extended location is used to route the requests of child objects of the cluster that are handled by the platform operator.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly clusterExtendedLocation?: ExtendedLocation;
@@ -1808,13 +1558,13 @@ export interface Cluster extends TrackedResource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly clusterManagerId?: string;
-  /** The service principal to be used by the cluster during Arc Appliance installation. */
+  /** ServicePrincipalInformation represents the details of the service principal to be used by the cluster during Arc Appliance installation. */
   clusterServicePrincipal?: ServicePrincipalInformation;
   /** The type of rack configuration for the cluster. */
   clusterType: ClusterType;
   /** The current runtime version of the cluster. */
   clusterVersion: string;
-  /** The validation threshold indicating the allowable failures of compute machines during environment validation and deployment. */
+  /** ValidationThreshold indicates allowed machine and node hardware and deployment failures. */
   computeDeploymentThreshold?: ValidationThreshold;
   /**
    * The list of rack definitions for the compute racks in a multi-rack
@@ -1832,7 +1582,8 @@ export interface Cluster extends TrackedResource {
    */
   readonly detailedStatusMessage?: string;
   /**
-   * Field Deprecated. This field will not be populated in an upcoming version. The extended location (custom location) that represents the Hybrid AKS control plane location. This extended location is used when creating provisioned clusters (Hybrid AKS clusters).
+   * The extended location (custom location) that represents the Hybrid AKS control plane location.
+   * This extended location is used when creating provisioned clusters (Hybrid AKS clusters).
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly hybridAksExtendedLocation?: ExtendedLocation;
@@ -1860,441 +1611,6 @@ export interface Cluster extends TrackedResource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly workloadResourceIds?: string[];
-}
-
-/** KubernetesCluster represents the Kubernetes cluster hosted on Network Cloud. */
-export interface KubernetesCluster extends TrackedResource {
-  /** The extended location of the cluster associated with the resource. */
-  extendedLocation: ExtendedLocation;
-  /** The Azure Active Directory Integration properties. */
-  aadConfiguration?: AadConfiguration;
-  /** The administrative credentials that will be applied to the control plane and agent pool nodes that do not specify their own values. */
-  administratorConfiguration?: AdministratorConfiguration;
-  /**
-   * The full list of network resource IDs that are attached to this cluster, including those attached only to specific agent pools.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly attachedNetworkIds?: string[];
-  /**
-   * The list of versions that this Kubernetes cluster can be upgraded to.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly availableUpgrades?: AvailableUpgrade[];
-  /**
-   * The resource ID of the Network Cloud cluster.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly clusterId?: string;
-  /**
-   * The resource ID of the connected cluster set up when this Kubernetes cluster is created.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly connectedClusterId?: string;
-  /**
-   * The current running version of Kubernetes on the control plane.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly controlPlaneKubernetesVersion?: string;
-  /** The defining characteristics of the control plane for this Kubernetes Cluster. */
-  controlPlaneNodeConfiguration: ControlPlaneNodeConfiguration;
-  /**
-   * The current status of the Kubernetes cluster.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly detailedStatus?: KubernetesClusterDetailedStatus;
-  /**
-   * The descriptive message about the current detailed status.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly detailedStatusMessage?: string;
-  /**
-   * The current feature settings.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly featureStatuses?: FeatureStatus[];
-  /** The agent pools that are created with this Kubernetes cluster for running critical system services and workloads. This data in this field is only used during creation, and the field will be empty following the creation of the Kubernetes Cluster. After creation, the management of agent pools is done using the agentPools sub-resource. */
-  initialAgentPoolConfigurations: InitialAgentPoolConfiguration[];
-  /** The Kubernetes version for this cluster. Accepts n.n, n.n.n, and n.n.n-n format. The interpreted version used will be resolved into this field after creation or update. */
-  kubernetesVersion: string;
-  /** The configuration of the managed resource group associated with the resource. */
-  managedResourceGroupConfiguration?: ManagedResourceGroupConfiguration;
-  /** The configuration of the Kubernetes cluster networking, including the attachment of networks that span the cluster. */
-  networkConfiguration: NetworkConfiguration;
-  /**
-   * The details of the nodes in this cluster.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nodes?: KubernetesClusterNode[];
-  /**
-   * The provisioning state of the Kubernetes cluster resource.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: KubernetesClusterProvisioningState;
-}
-
-/** L2Network represents a network that utilizes a single isolation domain set up for layer-2 resources. */
-export interface L2Network extends TrackedResource {
-  /** The extended location of the cluster associated with the resource. */
-  extendedLocation: ExtendedLocation;
-  /**
-   * The list of resource IDs for the other Microsoft.NetworkCloud resources that have attached this network.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly associatedResourceIds?: string[];
-  /**
-   * The resource ID of the Network Cloud cluster this L2 network is associated with.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly clusterId?: string;
-  /**
-   * The more detailed status of the L2 network.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly detailedStatus?: L2NetworkDetailedStatus;
-  /**
-   * The descriptive message about the current detailed status.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly detailedStatusMessage?: string;
-  /**
-   * Field Deprecated. These fields will be empty/omitted. The list of Hybrid AKS cluster resource ID(s) that are associated with this L2 network.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly hybridAksClustersAssociatedIds?: string[];
-  /** Field Deprecated. The field was previously optional, now it will have no defined behavior and will be ignored. The network plugin type for Hybrid AKS. */
-  hybridAksPluginType?: HybridAksPluginType;
-  /** The default interface name for this L2 network in the virtual machine. This name can be overridden by the name supplied in the network attachment configuration of that virtual machine. */
-  interfaceName?: string;
-  /** The resource ID of the Network Fabric l2IsolationDomain. */
-  l2IsolationDomainId: string;
-  /**
-   * The provisioning state of the L2 network.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: L2NetworkProvisioningState;
-  /**
-   * Field Deprecated. These fields will be empty/omitted. The list of virtual machine resource ID(s), excluding any Hybrid AKS virtual machines, that are currently using this L2 network.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly virtualMachinesAssociatedIds?: string[];
-}
-
-/** L3Network represents a network that utilizes a single isolation domain set up for layer-3 resources. */
-export interface L3Network extends TrackedResource {
-  /** The extended location of the cluster associated with the resource. */
-  extendedLocation: ExtendedLocation;
-  /**
-   * The list of resource IDs for the other Microsoft.NetworkCloud resources that have attached this network.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly associatedResourceIds?: string[];
-  /**
-   * The resource ID of the Network Cloud cluster this L3 network is associated with.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly clusterId?: string;
-  /**
-   * The more detailed status of the L3 network.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly detailedStatus?: L3NetworkDetailedStatus;
-  /**
-   * The descriptive message about the current detailed status.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly detailedStatusMessage?: string;
-  /**
-   * Field Deprecated. These fields will be empty/omitted. The list of Hybrid AKS cluster resource IDs that are associated with this L3 network.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly hybridAksClustersAssociatedIds?: string[];
-  /** Field Deprecated. The field was previously optional, now it will have no defined behavior and will be ignored. The indicator of whether or not to disable IPAM allocation on the network attachment definition injected into the Hybrid AKS Cluster. */
-  hybridAksIpamEnabled?: HybridAksIpamEnabled;
-  /** Field Deprecated. The field was previously optional, now it will have no defined behavior and will be ignored. The network plugin type for Hybrid AKS. */
-  hybridAksPluginType?: HybridAksPluginType;
-  /** The default interface name for this L3 network in the virtual machine. This name can be overridden by the name supplied in the network attachment configuration of that virtual machine. */
-  interfaceName?: string;
-  /** The type of the IP address allocation, defaulted to "DualStack". */
-  ipAllocationType?: IpAllocationType;
-  /**
-   * The IPV4 prefix (CIDR) assigned to this L3 network. Required when the IP allocation type
-   * is IPV4 or DualStack.
-   */
-  ipv4ConnectedPrefix?: string;
-  /**
-   * The IPV6 prefix (CIDR) assigned to this L3 network. Required when the IP allocation type
-   * is IPV6 or DualStack.
-   */
-  ipv6ConnectedPrefix?: string;
-  /** The resource ID of the Network Fabric l3IsolationDomain. */
-  l3IsolationDomainId: string;
-  /**
-   * The provisioning state of the L3 network.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: L3NetworkProvisioningState;
-  /**
-   * Field Deprecated. These fields will be empty/omitted. The list of virtual machine resource IDs, excluding any Hybrid AKS virtual machines, that are currently using this L3 network.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly virtualMachinesAssociatedIds?: string[];
-  /** The VLAN from the l3IsolationDomain that is used for this network. */
-  vlan: number;
-}
-
-/** Rack represents the hardware of the rack and is dependent upon the cluster for lifecycle. */
-export interface Rack extends TrackedResource {
-  /** The extended location of the cluster associated with the resource. */
-  extendedLocation: ExtendedLocation;
-  /** The value that will be used for machines in this rack to represent the availability zones that can be referenced by Hybrid AKS Clusters for node arrangement. */
-  availabilityZone: string;
-  /**
-   * The resource ID of the cluster the rack is created for. This value is set when the rack is created by the cluster.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly clusterId?: string;
-  /**
-   * The more detailed status of the rack.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly detailedStatus?: RackDetailedStatus;
-  /**
-   * The descriptive message about the current detailed status.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly detailedStatusMessage?: string;
-  /**
-   * The provisioning state of the rack resource.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: RackProvisioningState;
-  /** The free-form description of the rack location. (e.g. “DTN Datacenter, Floor 3, Isle 9, Rack 2B”) */
-  rackLocation: string;
-  /** The unique identifier for the rack within Network Cloud cluster. An alternate unique alphanumeric value other than a serial number may be provided if desired. */
-  rackSerialNumber: string;
-  /** The SKU for the rack. */
-  rackSkuId: string;
-}
-
-/** StorageAppliance represents on-premises Network Cloud storage appliance. */
-export interface StorageAppliance extends TrackedResource {
-  /** The extended location of the cluster associated with the resource. */
-  extendedLocation: ExtendedLocation;
-  /** The credentials of the administrative interface on this storage appliance. */
-  administratorCredentials: AdministrativeCredentials;
-  /**
-   * The total capacity of the storage appliance.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly capacity?: number;
-  /**
-   * The amount of storage consumed.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly capacityUsed?: number;
-  /**
-   * The resource ID of the cluster this storage appliance is associated with.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly clusterId?: string;
-  /**
-   * The detailed status of the storage appliance.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly detailedStatus?: StorageApplianceDetailedStatus;
-  /**
-   * The descriptive message about the current detailed status.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly detailedStatusMessage?: string;
-  /**
-   * The endpoint for the management interface of the storage appliance.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly managementIpv4Address?: string;
-  /**
-   * The provisioning state of the storage appliance.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: StorageApplianceProvisioningState;
-  /** The resource ID of the rack where this storage appliance resides. */
-  rackId: string;
-  /** The slot the storage appliance is in the rack based on the BOM configuration. */
-  rackSlot: number;
-  /**
-   * The indicator of whether the storage appliance supports remote vendor management.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly remoteVendorManagementFeature?: RemoteVendorManagementFeature;
-  /**
-   * The indicator of whether the remote vendor management feature is enabled or disabled, or unsupported if it is an unsupported feature.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly remoteVendorManagementStatus?: RemoteVendorManagementStatus;
-  /** The serial number for the storage appliance. */
-  serialNumber: string;
-  /** The SKU for the storage appliance. */
-  storageApplianceSkuId: string;
-}
-
-/** TrunkedNetwork represents a network that utilizes multiple isolation domains and specified VLANs to create a trunked network. */
-export interface TrunkedNetwork extends TrackedResource {
-  /** The extended location of the cluster associated with the resource. */
-  extendedLocation: ExtendedLocation;
-  /**
-   * The list of resource IDs for the other Microsoft.NetworkCloud resources that have attached this network.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly associatedResourceIds?: string[];
-  /**
-   * The resource ID of the Network Cloud cluster this trunked network is associated with.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly clusterId?: string;
-  /**
-   * The more detailed status of the trunked network.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly detailedStatus?: TrunkedNetworkDetailedStatus;
-  /**
-   * The descriptive message about the current detailed status.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly detailedStatusMessage?: string;
-  /**
-   * Field Deprecated. These fields will be empty/omitted. The list of Hybrid AKS cluster resource IDs that are associated with this trunked network.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly hybridAksClustersAssociatedIds?: string[];
-  /** Field Deprecated. The field was previously optional, now it will have no defined behavior and will be ignored. The network plugin type for Hybrid AKS. */
-  hybridAksPluginType?: HybridAksPluginType;
-  /** The default interface name for this trunked network in the virtual machine. This name can be overridden by the name supplied in the network attachment configuration of that virtual machine. */
-  interfaceName?: string;
-  /** The list of resource IDs representing the Network Fabric isolation domains. It can be any combination of l2IsolationDomain and l3IsolationDomain resources. */
-  isolationDomainIds: string[];
-  /**
-   * The provisioning state of the trunked network.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: TrunkedNetworkProvisioningState;
-  /**
-   * Field Deprecated. These fields will be empty/omitted. The list of virtual machine resource IDs, excluding any Hybrid AKS virtual machines, that are currently using this trunked network.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly virtualMachinesAssociatedIds?: string[];
-  /** The list of vlans that are selected from the isolation domains for trunking. */
-  vlans: number[];
-}
-
-/** VirtualMachine represents the on-premises Network Cloud virtual machine. */
-export interface VirtualMachine extends TrackedResource {
-  /** The extended location of the cluster associated with the resource. */
-  extendedLocation: ExtendedLocation;
-  /** The name of the administrator to which the ssh public keys will be added into the authorized keys. */
-  adminUsername: string;
-  /**
-   * The cluster availability zone containing this virtual machine.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly availabilityZone?: string;
-  /**
-   * The resource ID of the bare metal machine the virtual machine has landed to.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly bareMetalMachineId?: string;
-  /** Selects the boot method for the virtual machine. */
-  bootMethod?: VirtualMachineBootMethod;
-  /** The cloud service network that provides platform-level services for the virtual machine. */
-  cloudServicesNetworkAttachment: NetworkAttachment;
-  /**
-   * The resource ID of the cluster the virtual machine is created for.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly clusterId?: string;
-  /** The number of CPU cores in the virtual machine. */
-  cpuCores: number;
-  /**
-   * The more detailed status of the virtual machine.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly detailedStatus?: VirtualMachineDetailedStatus;
-  /**
-   * The descriptive message about the current detailed status.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly detailedStatusMessage?: string;
-  /** Field Deprecated, the value will be ignored if provided. The indicator of whether one of the specified CPU cores is isolated to run the emulator thread for this virtual machine. */
-  isolateEmulatorThread?: VirtualMachineIsolateEmulatorThread;
-  /** The memory size of the virtual machine in GB. */
-  memorySizeGB: number;
-  /** The list of network attachments to the virtual machine. */
-  networkAttachments?: NetworkAttachment[];
-  /** The Base64 encoded cloud-init network data. */
-  networkData?: string;
-  /** The scheduling hints for the virtual machine. */
-  placementHints?: VirtualMachinePlacementHint[];
-  /**
-   * The power state of the virtual machine.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly powerState?: VirtualMachinePowerState;
-  /**
-   * The provisioning state of the virtual machine.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: VirtualMachineProvisioningState;
-  /** The list of ssh public keys. Each key will be added to the virtual machine using the cloud-init ssh_authorized_keys mechanism for the adminUsername. */
-  sshPublicKeys?: SshPublicKey[];
-  /** The storage profile that specifies size and other parameters about the disks related to the virtual machine. */
-  storageProfile: StorageProfile;
-  /** The Base64 encoded cloud-init user data. */
-  userData?: string;
-  /** Field Deprecated, use virtualizationModel instead. The type of the virtio interface. */
-  virtioInterface?: VirtualMachineVirtioInterfaceType;
-  /** The type of the device model to use. */
-  vmDeviceModel?: VirtualMachineDeviceModelType;
-  /** The virtual machine image that is currently provisioned to the OS disk, using the full url and tag notation used to pull the image. */
-  vmImage: string;
-  /** The credentials used to login to the image repository that has access to the specified image. */
-  vmImageRepositoryCredentials?: ImageRepositoryCredentials;
-  /**
-   * The resource IDs of volumes that are attached to the virtual machine.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly volumes?: string[];
-}
-
-/** Volume represents storage made available for use by resources running on the cluster. */
-export interface Volume extends TrackedResource {
-  /** The extended location of the cluster associated with the resource. */
-  extendedLocation: ExtendedLocation;
-  /**
-   * The list of resource IDs that attach the volume. It may include virtual machines and Hybrid AKS clusters.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly attachedTo?: string[];
-  /**
-   * The more detailed status of the volume.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly detailedStatus?: VolumeDetailedStatus;
-  /**
-   * The descriptive message about the current detailed status.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly detailedStatusMessage?: string;
-  /**
-   * The provisioning state of the volume.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: VolumeProvisioningState;
-  /**
-   * The unique identifier of the volume.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly serialNumber?: string;
-  /** The size of the allocation for this volume in Mebibytes. */
-  sizeMiB: number;
 }
 
 /** BareMetalMachineKeySet represents the bare metal machine key set. */
@@ -2409,50 +1725,439 @@ export interface ClusterMetricsConfiguration extends TrackedResource {
   readonly provisioningState?: ClusterMetricsConfigurationProvisioningState;
 }
 
-/** AgentPool represents the agent pool of Kubernetes cluster. */
-export interface AgentPool extends TrackedResource {
+/** DefaultCniNetwork represents the user-managed portions of the default CNI (pod) network that is created in support of a Hybrid AKS Cluster. */
+export interface DefaultCniNetwork extends TrackedResource {
   /** The extended location of the cluster associated with the resource. */
-  extendedLocation?: ExtendedLocation;
-  /** The administrator credentials to be used for the nodes in this agent pool. */
-  administratorConfiguration?: AdministratorConfiguration;
-  /** The configurations that will be applied to each agent in this agent pool. */
-  agentOptions?: AgentOptions;
-  /** The configuration of networks being attached to the agent pool for use by the workloads that run on this Kubernetes cluster. */
-  attachedNetworkConfiguration?: AttachedNetworkConfiguration;
-  /** The list of availability zones of the Network Cloud cluster used for the provisioning of nodes in this agent pool. If not specified, all availability zones will be used. */
-  availabilityZones?: string[];
-  /** The number of virtual machines that use this configuration. */
-  count: number;
+  extendedLocation: ExtendedLocation;
   /**
-   * The current status of the agent pool.
+   * The resource ID of the Network Cloud cluster this default CNI network is associated with.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly detailedStatus?: AgentPoolDetailedStatus;
+  readonly clusterId?: string;
+  /**
+   * The autonomous system number that the fabric expects to peer with, derived from the associated L3 isolation domain.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly cniAsNumber?: number;
+  /** CniBgpConfiguration represents the Calico BGP configuration. */
+  cniBgpConfiguration?: CniBgpConfiguration;
+  /**
+   * The more detailed status of the default CNI network.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly detailedStatus?: DefaultCniNetworkDetailedStatus;
   /**
    * The descriptive message about the current detailed status.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly detailedStatusMessage?: string;
   /**
-   * The Kubernetes version running in this agent pool.
+   * The L3 isolation fabric BGP peering connectivity information necessary for BGP peering the Hybrid AKS Cluster with the switch fabric.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly kubernetesVersion?: string;
-  /** The labels applied to the nodes in this agent pool. */
-  labels?: KubernetesLabel[];
-  /** The selection of how this agent pool is utilized, either as a system pool or a user pool. System pools run the features and critical services for the Kubernetes Cluster, while user pools are dedicated to user workloads. Every Kubernetes cluster must contain at least one system node pool with at least one node. */
-  mode: AgentPoolMode;
+  readonly fabricBgpPeers?: BgpPeer[];
   /**
-   * The provisioning state of the agent pool.
+   * The list of Hybrid AKS cluster resource ID(s) that are associated with this default CNI network.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly provisioningState?: AgentPoolProvisioningState;
-  /** The taints applied to the nodes in this agent pool. */
-  taints?: KubernetesLabel[];
-  /** The configuration of the agent pool. */
-  upgradeSettings?: AgentPoolUpgradeSettings;
-  /** The name of the VM SKU that determines the size of resources allocated for node VMs. */
-  vmSkuName: string;
+  readonly hybridAksClustersAssociatedIds?: string[];
+  /**
+   * The name of the interface that will be present in the virtual machine to represent this network.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly interfaceName?: string;
+  /** The type of the IP address allocation. */
+  ipAllocationType?: IpAllocationType;
+  /**
+   * The IPV4 prefix (CIDR) assigned to this default CNI network. It is required when the IP allocation type
+   * is IPV4 or DualStack.
+   */
+  ipv4ConnectedPrefix?: string;
+  /**
+   * The IPV6 prefix (CIDR) assigned to this default CNI network. It is required when the IP allocation type
+   * is IPV6 or DualStack.
+   */
+  ipv6ConnectedPrefix?: string;
+  /** The resource ID of the Network Fabric l3IsolationDomain. */
+  l3IsolationDomainId: string;
+  /**
+   * The provisioning state of the default CNI network.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: DefaultCniNetworkProvisioningState;
+  /** The VLAN from the l3IsolationDomain that is used for this network. */
+  vlan: number;
+}
+
+/** The details are specific to the Network Cloud use of the Hybrid AKS cluster. */
+export interface HybridAksCluster extends TrackedResource {
+  /** The extended location of the cluster associated with the resource. */
+  extendedLocation: ExtendedLocation;
+  /** The list of resource IDs for the workload networks associated with the Hybrid AKS cluster. It can be any of l2Networks, l3Networks, or trunkedNetworks resources. This field will also contain one cloudServicesNetwork and one defaultCniNetwork. */
+  associatedNetworkIds: string[];
+  /**
+   * The resource ID of the associated cloud services network.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly cloudServicesNetworkId?: string;
+  /**
+   * The resource ID of the Network Cloud cluster hosting the Hybrid AKS cluster.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly clusterId?: string;
+  /** The number of control plane node VMs. */
+  controlPlaneCount: number;
+  /**
+   * The list of node configurations detailing associated VMs that are part of the control plane nodes of this Hybrid AKS cluster.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly controlPlaneNodes?: NodeConfiguration[];
+  /**
+   * The resource ID of the associated default CNI network.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly defaultCniNetworkId?: string;
+  /**
+   * The more detailed status of this Hybrid AKS cluster.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly detailedStatus?: HybridAksClusterDetailedStatus;
+  /**
+   * The descriptive message about the current detailed status.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly detailedStatusMessage?: string;
+  /** The resource ID of the Hybrid AKS cluster that this additional information is for. */
+  hybridAksProvisionedClusterId: string;
+  /**
+   * The provisioning state of the Hybrid AKS cluster resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: HybridAksClusterProvisioningState;
+  /**
+   * The resource IDs of volumes that are attached to the Hybrid AKS cluster.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly volumes?: string[];
+  /** The number of worker node VMs. */
+  workerCount: number;
+  /**
+   * The list of node configurations detailing associated VMs that are part of the worker nodes of this Hybrid AKS cluster.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly workerNodes?: NodeConfiguration[];
+}
+
+/** L2Network represents a network that utilizes a single isolation domain set up for layer-2 resources. */
+export interface L2Network extends TrackedResource {
+  /** The extended location of the cluster associated with the resource. */
+  extendedLocation: ExtendedLocation;
+  /**
+   * The resource ID of the Network Cloud cluster this L2 network is associated with.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly clusterId?: string;
+  /**
+   * The more detailed status of the L2 network.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly detailedStatus?: L2NetworkDetailedStatus;
+  /**
+   * The descriptive message about the current detailed status.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly detailedStatusMessage?: string;
+  /**
+   * The list of Hybrid AKS cluster resource ID(s) that are associated with this L2 network.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly hybridAksClustersAssociatedIds?: string[];
+  /** The network plugin type for Hybrid AKS. */
+  hybridAksPluginType?: HybridAksPluginType;
+  /** The default interface name for this L2 network in the virtual machine. This name can be overridden by the name supplied in the network attachment configuration of that virtual machine. */
+  interfaceName?: string;
+  /** The resource ID of the Network Fabric l2IsolationDomain. */
+  l2IsolationDomainId: string;
+  /**
+   * The provisioning state of the L2 network.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: L2NetworkProvisioningState;
+  /**
+   * The list of virtual machine resource ID(s), excluding any Hybrid AKS virtual machines, that are currently using this L2 network.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly virtualMachinesAssociatedIds?: string[];
+}
+
+/** L3Network represents a network that utilizes a single isolation domain set up for layer-3 resources. */
+export interface L3Network extends TrackedResource {
+  /** The extended location of the cluster associated with the resource. */
+  extendedLocation: ExtendedLocation;
+  /**
+   * The resource ID of the Network Cloud cluster this L3 network is associated with.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly clusterId?: string;
+  /**
+   * The more detailed status of the L3 network.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly detailedStatus?: L3NetworkDetailedStatus;
+  /**
+   * The descriptive message about the current detailed status.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly detailedStatusMessage?: string;
+  /**
+   * The list of Hybrid AKS cluster resource IDs that are associated with this L3 network.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly hybridAksClustersAssociatedIds?: string[];
+  /** The indicator of whether or not to disable IPAM allocation on the network attachment definition injected into the Hybrid AKS Cluster. */
+  hybridAksIpamEnabled?: HybridAksIpamEnabled;
+  /** The network plugin type for Hybrid AKS. */
+  hybridAksPluginType?: HybridAksPluginType;
+  /** The default interface name for this L3 network in the virtual machine. This name can be overridden by the name supplied in the network attachment configuration of that virtual machine. */
+  interfaceName?: string;
+  /** The type of the IP address allocation, defaulted to "DualStack". */
+  ipAllocationType?: IpAllocationType;
+  /**
+   * The IPV4 prefix (CIDR) assigned to this L3 network. Required when the IP allocation type
+   * is IPV4 or DualStack.
+   */
+  ipv4ConnectedPrefix?: string;
+  /**
+   * The IPV6 prefix (CIDR) assigned to this L3 network. Required when the IP allocation type
+   * is IPV6 or DualStack.
+   */
+  ipv6ConnectedPrefix?: string;
+  /** The resource ID of the Network Fabric l3IsolationDomain. */
+  l3IsolationDomainId: string;
+  /**
+   * The provisioning state of the L3 network.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: L3NetworkProvisioningState;
+  /**
+   * The list of virtual machine resource IDs, excluding any Hybrid AKS virtual machines, that are currently using this L3 network.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly virtualMachinesAssociatedIds?: string[];
+  /** The VLAN from the l3IsolationDomain that is used for this network. */
+  vlan: number;
+}
+
+/** Rack represents the hardware of the rack and is dependent upon the cluster for lifecycle. */
+export interface Rack extends TrackedResource {
+  /** The extended location of the cluster associated with the resource. */
+  extendedLocation: ExtendedLocation;
+  /** The value that will be used for machines in this rack to represent the availability zones that can be referenced by Hybrid AKS Clusters for node arrangement. */
+  availabilityZone: string;
+  /**
+   * The resource ID of the cluster the rack is created for. This value is set when the rack is created by the cluster.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly clusterId?: string;
+  /**
+   * The more detailed status of the rack.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly detailedStatus?: RackDetailedStatus;
+  /**
+   * The descriptive message about the current detailed status.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly detailedStatusMessage?: string;
+  /**
+   * The provisioning state of the rack resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: RackProvisioningState;
+  /** The free-form description of the rack location. (e.g. “DTN Datacenter, Floor 3, Isle 9, Rack 2B”) */
+  rackLocation: string;
+  /** The unique identifier for the rack within Network Cloud cluster. An alternate unique alphanumeric value other than a serial number may be provided if desired. */
+  rackSerialNumber: string;
+  /** The SKU for the rack. */
+  rackSkuId: string;
+}
+
+/** StorageAppliance represents on-premises Network Cloud storage appliance. */
+export interface StorageAppliance extends TrackedResource {
+  /** The extended location of the cluster associated with the resource. */
+  extendedLocation: ExtendedLocation;
+  /** AdministrativeCredentials represents the admin credentials for the device requiring password-based authentication. */
+  administratorCredentials: AdministrativeCredentials;
+  /**
+   * The total capacity of the storage appliance.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly capacity?: number;
+  /**
+   * The amount of storage consumed.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly capacityUsed?: number;
+  /**
+   * The resource ID of the cluster this storage appliance is associated with.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly clusterId?: string;
+  /**
+   * The detailed status of the storage appliance.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly detailedStatus?: StorageApplianceDetailedStatus;
+  /**
+   * The descriptive message about the current detailed status.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly detailedStatusMessage?: string;
+  /**
+   * The endpoint for the management interface of the storage appliance.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly managementIpv4Address?: string;
+  /**
+   * The provisioning state of the storage appliance.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: StorageApplianceProvisioningState;
+  /** The resource ID of the rack where this storage appliance resides. */
+  rackId: string;
+  /** The slot the storage appliance is in the rack based on the BOM configuration. */
+  rackSlot: number;
+  /**
+   * The indicator of whether the storage appliance supports remote vendor management.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly remoteVendorManagementFeature?: RemoteVendorManagementFeature;
+  /**
+   * The indicator of whether the remote vendor management feature is enabled or disabled, or unsupported if it is an unsupported feature.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly remoteVendorManagementStatus?: RemoteVendorManagementStatus;
+  /** The serial number for the storage appliance. */
+  serialNumber: string;
+  /** The SKU for the storage appliance. */
+  storageApplianceSkuId: string;
+}
+
+/** TrunkedNetwork represents a network that utilizes multiple isolation domains and specified VLANs to create a trunked network. */
+export interface TrunkedNetwork extends TrackedResource {
+  /** The extended location of the cluster associated with the resource. */
+  extendedLocation: ExtendedLocation;
+  /**
+   * The resource ID of the Network Cloud cluster this trunked network is associated with.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly clusterId?: string;
+  /**
+   * The more detailed status of the trunked network.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly detailedStatus?: TrunkedNetworkDetailedStatus;
+  /**
+   * The descriptive message about the current detailed status.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly detailedStatusMessage?: string;
+  /**
+   * The list of Hybrid AKS cluster resource IDs that are associated with this trunked network.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly hybridAksClustersAssociatedIds?: string[];
+  /** The network plugin type for Hybrid AKS. */
+  hybridAksPluginType?: HybridAksPluginType;
+  /** The default interface name for this trunked network in the virtual machine. This name can be overridden by the name supplied in the network attachment configuration of that virtual machine. */
+  interfaceName?: string;
+  /** The list of resource IDs representing the Network Fabric isolation domains. It can be any combination of l2IsolationDomain and l3IsolationDomain resources. */
+  isolationDomainIds: string[];
+  /**
+   * The provisioning state of the trunked network.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: TrunkedNetworkProvisioningState;
+  /**
+   * The list of virtual machine resource IDs, excluding any Hybrid AKS virtual machines, that are currently using this trunked network.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly virtualMachinesAssociatedIds?: string[];
+  /** The list of vlans that are selected from the isolation domains for trunking. */
+  vlans: number[];
+}
+
+/** VirtualMachine represents the on-premises Network Cloud virtual machine. */
+export interface VirtualMachine extends TrackedResource {
+  /** The extended location of the cluster associated with the resource. */
+  extendedLocation: ExtendedLocation;
+  /** The name of the administrator to which the ssh public keys will be added into the authorized keys. */
+  adminUsername: string;
+  /**
+   * The resource ID of the bare metal machine the virtual machine has landed to.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly bareMetalMachineId?: string;
+  /** Selects the boot method for the virtual machine. */
+  bootMethod?: VirtualMachineBootMethod;
+  /** NetworkAttachment represents the single network attachment. */
+  cloudServicesNetworkAttachment: NetworkAttachment;
+  /**
+   * The resource ID of the cluster the virtual machine is created for.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly clusterId?: string;
+  /** The number of CPU cores in the virtual machine. */
+  cpuCores: number;
+  /**
+   * The more detailed status of the virtual machine.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly detailedStatus?: VirtualMachineDetailedStatus;
+  /**
+   * The descriptive message about the current detailed status.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly detailedStatusMessage?: string;
+  /** Field Deprecated, the value will be ignored if provided. The indicator of whether one of the specified CPU cores is isolated to run the emulator thread for this virtual machine. */
+  isolateEmulatorThread?: VirtualMachineIsolateEmulatorThread;
+  /** The memory size of the virtual machine in GB. */
+  memorySizeGB: number;
+  /** The list of network attachments to the virtual machine. */
+  networkAttachments?: NetworkAttachment[];
+  /** The Base64 encoded cloud-init network data. */
+  networkData?: string;
+  /** The scheduling hints for the virtual machine. */
+  placementHints?: VirtualMachinePlacementHint[];
+  /**
+   * The power state of the virtual machine.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly powerState?: VirtualMachinePowerState;
+  /**
+   * The provisioning state of the virtual machine.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: VirtualMachineProvisioningState;
+  /** The list of ssh public keys. Each key will be added to the virtual machine using the cloud-init ssh_authorized_keys mechanism for the adminUsername. */
+  sshPublicKeys?: SshPublicKey[];
+  /** StorageProfile represents information about a disk. */
+  storageProfile: StorageProfile;
+  /** The Base64 encoded cloud-init user data. */
+  userData?: string;
+  /** Field Deprecated, use virtualizationModel instead. The type of the virtio interface. */
+  virtioInterface?: VirtualMachineVirtioInterfaceType;
+  /** The type of the device model to use. */
+  vmDeviceModel?: VirtualMachineDeviceModelType;
+  /** The virtual machine image that is currently provisioned to the OS disk, using the full url and tag notation used to pull the image. */
+  vmImage: string;
+  /** ImageRepositoryCredentials represents the credentials used to login to the image repository. */
+  vmImageRepositoryCredentials?: ImageRepositoryCredentials;
+  /**
+   * The resource IDs of volumes that are attached to the virtual machine.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly volumes?: string[];
 }
 
 /** Console represents the console of an on-premises Network Cloud virtual machine. */
@@ -2483,13 +2188,46 @@ export interface Console extends TrackedResource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly provisioningState?: ConsoleProvisioningState;
-  /** The SSH public key that will be provisioned for user access. The user is expected to have the corresponding SSH private key for logging in. */
+  /** SshPublicKey represents the public key used to authenticate with the virtual machine through SSH. */
   sshPublicKey: SshPublicKey;
   /**
    * The unique identifier for the virtual machine that is used to access the console.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly virtualMachineAccessId?: string;
+}
+
+/** Volume represents storage made available for use by resources running on the cluster. */
+export interface Volume extends TrackedResource {
+  /** The extended location of the cluster associated with the resource. */
+  extendedLocation: ExtendedLocation;
+  /**
+   * The list of resource IDs that attach the volume. It may include virtual machines and Hybrid AKS clusters.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly attachedTo?: string[];
+  /**
+   * The more detailed status of the volume.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly detailedStatus?: VolumeDetailedStatus;
+  /**
+   * The descriptive message about the current detailed status.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly detailedStatusMessage?: string;
+  /**
+   * The provisioning state of the volume.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: VolumeProvisioningState;
+  /**
+   * The unique identifier of the volume.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly serialNumber?: string;
+  /** The size of the allocation for this volume in Mebibytes. */
+  sizeMiB: number;
 }
 
 /** Defines headers for BareMetalMachines_createOrUpdate operation. */
@@ -2507,7 +2245,7 @@ export interface BareMetalMachinesDeleteHeaders {
 /** Defines headers for BareMetalMachines_update operation. */
 export interface BareMetalMachinesUpdateHeaders {
   /** The URL to retrieve the status of the asynchronous operation. */
-  azureAsyncOperation?: string;
+  location?: string;
 }
 
 /** Defines headers for BareMetalMachines_cordon operation. */
@@ -2570,6 +2308,12 @@ export interface BareMetalMachinesUncordonHeaders {
   location?: string;
 }
 
+/** Defines headers for BareMetalMachines_validateHardware operation. */
+export interface BareMetalMachinesValidateHardwareHeaders {
+  /** The URL to retrieve the status of the asynchronous operation. */
+  location?: string;
+}
+
 /** Defines headers for CloudServicesNetworks_createOrUpdate operation. */
 export interface CloudServicesNetworksCreateOrUpdateHeaders {
   /** The URL to retrieve the status of the asynchronous operation. */
@@ -2585,7 +2329,7 @@ export interface CloudServicesNetworksDeleteHeaders {
 /** Defines headers for CloudServicesNetworks_update operation. */
 export interface CloudServicesNetworksUpdateHeaders {
   /** The URL to retrieve the status of the asynchronous operation. */
-  azureAsyncOperation?: string;
+  location?: string;
 }
 
 /** Defines headers for ClusterManagers_createOrUpdate operation. */
@@ -2615,7 +2359,7 @@ export interface ClustersDeleteHeaders {
 /** Defines headers for Clusters_update operation. */
 export interface ClustersUpdateHeaders {
   /** The URL to retrieve the status of the asynchronous operation. */
-  azureAsyncOperation?: string;
+  location?: string;
 }
 
 /** Defines headers for Clusters_deploy operation. */
@@ -2630,26 +2374,86 @@ export interface ClustersUpdateVersionHeaders {
   location?: string;
 }
 
-/** Defines headers for KubernetesClusters_createOrUpdate operation. */
-export interface KubernetesClustersCreateOrUpdateHeaders {
+/** Defines headers for BareMetalMachineKeySets_createOrUpdate operation. */
+export interface BareMetalMachineKeySetsCreateOrUpdateHeaders {
   /** The URL to retrieve the status of the asynchronous operation. */
   azureAsyncOperation?: string;
 }
 
-/** Defines headers for KubernetesClusters_delete operation. */
-export interface KubernetesClustersDeleteHeaders {
+/** Defines headers for BareMetalMachineKeySets_delete operation. */
+export interface BareMetalMachineKeySetsDeleteHeaders {
   /** The URL to retrieve the status of the asynchronous operation. */
   location?: string;
 }
 
-/** Defines headers for KubernetesClusters_update operation. */
-export interface KubernetesClustersUpdateHeaders {
+/** Defines headers for BareMetalMachineKeySets_update operation. */
+export interface BareMetalMachineKeySetsUpdateHeaders {
+  /** The URL to retrieve the status of the asynchronous operation. */
+  location?: string;
+}
+
+/** Defines headers for BmcKeySets_createOrUpdate operation. */
+export interface BmcKeySetsCreateOrUpdateHeaders {
   /** The URL to retrieve the status of the asynchronous operation. */
   azureAsyncOperation?: string;
 }
 
-/** Defines headers for KubernetesClusters_restartNode operation. */
-export interface KubernetesClustersRestartNodeHeaders {
+/** Defines headers for BmcKeySets_delete operation. */
+export interface BmcKeySetsDeleteHeaders {
+  /** The URL to retrieve the status of the asynchronous operation. */
+  location?: string;
+}
+
+/** Defines headers for BmcKeySets_update operation. */
+export interface BmcKeySetsUpdateHeaders {
+  /** The URL to retrieve the status of the asynchronous operation. */
+  location?: string;
+}
+
+/** Defines headers for MetricsConfigurations_createOrUpdate operation. */
+export interface MetricsConfigurationsCreateOrUpdateHeaders {
+  /** The URL to retrieve the status of the asynchronous operation. */
+  azureAsyncOperation?: string;
+}
+
+/** Defines headers for MetricsConfigurations_delete operation. */
+export interface MetricsConfigurationsDeleteHeaders {
+  /** The URL to retrieve the status of the asynchronous operation. */
+  location?: string;
+}
+
+/** Defines headers for MetricsConfigurations_update operation. */
+export interface MetricsConfigurationsUpdateHeaders {
+  /** The URL to retrieve the status of the asynchronous operation. */
+  location?: string;
+}
+
+/** Defines headers for DefaultCniNetworks_createOrUpdate operation. */
+export interface DefaultCniNetworksCreateOrUpdateHeaders {
+  /** The URL to retrieve the status of the asynchronous operation. */
+  azureAsyncOperation?: string;
+}
+
+/** Defines headers for DefaultCniNetworks_delete operation. */
+export interface DefaultCniNetworksDeleteHeaders {
+  /** The URL to retrieve the status of the asynchronous operation. */
+  location?: string;
+}
+
+/** Defines headers for HybridAksClusters_createOrUpdate operation. */
+export interface HybridAksClustersCreateOrUpdateHeaders {
+  /** The URL to retrieve the status of the asynchronous operation. */
+  azureAsyncOperation?: string;
+}
+
+/** Defines headers for HybridAksClusters_delete operation. */
+export interface HybridAksClustersDeleteHeaders {
+  /** The URL to retrieve the status of the asynchronous operation. */
+  location?: string;
+}
+
+/** Defines headers for HybridAksClusters_restartNode operation. */
+export interface HybridAksClustersRestartNodeHeaders {
   /** The URL to retrieve the status of the asynchronous operation. */
   location?: string;
 }
@@ -2693,7 +2497,7 @@ export interface RacksDeleteHeaders {
 /** Defines headers for Racks_update operation. */
 export interface RacksUpdateHeaders {
   /** The URL to retrieve the status of the asynchronous operation. */
-  azureAsyncOperation?: string;
+  location?: string;
 }
 
 /** Defines headers for StorageAppliances_createOrUpdate operation. */
@@ -2711,7 +2515,7 @@ export interface StorageAppliancesDeleteHeaders {
 /** Defines headers for StorageAppliances_update operation. */
 export interface StorageAppliancesUpdateHeaders {
   /** The URL to retrieve the status of the asynchronous operation. */
-  azureAsyncOperation?: string;
+  location?: string;
 }
 
 /** Defines headers for StorageAppliances_disableRemoteVendorManagement operation. */
@@ -2722,6 +2526,18 @@ export interface StorageAppliancesDisableRemoteVendorManagementHeaders {
 
 /** Defines headers for StorageAppliances_enableRemoteVendorManagement operation. */
 export interface StorageAppliancesEnableRemoteVendorManagementHeaders {
+  /** The URL to retrieve the status of the asynchronous operation. */
+  location?: string;
+}
+
+/** Defines headers for StorageAppliances_runReadCommands operation. */
+export interface StorageAppliancesRunReadCommandsHeaders {
+  /** The URL to retrieve the status of the asynchronous operation. */
+  location?: string;
+}
+
+/** Defines headers for StorageAppliances_validateHardware operation. */
+export interface StorageAppliancesValidateHardwareHeaders {
   /** The URL to retrieve the status of the asynchronous operation. */
   location?: string;
 }
@@ -2753,7 +2569,19 @@ export interface VirtualMachinesDeleteHeaders {
 /** Defines headers for VirtualMachines_update operation. */
 export interface VirtualMachinesUpdateHeaders {
   /** The URL to retrieve the status of the asynchronous operation. */
-  azureAsyncOperation?: string;
+  location?: string;
+}
+
+/** Defines headers for VirtualMachines_attachVolume operation. */
+export interface VirtualMachinesAttachVolumeHeaders {
+  /** The URL to retrieve the status of the asynchronous operation. */
+  location?: string;
+}
+
+/** Defines headers for VirtualMachines_detachVolume operation. */
+export interface VirtualMachinesDetachVolumeHeaders {
+  /** The URL to retrieve the status of the asynchronous operation. */
+  location?: string;
 }
 
 /** Defines headers for VirtualMachines_powerOff operation. */
@@ -2780,90 +2608,6 @@ export interface VirtualMachinesStartHeaders {
   location?: string;
 }
 
-/** Defines headers for Volumes_createOrUpdate operation. */
-export interface VolumesCreateOrUpdateHeaders {
-  /** The URL to retrieve the status of the asynchronous operation. */
-  azureAsyncOperation?: string;
-}
-
-/** Defines headers for Volumes_delete operation. */
-export interface VolumesDeleteHeaders {
-  /** The URL to retrieve the status of the asynchronous operation. */
-  location?: string;
-}
-
-/** Defines headers for BareMetalMachineKeySets_createOrUpdate operation. */
-export interface BareMetalMachineKeySetsCreateOrUpdateHeaders {
-  /** The URL to retrieve the status of the asynchronous operation. */
-  azureAsyncOperation?: string;
-}
-
-/** Defines headers for BareMetalMachineKeySets_delete operation. */
-export interface BareMetalMachineKeySetsDeleteHeaders {
-  /** The URL to retrieve the status of the asynchronous operation. */
-  location?: string;
-}
-
-/** Defines headers for BareMetalMachineKeySets_update operation. */
-export interface BareMetalMachineKeySetsUpdateHeaders {
-  /** The URL to retrieve the status of the asynchronous operation. */
-  azureAsyncOperation?: string;
-}
-
-/** Defines headers for BmcKeySets_createOrUpdate operation. */
-export interface BmcKeySetsCreateOrUpdateHeaders {
-  /** The URL to retrieve the status of the asynchronous operation. */
-  azureAsyncOperation?: string;
-}
-
-/** Defines headers for BmcKeySets_delete operation. */
-export interface BmcKeySetsDeleteHeaders {
-  /** The URL to retrieve the status of the asynchronous operation. */
-  location?: string;
-}
-
-/** Defines headers for BmcKeySets_update operation. */
-export interface BmcKeySetsUpdateHeaders {
-  /** The URL to retrieve the status of the asynchronous operation. */
-  azureAsyncOperation?: string;
-}
-
-/** Defines headers for MetricsConfigurations_createOrUpdate operation. */
-export interface MetricsConfigurationsCreateOrUpdateHeaders {
-  /** The URL to retrieve the status of the asynchronous operation. */
-  azureAsyncOperation?: string;
-}
-
-/** Defines headers for MetricsConfigurations_delete operation. */
-export interface MetricsConfigurationsDeleteHeaders {
-  /** The URL to retrieve the status of the asynchronous operation. */
-  location?: string;
-}
-
-/** Defines headers for MetricsConfigurations_update operation. */
-export interface MetricsConfigurationsUpdateHeaders {
-  /** The URL to retrieve the status of the asynchronous operation. */
-  azureAsyncOperation?: string;
-}
-
-/** Defines headers for AgentPools_createOrUpdate operation. */
-export interface AgentPoolsCreateOrUpdateHeaders {
-  /** The URL to retrieve the status of the asynchronous operation. */
-  azureAsyncOperation?: string;
-}
-
-/** Defines headers for AgentPools_delete operation. */
-export interface AgentPoolsDeleteHeaders {
-  /** The URL to retrieve the status of the asynchronous operation. */
-  location?: string;
-}
-
-/** Defines headers for AgentPools_update operation. */
-export interface AgentPoolsUpdateHeaders {
-  /** The URL to retrieve the status of the asynchronous operation. */
-  azureAsyncOperation?: string;
-}
-
 /** Defines headers for Consoles_createOrUpdate operation. */
 export interface ConsolesCreateOrUpdateHeaders {
   /** The URL to retrieve the status of the asynchronous operation. */
@@ -2879,7 +2623,19 @@ export interface ConsolesDeleteHeaders {
 /** Defines headers for Consoles_update operation. */
 export interface ConsolesUpdateHeaders {
   /** The URL to retrieve the status of the asynchronous operation. */
+  location?: string;
+}
+
+/** Defines headers for Volumes_createOrUpdate operation. */
+export interface VolumesCreateOrUpdateHeaders {
+  /** The URL to retrieve the status of the asynchronous operation. */
   azureAsyncOperation?: string;
+}
+
+/** Defines headers for Volumes_delete operation. */
+export interface VolumesDeleteHeaders {
+  /** The URL to retrieve the status of the asynchronous operation. */
+  location?: string;
 }
 
 /** Known values of {@link Origin} that the service accepts. */
@@ -3392,257 +3148,278 @@ export enum KnownClusterProvisioningState {
  */
 export type ClusterProvisioningState = string;
 
-/** Known values of {@link AvailabilityLifecycle} that the service accepts. */
-export enum KnownAvailabilityLifecycle {
-  /** Preview */
-  Preview = "Preview",
-  /** GenerallyAvailable */
-  GenerallyAvailable = "GenerallyAvailable"
+/** Known values of {@link BareMetalMachineKeySetDetailedStatus} that the service accepts. */
+export enum KnownBareMetalMachineKeySetDetailedStatus {
+  /** AllActive */
+  AllActive = "AllActive",
+  /** SomeInvalid */
+  SomeInvalid = "SomeInvalid",
+  /** AllInvalid */
+  AllInvalid = "AllInvalid",
+  /** Validating */
+  Validating = "Validating"
 }
 
 /**
- * Defines values for AvailabilityLifecycle. \
- * {@link KnownAvailabilityLifecycle} can be used interchangeably with AvailabilityLifecycle,
+ * Defines values for BareMetalMachineKeySetDetailedStatus. \
+ * {@link KnownBareMetalMachineKeySetDetailedStatus} can be used interchangeably with BareMetalMachineKeySetDetailedStatus,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Preview** \
- * **GenerallyAvailable**
+ * **AllActive** \
+ * **SomeInvalid** \
+ * **AllInvalid** \
+ * **Validating**
  */
-export type AvailabilityLifecycle = string;
+export type BareMetalMachineKeySetDetailedStatus = string;
 
-/** Known values of {@link KubernetesClusterDetailedStatus} that the service accepts. */
-export enum KnownKubernetesClusterDetailedStatus {
-  /** Available */
-  Available = "Available",
-  /** Error */
-  Error = "Error",
+/** Known values of {@link BareMetalMachineKeySetPrivilegeLevel} that the service accepts. */
+export enum KnownBareMetalMachineKeySetPrivilegeLevel {
+  /** Standard */
+  Standard = "Standard",
+  /** Superuser */
+  Superuser = "Superuser"
+}
+
+/**
+ * Defines values for BareMetalMachineKeySetPrivilegeLevel. \
+ * {@link KnownBareMetalMachineKeySetPrivilegeLevel} can be used interchangeably with BareMetalMachineKeySetPrivilegeLevel,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Standard** \
+ * **Superuser**
+ */
+export type BareMetalMachineKeySetPrivilegeLevel = string;
+
+/** Known values of {@link BareMetalMachineKeySetProvisioningState} that the service accepts. */
+export enum KnownBareMetalMachineKeySetProvisioningState {
+  /** Succeeded */
+  Succeeded = "Succeeded",
+  /** Failed */
+  Failed = "Failed",
+  /** Canceled */
+  Canceled = "Canceled",
+  /** Accepted */
+  Accepted = "Accepted",
   /** Provisioning */
   Provisioning = "Provisioning"
 }
 
 /**
- * Defines values for KubernetesClusterDetailedStatus. \
- * {@link KnownKubernetesClusterDetailedStatus} can be used interchangeably with KubernetesClusterDetailedStatus,
+ * Defines values for BareMetalMachineKeySetProvisioningState. \
+ * {@link KnownBareMetalMachineKeySetProvisioningState} can be used interchangeably with BareMetalMachineKeySetProvisioningState,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Available** \
- * **Error** \
+ * **Succeeded** \
+ * **Failed** \
+ * **Canceled** \
+ * **Accepted** \
  * **Provisioning**
  */
-export type KubernetesClusterDetailedStatus = string;
+export type BareMetalMachineKeySetProvisioningState = string;
 
-/** Known values of {@link FeatureDetailedStatus} that the service accepts. */
-export enum KnownFeatureDetailedStatus {
-  /** Running */
-  Running = "Running",
+/** Known values of {@link BareMetalMachineKeySetUserSetupStatus} that the service accepts. */
+export enum KnownBareMetalMachineKeySetUserSetupStatus {
+  /** Active */
+  Active = "Active",
+  /** Invalid */
+  Invalid = "Invalid"
+}
+
+/**
+ * Defines values for BareMetalMachineKeySetUserSetupStatus. \
+ * {@link KnownBareMetalMachineKeySetUserSetupStatus} can be used interchangeably with BareMetalMachineKeySetUserSetupStatus,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Active** \
+ * **Invalid**
+ */
+export type BareMetalMachineKeySetUserSetupStatus = string;
+
+/** Known values of {@link BmcKeySetDetailedStatus} that the service accepts. */
+export enum KnownBmcKeySetDetailedStatus {
+  /** AllActive */
+  AllActive = "AllActive",
+  /** SomeInvalid */
+  SomeInvalid = "SomeInvalid",
+  /** AllInvalid */
+  AllInvalid = "AllInvalid",
+  /** Validating */
+  Validating = "Validating"
+}
+
+/**
+ * Defines values for BmcKeySetDetailedStatus. \
+ * {@link KnownBmcKeySetDetailedStatus} can be used interchangeably with BmcKeySetDetailedStatus,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **AllActive** \
+ * **SomeInvalid** \
+ * **AllInvalid** \
+ * **Validating**
+ */
+export type BmcKeySetDetailedStatus = string;
+
+/** Known values of {@link BmcKeySetPrivilegeLevel} that the service accepts. */
+export enum KnownBmcKeySetPrivilegeLevel {
+  /** ReadOnly */
+  ReadOnly = "ReadOnly",
+  /** Administrator */
+  Administrator = "Administrator"
+}
+
+/**
+ * Defines values for BmcKeySetPrivilegeLevel. \
+ * {@link KnownBmcKeySetPrivilegeLevel} can be used interchangeably with BmcKeySetPrivilegeLevel,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **ReadOnly** \
+ * **Administrator**
+ */
+export type BmcKeySetPrivilegeLevel = string;
+
+/** Known values of {@link BmcKeySetProvisioningState} that the service accepts. */
+export enum KnownBmcKeySetProvisioningState {
+  /** Succeeded */
+  Succeeded = "Succeeded",
   /** Failed */
   Failed = "Failed",
-  /** Unknown */
-  Unknown = "Unknown"
+  /** Canceled */
+  Canceled = "Canceled",
+  /** Accepted */
+  Accepted = "Accepted",
+  /** Provisioning */
+  Provisioning = "Provisioning"
 }
 
 /**
- * Defines values for FeatureDetailedStatus. \
- * {@link KnownFeatureDetailedStatus} can be used interchangeably with FeatureDetailedStatus,
+ * Defines values for BmcKeySetProvisioningState. \
+ * {@link KnownBmcKeySetProvisioningState} can be used interchangeably with BmcKeySetProvisioningState,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Running** \
+ * **Succeeded** \
  * **Failed** \
- * **Unknown**
+ * **Canceled** \
+ * **Accepted** \
+ * **Provisioning**
  */
-export type FeatureDetailedStatus = string;
+export type BmcKeySetProvisioningState = string;
 
-/** Known values of {@link HugepagesSize} that the service accepts. */
-export enum KnownHugepagesSize {
-  /** TwoM */
-  TwoM = "2M",
-  /** OneG */
-  OneG = "1G"
+/** Known values of {@link ClusterMetricsConfigurationDetailedStatus} that the service accepts. */
+export enum KnownClusterMetricsConfigurationDetailedStatus {
+  /** Processing */
+  Processing = "Processing",
+  /** Applied */
+  Applied = "Applied",
+  /** Error */
+  Error = "Error"
 }
 
 /**
- * Defines values for HugepagesSize. \
- * {@link KnownHugepagesSize} can be used interchangeably with HugepagesSize,
+ * Defines values for ClusterMetricsConfigurationDetailedStatus. \
+ * {@link KnownClusterMetricsConfigurationDetailedStatus} can be used interchangeably with ClusterMetricsConfigurationDetailedStatus,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **2M** \
- * **1G**
+ * **Processing** \
+ * **Applied** \
+ * **Error**
  */
-export type HugepagesSize = string;
+export type ClusterMetricsConfigurationDetailedStatus = string;
 
-/** Known values of {@link KubernetesPluginType} that the service accepts. */
-export enum KnownKubernetesPluginType {
-  /** Dpdk */
-  Dpdk = "DPDK",
-  /** Sriov */
-  Sriov = "SRIOV",
-  /** OSDevice */
-  OSDevice = "OSDevice",
-  /** Macvlan */
-  Macvlan = "MACVLAN",
-  /** Ipvlan */
-  Ipvlan = "IPVLAN"
+/** Known values of {@link ClusterMetricsConfigurationProvisioningState} that the service accepts. */
+export enum KnownClusterMetricsConfigurationProvisioningState {
+  /** Succeeded */
+  Succeeded = "Succeeded",
+  /** Failed */
+  Failed = "Failed",
+  /** Canceled */
+  Canceled = "Canceled",
+  /** Accepted */
+  Accepted = "Accepted",
+  /** Provisioning */
+  Provisioning = "Provisioning"
 }
 
 /**
- * Defines values for KubernetesPluginType. \
- * {@link KnownKubernetesPluginType} can be used interchangeably with KubernetesPluginType,
+ * Defines values for ClusterMetricsConfigurationProvisioningState. \
+ * {@link KnownClusterMetricsConfigurationProvisioningState} can be used interchangeably with ClusterMetricsConfigurationProvisioningState,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **DPDK** \
- * **SRIOV** \
- * **OSDevice** \
- * **MACVLAN** \
- * **IPVLAN**
+ * **Succeeded** \
+ * **Failed** \
+ * **Canceled** \
+ * **Accepted** \
+ * **Provisioning**
  */
-export type KubernetesPluginType = string;
+export type ClusterMetricsConfigurationProvisioningState = string;
 
-/** Known values of {@link L3NetworkConfigurationIpamEnabled} that the service accepts. */
-export enum KnownL3NetworkConfigurationIpamEnabled {
-  /** True */
-  True = "True",
-  /** False */
-  False = "False"
-}
-
-/**
- * Defines values for L3NetworkConfigurationIpamEnabled. \
- * {@link KnownL3NetworkConfigurationIpamEnabled} can be used interchangeably with L3NetworkConfigurationIpamEnabled,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **True** \
- * **False**
- */
-export type L3NetworkConfigurationIpamEnabled = string;
-
-/** Known values of {@link AgentPoolMode} that the service accepts. */
-export enum KnownAgentPoolMode {
-  /** System */
-  System = "System",
-  /** User */
-  User = "User",
-  /** NotApplicable */
-  NotApplicable = "NotApplicable"
-}
-
-/**
- * Defines values for AgentPoolMode. \
- * {@link KnownAgentPoolMode} can be used interchangeably with AgentPoolMode,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **System** \
- * **User** \
- * **NotApplicable**
- */
-export type AgentPoolMode = string;
-
-/** Known values of {@link AdvertiseToFabric} that the service accepts. */
-export enum KnownAdvertiseToFabric {
-  /** True */
-  True = "True",
-  /** False */
-  False = "False"
-}
-
-/**
- * Defines values for AdvertiseToFabric. \
- * {@link KnownAdvertiseToFabric} can be used interchangeably with AdvertiseToFabric,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **True** \
- * **False**
- */
-export type AdvertiseToFabric = string;
-
-/** Known values of {@link BfdEnabled} that the service accepts. */
-export enum KnownBfdEnabled {
-  /** True */
-  True = "True",
-  /** False */
-  False = "False"
-}
-
-/**
- * Defines values for BfdEnabled. \
- * {@link KnownBfdEnabled} can be used interchangeably with BfdEnabled,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **True** \
- * **False**
- */
-export type BfdEnabled = string;
-
-/** Known values of {@link BgpMultiHop} that the service accepts. */
-export enum KnownBgpMultiHop {
-  /** True */
-  True = "True",
-  /** False */
-  False = "False"
-}
-
-/**
- * Defines values for BgpMultiHop. \
- * {@link KnownBgpMultiHop} can be used interchangeably with BgpMultiHop,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **True** \
- * **False**
- */
-export type BgpMultiHop = string;
-
-/** Known values of {@link FabricPeeringEnabled} that the service accepts. */
-export enum KnownFabricPeeringEnabled {
-  /** True */
-  True = "True",
-  /** False */
-  False = "False"
-}
-
-/**
- * Defines values for FabricPeeringEnabled. \
- * {@link KnownFabricPeeringEnabled} can be used interchangeably with FabricPeeringEnabled,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **True** \
- * **False**
- */
-export type FabricPeeringEnabled = string;
-
-/** Known values of {@link KubernetesClusterNodeDetailedStatus} that the service accepts. */
-export enum KnownKubernetesClusterNodeDetailedStatus {
-  /** Available */
-  Available = "Available",
+/** Known values of {@link DefaultCniNetworkDetailedStatus} that the service accepts. */
+export enum KnownDefaultCniNetworkDetailedStatus {
   /** Error */
   Error = "Error",
+  /** Available */
+  Available = "Available",
   /** Provisioning */
-  Provisioning = "Provisioning",
-  /** Running */
-  Running = "Running",
-  /** Scheduling */
-  Scheduling = "Scheduling",
-  /** Stopped */
-  Stopped = "Stopped",
-  /** Terminating */
-  Terminating = "Terminating",
-  /** Unknown */
-  Unknown = "Unknown"
+  Provisioning = "Provisioning"
 }
 
 /**
- * Defines values for KubernetesClusterNodeDetailedStatus. \
- * {@link KnownKubernetesClusterNodeDetailedStatus} can be used interchangeably with KubernetesClusterNodeDetailedStatus,
+ * Defines values for DefaultCniNetworkDetailedStatus. \
+ * {@link KnownDefaultCniNetworkDetailedStatus} can be used interchangeably with DefaultCniNetworkDetailedStatus,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Available** \
  * **Error** \
- * **Provisioning** \
- * **Running** \
- * **Scheduling** \
- * **Stopped** \
- * **Terminating** \
- * **Unknown**
+ * **Available** \
+ * **Provisioning**
  */
-export type KubernetesClusterNodeDetailedStatus = string;
+export type DefaultCniNetworkDetailedStatus = string;
+
+/** Known values of {@link IpAllocationType} that the service accepts. */
+export enum KnownIpAllocationType {
+  /** IPV4 */
+  IPV4 = "IPV4",
+  /** IPV6 */
+  IPV6 = "IPV6",
+  /** DualStack */
+  DualStack = "DualStack"
+}
+
+/**
+ * Defines values for IpAllocationType. \
+ * {@link KnownIpAllocationType} can be used interchangeably with IpAllocationType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **IPV4** \
+ * **IPV6** \
+ * **DualStack**
+ */
+export type IpAllocationType = string;
+
+/** Known values of {@link DefaultCniNetworkProvisioningState} that the service accepts. */
+export enum KnownDefaultCniNetworkProvisioningState {
+  /** Succeeded */
+  Succeeded = "Succeeded",
+  /** Failed */
+  Failed = "Failed",
+  /** Canceled */
+  Canceled = "Canceled",
+  /** Provisioning */
+  Provisioning = "Provisioning",
+  /** Accepted */
+  Accepted = "Accepted"
+}
+
+/**
+ * Defines values for DefaultCniNetworkProvisioningState. \
+ * {@link KnownDefaultCniNetworkProvisioningState} can be used interchangeably with DefaultCniNetworkProvisioningState,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Succeeded** \
+ * **Failed** \
+ * **Canceled** \
+ * **Provisioning** \
+ * **Accepted**
+ */
+export type DefaultCniNetworkProvisioningState = string;
 
 /** Known values of {@link DefaultGateway} that the service accepts. */
 export enum KnownDefaultGateway {
@@ -3683,80 +3460,65 @@ export enum KnownVirtualMachineIPAllocationMethod {
  */
 export type VirtualMachineIPAllocationMethod = string;
 
-/** Known values of {@link KubernetesNodePowerState} that the service accepts. */
-export enum KnownKubernetesNodePowerState {
+/** Known values of {@link HybridAksClusterMachinePowerState} that the service accepts. */
+export enum KnownHybridAksClusterMachinePowerState {
   /** On */
   On = "On",
   /** Off */
-  Off = "Off",
-  /** Unknown */
-  Unknown = "Unknown"
+  Off = "Off"
 }
 
 /**
- * Defines values for KubernetesNodePowerState. \
- * {@link KnownKubernetesNodePowerState} can be used interchangeably with KubernetesNodePowerState,
+ * Defines values for HybridAksClusterMachinePowerState. \
+ * {@link KnownHybridAksClusterMachinePowerState} can be used interchangeably with HybridAksClusterMachinePowerState,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
  * **On** \
- * **Off** \
- * **Unknown**
+ * **Off**
  */
-export type KubernetesNodePowerState = string;
+export type HybridAksClusterMachinePowerState = string;
 
-/** Known values of {@link KubernetesNodeRole} that the service accepts. */
-export enum KnownKubernetesNodeRole {
-  /** ControlPlane */
-  ControlPlane = "ControlPlane",
-  /** Worker */
-  Worker = "Worker"
+/** Known values of {@link HybridAksClusterDetailedStatus} that the service accepts. */
+export enum KnownHybridAksClusterDetailedStatus {
+  /** Error */
+  Error = "Error",
+  /** Available */
+  Available = "Available",
+  /** Provisioning */
+  Provisioning = "Provisioning"
 }
 
 /**
- * Defines values for KubernetesNodeRole. \
- * {@link KnownKubernetesNodeRole} can be used interchangeably with KubernetesNodeRole,
+ * Defines values for HybridAksClusterDetailedStatus. \
+ * {@link KnownHybridAksClusterDetailedStatus} can be used interchangeably with HybridAksClusterDetailedStatus,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **ControlPlane** \
- * **Worker**
+ * **Error** \
+ * **Available** \
+ * **Provisioning**
  */
-export type KubernetesNodeRole = string;
+export type HybridAksClusterDetailedStatus = string;
 
-/** Known values of {@link KubernetesClusterProvisioningState} that the service accepts. */
-export enum KnownKubernetesClusterProvisioningState {
+/** Known values of {@link HybridAksClusterProvisioningState} that the service accepts. */
+export enum KnownHybridAksClusterProvisioningState {
   /** Succeeded */
   Succeeded = "Succeeded",
   /** Failed */
   Failed = "Failed",
   /** Canceled */
-  Canceled = "Canceled",
-  /** Accepted */
-  Accepted = "Accepted",
-  /** InProgress */
-  InProgress = "InProgress",
-  /** Created */
-  Created = "Created",
-  /** Updating */
-  Updating = "Updating",
-  /** Deleting */
-  Deleting = "Deleting"
+  Canceled = "Canceled"
 }
 
 /**
- * Defines values for KubernetesClusterProvisioningState. \
- * {@link KnownKubernetesClusterProvisioningState} can be used interchangeably with KubernetesClusterProvisioningState,
+ * Defines values for HybridAksClusterProvisioningState. \
+ * {@link KnownHybridAksClusterProvisioningState} can be used interchangeably with HybridAksClusterProvisioningState,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
  * **Succeeded** \
  * **Failed** \
- * **Canceled** \
- * **Accepted** \
- * **InProgress** \
- * **Created** \
- * **Updating** \
- * **Deleting**
+ * **Canceled**
  */
-export type KubernetesClusterProvisioningState = string;
+export type HybridAksClusterProvisioningState = string;
 
 /** Known values of {@link L2NetworkDetailedStatus} that the service accepts. */
 export enum KnownL2NetworkDetailedStatus {
@@ -3865,27 +3627,6 @@ export enum KnownHybridAksIpamEnabled {
  * **False**
  */
 export type HybridAksIpamEnabled = string;
-
-/** Known values of {@link IpAllocationType} that the service accepts. */
-export enum KnownIpAllocationType {
-  /** IPV4 */
-  IPV4 = "IPV4",
-  /** IPV6 */
-  IPV6 = "IPV6",
-  /** DualStack */
-  DualStack = "DualStack"
-}
-
-/**
- * Defines values for IpAllocationType. \
- * {@link KnownIpAllocationType} can be used interchangeably with IpAllocationType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **IPV4** \
- * **IPV6** \
- * **DualStack**
- */
-export type IpAllocationType = string;
 
 /** Known values of {@link L3NetworkProvisioningState} that the service accepts. */
 export enum KnownL3NetworkProvisioningState {
@@ -4225,22 +3966,12 @@ export type VirtualMachineBootMethod = string;
 
 /** Known values of {@link VirtualMachineDetailedStatus} that the service accepts. */
 export enum KnownVirtualMachineDetailedStatus {
-  /** Available */
-  Available = "Available",
   /** Error */
   Error = "Error",
+  /** Available */
+  Available = "Available",
   /** Provisioning */
-  Provisioning = "Provisioning",
-  /** Running */
-  Running = "Running",
-  /** Scheduling */
-  Scheduling = "Scheduling",
-  /** Stopped */
-  Stopped = "Stopped",
-  /** Terminating */
-  Terminating = "Terminating",
-  /** Unknown */
-  Unknown = "Unknown"
+  Provisioning = "Provisioning"
 }
 
 /**
@@ -4248,14 +3979,9 @@ export enum KnownVirtualMachineDetailedStatus {
  * {@link KnownVirtualMachineDetailedStatus} can be used interchangeably with VirtualMachineDetailedStatus,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Available** \
  * **Error** \
- * **Provisioning** \
- * **Running** \
- * **Scheduling** \
- * **Stopped** \
- * **Terminating** \
- * **Unknown**
+ * **Available** \
+ * **Provisioning**
  */
 export type VirtualMachineDetailedStatus = string;
 
@@ -4336,9 +4062,7 @@ export enum KnownVirtualMachinePowerState {
   /** On */
   On = "On",
   /** Off */
-  Off = "Off",
-  /** Unknown */
-  Unknown = "Unknown"
+  Off = "Off"
 }
 
 /**
@@ -4347,8 +4071,7 @@ export enum KnownVirtualMachinePowerState {
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
  * **On** \
- * **Off** \
- * **Unknown**
+ * **Off**
  */
 export type VirtualMachinePowerState = string;
 
@@ -4445,6 +4168,69 @@ export enum KnownVirtualMachineDeviceModelType {
  */
 export type VirtualMachineDeviceModelType = string;
 
+/** Known values of {@link ConsoleDetailedStatus} that the service accepts. */
+export enum KnownConsoleDetailedStatus {
+  /** Ready */
+  Ready = "Ready",
+  /** Error */
+  Error = "Error"
+}
+
+/**
+ * Defines values for ConsoleDetailedStatus. \
+ * {@link KnownConsoleDetailedStatus} can be used interchangeably with ConsoleDetailedStatus,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Ready** \
+ * **Error**
+ */
+export type ConsoleDetailedStatus = string;
+
+/** Known values of {@link ConsoleEnabled} that the service accepts. */
+export enum KnownConsoleEnabled {
+  /** True */
+  True = "True",
+  /** False */
+  False = "False"
+}
+
+/**
+ * Defines values for ConsoleEnabled. \
+ * {@link KnownConsoleEnabled} can be used interchangeably with ConsoleEnabled,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **True** \
+ * **False**
+ */
+export type ConsoleEnabled = string;
+
+/** Known values of {@link ConsoleProvisioningState} that the service accepts. */
+export enum KnownConsoleProvisioningState {
+  /** Succeeded */
+  Succeeded = "Succeeded",
+  /** Failed */
+  Failed = "Failed",
+  /** Canceled */
+  Canceled = "Canceled",
+  /** Provisioning */
+  Provisioning = "Provisioning",
+  /** Accepted */
+  Accepted = "Accepted"
+}
+
+/**
+ * Defines values for ConsoleProvisioningState. \
+ * {@link KnownConsoleProvisioningState} can be used interchangeably with ConsoleProvisioningState,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Succeeded** \
+ * **Failed** \
+ * **Canceled** \
+ * **Provisioning** \
+ * **Accepted**
+ */
+export type ConsoleProvisioningState = string;
+
 /** Known values of {@link VolumeDetailedStatus} that the service accepts. */
 export enum KnownVolumeDetailedStatus {
   /** Error */
@@ -4529,326 +4315,35 @@ export enum KnownBareMetalMachineSkipShutdown {
  */
 export type BareMetalMachineSkipShutdown = string;
 
-/** Known values of {@link BareMetalMachineKeySetDetailedStatus} that the service accepts. */
-export enum KnownBareMetalMachineKeySetDetailedStatus {
-  /** AllActive */
-  AllActive = "AllActive",
-  /** SomeInvalid */
-  SomeInvalid = "SomeInvalid",
-  /** AllInvalid */
-  AllInvalid = "AllInvalid",
-  /** Validating */
-  Validating = "Validating"
+/** Known values of {@link BareMetalMachineHardwareValidationCategory} that the service accepts. */
+export enum KnownBareMetalMachineHardwareValidationCategory {
+  /** BasicValidation */
+  BasicValidation = "BasicValidation"
 }
 
 /**
- * Defines values for BareMetalMachineKeySetDetailedStatus. \
- * {@link KnownBareMetalMachineKeySetDetailedStatus} can be used interchangeably with BareMetalMachineKeySetDetailedStatus,
+ * Defines values for BareMetalMachineHardwareValidationCategory. \
+ * {@link KnownBareMetalMachineHardwareValidationCategory} can be used interchangeably with BareMetalMachineHardwareValidationCategory,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **AllActive** \
- * **SomeInvalid** \
- * **AllInvalid** \
- * **Validating**
+ * **BasicValidation**
  */
-export type BareMetalMachineKeySetDetailedStatus = string;
+export type BareMetalMachineHardwareValidationCategory = string;
 
-/** Known values of {@link BareMetalMachineKeySetPrivilegeLevel} that the service accepts. */
-export enum KnownBareMetalMachineKeySetPrivilegeLevel {
-  /** Standard */
-  Standard = "Standard",
-  /** Superuser */
-  Superuser = "Superuser"
+/** Known values of {@link StorageApplianceHardwareValidationCategory} that the service accepts. */
+export enum KnownStorageApplianceHardwareValidationCategory {
+  /** BasicValidation */
+  BasicValidation = "BasicValidation"
 }
 
 /**
- * Defines values for BareMetalMachineKeySetPrivilegeLevel. \
- * {@link KnownBareMetalMachineKeySetPrivilegeLevel} can be used interchangeably with BareMetalMachineKeySetPrivilegeLevel,
+ * Defines values for StorageApplianceHardwareValidationCategory. \
+ * {@link KnownStorageApplianceHardwareValidationCategory} can be used interchangeably with StorageApplianceHardwareValidationCategory,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Standard** \
- * **Superuser**
+ * **BasicValidation**
  */
-export type BareMetalMachineKeySetPrivilegeLevel = string;
-
-/** Known values of {@link BareMetalMachineKeySetProvisioningState} that the service accepts. */
-export enum KnownBareMetalMachineKeySetProvisioningState {
-  /** Succeeded */
-  Succeeded = "Succeeded",
-  /** Failed */
-  Failed = "Failed",
-  /** Canceled */
-  Canceled = "Canceled",
-  /** Accepted */
-  Accepted = "Accepted",
-  /** Provisioning */
-  Provisioning = "Provisioning"
-}
-
-/**
- * Defines values for BareMetalMachineKeySetProvisioningState. \
- * {@link KnownBareMetalMachineKeySetProvisioningState} can be used interchangeably with BareMetalMachineKeySetProvisioningState,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Succeeded** \
- * **Failed** \
- * **Canceled** \
- * **Accepted** \
- * **Provisioning**
- */
-export type BareMetalMachineKeySetProvisioningState = string;
-
-/** Known values of {@link BareMetalMachineKeySetUserSetupStatus} that the service accepts. */
-export enum KnownBareMetalMachineKeySetUserSetupStatus {
-  /** Active */
-  Active = "Active",
-  /** Invalid */
-  Invalid = "Invalid"
-}
-
-/**
- * Defines values for BareMetalMachineKeySetUserSetupStatus. \
- * {@link KnownBareMetalMachineKeySetUserSetupStatus} can be used interchangeably with BareMetalMachineKeySetUserSetupStatus,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Active** \
- * **Invalid**
- */
-export type BareMetalMachineKeySetUserSetupStatus = string;
-
-/** Known values of {@link BmcKeySetDetailedStatus} that the service accepts. */
-export enum KnownBmcKeySetDetailedStatus {
-  /** AllActive */
-  AllActive = "AllActive",
-  /** SomeInvalid */
-  SomeInvalid = "SomeInvalid",
-  /** AllInvalid */
-  AllInvalid = "AllInvalid",
-  /** Validating */
-  Validating = "Validating"
-}
-
-/**
- * Defines values for BmcKeySetDetailedStatus. \
- * {@link KnownBmcKeySetDetailedStatus} can be used interchangeably with BmcKeySetDetailedStatus,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **AllActive** \
- * **SomeInvalid** \
- * **AllInvalid** \
- * **Validating**
- */
-export type BmcKeySetDetailedStatus = string;
-
-/** Known values of {@link BmcKeySetPrivilegeLevel} that the service accepts. */
-export enum KnownBmcKeySetPrivilegeLevel {
-  /** ReadOnly */
-  ReadOnly = "ReadOnly",
-  /** Administrator */
-  Administrator = "Administrator"
-}
-
-/**
- * Defines values for BmcKeySetPrivilegeLevel. \
- * {@link KnownBmcKeySetPrivilegeLevel} can be used interchangeably with BmcKeySetPrivilegeLevel,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **ReadOnly** \
- * **Administrator**
- */
-export type BmcKeySetPrivilegeLevel = string;
-
-/** Known values of {@link BmcKeySetProvisioningState} that the service accepts. */
-export enum KnownBmcKeySetProvisioningState {
-  /** Succeeded */
-  Succeeded = "Succeeded",
-  /** Failed */
-  Failed = "Failed",
-  /** Canceled */
-  Canceled = "Canceled",
-  /** Accepted */
-  Accepted = "Accepted",
-  /** Provisioning */
-  Provisioning = "Provisioning"
-}
-
-/**
- * Defines values for BmcKeySetProvisioningState. \
- * {@link KnownBmcKeySetProvisioningState} can be used interchangeably with BmcKeySetProvisioningState,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Succeeded** \
- * **Failed** \
- * **Canceled** \
- * **Accepted** \
- * **Provisioning**
- */
-export type BmcKeySetProvisioningState = string;
-
-/** Known values of {@link ClusterMetricsConfigurationDetailedStatus} that the service accepts. */
-export enum KnownClusterMetricsConfigurationDetailedStatus {
-  /** Processing */
-  Processing = "Processing",
-  /** Applied */
-  Applied = "Applied",
-  /** Error */
-  Error = "Error"
-}
-
-/**
- * Defines values for ClusterMetricsConfigurationDetailedStatus. \
- * {@link KnownClusterMetricsConfigurationDetailedStatus} can be used interchangeably with ClusterMetricsConfigurationDetailedStatus,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Processing** \
- * **Applied** \
- * **Error**
- */
-export type ClusterMetricsConfigurationDetailedStatus = string;
-
-/** Known values of {@link ClusterMetricsConfigurationProvisioningState} that the service accepts. */
-export enum KnownClusterMetricsConfigurationProvisioningState {
-  /** Succeeded */
-  Succeeded = "Succeeded",
-  /** Failed */
-  Failed = "Failed",
-  /** Canceled */
-  Canceled = "Canceled",
-  /** Accepted */
-  Accepted = "Accepted",
-  /** Provisioning */
-  Provisioning = "Provisioning"
-}
-
-/**
- * Defines values for ClusterMetricsConfigurationProvisioningState. \
- * {@link KnownClusterMetricsConfigurationProvisioningState} can be used interchangeably with ClusterMetricsConfigurationProvisioningState,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Succeeded** \
- * **Failed** \
- * **Canceled** \
- * **Accepted** \
- * **Provisioning**
- */
-export type ClusterMetricsConfigurationProvisioningState = string;
-
-/** Known values of {@link AgentPoolDetailedStatus} that the service accepts. */
-export enum KnownAgentPoolDetailedStatus {
-  /** Available */
-  Available = "Available",
-  /** Error */
-  Error = "Error",
-  /** Provisioning */
-  Provisioning = "Provisioning"
-}
-
-/**
- * Defines values for AgentPoolDetailedStatus. \
- * {@link KnownAgentPoolDetailedStatus} can be used interchangeably with AgentPoolDetailedStatus,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Available** \
- * **Error** \
- * **Provisioning**
- */
-export type AgentPoolDetailedStatus = string;
-
-/** Known values of {@link AgentPoolProvisioningState} that the service accepts. */
-export enum KnownAgentPoolProvisioningState {
-  /** Accepted */
-  Accepted = "Accepted",
-  /** Canceled */
-  Canceled = "Canceled",
-  /** Deleting */
-  Deleting = "Deleting",
-  /** Failed */
-  Failed = "Failed",
-  /** InProgress */
-  InProgress = "InProgress",
-  /** Succeeded */
-  Succeeded = "Succeeded",
-  /** Updating */
-  Updating = "Updating"
-}
-
-/**
- * Defines values for AgentPoolProvisioningState. \
- * {@link KnownAgentPoolProvisioningState} can be used interchangeably with AgentPoolProvisioningState,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Accepted** \
- * **Canceled** \
- * **Deleting** \
- * **Failed** \
- * **InProgress** \
- * **Succeeded** \
- * **Updating**
- */
-export type AgentPoolProvisioningState = string;
-
-/** Known values of {@link ConsoleDetailedStatus} that the service accepts. */
-export enum KnownConsoleDetailedStatus {
-  /** Ready */
-  Ready = "Ready",
-  /** Error */
-  Error = "Error"
-}
-
-/**
- * Defines values for ConsoleDetailedStatus. \
- * {@link KnownConsoleDetailedStatus} can be used interchangeably with ConsoleDetailedStatus,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Ready** \
- * **Error**
- */
-export type ConsoleDetailedStatus = string;
-
-/** Known values of {@link ConsoleEnabled} that the service accepts. */
-export enum KnownConsoleEnabled {
-  /** True */
-  True = "True",
-  /** False */
-  False = "False"
-}
-
-/**
- * Defines values for ConsoleEnabled. \
- * {@link KnownConsoleEnabled} can be used interchangeably with ConsoleEnabled,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **True** \
- * **False**
- */
-export type ConsoleEnabled = string;
-
-/** Known values of {@link ConsoleProvisioningState} that the service accepts. */
-export enum KnownConsoleProvisioningState {
-  /** Succeeded */
-  Succeeded = "Succeeded",
-  /** Failed */
-  Failed = "Failed",
-  /** Canceled */
-  Canceled = "Canceled",
-  /** Provisioning */
-  Provisioning = "Provisioning",
-  /** Accepted */
-  Accepted = "Accepted"
-}
-
-/**
- * Defines values for ConsoleProvisioningState. \
- * {@link KnownConsoleProvisioningState} can be used interchangeably with ConsoleProvisioningState,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Succeeded** \
- * **Failed** \
- * **Canceled** \
- * **Provisioning** \
- * **Accepted**
- */
-export type ConsoleProvisioningState = string;
+export type StorageApplianceHardwareValidationCategory = string;
 
 /** Known values of {@link SkipShutdown} that the service accepts. */
 export enum KnownSkipShutdown {
@@ -4906,6 +4401,8 @@ export type BareMetalMachinesGetResponse = BareMetalMachine;
 /** Optional parameters. */
 export interface BareMetalMachinesCreateOrUpdateOptionalParams
   extends coreClient.OperationOptions {
+  /** The request body. */
+  bareMetalMachineParameters?: BareMetalMachine;
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -4950,7 +4447,7 @@ export interface BareMetalMachinesCordonOptionalParams
 }
 
 /** Contains response data for the cordon operation. */
-export type BareMetalMachinesCordonResponse = OperationStatusResult;
+export type BareMetalMachinesCordonResponse = BareMetalMachinesCordonHeaders;
 
 /** Optional parameters. */
 export interface BareMetalMachinesPowerOffOptionalParams
@@ -4964,7 +4461,7 @@ export interface BareMetalMachinesPowerOffOptionalParams
 }
 
 /** Contains response data for the powerOff operation. */
-export type BareMetalMachinesPowerOffResponse = OperationStatusResult;
+export type BareMetalMachinesPowerOffResponse = BareMetalMachinesPowerOffHeaders;
 
 /** Optional parameters. */
 export interface BareMetalMachinesReimageOptionalParams
@@ -4976,7 +4473,7 @@ export interface BareMetalMachinesReimageOptionalParams
 }
 
 /** Contains response data for the reimage operation. */
-export type BareMetalMachinesReimageResponse = OperationStatusResult;
+export type BareMetalMachinesReimageResponse = BareMetalMachinesReimageHeaders;
 
 /** Optional parameters. */
 export interface BareMetalMachinesReplaceOptionalParams
@@ -4990,7 +4487,7 @@ export interface BareMetalMachinesReplaceOptionalParams
 }
 
 /** Contains response data for the replace operation. */
-export type BareMetalMachinesReplaceResponse = OperationStatusResult;
+export type BareMetalMachinesReplaceResponse = BareMetalMachinesReplaceHeaders;
 
 /** Optional parameters. */
 export interface BareMetalMachinesRestartOptionalParams
@@ -5002,11 +4499,13 @@ export interface BareMetalMachinesRestartOptionalParams
 }
 
 /** Contains response data for the restart operation. */
-export type BareMetalMachinesRestartResponse = OperationStatusResult;
+export type BareMetalMachinesRestartResponse = BareMetalMachinesRestartHeaders;
 
 /** Optional parameters. */
 export interface BareMetalMachinesRunCommandOptionalParams
   extends coreClient.OperationOptions {
+  /** The request body. */
+  bareMetalMachineRunCommandParameters?: BareMetalMachineRunCommandParameters;
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -5014,11 +4513,13 @@ export interface BareMetalMachinesRunCommandOptionalParams
 }
 
 /** Contains response data for the runCommand operation. */
-export type BareMetalMachinesRunCommandResponse = OperationStatusResult;
+export type BareMetalMachinesRunCommandResponse = BareMetalMachinesRunCommandHeaders;
 
 /** Optional parameters. */
 export interface BareMetalMachinesRunDataExtractsOptionalParams
   extends coreClient.OperationOptions {
+  /** The request body. */
+  bareMetalMachineRunDataExtractsParameters?: BareMetalMachineRunDataExtractsParameters;
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -5026,11 +4527,13 @@ export interface BareMetalMachinesRunDataExtractsOptionalParams
 }
 
 /** Contains response data for the runDataExtracts operation. */
-export type BareMetalMachinesRunDataExtractsResponse = OperationStatusResult;
+export type BareMetalMachinesRunDataExtractsResponse = BareMetalMachinesRunDataExtractsHeaders;
 
 /** Optional parameters. */
 export interface BareMetalMachinesRunReadCommandsOptionalParams
   extends coreClient.OperationOptions {
+  /** The request body. */
+  bareMetalMachineRunReadCommandsParameters?: BareMetalMachineRunReadCommandsParameters;
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -5038,7 +4541,7 @@ export interface BareMetalMachinesRunReadCommandsOptionalParams
 }
 
 /** Contains response data for the runReadCommands operation. */
-export type BareMetalMachinesRunReadCommandsResponse = OperationStatusResult;
+export type BareMetalMachinesRunReadCommandsResponse = BareMetalMachinesRunReadCommandsHeaders;
 
 /** Optional parameters. */
 export interface BareMetalMachinesStartOptionalParams
@@ -5050,7 +4553,7 @@ export interface BareMetalMachinesStartOptionalParams
 }
 
 /** Contains response data for the start operation. */
-export type BareMetalMachinesStartResponse = OperationStatusResult;
+export type BareMetalMachinesStartResponse = BareMetalMachinesStartHeaders;
 
 /** Optional parameters. */
 export interface BareMetalMachinesUncordonOptionalParams
@@ -5062,7 +4565,21 @@ export interface BareMetalMachinesUncordonOptionalParams
 }
 
 /** Contains response data for the uncordon operation. */
-export type BareMetalMachinesUncordonResponse = OperationStatusResult;
+export type BareMetalMachinesUncordonResponse = BareMetalMachinesUncordonHeaders;
+
+/** Optional parameters. */
+export interface BareMetalMachinesValidateHardwareOptionalParams
+  extends coreClient.OperationOptions {
+  /** The request body. */
+  bareMetalMachineValidateHardwareParameters?: BareMetalMachineValidateHardwareParameters;
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the validateHardware operation. */
+export type BareMetalMachinesValidateHardwareResponse = BareMetalMachinesValidateHardwareHeaders;
 
 /** Optional parameters. */
 export interface BareMetalMachinesListBySubscriptionNextOptionalParams
@@ -5102,6 +4619,8 @@ export type CloudServicesNetworksGetResponse = CloudServicesNetwork;
 /** Optional parameters. */
 export interface CloudServicesNetworksCreateOrUpdateOptionalParams
   extends coreClient.OperationOptions {
+  /** The request body. */
+  cloudServicesNetworkParameters?: CloudServicesNetwork;
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -5172,6 +4691,8 @@ export type ClusterManagersGetResponse = ClusterManager;
 /** Optional parameters. */
 export interface ClusterManagersCreateOrUpdateOptionalParams
   extends coreClient.OperationOptions {
+  /** The request body. */
+  clusterManagerParameters?: ClusterManager;
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -5238,6 +4759,8 @@ export type ClustersGetResponse = Cluster;
 /** Optional parameters. */
 export interface ClustersCreateOrUpdateOptionalParams
   extends coreClient.OperationOptions {
+  /** The request body. */
+  clusterParameters?: Cluster;
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -5282,11 +4805,13 @@ export interface ClustersDeployOptionalParams
 }
 
 /** Contains response data for the deploy operation. */
-export type ClustersDeployResponse = OperationStatusResult;
+export type ClustersDeployResponse = ClustersDeployHeaders;
 
 /** Optional parameters. */
 export interface ClustersUpdateVersionOptionalParams
   extends coreClient.OperationOptions {
+  /** The request body. */
+  clusterUpdateVersionParameters?: ClusterUpdateVersionParameters;
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -5294,7 +4819,7 @@ export interface ClustersUpdateVersionOptionalParams
 }
 
 /** Contains response data for the updateVersion operation. */
-export type ClustersUpdateVersionResponse = OperationStatusResult;
+export type ClustersUpdateVersionResponse = ClustersUpdateVersionHeaders;
 
 /** Optional parameters. */
 export interface ClustersListBySubscriptionNextOptionalParams
@@ -5311,29 +4836,31 @@ export interface ClustersListByResourceGroupNextOptionalParams
 export type ClustersListByResourceGroupNextResponse = ClusterList;
 
 /** Optional parameters. */
-export interface KubernetesClustersListBySubscriptionOptionalParams
+export interface BareMetalMachineKeySetsListBySubscriptionOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listBySubscription operation. */
-export type KubernetesClustersListBySubscriptionResponse = KubernetesClusterList;
+export type BareMetalMachineKeySetsListBySubscriptionResponse = BareMetalMachineKeySetList;
 
 /** Optional parameters. */
-export interface KubernetesClustersListByResourceGroupOptionalParams
+export interface BareMetalMachineKeySetsListByResourceGroupOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroup operation. */
-export type KubernetesClustersListByResourceGroupResponse = KubernetesClusterList;
+export type BareMetalMachineKeySetsListByResourceGroupResponse = BareMetalMachineKeySetList;
 
 /** Optional parameters. */
-export interface KubernetesClustersGetOptionalParams
+export interface BareMetalMachineKeySetsGetOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
-export type KubernetesClustersGetResponse = KubernetesCluster;
+export type BareMetalMachineKeySetsGetResponse = BareMetalMachineKeySet;
 
 /** Optional parameters. */
-export interface KubernetesClustersCreateOrUpdateOptionalParams
+export interface BareMetalMachineKeySetsCreateOrUpdateOptionalParams
   extends coreClient.OperationOptions {
+  /** The request body. */
+  bareMetalMachineKeySetParameters?: BareMetalMachineKeySet;
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -5341,10 +4868,10 @@ export interface KubernetesClustersCreateOrUpdateOptionalParams
 }
 
 /** Contains response data for the createOrUpdate operation. */
-export type KubernetesClustersCreateOrUpdateResponse = KubernetesCluster;
+export type BareMetalMachineKeySetsCreateOrUpdateResponse = BareMetalMachineKeySet;
 
 /** Optional parameters. */
-export interface KubernetesClustersDeleteOptionalParams
+export interface BareMetalMachineKeySetsDeleteOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
@@ -5353,10 +4880,10 @@ export interface KubernetesClustersDeleteOptionalParams
 }
 
 /** Optional parameters. */
-export interface KubernetesClustersUpdateOptionalParams
+export interface BareMetalMachineKeySetsUpdateOptionalParams
   extends coreClient.OperationOptions {
   /** The request body. */
-  kubernetesClusterUpdateParameters?: KubernetesClusterPatchParameters;
+  bareMetalMachineKeySetUpdateParameters?: BareMetalMachineKeySetPatchParameters;
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -5364,10 +4891,59 @@ export interface KubernetesClustersUpdateOptionalParams
 }
 
 /** Contains response data for the update operation. */
-export type KubernetesClustersUpdateResponse = KubernetesCluster;
+export type BareMetalMachineKeySetsUpdateResponse = BareMetalMachineKeySet;
 
 /** Optional parameters. */
-export interface KubernetesClustersRestartNodeOptionalParams
+export interface BareMetalMachineKeySetsListBySubscriptionNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listBySubscriptionNext operation. */
+export type BareMetalMachineKeySetsListBySubscriptionNextResponse = BareMetalMachineKeySetList;
+
+/** Optional parameters. */
+export interface BareMetalMachineKeySetsListByResourceGroupNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroupNext operation. */
+export type BareMetalMachineKeySetsListByResourceGroupNextResponse = BareMetalMachineKeySetList;
+
+/** Optional parameters. */
+export interface BmcKeySetsListBySubscriptionOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listBySubscription operation. */
+export type BmcKeySetsListBySubscriptionResponse = BmcKeySetList;
+
+/** Optional parameters. */
+export interface BmcKeySetsListByResourceGroupOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroup operation. */
+export type BmcKeySetsListByResourceGroupResponse = BmcKeySetList;
+
+/** Optional parameters. */
+export interface BmcKeySetsGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type BmcKeySetsGetResponse = BmcKeySet;
+
+/** Optional parameters. */
+export interface BmcKeySetsCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** The request body. */
+  bmcKeySetParameters?: BmcKeySet;
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createOrUpdate operation. */
+export type BmcKeySetsCreateOrUpdateResponse = BmcKeySet;
+
+/** Optional parameters. */
+export interface BmcKeySetsDeleteOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
@@ -5375,22 +4951,255 @@ export interface KubernetesClustersRestartNodeOptionalParams
   resumeFrom?: string;
 }
 
-/** Contains response data for the restartNode operation. */
-export type KubernetesClustersRestartNodeResponse = OperationStatusResult;
+/** Optional parameters. */
+export interface BmcKeySetsUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** The request body. */
+  bmcKeySetUpdateParameters?: BmcKeySetPatchParameters;
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the update operation. */
+export type BmcKeySetsUpdateResponse = BmcKeySet;
 
 /** Optional parameters. */
-export interface KubernetesClustersListBySubscriptionNextOptionalParams
+export interface BmcKeySetsListBySubscriptionNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listBySubscriptionNext operation. */
-export type KubernetesClustersListBySubscriptionNextResponse = KubernetesClusterList;
+export type BmcKeySetsListBySubscriptionNextResponse = BmcKeySetList;
 
 /** Optional parameters. */
-export interface KubernetesClustersListByResourceGroupNextOptionalParams
+export interface BmcKeySetsListByResourceGroupNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroupNext operation. */
-export type KubernetesClustersListByResourceGroupNextResponse = KubernetesClusterList;
+export type BmcKeySetsListByResourceGroupNextResponse = BmcKeySetList;
+
+/** Optional parameters. */
+export interface MetricsConfigurationsListBySubscriptionOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listBySubscription operation. */
+export type MetricsConfigurationsListBySubscriptionResponse = ClusterMetricsConfigurationList;
+
+/** Optional parameters. */
+export interface MetricsConfigurationsListByResourceGroupOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroup operation. */
+export type MetricsConfigurationsListByResourceGroupResponse = ClusterMetricsConfigurationList;
+
+/** Optional parameters. */
+export interface MetricsConfigurationsGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type MetricsConfigurationsGetResponse = ClusterMetricsConfiguration;
+
+/** Optional parameters. */
+export interface MetricsConfigurationsCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** The request body. */
+  metricsConfigurationParameters?: ClusterMetricsConfiguration;
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createOrUpdate operation. */
+export type MetricsConfigurationsCreateOrUpdateResponse = ClusterMetricsConfiguration;
+
+/** Optional parameters. */
+export interface MetricsConfigurationsDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface MetricsConfigurationsUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** The request body. */
+  metricsConfigurationUpdateParameters?: ClusterMetricsConfigurationPatchParameters;
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the update operation. */
+export type MetricsConfigurationsUpdateResponse = ClusterMetricsConfiguration;
+
+/** Optional parameters. */
+export interface MetricsConfigurationsListBySubscriptionNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listBySubscriptionNext operation. */
+export type MetricsConfigurationsListBySubscriptionNextResponse = ClusterMetricsConfigurationList;
+
+/** Optional parameters. */
+export interface MetricsConfigurationsListByResourceGroupNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroupNext operation. */
+export type MetricsConfigurationsListByResourceGroupNextResponse = ClusterMetricsConfigurationList;
+
+/** Optional parameters. */
+export interface DefaultCniNetworksListBySubscriptionOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listBySubscription operation. */
+export type DefaultCniNetworksListBySubscriptionResponse = DefaultCniNetworkList;
+
+/** Optional parameters. */
+export interface DefaultCniNetworksListByResourceGroupOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroup operation. */
+export type DefaultCniNetworksListByResourceGroupResponse = DefaultCniNetworkList;
+
+/** Optional parameters. */
+export interface DefaultCniNetworksGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type DefaultCniNetworksGetResponse = DefaultCniNetwork;
+
+/** Optional parameters. */
+export interface DefaultCniNetworksCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** The request body. */
+  defaultCniNetworkParameters?: DefaultCniNetwork;
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createOrUpdate operation. */
+export type DefaultCniNetworksCreateOrUpdateResponse = DefaultCniNetwork;
+
+/** Optional parameters. */
+export interface DefaultCniNetworksDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface DefaultCniNetworksUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** The request body. */
+  defaultCniNetworkUpdateParameters?: DefaultCniNetworkPatchParameters;
+}
+
+/** Contains response data for the update operation. */
+export type DefaultCniNetworksUpdateResponse = DefaultCniNetwork;
+
+/** Optional parameters. */
+export interface DefaultCniNetworksListBySubscriptionNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listBySubscriptionNext operation. */
+export type DefaultCniNetworksListBySubscriptionNextResponse = DefaultCniNetworkList;
+
+/** Optional parameters. */
+export interface DefaultCniNetworksListByResourceGroupNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroupNext operation. */
+export type DefaultCniNetworksListByResourceGroupNextResponse = DefaultCniNetworkList;
+
+/** Optional parameters. */
+export interface HybridAksClustersListBySubscriptionOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listBySubscription operation. */
+export type HybridAksClustersListBySubscriptionResponse = HybridAksClusterList;
+
+/** Optional parameters. */
+export interface HybridAksClustersListByResourceGroupOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroup operation. */
+export type HybridAksClustersListByResourceGroupResponse = HybridAksClusterList;
+
+/** Optional parameters. */
+export interface HybridAksClustersGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type HybridAksClustersGetResponse = HybridAksCluster;
+
+/** Optional parameters. */
+export interface HybridAksClustersCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** The request body. */
+  hybridAksClusterParameters?: HybridAksCluster;
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createOrUpdate operation. */
+export type HybridAksClustersCreateOrUpdateResponse = HybridAksCluster;
+
+/** Optional parameters. */
+export interface HybridAksClustersDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface HybridAksClustersUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** The request body. */
+  hybridAksClusterUpdateParameters?: HybridAksClusterPatchParameters;
+}
+
+/** Contains response data for the update operation. */
+export type HybridAksClustersUpdateResponse = HybridAksCluster;
+
+/** Optional parameters. */
+export interface HybridAksClustersRestartNodeOptionalParams
+  extends coreClient.OperationOptions {
+  /** The request body. */
+  hybridAksClusterRestartNodeParameters?: HybridAksClusterRestartNodeParameters;
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the restartNode operation. */
+export type HybridAksClustersRestartNodeResponse = HybridAksClustersRestartNodeHeaders;
+
+/** Optional parameters. */
+export interface HybridAksClustersListBySubscriptionNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listBySubscriptionNext operation. */
+export type HybridAksClustersListBySubscriptionNextResponse = HybridAksClusterList;
+
+/** Optional parameters. */
+export interface HybridAksClustersListByResourceGroupNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroupNext operation. */
+export type HybridAksClustersListByResourceGroupNextResponse = HybridAksClusterList;
 
 /** Optional parameters. */
 export interface L2NetworksListBySubscriptionOptionalParams
@@ -5416,6 +5225,8 @@ export type L2NetworksGetResponse = L2Network;
 /** Optional parameters. */
 export interface L2NetworksCreateOrUpdateOptionalParams
   extends coreClient.OperationOptions {
+  /** The request body. */
+  l2NetworkParameters?: L2Network;
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -5482,6 +5293,8 @@ export type L3NetworksGetResponse = L3Network;
 /** Optional parameters. */
 export interface L3NetworksCreateOrUpdateOptionalParams
   extends coreClient.OperationOptions {
+  /** The request body. */
+  l3NetworkParameters?: L3Network;
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -5568,6 +5381,8 @@ export type RacksGetResponse = Rack;
 /** Optional parameters. */
 export interface RacksCreateOrUpdateOptionalParams
   extends coreClient.OperationOptions {
+  /** The request body. */
+  rackParameters?: Rack;
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -5636,6 +5451,8 @@ export type StorageAppliancesGetResponse = StorageAppliance;
 /** Optional parameters. */
 export interface StorageAppliancesCreateOrUpdateOptionalParams
   extends coreClient.OperationOptions {
+  /** The request body. */
+  storageApplianceParameters?: StorageAppliance;
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -5678,7 +5495,7 @@ export interface StorageAppliancesDisableRemoteVendorManagementOptionalParams
 }
 
 /** Contains response data for the disableRemoteVendorManagement operation. */
-export type StorageAppliancesDisableRemoteVendorManagementResponse = OperationStatusResult;
+export type StorageAppliancesDisableRemoteVendorManagementResponse = StorageAppliancesDisableRemoteVendorManagementHeaders;
 
 /** Optional parameters. */
 export interface StorageAppliancesEnableRemoteVendorManagementOptionalParams
@@ -5692,7 +5509,35 @@ export interface StorageAppliancesEnableRemoteVendorManagementOptionalParams
 }
 
 /** Contains response data for the enableRemoteVendorManagement operation. */
-export type StorageAppliancesEnableRemoteVendorManagementResponse = OperationStatusResult;
+export type StorageAppliancesEnableRemoteVendorManagementResponse = StorageAppliancesEnableRemoteVendorManagementHeaders;
+
+/** Optional parameters. */
+export interface StorageAppliancesRunReadCommandsOptionalParams
+  extends coreClient.OperationOptions {
+  /** The request body. */
+  storageApplianceRunReadCommandsParameters?: StorageApplianceRunReadCommandsParameters;
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the runReadCommands operation. */
+export type StorageAppliancesRunReadCommandsResponse = StorageAppliancesRunReadCommandsHeaders;
+
+/** Optional parameters. */
+export interface StorageAppliancesValidateHardwareOptionalParams
+  extends coreClient.OperationOptions {
+  /** The request body. */
+  storageApplianceValidateHardwareParameters?: StorageApplianceValidateHardwareParameters;
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the validateHardware operation. */
+export type StorageAppliancesValidateHardwareResponse = StorageAppliancesValidateHardwareHeaders;
 
 /** Optional parameters. */
 export interface StorageAppliancesListBySubscriptionNextOptionalParams
@@ -5732,6 +5577,8 @@ export type TrunkedNetworksGetResponse = TrunkedNetwork;
 /** Optional parameters. */
 export interface TrunkedNetworksCreateOrUpdateOptionalParams
   extends coreClient.OperationOptions {
+  /** The request body. */
+  trunkedNetworkParameters?: TrunkedNetwork;
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -5798,6 +5645,8 @@ export type VirtualMachinesGetResponse = VirtualMachine;
 /** Optional parameters. */
 export interface VirtualMachinesCreateOrUpdateOptionalParams
   extends coreClient.OperationOptions {
+  /** The request body. */
+  virtualMachineParameters?: VirtualMachine;
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -5831,6 +5680,34 @@ export interface VirtualMachinesUpdateOptionalParams
 export type VirtualMachinesUpdateResponse = VirtualMachine;
 
 /** Optional parameters. */
+export interface VirtualMachinesAttachVolumeOptionalParams
+  extends coreClient.OperationOptions {
+  /** The request body. */
+  virtualMachineAttachVolumeParameters?: VirtualMachineVolumeParameters;
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the attachVolume operation. */
+export type VirtualMachinesAttachVolumeResponse = VirtualMachinesAttachVolumeHeaders;
+
+/** Optional parameters. */
+export interface VirtualMachinesDetachVolumeOptionalParams
+  extends coreClient.OperationOptions {
+  /** The request body. */
+  virtualMachineDetachVolumeParameters?: VirtualMachineVolumeParameters;
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the detachVolume operation. */
+export type VirtualMachinesDetachVolumeResponse = VirtualMachinesDetachVolumeHeaders;
+
+/** Optional parameters. */
 export interface VirtualMachinesPowerOffOptionalParams
   extends coreClient.OperationOptions {
   /** The request body. */
@@ -5842,7 +5719,7 @@ export interface VirtualMachinesPowerOffOptionalParams
 }
 
 /** Contains response data for the powerOff operation. */
-export type VirtualMachinesPowerOffResponse = OperationStatusResult;
+export type VirtualMachinesPowerOffResponse = VirtualMachinesPowerOffHeaders;
 
 /** Optional parameters. */
 export interface VirtualMachinesReimageOptionalParams
@@ -5854,7 +5731,7 @@ export interface VirtualMachinesReimageOptionalParams
 }
 
 /** Contains response data for the reimage operation. */
-export type VirtualMachinesReimageResponse = OperationStatusResult;
+export type VirtualMachinesReimageResponse = VirtualMachinesReimageHeaders;
 
 /** Optional parameters. */
 export interface VirtualMachinesRestartOptionalParams
@@ -5866,7 +5743,7 @@ export interface VirtualMachinesRestartOptionalParams
 }
 
 /** Contains response data for the restart operation. */
-export type VirtualMachinesRestartResponse = OperationStatusResult;
+export type VirtualMachinesRestartResponse = VirtualMachinesRestartHeaders;
 
 /** Optional parameters. */
 export interface VirtualMachinesStartOptionalParams
@@ -5878,7 +5755,7 @@ export interface VirtualMachinesStartOptionalParams
 }
 
 /** Contains response data for the start operation. */
-export type VirtualMachinesStartResponse = OperationStatusResult;
+export type VirtualMachinesStartResponse = VirtualMachinesStartHeaders;
 
 /** Optional parameters. */
 export interface VirtualMachinesListBySubscriptionNextOptionalParams
@@ -5893,6 +5770,78 @@ export interface VirtualMachinesListByResourceGroupNextOptionalParams
 
 /** Contains response data for the listByResourceGroupNext operation. */
 export type VirtualMachinesListByResourceGroupNextResponse = VirtualMachineList;
+
+/** Optional parameters. */
+export interface ConsolesListBySubscriptionOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listBySubscription operation. */
+export type ConsolesListBySubscriptionResponse = ConsoleList;
+
+/** Optional parameters. */
+export interface ConsolesListByResourceGroupOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroup operation. */
+export type ConsolesListByResourceGroupResponse = ConsoleList;
+
+/** Optional parameters. */
+export interface ConsolesGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type ConsolesGetResponse = Console;
+
+/** Optional parameters. */
+export interface ConsolesCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** The request body. */
+  consoleParameters?: Console;
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createOrUpdate operation. */
+export type ConsolesCreateOrUpdateResponse = Console;
+
+/** Optional parameters. */
+export interface ConsolesDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface ConsolesUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** The request body. */
+  consoleUpdateParameters?: ConsolePatchParameters;
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the update operation. */
+export type ConsolesUpdateResponse = Console;
+
+/** Optional parameters. */
+export interface ConsolesListBySubscriptionNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listBySubscriptionNext operation. */
+export type ConsolesListBySubscriptionNextResponse = ConsoleList;
+
+/** Optional parameters. */
+export interface ConsolesListByResourceGroupNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroupNext operation. */
+export type ConsolesListByResourceGroupNextResponse = ConsoleList;
 
 /** Optional parameters. */
 export interface VolumesListBySubscriptionOptionalParams
@@ -5917,6 +5866,8 @@ export type VolumesGetResponse = Volume;
 /** Optional parameters. */
 export interface VolumesCreateOrUpdateOptionalParams
   extends coreClient.OperationOptions {
+  /** The request body. */
+  volumeParameters?: Volume;
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -5958,286 +5909,6 @@ export interface VolumesListByResourceGroupNextOptionalParams
 
 /** Contains response data for the listByResourceGroupNext operation. */
 export type VolumesListByResourceGroupNextResponse = VolumeList;
-
-/** Optional parameters. */
-export interface BareMetalMachineKeySetsListByClusterOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByCluster operation. */
-export type BareMetalMachineKeySetsListByClusterResponse = BareMetalMachineKeySetList;
-
-/** Optional parameters. */
-export interface BareMetalMachineKeySetsGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type BareMetalMachineKeySetsGetResponse = BareMetalMachineKeySet;
-
-/** Optional parameters. */
-export interface BareMetalMachineKeySetsCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createOrUpdate operation. */
-export type BareMetalMachineKeySetsCreateOrUpdateResponse = BareMetalMachineKeySet;
-
-/** Optional parameters. */
-export interface BareMetalMachineKeySetsDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface BareMetalMachineKeySetsUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** The request body. */
-  bareMetalMachineKeySetUpdateParameters?: BareMetalMachineKeySetPatchParameters;
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the update operation. */
-export type BareMetalMachineKeySetsUpdateResponse = BareMetalMachineKeySet;
-
-/** Optional parameters. */
-export interface BareMetalMachineKeySetsListByClusterNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByClusterNext operation. */
-export type BareMetalMachineKeySetsListByClusterNextResponse = BareMetalMachineKeySetList;
-
-/** Optional parameters. */
-export interface BmcKeySetsListByClusterOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByCluster operation. */
-export type BmcKeySetsListByClusterResponse = BmcKeySetList;
-
-/** Optional parameters. */
-export interface BmcKeySetsGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type BmcKeySetsGetResponse = BmcKeySet;
-
-/** Optional parameters. */
-export interface BmcKeySetsCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createOrUpdate operation. */
-export type BmcKeySetsCreateOrUpdateResponse = BmcKeySet;
-
-/** Optional parameters. */
-export interface BmcKeySetsDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface BmcKeySetsUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** The request body. */
-  bmcKeySetUpdateParameters?: BmcKeySetPatchParameters;
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the update operation. */
-export type BmcKeySetsUpdateResponse = BmcKeySet;
-
-/** Optional parameters. */
-export interface BmcKeySetsListByClusterNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByClusterNext operation. */
-export type BmcKeySetsListByClusterNextResponse = BmcKeySetList;
-
-/** Optional parameters. */
-export interface MetricsConfigurationsListByClusterOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByCluster operation. */
-export type MetricsConfigurationsListByClusterResponse = ClusterMetricsConfigurationList;
-
-/** Optional parameters. */
-export interface MetricsConfigurationsGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type MetricsConfigurationsGetResponse = ClusterMetricsConfiguration;
-
-/** Optional parameters. */
-export interface MetricsConfigurationsCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createOrUpdate operation. */
-export type MetricsConfigurationsCreateOrUpdateResponse = ClusterMetricsConfiguration;
-
-/** Optional parameters. */
-export interface MetricsConfigurationsDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface MetricsConfigurationsUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** The request body. */
-  metricsConfigurationUpdateParameters?: ClusterMetricsConfigurationPatchParameters;
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the update operation. */
-export type MetricsConfigurationsUpdateResponse = ClusterMetricsConfiguration;
-
-/** Optional parameters. */
-export interface MetricsConfigurationsListByClusterNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByClusterNext operation. */
-export type MetricsConfigurationsListByClusterNextResponse = ClusterMetricsConfigurationList;
-
-/** Optional parameters. */
-export interface AgentPoolsListByKubernetesClusterOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByKubernetesCluster operation. */
-export type AgentPoolsListByKubernetesClusterResponse = AgentPoolList;
-
-/** Optional parameters. */
-export interface AgentPoolsGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type AgentPoolsGetResponse = AgentPool;
-
-/** Optional parameters. */
-export interface AgentPoolsCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createOrUpdate operation. */
-export type AgentPoolsCreateOrUpdateResponse = AgentPool;
-
-/** Optional parameters. */
-export interface AgentPoolsDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface AgentPoolsUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** The request body. */
-  agentPoolUpdateParameters?: AgentPoolPatchParameters;
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the update operation. */
-export type AgentPoolsUpdateResponse = AgentPool;
-
-/** Optional parameters. */
-export interface AgentPoolsListByKubernetesClusterNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByKubernetesClusterNext operation. */
-export type AgentPoolsListByKubernetesClusterNextResponse = AgentPoolList;
-
-/** Optional parameters. */
-export interface ConsolesListByVirtualMachineOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByVirtualMachine operation. */
-export type ConsolesListByVirtualMachineResponse = ConsoleList;
-
-/** Optional parameters. */
-export interface ConsolesGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type ConsolesGetResponse = Console;
-
-/** Optional parameters. */
-export interface ConsolesCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createOrUpdate operation. */
-export type ConsolesCreateOrUpdateResponse = Console;
-
-/** Optional parameters. */
-export interface ConsolesDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface ConsolesUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** The request body. */
-  consoleUpdateParameters?: ConsolePatchParameters;
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the update operation. */
-export type ConsolesUpdateResponse = Console;
-
-/** Optional parameters. */
-export interface ConsolesListByVirtualMachineNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByVirtualMachineNext operation. */
-export type ConsolesListByVirtualMachineNextResponse = ConsoleList;
 
 /** Optional parameters. */
 export interface NetworkCloudOptionalParams

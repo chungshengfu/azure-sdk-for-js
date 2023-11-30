@@ -57,13 +57,11 @@ export interface Racks {
    * the system.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param rackName The name of the rack.
-   * @param rackParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     rackName: string,
-    rackParameters: Rack,
     options?: RacksCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -77,13 +75,11 @@ export interface Racks {
    * the system.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param rackName The name of the rack.
-   * @param rackParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     rackName: string,
-    rackParameters: Rack,
     options?: RacksCreateOrUpdateOptionalParams
   ): Promise<RacksCreateOrUpdateResponse>;
   /**

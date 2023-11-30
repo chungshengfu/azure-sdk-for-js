@@ -10,7 +10,8 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   BareMetalMachineKeySet,
-  BareMetalMachineKeySetsListByClusterOptionalParams,
+  BareMetalMachineKeySetsListBySubscriptionOptionalParams,
+  BareMetalMachineKeySetsListByResourceGroupOptionalParams,
   BareMetalMachineKeySetsGetOptionalParams,
   BareMetalMachineKeySetsGetResponse,
   BareMetalMachineKeySetsCreateOrUpdateOptionalParams,
@@ -24,15 +25,24 @@ import {
 /** Interface representing a BareMetalMachineKeySets. */
 export interface BareMetalMachineKeySets {
   /**
-   * Get a list of bare metal machine key sets for the provided cluster.
+   * Get a list of bare metal machine key sets of the cluster in the provided subscription.
+   * @param clusterName The name of the cluster.
+   * @param options The options parameters.
+   */
+  listBySubscription(
+    clusterName: string,
+    options?: BareMetalMachineKeySetsListBySubscriptionOptionalParams
+  ): PagedAsyncIterableIterator<BareMetalMachineKeySet>;
+  /**
+   * Get a list of bare metal machine key sets of the cluster in the provided resource group.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
    * @param options The options parameters.
    */
-  listByCluster(
+  listByResourceGroup(
     resourceGroupName: string,
     clusterName: string,
-    options?: BareMetalMachineKeySetsListByClusterOptionalParams
+    options?: BareMetalMachineKeySetsListByResourceGroupOptionalParams
   ): PagedAsyncIterableIterator<BareMetalMachineKeySet>;
   /**
    * Get bare metal machine key set of the provided cluster.
@@ -52,14 +62,12 @@ export interface BareMetalMachineKeySets {
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
    * @param bareMetalMachineKeySetName The name of the bare metal machine key set.
-   * @param bareMetalMachineKeySetParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     clusterName: string,
     bareMetalMachineKeySetName: string,
-    bareMetalMachineKeySetParameters: BareMetalMachineKeySet,
     options?: BareMetalMachineKeySetsCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -72,14 +80,12 @@ export interface BareMetalMachineKeySets {
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
    * @param bareMetalMachineKeySetName The name of the bare metal machine key set.
-   * @param bareMetalMachineKeySetParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     clusterName: string,
     bareMetalMachineKeySetName: string,
-    bareMetalMachineKeySetParameters: BareMetalMachineKeySet,
     options?: BareMetalMachineKeySetsCreateOrUpdateOptionalParams
   ): Promise<BareMetalMachineKeySetsCreateOrUpdateResponse>;
   /**

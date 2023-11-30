@@ -1,5 +1,266 @@
 # Release History
     
+## 2.0.0-beta.1 (2023-11-30)
+    
+**Features**
+
+  - Added operation group DefaultCniNetworks
+  - Added operation group HybridAksClusters
+  - Added operation BareMetalMachineKeySets.listByResourceGroup
+  - Added operation BareMetalMachineKeySets.listBySubscription
+  - Added operation BareMetalMachines.beginValidateHardware
+  - Added operation BareMetalMachines.beginValidateHardwareAndWait
+  - Added operation BmcKeySets.listByResourceGroup
+  - Added operation BmcKeySets.listBySubscription
+  - Added operation Consoles.listByResourceGroup
+  - Added operation Consoles.listBySubscription
+  - Added operation MetricsConfigurations.listByResourceGroup
+  - Added operation MetricsConfigurations.listBySubscription
+  - Added operation StorageAppliances.beginRunReadCommands
+  - Added operation StorageAppliances.beginRunReadCommandsAndWait
+  - Added operation StorageAppliances.beginValidateHardware
+  - Added operation StorageAppliances.beginValidateHardwareAndWait
+  - Added operation VirtualMachines.beginAttachVolume
+  - Added operation VirtualMachines.beginAttachVolumeAndWait
+  - Added operation VirtualMachines.beginDetachVolume
+  - Added operation VirtualMachines.beginDetachVolumeAndWait
+  - Added Interface BareMetalMachineKeySetsListByResourceGroupNextOptionalParams
+  - Added Interface BareMetalMachineKeySetsListByResourceGroupOptionalParams
+  - Added Interface BareMetalMachineKeySetsListBySubscriptionNextOptionalParams
+  - Added Interface BareMetalMachineKeySetsListBySubscriptionOptionalParams
+  - Added Interface BareMetalMachinesValidateHardwareHeaders
+  - Added Interface BareMetalMachinesValidateHardwareOptionalParams
+  - Added Interface BareMetalMachineValidateHardwareParameters
+  - Added Interface BgpPeer
+  - Added Interface BmcKeySetsListByResourceGroupNextOptionalParams
+  - Added Interface BmcKeySetsListByResourceGroupOptionalParams
+  - Added Interface BmcKeySetsListBySubscriptionNextOptionalParams
+  - Added Interface BmcKeySetsListBySubscriptionOptionalParams
+  - Added Interface CniBgpConfiguration
+  - Added Interface CommunityAdvertisement
+  - Added Interface ConsolesListByResourceGroupNextOptionalParams
+  - Added Interface ConsolesListByResourceGroupOptionalParams
+  - Added Interface ConsolesListBySubscriptionNextOptionalParams
+  - Added Interface ConsolesListBySubscriptionOptionalParams
+  - Added Interface DefaultCniNetwork
+  - Added Interface DefaultCniNetworkList
+  - Added Interface DefaultCniNetworkPatchParameters
+  - Added Interface DefaultCniNetworksCreateOrUpdateHeaders
+  - Added Interface DefaultCniNetworksCreateOrUpdateOptionalParams
+  - Added Interface DefaultCniNetworksDeleteHeaders
+  - Added Interface DefaultCniNetworksDeleteOptionalParams
+  - Added Interface DefaultCniNetworksGetOptionalParams
+  - Added Interface DefaultCniNetworksListByResourceGroupNextOptionalParams
+  - Added Interface DefaultCniNetworksListByResourceGroupOptionalParams
+  - Added Interface DefaultCniNetworksListBySubscriptionNextOptionalParams
+  - Added Interface DefaultCniNetworksListBySubscriptionOptionalParams
+  - Added Interface DefaultCniNetworksUpdateOptionalParams
+  - Added Interface HybridAksCluster
+  - Added Interface HybridAksClusterList
+  - Added Interface HybridAksClusterPatchParameters
+  - Added Interface HybridAksClusterRestartNodeParameters
+  - Added Interface HybridAksClustersCreateOrUpdateHeaders
+  - Added Interface HybridAksClustersCreateOrUpdateOptionalParams
+  - Added Interface HybridAksClustersDeleteHeaders
+  - Added Interface HybridAksClustersDeleteOptionalParams
+  - Added Interface HybridAksClustersGetOptionalParams
+  - Added Interface HybridAksClustersListByResourceGroupNextOptionalParams
+  - Added Interface HybridAksClustersListByResourceGroupOptionalParams
+  - Added Interface HybridAksClustersListBySubscriptionNextOptionalParams
+  - Added Interface HybridAksClustersListBySubscriptionOptionalParams
+  - Added Interface HybridAksClustersRestartNodeHeaders
+  - Added Interface HybridAksClustersRestartNodeOptionalParams
+  - Added Interface HybridAksClustersUpdateOptionalParams
+  - Added Interface MetricsConfigurationsListByResourceGroupNextOptionalParams
+  - Added Interface MetricsConfigurationsListByResourceGroupOptionalParams
+  - Added Interface MetricsConfigurationsListBySubscriptionNextOptionalParams
+  - Added Interface MetricsConfigurationsListBySubscriptionOptionalParams
+  - Added Interface Node_2
+  - Added Interface NodeConfiguration
+  - Added Interface StorageApplianceCommandSpecification
+  - Added Interface StorageApplianceRunReadCommandsParameters
+  - Added Interface StorageAppliancesRunReadCommandsHeaders
+  - Added Interface StorageAppliancesRunReadCommandsOptionalParams
+  - Added Interface StorageAppliancesValidateHardwareHeaders
+  - Added Interface StorageAppliancesValidateHardwareOptionalParams
+  - Added Interface StorageApplianceValidateHardwareParameters
+  - Added Interface VirtualMachinesAttachVolumeHeaders
+  - Added Interface VirtualMachinesAttachVolumeOptionalParams
+  - Added Interface VirtualMachinesDetachVolumeHeaders
+  - Added Interface VirtualMachinesDetachVolumeOptionalParams
+  - Added Interface VirtualMachineVolumeParameters
+  - Added Type Alias BareMetalMachineHardwareValidationCategory
+  - Added Type Alias BareMetalMachineKeySetsListByResourceGroupNextResponse
+  - Added Type Alias BareMetalMachineKeySetsListByResourceGroupResponse
+  - Added Type Alias BareMetalMachineKeySetsListBySubscriptionNextResponse
+  - Added Type Alias BareMetalMachineKeySetsListBySubscriptionResponse
+  - Added Type Alias BareMetalMachinesValidateHardwareResponse
+  - Added Type Alias BmcKeySetsListByResourceGroupNextResponse
+  - Added Type Alias BmcKeySetsListByResourceGroupResponse
+  - Added Type Alias BmcKeySetsListBySubscriptionNextResponse
+  - Added Type Alias BmcKeySetsListBySubscriptionResponse
+  - Added Type Alias ConsolesListByResourceGroupNextResponse
+  - Added Type Alias ConsolesListByResourceGroupResponse
+  - Added Type Alias ConsolesListBySubscriptionNextResponse
+  - Added Type Alias ConsolesListBySubscriptionResponse
+  - Added Type Alias DefaultCniNetworkDetailedStatus
+  - Added Type Alias DefaultCniNetworkProvisioningState
+  - Added Type Alias DefaultCniNetworksCreateOrUpdateResponse
+  - Added Type Alias DefaultCniNetworksGetResponse
+  - Added Type Alias DefaultCniNetworksListByResourceGroupNextResponse
+  - Added Type Alias DefaultCniNetworksListByResourceGroupResponse
+  - Added Type Alias DefaultCniNetworksListBySubscriptionNextResponse
+  - Added Type Alias DefaultCniNetworksListBySubscriptionResponse
+  - Added Type Alias DefaultCniNetworksUpdateResponse
+  - Added Type Alias HybridAksClusterDetailedStatus
+  - Added Type Alias HybridAksClusterMachinePowerState
+  - Added Type Alias HybridAksClusterProvisioningState
+  - Added Type Alias HybridAksClustersCreateOrUpdateResponse
+  - Added Type Alias HybridAksClustersGetResponse
+  - Added Type Alias HybridAksClustersListByResourceGroupNextResponse
+  - Added Type Alias HybridAksClustersListByResourceGroupResponse
+  - Added Type Alias HybridAksClustersListBySubscriptionNextResponse
+  - Added Type Alias HybridAksClustersListBySubscriptionResponse
+  - Added Type Alias HybridAksClustersRestartNodeResponse
+  - Added Type Alias HybridAksClustersUpdateResponse
+  - Added Type Alias MetricsConfigurationsListByResourceGroupNextResponse
+  - Added Type Alias MetricsConfigurationsListByResourceGroupResponse
+  - Added Type Alias MetricsConfigurationsListBySubscriptionNextResponse
+  - Added Type Alias MetricsConfigurationsListBySubscriptionResponse
+  - Added Type Alias StorageApplianceHardwareValidationCategory
+  - Added Type Alias StorageAppliancesRunReadCommandsResponse
+  - Added Type Alias StorageAppliancesValidateHardwareResponse
+  - Added Type Alias VirtualMachinesAttachVolumeResponse
+  - Added Type Alias VirtualMachinesDetachVolumeResponse
+  - Interface BareMetalMachineKeySetsCreateOrUpdateOptionalParams has a new optional parameter bareMetalMachineKeySetParameters
+  - Interface BareMetalMachineKeySetsUpdateHeaders has a new optional parameter location
+  - Interface BareMetalMachinesCreateOrUpdateOptionalParams has a new optional parameter bareMetalMachineParameters
+  - Interface BareMetalMachinesRunCommandOptionalParams has a new optional parameter bareMetalMachineRunCommandParameters
+  - Interface BareMetalMachinesRunDataExtractsOptionalParams has a new optional parameter bareMetalMachineRunDataExtractsParameters
+  - Interface BareMetalMachinesRunReadCommandsOptionalParams has a new optional parameter bareMetalMachineRunReadCommandsParameters
+  - Interface BareMetalMachinesUpdateHeaders has a new optional parameter location
+  - Interface BmcKeySetsCreateOrUpdateOptionalParams has a new optional parameter bmcKeySetParameters
+  - Interface BmcKeySetsUpdateHeaders has a new optional parameter location
+  - Interface CloudServicesNetworksCreateOrUpdateOptionalParams has a new optional parameter cloudServicesNetworkParameters
+  - Interface CloudServicesNetworksUpdateHeaders has a new optional parameter location
+  - Interface ClusterManagersCreateOrUpdateOptionalParams has a new optional parameter clusterManagerParameters
+  - Interface ClustersCreateOrUpdateOptionalParams has a new optional parameter clusterParameters
+  - Interface ClustersUpdateHeaders has a new optional parameter location
+  - Interface ClustersUpdateVersionOptionalParams has a new optional parameter clusterUpdateVersionParameters
+  - Interface ConsolePatchParameters has a new optional parameter duration
+  - Interface ConsolesCreateOrUpdateOptionalParams has a new optional parameter consoleParameters
+  - Interface ConsolesUpdateHeaders has a new optional parameter location
+  - Interface L2NetworksCreateOrUpdateOptionalParams has a new optional parameter l2NetworkParameters
+  - Interface L3NetworksCreateOrUpdateOptionalParams has a new optional parameter l3NetworkParameters
+  - Interface MetricsConfigurationsCreateOrUpdateOptionalParams has a new optional parameter metricsConfigurationParameters
+  - Interface MetricsConfigurationsUpdateHeaders has a new optional parameter location
+  - Interface RacksCreateOrUpdateOptionalParams has a new optional parameter rackParameters
+  - Interface RacksUpdateHeaders has a new optional parameter location
+  - Interface StorageAppliancesCreateOrUpdateOptionalParams has a new optional parameter storageApplianceParameters
+  - Interface StorageAppliancesUpdateHeaders has a new optional parameter location
+  - Interface TrunkedNetworksCreateOrUpdateOptionalParams has a new optional parameter trunkedNetworkParameters
+  - Interface VirtualMachinesCreateOrUpdateOptionalParams has a new optional parameter virtualMachineParameters
+  - Interface VirtualMachinesUpdateHeaders has a new optional parameter location
+  - Interface VolumesCreateOrUpdateOptionalParams has a new optional parameter volumeParameters
+  - Added Enum KnownBareMetalMachineHardwareValidationCategory
+  - Added Enum KnownDefaultCniNetworkDetailedStatus
+  - Added Enum KnownDefaultCniNetworkProvisioningState
+  - Added Enum KnownHybridAksClusterDetailedStatus
+  - Added Enum KnownHybridAksClusterMachinePowerState
+  - Added Enum KnownHybridAksClusterProvisioningState
+  - Added Enum KnownStorageApplianceHardwareValidationCategory
+
+**Breaking Changes**
+
+  - Removed operation group AgentPools
+  - Removed operation group KubernetesClusters
+  - Removed operation BareMetalMachineKeySets.listByCluster
+  - Removed operation BmcKeySets.listByCluster
+  - Removed operation Consoles.listByVirtualMachine
+  - Removed operation MetricsConfigurations.listByCluster
+  - Operation BareMetalMachineKeySets.beginCreateOrUpdate has a new signature
+  - Operation BareMetalMachineKeySets.beginCreateOrUpdateAndWait has a new signature
+  - Operation BareMetalMachines.beginCreateOrUpdate has a new signature
+  - Operation BareMetalMachines.beginCreateOrUpdateAndWait has a new signature
+  - Operation BareMetalMachines.beginRunCommand has a new signature
+  - Operation BareMetalMachines.beginRunCommandAndWait has a new signature
+  - Operation BareMetalMachines.beginRunDataExtracts has a new signature
+  - Operation BareMetalMachines.beginRunDataExtractsAndWait has a new signature
+  - Operation BareMetalMachines.beginRunReadCommands has a new signature
+  - Operation BareMetalMachines.beginRunReadCommandsAndWait has a new signature
+  - Operation BmcKeySets.beginCreateOrUpdate has a new signature
+  - Operation BmcKeySets.beginCreateOrUpdateAndWait has a new signature
+  - Operation CloudServicesNetworks.beginCreateOrUpdate has a new signature
+  - Operation CloudServicesNetworks.beginCreateOrUpdateAndWait has a new signature
+  - Operation ClusterManagers.beginCreateOrUpdate has a new signature
+  - Operation ClusterManagers.beginCreateOrUpdateAndWait has a new signature
+  - Operation Clusters.beginCreateOrUpdate has a new signature
+  - Operation Clusters.beginCreateOrUpdateAndWait has a new signature
+  - Operation Clusters.beginUpdateVersion has a new signature
+  - Operation Clusters.beginUpdateVersionAndWait has a new signature
+  - Operation Consoles.beginCreateOrUpdate has a new signature
+  - Operation Consoles.beginCreateOrUpdateAndWait has a new signature
+  - Operation L2Networks.beginCreateOrUpdate has a new signature
+  - Operation L2Networks.beginCreateOrUpdateAndWait has a new signature
+  - Operation L3Networks.beginCreateOrUpdate has a new signature
+  - Operation L3Networks.beginCreateOrUpdateAndWait has a new signature
+  - Operation MetricsConfigurations.beginCreateOrUpdate has a new signature
+  - Operation MetricsConfigurations.beginCreateOrUpdateAndWait has a new signature
+  - Operation Racks.beginCreateOrUpdate has a new signature
+  - Operation Racks.beginCreateOrUpdateAndWait has a new signature
+  - Operation StorageAppliances.beginCreateOrUpdate has a new signature
+  - Operation StorageAppliances.beginCreateOrUpdateAndWait has a new signature
+  - Operation TrunkedNetworks.beginCreateOrUpdate has a new signature
+  - Operation TrunkedNetworks.beginCreateOrUpdateAndWait has a new signature
+  - Operation VirtualMachines.beginCreateOrUpdate has a new signature
+  - Operation VirtualMachines.beginCreateOrUpdateAndWait has a new signature
+  - Operation Volumes.beginCreateOrUpdate has a new signature
+  - Operation Volumes.beginCreateOrUpdateAndWait has a new signature
+  - Interface BareMetalMachine no longer has parameter associatedResourceIds
+  - Interface BareMetalMachineKeySetsUpdateHeaders no longer has parameter azureAsyncOperation
+  - Interface BareMetalMachinesUpdateHeaders no longer has parameter azureAsyncOperation
+  - Interface BmcKeySetsUpdateHeaders no longer has parameter azureAsyncOperation
+  - Interface CloudServicesNetwork no longer has parameter associatedResourceIds
+  - Interface CloudServicesNetworksUpdateHeaders no longer has parameter azureAsyncOperation
+  - Interface ClustersUpdateHeaders no longer has parameter azureAsyncOperation
+  - Interface ConsolePatchParameters no longer has parameter expiration
+  - Interface ConsolesUpdateHeaders no longer has parameter azureAsyncOperation
+  - Interface L2Network no longer has parameter associatedResourceIds
+  - Interface L3Network no longer has parameter associatedResourceIds
+  - Interface MetricsConfigurationsUpdateHeaders no longer has parameter azureAsyncOperation
+  - Interface RacksUpdateHeaders no longer has parameter azureAsyncOperation
+  - Interface StorageAppliancesUpdateHeaders no longer has parameter azureAsyncOperation
+  - Interface TrunkedNetwork no longer has parameter associatedResourceIds
+  - Interface VirtualMachine no longer has parameter availabilityZone
+  - Interface VirtualMachinesUpdateHeaders no longer has parameter azureAsyncOperation
+  - Parameter analyticsWorkspaceId of interface Cluster is now required
+  - Class NetworkCloud no longer has parameter agentPools
+  - Class NetworkCloud no longer has parameter kubernetesClusters
+  - Removed Enum KnownAdvertiseToFabric
+  - Removed Enum KnownAgentPoolDetailedStatus
+  - Removed Enum KnownAgentPoolMode
+  - Removed Enum KnownAgentPoolProvisioningState
+  - Removed Enum KnownAvailabilityLifecycle
+  - Removed Enum KnownBfdEnabled
+  - Removed Enum KnownBgpMultiHop
+  - Removed Enum KnownFabricPeeringEnabled
+  - Removed Enum KnownFeatureDetailedStatus
+  - Removed Enum KnownHugepagesSize
+  - Removed Enum KnownKubernetesClusterDetailedStatus
+  - Removed Enum KnownKubernetesClusterNodeDetailedStatus
+  - Removed Enum KnownKubernetesClusterProvisioningState
+  - Removed Enum KnownKubernetesNodePowerState
+  - Removed Enum KnownKubernetesNodeRole
+  - Removed Enum KnownKubernetesPluginType
+  - Removed Enum KnownL3NetworkConfigurationIpamEnabled
+  - Enum KnownVirtualMachineDetailedStatus no longer has value Running
+  - Enum KnownVirtualMachineDetailedStatus no longer has value Scheduling
+  - Enum KnownVirtualMachineDetailedStatus no longer has value Stopped
+  - Enum KnownVirtualMachineDetailedStatus no longer has value Terminating
+  - Enum KnownVirtualMachineDetailedStatus no longer has value Unknown
+  - Enum KnownVirtualMachinePowerState no longer has value Unknown
+    
+    
 ## 1.0.0 (2023-08-22)
 
-The package of @azure/arm-networkcloud is using our next generation design principles. To learn more, please refer to our documentation [Quick Start](https://aka.ms/azsdk/js/mgmt/quickstart ).
+The package of @azure/arm-networkcloud is using our next generation design principles. To learn more, please refer to our documentation [Quick Start](https://aka.ms/js-track2-quickstart).

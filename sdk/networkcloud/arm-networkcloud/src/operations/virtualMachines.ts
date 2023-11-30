@@ -34,6 +34,10 @@ import {
   VirtualMachinesDeleteOptionalParams,
   VirtualMachinesUpdateOptionalParams,
   VirtualMachinesUpdateResponse,
+  VirtualMachinesAttachVolumeOptionalParams,
+  VirtualMachinesAttachVolumeResponse,
+  VirtualMachinesDetachVolumeOptionalParams,
+  VirtualMachinesDetachVolumeResponse,
   VirtualMachinesPowerOffOptionalParams,
   VirtualMachinesPowerOffResponse,
   VirtualMachinesReimageOptionalParams,
@@ -231,13 +235,11 @@ export class VirtualMachinesImpl implements VirtualMachines {
    * Create a new virtual machine or update the properties of the existing virtual machine.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param virtualMachineName The name of the virtual machine.
-   * @param virtualMachineParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
     virtualMachineName: string,
-    virtualMachineParameters: VirtualMachine,
     options?: VirtualMachinesCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -286,12 +288,7 @@ export class VirtualMachinesImpl implements VirtualMachines {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: {
-        resourceGroupName,
-        virtualMachineName,
-        virtualMachineParameters,
-        options
-      },
+      args: { resourceGroupName, virtualMachineName, options },
       spec: createOrUpdateOperationSpec
     });
     const poller = await createHttpPoller<
@@ -310,19 +307,16 @@ export class VirtualMachinesImpl implements VirtualMachines {
    * Create a new virtual machine or update the properties of the existing virtual machine.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param virtualMachineName The name of the virtual machine.
-   * @param virtualMachineParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     virtualMachineName: string,
-    virtualMachineParameters: VirtualMachine,
     options?: VirtualMachinesCreateOrUpdateOptionalParams
   ): Promise<VirtualMachinesCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
       virtualMachineName,
-      virtualMachineParameters,
       options
     );
     return poller.pollUntilDone();
@@ -478,7 +472,7 @@ export class VirtualMachinesImpl implements VirtualMachines {
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "location"
     });
     await poller.poll();
     return poller;
@@ -497,6 +491,188 @@ export class VirtualMachinesImpl implements VirtualMachines {
     options?: VirtualMachinesUpdateOptionalParams
   ): Promise<VirtualMachinesUpdateResponse> {
     const poller = await this.beginUpdate(
+      resourceGroupName,
+      virtualMachineName,
+      options
+    );
+    return poller.pollUntilDone();
+  }
+
+  /**
+   * Attach volume to the provided virtual machine.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param virtualMachineName The name of the virtual machine.
+   * @param options The options parameters.
+   */
+  async beginAttachVolume(
+    resourceGroupName: string,
+    virtualMachineName: string,
+    options?: VirtualMachinesAttachVolumeOptionalParams
+  ): Promise<
+    SimplePollerLike<
+      OperationState<VirtualMachinesAttachVolumeResponse>,
+      VirtualMachinesAttachVolumeResponse
+    >
+  > {
+    const directSendOperation = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ): Promise<VirtualMachinesAttachVolumeResponse> => {
+      return this.client.sendOperationRequest(args, spec);
+    };
+    const sendOperationFn = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ) => {
+      let currentRawResponse:
+        | coreClient.FullOperationResponse
+        | undefined = undefined;
+      const providedCallback = args.options?.onResponse;
+      const callback: coreClient.RawResponseCallback = (
+        rawResponse: coreClient.FullOperationResponse,
+        flatResponse: unknown
+      ) => {
+        currentRawResponse = rawResponse;
+        providedCallback?.(rawResponse, flatResponse);
+      };
+      const updatedArgs = {
+        ...args,
+        options: {
+          ...args.options,
+          onResponse: callback
+        }
+      };
+      const flatResponse = await directSendOperation(updatedArgs, spec);
+      return {
+        flatResponse,
+        rawResponse: {
+          statusCode: currentRawResponse!.status,
+          body: currentRawResponse!.parsedBody,
+          headers: currentRawResponse!.headers.toJSON()
+        }
+      };
+    };
+
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: { resourceGroupName, virtualMachineName, options },
+      spec: attachVolumeOperationSpec
+    });
+    const poller = await createHttpPoller<
+      VirtualMachinesAttachVolumeResponse,
+      OperationState<VirtualMachinesAttachVolumeResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "location"
+    });
+    await poller.poll();
+    return poller;
+  }
+
+  /**
+   * Attach volume to the provided virtual machine.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param virtualMachineName The name of the virtual machine.
+   * @param options The options parameters.
+   */
+  async beginAttachVolumeAndWait(
+    resourceGroupName: string,
+    virtualMachineName: string,
+    options?: VirtualMachinesAttachVolumeOptionalParams
+  ): Promise<VirtualMachinesAttachVolumeResponse> {
+    const poller = await this.beginAttachVolume(
+      resourceGroupName,
+      virtualMachineName,
+      options
+    );
+    return poller.pollUntilDone();
+  }
+
+  /**
+   * Detach volume from the provided virtual machine.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param virtualMachineName The name of the virtual machine.
+   * @param options The options parameters.
+   */
+  async beginDetachVolume(
+    resourceGroupName: string,
+    virtualMachineName: string,
+    options?: VirtualMachinesDetachVolumeOptionalParams
+  ): Promise<
+    SimplePollerLike<
+      OperationState<VirtualMachinesDetachVolumeResponse>,
+      VirtualMachinesDetachVolumeResponse
+    >
+  > {
+    const directSendOperation = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ): Promise<VirtualMachinesDetachVolumeResponse> => {
+      return this.client.sendOperationRequest(args, spec);
+    };
+    const sendOperationFn = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ) => {
+      let currentRawResponse:
+        | coreClient.FullOperationResponse
+        | undefined = undefined;
+      const providedCallback = args.options?.onResponse;
+      const callback: coreClient.RawResponseCallback = (
+        rawResponse: coreClient.FullOperationResponse,
+        flatResponse: unknown
+      ) => {
+        currentRawResponse = rawResponse;
+        providedCallback?.(rawResponse, flatResponse);
+      };
+      const updatedArgs = {
+        ...args,
+        options: {
+          ...args.options,
+          onResponse: callback
+        }
+      };
+      const flatResponse = await directSendOperation(updatedArgs, spec);
+      return {
+        flatResponse,
+        rawResponse: {
+          statusCode: currentRawResponse!.status,
+          body: currentRawResponse!.parsedBody,
+          headers: currentRawResponse!.headers.toJSON()
+        }
+      };
+    };
+
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: { resourceGroupName, virtualMachineName, options },
+      spec: detachVolumeOperationSpec
+    });
+    const poller = await createHttpPoller<
+      VirtualMachinesDetachVolumeResponse,
+      OperationState<VirtualMachinesDetachVolumeResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "location"
+    });
+    await poller.poll();
+    return poller;
+  }
+
+  /**
+   * Detach volume from the provided virtual machine.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param virtualMachineName The name of the virtual machine.
+   * @param options The options parameters.
+   */
+  async beginDetachVolumeAndWait(
+    resourceGroupName: string,
+    virtualMachineName: string,
+    options?: VirtualMachinesDetachVolumeOptionalParams
+  ): Promise<VirtualMachinesDetachVolumeResponse> {
+    const poller = await this.beginDetachVolume(
       resourceGroupName,
       virtualMachineName,
       options
@@ -1052,22 +1228,88 @@ const updateOperationSpec: coreClient.OperationSpec = {
   mediaType: "json",
   serializer
 };
+const attachVolumeOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}/attachVolume",
+  httpMethod: "POST",
+  responses: {
+    200: {
+      headersMapper: Mappers.VirtualMachinesAttachVolumeHeaders
+    },
+    201: {
+      headersMapper: Mappers.VirtualMachinesAttachVolumeHeaders
+    },
+    202: {
+      headersMapper: Mappers.VirtualMachinesAttachVolumeHeaders
+    },
+    204: {
+      headersMapper: Mappers.VirtualMachinesAttachVolumeHeaders
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  requestBody: Parameters.virtualMachineAttachVolumeParameters,
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.virtualMachineName
+  ],
+  headerParameters: [Parameters.accept, Parameters.contentType],
+  mediaType: "json",
+  serializer
+};
+const detachVolumeOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}/detachVolume",
+  httpMethod: "POST",
+  responses: {
+    200: {
+      headersMapper: Mappers.VirtualMachinesDetachVolumeHeaders
+    },
+    201: {
+      headersMapper: Mappers.VirtualMachinesDetachVolumeHeaders
+    },
+    202: {
+      headersMapper: Mappers.VirtualMachinesDetachVolumeHeaders
+    },
+    204: {
+      headersMapper: Mappers.VirtualMachinesDetachVolumeHeaders
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  requestBody: Parameters.virtualMachineDetachVolumeParameters,
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.virtualMachineName
+  ],
+  headerParameters: [Parameters.accept, Parameters.contentType],
+  mediaType: "json",
+  serializer
+};
 const powerOffOperationSpec: coreClient.OperationSpec = {
   path:
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}/powerOff",
   httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.VirtualMachinesPowerOffHeaders
     },
     201: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.VirtualMachinesPowerOffHeaders
     },
     202: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.VirtualMachinesPowerOffHeaders
     },
     204: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.VirtualMachinesPowerOffHeaders
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -1091,16 +1333,16 @@ const reimageOperationSpec: coreClient.OperationSpec = {
   httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.VirtualMachinesReimageHeaders
     },
     201: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.VirtualMachinesReimageHeaders
     },
     202: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.VirtualMachinesReimageHeaders
     },
     204: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.VirtualMachinesReimageHeaders
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -1122,16 +1364,16 @@ const restartOperationSpec: coreClient.OperationSpec = {
   httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.VirtualMachinesRestartHeaders
     },
     201: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.VirtualMachinesRestartHeaders
     },
     202: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.VirtualMachinesRestartHeaders
     },
     204: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.VirtualMachinesRestartHeaders
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -1153,16 +1395,16 @@ const startOperationSpec: coreClient.OperationSpec = {
   httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.VirtualMachinesStartHeaders
     },
     201: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.VirtualMachinesStartHeaders
     },
     202: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.VirtualMachinesStartHeaders
     },
     204: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.VirtualMachinesStartHeaders
     },
     default: {
       bodyMapper: Mappers.ErrorResponse

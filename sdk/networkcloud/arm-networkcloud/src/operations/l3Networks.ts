@@ -223,13 +223,11 @@ export class L3NetworksImpl implements L3Networks {
    * Create a new layer 3 (L3) network or update the properties of the existing network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param l3NetworkName The name of the L3 network.
-   * @param l3NetworkParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
     l3NetworkName: string,
-    l3NetworkParameters: L3Network,
     options?: L3NetworksCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -278,7 +276,7 @@ export class L3NetworksImpl implements L3Networks {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, l3NetworkName, l3NetworkParameters, options },
+      args: { resourceGroupName, l3NetworkName, options },
       spec: createOrUpdateOperationSpec
     });
     const poller = await createHttpPoller<
@@ -297,19 +295,16 @@ export class L3NetworksImpl implements L3Networks {
    * Create a new layer 3 (L3) network or update the properties of the existing network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param l3NetworkName The name of the L3 network.
-   * @param l3NetworkParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     l3NetworkName: string,
-    l3NetworkParameters: L3Network,
     options?: L3NetworksCreateOrUpdateOptionalParams
   ): Promise<L3NetworksCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
       l3NetworkName,
-      l3NetworkParameters,
       options
     );
     return poller.pollUntilDone();

@@ -10,7 +10,8 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   Console,
-  ConsolesListByVirtualMachineOptionalParams,
+  ConsolesListBySubscriptionOptionalParams,
+  ConsolesListByResourceGroupOptionalParams,
   ConsolesGetOptionalParams,
   ConsolesGetResponse,
   ConsolesCreateOrUpdateOptionalParams,
@@ -24,15 +25,24 @@ import {
 /** Interface representing a Consoles. */
 export interface Consoles {
   /**
-   * Get a list of consoles for the provided virtual machine.
+   * Get a list of virtual machine consoles in the provided subscription.
+   * @param virtualMachineName The name of the virtual machine.
+   * @param options The options parameters.
+   */
+  listBySubscription(
+    virtualMachineName: string,
+    options?: ConsolesListBySubscriptionOptionalParams
+  ): PagedAsyncIterableIterator<Console>;
+  /**
+   * Get a list of virtual machine consoles in the provided resource group.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param virtualMachineName The name of the virtual machine.
    * @param options The options parameters.
    */
-  listByVirtualMachine(
+  listByResourceGroup(
     resourceGroupName: string,
     virtualMachineName: string,
-    options?: ConsolesListByVirtualMachineOptionalParams
+    options?: ConsolesListByResourceGroupOptionalParams
   ): PagedAsyncIterableIterator<Console>;
   /**
    * Get properties of the provided virtual machine console.
@@ -53,14 +63,12 @@ export interface Consoles {
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param virtualMachineName The name of the virtual machine.
    * @param consoleName The name of the virtual machine console.
-   * @param consoleParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     virtualMachineName: string,
     consoleName: string,
-    consoleParameters: Console,
     options?: ConsolesCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -74,14 +82,12 @@ export interface Consoles {
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param virtualMachineName The name of the virtual machine.
    * @param consoleName The name of the virtual machine console.
-   * @param consoleParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     virtualMachineName: string,
     consoleName: string,
-    consoleParameters: Console,
     options?: ConsolesCreateOrUpdateOptionalParams
   ): Promise<ConsolesCreateOrUpdateResponse>;
   /**

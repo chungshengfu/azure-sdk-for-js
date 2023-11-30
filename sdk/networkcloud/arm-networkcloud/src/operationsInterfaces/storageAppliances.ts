@@ -22,7 +22,11 @@ import {
   StorageAppliancesDisableRemoteVendorManagementOptionalParams,
   StorageAppliancesDisableRemoteVendorManagementResponse,
   StorageAppliancesEnableRemoteVendorManagementOptionalParams,
-  StorageAppliancesEnableRemoteVendorManagementResponse
+  StorageAppliancesEnableRemoteVendorManagementResponse,
+  StorageAppliancesRunReadCommandsOptionalParams,
+  StorageAppliancesRunReadCommandsResponse,
+  StorageAppliancesValidateHardwareOptionalParams,
+  StorageAppliancesValidateHardwareResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -61,13 +65,11 @@ export interface StorageAppliances {
    * the system.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param storageApplianceName The name of the storage appliance.
-   * @param storageApplianceParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     storageApplianceName: string,
-    storageApplianceParameters: StorageAppliance,
     options?: StorageAppliancesCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -81,13 +83,11 @@ export interface StorageAppliances {
    * the system.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param storageApplianceName The name of the storage appliance.
-   * @param storageApplianceParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     storageApplianceName: string,
-    storageApplianceParameters: StorageAppliance,
     options?: StorageAppliancesCreateOrUpdateOptionalParams
   ): Promise<StorageAppliancesCreateOrUpdateResponse>;
   /**
@@ -117,8 +117,8 @@ export interface StorageAppliances {
     options?: StorageAppliancesDeleteOptionalParams
   ): Promise<void>;
   /**
-   * Update properties of the provided storage appliance, or update tags associated with the storage
-   * appliance Properties and tag updates can be done independently.
+   * Patch properties of the provided bare metal machine, or update tags associated with the bare metal
+   * machine. Properties and tag updates can be done independently.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param storageApplianceName The name of the storage appliance.
    * @param options The options parameters.
@@ -134,8 +134,8 @@ export interface StorageAppliances {
     >
   >;
   /**
-   * Update properties of the provided storage appliance, or update tags associated with the storage
-   * appliance Properties and tag updates can be done independently.
+   * Patch properties of the provided bare metal machine, or update tags associated with the bare metal
+   * machine. Properties and tag updates can be done independently.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param storageApplianceName The name of the storage appliance.
    * @param options The options parameters.
@@ -199,4 +199,58 @@ export interface StorageAppliances {
     storageApplianceName: string,
     options?: StorageAppliancesEnableRemoteVendorManagementOptionalParams
   ): Promise<StorageAppliancesEnableRemoteVendorManagementResponse>;
+  /**
+   * Run and retrieve output from read only commands on the provided storage appliance.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param storageApplianceName The name of the storage appliance.
+   * @param options The options parameters.
+   */
+  beginRunReadCommands(
+    resourceGroupName: string,
+    storageApplianceName: string,
+    options?: StorageAppliancesRunReadCommandsOptionalParams
+  ): Promise<
+    SimplePollerLike<
+      OperationState<StorageAppliancesRunReadCommandsResponse>,
+      StorageAppliancesRunReadCommandsResponse
+    >
+  >;
+  /**
+   * Run and retrieve output from read only commands on the provided storage appliance.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param storageApplianceName The name of the storage appliance.
+   * @param options The options parameters.
+   */
+  beginRunReadCommandsAndWait(
+    resourceGroupName: string,
+    storageApplianceName: string,
+    options?: StorageAppliancesRunReadCommandsOptionalParams
+  ): Promise<StorageAppliancesRunReadCommandsResponse>;
+  /**
+   * Validate the hardware of the provided storage appliance.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param storageApplianceName The name of the storage appliance.
+   * @param options The options parameters.
+   */
+  beginValidateHardware(
+    resourceGroupName: string,
+    storageApplianceName: string,
+    options?: StorageAppliancesValidateHardwareOptionalParams
+  ): Promise<
+    SimplePollerLike<
+      OperationState<StorageAppliancesValidateHardwareResponse>,
+      StorageAppliancesValidateHardwareResponse
+    >
+  >;
+  /**
+   * Validate the hardware of the provided storage appliance.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param storageApplianceName The name of the storage appliance.
+   * @param options The options parameters.
+   */
+  beginValidateHardwareAndWait(
+    resourceGroupName: string,
+    storageApplianceName: string,
+    options?: StorageAppliancesValidateHardwareOptionalParams
+  ): Promise<StorageAppliancesValidateHardwareResponse>;
 }

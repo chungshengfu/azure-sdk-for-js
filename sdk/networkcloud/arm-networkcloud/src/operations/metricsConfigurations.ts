@@ -21,9 +21,12 @@ import {
 import { createLroSpec } from "../lroImpl";
 import {
   ClusterMetricsConfiguration,
-  MetricsConfigurationsListByClusterNextOptionalParams,
-  MetricsConfigurationsListByClusterOptionalParams,
-  MetricsConfigurationsListByClusterResponse,
+  MetricsConfigurationsListBySubscriptionNextOptionalParams,
+  MetricsConfigurationsListBySubscriptionOptionalParams,
+  MetricsConfigurationsListBySubscriptionResponse,
+  MetricsConfigurationsListByResourceGroupNextOptionalParams,
+  MetricsConfigurationsListByResourceGroupOptionalParams,
+  MetricsConfigurationsListByResourceGroupResponse,
   MetricsConfigurationsGetOptionalParams,
   MetricsConfigurationsGetResponse,
   MetricsConfigurationsCreateOrUpdateOptionalParams,
@@ -31,7 +34,8 @@ import {
   MetricsConfigurationsDeleteOptionalParams,
   MetricsConfigurationsUpdateOptionalParams,
   MetricsConfigurationsUpdateResponse,
-  MetricsConfigurationsListByClusterNextResponse
+  MetricsConfigurationsListBySubscriptionNextResponse,
+  MetricsConfigurationsListByResourceGroupNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -48,17 +52,86 @@ export class MetricsConfigurationsImpl implements MetricsConfigurations {
   }
 
   /**
-   * Get a list of metrics configurations for the provided cluster.
+   * Get a list of metrics configurations of the cluster in the provided subscription.
+   * @param clusterName The name of the cluster.
+   * @param options The options parameters.
+   */
+  public listBySubscription(
+    clusterName: string,
+    options?: MetricsConfigurationsListBySubscriptionOptionalParams
+  ): PagedAsyncIterableIterator<ClusterMetricsConfiguration> {
+    const iter = this.listBySubscriptionPagingAll(clusterName, options);
+    return {
+      next() {
+        return iter.next();
+      },
+      [Symbol.asyncIterator]() {
+        return this;
+      },
+      byPage: (settings?: PageSettings) => {
+        if (settings?.maxPageSize) {
+          throw new Error("maxPageSize is not supported by this operation.");
+        }
+        return this.listBySubscriptionPagingPage(
+          clusterName,
+          options,
+          settings
+        );
+      }
+    };
+  }
+
+  private async *listBySubscriptionPagingPage(
+    clusterName: string,
+    options?: MetricsConfigurationsListBySubscriptionOptionalParams,
+    settings?: PageSettings
+  ): AsyncIterableIterator<ClusterMetricsConfiguration[]> {
+    let result: MetricsConfigurationsListBySubscriptionResponse;
+    let continuationToken = settings?.continuationToken;
+    if (!continuationToken) {
+      result = await this._listBySubscription(clusterName, options);
+      let page = result.value || [];
+      continuationToken = result.nextLink;
+      setContinuationToken(page, continuationToken);
+      yield page;
+    }
+    while (continuationToken) {
+      result = await this._listBySubscriptionNext(
+        clusterName,
+        continuationToken,
+        options
+      );
+      continuationToken = result.nextLink;
+      let page = result.value || [];
+      setContinuationToken(page, continuationToken);
+      yield page;
+    }
+  }
+
+  private async *listBySubscriptionPagingAll(
+    clusterName: string,
+    options?: MetricsConfigurationsListBySubscriptionOptionalParams
+  ): AsyncIterableIterator<ClusterMetricsConfiguration> {
+    for await (const page of this.listBySubscriptionPagingPage(
+      clusterName,
+      options
+    )) {
+      yield* page;
+    }
+  }
+
+  /**
+   * Get a list of metrics configurations of the clusters in the provided resource group.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
    * @param options The options parameters.
    */
-  public listByCluster(
+  public listByResourceGroup(
     resourceGroupName: string,
     clusterName: string,
-    options?: MetricsConfigurationsListByClusterOptionalParams
+    options?: MetricsConfigurationsListByResourceGroupOptionalParams
   ): PagedAsyncIterableIterator<ClusterMetricsConfiguration> {
-    const iter = this.listByClusterPagingAll(
+    const iter = this.listByResourceGroupPagingAll(
       resourceGroupName,
       clusterName,
       options
@@ -74,7 +147,7 @@ export class MetricsConfigurationsImpl implements MetricsConfigurations {
         if (settings?.maxPageSize) {
           throw new Error("maxPageSize is not supported by this operation.");
         }
-        return this.listByClusterPagingPage(
+        return this.listByResourceGroupPagingPage(
           resourceGroupName,
           clusterName,
           options,
@@ -84,16 +157,16 @@ export class MetricsConfigurationsImpl implements MetricsConfigurations {
     };
   }
 
-  private async *listByClusterPagingPage(
+  private async *listByResourceGroupPagingPage(
     resourceGroupName: string,
     clusterName: string,
-    options?: MetricsConfigurationsListByClusterOptionalParams,
+    options?: MetricsConfigurationsListByResourceGroupOptionalParams,
     settings?: PageSettings
   ): AsyncIterableIterator<ClusterMetricsConfiguration[]> {
-    let result: MetricsConfigurationsListByClusterResponse;
+    let result: MetricsConfigurationsListByResourceGroupResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._listByCluster(
+      result = await this._listByResourceGroup(
         resourceGroupName,
         clusterName,
         options
@@ -104,7 +177,7 @@ export class MetricsConfigurationsImpl implements MetricsConfigurations {
       yield page;
     }
     while (continuationToken) {
-      result = await this._listByClusterNext(
+      result = await this._listByResourceGroupNext(
         resourceGroupName,
         clusterName,
         continuationToken,
@@ -117,12 +190,12 @@ export class MetricsConfigurationsImpl implements MetricsConfigurations {
     }
   }
 
-  private async *listByClusterPagingAll(
+  private async *listByResourceGroupPagingAll(
     resourceGroupName: string,
     clusterName: string,
-    options?: MetricsConfigurationsListByClusterOptionalParams
+    options?: MetricsConfigurationsListByResourceGroupOptionalParams
   ): AsyncIterableIterator<ClusterMetricsConfiguration> {
-    for await (const page of this.listByClusterPagingPage(
+    for await (const page of this.listByResourceGroupPagingPage(
       resourceGroupName,
       clusterName,
       options
@@ -132,19 +205,34 @@ export class MetricsConfigurationsImpl implements MetricsConfigurations {
   }
 
   /**
-   * Get a list of metrics configurations for the provided cluster.
+   * Get a list of metrics configurations of the cluster in the provided subscription.
+   * @param clusterName The name of the cluster.
+   * @param options The options parameters.
+   */
+  private _listBySubscription(
+    clusterName: string,
+    options?: MetricsConfigurationsListBySubscriptionOptionalParams
+  ): Promise<MetricsConfigurationsListBySubscriptionResponse> {
+    return this.client.sendOperationRequest(
+      { clusterName, options },
+      listBySubscriptionOperationSpec
+    );
+  }
+
+  /**
+   * Get a list of metrics configurations of the clusters in the provided resource group.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
    * @param options The options parameters.
    */
-  private _listByCluster(
+  private _listByResourceGroup(
     resourceGroupName: string,
     clusterName: string,
-    options?: MetricsConfigurationsListByClusterOptionalParams
-  ): Promise<MetricsConfigurationsListByClusterResponse> {
+    options?: MetricsConfigurationsListByResourceGroupOptionalParams
+  ): Promise<MetricsConfigurationsListByResourceGroupResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, clusterName, options },
-      listByClusterOperationSpec
+      listByResourceGroupOperationSpec
     );
   }
 
@@ -168,18 +256,16 @@ export class MetricsConfigurationsImpl implements MetricsConfigurations {
   }
 
   /**
-   * Create new or update the existing metrics configuration of the provided cluster.
+   * Update the metrics configuration of the provided cluster.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
    * @param metricsConfigurationName The name of the metrics configuration for the cluster.
-   * @param metricsConfigurationParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
     clusterName: string,
     metricsConfigurationName: string,
-    metricsConfigurationParameters: ClusterMetricsConfiguration,
     options?: MetricsConfigurationsCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -232,7 +318,6 @@ export class MetricsConfigurationsImpl implements MetricsConfigurations {
         resourceGroupName,
         clusterName,
         metricsConfigurationName,
-        metricsConfigurationParameters,
         options
       },
       spec: createOrUpdateOperationSpec
@@ -250,25 +335,22 @@ export class MetricsConfigurationsImpl implements MetricsConfigurations {
   }
 
   /**
-   * Create new or update the existing metrics configuration of the provided cluster.
+   * Update the metrics configuration of the provided cluster.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
    * @param metricsConfigurationName The name of the metrics configuration for the cluster.
-   * @param metricsConfigurationParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     clusterName: string,
     metricsConfigurationName: string,
-    metricsConfigurationParameters: ClusterMetricsConfiguration,
     options?: MetricsConfigurationsCreateOrUpdateOptionalParams
   ): Promise<MetricsConfigurationsCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
       clusterName,
       metricsConfigurationName,
-      metricsConfigurationParameters,
       options
     );
     return poller.pollUntilDone();
@@ -441,7 +523,7 @@ export class MetricsConfigurationsImpl implements MetricsConfigurations {
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "location"
     });
     await poller.poll();
     return poller;
@@ -471,28 +553,66 @@ export class MetricsConfigurationsImpl implements MetricsConfigurations {
   }
 
   /**
-   * ListByClusterNext
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * ListBySubscriptionNext
    * @param clusterName The name of the cluster.
-   * @param nextLink The nextLink from the previous successful call to the ListByCluster method.
+   * @param nextLink The nextLink from the previous successful call to the ListBySubscription method.
    * @param options The options parameters.
    */
-  private _listByClusterNext(
+  private _listBySubscriptionNext(
+    clusterName: string,
+    nextLink: string,
+    options?: MetricsConfigurationsListBySubscriptionNextOptionalParams
+  ): Promise<MetricsConfigurationsListBySubscriptionNextResponse> {
+    return this.client.sendOperationRequest(
+      { clusterName, nextLink, options },
+      listBySubscriptionNextOperationSpec
+    );
+  }
+
+  /**
+   * ListByResourceGroupNext
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param clusterName The name of the cluster.
+   * @param nextLink The nextLink from the previous successful call to the ListByResourceGroup method.
+   * @param options The options parameters.
+   */
+  private _listByResourceGroupNext(
     resourceGroupName: string,
     clusterName: string,
     nextLink: string,
-    options?: MetricsConfigurationsListByClusterNextOptionalParams
-  ): Promise<MetricsConfigurationsListByClusterNextResponse> {
+    options?: MetricsConfigurationsListByResourceGroupNextOptionalParams
+  ): Promise<MetricsConfigurationsListByResourceGroupNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, clusterName, nextLink, options },
-      listByClusterNextOperationSpec
+      listByResourceGroupNextOperationSpec
     );
   }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const listByClusterOperationSpec: coreClient.OperationSpec = {
+const listBySubscriptionOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/clusters/{clusterName}/metricsConfigurations",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.ClusterMetricsConfigurationList
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.clusterName
+  ],
+  headerParameters: [Parameters.accept],
+  serializer
+};
+const listByResourceGroupOperationSpec: coreClient.OperationSpec = {
   path:
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusters/{clusterName}/metricsConfigurations",
   httpMethod: "GET",
@@ -629,7 +749,27 @@ const updateOperationSpec: coreClient.OperationSpec = {
   mediaType: "json",
   serializer
 };
-const listByClusterNextOperationSpec: coreClient.OperationSpec = {
+const listBySubscriptionNextOperationSpec: coreClient.OperationSpec = {
+  path: "{nextLink}",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.ClusterMetricsConfigurationList
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  urlParameters: [
+    Parameters.$host,
+    Parameters.nextLink,
+    Parameters.subscriptionId,
+    Parameters.clusterName
+  ],
+  headerParameters: [Parameters.accept],
+  serializer
+};
+const listByResourceGroupNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {

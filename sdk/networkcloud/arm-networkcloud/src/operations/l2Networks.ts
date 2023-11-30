@@ -223,13 +223,11 @@ export class L2NetworksImpl implements L2Networks {
    * Create a new layer 2 (L2) network or update the properties of the existing network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param l2NetworkName The name of the L2 network.
-   * @param l2NetworkParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
     l2NetworkName: string,
-    l2NetworkParameters: L2Network,
     options?: L2NetworksCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -278,7 +276,7 @@ export class L2NetworksImpl implements L2Networks {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, l2NetworkName, l2NetworkParameters, options },
+      args: { resourceGroupName, l2NetworkName, options },
       spec: createOrUpdateOperationSpec
     });
     const poller = await createHttpPoller<
@@ -297,19 +295,16 @@ export class L2NetworksImpl implements L2Networks {
    * Create a new layer 2 (L2) network or update the properties of the existing network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param l2NetworkName The name of the L2 network.
-   * @param l2NetworkParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     l2NetworkName: string,
-    l2NetworkParameters: L2Network,
     options?: L2NetworksCreateOrUpdateOptionalParams
   ): Promise<L2NetworksCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
       l2NetworkName,
-      l2NetworkParameters,
       options
     );
     return poller.pollUntilDone();

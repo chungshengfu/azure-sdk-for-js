@@ -55,13 +55,11 @@ export interface TrunkedNetworks {
    * Create a new trunked network or update the properties of the existing trunked network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param trunkedNetworkName The name of the trunked network.
-   * @param trunkedNetworkParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     trunkedNetworkName: string,
-    trunkedNetworkParameters: TrunkedNetwork,
     options?: TrunkedNetworksCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -73,13 +71,11 @@ export interface TrunkedNetworks {
    * Create a new trunked network or update the properties of the existing trunked network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param trunkedNetworkName The name of the trunked network.
-   * @param trunkedNetworkParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     trunkedNetworkName: string,
-    trunkedNetworkParameters: TrunkedNetwork,
     options?: TrunkedNetworksCreateOrUpdateOptionalParams
   ): Promise<TrunkedNetworksCreateOrUpdateResponse>;
   /**

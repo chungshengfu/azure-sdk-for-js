@@ -55,13 +55,11 @@ export interface CloudServicesNetworks {
    * Create a new cloud services network or update the properties of the existing cloud services network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param cloudServicesNetworkName The name of the cloud services network.
-   * @param cloudServicesNetworkParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     cloudServicesNetworkName: string,
-    cloudServicesNetworkParameters: CloudServicesNetwork,
     options?: CloudServicesNetworksCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -73,13 +71,11 @@ export interface CloudServicesNetworks {
    * Create a new cloud services network or update the properties of the existing cloud services network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param cloudServicesNetworkName The name of the cloud services network.
-   * @param cloudServicesNetworkParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     cloudServicesNetworkName: string,
-    cloudServicesNetworkParameters: CloudServicesNetwork,
     options?: CloudServicesNetworksCreateOrUpdateOptionalParams
   ): Promise<CloudServicesNetworksCreateOrUpdateResponse>;
   /**

@@ -36,7 +36,6 @@ import {
   ClustersUpdateResponse,
   ClustersDeployOptionalParams,
   ClustersDeployResponse,
-  ClusterUpdateVersionParameters,
   ClustersUpdateVersionOptionalParams,
   ClustersUpdateVersionResponse,
   ClustersListBySubscriptionNextResponse,
@@ -228,13 +227,11 @@ export class ClustersImpl implements Clusters {
    * Create a new cluster or update the properties of the cluster if it exists.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
-   * @param clusterParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
     clusterName: string,
-    clusterParameters: Cluster,
     options?: ClustersCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -283,7 +280,7 @@ export class ClustersImpl implements Clusters {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, clusterName, clusterParameters, options },
+      args: { resourceGroupName, clusterName, options },
       spec: createOrUpdateOperationSpec
     });
     const poller = await createHttpPoller<
@@ -302,19 +299,16 @@ export class ClustersImpl implements Clusters {
    * Create a new cluster or update the properties of the cluster if it exists.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
-   * @param clusterParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     clusterName: string,
-    clusterParameters: Cluster,
     options?: ClustersCreateOrUpdateOptionalParams
   ): Promise<ClustersCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
       clusterName,
-      clusterParameters,
       options
     );
     return poller.pollUntilDone();
@@ -470,7 +464,7 @@ export class ClustersImpl implements Clusters {
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "location"
     });
     await poller.poll();
     return poller;
@@ -591,13 +585,11 @@ export class ClustersImpl implements Clusters {
    * Update the version of the provided cluster to one of the available supported versions.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
-   * @param clusterUpdateVersionParameters The request body.
    * @param options The options parameters.
    */
   async beginUpdateVersion(
     resourceGroupName: string,
     clusterName: string,
-    clusterUpdateVersionParameters: ClusterUpdateVersionParameters,
     options?: ClustersUpdateVersionOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -646,12 +638,7 @@ export class ClustersImpl implements Clusters {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: {
-        resourceGroupName,
-        clusterName,
-        clusterUpdateVersionParameters,
-        options
-      },
+      args: { resourceGroupName, clusterName, options },
       spec: updateVersionOperationSpec
     });
     const poller = await createHttpPoller<
@@ -670,19 +657,16 @@ export class ClustersImpl implements Clusters {
    * Update the version of the provided cluster to one of the available supported versions.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
-   * @param clusterUpdateVersionParameters The request body.
    * @param options The options parameters.
    */
   async beginUpdateVersionAndWait(
     resourceGroupName: string,
     clusterName: string,
-    clusterUpdateVersionParameters: ClusterUpdateVersionParameters,
     options?: ClustersUpdateVersionOptionalParams
   ): Promise<ClustersUpdateVersionResponse> {
     const poller = await this.beginUpdateVersion(
       resourceGroupName,
       clusterName,
-      clusterUpdateVersionParameters,
       options
     );
     return poller.pollUntilDone();
@@ -878,16 +862,16 @@ const deployOperationSpec: coreClient.OperationSpec = {
   httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.ClustersDeployHeaders
     },
     201: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.ClustersDeployHeaders
     },
     202: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.ClustersDeployHeaders
     },
     204: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.ClustersDeployHeaders
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -911,16 +895,16 @@ const updateVersionOperationSpec: coreClient.OperationSpec = {
   httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.ClustersUpdateVersionHeaders
     },
     201: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.ClustersUpdateVersionHeaders
     },
     202: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.ClustersUpdateVersionHeaders
     },
     204: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper: Mappers.ClustersUpdateVersionHeaders
     },
     default: {
       bodyMapper: Mappers.ErrorResponse

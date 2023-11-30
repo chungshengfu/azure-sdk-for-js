@@ -10,7 +10,8 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   ClusterMetricsConfiguration,
-  MetricsConfigurationsListByClusterOptionalParams,
+  MetricsConfigurationsListBySubscriptionOptionalParams,
+  MetricsConfigurationsListByResourceGroupOptionalParams,
   MetricsConfigurationsGetOptionalParams,
   MetricsConfigurationsGetResponse,
   MetricsConfigurationsCreateOrUpdateOptionalParams,
@@ -24,15 +25,24 @@ import {
 /** Interface representing a MetricsConfigurations. */
 export interface MetricsConfigurations {
   /**
-   * Get a list of metrics configurations for the provided cluster.
+   * Get a list of metrics configurations of the cluster in the provided subscription.
+   * @param clusterName The name of the cluster.
+   * @param options The options parameters.
+   */
+  listBySubscription(
+    clusterName: string,
+    options?: MetricsConfigurationsListBySubscriptionOptionalParams
+  ): PagedAsyncIterableIterator<ClusterMetricsConfiguration>;
+  /**
+   * Get a list of metrics configurations of the clusters in the provided resource group.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
    * @param options The options parameters.
    */
-  listByCluster(
+  listByResourceGroup(
     resourceGroupName: string,
     clusterName: string,
-    options?: MetricsConfigurationsListByClusterOptionalParams
+    options?: MetricsConfigurationsListByResourceGroupOptionalParams
   ): PagedAsyncIterableIterator<ClusterMetricsConfiguration>;
   /**
    * Get metrics configuration of the provided cluster.
@@ -48,18 +58,16 @@ export interface MetricsConfigurations {
     options?: MetricsConfigurationsGetOptionalParams
   ): Promise<MetricsConfigurationsGetResponse>;
   /**
-   * Create new or update the existing metrics configuration of the provided cluster.
+   * Update the metrics configuration of the provided cluster.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
    * @param metricsConfigurationName The name of the metrics configuration for the cluster.
-   * @param metricsConfigurationParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     clusterName: string,
     metricsConfigurationName: string,
-    metricsConfigurationParameters: ClusterMetricsConfiguration,
     options?: MetricsConfigurationsCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -68,18 +76,16 @@ export interface MetricsConfigurations {
     >
   >;
   /**
-   * Create new or update the existing metrics configuration of the provided cluster.
+   * Update the metrics configuration of the provided cluster.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName The name of the cluster.
    * @param metricsConfigurationName The name of the metrics configuration for the cluster.
-   * @param metricsConfigurationParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     clusterName: string,
     metricsConfigurationName: string,
-    metricsConfigurationParameters: ClusterMetricsConfiguration,
     options?: MetricsConfigurationsCreateOrUpdateOptionalParams
   ): Promise<MetricsConfigurationsCreateOrUpdateResponse>;
   /**

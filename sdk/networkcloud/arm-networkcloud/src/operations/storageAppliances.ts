@@ -38,6 +38,10 @@ import {
   StorageAppliancesDisableRemoteVendorManagementResponse,
   StorageAppliancesEnableRemoteVendorManagementOptionalParams,
   StorageAppliancesEnableRemoteVendorManagementResponse,
+  StorageAppliancesRunReadCommandsOptionalParams,
+  StorageAppliancesRunReadCommandsResponse,
+  StorageAppliancesValidateHardwareOptionalParams,
+  StorageAppliancesValidateHardwareResponse,
   StorageAppliancesListBySubscriptionNextResponse,
   StorageAppliancesListByResourceGroupNextResponse
 } from "../models";
@@ -229,13 +233,11 @@ export class StorageAppliancesImpl implements StorageAppliances {
    * the system.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param storageApplianceName The name of the storage appliance.
-   * @param storageApplianceParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
     storageApplianceName: string,
-    storageApplianceParameters: StorageAppliance,
     options?: StorageAppliancesCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -284,12 +286,7 @@ export class StorageAppliancesImpl implements StorageAppliances {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: {
-        resourceGroupName,
-        storageApplianceName,
-        storageApplianceParameters,
-        options
-      },
+      args: { resourceGroupName, storageApplianceName, options },
       spec: createOrUpdateOperationSpec
     });
     const poller = await createHttpPoller<
@@ -310,19 +307,16 @@ export class StorageAppliancesImpl implements StorageAppliances {
    * the system.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param storageApplianceName The name of the storage appliance.
-   * @param storageApplianceParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     storageApplianceName: string,
-    storageApplianceParameters: StorageAppliance,
     options?: StorageAppliancesCreateOrUpdateOptionalParams
   ): Promise<StorageAppliancesCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
       storageApplianceName,
-      storageApplianceParameters,
       options
     );
     return poller.pollUntilDone();
@@ -416,8 +410,8 @@ export class StorageAppliancesImpl implements StorageAppliances {
   }
 
   /**
-   * Update properties of the provided storage appliance, or update tags associated with the storage
-   * appliance Properties and tag updates can be done independently.
+   * Patch properties of the provided bare metal machine, or update tags associated with the bare metal
+   * machine. Properties and tag updates can be done independently.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param storageApplianceName The name of the storage appliance.
    * @param options The options parameters.
@@ -482,15 +476,15 @@ export class StorageAppliancesImpl implements StorageAppliances {
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "location"
     });
     await poller.poll();
     return poller;
   }
 
   /**
-   * Update properties of the provided storage appliance, or update tags associated with the storage
-   * appliance Properties and tag updates can be done independently.
+   * Patch properties of the provided bare metal machine, or update tags associated with the bare metal
+   * machine. Properties and tag updates can be done independently.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param storageApplianceName The name of the storage appliance.
    * @param options The options parameters.
@@ -691,6 +685,188 @@ export class StorageAppliancesImpl implements StorageAppliances {
   }
 
   /**
+   * Run and retrieve output from read only commands on the provided storage appliance.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param storageApplianceName The name of the storage appliance.
+   * @param options The options parameters.
+   */
+  async beginRunReadCommands(
+    resourceGroupName: string,
+    storageApplianceName: string,
+    options?: StorageAppliancesRunReadCommandsOptionalParams
+  ): Promise<
+    SimplePollerLike<
+      OperationState<StorageAppliancesRunReadCommandsResponse>,
+      StorageAppliancesRunReadCommandsResponse
+    >
+  > {
+    const directSendOperation = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ): Promise<StorageAppliancesRunReadCommandsResponse> => {
+      return this.client.sendOperationRequest(args, spec);
+    };
+    const sendOperationFn = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ) => {
+      let currentRawResponse:
+        | coreClient.FullOperationResponse
+        | undefined = undefined;
+      const providedCallback = args.options?.onResponse;
+      const callback: coreClient.RawResponseCallback = (
+        rawResponse: coreClient.FullOperationResponse,
+        flatResponse: unknown
+      ) => {
+        currentRawResponse = rawResponse;
+        providedCallback?.(rawResponse, flatResponse);
+      };
+      const updatedArgs = {
+        ...args,
+        options: {
+          ...args.options,
+          onResponse: callback
+        }
+      };
+      const flatResponse = await directSendOperation(updatedArgs, spec);
+      return {
+        flatResponse,
+        rawResponse: {
+          statusCode: currentRawResponse!.status,
+          body: currentRawResponse!.parsedBody,
+          headers: currentRawResponse!.headers.toJSON()
+        }
+      };
+    };
+
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: { resourceGroupName, storageApplianceName, options },
+      spec: runReadCommandsOperationSpec
+    });
+    const poller = await createHttpPoller<
+      StorageAppliancesRunReadCommandsResponse,
+      OperationState<StorageAppliancesRunReadCommandsResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "location"
+    });
+    await poller.poll();
+    return poller;
+  }
+
+  /**
+   * Run and retrieve output from read only commands on the provided storage appliance.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param storageApplianceName The name of the storage appliance.
+   * @param options The options parameters.
+   */
+  async beginRunReadCommandsAndWait(
+    resourceGroupName: string,
+    storageApplianceName: string,
+    options?: StorageAppliancesRunReadCommandsOptionalParams
+  ): Promise<StorageAppliancesRunReadCommandsResponse> {
+    const poller = await this.beginRunReadCommands(
+      resourceGroupName,
+      storageApplianceName,
+      options
+    );
+    return poller.pollUntilDone();
+  }
+
+  /**
+   * Validate the hardware of the provided storage appliance.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param storageApplianceName The name of the storage appliance.
+   * @param options The options parameters.
+   */
+  async beginValidateHardware(
+    resourceGroupName: string,
+    storageApplianceName: string,
+    options?: StorageAppliancesValidateHardwareOptionalParams
+  ): Promise<
+    SimplePollerLike<
+      OperationState<StorageAppliancesValidateHardwareResponse>,
+      StorageAppliancesValidateHardwareResponse
+    >
+  > {
+    const directSendOperation = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ): Promise<StorageAppliancesValidateHardwareResponse> => {
+      return this.client.sendOperationRequest(args, spec);
+    };
+    const sendOperationFn = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ) => {
+      let currentRawResponse:
+        | coreClient.FullOperationResponse
+        | undefined = undefined;
+      const providedCallback = args.options?.onResponse;
+      const callback: coreClient.RawResponseCallback = (
+        rawResponse: coreClient.FullOperationResponse,
+        flatResponse: unknown
+      ) => {
+        currentRawResponse = rawResponse;
+        providedCallback?.(rawResponse, flatResponse);
+      };
+      const updatedArgs = {
+        ...args,
+        options: {
+          ...args.options,
+          onResponse: callback
+        }
+      };
+      const flatResponse = await directSendOperation(updatedArgs, spec);
+      return {
+        flatResponse,
+        rawResponse: {
+          statusCode: currentRawResponse!.status,
+          body: currentRawResponse!.parsedBody,
+          headers: currentRawResponse!.headers.toJSON()
+        }
+      };
+    };
+
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: { resourceGroupName, storageApplianceName, options },
+      spec: validateHardwareOperationSpec
+    });
+    const poller = await createHttpPoller<
+      StorageAppliancesValidateHardwareResponse,
+      OperationState<StorageAppliancesValidateHardwareResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "location"
+    });
+    await poller.poll();
+    return poller;
+  }
+
+  /**
+   * Validate the hardware of the provided storage appliance.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param storageApplianceName The name of the storage appliance.
+   * @param options The options parameters.
+   */
+  async beginValidateHardwareAndWait(
+    resourceGroupName: string,
+    storageApplianceName: string,
+    options?: StorageAppliancesValidateHardwareOptionalParams
+  ): Promise<StorageAppliancesValidateHardwareResponse> {
+    const poller = await this.beginValidateHardware(
+      resourceGroupName,
+      storageApplianceName,
+      options
+    );
+    return poller.pollUntilDone();
+  }
+
+  /**
    * ListBySubscriptionNext
    * @param nextLink The nextLink from the previous successful call to the ListBySubscription method.
    * @param options The options parameters.
@@ -880,16 +1056,20 @@ const disableRemoteVendorManagementOperationSpec: coreClient.OperationSpec = {
   httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper:
+        Mappers.StorageAppliancesDisableRemoteVendorManagementHeaders
     },
     201: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper:
+        Mappers.StorageAppliancesDisableRemoteVendorManagementHeaders
     },
     202: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper:
+        Mappers.StorageAppliancesDisableRemoteVendorManagementHeaders
     },
     204: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper:
+        Mappers.StorageAppliancesDisableRemoteVendorManagementHeaders
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -911,16 +1091,20 @@ const enableRemoteVendorManagementOperationSpec: coreClient.OperationSpec = {
   httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper:
+        Mappers.StorageAppliancesEnableRemoteVendorManagementHeaders
     },
     201: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper:
+        Mappers.StorageAppliancesEnableRemoteVendorManagementHeaders
     },
     202: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper:
+        Mappers.StorageAppliancesEnableRemoteVendorManagementHeaders
     },
     204: {
-      bodyMapper: Mappers.OperationStatusResult
+      headersMapper:
+        Mappers.StorageAppliancesEnableRemoteVendorManagementHeaders
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -928,6 +1112,72 @@ const enableRemoteVendorManagementOperationSpec: coreClient.OperationSpec = {
   },
   requestBody:
     Parameters.storageApplianceEnableRemoteVendorManagementParameters,
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.storageApplianceName
+  ],
+  headerParameters: [Parameters.accept, Parameters.contentType],
+  mediaType: "json",
+  serializer
+};
+const runReadCommandsOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/storageAppliances/{storageApplianceName}/runReadCommands",
+  httpMethod: "POST",
+  responses: {
+    200: {
+      headersMapper: Mappers.StorageAppliancesRunReadCommandsHeaders
+    },
+    201: {
+      headersMapper: Mappers.StorageAppliancesRunReadCommandsHeaders
+    },
+    202: {
+      headersMapper: Mappers.StorageAppliancesRunReadCommandsHeaders
+    },
+    204: {
+      headersMapper: Mappers.StorageAppliancesRunReadCommandsHeaders
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  requestBody: Parameters.storageApplianceRunReadCommandsParameters,
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.storageApplianceName
+  ],
+  headerParameters: [Parameters.accept, Parameters.contentType],
+  mediaType: "json",
+  serializer
+};
+const validateHardwareOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/storageAppliances/{storageApplianceName}/validateHardware",
+  httpMethod: "POST",
+  responses: {
+    200: {
+      headersMapper: Mappers.StorageAppliancesValidateHardwareHeaders
+    },
+    201: {
+      headersMapper: Mappers.StorageAppliancesValidateHardwareHeaders
+    },
+    202: {
+      headersMapper: Mappers.StorageAppliancesValidateHardwareHeaders
+    },
+    204: {
+      headersMapper: Mappers.StorageAppliancesValidateHardwareHeaders
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  requestBody: Parameters.storageApplianceValidateHardwareParameters,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,

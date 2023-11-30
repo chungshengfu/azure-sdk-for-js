@@ -223,13 +223,11 @@ export class CloudServicesNetworksImpl implements CloudServicesNetworks {
    * Create a new cloud services network or update the properties of the existing cloud services network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param cloudServicesNetworkName The name of the cloud services network.
-   * @param cloudServicesNetworkParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
     cloudServicesNetworkName: string,
-    cloudServicesNetworkParameters: CloudServicesNetwork,
     options?: CloudServicesNetworksCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -278,12 +276,7 @@ export class CloudServicesNetworksImpl implements CloudServicesNetworks {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: {
-        resourceGroupName,
-        cloudServicesNetworkName,
-        cloudServicesNetworkParameters,
-        options
-      },
+      args: { resourceGroupName, cloudServicesNetworkName, options },
       spec: createOrUpdateOperationSpec
     });
     const poller = await createHttpPoller<
@@ -302,19 +295,16 @@ export class CloudServicesNetworksImpl implements CloudServicesNetworks {
    * Create a new cloud services network or update the properties of the existing cloud services network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param cloudServicesNetworkName The name of the cloud services network.
-   * @param cloudServicesNetworkParameters The request body.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     cloudServicesNetworkName: string,
-    cloudServicesNetworkParameters: CloudServicesNetwork,
     options?: CloudServicesNetworksCreateOrUpdateOptionalParams
   ): Promise<CloudServicesNetworksCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
       cloudServicesNetworkName,
-      cloudServicesNetworkParameters,
       options
     );
     return poller.pollUntilDone();
@@ -470,7 +460,7 @@ export class CloudServicesNetworksImpl implements CloudServicesNetworks {
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "location"
     });
     await poller.poll();
     return poller;

@@ -29,19 +29,18 @@ import {
   BareMetalMachinesReplaceResponse,
   BareMetalMachinesRestartOptionalParams,
   BareMetalMachinesRestartResponse,
-  BareMetalMachineRunCommandParameters,
   BareMetalMachinesRunCommandOptionalParams,
   BareMetalMachinesRunCommandResponse,
-  BareMetalMachineRunDataExtractsParameters,
   BareMetalMachinesRunDataExtractsOptionalParams,
   BareMetalMachinesRunDataExtractsResponse,
-  BareMetalMachineRunReadCommandsParameters,
   BareMetalMachinesRunReadCommandsOptionalParams,
   BareMetalMachinesRunReadCommandsResponse,
   BareMetalMachinesStartOptionalParams,
   BareMetalMachinesStartResponse,
   BareMetalMachinesUncordonOptionalParams,
-  BareMetalMachinesUncordonResponse
+  BareMetalMachinesUncordonResponse,
+  BareMetalMachinesValidateHardwareOptionalParams,
+  BareMetalMachinesValidateHardwareResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -80,13 +79,11 @@ export interface BareMetalMachines {
    * the system.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param bareMetalMachineName The name of the bare metal machine.
-   * @param bareMetalMachineParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     bareMetalMachineName: string,
-    bareMetalMachineParameters: BareMetalMachine,
     options?: BareMetalMachinesCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -100,13 +97,11 @@ export interface BareMetalMachines {
    * the system.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param bareMetalMachineName The name of the bare metal machine.
-   * @param bareMetalMachineParameters The request body.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     bareMetalMachineName: string,
-    bareMetalMachineParameters: BareMetalMachine,
     options?: BareMetalMachinesCreateOrUpdateOptionalParams
   ): Promise<BareMetalMachinesCreateOrUpdateResponse>;
   /**
@@ -305,13 +300,11 @@ export interface BareMetalMachines {
    * API once available.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param bareMetalMachineName The name of the bare metal machine.
-   * @param bareMetalMachineRunCommandParameters The request body.
    * @param options The options parameters.
    */
   beginRunCommand(
     resourceGroupName: string,
     bareMetalMachineName: string,
-    bareMetalMachineRunCommandParameters: BareMetalMachineRunCommandParameters,
     options?: BareMetalMachinesRunCommandOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -325,13 +318,11 @@ export interface BareMetalMachines {
    * API once available.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param bareMetalMachineName The name of the bare metal machine.
-   * @param bareMetalMachineRunCommandParameters The request body.
    * @param options The options parameters.
    */
   beginRunCommandAndWait(
     resourceGroupName: string,
     bareMetalMachineName: string,
-    bareMetalMachineRunCommandParameters: BareMetalMachineRunCommandParameters,
     options?: BareMetalMachinesRunCommandOptionalParams
   ): Promise<BareMetalMachinesRunCommandResponse>;
   /**
@@ -340,13 +331,11 @@ export interface BareMetalMachines {
    * API once available.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param bareMetalMachineName The name of the bare metal machine.
-   * @param bareMetalMachineRunDataExtractsParameters The request body.
    * @param options The options parameters.
    */
   beginRunDataExtracts(
     resourceGroupName: string,
     bareMetalMachineName: string,
-    bareMetalMachineRunDataExtractsParameters: BareMetalMachineRunDataExtractsParameters,
     options?: BareMetalMachinesRunDataExtractsOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -360,13 +349,11 @@ export interface BareMetalMachines {
    * API once available.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param bareMetalMachineName The name of the bare metal machine.
-   * @param bareMetalMachineRunDataExtractsParameters The request body.
    * @param options The options parameters.
    */
   beginRunDataExtractsAndWait(
     resourceGroupName: string,
     bareMetalMachineName: string,
-    bareMetalMachineRunDataExtractsParameters: BareMetalMachineRunDataExtractsParameters,
     options?: BareMetalMachinesRunDataExtractsOptionalParams
   ): Promise<BareMetalMachinesRunDataExtractsResponse>;
   /**
@@ -375,13 +362,11 @@ export interface BareMetalMachines {
    * status API once available.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param bareMetalMachineName The name of the bare metal machine.
-   * @param bareMetalMachineRunReadCommandsParameters The request body.
    * @param options The options parameters.
    */
   beginRunReadCommands(
     resourceGroupName: string,
     bareMetalMachineName: string,
-    bareMetalMachineRunReadCommandsParameters: BareMetalMachineRunReadCommandsParameters,
     options?: BareMetalMachinesRunReadCommandsOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -395,13 +380,11 @@ export interface BareMetalMachines {
    * status API once available.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param bareMetalMachineName The name of the bare metal machine.
-   * @param bareMetalMachineRunReadCommandsParameters The request body.
    * @param options The options parameters.
    */
   beginRunReadCommandsAndWait(
     resourceGroupName: string,
     bareMetalMachineName: string,
-    bareMetalMachineRunReadCommandsParameters: BareMetalMachineRunReadCommandsParameters,
     options?: BareMetalMachinesRunReadCommandsOptionalParams
   ): Promise<BareMetalMachinesRunReadCommandsResponse>;
   /**
@@ -458,4 +441,31 @@ export interface BareMetalMachines {
     bareMetalMachineName: string,
     options?: BareMetalMachinesUncordonOptionalParams
   ): Promise<BareMetalMachinesUncordonResponse>;
+  /**
+   * Validate the hardware of the provided bare metal machine.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param bareMetalMachineName The name of the bare metal machine.
+   * @param options The options parameters.
+   */
+  beginValidateHardware(
+    resourceGroupName: string,
+    bareMetalMachineName: string,
+    options?: BareMetalMachinesValidateHardwareOptionalParams
+  ): Promise<
+    SimplePollerLike<
+      OperationState<BareMetalMachinesValidateHardwareResponse>,
+      BareMetalMachinesValidateHardwareResponse
+    >
+  >;
+  /**
+   * Validate the hardware of the provided bare metal machine.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param bareMetalMachineName The name of the bare metal machine.
+   * @param options The options parameters.
+   */
+  beginValidateHardwareAndWait(
+    resourceGroupName: string,
+    bareMetalMachineName: string,
+    options?: BareMetalMachinesValidateHardwareOptionalParams
+  ): Promise<BareMetalMachinesValidateHardwareResponse>;
 }
