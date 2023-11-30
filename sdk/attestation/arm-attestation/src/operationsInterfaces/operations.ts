@@ -6,16 +6,17 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-import {
-  OperationsListOptionalParams,
-  OperationsListResponse
-} from "../models";
+import { PagedAsyncIterableIterator } from "@azure/core-paging";
+import { Operation, OperationsListOptionalParams } from "../models";
 
+/// <reference lib="esnext.asynciterable" />
 /** Interface representing a Operations. */
 export interface Operations {
   /**
-   * Lists all of the available Azure attestation operations.
+   * List the operations for the provider
    * @param options The options parameters.
    */
-  list(options?: OperationsListOptionalParams): Promise<OperationsListResponse>;
+  list(
+    options?: OperationsListOptionalParams
+  ): PagedAsyncIterableIterator<Operation>;
 }

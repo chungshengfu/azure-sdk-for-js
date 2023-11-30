@@ -17,19 +17,19 @@ import * as coreAuth from "@azure/core-auth";
 import {
   OperationsImpl,
   AttestationProvidersImpl,
-  PrivateEndpointConnectionsImpl
+  AttestationManagementClientPrivateEndpointConnectionsImpl
 } from "./operations";
 import {
   Operations,
   AttestationProviders,
-  PrivateEndpointConnections
+  AttestationManagementClientPrivateEndpointConnections
 } from "./operationsInterfaces";
 import { AttestationManagementClientOptionalParams } from "./models";
 
 export class AttestationManagementClient extends coreClient.ServiceClient {
   $host: string;
   apiVersion: string;
-  subscriptionId: string;
+  subscriptionId?: string;
 
   /**
    * Initializes a new instance of the AttestationManagementClient class.
@@ -41,12 +41,28 @@ export class AttestationManagementClient extends coreClient.ServiceClient {
     credentials: coreAuth.TokenCredential,
     subscriptionId: string,
     options?: AttestationManagementClientOptionalParams
+  );
+  constructor(
+    credentials: coreAuth.TokenCredential,
+    options?: AttestationManagementClientOptionalParams
+  );
+  constructor(
+    credentials: coreAuth.TokenCredential,
+    subscriptionIdOrOptions?:
+      | AttestationManagementClientOptionalParams
+      | string,
+    options?: AttestationManagementClientOptionalParams
   ) {
     if (credentials === undefined) {
       throw new Error("'credentials' cannot be null");
     }
-    if (subscriptionId === undefined) {
-      throw new Error("'subscriptionId' cannot be null");
+
+    let subscriptionId: string | undefined;
+
+    if (typeof subscriptionIdOrOptions === "string") {
+      subscriptionId = subscriptionIdOrOptions;
+    } else if (typeof subscriptionIdOrOptions === "object") {
+      options = subscriptionIdOrOptions;
     }
 
     // Initializing default values for options
@@ -58,7 +74,7 @@ export class AttestationManagementClient extends coreClient.ServiceClient {
       credential: credentials
     };
 
-    const packageDetails = `azsdk-js-arm-attestation/2.1.1`;
+    const packageDetails = `azsdk-js-arm-attestation/3.0.0`;
     const userAgentPrefix =
       options.userAgentOptions && options.userAgentOptions.userAgentPrefix
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
@@ -111,10 +127,12 @@ export class AttestationManagementClient extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
-    this.apiVersion = options.apiVersion || "2020-10-01";
+    this.apiVersion = options.apiVersion || "2021-06-01";
     this.operations = new OperationsImpl(this);
     this.attestationProviders = new AttestationProvidersImpl(this);
-    this.privateEndpointConnections = new PrivateEndpointConnectionsImpl(this);
+    this.attestationManagementClientPrivateEndpointConnections = new AttestationManagementClientPrivateEndpointConnectionsImpl(
+      this
+    );
     this.addCustomApiVersionPolicy(options.apiVersion);
   }
 
@@ -148,5 +166,5 @@ export class AttestationManagementClient extends coreClient.ServiceClient {
 
   operations: Operations;
   attestationProviders: AttestationProviders;
-  privateEndpointConnections: PrivateEndpointConnections;
+  attestationManagementClientPrivateEndpointConnections: AttestationManagementClientPrivateEndpointConnections;
 }

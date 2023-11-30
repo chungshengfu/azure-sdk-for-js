@@ -12,9 +12,9 @@ import {
   OperationQueryParameter
 } from "@azure/core-client";
 import {
-  AttestationServiceCreationParams as AttestationServiceCreationParamsMapper,
-  AttestationServicePatchParams as AttestationServicePatchParamsMapper,
-  PrivateEndpointConnection as PrivateEndpointConnectionMapper
+  AttestationProvider as AttestationProviderMapper,
+  AttestationProviderUpdate as AttestationProviderUpdateMapper,
+  AttestationManagementClientPrivateEndpointConnection as AttestationManagementClientPrivateEndpointConnectionMapper
 } from "../models/mappers";
 
 export const accept: OperationParameter = {
@@ -44,13 +44,25 @@ export const $host: OperationURLParameter = {
 export const apiVersion: OperationQueryParameter = {
   parameterPath: "apiVersion",
   mapper: {
-    defaultValue: "2020-10-01",
+    defaultValue: "2021-06-01",
     isConstant: true,
     serializedName: "api-version",
     type: {
       name: "String"
     }
   }
+};
+
+export const nextLink: OperationURLParameter = {
+  parameterPath: "nextLink",
+  mapper: {
+    serializedName: "nextLink",
+    required: true,
+    type: {
+      name: "String"
+    }
+  },
+  skipEncoding: true
 };
 
 export const subscriptionId: OperationURLParameter = {
@@ -105,28 +117,14 @@ export const contentType: OperationParameter = {
   }
 };
 
-export const creationParams: OperationParameter = {
-  parameterPath: "creationParams",
-  mapper: AttestationServiceCreationParamsMapper
+export const resource: OperationParameter = {
+  parameterPath: "resource",
+  mapper: AttestationProviderMapper
 };
 
-export const updateParams: OperationParameter = {
-  parameterPath: "updateParams",
-  mapper: AttestationServicePatchParamsMapper
-};
-
-export const location: OperationURLParameter = {
-  parameterPath: "location",
-  mapper: {
-    constraints: {
-      MinLength: 1
-    },
-    serializedName: "location",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
+export const properties: OperationParameter = {
+  parameterPath: "properties",
+  mapper: AttestationProviderUpdateMapper
 };
 
 export const providerName1: OperationURLParameter = {
@@ -136,6 +134,20 @@ export const providerName1: OperationURLParameter = {
       Pattern: new RegExp("^[a-zA-Z0-9-]{3,24}$")
     },
     serializedName: "providerName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const subscriptionId1: OperationURLParameter = {
+  parameterPath: "subscriptionId",
+  mapper: {
+    constraints: {
+      MinLength: 1
+    },
+    serializedName: "subscriptionId",
     required: true,
     type: {
       name: "String"
@@ -154,7 +166,7 @@ export const privateEndpointConnectionName: OperationURLParameter = {
   }
 };
 
-export const properties: OperationParameter = {
-  parameterPath: "properties",
-  mapper: PrivateEndpointConnectionMapper
+export const resource1: OperationParameter = {
+  parameterPath: "resource",
+  mapper: AttestationManagementClientPrivateEndpointConnectionMapper
 };

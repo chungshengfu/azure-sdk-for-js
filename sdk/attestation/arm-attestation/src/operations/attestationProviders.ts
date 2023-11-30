@@ -6,31 +6,32 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
+import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
+import { setContinuationToken } from "../pagingHelper";
 import { AttestationProviders } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { AttestationManagementClient } from "../attestationManagementClient";
 import {
+  AttestationProvider,
+  AttestationProvidersListByResourceGroupNextOptionalParams,
+  AttestationProvidersListByResourceGroupOptionalParams,
+  AttestationProvidersListByResourceGroupResponse,
   AttestationProvidersGetOptionalParams,
   AttestationProvidersGetResponse,
-  AttestationServiceCreationParams,
   AttestationProvidersCreateOptionalParams,
   AttestationProvidersCreateResponse,
-  AttestationServicePatchParams,
+  AttestationProviderUpdate,
   AttestationProvidersUpdateOptionalParams,
   AttestationProvidersUpdateResponse,
   AttestationProvidersDeleteOptionalParams,
-  AttestationProvidersListOptionalParams,
-  AttestationProvidersListResponse,
-  AttestationProvidersListByResourceGroupOptionalParams,
-  AttestationProvidersListByResourceGroupResponse,
-  AttestationProvidersListDefaultOptionalParams,
-  AttestationProvidersListDefaultResponse,
-  AttestationProvidersGetDefaultByLocationOptionalParams,
-  AttestationProvidersGetDefaultByLocationResponse
+  AttestationProvidersListByProviderOptionalParams,
+  AttestationProvidersListByProviderResponse,
+  AttestationProvidersListByResourceGroupNextResponse
 } from "../models";
 
+/// <reference lib="esnext.asynciterable" />
 /** Class containing AttestationProviders operations. */
 export class AttestationProvidersImpl implements AttestationProviders {
   private readonly client: AttestationManagementClient;
@@ -41,6 +42,90 @@ export class AttestationProvidersImpl implements AttestationProviders {
    */
   constructor(client: AttestationManagementClient) {
     this.client = client;
+  }
+
+  /**
+   * Returns attestation providers list in a resource group.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param options The options parameters.
+   */
+  public listByResourceGroup(
+    resourceGroupName: string,
+    options?: AttestationProvidersListByResourceGroupOptionalParams
+  ): PagedAsyncIterableIterator<AttestationProvider> {
+    const iter = this.listByResourceGroupPagingAll(resourceGroupName, options);
+    return {
+      next() {
+        return iter.next();
+      },
+      [Symbol.asyncIterator]() {
+        return this;
+      },
+      byPage: (settings?: PageSettings) => {
+        if (settings?.maxPageSize) {
+          throw new Error("maxPageSize is not supported by this operation.");
+        }
+        return this.listByResourceGroupPagingPage(
+          resourceGroupName,
+          options,
+          settings
+        );
+      }
+    };
+  }
+
+  private async *listByResourceGroupPagingPage(
+    resourceGroupName: string,
+    options?: AttestationProvidersListByResourceGroupOptionalParams,
+    settings?: PageSettings
+  ): AsyncIterableIterator<AttestationProvider[]> {
+    let result: AttestationProvidersListByResourceGroupResponse;
+    let continuationToken = settings?.continuationToken;
+    if (!continuationToken) {
+      result = await this._listByResourceGroup(resourceGroupName, options);
+      let page = result.value || [];
+      continuationToken = result.nextLink;
+      setContinuationToken(page, continuationToken);
+      yield page;
+    }
+    while (continuationToken) {
+      result = await this._listByResourceGroupNext(
+        resourceGroupName,
+        continuationToken,
+        options
+      );
+      continuationToken = result.nextLink;
+      let page = result.value || [];
+      setContinuationToken(page, continuationToken);
+      yield page;
+    }
+  }
+
+  private async *listByResourceGroupPagingAll(
+    resourceGroupName: string,
+    options?: AttestationProvidersListByResourceGroupOptionalParams
+  ): AsyncIterableIterator<AttestationProvider> {
+    for await (const page of this.listByResourceGroupPagingPage(
+      resourceGroupName,
+      options
+    )) {
+      yield* page;
+    }
+  }
+
+  /**
+   * Returns attestation providers list in a resource group.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param options The options parameters.
+   */
+  private _listByResourceGroup(
+    resourceGroupName: string,
+    options?: AttestationProvidersListByResourceGroupOptionalParams
+  ): Promise<AttestationProvidersListByResourceGroupResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, options },
+      listByResourceGroupOperationSpec
+    );
   }
 
   /**
@@ -61,20 +146,20 @@ export class AttestationProvidersImpl implements AttestationProviders {
   }
 
   /**
-   * Creates a new Attestation Provider.
+   * Creates or updates an Attestation Provider.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param providerName Name of the attestation provider.
-   * @param creationParams Client supplied parameters.
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   create(
     resourceGroupName: string,
     providerName: string,
-    creationParams: AttestationServiceCreationParams,
+    resource: AttestationProvider,
     options?: AttestationProvidersCreateOptionalParams
   ): Promise<AttestationProvidersCreateResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, providerName, creationParams, options },
+      { resourceGroupName, providerName, resource, options },
       createOperationSpec
     );
   }
@@ -83,17 +168,17 @@ export class AttestationProvidersImpl implements AttestationProviders {
    * Updates the Attestation Provider.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param providerName Name of the attestation provider.
-   * @param updateParams Client supplied parameters.
+   * @param properties The resource properties to be updated.
    * @param options The options parameters.
    */
   update(
     resourceGroupName: string,
     providerName: string,
-    updateParams: AttestationServicePatchParams,
+    properties: AttestationProviderUpdate,
     options?: AttestationProvidersUpdateOptionalParams
   ): Promise<AttestationProvidersUpdateResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, providerName, updateParams, options },
+      { resourceGroupName, providerName, properties, options },
       updateOperationSpec
     );
   }
@@ -101,7 +186,7 @@ export class AttestationProvidersImpl implements AttestationProviders {
   /**
    * Delete Attestation Service.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param providerName Name of the attestation service
+   * @param providerName Name of the attestation provider.
    * @param options The options parameters.
    */
   delete(
@@ -117,60 +202,64 @@ export class AttestationProvidersImpl implements AttestationProviders {
 
   /**
    * Returns a list of attestation providers in a subscription.
-   * @param options The options parameters.
-   */
-  list(
-    options?: AttestationProvidersListOptionalParams
-  ): Promise<AttestationProvidersListResponse> {
-    return this.client.sendOperationRequest({ options }, listOperationSpec);
-  }
-
-  /**
-   * Returns attestation providers list in a resource group.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param providerName The name of the attestation provider.
+   * @param subscriptionId The ID of the target subscription.
    * @param options The options parameters.
    */
-  listByResourceGroup(
+  listByProvider(
     resourceGroupName: string,
-    options?: AttestationProvidersListByResourceGroupOptionalParams
-  ): Promise<AttestationProvidersListByResourceGroupResponse> {
+    providerName: string,
+    subscriptionId: string,
+    options?: AttestationProvidersListByProviderOptionalParams
+  ): Promise<AttestationProvidersListByProviderResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, options },
-      listByResourceGroupOperationSpec
+      { resourceGroupName, providerName, subscriptionId, options },
+      listByProviderOperationSpec
     );
   }
 
   /**
-   * Get the default provider
+   * ListByResourceGroupNext
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param nextLink The nextLink from the previous successful call to the ListByResourceGroup method.
    * @param options The options parameters.
    */
-  listDefault(
-    options?: AttestationProvidersListDefaultOptionalParams
-  ): Promise<AttestationProvidersListDefaultResponse> {
+  private _listByResourceGroupNext(
+    resourceGroupName: string,
+    nextLink: string,
+    options?: AttestationProvidersListByResourceGroupNextOptionalParams
+  ): Promise<AttestationProvidersListByResourceGroupNextResponse> {
     return this.client.sendOperationRequest(
-      { options },
-      listDefaultOperationSpec
-    );
-  }
-
-  /**
-   * Get the default provider by location.
-   * @param location The location of the default provider.
-   * @param options The options parameters.
-   */
-  getDefaultByLocation(
-    location: string,
-    options?: AttestationProvidersGetDefaultByLocationOptionalParams
-  ): Promise<AttestationProvidersGetDefaultByLocationResponse> {
-    return this.client.sendOperationRequest(
-      { location, options },
-      getDefaultByLocationOperationSpec
+      { resourceGroupName, nextLink, options },
+      listByResourceGroupNextOperationSpec
     );
   }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
+const listByResourceGroupOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Attestation/attestationProviders",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.AttestationProviderListResult
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName
+  ],
+  headerParameters: [Parameters.accept],
+  serializer
+};
 const getOperationSpec: coreClient.OperationSpec = {
   path:
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Attestation/attestationProviders/{providerName}",
@@ -180,7 +269,7 @@ const getOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.AttestationProvider
     },
     default: {
-      bodyMapper: Mappers.CloudError
+      bodyMapper: Mappers.ErrorResponse
     }
   },
   queryParameters: [Parameters.apiVersion],
@@ -205,10 +294,10 @@ const createOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.AttestationProvider
     },
     default: {
-      bodyMapper: Mappers.CloudError
+      bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.creationParams,
+  requestBody: Parameters.resource,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -229,10 +318,10 @@ const updateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.AttestationProvider
     },
     default: {
-      bodyMapper: Mappers.CloudError
+      bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.updateParams,
+  requestBody: Parameters.properties,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -250,10 +339,9 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   httpMethod: "DELETE",
   responses: {
     200: {},
-    202: {},
     204: {},
     default: {
-      bodyMapper: Mappers.CloudError
+      bodyMapper: Mappers.ErrorResponse
     }
   },
   queryParameters: [Parameters.apiVersion],
@@ -266,78 +354,45 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept],
   serializer
 };
-const listOperationSpec: coreClient.OperationSpec = {
+const listByProviderOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/providers/Microsoft.Attestation/attestationProviders",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Attestation/attestationProviders/{providerName}/privateLinkResources/{resourceGroupName}/{providerName}/{subscriptionId}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.AttestationProviderListResult
+      bodyMapper: Mappers.PrivateLinkResourceListResult
     },
     default: {
-      bodyMapper: Mappers.CloudError
-    }
-  },
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.$host, Parameters.subscriptionId],
-  headerParameters: [Parameters.accept],
-  serializer
-};
-const listByResourceGroupOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Attestation/attestationProviders",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: Mappers.AttestationProviderListResult
-    },
-    default: {
-      bodyMapper: Mappers.CloudError
+      bodyMapper: Mappers.AzureCoreFoundationsErrorResponse,
+      headersMapper: Mappers.AttestationProvidersListByProviderExceptionHeaders
     }
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName
+    Parameters.resourceGroupName,
+    Parameters.providerName1,
+    Parameters.subscriptionId1
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
-const listDefaultOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/providers/Microsoft.Attestation/defaultProviders",
+const listByResourceGroupNextOperationSpec: coreClient.OperationSpec = {
+  path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
       bodyMapper: Mappers.AttestationProviderListResult
     },
     default: {
-      bodyMapper: Mappers.CloudError
+      bodyMapper: Mappers.ErrorResponse
     }
   },
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.$host, Parameters.subscriptionId],
-  headerParameters: [Parameters.accept],
-  serializer
-};
-const getDefaultByLocationOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/providers/Microsoft.Attestation/locations/{location}/defaultProvider",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: Mappers.AttestationProvider
-    },
-    default: {
-      bodyMapper: Mappers.CloudError
-    }
-  },
-  queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
+    Parameters.nextLink,
     Parameters.subscriptionId,
-    Parameters.location
+    Parameters.resourceGroupName
   ],
   headerParameters: [Parameters.accept],
   serializer

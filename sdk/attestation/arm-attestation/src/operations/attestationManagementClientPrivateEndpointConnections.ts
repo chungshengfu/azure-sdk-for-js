@@ -7,30 +7,33 @@
  */
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
-import { PrivateEndpointConnections } from "../operationsInterfaces";
+import { setContinuationToken } from "../pagingHelper";
+import { AttestationManagementClientPrivateEndpointConnections } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { AttestationManagementClient } from "../attestationManagementClient";
 import {
-  PrivateEndpointConnection,
-  PrivateEndpointConnectionsListOptionalParams,
-  PrivateEndpointConnectionsListResponse,
-  PrivateEndpointConnectionsGetOptionalParams,
-  PrivateEndpointConnectionsGetResponse,
-  PrivateEndpointConnectionsCreateOptionalParams,
-  PrivateEndpointConnectionsCreateResponse,
-  PrivateEndpointConnectionsDeleteOptionalParams
+  AttestationManagementClientPrivateEndpointConnection,
+  AttestationManagementClientPrivateEndpointConnectionsListByAttestationProviderNextOptionalParams,
+  AttestationManagementClientPrivateEndpointConnectionsListByAttestationProviderOptionalParams,
+  AttestationManagementClientPrivateEndpointConnectionsListByAttestationProviderResponse,
+  AttestationManagementClientPrivateEndpointConnectionsGetOptionalParams,
+  AttestationManagementClientPrivateEndpointConnectionsGetResponse,
+  AttestationManagementClientPrivateEndpointConnectionsCreateOptionalParams,
+  AttestationManagementClientPrivateEndpointConnectionsCreateResponse,
+  AttestationManagementClientPrivateEndpointConnectionsDeleteOptionalParams,
+  AttestationManagementClientPrivateEndpointConnectionsListByAttestationProviderNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing PrivateEndpointConnections operations. */
-export class PrivateEndpointConnectionsImpl
-  implements PrivateEndpointConnections {
+/** Class containing AttestationManagementClientPrivateEndpointConnections operations. */
+export class AttestationManagementClientPrivateEndpointConnectionsImpl
+  implements AttestationManagementClientPrivateEndpointConnections {
   private readonly client: AttestationManagementClient;
 
   /**
-   * Initialize a new instance of the class PrivateEndpointConnections class.
+   * Initialize a new instance of the class AttestationManagementClientPrivateEndpointConnections class.
    * @param client Reference to the service client
    */
   constructor(client: AttestationManagementClient) {
@@ -40,15 +43,21 @@ export class PrivateEndpointConnectionsImpl
   /**
    * List all the private endpoint connections associated with the attestation provider.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param providerName The name of the attestation provider.
+   * @param providerName Name of the attestation provider.
    * @param options The options parameters.
    */
-  public list(
+  public listByAttestationProvider(
     resourceGroupName: string,
     providerName: string,
-    options?: PrivateEndpointConnectionsListOptionalParams
-  ): PagedAsyncIterableIterator<PrivateEndpointConnection> {
-    const iter = this.listPagingAll(resourceGroupName, providerName, options);
+    options?: AttestationManagementClientPrivateEndpointConnectionsListByAttestationProviderOptionalParams
+  ): PagedAsyncIterableIterator<
+    AttestationManagementClientPrivateEndpointConnection
+  > {
+    const iter = this.listByAttestationProviderPagingAll(
+      resourceGroupName,
+      providerName,
+      options
+    );
     return {
       next() {
         return iter.next();
@@ -60,7 +69,7 @@ export class PrivateEndpointConnectionsImpl
         if (settings?.maxPageSize) {
           throw new Error("maxPageSize is not supported by this operation.");
         }
-        return this.listPagingPage(
+        return this.listByAttestationProviderPagingPage(
           resourceGroupName,
           providerName,
           options,
@@ -70,23 +79,49 @@ export class PrivateEndpointConnectionsImpl
     };
   }
 
-  private async *listPagingPage(
+  private async *listByAttestationProviderPagingPage(
     resourceGroupName: string,
     providerName: string,
-    options?: PrivateEndpointConnectionsListOptionalParams,
-    _settings?: PageSettings
-  ): AsyncIterableIterator<PrivateEndpointConnection[]> {
-    let result: PrivateEndpointConnectionsListResponse;
-    result = await this._list(resourceGroupName, providerName, options);
-    yield result.value || [];
+    options?: AttestationManagementClientPrivateEndpointConnectionsListByAttestationProviderOptionalParams,
+    settings?: PageSettings
+  ): AsyncIterableIterator<
+    AttestationManagementClientPrivateEndpointConnection[]
+  > {
+    let result: AttestationManagementClientPrivateEndpointConnectionsListByAttestationProviderResponse;
+    let continuationToken = settings?.continuationToken;
+    if (!continuationToken) {
+      result = await this._listByAttestationProvider(
+        resourceGroupName,
+        providerName,
+        options
+      );
+      let page = result.value || [];
+      continuationToken = result.nextLink;
+      setContinuationToken(page, continuationToken);
+      yield page;
+    }
+    while (continuationToken) {
+      result = await this._listByAttestationProviderNext(
+        resourceGroupName,
+        providerName,
+        continuationToken,
+        options
+      );
+      continuationToken = result.nextLink;
+      let page = result.value || [];
+      setContinuationToken(page, continuationToken);
+      yield page;
+    }
   }
 
-  private async *listPagingAll(
+  private async *listByAttestationProviderPagingAll(
     resourceGroupName: string,
     providerName: string,
-    options?: PrivateEndpointConnectionsListOptionalParams
-  ): AsyncIterableIterator<PrivateEndpointConnection> {
-    for await (const page of this.listPagingPage(
+    options?: AttestationManagementClientPrivateEndpointConnectionsListByAttestationProviderOptionalParams
+  ): AsyncIterableIterator<
+    AttestationManagementClientPrivateEndpointConnection
+  > {
+    for await (const page of this.listByAttestationProviderPagingPage(
       resourceGroupName,
       providerName,
       options
@@ -98,24 +133,26 @@ export class PrivateEndpointConnectionsImpl
   /**
    * List all the private endpoint connections associated with the attestation provider.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param providerName The name of the attestation provider.
+   * @param providerName Name of the attestation provider.
    * @param options The options parameters.
    */
-  private _list(
+  private _listByAttestationProvider(
     resourceGroupName: string,
     providerName: string,
-    options?: PrivateEndpointConnectionsListOptionalParams
-  ): Promise<PrivateEndpointConnectionsListResponse> {
+    options?: AttestationManagementClientPrivateEndpointConnectionsListByAttestationProviderOptionalParams
+  ): Promise<
+    AttestationManagementClientPrivateEndpointConnectionsListByAttestationProviderResponse
+  > {
     return this.client.sendOperationRequest(
       { resourceGroupName, providerName, options },
-      listOperationSpec
+      listByAttestationProviderOperationSpec
     );
   }
 
   /**
    * Gets the specified private endpoint connection associated with the attestation provider.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param providerName The name of the attestation provider.
+   * @param providerName Name of the attestation provider.
    * @param privateEndpointConnectionName The name of the private endpoint connection associated with the
    *                                      Azure resource
    * @param options The options parameters.
@@ -124,8 +161,8 @@ export class PrivateEndpointConnectionsImpl
     resourceGroupName: string,
     providerName: string,
     privateEndpointConnectionName: string,
-    options?: PrivateEndpointConnectionsGetOptionalParams
-  ): Promise<PrivateEndpointConnectionsGetResponse> {
+    options?: AttestationManagementClientPrivateEndpointConnectionsGetOptionalParams
+  ): Promise<AttestationManagementClientPrivateEndpointConnectionsGetResponse> {
     return this.client.sendOperationRequest(
       {
         resourceGroupName,
@@ -140,25 +177,27 @@ export class PrivateEndpointConnectionsImpl
   /**
    * Update the state of specified private endpoint connection associated with the attestation provider.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param providerName The name of the attestation provider.
+   * @param providerName Name of the attestation provider.
    * @param privateEndpointConnectionName The name of the private endpoint connection associated with the
    *                                      Azure resource
-   * @param properties The private endpoint connection properties.
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   create(
     resourceGroupName: string,
     providerName: string,
     privateEndpointConnectionName: string,
-    properties: PrivateEndpointConnection,
-    options?: PrivateEndpointConnectionsCreateOptionalParams
-  ): Promise<PrivateEndpointConnectionsCreateResponse> {
+    resource: AttestationManagementClientPrivateEndpointConnection,
+    options?: AttestationManagementClientPrivateEndpointConnectionsCreateOptionalParams
+  ): Promise<
+    AttestationManagementClientPrivateEndpointConnectionsCreateResponse
+  > {
     return this.client.sendOperationRequest(
       {
         resourceGroupName,
         providerName,
         privateEndpointConnectionName,
-        properties,
+        resource,
         options
       },
       createOperationSpec
@@ -168,7 +207,7 @@ export class PrivateEndpointConnectionsImpl
   /**
    * Deletes the specified private endpoint connection associated with the attestation provider.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param providerName The name of the attestation provider.
+   * @param providerName Name of the attestation provider.
    * @param privateEndpointConnectionName The name of the private endpoint connection associated with the
    *                                      Azure resource
    * @param options The options parameters.
@@ -177,7 +216,7 @@ export class PrivateEndpointConnectionsImpl
     resourceGroupName: string,
     providerName: string,
     privateEndpointConnectionName: string,
-    options?: PrivateEndpointConnectionsDeleteOptionalParams
+    options?: AttestationManagementClientPrivateEndpointConnectionsDeleteOptionalParams
   ): Promise<void> {
     return this.client.sendOperationRequest(
       {
@@ -189,20 +228,43 @@ export class PrivateEndpointConnectionsImpl
       deleteOperationSpec
     );
   }
+
+  /**
+   * ListByAttestationProviderNext
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param providerName Name of the attestation provider.
+   * @param nextLink The nextLink from the previous successful call to the ListByAttestationProvider
+   *                 method.
+   * @param options The options parameters.
+   */
+  private _listByAttestationProviderNext(
+    resourceGroupName: string,
+    providerName: string,
+    nextLink: string,
+    options?: AttestationManagementClientPrivateEndpointConnectionsListByAttestationProviderNextOptionalParams
+  ): Promise<
+    AttestationManagementClientPrivateEndpointConnectionsListByAttestationProviderNextResponse
+  > {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, providerName, nextLink, options },
+      listByAttestationProviderNextOperationSpec
+    );
+  }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const listOperationSpec: coreClient.OperationSpec = {
+const listByAttestationProviderOperationSpec: coreClient.OperationSpec = {
   path:
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Attestation/attestationProviders/{providerName}/privateEndpointConnections",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.PrivateEndpointConnectionListResult
+      bodyMapper:
+        Mappers.AttestationManagementClientPrivateEndpointConnectionListResult
     },
     default: {
-      bodyMapper: Mappers.CloudError
+      bodyMapper: Mappers.ErrorResponse
     }
   },
   queryParameters: [Parameters.apiVersion],
@@ -210,7 +272,7 @@ const listOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.providerName1
+    Parameters.providerName
   ],
   headerParameters: [Parameters.accept],
   serializer
@@ -221,10 +283,10 @@ const getOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.PrivateEndpointConnection
+      bodyMapper: Mappers.AttestationManagementClientPrivateEndpointConnection
     },
     default: {
-      bodyMapper: Mappers.CloudError
+      bodyMapper: Mappers.ErrorResponse
     }
   },
   queryParameters: [Parameters.apiVersion],
@@ -232,7 +294,7 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.providerName1,
+    Parameters.providerName,
     Parameters.privateEndpointConnectionName
   ],
   headerParameters: [Parameters.accept],
@@ -244,19 +306,22 @@ const createOperationSpec: coreClient.OperationSpec = {
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.PrivateEndpointConnection
+      bodyMapper: Mappers.AttestationManagementClientPrivateEndpointConnection
+    },
+    201: {
+      bodyMapper: Mappers.AttestationManagementClientPrivateEndpointConnection
     },
     default: {
-      bodyMapper: Mappers.CloudError
+      bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.properties,
+  requestBody: Parameters.resource1,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.providerName1,
+    Parameters.providerName,
     Parameters.privateEndpointConnectionName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
@@ -271,7 +336,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     200: {},
     204: {},
     default: {
-      bodyMapper: Mappers.CloudError
+      bodyMapper: Mappers.ErrorResponse
     }
   },
   queryParameters: [Parameters.apiVersion],
@@ -279,8 +344,30 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.providerName1,
+    Parameters.providerName,
     Parameters.privateEndpointConnectionName
+  ],
+  headerParameters: [Parameters.accept],
+  serializer
+};
+const listByAttestationProviderNextOperationSpec: coreClient.OperationSpec = {
+  path: "{nextLink}",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper:
+        Mappers.AttestationManagementClientPrivateEndpointConnectionListResult
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  urlParameters: [
+    Parameters.$host,
+    Parameters.nextLink,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.providerName
   ],
   headerParameters: [Parameters.accept],
   serializer

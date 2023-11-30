@@ -8,71 +8,146 @@
 
 import * as coreClient from "@azure/core-client";
 
-/** List of supported operations. */
-export interface OperationList {
+/** A list of REST API operations supported by an Azure Resource Provider. It contains an URL link to get the next set of results. */
+export interface OperationListResult {
   /**
-   * The system metadata relating to this resource
+   * List of operations supported by the resource provider
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly systemData?: SystemData;
-  /** List of supported operations. */
-  value?: OperationsDefinition[];
+  readonly value?: Operation[];
+  /**
+   * URL to get the next set of operation list results (if there are any).
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly nextLink?: string;
 }
 
-/** Metadata pertaining to creation and last modification of the resource. */
-export interface SystemData {
-  /** The identity that created the resource. */
-  createdBy?: string;
-  /** The type of identity that created the resource. */
-  createdByType?: CreatedByType;
-  /** The timestamp of resource creation (UTC). */
-  createdAt?: Date;
-  /** The identity that last modified the resource. */
-  lastModifiedBy?: string;
-  /** The type of identity that last modified the resource. */
-  lastModifiedByType?: CreatedByType;
-  /** The timestamp of resource last modification (UTC) */
-  lastModifiedAt?: Date;
+/** Details of a REST API operation, returned from the Resource Provider Operations API */
+export interface Operation {
+  /**
+   * The name of the operation, as per Resource-Based Access Control (RBAC). Examples: "Microsoft.Compute/virtualMachines/write", "Microsoft.Compute/virtualMachines/capture/action"
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /**
+   * Whether the operation applies to data-plane. This is "true" for data-plane operations and "false" for ARM/control-plane operations.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly isDataAction?: boolean;
+  /** Localized display information for this particular operation. */
+  display?: OperationDisplay;
+  /**
+   * The intended executor of the operation; as in Resource Based Access Control (RBAC) and audit logs UX. Default value is "user,system"
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly origin?: Origin;
+  /**
+   * Enum. Indicates the action type. "Internal" refers to actions that are for internal only APIs.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly actionType?: ActionType;
 }
 
-/** Definition object with the name and properties of an operation. */
-export interface OperationsDefinition {
-  /** Name of the operation. */
-  name?: string;
-  /** Display object with properties of the operation. */
-  display?: OperationsDisplayDefinition;
+/** Localized display information for this particular operation. */
+export interface OperationDisplay {
+  /**
+   * The localized friendly form of the resource provider name, e.g. "Microsoft Monitoring Insights" or "Microsoft Compute".
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provider?: string;
+  /**
+   * The localized friendly name of the resource type related to this operation. E.g. "Virtual Machines" or "Job Schedule Collections".
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly resource?: string;
+  /**
+   * The concise, localized friendly name for the operation; suitable for dropdowns. E.g. "Create or Update Virtual Machine", "Restart Virtual Machine".
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly operation?: string;
+  /**
+   * The short, localized friendly description of the operation; suitable for tool tips and detailed views.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly description?: string;
 }
 
-/** Display object with properties of the operation. */
-export interface OperationsDisplayDefinition {
-  /** Resource provider of the operation. */
-  provider?: string;
-  /** Resource for the operation. */
-  resource?: string;
-  /** Short description of the operation. */
-  operation?: string;
-  /** Description of the operation. */
-  description?: string;
+/** Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.). */
+export interface ErrorResponse {
+  /** The error object. */
+  error?: ErrorDetail;
 }
 
-/** An error response from Attestation. */
-export interface CloudError {
-  /** An error response from Attestation. */
-  error?: CloudErrorBody;
+/** The error detail. */
+export interface ErrorDetail {
+  /**
+   * The error code.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly code?: string;
+  /**
+   * The error message.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly message?: string;
+  /**
+   * The error target.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly target?: string;
+  /**
+   * The error details.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly details?: ErrorDetail[];
+  /**
+   * The error additional info.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly additionalInfo?: ErrorAdditionalInfo[];
 }
 
-/** An error response from Attestation. */
-export interface CloudErrorBody {
-  /** An identifier for the error. Codes are invariant and are intended to be consumed programmatically. */
-  code?: string;
-  /** A message describing the error, intended to be suitable for displaying in a user interface. */
-  message?: string;
+/** The resource management error additional info. */
+export interface ErrorAdditionalInfo {
+  /**
+   * The additional info type.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly type?: string;
+  /**
+   * The additional info.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly info?: Record<string, unknown>;
 }
 
-/** The Private Endpoint resource. */
+/** The response of a AttestationProvider list operation. */
+export interface AttestationProviderListResult {
+  /** The AttestationProvider items on this page */
+  value: AttestationProvider[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** Properties of the private endpoint connection. */
+export interface PrivateEndpointConnectionProperties {
+  /**
+   * The group ids for the private endpoint resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly groupIds?: string[];
+  /** The private endpoint resource. */
+  privateEndpoint?: PrivateEndpoint;
+  /** A collection of information about the state of the connection between service consumer and provider. */
+  privateLinkServiceConnectionState: PrivateLinkServiceConnectionState;
+  /** The provisioning state of the private endpoint connection resource. */
+  provisioningState?: PrivateEndpointConnectionProvisioningState;
+}
+
+/** The private endpoint resource. */
 export interface PrivateEndpoint {
   /**
-   * The ARM identifier for Private Endpoint
+   * The ARM identifier for private endpoint.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly id?: string;
@@ -105,6 +180,116 @@ export interface Resource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly type?: string;
+  /**
+   * Azure Resource Manager metadata containing createdBy and modifiedBy information.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly systemData?: SystemData;
+}
+
+/** Metadata pertaining to creation and last modification of the resource. */
+export interface SystemData {
+  /** The identity that created the resource. */
+  createdBy?: string;
+  /** The type of identity that created the resource. */
+  createdByType?: CreatedByType;
+  /** The timestamp of resource creation (UTC). */
+  createdAt?: Date;
+  /** The identity that last modified the resource. */
+  lastModifiedBy?: string;
+  /** The type of identity that last modified the resource. */
+  lastModifiedByType?: CreatedByType;
+  /** The timestamp of resource last modification (UTC) */
+  lastModifiedAt?: Date;
+}
+
+/** The type used for update operations of the AttestationProvider. */
+export interface AttestationProviderUpdate {
+  /** Resource tags. */
+  tags?: { [propertyName: string]: string };
+  /** Trust model for the attestation provider. */
+  trustModel?: string;
+  /** Status of attestation service. */
+  status?: AttestationServiceStatus;
+  /** Gets the uri of attestation service */
+  attestUri?: string;
+  /** Controls whether traffic from the public network is allowed to access the Attestation Provider APIs. */
+  publicNetworkAccess?: PublicNetworkAccessType;
+  /** The setting that controls whether authentication is enabled or disabled for TPM Attestation REST APIs. */
+  tpmAttestationAuthentication?: TpmAttestationAuthenticationType;
+}
+
+/** The response of a AttestationManagementClientPrivateEndpointConnection list operation. */
+export interface AttestationManagementClientPrivateEndpointConnectionListResult {
+  /** The AttestationManagementClientPrivateEndpointConnection items on this page */
+  value: AttestationManagementClientPrivateEndpointConnection[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The Private Endpoint resource. */
+export interface PrivateEndpointAutoGenerated {
+  /**
+   * The ARM identifier for Private Endpoint
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly id?: string;
+}
+
+/** A list of private link resources */
+export interface PrivateLinkResourceListResult {
+  /** Array of private link resources */
+  value?: PrivateLinkResource[];
+}
+
+/** A private link resource */
+export interface PrivateLinkResource {
+  /** Resource properties. */
+  properties?: PrivateLinkResourceProperties;
+}
+
+/** Properties of a private link resource. */
+export interface PrivateLinkResourceProperties {
+  /**
+   * The private link resource group id.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly groupId?: string;
+  /**
+   * The private link resource required member names.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly requiredMembers?: string[];
+  /** The private link resource Private link DNS zone name. */
+  requiredZoneNames?: string[];
+}
+
+/** A response containing error details. */
+export interface AzureCoreFoundationsErrorResponse {
+  /** The error object. */
+  error: AzureCoreFoundationsError;
+}
+
+/** The error object. */
+export interface AzureCoreFoundationsError {
+  /** One of a server-defined set of error codes. */
+  code: string;
+  /** A human-readable representation of the error. */
+  message: string;
+  /** The target of the error. */
+  target?: string;
+  /** An array of details about specific errors that led to this reported error. */
+  details?: AzureCoreFoundationsError[];
+  /** An object containing more specific information than the current object about the error. */
+  innererror?: AzureCoreFoundationsInnerError;
+}
+
+/** An object containing more specific information about the error. As per Microsoft One API guidelines - https://github.com/Microsoft/api-guidelines/blob/vNext/Guidelines.md#7102-error-condition-responses. */
+export interface AzureCoreFoundationsInnerError {
+  /** One of a server-defined set of error codes. */
+  code?: string;
+  /** Inner error. */
+  innererror?: AzureCoreFoundationsInnerError;
 }
 
 /** Parameters for creating an attestation provider */
@@ -119,8 +304,12 @@ export interface AttestationServiceCreationParams {
 
 /** Client supplied parameters used to create a new attestation provider. */
 export interface AttestationServiceCreationSpecificParams {
+  /** Controls whether traffic from the public network is allowed to access the Attestation Provider APIs. */
+  publicNetworkAccess?: PublicNetworkAccessType;
   /** JSON Web Key Set defining a set of X.509 Certificates that will represent the parent certificate for the signing certificate used for policy operations */
   policySigningCertificates?: JsonWebKeySet;
+  /** The setting that controls whether authentication is enabled or disabled for TPM Attestation REST APIs. */
+  tpmAttestationAuthentication?: TpmAttestationAuthenticationType;
 }
 
 export interface JsonWebKeySet {
@@ -206,41 +395,73 @@ export interface JsonWebKey {
   y?: string;
 }
 
-/** Parameters for patching an attestation provider */
-export interface AttestationServicePatchParams {
-  /** The tags that will be assigned to the attestation provider. */
-  tags?: { [propertyName: string]: string };
+/** An error response from Attestation. */
+export interface CloudError {
+  /** An error response from Attestation. */
+  error?: CloudErrorBody;
 }
 
-/** List of private endpoint connection associated with the specified storage account */
-export interface PrivateEndpointConnectionListResult {
-  /** Array of private endpoint connections */
-  value?: PrivateEndpointConnection[];
+/** An error response from Attestation. */
+export interface CloudErrorBody {
+  /** An identifier for the error. Codes are invariant and are intended to be consumed programmatically. */
+  code?: string;
+  /** A message describing the error, intended to be suitable for displaying in a user interface. */
+  message?: string;
 }
 
-/** Attestation Providers List. */
-export interface AttestationProviderListResult {
+/** Specifications of the Log for Microsoft Azure Attestation */
+export interface LogSpecification {
+  /** Name of the log */
+  name?: string;
+  /** Localized friendly display name of the log */
+  displayName?: string;
+}
+
+/** List of supported operations. */
+export interface OperationList {
   /**
    * The system metadata relating to this resource
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly systemData?: SystemData;
-  /** Attestation Provider array. */
-  value?: AttestationProvider[];
+  readonly value?: OperationsDefinition[];
 }
 
-/** The Private Endpoint Connection resource. */
-export interface PrivateEndpointConnection extends Resource {
-  /** The resource of private end point. */
-  privateEndpoint?: PrivateEndpoint;
-  /** A collection of information about the state of the connection between service consumer and provider. */
-  privateLinkServiceConnectionState?: PrivateLinkServiceConnectionState;
-  /**
-   * The provisioning state of the private endpoint connection resource.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: PrivateEndpointConnectionProvisioningState;
+/** Definition object with the name and properties of an operation. */
+export interface OperationsDefinition {
+  /** Name of the operation. */
+  name?: string;
+  /** Display object with properties of the operation. */
+  display?: OperationsDisplayDefinition;
+  /** Properties of the operation */
+  properties?: OperationProperties;
 }
+
+/** Display object with properties of the operation. */
+export interface OperationsDisplayDefinition {
+  /** Resource provider of the operation. */
+  provider?: string;
+  /** Resource for the operation. */
+  resource?: string;
+  /** Short description of the operation. */
+  operation?: string;
+  /** Description of the operation. */
+  description?: string;
+}
+
+/** Extra Operation properties */
+export interface OperationProperties {
+  /** Service specifications of the operation */
+  serviceSpecification?: ServiceSpecification;
+}
+
+/** Service specification payload */
+export interface ServiceSpecification {
+  /** Specifications of the Log for Microsoft Azure Attestation */
+  logSpecifications?: LogSpecification[];
+}
+
+/** The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location */
+export interface ProxyResource extends Resource {}
 
 /** The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location' */
 export interface TrackedResource extends Resource {
@@ -250,49 +471,87 @@ export interface TrackedResource extends Resource {
   location: string;
 }
 
-/** Attestation service response message. */
-export interface AttestationProvider extends TrackedResource {
+/** The private endpoint connection resource */
+export interface AzureResourceManagerPrivateEndpointConnection
+  extends ProxyResource {
+  /** The private endpoint connection properties */
+  properties?: PrivateEndpointConnectionProperties;
+}
+
+/** The Private Endpoint Connection resource. */
+export interface AttestationManagementClientPrivateEndpointConnection
+  extends ProxyResource {
+  /** The resource of private end point. */
+  privateEndpoint?: PrivateEndpointAutoGenerated;
+  /** A collection of information about the state of the connection between service consumer and provider. */
+  privateLinkServiceConnectionState?: PrivateLinkServiceConnectionState;
   /**
-   * The system metadata relating to this resource
+   * The provisioning state of the private endpoint connection resource.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly systemData?: SystemData;
+  readonly provisioningState?: PrivateEndpointConnectionProvisioningState;
+}
+
+/** Attestation service response message. */
+export interface AttestationProvider extends TrackedResource {
   /** Trust model for the attestation provider. */
   trustModel?: string;
   /** Status of attestation service. */
   status?: AttestationServiceStatus;
   /** Gets the uri of attestation service */
   attestUri?: string;
+  /** Controls whether traffic from the public network is allowed to access the Attestation Provider APIs. */
+  publicNetworkAccess?: PublicNetworkAccessType;
   /**
    * List of private endpoint connections associated with the attestation provider.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly privateEndpointConnections?: PrivateEndpointConnection[];
+  readonly privateEndpointConnections?: AzureResourceManagerPrivateEndpointConnection[];
+  /** The setting that controls whether authentication is enabled or disabled for TPM Attestation REST APIs. */
+  tpmAttestationAuthentication?: TpmAttestationAuthenticationType;
 }
 
-/** Known values of {@link CreatedByType} that the service accepts. */
-export enum KnownCreatedByType {
+/** Defines headers for AttestationProviders_listByProvider operation. */
+export interface AttestationProvidersListByProviderExceptionHeaders {
+  /** String error code indicating what went wrong. */
+  xMsErrorCode?: string;
+}
+
+/** Known values of {@link Origin} that the service accepts. */
+export enum KnownOrigin {
   /** User */
-  User = "User",
-  /** Application */
-  Application = "Application",
-  /** ManagedIdentity */
-  ManagedIdentity = "ManagedIdentity",
-  /** Key */
-  Key = "Key"
+  User = "user",
+  /** System */
+  System = "system",
+  /** UserSystem */
+  UserSystem = "user,system"
 }
 
 /**
- * Defines values for CreatedByType. \
- * {@link KnownCreatedByType} can be used interchangeably with CreatedByType,
+ * Defines values for Origin. \
+ * {@link KnownOrigin} can be used interchangeably with Origin,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **User** \
- * **Application** \
- * **ManagedIdentity** \
- * **Key**
+ * **user** \
+ * **system** \
+ * **user,system**
  */
-export type CreatedByType = string;
+export type Origin = string;
+
+/** Known values of {@link ActionType} that the service accepts. */
+export enum KnownActionType {
+  /** Internal */
+  Internal = "Internal"
+}
+
+/**
+ * Defines values for ActionType. \
+ * {@link KnownActionType} can be used interchangeably with ActionType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Internal**
+ */
+export type ActionType = string;
 
 /** Known values of {@link AttestationServiceStatus} that the service accepts. */
 export enum KnownAttestationServiceStatus {
@@ -314,6 +573,24 @@ export enum KnownAttestationServiceStatus {
  * **Error**
  */
 export type AttestationServiceStatus = string;
+
+/** Known values of {@link PublicNetworkAccessType} that the service accepts. */
+export enum KnownPublicNetworkAccessType {
+  /** Enables public network connectivity to the Attestation Provider REST APIs. */
+  Enabled = "Enabled",
+  /** Disables public network connectivity to the Attestation Provider REST APIs. */
+  Disabled = "Disabled"
+}
+
+/**
+ * Defines values for PublicNetworkAccessType. \
+ * {@link KnownPublicNetworkAccessType} can be used interchangeably with PublicNetworkAccessType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Enabled**: Enables public network connectivity to the Attestation Provider REST APIs. \
+ * **Disabled**: Disables public network connectivity to the Attestation Provider REST APIs.
+ */
+export type PublicNetworkAccessType = string;
 
 /** Known values of {@link PrivateEndpointServiceConnectionStatus} that the service accepts. */
 export enum KnownPrivateEndpointServiceConnectionStatus {
@@ -360,12 +637,83 @@ export enum KnownPrivateEndpointConnectionProvisioningState {
  */
 export type PrivateEndpointConnectionProvisioningState = string;
 
+/** Known values of {@link CreatedByType} that the service accepts. */
+export enum KnownCreatedByType {
+  /** User */
+  User = "User",
+  /** Application */
+  Application = "Application",
+  /** ManagedIdentity */
+  ManagedIdentity = "ManagedIdentity",
+  /** Key */
+  Key = "Key"
+}
+
+/**
+ * Defines values for CreatedByType. \
+ * {@link KnownCreatedByType} can be used interchangeably with CreatedByType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **User** \
+ * **Application** \
+ * **ManagedIdentity** \
+ * **Key**
+ */
+export type CreatedByType = string;
+
+/** Known values of {@link TpmAttestationAuthenticationType} that the service accepts. */
+export enum KnownTpmAttestationAuthenticationType {
+  /** Enables the requirement of authentication for TPM Attestation REST APIs. */
+  Enabled = "Enabled",
+  /** Disables the requirement of authentication for TPM Attestation REST APIs. */
+  Disabled = "Disabled"
+}
+
+/**
+ * Defines values for TpmAttestationAuthenticationType. \
+ * {@link KnownTpmAttestationAuthenticationType} can be used interchangeably with TpmAttestationAuthenticationType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Enabled**: Enables the requirement of authentication for TPM Attestation REST APIs. \
+ * **Disabled**: Disables the requirement of authentication for TPM Attestation REST APIs.
+ */
+export type TpmAttestationAuthenticationType = string;
+
+/** Known values of {@link Versions} that the service accepts. */
+export enum KnownVersions {
+  /** V20210601 */
+  V20210601 = "2021-06-01"
+}
+
+/**
+ * Defines values for Versions. \
+ * {@link KnownVersions} can be used interchangeably with Versions,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **2021-06-01**
+ */
+export type Versions = string;
+
 /** Optional parameters. */
 export interface OperationsListOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
-export type OperationsListResponse = OperationList;
+export type OperationsListResponse = OperationListResult;
+
+/** Optional parameters. */
+export interface OperationsListNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listNext operation. */
+export type OperationsListNextResponse = OperationListResult;
+
+/** Optional parameters. */
+export interface AttestationProvidersListByResourceGroupOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroup operation. */
+export type AttestationProvidersListByResourceGroupResponse = AttestationProviderListResult;
 
 /** Optional parameters. */
 export interface AttestationProvidersGetOptionalParams
@@ -393,57 +741,50 @@ export interface AttestationProvidersDeleteOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Optional parameters. */
-export interface AttestationProvidersListOptionalParams
+export interface AttestationProvidersListByProviderOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the list operation. */
-export type AttestationProvidersListResponse = AttestationProviderListResult;
+/** Contains response data for the listByProvider operation. */
+export type AttestationProvidersListByProviderResponse = PrivateLinkResourceListResult;
 
 /** Optional parameters. */
-export interface AttestationProvidersListByResourceGroupOptionalParams
+export interface AttestationProvidersListByResourceGroupNextOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the listByResourceGroup operation. */
-export type AttestationProvidersListByResourceGroupResponse = AttestationProviderListResult;
+/** Contains response data for the listByResourceGroupNext operation. */
+export type AttestationProvidersListByResourceGroupNextResponse = AttestationProviderListResult;
 
 /** Optional parameters. */
-export interface AttestationProvidersListDefaultOptionalParams
+export interface AttestationManagementClientPrivateEndpointConnectionsListByAttestationProviderOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the listDefault operation. */
-export type AttestationProvidersListDefaultResponse = AttestationProviderListResult;
+/** Contains response data for the listByAttestationProvider operation. */
+export type AttestationManagementClientPrivateEndpointConnectionsListByAttestationProviderResponse = AttestationManagementClientPrivateEndpointConnectionListResult;
 
 /** Optional parameters. */
-export interface AttestationProvidersGetDefaultByLocationOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getDefaultByLocation operation. */
-export type AttestationProvidersGetDefaultByLocationResponse = AttestationProvider;
-
-/** Optional parameters. */
-export interface PrivateEndpointConnectionsListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type PrivateEndpointConnectionsListResponse = PrivateEndpointConnectionListResult;
-
-/** Optional parameters. */
-export interface PrivateEndpointConnectionsGetOptionalParams
+export interface AttestationManagementClientPrivateEndpointConnectionsGetOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
-export type PrivateEndpointConnectionsGetResponse = PrivateEndpointConnection;
+export type AttestationManagementClientPrivateEndpointConnectionsGetResponse = AttestationManagementClientPrivateEndpointConnection;
 
 /** Optional parameters. */
-export interface PrivateEndpointConnectionsCreateOptionalParams
+export interface AttestationManagementClientPrivateEndpointConnectionsCreateOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the create operation. */
-export type PrivateEndpointConnectionsCreateResponse = PrivateEndpointConnection;
+export type AttestationManagementClientPrivateEndpointConnectionsCreateResponse = AttestationManagementClientPrivateEndpointConnection;
 
 /** Optional parameters. */
-export interface PrivateEndpointConnectionsDeleteOptionalParams
+export interface AttestationManagementClientPrivateEndpointConnectionsDeleteOptionalParams
   extends coreClient.OperationOptions {}
+
+/** Optional parameters. */
+export interface AttestationManagementClientPrivateEndpointConnectionsListByAttestationProviderNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByAttestationProviderNext operation. */
+export type AttestationManagementClientPrivateEndpointConnectionsListByAttestationProviderNextResponse = AttestationManagementClientPrivateEndpointConnectionListResult;
 
 /** Optional parameters. */
 export interface AttestationManagementClientOptionalParams

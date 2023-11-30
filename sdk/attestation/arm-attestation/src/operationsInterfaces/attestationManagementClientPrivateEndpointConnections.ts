@@ -8,33 +8,35 @@
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
-  PrivateEndpointConnection,
-  PrivateEndpointConnectionsListOptionalParams,
-  PrivateEndpointConnectionsGetOptionalParams,
-  PrivateEndpointConnectionsGetResponse,
-  PrivateEndpointConnectionsCreateOptionalParams,
-  PrivateEndpointConnectionsCreateResponse,
-  PrivateEndpointConnectionsDeleteOptionalParams
+  AttestationManagementClientPrivateEndpointConnection,
+  AttestationManagementClientPrivateEndpointConnectionsListByAttestationProviderOptionalParams,
+  AttestationManagementClientPrivateEndpointConnectionsGetOptionalParams,
+  AttestationManagementClientPrivateEndpointConnectionsGetResponse,
+  AttestationManagementClientPrivateEndpointConnectionsCreateOptionalParams,
+  AttestationManagementClientPrivateEndpointConnectionsCreateResponse,
+  AttestationManagementClientPrivateEndpointConnectionsDeleteOptionalParams
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Interface representing a PrivateEndpointConnections. */
-export interface PrivateEndpointConnections {
+/** Interface representing a AttestationManagementClientPrivateEndpointConnections. */
+export interface AttestationManagementClientPrivateEndpointConnections {
   /**
    * List all the private endpoint connections associated with the attestation provider.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param providerName The name of the attestation provider.
+   * @param providerName Name of the attestation provider.
    * @param options The options parameters.
    */
-  list(
+  listByAttestationProvider(
     resourceGroupName: string,
     providerName: string,
-    options?: PrivateEndpointConnectionsListOptionalParams
-  ): PagedAsyncIterableIterator<PrivateEndpointConnection>;
+    options?: AttestationManagementClientPrivateEndpointConnectionsListByAttestationProviderOptionalParams
+  ): PagedAsyncIterableIterator<
+    AttestationManagementClientPrivateEndpointConnection
+  >;
   /**
    * Gets the specified private endpoint connection associated with the attestation provider.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param providerName The name of the attestation provider.
+   * @param providerName Name of the attestation provider.
    * @param privateEndpointConnectionName The name of the private endpoint connection associated with the
    *                                      Azure resource
    * @param options The options parameters.
@@ -43,28 +45,30 @@ export interface PrivateEndpointConnections {
     resourceGroupName: string,
     providerName: string,
     privateEndpointConnectionName: string,
-    options?: PrivateEndpointConnectionsGetOptionalParams
-  ): Promise<PrivateEndpointConnectionsGetResponse>;
+    options?: AttestationManagementClientPrivateEndpointConnectionsGetOptionalParams
+  ): Promise<AttestationManagementClientPrivateEndpointConnectionsGetResponse>;
   /**
    * Update the state of specified private endpoint connection associated with the attestation provider.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param providerName The name of the attestation provider.
+   * @param providerName Name of the attestation provider.
    * @param privateEndpointConnectionName The name of the private endpoint connection associated with the
    *                                      Azure resource
-   * @param properties The private endpoint connection properties.
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   create(
     resourceGroupName: string,
     providerName: string,
     privateEndpointConnectionName: string,
-    properties: PrivateEndpointConnection,
-    options?: PrivateEndpointConnectionsCreateOptionalParams
-  ): Promise<PrivateEndpointConnectionsCreateResponse>;
+    resource: AttestationManagementClientPrivateEndpointConnection,
+    options?: AttestationManagementClientPrivateEndpointConnectionsCreateOptionalParams
+  ): Promise<
+    AttestationManagementClientPrivateEndpointConnectionsCreateResponse
+  >;
   /**
    * Deletes the specified private endpoint connection associated with the attestation provider.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param providerName The name of the attestation provider.
+   * @param providerName Name of the attestation provider.
    * @param privateEndpointConnectionName The name of the private endpoint connection associated with the
    *                                      Azure resource
    * @param options The options parameters.
@@ -73,6 +77,6 @@ export interface PrivateEndpointConnections {
     resourceGroupName: string,
     providerName: string,
     privateEndpointConnectionName: string,
-    options?: PrivateEndpointConnectionsDeleteOptionalParams
+    options?: AttestationManagementClientPrivateEndpointConnectionsDeleteOptionalParams
   ): Promise<void>;
 }
