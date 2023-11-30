@@ -6,9 +6,9 @@
 
 import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
+import { OperationState } from '@azure/core-lro';
 import { PagedAsyncIterableIterator } from '@azure/core-paging';
-import { PollerLike } from '@azure/core-lro';
-import { PollOperationState } from '@azure/core-lro';
+import { SimplePollerLike } from '@azure/core-lro';
 
 // @public
 export type ActionType = string;
@@ -23,13 +23,9 @@ export class AppComplianceAutomationToolForMicrosoft365 extends coreClient.Servi
     // (undocumented)
     operations: Operations;
     // (undocumented)
-    report: Report;
+    reportResources: ReportResources;
     // (undocumented)
-    reports: Reports;
-    // (undocumented)
-    snapshot: Snapshot;
-    // (undocumented)
-    snapshots: Snapshots;
+    snapshotResources: SnapshotResources;
 }
 
 // @public
@@ -295,6 +291,11 @@ export enum KnownResourceStatus {
 }
 
 // @public
+export enum KnownVersions {
+    V20221116Preview = "2022-11-16-preview"
+}
+
+// @public
 export interface Operation {
     readonly actionType?: ActionType;
     display?: OperationDisplay;
@@ -354,42 +355,9 @@ export interface ProxyResource extends Resource {
 }
 
 // @public
-export interface Report {
-    beginCreateOrUpdate(reportName: string, parameters: ReportResource, options?: ReportCreateOrUpdateOptionalParams): Promise<PollerLike<PollOperationState<ReportCreateOrUpdateResponse>, ReportCreateOrUpdateResponse>>;
-    beginCreateOrUpdateAndWait(reportName: string, parameters: ReportResource, options?: ReportCreateOrUpdateOptionalParams): Promise<ReportCreateOrUpdateResponse>;
-    beginDelete(reportName: string, options?: ReportDeleteOptionalParams): Promise<PollerLike<PollOperationState<void>, void>>;
-    beginDeleteAndWait(reportName: string, options?: ReportDeleteOptionalParams): Promise<void>;
-    beginUpdate(reportName: string, parameters: ReportResourcePatch, options?: ReportUpdateOptionalParams): Promise<PollerLike<PollOperationState<ReportUpdateResponse>, ReportUpdateResponse>>;
-    beginUpdateAndWait(reportName: string, parameters: ReportResourcePatch, options?: ReportUpdateOptionalParams): Promise<ReportUpdateResponse>;
-    get(reportName: string, options?: ReportGetOptionalParams): Promise<ReportGetResponse>;
-}
-
-// @public
 export interface ReportComplianceStatus {
     m365?: OverviewStatus;
 }
-
-// @public
-export interface ReportCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type ReportCreateOrUpdateResponse = ReportResource;
-
-// @public
-export interface ReportDeleteOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export interface ReportGetOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type ReportGetResponse = ReportResource;
 
 // @public
 export interface ReportProperties {
@@ -410,60 +378,116 @@ export interface ReportProperties {
 
 // @public
 export interface ReportResource extends ProxyResource {
-    properties: ReportProperties;
+    readonly complianceStatus?: ReportComplianceStatus;
+    readonly idPropertiesId?: string;
+    readonly lastTriggerTime?: Date;
+    readonly nextTriggerTime?: Date;
+    offerGuid?: string;
+    readonly provisioningState?: ProvisioningState;
+    readonly reportName?: string;
+    resources?: ResourceMetadata[];
+    readonly status?: ReportStatus;
+    readonly subscriptions?: string[];
+    readonly tenantId?: string;
+    timeZone?: string;
+    triggerTime?: Date;
 }
 
 // @public
-export interface ReportResourceList {
+export interface ReportResourceListResult {
     nextLink?: string;
-    readonly value?: ReportResource[];
+    value: ReportResource[];
 }
 
 // @public
-export interface ReportResourcePatch {
-    properties?: ReportProperties;
+export interface ReportResources {
+    beginCreateOrUpdate(reportName: string, resource: ReportResource, options?: ReportResourcesCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<ReportResourcesCreateOrUpdateResponse>, ReportResourcesCreateOrUpdateResponse>>;
+    beginCreateOrUpdateAndWait(reportName: string, resource: ReportResource, options?: ReportResourcesCreateOrUpdateOptionalParams): Promise<ReportResourcesCreateOrUpdateResponse>;
+    beginDelete(reportName: string, options?: ReportResourcesDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
+    beginDeleteAndWait(reportName: string, options?: ReportResourcesDeleteOptionalParams): Promise<void>;
+    beginUpdate(reportName: string, properties: ReportResourceUpdate, options?: ReportResourcesUpdateOptionalParams): Promise<SimplePollerLike<OperationState<ReportResourcesUpdateResponse>, ReportResourcesUpdateResponse>>;
+    beginUpdateAndWait(reportName: string, properties: ReportResourceUpdate, options?: ReportResourcesUpdateOptionalParams): Promise<ReportResourcesUpdateResponse>;
+    get(reportName: string, options?: ReportResourcesGetOptionalParams): Promise<ReportResourcesGetResponse>;
+    listByTenant(options?: ReportResourcesListByTenantOptionalParams): PagedAsyncIterableIterator<ReportResource>;
 }
 
 // @public
-export interface Reports {
-    list(options?: ReportsListOptionalParams): PagedAsyncIterableIterator<ReportResource>;
+export interface ReportResourcesCreateOrUpdateHeaders {
+    retryAfter?: number;
 }
 
 // @public
-export interface ReportsListNextOptionalParams extends coreClient.OperationOptions {
-    offerGuid?: string;
-    reportCreatorTenantId?: string;
-    select?: string;
-    skipToken?: string;
-    top?: number;
-}
-
-// @public
-export type ReportsListNextResponse = ReportResourceList;
-
-// @public
-export interface ReportsListOptionalParams extends coreClient.OperationOptions {
-    offerGuid?: string;
-    reportCreatorTenantId?: string;
-    select?: string;
-    skipToken?: string;
-    top?: number;
-}
-
-// @public
-export type ReportsListResponse = ReportResourceList;
-
-// @public
-export type ReportStatus = string;
-
-// @public
-export interface ReportUpdateOptionalParams extends coreClient.OperationOptions {
+export interface ReportResourcesCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
     resumeFrom?: string;
     updateIntervalInMs?: number;
 }
 
 // @public
-export type ReportUpdateResponse = ReportResource;
+export type ReportResourcesCreateOrUpdateResponse = ReportResource;
+
+// @public
+export interface ReportResourcesDeleteHeaders {
+    location?: string;
+    retryAfter?: number;
+}
+
+// @public
+export interface ReportResourcesDeleteOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export interface ReportResourcesGetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type ReportResourcesGetResponse = ReportResource;
+
+// @public
+export interface ReportResourcesListByTenantNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type ReportResourcesListByTenantNextResponse = ReportResourceListResult;
+
+// @public
+export interface ReportResourcesListByTenantOptionalParams extends coreClient.OperationOptions {
+    offerGuid?: string;
+    reportCreatorTenantId?: string;
+    select?: string;
+    skipToken?: string;
+    top?: number;
+}
+
+// @public
+export type ReportResourcesListByTenantResponse = ReportResourceListResult;
+
+// @public
+export interface ReportResourcesUpdateHeaders {
+    location?: string;
+    retryAfter?: number;
+}
+
+// @public
+export interface ReportResourcesUpdateOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type ReportResourcesUpdateResponse = ReportResource;
+
+// @public
+export interface ReportResourceUpdate {
+    offerGuid?: string;
+    resources?: ResourceMetadata[];
+    timeZone?: string;
+    triggerTime?: Date;
+}
+
+// @public
+export type ReportStatus = string;
 
 // @public
 export interface Resource {
@@ -496,19 +520,6 @@ export interface ResourceMetadata {
 export type ResourceStatus = string;
 
 // @public
-export interface Snapshot {
-    beginDownload(reportName: string, snapshotName: string, parameters: SnapshotDownloadRequest, options?: SnapshotDownloadOptionalParams): Promise<PollerLike<PollOperationState<SnapshotDownloadResponse>, SnapshotDownloadResponse>>;
-    beginDownloadAndWait(reportName: string, snapshotName: string, parameters: SnapshotDownloadRequest, options?: SnapshotDownloadOptionalParams): Promise<SnapshotDownloadResponse>;
-    get(reportName: string, snapshotName: string, options?: SnapshotGetOptionalParams): Promise<SnapshotGetResponse>;
-}
-
-// @public
-export interface SnapshotDownloadOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
 export interface SnapshotDownloadRequest {
     downloadType: DownloadType;
     offerGuid?: string;
@@ -516,44 +527,60 @@ export interface SnapshotDownloadRequest {
 }
 
 // @public
-export type SnapshotDownloadResponse = DownloadResponse;
-
-// @public
-export interface SnapshotGetOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type SnapshotGetResponse = SnapshotResource;
-
-// @public
-export interface SnapshotProperties {
+export interface SnapshotResource extends ProxyResource {
     readonly complianceResults?: ComplianceResult[];
     readonly createdAt?: Date;
-    readonly id?: string;
+    readonly idPropertiesId?: string;
     readonly provisioningState?: ProvisioningState;
     readonly reportProperties?: ReportProperties;
-    readonly reportSystemData?: SystemData;
     readonly snapshotName?: string;
 }
 
 // @public
-export interface SnapshotResource extends ProxyResource {
-    readonly properties?: SnapshotProperties;
-}
-
-// @public
-export interface SnapshotResourceList {
+export interface SnapshotResourceListResult {
     nextLink?: string;
-    readonly value?: SnapshotResource[];
+    value: SnapshotResource[];
 }
 
 // @public
-export interface Snapshots {
-    list(reportName: string, options?: SnapshotsListOptionalParams): PagedAsyncIterableIterator<SnapshotResource>;
+export interface SnapshotResources {
+    beginDownload(reportName: string, snapshotName: string, body: SnapshotDownloadRequest, options?: SnapshotResourcesDownloadOptionalParams): Promise<SimplePollerLike<OperationState<SnapshotResourcesDownloadResponse>, SnapshotResourcesDownloadResponse>>;
+    beginDownloadAndWait(reportName: string, snapshotName: string, body: SnapshotDownloadRequest, options?: SnapshotResourcesDownloadOptionalParams): Promise<SnapshotResourcesDownloadResponse>;
+    get(reportName: string, snapshotName: string, options?: SnapshotResourcesGetOptionalParams): Promise<SnapshotResourcesGetResponse>;
+    listByReportResource(reportName: string, options?: SnapshotResourcesListByReportResourceOptionalParams): PagedAsyncIterableIterator<SnapshotResource>;
 }
 
 // @public
-export interface SnapshotsListNextOptionalParams extends coreClient.OperationOptions {
+export interface SnapshotResourcesDownloadHeaders {
+    location?: string;
+    retryAfter?: number;
+}
+
+// @public
+export interface SnapshotResourcesDownloadOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type SnapshotResourcesDownloadResponse = DownloadResponse;
+
+// @public
+export interface SnapshotResourcesGetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type SnapshotResourcesGetResponse = SnapshotResource;
+
+// @public
+export interface SnapshotResourcesListByReportResourceNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type SnapshotResourcesListByReportResourceNextResponse = SnapshotResourceListResult;
+
+// @public
+export interface SnapshotResourcesListByReportResourceOptionalParams extends coreClient.OperationOptions {
     offerGuid?: string;
     reportCreatorTenantId?: string;
     select?: string;
@@ -562,19 +589,7 @@ export interface SnapshotsListNextOptionalParams extends coreClient.OperationOpt
 }
 
 // @public
-export type SnapshotsListNextResponse = SnapshotResourceList;
-
-// @public
-export interface SnapshotsListOptionalParams extends coreClient.OperationOptions {
-    offerGuid?: string;
-    reportCreatorTenantId?: string;
-    select?: string;
-    skipToken?: string;
-    top?: number;
-}
-
-// @public
-export type SnapshotsListResponse = SnapshotResourceList;
+export type SnapshotResourcesListByReportResourceResponse = SnapshotResourceListResult;
 
 // @public
 export interface SystemData {
@@ -585,6 +600,9 @@ export interface SystemData {
     lastModifiedBy?: string;
     lastModifiedByType?: CreatedByType;
 }
+
+// @public
+export type Versions = string;
 
 // (No @packageDocumentation comment for this package)
 

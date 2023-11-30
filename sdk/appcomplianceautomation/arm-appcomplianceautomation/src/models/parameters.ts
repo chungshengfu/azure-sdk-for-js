@@ -13,7 +13,7 @@ import {
 } from "@azure/core-client";
 import {
   ReportResource as ReportResourceMapper,
-  ReportResourcePatch as ReportResourcePatchMapper,
+  ReportResourceUpdate as ReportResourceUpdateMapper,
   SnapshotDownloadRequest as SnapshotDownloadRequestMapper
 } from "../models/mappers";
 
@@ -78,10 +78,6 @@ export const skipToken: OperationQueryParameter = {
 export const top: OperationQueryParameter = {
   parameterPath: ["options", "top"],
   mapper: {
-    constraints: {
-      InclusiveMaximum: 100,
-      InclusiveMinimum: 1
-    },
     serializedName: "$top",
     type: {
       name: "Number"
@@ -154,14 +150,14 @@ export const contentType: OperationParameter = {
   }
 };
 
-export const parameters: OperationParameter = {
-  parameterPath: "parameters",
+export const resource: OperationParameter = {
+  parameterPath: "resource",
   mapper: ReportResourceMapper
 };
 
-export const parameters1: OperationParameter = {
-  parameterPath: "parameters",
-  mapper: ReportResourcePatchMapper
+export const properties: OperationParameter = {
+  parameterPath: "properties",
+  mapper: ReportResourceUpdateMapper
 };
 
 export const snapshotName: OperationURLParameter = {
@@ -175,7 +171,7 @@ export const snapshotName: OperationURLParameter = {
   }
 };
 
-export const parameters2: OperationParameter = {
-  parameterPath: "parameters",
+export const body: OperationParameter = {
+  parameterPath: "body",
   mapper: SnapshotDownloadRequestMapper
 };

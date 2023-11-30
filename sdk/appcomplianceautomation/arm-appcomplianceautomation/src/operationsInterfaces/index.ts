@@ -7,7 +7,5 @@
  */
 
 export * from "./operations";
-export * from "./reports";
-export * from "./report";
-export * from "./snapshots";
-export * from "./snapshot";
+export * from "./reportResources";
+export * from "./snapshotResources";

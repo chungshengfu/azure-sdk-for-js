@@ -16,17 +16,13 @@ import {
 import * as coreAuth from "@azure/core-auth";
 import {
   OperationsImpl,
-  ReportsImpl,
-  ReportImpl,
-  SnapshotsImpl,
-  SnapshotImpl
+  ReportResourcesImpl,
+  SnapshotResourcesImpl
 } from "./operations";
 import {
   Operations,
-  Reports,
-  Report,
-  Snapshots,
-  Snapshot
+  ReportResources,
+  SnapshotResources
 } from "./operationsInterfaces";
 import { AppComplianceAutomationToolForMicrosoft365OptionalParams } from "./models";
 
@@ -109,10 +105,8 @@ export class AppComplianceAutomationToolForMicrosoft365 extends coreClient.Servi
     this.$host = options.$host || "https://management.azure.com";
     this.apiVersion = options.apiVersion || "2022-11-16-preview";
     this.operations = new OperationsImpl(this);
-    this.reports = new ReportsImpl(this);
-    this.report = new ReportImpl(this);
-    this.snapshots = new SnapshotsImpl(this);
-    this.snapshot = new SnapshotImpl(this);
+    this.reportResources = new ReportResourcesImpl(this);
+    this.snapshotResources = new SnapshotResourcesImpl(this);
     this.addCustomApiVersionPolicy(options.apiVersion);
   }
 
@@ -145,8 +139,6 @@ export class AppComplianceAutomationToolForMicrosoft365 extends coreClient.Servi
   }
 
   operations: Operations;
-  reports: Reports;
-  report: Report;
-  snapshots: Snapshots;
-  snapshot: Snapshot;
+  reportResources: ReportResources;
+  snapshotResources: SnapshotResources;
 }

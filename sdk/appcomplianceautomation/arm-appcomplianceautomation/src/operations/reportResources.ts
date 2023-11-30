@@ -6,35 +6,113 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-import { Report } from "../operationsInterfaces";
+import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
+import { setContinuationToken } from "../pagingHelper";
+import { ReportResources } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { AppComplianceAutomationToolForMicrosoft365 } from "../appComplianceAutomationToolForMicrosoft365";
-import { PollerLike, PollOperationState, LroEngine } from "@azure/core-lro";
-import { LroImpl } from "../lroImpl";
 import {
-  ReportGetOptionalParams,
-  ReportGetResponse,
+  SimplePollerLike,
+  OperationState,
+  createHttpPoller
+} from "@azure/core-lro";
+import { createLroSpec } from "../lroImpl";
+import {
   ReportResource,
-  ReportCreateOrUpdateOptionalParams,
-  ReportCreateOrUpdateResponse,
-  ReportResourcePatch,
-  ReportUpdateOptionalParams,
-  ReportUpdateResponse,
-  ReportDeleteOptionalParams
+  ReportResourcesListByTenantNextOptionalParams,
+  ReportResourcesListByTenantOptionalParams,
+  ReportResourcesListByTenantResponse,
+  ReportResourcesGetOptionalParams,
+  ReportResourcesGetResponse,
+  ReportResourcesCreateOrUpdateOptionalParams,
+  ReportResourcesCreateOrUpdateResponse,
+  ReportResourceUpdate,
+  ReportResourcesUpdateOptionalParams,
+  ReportResourcesUpdateResponse,
+  ReportResourcesDeleteOptionalParams,
+  ReportResourcesListByTenantNextResponse
 } from "../models";
 
-/** Class containing Report operations. */
-export class ReportImpl implements Report {
+/// <reference lib="esnext.asynciterable" />
+/** Class containing ReportResources operations. */
+export class ReportResourcesImpl implements ReportResources {
   private readonly client: AppComplianceAutomationToolForMicrosoft365;
 
   /**
-   * Initialize a new instance of the class Report class.
+   * Initialize a new instance of the class ReportResources class.
    * @param client Reference to the service client
    */
   constructor(client: AppComplianceAutomationToolForMicrosoft365) {
     this.client = client;
+  }
+
+  /**
+   * Get the AppComplianceAutomation report list for the tenant.
+   * @param options The options parameters.
+   */
+  public listByTenant(
+    options?: ReportResourcesListByTenantOptionalParams
+  ): PagedAsyncIterableIterator<ReportResource> {
+    const iter = this.listByTenantPagingAll(options);
+    return {
+      next() {
+        return iter.next();
+      },
+      [Symbol.asyncIterator]() {
+        return this;
+      },
+      byPage: (settings?: PageSettings) => {
+        if (settings?.maxPageSize) {
+          throw new Error("maxPageSize is not supported by this operation.");
+        }
+        return this.listByTenantPagingPage(options, settings);
+      }
+    };
+  }
+
+  private async *listByTenantPagingPage(
+    options?: ReportResourcesListByTenantOptionalParams,
+    settings?: PageSettings
+  ): AsyncIterableIterator<ReportResource[]> {
+    let result: ReportResourcesListByTenantResponse;
+    let continuationToken = settings?.continuationToken;
+    if (!continuationToken) {
+      result = await this._listByTenant(options);
+      let page = result.value || [];
+      continuationToken = result.nextLink;
+      setContinuationToken(page, continuationToken);
+      yield page;
+    }
+    while (continuationToken) {
+      result = await this._listByTenantNext(continuationToken, options);
+      continuationToken = result.nextLink;
+      let page = result.value || [];
+      setContinuationToken(page, continuationToken);
+      yield page;
+    }
+  }
+
+  private async *listByTenantPagingAll(
+    options?: ReportResourcesListByTenantOptionalParams
+  ): AsyncIterableIterator<ReportResource> {
+    for await (const page of this.listByTenantPagingPage(options)) {
+      yield* page;
+    }
+  }
+
+  /**
+   * Get the AppComplianceAutomation report list for the tenant.
+   * @param options The options parameters.
+   */
+  private _listByTenant(
+    options?: ReportResourcesListByTenantOptionalParams
+  ): Promise<ReportResourcesListByTenantResponse> {
+    return this.client.sendOperationRequest(
+      { options },
+      listByTenantOperationSpec
+    );
   }
 
   /**
@@ -44,8 +122,8 @@ export class ReportImpl implements Report {
    */
   get(
     reportName: string,
-    options?: ReportGetOptionalParams
-  ): Promise<ReportGetResponse> {
+    options?: ReportResourcesGetOptionalParams
+  ): Promise<ReportResourcesGetResponse> {
     return this.client.sendOperationRequest(
       { reportName, options },
       getOperationSpec
@@ -55,26 +133,26 @@ export class ReportImpl implements Report {
   /**
    * Create a new AppComplianceAutomation report or update an exiting AppComplianceAutomation report.
    * @param reportName Report Name.
-   * @param parameters Parameters for the create or update operation
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     reportName: string,
-    parameters: ReportResource,
-    options?: ReportCreateOrUpdateOptionalParams
+    resource: ReportResource,
+    options?: ReportResourcesCreateOrUpdateOptionalParams
   ): Promise<
-    PollerLike<
-      PollOperationState<ReportCreateOrUpdateResponse>,
-      ReportCreateOrUpdateResponse
+    SimplePollerLike<
+      OperationState<ReportResourcesCreateOrUpdateResponse>,
+      ReportResourcesCreateOrUpdateResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
-    ): Promise<ReportCreateOrUpdateResponse> => {
+    ): Promise<ReportResourcesCreateOrUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
-    const sendOperation = async (
+    const sendOperationFn = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
     ) => {
@@ -107,15 +185,18 @@ export class ReportImpl implements Report {
       };
     };
 
-    const lro = new LroImpl(
-      sendOperation,
-      { reportName, parameters, options },
-      createOrUpdateOperationSpec
-    );
-    const poller = new LroEngine(lro, {
-      resumeFrom: options?.resumeFrom,
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: { reportName, resource, options },
+      spec: createOrUpdateOperationSpec
+    });
+    const poller = await createHttpPoller<
+      ReportResourcesCreateOrUpdateResponse,
+      OperationState<ReportResourcesCreateOrUpdateResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      lroResourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "azure-async-operation"
     });
     await poller.poll();
     return poller;
@@ -124,17 +205,17 @@ export class ReportImpl implements Report {
   /**
    * Create a new AppComplianceAutomation report or update an exiting AppComplianceAutomation report.
    * @param reportName Report Name.
-   * @param parameters Parameters for the create or update operation
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     reportName: string,
-    parameters: ReportResource,
-    options?: ReportCreateOrUpdateOptionalParams
-  ): Promise<ReportCreateOrUpdateResponse> {
+    resource: ReportResource,
+    options?: ReportResourcesCreateOrUpdateOptionalParams
+  ): Promise<ReportResourcesCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       reportName,
-      parameters,
+      resource,
       options
     );
     return poller.pollUntilDone();
@@ -143,23 +224,26 @@ export class ReportImpl implements Report {
   /**
    * Update an exiting AppComplianceAutomation report.
    * @param reportName Report Name.
-   * @param parameters Parameters for the create or update operation
+   * @param properties The resource properties to be updated.
    * @param options The options parameters.
    */
   async beginUpdate(
     reportName: string,
-    parameters: ReportResourcePatch,
-    options?: ReportUpdateOptionalParams
+    properties: ReportResourceUpdate,
+    options?: ReportResourcesUpdateOptionalParams
   ): Promise<
-    PollerLike<PollOperationState<ReportUpdateResponse>, ReportUpdateResponse>
+    SimplePollerLike<
+      OperationState<ReportResourcesUpdateResponse>,
+      ReportResourcesUpdateResponse
+    >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
-    ): Promise<ReportUpdateResponse> => {
+    ): Promise<ReportResourcesUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
-    const sendOperation = async (
+    const sendOperationFn = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
     ) => {
@@ -192,15 +276,18 @@ export class ReportImpl implements Report {
       };
     };
 
-    const lro = new LroImpl(
-      sendOperation,
-      { reportName, parameters, options },
-      updateOperationSpec
-    );
-    const poller = new LroEngine(lro, {
-      resumeFrom: options?.resumeFrom,
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: { reportName, properties, options },
+      spec: updateOperationSpec
+    });
+    const poller = await createHttpPoller<
+      ReportResourcesUpdateResponse,
+      OperationState<ReportResourcesUpdateResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      lroResourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "location"
     });
     await poller.poll();
     return poller;
@@ -209,15 +296,15 @@ export class ReportImpl implements Report {
   /**
    * Update an exiting AppComplianceAutomation report.
    * @param reportName Report Name.
-   * @param parameters Parameters for the create or update operation
+   * @param properties The resource properties to be updated.
    * @param options The options parameters.
    */
   async beginUpdateAndWait(
     reportName: string,
-    parameters: ReportResourcePatch,
-    options?: ReportUpdateOptionalParams
-  ): Promise<ReportUpdateResponse> {
-    const poller = await this.beginUpdate(reportName, parameters, options);
+    properties: ReportResourceUpdate,
+    options?: ReportResourcesUpdateOptionalParams
+  ): Promise<ReportResourcesUpdateResponse> {
+    const poller = await this.beginUpdate(reportName, properties, options);
     return poller.pollUntilDone();
   }
 
@@ -228,15 +315,15 @@ export class ReportImpl implements Report {
    */
   async beginDelete(
     reportName: string,
-    options?: ReportDeleteOptionalParams
-  ): Promise<PollerLike<PollOperationState<void>, void>> {
+    options?: ReportResourcesDeleteOptionalParams
+  ): Promise<SimplePollerLike<OperationState<void>, void>> {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
     ): Promise<void> => {
       return this.client.sendOperationRequest(args, spec);
     };
-    const sendOperation = async (
+    const sendOperationFn = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
     ) => {
@@ -269,15 +356,15 @@ export class ReportImpl implements Report {
       };
     };
 
-    const lro = new LroImpl(
-      sendOperation,
-      { reportName, options },
-      deleteOperationSpec
-    );
-    const poller = new LroEngine(lro, {
-      resumeFrom: options?.resumeFrom,
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: { reportName, options },
+      spec: deleteOperationSpec
+    });
+    const poller = await createHttpPoller<void, OperationState<void>>(lro, {
+      restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      lroResourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "location"
     });
     await poller.poll();
     return poller;
@@ -290,15 +377,53 @@ export class ReportImpl implements Report {
    */
   async beginDeleteAndWait(
     reportName: string,
-    options?: ReportDeleteOptionalParams
+    options?: ReportResourcesDeleteOptionalParams
   ): Promise<void> {
     const poller = await this.beginDelete(reportName, options);
     return poller.pollUntilDone();
+  }
+
+  /**
+   * ListByTenantNext
+   * @param nextLink The nextLink from the previous successful call to the ListByTenant method.
+   * @param options The options parameters.
+   */
+  private _listByTenantNext(
+    nextLink: string,
+    options?: ReportResourcesListByTenantNextOptionalParams
+  ): Promise<ReportResourcesListByTenantNextResponse> {
+    return this.client.sendOperationRequest(
+      { nextLink, options },
+      listByTenantNextOperationSpec
+    );
   }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
+const listByTenantOperationSpec: coreClient.OperationSpec = {
+  path: "/providers/Microsoft.AppComplianceAutomation/reports",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.ReportResourceListResult
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  queryParameters: [
+    Parameters.apiVersion,
+    Parameters.skipToken,
+    Parameters.top,
+    Parameters.select,
+    Parameters.offerGuid,
+    Parameters.reportCreatorTenantId
+  ],
+  urlParameters: [Parameters.$host],
+  headerParameters: [Parameters.accept],
+  serializer
+};
 const getOperationSpec: coreClient.OperationSpec = {
   path: "/providers/Microsoft.AppComplianceAutomation/reports/{reportName}",
   httpMethod: "GET",
@@ -335,7 +460,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.parameters,
+  requestBody: Parameters.resource,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host, Parameters.reportName],
   headerParameters: [Parameters.accept, Parameters.contentType],
@@ -362,7 +487,7 @@ const updateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.parameters1,
+  requestBody: Parameters.properties,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host, Parameters.reportName],
   headerParameters: [Parameters.accept, Parameters.contentType],
@@ -383,6 +508,21 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host, Parameters.reportName],
+  headerParameters: [Parameters.accept],
+  serializer
+};
+const listByTenantNextOperationSpec: coreClient.OperationSpec = {
+  path: "{nextLink}",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.ReportResourceListResult
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  urlParameters: [Parameters.$host, Parameters.nextLink],
   headerParameters: [Parameters.accept],
   serializer
 };

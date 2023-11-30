@@ -121,17 +121,11 @@ export interface ErrorAdditionalInfo {
   readonly info?: Record<string, unknown>;
 }
 
-/** Object that includes an array of resources and a possible link for next set. */
-export interface ReportResourceList {
-  /**
-   * List of the reports
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: ReportResource[];
-  /**
-   * The URL the client should use to fetch the next page (per server side paging).
-   * It's null for now, added for future use.
-   */
+/** The response of a ReportResource list operation. */
+export interface ReportResourceListResult {
+  /** The ReportResource items on this page */
+  value: ReportResource[];
+  /** The link to the next page of items */
   nextLink?: string;
 }
 
@@ -265,63 +259,27 @@ export interface SystemData {
   lastModifiedAt?: Date;
 }
 
-/** A class represent a AppComplianceAutomation report resource update properties. */
-export interface ReportResourcePatch {
-  /** Report property. */
-  properties?: ReportProperties;
+/** The type used for update operations of the ReportResource. */
+export interface ReportResourceUpdate {
+  /** Report offer Guid. */
+  offerGuid?: string;
+  /**
+   * Report collection trigger time's time zone, the available list can be obtained by executing "Get-TimeZone -ListAvailable" in PowerShell.
+   * An example of valid timezone id is "Pacific Standard Time".
+   */
+  timeZone?: string;
+  /** Report collection trigger time. */
+  triggerTime?: Date;
+  /** List of resource data. */
+  resources?: ResourceMetadata[];
 }
 
-/** Object that includes an array of resources and a possible link for next set. */
-export interface SnapshotResourceList {
-  /**
-   * List of the snapshots
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: SnapshotResource[];
-  /**
-   * The URL the client should use to fetch the next page (per server side paging).
-   * It's null for now, added for future use.
-   */
+/** The response of a SnapshotResource list operation. */
+export interface SnapshotResourceListResult {
+  /** The SnapshotResource items on this page */
+  value: SnapshotResource[];
+  /** The link to the next page of items */
   nextLink?: string;
-}
-
-/** Snapshot's properties. */
-export interface SnapshotProperties {
-  /**
-   * Snapshot id in the database.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly id?: string;
-  /**
-   * Snapshot name.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly snapshotName?: string;
-  /**
-   * The timestamp of resource creation (UTC).
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly createdAt?: Date;
-  /**
-   * Azure lifecycle management
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: ProvisioningState;
-  /**
-   * The report essential info.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly reportProperties?: ReportProperties;
-  /**
-   * Metadata pertaining to creation and last modification of the resource.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly reportSystemData?: SystemData;
-  /**
-   * List of compliance results.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly complianceResults?: ComplianceResult[];
 }
 
 /** A class represent the compliance result. */
@@ -643,17 +601,126 @@ export interface ProxyResource extends Resource {}
 
 /** A class represent an AppComplianceAutomation report resource. */
 export interface ReportResource extends ProxyResource {
-  /** Report property. */
-  properties: ReportProperties;
+  /**
+   * Report id in database.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly idPropertiesId?: string;
+  /**
+   * Report status.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly status?: ReportStatus;
+  /**
+   * Report's tenant id.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly tenantId?: string;
+  /**
+   * Report name.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly reportName?: string;
+  /** Report offer Guid. */
+  offerGuid?: string;
+  /**
+   * Report collection trigger time's time zone, the available list can be obtained by executing "Get-TimeZone -ListAvailable" in PowerShell.
+   * An example of valid timezone id is "Pacific Standard Time".
+   */
+  timeZone?: string;
+  /** Report collection trigger time. */
+  triggerTime?: Date;
+  /**
+   * Report next collection trigger time.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly nextTriggerTime?: Date;
+  /**
+   * Report last collection trigger time.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly lastTriggerTime?: Date;
+  /**
+   * List of subscription Ids.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly subscriptions?: string[];
+  /** List of resource data. */
+  resources?: ResourceMetadata[];
+  /**
+   * Report compliance status.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly complianceStatus?: ReportComplianceStatus;
+  /**
+   * Azure lifecycle management
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ProvisioningState;
 }
 
 /** A class represent a AppComplianceAutomation snapshot resource. */
 export interface SnapshotResource extends ProxyResource {
   /**
-   * Snapshot's property'.
+   * Snapshot id in the database.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly properties?: SnapshotProperties;
+  readonly idPropertiesId?: string;
+  /**
+   * Snapshot name.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly snapshotName?: string;
+  /**
+   * The timestamp of resource creation (UTC).
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly createdAt?: Date;
+  /**
+   * Azure lifecycle management
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ProvisioningState;
+  /**
+   * The report essential info.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly reportProperties?: ReportProperties;
+  /**
+   * List of compliance results.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly complianceResults?: ComplianceResult[];
+}
+
+/** Defines headers for ReportResources_createOrUpdate operation. */
+export interface ReportResourcesCreateOrUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for ReportResources_update operation. */
+export interface ReportResourcesUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for ReportResources_delete operation. */
+export interface ReportResourcesDeleteHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for SnapshotResources_download operation. */
+export interface SnapshotResourcesDownloadHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
 }
 
 /** Known values of {@link Origin} that the service accepts. */
@@ -989,6 +1056,21 @@ export enum KnownComplianceState {
  */
 export type ComplianceState = string;
 
+/** Known values of {@link Versions} that the service accepts. */
+export enum KnownVersions {
+  /** V20221116Preview */
+  V20221116Preview = "2022-11-16-preview"
+}
+
+/**
+ * Defines values for Versions. \
+ * {@link KnownVersions} can be used interchangeably with Versions,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **2022-11-16-preview**
+ */
+export type Versions = string;
+
 /** Optional parameters. */
 export interface OperationsListOptionalParams
   extends coreClient.OperationOptions {}
@@ -1004,24 +1086,7 @@ export interface OperationsListNextOptionalParams
 export type OperationsListNextResponse = OperationListResult;
 
 /** Optional parameters. */
-export interface ReportsListOptionalParams extends coreClient.OperationOptions {
-  /** Skip over when retrieving results. */
-  skipToken?: string;
-  /** Number of elements to return when retrieving results. */
-  top?: number;
-  /** OData Select statement. Limits the properties on each entry to just those requested, e.g. ?$select=reportName,id. */
-  select?: string;
-  /** The offerGuid which mapping to the reports. */
-  offerGuid?: string;
-  /** The tenant id of the report creator. */
-  reportCreatorTenantId?: string;
-}
-
-/** Contains response data for the list operation. */
-export type ReportsListResponse = ReportResourceList;
-
-/** Optional parameters. */
-export interface ReportsListNextOptionalParams
+export interface ReportResourcesListByTenantOptionalParams
   extends coreClient.OperationOptions {
   /** Skip over when retrieving results. */
   skipToken?: string;
@@ -1035,17 +1100,18 @@ export interface ReportsListNextOptionalParams
   reportCreatorTenantId?: string;
 }
 
-/** Contains response data for the listNext operation. */
-export type ReportsListNextResponse = ReportResourceList;
+/** Contains response data for the listByTenant operation. */
+export type ReportResourcesListByTenantResponse = ReportResourceListResult;
 
 /** Optional parameters. */
-export interface ReportGetOptionalParams extends coreClient.OperationOptions {}
+export interface ReportResourcesGetOptionalParams
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
-export type ReportGetResponse = ReportResource;
+export type ReportResourcesGetResponse = ReportResource;
 
 /** Optional parameters. */
-export interface ReportCreateOrUpdateOptionalParams
+export interface ReportResourcesCreateOrUpdateOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
@@ -1054,10 +1120,10 @@ export interface ReportCreateOrUpdateOptionalParams
 }
 
 /** Contains response data for the createOrUpdate operation. */
-export type ReportCreateOrUpdateResponse = ReportResource;
+export type ReportResourcesCreateOrUpdateResponse = ReportResource;
 
 /** Optional parameters. */
-export interface ReportUpdateOptionalParams
+export interface ReportResourcesUpdateOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
@@ -1066,10 +1132,10 @@ export interface ReportUpdateOptionalParams
 }
 
 /** Contains response data for the update operation. */
-export type ReportUpdateResponse = ReportResource;
+export type ReportResourcesUpdateResponse = ReportResource;
 
 /** Optional parameters. */
-export interface ReportDeleteOptionalParams
+export interface ReportResourcesDeleteOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
@@ -1078,7 +1144,14 @@ export interface ReportDeleteOptionalParams
 }
 
 /** Optional parameters. */
-export interface SnapshotsListOptionalParams
+export interface ReportResourcesListByTenantNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByTenantNext operation. */
+export type ReportResourcesListByTenantNextResponse = ReportResourceListResult;
+
+/** Optional parameters. */
+export interface SnapshotResourcesListByReportResourceOptionalParams
   extends coreClient.OperationOptions {
   /** Skip over when retrieving results. */
   skipToken?: string;
@@ -1092,36 +1165,18 @@ export interface SnapshotsListOptionalParams
   reportCreatorTenantId?: string;
 }
 
-/** Contains response data for the list operation. */
-export type SnapshotsListResponse = SnapshotResourceList;
+/** Contains response data for the listByReportResource operation. */
+export type SnapshotResourcesListByReportResourceResponse = SnapshotResourceListResult;
 
 /** Optional parameters. */
-export interface SnapshotsListNextOptionalParams
-  extends coreClient.OperationOptions {
-  /** Skip over when retrieving results. */
-  skipToken?: string;
-  /** Number of elements to return when retrieving results. */
-  top?: number;
-  /** OData Select statement. Limits the properties on each entry to just those requested, e.g. ?$select=reportName,id. */
-  select?: string;
-  /** The offerGuid which mapping to the reports. */
-  offerGuid?: string;
-  /** The tenant id of the report creator. */
-  reportCreatorTenantId?: string;
-}
-
-/** Contains response data for the listNext operation. */
-export type SnapshotsListNextResponse = SnapshotResourceList;
-
-/** Optional parameters. */
-export interface SnapshotGetOptionalParams
+export interface SnapshotResourcesGetOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
-export type SnapshotGetResponse = SnapshotResource;
+export type SnapshotResourcesGetResponse = SnapshotResource;
 
 /** Optional parameters. */
-export interface SnapshotDownloadOptionalParams
+export interface SnapshotResourcesDownloadOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
@@ -1130,7 +1185,14 @@ export interface SnapshotDownloadOptionalParams
 }
 
 /** Contains response data for the download operation. */
-export type SnapshotDownloadResponse = DownloadResponse;
+export type SnapshotResourcesDownloadResponse = DownloadResponse;
+
+/** Optional parameters. */
+export interface SnapshotResourcesListByReportResourceNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByReportResourceNext operation. */
+export type SnapshotResourcesListByReportResourceNextResponse = SnapshotResourceListResult;
 
 /** Optional parameters. */
 export interface AppComplianceAutomationToolForMicrosoft365OptionalParams
