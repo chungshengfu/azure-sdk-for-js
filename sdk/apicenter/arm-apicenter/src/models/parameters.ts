@@ -13,7 +13,16 @@ import {
 } from "@azure/core-client";
 import {
   Service as ServiceMapper,
-  ServiceUpdate as ServiceUpdateMapper
+  ServiceUpdate as ServiceUpdateMapper,
+  MetadataSchemaExportRequest as MetadataSchemaExportRequestMapper,
+  MetadataSchema as MetadataSchemaMapper,
+  Workspace as WorkspaceMapper,
+  Api as ApiMapper,
+  Deployment as DeploymentMapper,
+  ApiVersion as ApiVersionMapper,
+  ApiDefinition as ApiDefinitionMapper,
+  ApiSpecImportRequest as ApiSpecImportRequestMapper,
+  Environment as EnvironmentMapper
 } from "../models/mappers";
 
 export const accept: OperationParameter = {
@@ -43,7 +52,7 @@ export const $host: OperationURLParameter = {
 export const apiVersion: OperationQueryParameter = {
   parameterPath: "apiVersion",
   mapper: {
-    defaultValue: "2023-07-01-preview",
+    defaultValue: "2024-03-01",
     isConstant: true,
     serializedName: "api-version",
     type: {
@@ -97,7 +106,8 @@ export const serviceName: OperationURLParameter = {
   parameterPath: "serviceName",
   mapper: {
     constraints: {
-      Pattern: new RegExp("^[a-zA-Z0-9\\-]{1,64}$")
+      MaxLength: 90,
+      MinLength: 1
     },
     serializedName: "serviceName",
     required: true,
@@ -120,11 +130,183 @@ export const contentType: OperationParameter = {
 };
 
 export const resource: OperationParameter = {
-  parameterPath: ["options", "resource"],
+  parameterPath: "resource",
   mapper: ServiceMapper
 };
 
-export const parameters: OperationParameter = {
-  parameterPath: ["options", "parameters"],
+export const properties: OperationParameter = {
+  parameterPath: "properties",
   mapper: ServiceUpdateMapper
+};
+
+export const body: OperationParameter = {
+  parameterPath: "body",
+  mapper: MetadataSchemaExportRequestMapper
+};
+
+export const filter: OperationQueryParameter = {
+  parameterPath: ["options", "filter"],
+  mapper: {
+    serializedName: "$filter",
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const metadataSchemaName: OperationURLParameter = {
+  parameterPath: "metadataSchemaName",
+  mapper: {
+    constraints: {
+      MaxLength: 90,
+      MinLength: 1
+    },
+    serializedName: "metadataSchemaName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const resource1: OperationParameter = {
+  parameterPath: "resource",
+  mapper: MetadataSchemaMapper
+};
+
+export const workspaceName: OperationURLParameter = {
+  parameterPath: "workspaceName",
+  mapper: {
+    constraints: {
+      MaxLength: 90,
+      MinLength: 1
+    },
+    serializedName: "workspaceName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const resource2: OperationParameter = {
+  parameterPath: "resource",
+  mapper: WorkspaceMapper
+};
+
+export const apiName: OperationURLParameter = {
+  parameterPath: "apiName",
+  mapper: {
+    constraints: {
+      MaxLength: 90,
+      MinLength: 1
+    },
+    serializedName: "apiName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const resource3: OperationParameter = {
+  parameterPath: "resource",
+  mapper: ApiMapper
+};
+
+export const deploymentName: OperationURLParameter = {
+  parameterPath: "deploymentName",
+  mapper: {
+    constraints: {
+      MaxLength: 90,
+      MinLength: 1
+    },
+    serializedName: "deploymentName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const resource4: OperationParameter = {
+  parameterPath: "resource",
+  mapper: DeploymentMapper
+};
+
+export const versionName: OperationURLParameter = {
+  parameterPath: "versionName",
+  mapper: {
+    constraints: {
+      MaxLength: 90,
+      MinLength: 1
+    },
+    serializedName: "versionName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const resource5: OperationParameter = {
+  parameterPath: "resource",
+  mapper: ApiVersionMapper
+};
+
+export const definitionName: OperationURLParameter = {
+  parameterPath: "definitionName",
+  mapper: {
+    constraints: {
+      MaxLength: 90,
+      MinLength: 1
+    },
+    serializedName: "definitionName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const resource6: OperationParameter = {
+  parameterPath: "resource",
+  mapper: ApiDefinitionMapper
+};
+
+export const body1: OperationParameter = {
+  parameterPath: "body",
+  mapper: {
+    serializedName: "body",
+    required: true,
+    type: {
+      name: "Dictionary",
+      value: { type: { name: "any" } }
+    }
+  }
+};
+
+export const body2: OperationParameter = {
+  parameterPath: "body",
+  mapper: ApiSpecImportRequestMapper
+};
+
+export const environmentName: OperationURLParameter = {
+  parameterPath: "environmentName",
+  mapper: {
+    constraints: {
+      MaxLength: 90,
+      MinLength: 1
+    },
+    serializedName: "environmentName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const resource7: OperationParameter = {
+  parameterPath: "resource",
+  mapper: EnvironmentMapper
 };

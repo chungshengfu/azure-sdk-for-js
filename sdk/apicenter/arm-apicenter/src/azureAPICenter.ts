@@ -14,8 +14,28 @@ import {
   SendRequest
 } from "@azure/core-rest-pipeline";
 import * as coreAuth from "@azure/core-auth";
-import { OperationsImpl, ServicesImpl } from "./operations";
-import { Operations, Services } from "./operationsInterfaces";
+import {
+  OperationsImpl,
+  ServicesImpl,
+  MetadataSchemasImpl,
+  WorkspacesImpl,
+  ApisImpl,
+  DeploymentsImpl,
+  ApiVersionsImpl,
+  ApiDefinitionsImpl,
+  EnvironmentsImpl
+} from "./operations";
+import {
+  Operations,
+  Services,
+  MetadataSchemas,
+  Workspaces,
+  Apis,
+  Deployments,
+  ApiVersions,
+  ApiDefinitions,
+  Environments
+} from "./operationsInterfaces";
 import { AzureAPICenterOptionalParams } from "./models";
 
 export class AzureAPICenter extends coreClient.ServiceClient {
@@ -103,9 +123,16 @@ export class AzureAPICenter extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
-    this.apiVersion = options.apiVersion || "2023-07-01-preview";
+    this.apiVersion = options.apiVersion || "2024-03-01";
     this.operations = new OperationsImpl(this);
     this.services = new ServicesImpl(this);
+    this.metadataSchemas = new MetadataSchemasImpl(this);
+    this.workspaces = new WorkspacesImpl(this);
+    this.apis = new ApisImpl(this);
+    this.deployments = new DeploymentsImpl(this);
+    this.apiVersions = new ApiVersionsImpl(this);
+    this.apiDefinitions = new ApiDefinitionsImpl(this);
+    this.environments = new EnvironmentsImpl(this);
     this.addCustomApiVersionPolicy(options.apiVersion);
   }
 
@@ -139,4 +166,11 @@ export class AzureAPICenter extends coreClient.ServiceClient {
 
   operations: Operations;
   services: Services;
+  metadataSchemas: MetadataSchemas;
+  workspaces: Workspaces;
+  apis: Apis;
+  deployments: Deployments;
+  apiVersions: ApiVersions;
+  apiDefinitions: ApiDefinitions;
+  environments: Environments;
 }

@@ -25,9 +25,13 @@ import {
   ServicesGetResponse,
   ServicesCreateOrUpdateOptionalParams,
   ServicesCreateOrUpdateResponse,
+  ServiceUpdate,
   ServicesUpdateOptionalParams,
   ServicesUpdateResponse,
   ServicesDeleteOptionalParams,
+  MetadataSchemaExportRequest,
+  ServicesExportMetadataSchemaOptionalParams,
+  ServicesExportMetadataSchemaResponse,
   ServicesListBySubscriptionNextResponse,
   ServicesListByResourceGroupNextResponse
 } from "../models";
@@ -100,7 +104,7 @@ export class ServicesImpl implements Services {
   }
 
   /**
-   * Lists services within a resource group
+   * Returns a collection of services within the resource group.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param options The options parameters.
    */
@@ -182,7 +186,7 @@ export class ServicesImpl implements Services {
   }
 
   /**
-   * Lists services within a resource group
+   * Returns a collection of services within the resource group.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param options The options parameters.
    */
@@ -197,9 +201,9 @@ export class ServicesImpl implements Services {
   }
 
   /**
-   * Get service
+   * Returns details of the service.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param serviceName Service name
+   * @param serviceName The name of Azure API Center service.
    * @param options The options parameters.
    */
   get(
@@ -214,43 +218,47 @@ export class ServicesImpl implements Services {
   }
 
   /**
-   * Create or update service
+   * Creates new or updates existing API.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param serviceName Service name
+   * @param serviceName The name of Azure API Center service.
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
     serviceName: string,
+    resource: Service,
     options?: ServicesCreateOrUpdateOptionalParams
   ): Promise<ServicesCreateOrUpdateResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, options },
+      { resourceGroupName, serviceName, resource, options },
       createOrUpdateOperationSpec
     );
   }
 
   /**
-   * Update service
+   * Updates existing service.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param serviceName Service name
+   * @param serviceName The name of Azure API Center service.
+   * @param properties The resource properties to be updated.
    * @param options The options parameters.
    */
   update(
     resourceGroupName: string,
     serviceName: string,
+    properties: ServiceUpdate,
     options?: ServicesUpdateOptionalParams
   ): Promise<ServicesUpdateResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, options },
+      { resourceGroupName, serviceName, properties, options },
       updateOperationSpec
     );
   }
 
   /**
-   * Delete service
+   * Deletes specified service.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param serviceName Service name
+   * @param serviceName The name of Azure API Center service.
    * @param options The options parameters.
    */
   delete(
@@ -261,6 +269,25 @@ export class ServicesImpl implements Services {
     return this.client.sendOperationRequest(
       { resourceGroupName, serviceName, options },
       deleteOperationSpec
+    );
+  }
+
+  /**
+   * Exports the effective metadata schema.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param serviceName The name of Azure API Center service.
+   * @param body The content of the action request
+   * @param options The options parameters.
+   */
+  exportMetadataSchema(
+    resourceGroupName: string,
+    serviceName: string,
+    body: MetadataSchemaExportRequest,
+    options?: ServicesExportMetadataSchemaOptionalParams
+  ): Promise<ServicesExportMetadataSchemaResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, serviceName, body, options },
+      exportMetadataSchemaOperationSpec
     );
   }
 
@@ -305,7 +332,7 @@ const listBySubscriptionOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ServiceCollection
+      bodyMapper: Mappers.ServiceListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -322,7 +349,7 @@ const listByResourceGroupOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ServiceCollection
+      bodyMapper: Mappers.ServiceListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -398,7 +425,7 @@ const updateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.parameters,
+  requestBody: Parameters.properties,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -431,12 +458,36 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept],
   serializer
 };
+const exportMetadataSchemaOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiCenter/services/{serviceName}/exportMetadataSchema",
+  httpMethod: "POST",
+  responses: {
+    200: {
+      bodyMapper: Mappers.MetadataSchemaExportResult
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  requestBody: Parameters.body,
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.serviceName
+  ],
+  headerParameters: [Parameters.accept, Parameters.contentType],
+  mediaType: "json",
+  serializer
+};
 const listBySubscriptionNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ServiceCollection
+      bodyMapper: Mappers.ServiceListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -455,7 +506,7 @@ const listByResourceGroupNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ServiceCollection
+      bodyMapper: Mappers.ServiceListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
