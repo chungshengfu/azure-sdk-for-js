@@ -8,7 +8,7 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { CloudLinks } from "../operationsInterfaces";
+import { WorkloadNetworkVmGroups } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
@@ -20,25 +20,28 @@ import {
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
-  CloudLink,
-  CloudLinksListByPrivateCloudNextOptionalParams,
-  CloudLinksListByPrivateCloudOptionalParams,
-  CloudLinksListByPrivateCloudResponse,
-  CloudLinksGetOptionalParams,
-  CloudLinksGetResponse,
-  CloudLinksCreateOrUpdateOptionalParams,
-  CloudLinksCreateOrUpdateResponse,
-  CloudLinksDeleteOptionalParams,
-  CloudLinksListByPrivateCloudNextResponse
+  WorkloadNetworkVMGroup,
+  WorkloadNetworkVmGroupsListByPrivateCloudNextOptionalParams,
+  WorkloadNetworkVmGroupsListByPrivateCloudOptionalParams,
+  WorkloadNetworkVmGroupsListByPrivateCloudResponse,
+  WorkloadNetworkVmGroupsGetVmGroupOptionalParams,
+  WorkloadNetworkVmGroupsGetVmGroupResponse,
+  WorkloadNetworkVmGroupsCreateVmGroupOptionalParams,
+  WorkloadNetworkVmGroupsCreateVmGroupResponse,
+  WorkloadNetworkVMGroupUpdate,
+  WorkloadNetworkVmGroupsUpdateVmGroupOptionalParams,
+  WorkloadNetworkVmGroupsUpdateVmGroupResponse,
+  WorkloadNetworkVmGroupsDeleteVmGroupOptionalParams,
+  WorkloadNetworkVmGroupsListByPrivateCloudNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing CloudLinks operations. */
-export class CloudLinksImpl implements CloudLinks {
+/** Class containing WorkloadNetworkVmGroups operations. */
+export class WorkloadNetworkVmGroupsImpl implements WorkloadNetworkVmGroups {
   private readonly client: AzureVMwareSolutionAPI;
 
   /**
-   * Initialize a new instance of the class CloudLinks class.
+   * Initialize a new instance of the class WorkloadNetworkVmGroups class.
    * @param client Reference to the service client
    */
   constructor(client: AzureVMwareSolutionAPI) {
@@ -46,7 +49,7 @@ export class CloudLinksImpl implements CloudLinks {
   }
 
   /**
-   * List cloud link in a private cloud
+   * List of vm groups in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
@@ -54,8 +57,8 @@ export class CloudLinksImpl implements CloudLinks {
   public listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: CloudLinksListByPrivateCloudOptionalParams
-  ): PagedAsyncIterableIterator<CloudLink> {
+    options?: WorkloadNetworkVmGroupsListByPrivateCloudOptionalParams
+  ): PagedAsyncIterableIterator<WorkloadNetworkVMGroup> {
     const iter = this.listByPrivateCloudPagingAll(
       resourceGroupName,
       privateCloudName,
@@ -85,10 +88,10 @@ export class CloudLinksImpl implements CloudLinks {
   private async *listByPrivateCloudPagingPage(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: CloudLinksListByPrivateCloudOptionalParams,
+    options?: WorkloadNetworkVmGroupsListByPrivateCloudOptionalParams,
     settings?: PageSettings
-  ): AsyncIterableIterator<CloudLink[]> {
-    let result: CloudLinksListByPrivateCloudResponse;
+  ): AsyncIterableIterator<WorkloadNetworkVMGroup[]> {
+    let result: WorkloadNetworkVmGroupsListByPrivateCloudResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
       result = await this._listByPrivateCloud(
@@ -118,8 +121,8 @@ export class CloudLinksImpl implements CloudLinks {
   private async *listByPrivateCloudPagingAll(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: CloudLinksListByPrivateCloudOptionalParams
-  ): AsyncIterableIterator<CloudLink> {
+    options?: WorkloadNetworkVmGroupsListByPrivateCloudOptionalParams
+  ): AsyncIterableIterator<WorkloadNetworkVMGroup> {
     for await (const page of this.listByPrivateCloudPagingPage(
       resourceGroupName,
       privateCloudName,
@@ -130,7 +133,7 @@ export class CloudLinksImpl implements CloudLinks {
   }
 
   /**
-   * List cloud link in a private cloud
+   * List of vm groups in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
@@ -138,8 +141,8 @@ export class CloudLinksImpl implements CloudLinks {
   private _listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: CloudLinksListByPrivateCloudOptionalParams
-  ): Promise<CloudLinksListByPrivateCloudResponse> {
+    options?: WorkloadNetworkVmGroupsListByPrivateCloudOptionalParams
+  ): Promise<WorkloadNetworkVmGroupsListByPrivateCloudResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, privateCloudName, options },
       listByPrivateCloudOperationSpec
@@ -147,48 +150,48 @@ export class CloudLinksImpl implements CloudLinks {
   }
 
   /**
-   * Get an cloud link by name in a private cloud
+   * Get a vm group by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param cloudLinkName Name of the cloud link resource
+   * @param vmGroupId NSX VM Group identifier. Generally the same as the VM Group's display name
    * @param options The options parameters.
    */
-  get(
+  getVmGroup(
     resourceGroupName: string,
     privateCloudName: string,
-    cloudLinkName: string,
-    options?: CloudLinksGetOptionalParams
-  ): Promise<CloudLinksGetResponse> {
+    vmGroupId: string,
+    options?: WorkloadNetworkVmGroupsGetVmGroupOptionalParams
+  ): Promise<WorkloadNetworkVmGroupsGetVmGroupResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, privateCloudName, cloudLinkName, options },
-      getOperationSpec
+      { resourceGroupName, privateCloudName, vmGroupId, options },
+      getVmGroupOperationSpec
     );
   }
 
   /**
-   * Create or update a cloud link in a private cloud
+   * Create a vm group by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param cloudLinkName Name of the cloud link resource
+   * @param vmGroupId NSX VM Group identifier. Generally the same as the VM Group's display name
    * @param resource Resource create parameters.
    * @param options The options parameters.
    */
-  async beginCreateOrUpdate(
+  async beginCreateVmGroup(
     resourceGroupName: string,
     privateCloudName: string,
-    cloudLinkName: string,
-    resource: CloudLink,
-    options?: CloudLinksCreateOrUpdateOptionalParams
+    vmGroupId: string,
+    resource: WorkloadNetworkVMGroup,
+    options?: WorkloadNetworkVmGroupsCreateVmGroupOptionalParams
   ): Promise<
     SimplePollerLike<
-      OperationState<CloudLinksCreateOrUpdateResponse>,
-      CloudLinksCreateOrUpdateResponse
+      OperationState<WorkloadNetworkVmGroupsCreateVmGroupResponse>,
+      WorkloadNetworkVmGroupsCreateVmGroupResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
-    ): Promise<CloudLinksCreateOrUpdateResponse> => {
+    ): Promise<WorkloadNetworkVmGroupsCreateVmGroupResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -229,15 +232,15 @@ export class CloudLinksImpl implements CloudLinks {
       args: {
         resourceGroupName,
         privateCloudName,
-        cloudLinkName,
+        vmGroupId,
         resource,
         options
       },
-      spec: createOrUpdateOperationSpec
+      spec: createVmGroupOperationSpec
     });
     const poller = await createHttpPoller<
-      CloudLinksCreateOrUpdateResponse,
-      OperationState<CloudLinksCreateOrUpdateResponse>
+      WorkloadNetworkVmGroupsCreateVmGroupResponse,
+      OperationState<WorkloadNetworkVmGroupsCreateVmGroupResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
@@ -248,24 +251,24 @@ export class CloudLinksImpl implements CloudLinks {
   }
 
   /**
-   * Create or update a cloud link in a private cloud
+   * Create a vm group by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param cloudLinkName Name of the cloud link resource
+   * @param vmGroupId NSX VM Group identifier. Generally the same as the VM Group's display name
    * @param resource Resource create parameters.
    * @param options The options parameters.
    */
-  async beginCreateOrUpdateAndWait(
+  async beginCreateVmGroupAndWait(
     resourceGroupName: string,
     privateCloudName: string,
-    cloudLinkName: string,
-    resource: CloudLink,
-    options?: CloudLinksCreateOrUpdateOptionalParams
-  ): Promise<CloudLinksCreateOrUpdateResponse> {
-    const poller = await this.beginCreateOrUpdate(
+    vmGroupId: string,
+    resource: WorkloadNetworkVMGroup,
+    options?: WorkloadNetworkVmGroupsCreateVmGroupOptionalParams
+  ): Promise<WorkloadNetworkVmGroupsCreateVmGroupResponse> {
+    const poller = await this.beginCreateVmGroup(
       resourceGroupName,
       privateCloudName,
-      cloudLinkName,
+      vmGroupId,
       resource,
       options
     );
@@ -273,17 +276,124 @@ export class CloudLinksImpl implements CloudLinks {
   }
 
   /**
-   * Delete a cloud link in a private cloud
+   * Create or update a vm group by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param cloudLinkName Name of the cloud link resource
+   * @param vmGroupId NSX VM Group identifier. Generally the same as the VM Group's display name
+   * @param properties The resource properties to be updated.
    * @param options The options parameters.
    */
-  async beginDelete(
+  async beginUpdateVmGroup(
     resourceGroupName: string,
     privateCloudName: string,
-    cloudLinkName: string,
-    options?: CloudLinksDeleteOptionalParams
+    vmGroupId: string,
+    properties: WorkloadNetworkVMGroupUpdate,
+    options?: WorkloadNetworkVmGroupsUpdateVmGroupOptionalParams
+  ): Promise<
+    SimplePollerLike<
+      OperationState<WorkloadNetworkVmGroupsUpdateVmGroupResponse>,
+      WorkloadNetworkVmGroupsUpdateVmGroupResponse
+    >
+  > {
+    const directSendOperation = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ): Promise<WorkloadNetworkVmGroupsUpdateVmGroupResponse> => {
+      return this.client.sendOperationRequest(args, spec);
+    };
+    const sendOperationFn = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ) => {
+      let currentRawResponse:
+        | coreClient.FullOperationResponse
+        | undefined = undefined;
+      const providedCallback = args.options?.onResponse;
+      const callback: coreClient.RawResponseCallback = (
+        rawResponse: coreClient.FullOperationResponse,
+        flatResponse: unknown
+      ) => {
+        currentRawResponse = rawResponse;
+        providedCallback?.(rawResponse, flatResponse);
+      };
+      const updatedArgs = {
+        ...args,
+        options: {
+          ...args.options,
+          onResponse: callback
+        }
+      };
+      const flatResponse = await directSendOperation(updatedArgs, spec);
+      return {
+        flatResponse,
+        rawResponse: {
+          statusCode: currentRawResponse!.status,
+          body: currentRawResponse!.parsedBody,
+          headers: currentRawResponse!.headers.toJSON()
+        }
+      };
+    };
+
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: {
+        resourceGroupName,
+        privateCloudName,
+        vmGroupId,
+        properties,
+        options
+      },
+      spec: updateVmGroupOperationSpec
+    });
+    const poller = await createHttpPoller<
+      WorkloadNetworkVmGroupsUpdateVmGroupResponse,
+      OperationState<WorkloadNetworkVmGroupsUpdateVmGroupResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "location"
+    });
+    await poller.poll();
+    return poller;
+  }
+
+  /**
+   * Create or update a vm group by id in a private cloud workload network.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param privateCloudName Name of the private cloud
+   * @param vmGroupId NSX VM Group identifier. Generally the same as the VM Group's display name
+   * @param properties The resource properties to be updated.
+   * @param options The options parameters.
+   */
+  async beginUpdateVmGroupAndWait(
+    resourceGroupName: string,
+    privateCloudName: string,
+    vmGroupId: string,
+    properties: WorkloadNetworkVMGroupUpdate,
+    options?: WorkloadNetworkVmGroupsUpdateVmGroupOptionalParams
+  ): Promise<WorkloadNetworkVmGroupsUpdateVmGroupResponse> {
+    const poller = await this.beginUpdateVmGroup(
+      resourceGroupName,
+      privateCloudName,
+      vmGroupId,
+      properties,
+      options
+    );
+    return poller.pollUntilDone();
+  }
+
+  /**
+   * Delete a vm group by id in a private cloud workload network.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param privateCloudName Name of the private cloud
+   * @param vmGroupId NSX VM Group identifier. Generally the same as the VM Group's display name
+   * @param options The options parameters.
+   */
+  async beginDeleteVmGroup(
+    resourceGroupName: string,
+    privateCloudName: string,
+    vmGroupId: string,
+    options?: WorkloadNetworkVmGroupsDeleteVmGroupOptionalParams
   ): Promise<SimplePollerLike<OperationState<void>, void>> {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
@@ -326,8 +436,8 @@ export class CloudLinksImpl implements CloudLinks {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, privateCloudName, cloudLinkName, options },
-      spec: deleteOperationSpec
+      args: { resourceGroupName, privateCloudName, vmGroupId, options },
+      spec: deleteVmGroupOperationSpec
     });
     const poller = await createHttpPoller<void, OperationState<void>>(lro, {
       restoreFrom: options?.resumeFrom,
@@ -339,22 +449,22 @@ export class CloudLinksImpl implements CloudLinks {
   }
 
   /**
-   * Delete a cloud link in a private cloud
+   * Delete a vm group by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param cloudLinkName Name of the cloud link resource
+   * @param vmGroupId NSX VM Group identifier. Generally the same as the VM Group's display name
    * @param options The options parameters.
    */
-  async beginDeleteAndWait(
+  async beginDeleteVmGroupAndWait(
     resourceGroupName: string,
     privateCloudName: string,
-    cloudLinkName: string,
-    options?: CloudLinksDeleteOptionalParams
+    vmGroupId: string,
+    options?: WorkloadNetworkVmGroupsDeleteVmGroupOptionalParams
   ): Promise<void> {
-    const poller = await this.beginDelete(
+    const poller = await this.beginDeleteVmGroup(
       resourceGroupName,
       privateCloudName,
-      cloudLinkName,
+      vmGroupId,
       options
     );
     return poller.pollUntilDone();
@@ -371,8 +481,8 @@ export class CloudLinksImpl implements CloudLinks {
     resourceGroupName: string,
     privateCloudName: string,
     nextLink: string,
-    options?: CloudLinksListByPrivateCloudNextOptionalParams
-  ): Promise<CloudLinksListByPrivateCloudNextResponse> {
+    options?: WorkloadNetworkVmGroupsListByPrivateCloudNextOptionalParams
+  ): Promise<WorkloadNetworkVmGroupsListByPrivateCloudNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, privateCloudName, nextLink, options },
       listByPrivateCloudNextOperationSpec
@@ -384,11 +494,11 @@ const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listByPrivateCloudOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/cloudLinks",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/vmGroups",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudLinkListResult
+      bodyMapper: Mappers.WorkloadNetworkVMGroupListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -404,13 +514,13 @@ const listByPrivateCloudOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept],
   serializer
 };
-const getOperationSpec: coreClient.OperationSpec = {
+const getVmGroupOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/cloudLinks/{cloudLinkName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/vmGroups/{vmGroupId}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudLink
+      bodyMapper: Mappers.WorkloadNetworkVMGroup
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -422,48 +532,82 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
-    Parameters.cloudLinkName
+    Parameters.vmGroupId
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
-const createOrUpdateOperationSpec: coreClient.OperationSpec = {
+const createVmGroupOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/cloudLinks/{cloudLinkName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/vmGroups/{vmGroupId}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudLink
+      bodyMapper: Mappers.WorkloadNetworkVMGroup
     },
     201: {
-      bodyMapper: Mappers.CloudLink
+      bodyMapper: Mappers.WorkloadNetworkVMGroup
     },
     202: {
-      bodyMapper: Mappers.CloudLink
+      bodyMapper: Mappers.WorkloadNetworkVMGroup
     },
     204: {
-      bodyMapper: Mappers.CloudLink
+      bodyMapper: Mappers.WorkloadNetworkVMGroup
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.resource3,
+  requestBody: Parameters.resource16,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
-    Parameters.cloudLinkName
+    Parameters.vmGroupId
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
   serializer
 };
-const deleteOperationSpec: coreClient.OperationSpec = {
+const updateVmGroupOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/cloudLinks/{cloudLinkName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/vmGroups/{vmGroupId}",
+  httpMethod: "PATCH",
+  responses: {
+    200: {
+      bodyMapper: Mappers.WorkloadNetworkVMGroup
+    },
+    201: {
+      bodyMapper: Mappers.WorkloadNetworkVMGroup
+    },
+    202: {
+      bodyMapper: Mappers.WorkloadNetworkVMGroup
+    },
+    204: {
+      bodyMapper: Mappers.WorkloadNetworkVMGroup
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  requestBody: Parameters.properties8,
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId1,
+    Parameters.resourceGroupName,
+    Parameters.privateCloudName,
+    Parameters.vmGroupId
+  ],
+  headerParameters: [Parameters.accept, Parameters.contentType],
+  mediaType: "json",
+  serializer
+};
+const deleteVmGroupOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/vmGroups/{vmGroupId}",
   httpMethod: "DELETE",
   responses: {
     200: {},
@@ -480,7 +624,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
-    Parameters.cloudLinkName
+    Parameters.vmGroupId
   ],
   headerParameters: [Parameters.accept],
   serializer
@@ -490,7 +634,7 @@ const listByPrivateCloudNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudLinkListResult
+      bodyMapper: Mappers.WorkloadNetworkVMGroupListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse

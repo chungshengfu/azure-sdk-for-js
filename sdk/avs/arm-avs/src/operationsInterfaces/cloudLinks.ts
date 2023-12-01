@@ -10,7 +10,7 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   CloudLink,
-  CloudLinksListOptionalParams,
+  CloudLinksListByPrivateCloudOptionalParams,
   CloudLinksGetOptionalParams,
   CloudLinksGetResponse,
   CloudLinksCreateOrUpdateOptionalParams,
@@ -27,10 +27,10 @@ export interface CloudLinks {
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
    */
-  list(
+  listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: CloudLinksListOptionalParams
+    options?: CloudLinksListByPrivateCloudOptionalParams
   ): PagedAsyncIterableIterator<CloudLink>;
   /**
    * Get an cloud link by name in a private cloud
@@ -48,16 +48,16 @@ export interface CloudLinks {
   /**
    * Create or update a cloud link in a private cloud
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName The name of the private cloud.
+   * @param privateCloudName Name of the private cloud
    * @param cloudLinkName Name of the cloud link resource
-   * @param cloudLink A cloud link in the private cloud
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     privateCloudName: string,
     cloudLinkName: string,
-    cloudLink: CloudLink,
+    resource: CloudLink,
     options?: CloudLinksCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -68,16 +68,16 @@ export interface CloudLinks {
   /**
    * Create or update a cloud link in a private cloud
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName The name of the private cloud.
+   * @param privateCloudName Name of the private cloud
    * @param cloudLinkName Name of the cloud link resource
-   * @param cloudLink A cloud link in the private cloud
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     privateCloudName: string,
     cloudLinkName: string,
-    cloudLink: CloudLink,
+    resource: CloudLink,
     options?: CloudLinksCreateOrUpdateOptionalParams
   ): Promise<CloudLinksCreateOrUpdateResponse>;
   /**

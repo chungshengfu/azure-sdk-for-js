@@ -21,15 +21,15 @@ import {
 import { createLroSpec } from "../lroImpl";
 import {
   GlobalReachConnection,
-  GlobalReachConnectionsListNextOptionalParams,
-  GlobalReachConnectionsListOptionalParams,
-  GlobalReachConnectionsListResponse,
+  GlobalReachConnectionsListByPrivateCloudNextOptionalParams,
+  GlobalReachConnectionsListByPrivateCloudOptionalParams,
+  GlobalReachConnectionsListByPrivateCloudResponse,
   GlobalReachConnectionsGetOptionalParams,
   GlobalReachConnectionsGetResponse,
   GlobalReachConnectionsCreateOrUpdateOptionalParams,
   GlobalReachConnectionsCreateOrUpdateResponse,
   GlobalReachConnectionsDeleteOptionalParams,
-  GlobalReachConnectionsListNextResponse
+  GlobalReachConnectionsListByPrivateCloudNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -51,12 +51,12 @@ export class GlobalReachConnectionsImpl implements GlobalReachConnections {
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
    */
-  public list(
+  public listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: GlobalReachConnectionsListOptionalParams
+    options?: GlobalReachConnectionsListByPrivateCloudOptionalParams
   ): PagedAsyncIterableIterator<GlobalReachConnection> {
-    const iter = this.listPagingAll(
+    const iter = this.listByPrivateCloudPagingAll(
       resourceGroupName,
       privateCloudName,
       options
@@ -72,7 +72,7 @@ export class GlobalReachConnectionsImpl implements GlobalReachConnections {
         if (settings?.maxPageSize) {
           throw new Error("maxPageSize is not supported by this operation.");
         }
-        return this.listPagingPage(
+        return this.listByPrivateCloudPagingPage(
           resourceGroupName,
           privateCloudName,
           options,
@@ -82,23 +82,27 @@ export class GlobalReachConnectionsImpl implements GlobalReachConnections {
     };
   }
 
-  private async *listPagingPage(
+  private async *listByPrivateCloudPagingPage(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: GlobalReachConnectionsListOptionalParams,
+    options?: GlobalReachConnectionsListByPrivateCloudOptionalParams,
     settings?: PageSettings
   ): AsyncIterableIterator<GlobalReachConnection[]> {
-    let result: GlobalReachConnectionsListResponse;
+    let result: GlobalReachConnectionsListByPrivateCloudResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._list(resourceGroupName, privateCloudName, options);
+      result = await this._listByPrivateCloud(
+        resourceGroupName,
+        privateCloudName,
+        options
+      );
       let page = result.value || [];
       continuationToken = result.nextLink;
       setContinuationToken(page, continuationToken);
       yield page;
     }
     while (continuationToken) {
-      result = await this._listNext(
+      result = await this._listByPrivateCloudNext(
         resourceGroupName,
         privateCloudName,
         continuationToken,
@@ -111,12 +115,12 @@ export class GlobalReachConnectionsImpl implements GlobalReachConnections {
     }
   }
 
-  private async *listPagingAll(
+  private async *listByPrivateCloudPagingAll(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: GlobalReachConnectionsListOptionalParams
+    options?: GlobalReachConnectionsListByPrivateCloudOptionalParams
   ): AsyncIterableIterator<GlobalReachConnection> {
-    for await (const page of this.listPagingPage(
+    for await (const page of this.listByPrivateCloudPagingPage(
       resourceGroupName,
       privateCloudName,
       options
@@ -131,14 +135,14 @@ export class GlobalReachConnectionsImpl implements GlobalReachConnections {
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
    */
-  private _list(
+  private _listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: GlobalReachConnectionsListOptionalParams
-  ): Promise<GlobalReachConnectionsListResponse> {
+    options?: GlobalReachConnectionsListByPrivateCloudOptionalParams
+  ): Promise<GlobalReachConnectionsListByPrivateCloudResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, privateCloudName, options },
-      listOperationSpec
+      listByPrivateCloudOperationSpec
     );
   }
 
@@ -169,16 +173,16 @@ export class GlobalReachConnectionsImpl implements GlobalReachConnections {
   /**
    * Create or update a global reach connection in a private cloud
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName The name of the private cloud.
+   * @param privateCloudName Name of the private cloud
    * @param globalReachConnectionName Name of the global reach connection in the private cloud
-   * @param globalReachConnection A global reach connection in the private cloud
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
     privateCloudName: string,
     globalReachConnectionName: string,
-    globalReachConnection: GlobalReachConnection,
+    resource: GlobalReachConnection,
     options?: GlobalReachConnectionsCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -231,7 +235,7 @@ export class GlobalReachConnectionsImpl implements GlobalReachConnections {
         resourceGroupName,
         privateCloudName,
         globalReachConnectionName,
-        globalReachConnection,
+        resource,
         options
       },
       spec: createOrUpdateOperationSpec
@@ -241,7 +245,8 @@ export class GlobalReachConnectionsImpl implements GlobalReachConnections {
       OperationState<GlobalReachConnectionsCreateOrUpdateResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "azure-async-operation"
     });
     await poller.poll();
     return poller;
@@ -250,23 +255,23 @@ export class GlobalReachConnectionsImpl implements GlobalReachConnections {
   /**
    * Create or update a global reach connection in a private cloud
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName The name of the private cloud.
+   * @param privateCloudName Name of the private cloud
    * @param globalReachConnectionName Name of the global reach connection in the private cloud
-   * @param globalReachConnection A global reach connection in the private cloud
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     privateCloudName: string,
     globalReachConnectionName: string,
-    globalReachConnection: GlobalReachConnection,
+    resource: GlobalReachConnection,
     options?: GlobalReachConnectionsCreateOrUpdateOptionalParams
   ): Promise<GlobalReachConnectionsCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
       privateCloudName,
       globalReachConnectionName,
-      globalReachConnection,
+      resource,
       options
     );
     return poller.pollUntilDone();
@@ -336,7 +341,8 @@ export class GlobalReachConnectionsImpl implements GlobalReachConnections {
     });
     const poller = await createHttpPoller<void, OperationState<void>>(lro, {
       restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "location"
     });
     await poller.poll();
     return poller;
@@ -365,34 +371,34 @@ export class GlobalReachConnectionsImpl implements GlobalReachConnections {
   }
 
   /**
-   * ListNext
+   * ListByPrivateCloudNext
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param nextLink The nextLink from the previous successful call to the List method.
+   * @param nextLink The nextLink from the previous successful call to the ListByPrivateCloud method.
    * @param options The options parameters.
    */
-  private _listNext(
+  private _listByPrivateCloudNext(
     resourceGroupName: string,
     privateCloudName: string,
     nextLink: string,
-    options?: GlobalReachConnectionsListNextOptionalParams
-  ): Promise<GlobalReachConnectionsListNextResponse> {
+    options?: GlobalReachConnectionsListByPrivateCloudNextOptionalParams
+  ): Promise<GlobalReachConnectionsListByPrivateCloudNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, privateCloudName, nextLink, options },
-      listNextOperationSpec
+      listByPrivateCloudNextOperationSpec
     );
   }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const listOperationSpec: coreClient.OperationSpec = {
+const listByPrivateCloudOperationSpec: coreClient.OperationSpec = {
   path:
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/globalReachConnections",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.GlobalReachConnectionList
+      bodyMapper: Mappers.GlobalReachConnectionListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -401,7 +407,7 @@ const listOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName
   ],
@@ -423,7 +429,7 @@ const getOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
     Parameters.globalReachConnectionName
@@ -452,13 +458,13 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.globalReachConnection,
+  requestBody: Parameters.resource10,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
-    Parameters.privateCloudName1,
+    Parameters.privateCloudName,
     Parameters.globalReachConnectionName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
@@ -481,7 +487,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
     Parameters.globalReachConnectionName
@@ -489,12 +495,12 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept],
   serializer
 };
-const listNextOperationSpec: coreClient.OperationSpec = {
+const listByPrivateCloudNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.GlobalReachConnectionList
+      bodyMapper: Mappers.GlobalReachConnectionListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -503,7 +509,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.nextLink,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName
   ],

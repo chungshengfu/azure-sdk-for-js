@@ -10,7 +10,7 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   GlobalReachConnection,
-  GlobalReachConnectionsListOptionalParams,
+  GlobalReachConnectionsListByPrivateCloudOptionalParams,
   GlobalReachConnectionsGetOptionalParams,
   GlobalReachConnectionsGetResponse,
   GlobalReachConnectionsCreateOrUpdateOptionalParams,
@@ -27,10 +27,10 @@ export interface GlobalReachConnections {
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
    */
-  list(
+  listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: GlobalReachConnectionsListOptionalParams
+    options?: GlobalReachConnectionsListByPrivateCloudOptionalParams
   ): PagedAsyncIterableIterator<GlobalReachConnection>;
   /**
    * Get a global reach connection by name in a private cloud
@@ -48,16 +48,16 @@ export interface GlobalReachConnections {
   /**
    * Create or update a global reach connection in a private cloud
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName The name of the private cloud.
+   * @param privateCloudName Name of the private cloud
    * @param globalReachConnectionName Name of the global reach connection in the private cloud
-   * @param globalReachConnection A global reach connection in the private cloud
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     privateCloudName: string,
     globalReachConnectionName: string,
-    globalReachConnection: GlobalReachConnection,
+    resource: GlobalReachConnection,
     options?: GlobalReachConnectionsCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -68,16 +68,16 @@ export interface GlobalReachConnections {
   /**
    * Create or update a global reach connection in a private cloud
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName The name of the private cloud.
+   * @param privateCloudName Name of the private cloud
    * @param globalReachConnectionName Name of the global reach connection in the private cloud
-   * @param globalReachConnection A global reach connection in the private cloud
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     privateCloudName: string,
     globalReachConnectionName: string,
-    globalReachConnection: GlobalReachConnection,
+    resource: GlobalReachConnection,
     options?: GlobalReachConnectionsCreateOrUpdateOptionalParams
   ): Promise<GlobalReachConnectionsCreateOrUpdateResponse>;
   /**

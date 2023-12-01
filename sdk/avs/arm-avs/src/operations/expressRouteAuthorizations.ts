@@ -8,7 +8,7 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { Authorizations } from "../operationsInterfaces";
+import { ExpressRouteAuthorizations } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
@@ -21,24 +21,25 @@ import {
 import { createLroSpec } from "../lroImpl";
 import {
   ExpressRouteAuthorization,
-  AuthorizationsListNextOptionalParams,
-  AuthorizationsListOptionalParams,
-  AuthorizationsListResponse,
-  AuthorizationsGetOptionalParams,
-  AuthorizationsGetResponse,
-  AuthorizationsCreateOrUpdateOptionalParams,
-  AuthorizationsCreateOrUpdateResponse,
-  AuthorizationsDeleteOptionalParams,
-  AuthorizationsListNextResponse
+  ExpressRouteAuthorizationsListByPrivateCloudNextOptionalParams,
+  ExpressRouteAuthorizationsListByPrivateCloudOptionalParams,
+  ExpressRouteAuthorizationsListByPrivateCloudResponse,
+  ExpressRouteAuthorizationsGetOptionalParams,
+  ExpressRouteAuthorizationsGetResponse,
+  ExpressRouteAuthorizationsCreateOrUpdateOptionalParams,
+  ExpressRouteAuthorizationsCreateOrUpdateResponse,
+  ExpressRouteAuthorizationsDeleteOptionalParams,
+  ExpressRouteAuthorizationsListByPrivateCloudNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing Authorizations operations. */
-export class AuthorizationsImpl implements Authorizations {
+/** Class containing ExpressRouteAuthorizations operations. */
+export class ExpressRouteAuthorizationsImpl
+  implements ExpressRouteAuthorizations {
   private readonly client: AzureVMwareSolutionAPI;
 
   /**
-   * Initialize a new instance of the class Authorizations class.
+   * Initialize a new instance of the class ExpressRouteAuthorizations class.
    * @param client Reference to the service client
    */
   constructor(client: AzureVMwareSolutionAPI) {
@@ -51,12 +52,12 @@ export class AuthorizationsImpl implements Authorizations {
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
    */
-  public list(
+  public listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: AuthorizationsListOptionalParams
+    options?: ExpressRouteAuthorizationsListByPrivateCloudOptionalParams
   ): PagedAsyncIterableIterator<ExpressRouteAuthorization> {
-    const iter = this.listPagingAll(
+    const iter = this.listByPrivateCloudPagingAll(
       resourceGroupName,
       privateCloudName,
       options
@@ -72,7 +73,7 @@ export class AuthorizationsImpl implements Authorizations {
         if (settings?.maxPageSize) {
           throw new Error("maxPageSize is not supported by this operation.");
         }
-        return this.listPagingPage(
+        return this.listByPrivateCloudPagingPage(
           resourceGroupName,
           privateCloudName,
           options,
@@ -82,23 +83,27 @@ export class AuthorizationsImpl implements Authorizations {
     };
   }
 
-  private async *listPagingPage(
+  private async *listByPrivateCloudPagingPage(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: AuthorizationsListOptionalParams,
+    options?: ExpressRouteAuthorizationsListByPrivateCloudOptionalParams,
     settings?: PageSettings
   ): AsyncIterableIterator<ExpressRouteAuthorization[]> {
-    let result: AuthorizationsListResponse;
+    let result: ExpressRouteAuthorizationsListByPrivateCloudResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._list(resourceGroupName, privateCloudName, options);
+      result = await this._listByPrivateCloud(
+        resourceGroupName,
+        privateCloudName,
+        options
+      );
       let page = result.value || [];
       continuationToken = result.nextLink;
       setContinuationToken(page, continuationToken);
       yield page;
     }
     while (continuationToken) {
-      result = await this._listNext(
+      result = await this._listByPrivateCloudNext(
         resourceGroupName,
         privateCloudName,
         continuationToken,
@@ -111,12 +116,12 @@ export class AuthorizationsImpl implements Authorizations {
     }
   }
 
-  private async *listPagingAll(
+  private async *listByPrivateCloudPagingAll(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: AuthorizationsListOptionalParams
+    options?: ExpressRouteAuthorizationsListByPrivateCloudOptionalParams
   ): AsyncIterableIterator<ExpressRouteAuthorization> {
-    for await (const page of this.listPagingPage(
+    for await (const page of this.listByPrivateCloudPagingPage(
       resourceGroupName,
       privateCloudName,
       options
@@ -131,14 +136,14 @@ export class AuthorizationsImpl implements Authorizations {
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
    */
-  private _list(
+  private _listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: AuthorizationsListOptionalParams
-  ): Promise<AuthorizationsListResponse> {
+    options?: ExpressRouteAuthorizationsListByPrivateCloudOptionalParams
+  ): Promise<ExpressRouteAuthorizationsListByPrivateCloudResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, privateCloudName, options },
-      listOperationSpec
+      listByPrivateCloudOperationSpec
     );
   }
 
@@ -153,8 +158,8 @@ export class AuthorizationsImpl implements Authorizations {
     resourceGroupName: string,
     privateCloudName: string,
     authorizationName: string,
-    options?: AuthorizationsGetOptionalParams
-  ): Promise<AuthorizationsGetResponse> {
+    options?: ExpressRouteAuthorizationsGetOptionalParams
+  ): Promise<ExpressRouteAuthorizationsGetResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, privateCloudName, authorizationName, options },
       getOperationSpec
@@ -164,27 +169,27 @@ export class AuthorizationsImpl implements Authorizations {
   /**
    * Create or update an ExpressRoute Circuit Authorization in a private cloud
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName The name of the private cloud.
+   * @param privateCloudName Name of the private cloud
    * @param authorizationName Name of the ExpressRoute Circuit Authorization in the private cloud
-   * @param authorization An ExpressRoute Circuit Authorization
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
     privateCloudName: string,
     authorizationName: string,
-    authorization: ExpressRouteAuthorization,
-    options?: AuthorizationsCreateOrUpdateOptionalParams
+    resource: ExpressRouteAuthorization,
+    options?: ExpressRouteAuthorizationsCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
-      OperationState<AuthorizationsCreateOrUpdateResponse>,
-      AuthorizationsCreateOrUpdateResponse
+      OperationState<ExpressRouteAuthorizationsCreateOrUpdateResponse>,
+      ExpressRouteAuthorizationsCreateOrUpdateResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
-    ): Promise<AuthorizationsCreateOrUpdateResponse> => {
+    ): Promise<ExpressRouteAuthorizationsCreateOrUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -226,17 +231,18 @@ export class AuthorizationsImpl implements Authorizations {
         resourceGroupName,
         privateCloudName,
         authorizationName,
-        authorization,
+        resource,
         options
       },
       spec: createOrUpdateOperationSpec
     });
     const poller = await createHttpPoller<
-      AuthorizationsCreateOrUpdateResponse,
-      OperationState<AuthorizationsCreateOrUpdateResponse>
+      ExpressRouteAuthorizationsCreateOrUpdateResponse,
+      OperationState<ExpressRouteAuthorizationsCreateOrUpdateResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "azure-async-operation"
     });
     await poller.poll();
     return poller;
@@ -245,23 +251,23 @@ export class AuthorizationsImpl implements Authorizations {
   /**
    * Create or update an ExpressRoute Circuit Authorization in a private cloud
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName The name of the private cloud.
+   * @param privateCloudName Name of the private cloud
    * @param authorizationName Name of the ExpressRoute Circuit Authorization in the private cloud
-   * @param authorization An ExpressRoute Circuit Authorization
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     privateCloudName: string,
     authorizationName: string,
-    authorization: ExpressRouteAuthorization,
-    options?: AuthorizationsCreateOrUpdateOptionalParams
-  ): Promise<AuthorizationsCreateOrUpdateResponse> {
+    resource: ExpressRouteAuthorization,
+    options?: ExpressRouteAuthorizationsCreateOrUpdateOptionalParams
+  ): Promise<ExpressRouteAuthorizationsCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
       privateCloudName,
       authorizationName,
-      authorization,
+      resource,
       options
     );
     return poller.pollUntilDone();
@@ -278,7 +284,7 @@ export class AuthorizationsImpl implements Authorizations {
     resourceGroupName: string,
     privateCloudName: string,
     authorizationName: string,
-    options?: AuthorizationsDeleteOptionalParams
+    options?: ExpressRouteAuthorizationsDeleteOptionalParams
   ): Promise<SimplePollerLike<OperationState<void>, void>> {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
@@ -326,7 +332,8 @@ export class AuthorizationsImpl implements Authorizations {
     });
     const poller = await createHttpPoller<void, OperationState<void>>(lro, {
       restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "location"
     });
     await poller.poll();
     return poller;
@@ -343,7 +350,7 @@ export class AuthorizationsImpl implements Authorizations {
     resourceGroupName: string,
     privateCloudName: string,
     authorizationName: string,
-    options?: AuthorizationsDeleteOptionalParams
+    options?: ExpressRouteAuthorizationsDeleteOptionalParams
   ): Promise<void> {
     const poller = await this.beginDelete(
       resourceGroupName,
@@ -355,34 +362,34 @@ export class AuthorizationsImpl implements Authorizations {
   }
 
   /**
-   * ListNext
+   * ListByPrivateCloudNext
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param nextLink The nextLink from the previous successful call to the List method.
+   * @param nextLink The nextLink from the previous successful call to the ListByPrivateCloud method.
    * @param options The options parameters.
    */
-  private _listNext(
+  private _listByPrivateCloudNext(
     resourceGroupName: string,
     privateCloudName: string,
     nextLink: string,
-    options?: AuthorizationsListNextOptionalParams
-  ): Promise<AuthorizationsListNextResponse> {
+    options?: ExpressRouteAuthorizationsListByPrivateCloudNextOptionalParams
+  ): Promise<ExpressRouteAuthorizationsListByPrivateCloudNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, privateCloudName, nextLink, options },
-      listNextOperationSpec
+      listByPrivateCloudNextOperationSpec
     );
   }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const listOperationSpec: coreClient.OperationSpec = {
+const listByPrivateCloudOperationSpec: coreClient.OperationSpec = {
   path:
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/authorizations",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ExpressRouteAuthorizationList
+      bodyMapper: Mappers.ExpressRouteAuthorizationListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -391,7 +398,7 @@ const listOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName
   ],
@@ -413,7 +420,7 @@ const getOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
     Parameters.authorizationName
@@ -442,13 +449,13 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.authorization,
+  requestBody: Parameters.resource2,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
-    Parameters.privateCloudName1,
+    Parameters.privateCloudName,
     Parameters.authorizationName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
@@ -471,7 +478,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
     Parameters.authorizationName
@@ -479,12 +486,12 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept],
   serializer
 };
-const listNextOperationSpec: coreClient.OperationSpec = {
+const listByPrivateCloudNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ExpressRouteAuthorizationList
+      bodyMapper: Mappers.ExpressRouteAuthorizationListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -493,7 +500,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.nextLink,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName
   ],

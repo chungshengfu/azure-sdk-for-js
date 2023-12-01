@@ -8,148 +8,88 @@
 
 import * as coreClient from "@azure/core-client";
 
-export type WorkloadNetworkDhcpEntityUnion =
-  | WorkloadNetworkDhcpEntity
-  | WorkloadNetworkDhcpServer
-  | WorkloadNetworkDhcpRelay;
 export type AddonPropertiesUnion =
   | AddonProperties
-  | AddonSrmProperties
-  | AddonVrProperties
+  | AddonArcProperties
   | AddonHcxProperties
-  | AddonArcProperties;
+  | AddonSrmProperties
+  | AddonVrProperties;
 export type PlacementPolicyPropertiesUnion =
   | PlacementPolicyProperties
-  | VmPlacementPolicyProperties
-  | VmHostPlacementPolicyProperties;
+  | VmHostPlacementPolicyProperties
+  | VmPlacementPolicyProperties;
+export type WorkloadNetworkDhcpEntityUnion =
+  | WorkloadNetworkDhcpEntity
+  | WorkloadNetworkDhcpRelay
+  | WorkloadNetworkDhcpServer;
 export type ScriptExecutionParameterUnion =
   | ScriptExecutionParameter
+  | PSCredentialExecutionParameter
   | ScriptSecureStringExecutionParameter
-  | ScriptStringExecutionParameter
-  | PSCredentialExecutionParameter;
+  | ScriptStringExecutionParameter;
 
-/** Pageable list of operations */
-export interface OperationList {
+/** A list of REST API operations supported by an Azure Resource Provider. It contains an URL link to get the next set of results. */
+export interface OperationListResult {
   /**
-   * List of operations
+   * List of operations supported by the resource provider
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly value?: Operation[];
   /**
-   * URL to get the next page if any
+   * URL to get the next set of operation list results (if there are any).
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly nextLink?: string;
 }
 
-/** A REST API operation */
+/** Details of a REST API operation, returned from the Resource Provider Operations API */
 export interface Operation {
   /**
-   * Name of the operation being performed on this object
+   * The name of the operation, as per Resource-Based Access Control (RBAC). Examples: "Microsoft.Compute/virtualMachines/write", "Microsoft.Compute/virtualMachines/capture/action"
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly name?: string;
   /**
-   * Contains the localized display information for this operation
+   * Whether the operation applies to data-plane. This is "true" for data-plane operations and "false" for ARM/control-plane operations.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly display?: OperationDisplay;
-  /** Gets or sets a value indicating whether the operation is a data action or not */
-  isDataAction?: boolean;
-  /** Origin of the operation */
-  origin?: string;
-  /** Properties of the operation */
-  properties?: OperationProperties;
+  readonly isDataAction?: boolean;
+  /** Localized display information for this particular operation. */
+  display?: OperationDisplay;
+  /**
+   * The intended executor of the operation; as in Resource Based Access Control (RBAC) and audit logs UX. Default value is "user,system"
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly origin?: Origin;
+  /**
+   * Enum. Indicates the action type. "Internal" refers to actions that are for internal only APIs.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly actionType?: ActionType;
 }
 
-/** Contains the localized display information for this operation */
+/** Localized display information for this particular operation. */
 export interface OperationDisplay {
   /**
-   * Localized friendly form of the resource provider name
+   * The localized friendly form of the resource provider name, e.g. "Microsoft Monitoring Insights" or "Microsoft Compute".
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly provider?: string;
   /**
-   * Localized friendly form of the resource type related to this operation
+   * The localized friendly name of the resource type related to this operation. E.g. "Virtual Machines" or "Job Schedule Collections".
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly resource?: string;
   /**
-   * Localized friendly name for the operation
+   * The concise, localized friendly name for the operation; suitable for dropdowns. E.g. "Create or Update Virtual Machine", "Restart Virtual Machine".
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly operation?: string;
   /**
-   * Localized friendly description for the operation
+   * The short, localized friendly description of the operation; suitable for tool tips and detailed views.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly description?: string;
-}
-
-/** Extra Operation properties */
-export interface OperationProperties {
-  /** Service specifications of the operation */
-  serviceSpecification?: ServiceSpecification;
-}
-
-/** Service specification payload */
-export interface ServiceSpecification {
-  /** Specifications of the Log for Azure Monitoring */
-  logSpecifications?: LogSpecification[];
-  /** Specifications of the Metrics for Azure Monitoring */
-  metricSpecifications?: MetricSpecification[];
-}
-
-/** Specifications of the Log for Azure Monitoring */
-export interface LogSpecification {
-  /** Name of the log */
-  name?: string;
-  /** Localized friendly display name of the log */
-  displayName?: string;
-  /** Blob duration of the log */
-  blobDuration?: string;
-}
-
-/** Specifications of the Metrics for Azure Monitoring */
-export interface MetricSpecification {
-  /** Name of the metric */
-  name?: string;
-  /** Localized friendly display name of the metric */
-  displayName?: string;
-  /** Localized friendly description of the metric */
-  displayDescription?: string;
-  /** Unit that makes sense for the metric */
-  unit?: string;
-  /** Name of the metric category that the metric belongs to. A metric can only belong to a single category. */
-  category?: string;
-  /** Only provide one value for this field. Valid values: Average, Minimum, Maximum, Total, Count. */
-  aggregationType?: string;
-  /** Supported aggregation types */
-  supportedAggregationTypes?: string[];
-  /** Supported time grain types */
-  supportedTimeGrainTypes?: string[];
-  /** Optional. If set to true, then zero will be returned for time duration where no metric is emitted/published. */
-  fillGapWithZero?: boolean;
-  /** Dimensions of the metric */
-  dimensions?: MetricDimension[];
-  /** Whether or not the service is using regional MDM accounts. */
-  enableRegionalMdmAccount?: string;
-  /** The name of the MDM account. */
-  sourceMdmAccount?: string;
-  /** The name of the MDM namespace. */
-  sourceMdmNamespace?: string;
-}
-
-/** Specifications of the Dimension of metrics */
-export interface MetricDimension {
-  /** Name of the dimension */
-  name?: string;
-  /** Localized friendly display name of the dimension */
-  displayName?: string;
-  /** Name of the dimension as it appears in MDM */
-  internalName?: string;
-  /** A boolean flag indicating whether this dimension should be included for the shoebox export scenario */
-  toBeExportedForShoebox?: boolean;
 }
 
 /** Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.). */
@@ -201,6 +141,48 @@ export interface ErrorAdditionalInfo {
   readonly info?: Record<string, unknown>;
 }
 
+/** Subscription quotas */
+export interface Quota {
+  /**
+   * Remaining hosts quota by sku type
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly hostsRemaining?: { [propertyName: string]: number };
+  /**
+   * Host quota is active for current subscription
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly quotaEnabled?: QuotaEnabled;
+}
+
+/** A response containing error details. */
+export interface AzureCoreFoundationsErrorResponse {
+  /** The error object. */
+  error: AzureCoreFoundationsError;
+}
+
+/** The error object. */
+export interface AzureCoreFoundationsError {
+  /** One of a server-defined set of error codes. */
+  code: string;
+  /** A human-readable representation of the error. */
+  message: string;
+  /** The target of the error. */
+  target?: string;
+  /** An array of details about specific errors that led to this reported error. */
+  details?: AzureCoreFoundationsError[];
+  /** An object containing more specific information than the current object about the error. */
+  innererror?: AzureCoreFoundationsInnerError;
+}
+
+/** An object containing more specific information about the error. As per Microsoft One API guidelines - https://github.com/Microsoft/api-guidelines/blob/vNext/Guidelines.md#7102-error-condition-responses. */
+export interface AzureCoreFoundationsInnerError {
+  /** One of a server-defined set of error codes. */
+  code?: string;
+  /** Inner error. */
+  innererror?: AzureCoreFoundationsInnerError;
+}
+
 /** The resource model definition representing SKU */
 export interface Sku {
   /** The name of the SKU. */
@@ -221,32 +203,12 @@ export interface Trial {
   readonly availableHosts?: number;
 }
 
-/** Subscription quotas */
-export interface Quota {
-  /**
-   * Remaining hosts quota by sku type
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly hostsRemaining?: { [propertyName: string]: number };
-  /**
-   * Host quota is active for current subscription
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly quotaEnabled?: QuotaEnabled;
-}
-
-/** A paged list of private clouds */
-export interface PrivateCloudList {
-  /**
-   * The items on the page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: PrivateCloud[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
+/** The response of a PrivateCloud list operation. */
+export interface PrivateCloudListResult {
+  /** The PrivateCloud items on this page */
+  value: PrivateCloud[];
+  /** The link to the next page of items */
+  nextLink?: string;
 }
 
 /** An ExpressRoute Circuit */
@@ -292,20 +254,553 @@ export interface Endpoints {
   readonly hcxCloudManager?: string;
 }
 
-/** The properties of a private cloud resource that may be updated */
-export interface PrivateCloudUpdateProperties {
-  /** The default cluster used for management */
-  managementCluster?: ManagementCluster;
-  /** Connectivity to internet is enabled or disabled */
-  internet?: InternetEnum;
-  /** vCenter Single Sign On Identity Sources */
-  identitySources?: IdentitySource[];
-  /** Properties describing how the cloud is distributed across availability zones */
-  availability?: AvailabilityProperties;
-  /** Customer managed key encryption, can be enabled or disabled */
-  encryption?: Encryption;
-  /** Array of additional networks noncontiguous with networkBlock. Networks must be unique and non-overlapping across VNet in your subscription, on-premise, and this privateCloud networkBlock attribute. Make sure the CIDR format conforms to (A.B.C.D/X). */
-  extendedNetworkBlocks?: string[];
+/** Managed service identity (system assigned and/or user assigned identities) */
+export interface ManagedServiceIdentity {
+  /**
+   * The service principal ID of the system assigned identity. This property will only be provided for a system assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly principalId?: string;
+  /**
+   * The tenant ID of the system assigned identity. This property will only be provided for a system assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly tenantId?: string;
+  /** Type of managed service identity (where both SystemAssigned and UserAssigned types are allowed). */
+  type: ManagedServiceIdentityType;
+  /** The set of user assigned identities associated with the resource. The userAssignedIdentities dictionary keys will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}. The dictionary values can be empty objects ({}) in requests. */
+  userAssignedIdentities?: { [propertyName: string]: UserAssignedIdentity };
+}
+
+/** User assigned identity properties */
+export interface UserAssignedIdentity {
+  /**
+   * The principal ID of the assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly principalId?: string;
+  /**
+   * The client ID of the assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly clientId?: string;
+}
+
+/** The resource model definition representing SKU */
+export interface SkuAutoGenerated {
+  /** The name of the SKU. Ex - P3. It is typically a letter+number code */
+  name: string;
+  /** This field is required to be implemented by the Resource Provider if the service has more than one tier, but is not required on a PUT. */
+  tier?: SkuTier;
+  /** The SKU size. When the name field is the combination of tier and some other value, this would be the standalone code. */
+  size?: string;
+  /** If the service has different generations of hardware, for the same SKU, then that can be captured here. */
+  family?: string;
+  /** If the SKU supports scale out/in then the capacity integer should be included. If scale out/in is not possible for the resource this may be omitted. */
+  capacity?: number;
+}
+
+/** Common fields that are returned in the response for all Azure Resource Manager resources */
+export interface Resource {
+  /**
+   * Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly id?: string;
+  /**
+   * The name of the resource
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /**
+   * The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly type?: string;
+  /**
+   * Azure Resource Manager metadata containing createdBy and modifiedBy information.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly systemData?: SystemData;
+}
+
+/** Metadata pertaining to creation and last modification of the resource. */
+export interface SystemData {
+  /** The identity that created the resource. */
+  createdBy?: string;
+  /** The type of identity that created the resource. */
+  createdByType?: CreatedByType;
+  /** The timestamp of resource creation (UTC). */
+  createdAt?: Date;
+  /** The identity that last modified the resource. */
+  lastModifiedBy?: string;
+  /** The type of identity that last modified the resource. */
+  lastModifiedByType?: CreatedByType;
+  /** The timestamp of resource last modification (UTC) */
+  lastModifiedAt?: Date;
+}
+
+/** The type used for update operations of the PrivateCloud. */
+export interface PrivateCloudUpdate {
+  /** The managed service identities assigned to this resource. */
+  identity?: ManagedServiceIdentity;
+  /** The SKU (Stock Keeping Unit) assigned to this resource. */
+  sku?: SkuAutoGenerated;
+  /** Resource tags. */
+  tags?: { [propertyName: string]: string };
+  /** An ExpressRoute Circuit */
+  circuit?: Circuit;
+  /** Optionally, set the vCenter admin password when the private cloud is created */
+  vcenterPassword?: string;
+  /** Optionally, set the NSX-T Manager password when the private cloud is created */
+  nsxtPassword?: string;
+  /** A secondary expressRoute circuit from a separate AZ. Only present in a stretched private cloud */
+  secondaryCircuit?: Circuit;
+}
+
+/** The response of a Addon list operation. */
+export interface AddonListResult {
+  /** The Addon items on this page */
+  value: Addon[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The properties of an addon */
+export interface AddonProperties {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  addonType: "Arc" | "HCX" | "SRM" | "VR";
+  /**
+   * The state of the addon provisioning
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: AddonProvisioningState;
+}
+
+/** The response of a ExpressRouteAuthorization list operation. */
+export interface ExpressRouteAuthorizationListResult {
+  /** The ExpressRouteAuthorization items on this page */
+  value: ExpressRouteAuthorization[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The response of a CloudLink list operation. */
+export interface CloudLinkListResult {
+  /** The CloudLink items on this page */
+  value: CloudLink[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The response of a Cluster list operation. */
+export interface ClusterListResult {
+  /** The Cluster items on this page */
+  value: Cluster[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The type used for update operations of the Cluster. */
+export interface ClusterUpdate {
+  /** The SKU (Stock Keeping Unit) assigned to this resource. */
+  sku?: SkuAutoGenerated;
+  /** The cluster size */
+  clusterSize?: number;
+  /** The hosts */
+  hosts?: string[];
+}
+
+/** The response of a Datastore list operation. */
+export interface DatastoreListResult {
+  /** The Datastore items on this page */
+  value: Datastore[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** An Azure NetApp Files volume from Microsoft.NetApp provider */
+export interface NetAppVolume {
+  /** Azure resource ID of the NetApp volume */
+  id: string;
+}
+
+/** An iSCSI volume from Microsoft.StoragePool provider */
+export interface DiskPoolVolume {
+  /** Azure resource ID of the iSCSI target */
+  targetId: string;
+  /** Name of the LUN to be used for datastore */
+  lunName: string;
+  /** Mode that describes whether the LUN has to be mounted as a datastore or attached as a LUN */
+  mountOption?: MountOptionEnum;
+  /**
+   * Device path
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly path?: string;
+}
+
+/** List of all zones and associated hosts for a cluster */
+export interface ClusterZoneList {
+  /** Zone and associated hosts info */
+  zones?: ClusterZone[];
+}
+
+/** Zone and associated hosts info */
+export interface ClusterZone {
+  /**
+   * List of hosts belonging to the availability zone in a cluster
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly hosts?: string[];
+  /**
+   * Availability zone identifier
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly zone?: string;
+}
+
+/** The response of a PlacementPolicy list operation. */
+export interface PlacementPolicyListResult {
+  /** The PlacementPolicy items on this page */
+  value: PlacementPolicy[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** Abstract placement policy properties */
+export interface PlacementPolicyProperties {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  type: "VmHost" | "VmVm";
+  /** Whether the placement policy is enabled or disabled */
+  state?: PlacementPolicyState;
+  /** Display name of the placement policy */
+  displayName?: string;
+  /**
+   * The provisioning state
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: PlacementPolicyProvisioningState;
+}
+
+/** The type used for update operations of the PlacementPolicy. */
+export interface PlacementPolicyUpdate {
+  /** Whether the placement policy is enabled or disabled */
+  state?: PlacementPolicyState;
+  /** Display name of the placement policy */
+  displayName?: string;
+}
+
+/** The response of a VirtualMachine list operation. */
+export interface VirtualMachineListResult {
+  /** The VirtualMachine items on this page */
+  value: VirtualMachine[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** Set VM DRS-driven movement to restricted (enabled) or not (disabled) */
+export interface VirtualMachineRestrictMovement {
+  /** Whether VM DRS-driven movement is restricted (enabled) or not (disabled) */
+  restrictMovement?: VirtualMachineRestrictMovementState;
+}
+
+/** The response of a WorkloadNetworkDhcp list operation. */
+export interface WorkloadNetworkDhcpListResult {
+  /** The WorkloadNetworkDhcp items on this page */
+  value: WorkloadNetworkDhcp[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** Base class for WorkloadNetworkDhcpServer and WorkloadNetworkDhcpRelay to inherit from */
+export interface WorkloadNetworkDhcpEntity {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  dhcpType: "RELAY" | "SERVER";
+  /** Display name of the DHCP entity. */
+  displayName?: string;
+  /**
+   * NSX Segments consuming DHCP.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly segments?: string[];
+  /**
+   * The provisioning state
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: WorkloadNetworkDhcpProvisioningState;
+  /** NSX revision number. */
+  revision?: number;
+}
+
+/** The type used for update operations of the WorkloadNetworkDhcp. */
+export interface WorkloadNetworkDhcpUpdate {
+  /** Display name of the DHCP entity. */
+  displayName?: string;
+  /** NSX revision number. */
+  revision?: number;
+}
+
+/** The response of a WorkloadNetworkDnsService list operation. */
+export interface WorkloadNetworkDnsServiceListResult {
+  /** The WorkloadNetworkDnsService items on this page */
+  value: WorkloadNetworkDnsService[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The type used for update operations of the WorkloadNetworkDnsService. */
+export interface WorkloadNetworkDnsServiceUpdate {
+  /** Display name of the DNS Service. */
+  displayName?: string;
+  /** DNS service IP of the DNS Service. */
+  dnsServiceIp?: string;
+  /** Default DNS zone of the DNS Service. */
+  defaultDnsZone?: string;
+  /** FQDN zones of the DNS Service. */
+  fqdnZones?: string[];
+  /** DNS Service log level. */
+  logLevel?: DnsServiceLogLevelEnum;
+  /** NSX revision number. */
+  revision?: number;
+}
+
+/** The response of a WorkloadNetworkDnsZone list operation. */
+export interface WorkloadNetworkDnsZoneListResult {
+  /** The WorkloadNetworkDnsZone items on this page */
+  value: WorkloadNetworkDnsZone[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The type used for update operations of the WorkloadNetworkDnsZone. */
+export interface WorkloadNetworkDnsZoneUpdate {
+  /** Display name of the DNS Zone. */
+  displayName?: string;
+  /** Domain names of the DNS Zone. */
+  domain?: string[];
+  /** DNS Server IP array of the DNS Zone. */
+  dnsServerIps?: string[];
+  /** Source IP of the DNS Zone. */
+  sourceIp?: string;
+  /** Number of DNS Services using the DNS zone. */
+  dnsServices?: number;
+  /** NSX revision number. */
+  revision?: number;
+}
+
+/** The response of a WorkloadNetworkGateway list operation. */
+export interface WorkloadNetworkGatewayListResult {
+  /** The WorkloadNetworkGateway items on this page */
+  value: WorkloadNetworkGateway[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The response of a GlobalReachConnection list operation. */
+export interface GlobalReachConnectionListResult {
+  /** The GlobalReachConnection items on this page */
+  value: GlobalReachConnection[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The response of a HcxEnterpriseSite list operation. */
+export interface HcxEnterpriseSiteListResult {
+  /** The HcxEnterpriseSite items on this page */
+  value: HcxEnterpriseSite[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** Administrative credentials for accessing vCenter and NSX-T */
+export interface AdminCredentials {
+  /**
+   * NSX-T Manager username
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly nsxtUsername?: string;
+  /**
+   * NSX-T Manager password
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly nsxtPassword?: string;
+  /**
+   * vCenter admin username
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly vcenterUsername?: string;
+  /**
+   * vCenter admin password
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly vcenterPassword?: string;
+}
+
+/** The response of a WorkloadNetworkPortMirroring list operation. */
+export interface WorkloadNetworkPortMirroringListResult {
+  /** The WorkloadNetworkPortMirroring items on this page */
+  value: WorkloadNetworkPortMirroring[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The type used for update operations of the WorkloadNetworkPortMirroring. */
+export interface WorkloadNetworkPortMirroringUpdate {
+  /** Display name of the port mirroring profile. */
+  displayName?: string;
+  /** Direction of port mirroring profile. */
+  direction?: PortMirroringDirectionEnum;
+  /** Source VM Group. */
+  source?: string;
+  /** Destination VM Group. */
+  destination?: string;
+  /** NSX revision number. */
+  revision?: number;
+}
+
+/** The response of a WorkloadNetworkPublicIP list operation. */
+export interface WorkloadNetworkPublicIPListResult {
+  /** The WorkloadNetworkPublicIP items on this page */
+  value: WorkloadNetworkPublicIP[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The response of a ScriptExecution list operation. */
+export interface ScriptExecutionListResult {
+  /** The ScriptExecution items on this page */
+  value: ScriptExecution[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The arguments passed in to the execution */
+export interface ScriptExecutionParameter {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  type: "Credential" | "SecureValue" | "Value";
+  /** The parameter name */
+  name: string;
+}
+
+/** The response of a ScriptPackage list operation. */
+export interface ScriptPackageListResult {
+  /** The ScriptPackage items on this page */
+  value: ScriptPackage[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The response of a ScriptCmdlet list operation. */
+export interface ScriptCmdletListResult {
+  /** The ScriptCmdlet items on this page */
+  value: ScriptCmdlet[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** An parameter that the script will accept */
+export interface ScriptParameter {
+  /**
+   * The type of parameter the script is expecting. psCredential is a PSCredentialObject
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly type?: ScriptParameterTypes;
+  /** The parameter name that the script will expect a parameter value for */
+  name?: string;
+  /**
+   * User friendly description of the parameter
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly description?: string;
+  /**
+   * Should this parameter be visible to arm and passed in the parameters argument when executing
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly visibility?: VisibilityParameterEnum;
+  /**
+   * Is this parameter required or optional
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly optional?: OptionalParamEnum;
+}
+
+/** The response of a WorkloadNetworkSegment list operation. */
+export interface WorkloadNetworkSegmentListResult {
+  /** The WorkloadNetworkSegment items on this page */
+  value: WorkloadNetworkSegment[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** Subnet configuration for segment */
+export interface WorkloadNetworkSegmentSubnet {
+  /** DHCP Range assigned for subnet. */
+  dhcpRanges?: string[];
+  /** Gateway address. */
+  gatewayAddress?: string;
+}
+
+/** Ports and any VIF attached to segment. */
+export interface WorkloadNetworkSegmentPortVif {
+  /** Name of port or VIF attached to segment. */
+  portName?: string;
+}
+
+/** The type used for update operations of the WorkloadNetworkSegment. */
+export interface WorkloadNetworkSegmentUpdate {
+  /** Display name of the segment. */
+  displayName?: string;
+  /** Gateway which to connect segment to. */
+  connectedGateway?: string;
+  /** Subnet which to connect segment to. */
+  subnet?: WorkloadNetworkSegmentSubnet;
+  /** NSX revision number. */
+  revision?: number;
+}
+
+/** The response of a WorkloadNetworkVirtualMachine list operation. */
+export interface WorkloadNetworkVirtualMachineListResult {
+  /** The WorkloadNetworkVirtualMachine items on this page */
+  value: WorkloadNetworkVirtualMachine[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The response of a WorkloadNetworkVMGroup list operation. */
+export interface WorkloadNetworkVMGroupListResult {
+  /** The WorkloadNetworkVMGroup items on this page */
+  value: WorkloadNetworkVMGroup[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The type used for update operations of the WorkloadNetworkVMGroup. */
+export interface WorkloadNetworkVMGroupUpdate {
+  /** Display name of the VM group. */
+  displayName?: string;
+  /** Virtual machine members of this group. */
+  members?: string[];
+  /** NSX revision number. */
+  revision?: number;
+}
+
+/** The response of a WorkloadNetwork list operation. */
+export interface WorkloadNetworkListResult {
+  /** The WorkloadNetwork items on this page */
+  value: WorkloadNetwork[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The properties describing private cloud availability zone distribution */
+export interface AvailabilityProperties {
+  /** The availability strategy for the private cloud */
+  strategy?: AvailabilityStrategy;
+  /** The primary availability zone for the private cloud */
+  zone?: number;
+  /** The secondary availability zone for the private cloud */
+  secondaryZone?: number;
 }
 
 /** The common properties of a cluster */
@@ -324,40 +819,6 @@ export interface CommonClusterProperties {
   readonly clusterId?: number;
   /** The hosts */
   hosts?: string[];
-}
-
-/** vCenter Single Sign On Identity Source */
-export interface IdentitySource {
-  /** The name of the identity source */
-  name?: string;
-  /** The domain's NetBIOS name */
-  alias?: string;
-  /** The domain's dns name */
-  domain?: string;
-  /** The base distinguished name for users */
-  baseUserDN?: string;
-  /** The base distinguished name for groups */
-  baseGroupDN?: string;
-  /** Primary server URL */
-  primaryServer?: string;
-  /** Secondary server URL */
-  secondaryServer?: string;
-  /** Protect LDAP communication using SSL certificate (LDAPS) */
-  ssl?: SslEnum;
-  /** The ID of an Active Directory user with a minimum of read-only access to Base DN for users and group */
-  username?: string;
-  /** The password of the Active Directory user with a minimum of read-only access to Base DN for users and groups. */
-  password?: string;
-}
-
-/** The properties describing private cloud availability zone distribution */
-export interface AvailabilityProperties {
-  /** The availability strategy for the private cloud */
-  strategy?: AvailabilityStrategy;
-  /** The primary availability zone for the private cloud */
-  zone?: number;
-  /** The secondary availability zone for the private cloud */
-  secondaryZone?: number;
 }
 
 /** The properties of customer managed encryption key */
@@ -393,633 +854,42 @@ export interface EncryptionKeyVaultProperties {
   readonly versionType?: EncryptionVersionType;
 }
 
-/** Identity for the virtual machine. */
-export interface PrivateCloudIdentity {
-  /**
-   * The principal ID of private cloud identity. This property will only be provided for a system assigned identity.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly principalId?: string;
-  /**
-   * The tenant ID associated with the private cloud. This property will only be provided for a system assigned identity.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly tenantId?: string;
-  /** The type of identity used for the private cloud. The type 'SystemAssigned' refers to an implicitly created identity. The type 'None' will remove any identities from the Private Cloud. */
-  type?: ResourceIdentityType;
-}
-
-/** The core properties of ARM resources */
-export interface Resource {
-  /**
-   * Resource ID.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly id?: string;
-  /**
-   * Resource name.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly name?: string;
-  /**
-   * Resource type.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly type?: string;
-}
-
-/** An update to a private cloud resource */
-export interface PrivateCloudUpdate {
-  /** Resource tags */
-  tags?: { [propertyName: string]: string };
-  /** The identity of the private cloud, if configured. */
-  identity?: PrivateCloudIdentity;
-  /** The default cluster used for management */
-  managementCluster?: ManagementCluster;
-  /** Connectivity to internet is enabled or disabled */
-  internet?: InternetEnum;
-  /** vCenter Single Sign On Identity Sources */
-  identitySources?: IdentitySource[];
-  /** Properties describing how the cloud is distributed across availability zones */
-  availability?: AvailabilityProperties;
-  /** Customer managed key encryption, can be enabled or disabled */
-  encryption?: Encryption;
-  /** Array of additional networks noncontiguous with networkBlock. Networks must be unique and non-overlapping across VNet in your subscription, on-premise, and this privateCloud networkBlock attribute. Make sure the CIDR format conforms to (A.B.C.D/X). */
-  extendedNetworkBlocks?: string[];
-}
-
-/** A paged list of clusters */
-export interface ClusterList {
-  /**
-   * The items on a page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: Cluster[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** An update of a cluster resource */
-export interface ClusterUpdate {
-  /** The cluster size */
-  clusterSize?: number;
-  /** The hosts */
-  hosts?: string[];
-}
-
-/** List of all zones and associated hosts for a cluster */
-export interface ClusterZoneList {
-  /** Zone and associated hosts info */
-  zones?: ClusterZone[];
-}
-
-/** Zone and associated hosts info */
-export interface ClusterZone {
-  /**
-   * List of hosts belonging to the availability zone in a cluster
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly hosts?: string[];
-  /**
-   * Availability zone identifier
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly zone?: string;
-}
-
-/** A paged list of datastores */
-export interface DatastoreList {
-  /**
-   * The items on a page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: Datastore[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** An Azure NetApp Files volume from Microsoft.NetApp provider */
-export interface NetAppVolume {
-  /** Azure resource ID of the NetApp volume */
-  id: string;
-}
-
-/** An iSCSI volume from Microsoft.StoragePool provider */
-export interface DiskPoolVolume {
-  /** Azure resource ID of the iSCSI target */
-  targetId: string;
-  /** Name of the LUN to be used for datastore */
-  lunName: string;
-  /** Mode that describes whether the LUN has to be mounted as a datastore or attached as a LUN */
-  mountOption?: MountOptionEnum;
-  /**
-   * Device path
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly path?: string;
-}
-
-/** Administrative credentials for accessing vCenter and NSX-T */
-export interface AdminCredentials {
-  /**
-   * NSX-T Manager username
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nsxtUsername?: string;
-  /**
-   * NSX-T Manager password
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nsxtPassword?: string;
-  /**
-   * vCenter admin username
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly vcenterUsername?: string;
-  /**
-   * vCenter admin password
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly vcenterPassword?: string;
-}
-
-/** A paged list of HCX Enterprise Sites */
-export interface HcxEnterpriseSiteList {
-  /**
-   * The items on a page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: HcxEnterpriseSite[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** A paged list of ExpressRoute Circuit Authorizations */
-export interface ExpressRouteAuthorizationList {
-  /**
-   * The items on a page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: ExpressRouteAuthorization[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** A paged list of global reach connections */
-export interface GlobalReachConnectionList {
-  /**
-   * The items on a page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: GlobalReachConnection[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** A list of workload networks */
-export interface WorkloadNetworkList {
-  /**
-   * The items on the page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: WorkloadNetwork[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** A list of NSX Segments */
-export interface WorkloadNetworkSegmentsList {
-  /**
-   * The items on the page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: WorkloadNetworkSegment[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** Subnet configuration for segment */
-export interface WorkloadNetworkSegmentSubnet {
-  /** DHCP Range assigned for subnet. */
-  dhcpRanges?: string[];
-  /** Gateway address. */
-  gatewayAddress?: string;
-}
-
-/** Ports and any VIF attached to segment. */
-export interface WorkloadNetworkSegmentPortVif {
-  /** Name of port or VIF attached to segment. */
-  portName?: string;
-}
-
-/** A list of NSX dhcp entities */
-export interface WorkloadNetworkDhcpList {
-  /**
-   * The items on the page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: WorkloadNetworkDhcp[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** Base class for WorkloadNetworkDhcpServer and WorkloadNetworkDhcpRelay to inherit from */
-export interface WorkloadNetworkDhcpEntity {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  dhcpType: "SERVER" | "RELAY";
-  /** Display name of the DHCP entity. */
-  displayName?: string;
-  /**
-   * NSX Segments consuming DHCP.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly segments?: string[];
-  /**
-   * The provisioning state
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: WorkloadNetworkDhcpProvisioningState;
-  /** NSX revision number. */
-  revision?: number;
-}
-
-/** A list of NSX Gateways */
-export interface WorkloadNetworkGatewayList {
-  /**
-   * The items on the page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: WorkloadNetworkGateway[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** A list of NSX Port Mirroring */
-export interface WorkloadNetworkPortMirroringList {
-  /**
-   * The items on the page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: WorkloadNetworkPortMirroring[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** A list of NSX VM Groups */
-export interface WorkloadNetworkVMGroupsList {
-  /**
-   * The items on the page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: WorkloadNetworkVMGroup[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** A list of NSX Virtual Machines */
-export interface WorkloadNetworkVirtualMachinesList {
-  /**
-   * The items on the page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: WorkloadNetworkVirtualMachine[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** A list of NSX DNS Services */
-export interface WorkloadNetworkDnsServicesList {
-  /**
-   * The items on the page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: WorkloadNetworkDnsService[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** A list of NSX DNS Zones */
-export interface WorkloadNetworkDnsZonesList {
-  /**
-   * The items on the page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: WorkloadNetworkDnsZone[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** A list of NSX Public IP Blocks */
-export interface WorkloadNetworkPublicIPsList {
-  /**
-   * The items on the page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: WorkloadNetworkPublicIP[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** A paged list of cloud links */
-export interface CloudLinkList {
-  /**
-   * The items on a page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: CloudLink[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** A paged list of addons */
-export interface AddonList {
-  /**
-   * The items on a page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: Addon[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** The properties of an addon */
-export interface AddonProperties {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  addonType: "SRM" | "VR" | "HCX" | "Arc";
-  /**
-   * The state of the addon provisioning
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: AddonProvisioningState;
-}
-
-/** A list of Virtual Machines */
-export interface VirtualMachinesList {
-  /**
-   * The items to be displayed on the page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: VirtualMachine[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** Set VM DRS-driven movement to restricted (enabled) or not (disabled) */
-export interface VirtualMachineRestrictMovement {
-  /** Whether VM DRS-driven movement is restricted (enabled) or not (disabled) */
-  restrictMovement?: VirtualMachineRestrictMovementState;
-}
-
-/** Represents list of placement policies */
-export interface PlacementPoliciesList {
-  /**
-   * The items on the page
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: PlacementPolicy[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** Abstract placement policy properties */
-export interface PlacementPolicyProperties {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  type: "VmVm" | "VmHost";
-  /** Whether the placement policy is enabled or disabled */
-  state?: PlacementPolicyState;
-  /** Display name of the placement policy */
-  displayName?: string;
-  /**
-   * The provisioning state
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: PlacementPolicyProvisioningState;
-}
-
-/** An update of a DRS placement policy resource */
-export interface PlacementPolicyUpdate {
-  /** Whether the placement policy is enabled or disabled */
-  state?: PlacementPolicyState;
-  /** Virtual machine members list */
-  vmMembers?: string[];
-  /** Host members list */
-  hostMembers?: string[];
-  /** vm-host placement policy affinity strength (should/must) */
-  affinityStrength?: AffinityStrength;
-  /** placement policy azure hybrid benefit opt-in type */
-  azureHybridBenefitType?: AzureHybridBenefitType;
-}
-
-/** A list of the available script packages */
-export interface ScriptPackagesList {
-  /**
-   * List of script package resources
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: ScriptPackage[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** Pageable list of scripts/cmdlets */
-export interface ScriptCmdletsList {
-  /**
-   * List of scripts
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: ScriptCmdlet[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** An parameter that the script will accept */
-export interface ScriptParameter {
-  /**
-   * The type of parameter the script is expecting. psCredential is a PSCredentialObject
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly type?: ScriptParameterTypes;
-  /** The parameter name that the script will expect a parameter value for */
+/** vCenter Single Sign On Identity Source */
+export interface IdentitySource {
+  /** The name of the identity source */
   name?: string;
-  /**
-   * User friendly description of the parameter
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly description?: string;
-  /**
-   * Should this parameter be visible to arm and passed in the parameters argument when executing
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly visibility?: VisibilityParameterEnum;
-  /**
-   * Is this parameter required or optional
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly optional?: OptionalParamEnum;
+  /** The domain's NetBIOS name */
+  alias?: string;
+  /** The domain's dns name */
+  domain?: string;
+  /** The base distinguished name for users */
+  baseUserDN?: string;
+  /** The base distinguished name for groups */
+  baseGroupDN?: string;
+  /** Primary server URL */
+  primaryServer?: string;
+  /** Secondary server URL */
+  secondaryServer?: string;
+  /** Protect LDAP communication using SSL certificate (LDAPS) */
+  ssl?: SslEnum;
+  /** The ID of an Active Directory user with a minimum of read-only access to Base DN for users and group */
+  username?: string;
+  /** The password of the Active Directory user with a minimum of read-only access to Base DN for users and groups. */
+  password?: string;
 }
 
-/** Pageable list of script executions */
-export interface ScriptExecutionsList {
-  /**
-   * List of scripts
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: ScriptExecution[];
-  /**
-   * URL to get the next page if any
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** The arguments passed in to the execution */
-export interface ScriptExecutionParameter {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  type: "SecureValue" | "Value" | "Credential";
-  /** The parameter name */
-  name: string;
-}
-
-/** The properties of a private cloud resource */
-export interface PrivateCloudProperties extends PrivateCloudUpdateProperties {
-  /**
-   * The provisioning state
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: PrivateCloudProvisioningState;
-  /** An ExpressRoute Circuit */
-  circuit?: Circuit;
-  /**
-   * The endpoints
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly endpoints?: Endpoints;
-  /** The block of addresses should be unique across VNet in your subscription as well as on-premise. Make sure the CIDR format is conformed to (A.B.C.D/X) where A,B,C,D are between 0 and 255, and X is between 0 and 22 */
-  networkBlock: string;
-  /**
-   * Network used to access vCenter Server and NSX-T Manager
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly managementNetwork?: string;
-  /**
-   * Used for virtual machine cold migration, cloning, and snapshot migration
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningNetwork?: string;
-  /**
-   * Used for live migration of virtual machines
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly vmotionNetwork?: string;
-  /** Optionally, set the vCenter admin password when the private cloud is created */
-  vcenterPassword?: string;
-  /** Optionally, set the NSX-T Manager password when the private cloud is created */
-  nsxtPassword?: string;
-  /**
-   * Thumbprint of the vCenter Server SSL certificate
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly vcenterCertificateThumbprint?: string;
-  /**
-   * Thumbprint of the NSX-T Manager SSL certificate
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nsxtCertificateThumbprint?: string;
-  /**
-   * Array of cloud link IDs from other clouds that connect to this one
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly externalCloudLinks?: string[];
-  /** A secondary expressRoute circuit from a separate AZ. Only present in a stretched private cloud */
-  secondaryCircuit?: Circuit;
-  /**
-   * Flag to indicate whether the private cloud has the quota for provisioned NSX Public IP count raised from 64 to 1024
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nsxPublicIpQuotaRaised?: NsxPublicIpQuotaRaisedEnum;
+/** Specifications of the Log for Azure Monitoring */
+export interface LogSpecification {
+  /** Name of the log */
+  name?: string;
+  /** Localized friendly display name of the log */
+  displayName?: string;
+  /** Blob duration of the log */
+  blobDuration?: string;
 }
 
 /** The properties of a management cluster */
-export interface ManagementCluster extends CommonClusterProperties {}
-
-/** The properties of a cluster */
-export interface ClusterProperties extends CommonClusterProperties {}
-
-/** The resource model definition for a ARM tracked top level resource */
-export interface TrackedResource extends Resource {
-  /** Resource location */
-  location?: string;
-  /** Resource tags */
-  tags?: { [propertyName: string]: string };
-}
-
-/** A cluster resource */
-export interface Cluster extends Resource {
-  /** The cluster SKU */
-  sku: Sku;
+export interface ManagementCluster {
   /** The cluster size */
   clusterSize?: number;
   /**
@@ -1036,126 +906,103 @@ export interface Cluster extends Resource {
   hosts?: string[];
 }
 
-/** A datastore resource */
-export interface Datastore extends Resource {
-  /**
-   * The state of the datastore provisioning
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: DatastoreProvisioningState;
-  /** An Azure NetApp Files volume */
-  netAppVolume?: NetAppVolume;
-  /** An iSCSI volume */
-  diskPoolVolume?: DiskPoolVolume;
-  /**
-   * The operational status of the datastore
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly status?: DatastoreStatus;
+/** Specifications of the Dimension of metrics */
+export interface MetricDimension {
+  /** Name of the dimension */
+  name?: string;
+  /** Localized friendly display name of the dimension */
+  displayName?: string;
+  /** Name of the dimension as it appears in MDM */
+  internalName?: string;
+  /** A boolean flag indicating whether this dimension should be included for the shoebox export scenario */
+  toBeExportedForShoebox?: boolean;
 }
 
-/** An HCX Enterprise Site resource */
-export interface HcxEnterpriseSite extends Resource {
-  /**
-   * The activation key
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly activationKey?: string;
-  /**
-   * The status of the HCX Enterprise Site
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly status?: HcxEnterpriseSiteStatus;
+/** Specifications of the Metrics for Azure Monitoring */
+export interface MetricSpecification {
+  /** Name of the metric */
+  name?: string;
+  /** Localized friendly display name of the metric */
+  displayName?: string;
+  /** Localized friendly description of the metric */
+  displayDescription?: string;
+  /** Unit that makes sense for the metric */
+  unit?: string;
+  /** Name of the metric category that the metric belongs to. A metric can only belong to a single category. */
+  category?: string;
+  /** Only provide one value for this field. Valid values: Average, Minimum, Maximum, Total, Count. */
+  aggregationType?: string;
+  /** Supported aggregation types */
+  supportedAggregationTypes?: string[];
+  /** Supported time grain types */
+  supportedTimeGrainTypes?: string[];
+  /** Optional. If set to true, then zero will be returned for time duration where no metric is emitted/published. */
+  fillGapWithZero?: boolean;
+  /** Dimensions of the metric */
+  dimensions?: MetricDimension[];
+  /** Whether or not the service is using regional MDM accounts. */
+  enableRegionalMdmAccount?: string;
+  /** The name of the MDM account. */
+  sourceMdmAccount?: string;
+  /** The name of the MDM namespace. */
+  sourceMdmNamespace?: string;
 }
 
-/** ExpressRoute Circuit Authorization */
-export interface ExpressRouteAuthorization extends Resource {
-  /**
-   * The state of the  ExpressRoute Circuit Authorization provisioning
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: ExpressRouteAuthorizationProvisioningState;
-  /**
-   * The ID of the ExpressRoute Circuit Authorization
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly expressRouteAuthorizationId?: string;
-  /**
-   * The key of the ExpressRoute Circuit Authorization
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly expressRouteAuthorizationKey?: string;
-  /** The ID of the ExpressRoute Circuit */
-  expressRouteId?: string;
+/** Extra Operation properties */
+export interface OperationProperties {
+  /** Service specifications of the operation */
+  serviceSpecification?: ServiceSpecification;
 }
 
-/** A global reach connection resource */
-export interface GlobalReachConnection extends Resource {
-  /**
-   * The state of the  ExpressRoute Circuit Authorization provisioning
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: GlobalReachConnectionProvisioningState;
-  /**
-   * The network used for global reach carved out from the original network block provided for the private cloud
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly addressPrefix?: string;
-  /** Authorization key from the peer express route used for the global reach connection */
-  authorizationKey?: string;
-  /**
-   * The connection status of the global reach connection
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly circuitConnectionStatus?: GlobalReachConnectionStatus;
-  /** Identifier of the ExpressRoute Circuit to peer with in the global reach connection */
-  peerExpressRouteCircuit?: string;
-  /** The ID of the Private Cloud's ExpressRoute Circuit that is participating in the global reach connection */
-  expressRouteId?: string;
+/** Service specification payload */
+export interface ServiceSpecification {
+  /** Specifications of the Log for Azure Monitoring */
+  logSpecifications?: LogSpecification[];
+  /** Specifications of the Metrics for Azure Monitoring */
+  metricSpecifications?: MetricSpecification[];
 }
 
-/** The resource model definition for a ARM proxy resource */
+/** Identity for the virtual machine. */
+export interface PrivateCloudIdentity {
+  /**
+   * The principal ID of private cloud identity. This property will only be provided for a system assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly principalId?: string;
+  /**
+   * The tenant ID associated with the private cloud. This property will only be provided for a system assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly tenantId?: string;
+  /** The type of identity used for the private cloud. The type 'SystemAssigned' refers to an implicitly created identity. The type 'None' will remove any identities from the Private Cloud. */
+  type?: ResourceIdentityType;
+}
+
+/** The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location' */
+export interface TrackedResource extends Resource {
+  /** Resource tags. */
+  tags?: { [propertyName: string]: string };
+  /** The geo-location where the resource lives */
+  location: string;
+}
+
+/** The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location */
 export interface ProxyResource extends Resource {}
 
-/** A cloud link resource */
-export interface CloudLink extends Resource {
-  /**
-   * The state of the cloud link.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly status?: CloudLinkStatus;
-  /** Identifier of the other private cloud participating in the link. */
-  linkedCloud?: string;
-}
-
-/** An addon resource */
-export interface Addon extends Resource {
-  /** The properties of an addon resource */
-  properties?: AddonPropertiesUnion;
-}
-
-/** A vSphere Distributed Resource Scheduler (DRS) placement policy */
-export interface PlacementPolicy extends Resource {
-  /** placement policy properties */
-  properties?: PlacementPolicyPropertiesUnion;
-}
-
-/** NSX DHCP Server */
-export interface WorkloadNetworkDhcpServer extends WorkloadNetworkDhcpEntity {
+/** The properties of an Arc addon */
+export interface AddonArcProperties extends AddonProperties {
   /** Polymorphic discriminator, which specifies the different types this object can be */
-  dhcpType: "SERVER";
-  /** DHCP Server Address. */
-  serverAddress?: string;
-  /** DHCP Server Lease Time. */
-  leaseTime?: number;
+  addonType: "Arc";
+  /** The VMware vCenter resource ID */
+  vCenter?: string;
 }
 
-/** NSX DHCP Relay */
-export interface WorkloadNetworkDhcpRelay extends WorkloadNetworkDhcpEntity {
+/** The properties of an HCX addon */
+export interface AddonHcxProperties extends AddonProperties {
   /** Polymorphic discriminator, which specifies the different types this object can be */
-  dhcpType: "RELAY";
-  /** DHCP Relay Addresses. Max 3. */
-  serverAddresses?: string[];
+  addonType: "HCX";
+  /** The HCX offer, example VMware MaaS Cloud Provider (Enterprise) */
+  offer: string;
 }
 
 /** The properties of a Site Recovery Manager (SRM) addon */
@@ -1174,32 +1021,6 @@ export interface AddonVrProperties extends AddonProperties {
   vrsCount: number;
 }
 
-/** The properties of an HCX addon */
-export interface AddonHcxProperties extends AddonProperties {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  addonType: "HCX";
-  /** The HCX offer, example VMware MaaS Cloud Provider (Enterprise) */
-  offer: string;
-}
-
-/** The properties of an Arc addon */
-export interface AddonArcProperties extends AddonProperties {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  addonType: "Arc";
-  /** The VMware vCenter resource ID */
-  vCenter?: string;
-}
-
-/** VM-VM placement policy properties */
-export interface VmPlacementPolicyProperties extends PlacementPolicyProperties {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  type: "VmVm";
-  /** Virtual machine members list */
-  vmMembers: string[];
-  /** placement policy affinity type */
-  affinityType: AffinityType;
-}
-
 /** VM-Host placement policy properties */
 export interface VmHostPlacementPolicyProperties
   extends PlacementPolicyProperties {
@@ -1215,6 +1036,45 @@ export interface VmHostPlacementPolicyProperties
   affinityStrength?: AffinityStrength;
   /** placement policy azure hybrid benefit opt-in type */
   azureHybridBenefitType?: AzureHybridBenefitType;
+}
+
+/** VM-VM placement policy properties */
+export interface VmPlacementPolicyProperties extends PlacementPolicyProperties {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  type: "VmVm";
+  /** Virtual machine members list */
+  vmMembers: string[];
+  /** placement policy affinity type */
+  affinityType: AffinityType;
+}
+
+/** NSX DHCP Relay */
+export interface WorkloadNetworkDhcpRelay extends WorkloadNetworkDhcpEntity {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  dhcpType: "RELAY";
+  /** DHCP Relay Addresses. Max 3. */
+  serverAddresses?: string[];
+}
+
+/** NSX DHCP Server */
+export interface WorkloadNetworkDhcpServer extends WorkloadNetworkDhcpEntity {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  dhcpType: "SERVER";
+  /** DHCP Server Address. */
+  serverAddress?: string;
+  /** DHCP Server Lease Time. */
+  leaseTime?: number;
+}
+
+/** a powershell credential object */
+export interface PSCredentialExecutionParameter
+  extends ScriptExecutionParameter {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  type: "Credential";
+  /** username for login */
+  username?: string;
+  /** password for login */
+  password?: string;
 }
 
 /** a plain text value execution parameter */
@@ -1235,35 +1095,12 @@ export interface ScriptStringExecutionParameter
   value?: string;
 }
 
-/** a powershell credential object */
-export interface PSCredentialExecutionParameter
-  extends ScriptExecutionParameter {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  type: "Credential";
-  /** username for login */
-  username?: string;
-  /** password for login */
-  password?: string;
-}
-
 /** A private cloud resource */
 export interface PrivateCloud extends TrackedResource {
-  /** The private cloud SKU */
-  sku: Sku;
-  /** The identity of the private cloud, if configured. */
-  identity?: PrivateCloudIdentity;
-  /** The default cluster used for management */
-  managementCluster?: ManagementCluster;
-  /** Connectivity to internet is enabled or disabled */
-  internet?: InternetEnum;
-  /** vCenter Single Sign On Identity Sources */
-  identitySources?: IdentitySource[];
-  /** Properties describing how the cloud is distributed across availability zones */
-  availability?: AvailabilityProperties;
-  /** Customer managed key encryption, can be enabled or disabled */
-  encryption?: Encryption;
-  /** Array of additional networks noncontiguous with networkBlock. Networks must be unique and non-overlapping across VNet in your subscription, on-premise, and this privateCloud networkBlock attribute. Make sure the CIDR format conforms to (A.B.C.D/X). */
-  extendedNetworkBlocks?: string[];
+  /** The managed service identities assigned to this resource. */
+  identity?: ManagedServiceIdentity;
+  /** The SKU (Stock Keeping Unit) assigned to this resource. */
+  sku?: SkuAutoGenerated;
   /**
    * The provisioning state
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -1321,106 +1158,144 @@ export interface PrivateCloud extends TrackedResource {
   readonly nsxPublicIpQuotaRaised?: NsxPublicIpQuotaRaisedEnum;
 }
 
-/** Workload Network */
-export interface WorkloadNetwork extends ProxyResource {}
+/** An addon resource */
+export interface Addon extends ProxyResource {
+  /** Discriminator property for AddonProperties. */
+  addonType?: string;
+  /**
+   * The state of the addon provisioning
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: AddonProvisioningState;
+}
 
-/** NSX Segment */
-export interface WorkloadNetworkSegment extends ProxyResource {
-  /** Display name of the segment. */
+/** ExpressRoute Circuit Authorization */
+export interface ExpressRouteAuthorization extends ProxyResource {
+  /**
+   * The state of the  ExpressRoute Circuit Authorization provisioning
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ExpressRouteAuthorizationProvisioningState;
+  /**
+   * The ID of the ExpressRoute Circuit Authorization
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly expressRouteAuthorizationId?: string;
+  /**
+   * The key of the ExpressRoute Circuit Authorization
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly expressRouteAuthorizationKey?: string;
+  /** The ID of the ExpressRoute Circuit */
+  expressRouteId?: string;
+}
+
+/** A cloud link resource */
+export interface CloudLink extends ProxyResource {
+  /**
+   * The state of the cloud link.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly status?: CloudLinkStatus;
+  /** Identifier of the other private cloud participating in the link. */
+  linkedCloud?: string;
+}
+
+/** A cluster resource */
+export interface Cluster extends ProxyResource {
+  /** The SKU (Stock Keeping Unit) assigned to this resource. */
+  sku?: SkuAutoGenerated;
+  /** The cluster size */
+  clusterSize?: number;
+  /**
+   * The state of the cluster provisioning
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ClusterProvisioningState;
+  /**
+   * The identity
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly clusterId?: number;
+  /** The hosts */
+  hosts?: string[];
+}
+
+/** A datastore resource */
+export interface Datastore extends ProxyResource {
+  /**
+   * The state of the datastore provisioning
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: DatastoreProvisioningState;
+  /** An Azure NetApp Files volume */
+  netAppVolume?: NetAppVolume;
+  /** An iSCSI volume */
+  diskPoolVolume?: DiskPoolVolume;
+  /**
+   * The operational status of the datastore
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly status?: DatastoreStatus;
+}
+
+/** A vSphere Distributed Resource Scheduler (DRS) placement policy */
+export interface PlacementPolicy extends ProxyResource {
+  /** Discriminator property for PlacementPolicyProperties. */
+  typePropertiesType?: string;
+  /** Whether the placement policy is enabled or disabled */
+  state?: PlacementPolicyState;
+  /** Display name of the placement policy */
   displayName?: string;
-  /** Gateway which to connect segment to. */
-  connectedGateway?: string;
-  /** Subnet which to connect segment to. */
-  subnet?: WorkloadNetworkSegmentSubnet;
-  /**
-   * Port Vif which segment is associated with.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly portVif?: WorkloadNetworkSegmentPortVif[];
-  /**
-   * Segment status.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly status?: SegmentStatusEnum;
   /**
    * The provisioning state
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly provisioningState?: WorkloadNetworkSegmentProvisioningState;
-  /** NSX revision number. */
-  revision?: number;
+  readonly provisioningState?: PlacementPolicyProvisioningState;
+}
+
+/** Virtual Machine */
+export interface VirtualMachine extends ProxyResource {
+  /**
+   * Display name of the VM.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly displayName?: string;
+  /**
+   * Virtual machine managed object reference id
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly moRefId?: string;
+  /**
+   * Path to virtual machine's folder starting from datacenter virtual machine folder
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly folderPath?: string;
+  /**
+   * Whether VM DRS-driven movement is restricted (enabled) or not (disabled)
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly restrictMovement?: VirtualMachineRestrictMovementState;
 }
 
 /** NSX DHCP */
 export interface WorkloadNetworkDhcp extends ProxyResource {
-  /** DHCP properties. */
-  properties?: WorkloadNetworkDhcpEntityUnion;
-}
-
-/** NSX Gateway. */
-export interface WorkloadNetworkGateway extends ProxyResource {
+  /** Discriminator property for WorkloadNetworkDhcpEntity. */
+  dhcpType?: string;
   /** Display name of the DHCP entity. */
   displayName?: string;
   /**
-   * NSX Gateway Path.
+   * NSX Segments consuming DHCP.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly path?: string;
-}
-
-/** NSX Port Mirroring */
-export interface WorkloadNetworkPortMirroring extends ProxyResource {
-  /** Display name of the port mirroring profile. */
-  displayName?: string;
-  /** Direction of port mirroring profile. */
-  direction?: PortMirroringDirectionEnum;
-  /** Source VM Group. */
-  source?: string;
-  /** Destination VM Group. */
-  destination?: string;
-  /**
-   * Port Mirroring Status.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly status?: PortMirroringStatusEnum;
+  readonly segments?: string[];
   /**
    * The provisioning state
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly provisioningState?: WorkloadNetworkPortMirroringProvisioningState;
+  readonly provisioningState?: WorkloadNetworkDhcpProvisioningState;
   /** NSX revision number. */
   revision?: number;
-}
-
-/** NSX VM Group */
-export interface WorkloadNetworkVMGroup extends ProxyResource {
-  /** Display name of the VM group. */
-  displayName?: string;
-  /** Virtual machine members of this group. */
-  members?: string[];
-  /**
-   * VM Group status.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly status?: VMGroupStatusEnum;
-  /**
-   * The provisioning state
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: WorkloadNetworkVMGroupProvisioningState;
-  /** NSX revision number. */
-  revision?: number;
-}
-
-/** NSX Virtual Machine */
-export interface WorkloadNetworkVirtualMachine extends ProxyResource {
-  /** Display name of the VM. */
-  displayName?: string;
-  /**
-   * Virtual machine type.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly vmType?: VMTypeEnum;
 }
 
 /** NSX DNS Service */
@@ -1470,6 +1345,80 @@ export interface WorkloadNetworkDnsZone extends ProxyResource {
   revision?: number;
 }
 
+/** NSX Gateway. */
+export interface WorkloadNetworkGateway extends ProxyResource {
+  /** Display name of the DHCP entity. */
+  displayName?: string;
+  /**
+   * NSX Gateway Path.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly path?: string;
+}
+
+/** A global reach connection resource */
+export interface GlobalReachConnection extends ProxyResource {
+  /**
+   * The state of the  ExpressRoute Circuit Authorization provisioning
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: GlobalReachConnectionProvisioningState;
+  /**
+   * The network used for global reach carved out from the original network block provided for the private cloud
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly addressPrefix?: string;
+  /** Authorization key from the peer express route used for the global reach connection */
+  authorizationKey?: string;
+  /**
+   * The connection status of the global reach connection
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly circuitConnectionStatus?: GlobalReachConnectionStatus;
+  /** Identifier of the ExpressRoute Circuit to peer with in the global reach connection */
+  peerExpressRouteCircuit?: string;
+  /** The ID of the Private Cloud's ExpressRoute Circuit that is participating in the global reach connection */
+  expressRouteId?: string;
+}
+
+/** An HCX Enterprise Site resource */
+export interface HcxEnterpriseSite extends ProxyResource {
+  /**
+   * The activation key
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly activationKey?: string;
+  /**
+   * The status of the HCX Enterprise Site
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly status?: HcxEnterpriseSiteStatus;
+}
+
+/** NSX Port Mirroring */
+export interface WorkloadNetworkPortMirroring extends ProxyResource {
+  /** Display name of the port mirroring profile. */
+  displayName?: string;
+  /** Direction of port mirroring profile. */
+  direction?: PortMirroringDirectionEnum;
+  /** Source VM Group. */
+  source?: string;
+  /** Destination VM Group. */
+  destination?: string;
+  /**
+   * Port Mirroring Status.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly status?: PortMirroringStatusEnum;
+  /**
+   * The provisioning state
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: WorkloadNetworkPortMirroringProvisioningState;
+  /** NSX revision number. */
+  revision?: number;
+}
+
 /** NSX Public IP Block */
 export interface WorkloadNetworkPublicIP extends ProxyResource {
   /** Display name of the Public IP Block. */
@@ -1488,28 +1437,59 @@ export interface WorkloadNetworkPublicIP extends ProxyResource {
   readonly provisioningState?: WorkloadNetworkPublicIPProvisioningState;
 }
 
-/** Virtual Machine */
-export interface VirtualMachine extends ProxyResource {
+/** An instance of a script executed by a user - custom or AVS */
+export interface ScriptExecution extends ProxyResource {
+  /** A reference to the script cmdlet resource if user is running a AVS script */
+  scriptCmdletId?: string;
+  /** Parameters the script will accept */
+  parameters?: ScriptExecutionParameterUnion[];
+  /** Parameters that will be hidden/not visible to ARM, such as passwords and credentials */
+  hiddenParameters?: ScriptExecutionParameterUnion[];
+  /** Error message if the script was able to run, but if the script itself had errors or powershell threw an exception */
+  failureReason?: string;
+  /** Time limit for execution */
+  timeout?: string;
+  /** Time to live for the resource. If not provided, will be available for 60 days */
+  retention?: string;
   /**
-   * Display name of the VM.
+   * Time the script execution was submitted
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly displayName?: string;
+  readonly submittedAt?: Date;
   /**
-   * Virtual machine managed object reference id
+   * Time the script execution was started
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly moRefId?: string;
+  readonly startedAt?: Date;
   /**
-   * Path to virtual machine's folder starting from datacenter virtual machine folder
+   * Time the script execution was finished
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly folderPath?: string;
+  readonly finishedAt?: Date;
   /**
-   * Whether VM DRS-driven movement is restricted (enabled) or not (disabled)
+   * The state of the script execution resource
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly restrictMovement?: VirtualMachineRestrictMovementState;
+  readonly provisioningState?: ScriptExecutionProvisioningState;
+  /** Standard output stream from the powershell execution */
+  output?: string[];
+  /** User-defined dictionary. */
+  namedOutputs?: { [propertyName: string]: { [propertyName: string]: any } };
+  /**
+   * Standard information out stream from the powershell execution
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly information?: string[];
+  /**
+   * Standard warning out stream from the powershell execution
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly warnings?: string[];
+  /**
+   * Standard error output stream from the powershell execution
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly errors?: string[];
 }
 
 /** Script Package resources available for execution */
@@ -1555,60 +1535,455 @@ export interface ScriptCmdlet extends ProxyResource {
   readonly parameters?: ScriptParameter[];
 }
 
-/** An instance of a script executed by a user - custom or AVS */
-export interface ScriptExecution extends ProxyResource {
-  /** A reference to the script cmdlet resource if user is running a AVS script */
-  scriptCmdletId?: string;
-  /** Parameters the script will accept */
-  parameters?: ScriptExecutionParameterUnion[];
-  /** Parameters that will be hidden/not visible to ARM, such as passwords and credentials */
-  hiddenParameters?: ScriptExecutionParameterUnion[];
-  /** Error message if the script was able to run, but if the script itself had errors or powershell threw an exception */
-  failureReason?: string;
-  /** Time limit for execution */
-  timeout?: string;
-  /** Time to live for the resource. If not provided, will be available for 60 days */
-  retention?: string;
+/** NSX Segment */
+export interface WorkloadNetworkSegment extends ProxyResource {
+  /** Display name of the segment. */
+  displayName?: string;
+  /** Gateway which to connect segment to. */
+  connectedGateway?: string;
+  /** Subnet which to connect segment to. */
+  subnet?: WorkloadNetworkSegmentSubnet;
   /**
-   * Time the script execution was submitted
+   * Port Vif which segment is associated with.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly submittedAt?: Date;
+  readonly portVif?: WorkloadNetworkSegmentPortVif[];
   /**
-   * Time the script execution was started
+   * Segment status.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly startedAt?: Date;
+  readonly status?: SegmentStatusEnum;
   /**
-   * Time the script execution was finished
+   * The provisioning state
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly finishedAt?: Date;
-  /**
-   * The state of the script execution resource
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: ScriptExecutionProvisioningState;
-  /** Standard output stream from the powershell execution */
-  output?: string[];
-  /** User-defined dictionary. */
-  namedOutputs?: { [propertyName: string]: Record<string, unknown> };
-  /**
-   * Standard information out stream from the powershell execution
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly information?: string[];
-  /**
-   * Standard warning out stream from the powershell execution
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly warnings?: string[];
-  /**
-   * Standard error output stream from the powershell execution
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly errors?: string[];
+  readonly provisioningState?: WorkloadNetworkSegmentProvisioningState;
+  /** NSX revision number. */
+  revision?: number;
 }
+
+/** NSX Virtual Machine */
+export interface WorkloadNetworkVirtualMachine extends ProxyResource {
+  /** Display name of the VM. */
+  displayName?: string;
+  /**
+   * Virtual machine type.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly vmType?: VMTypeEnum;
+}
+
+/** NSX VM Group */
+export interface WorkloadNetworkVMGroup extends ProxyResource {
+  /** Display name of the VM group. */
+  displayName?: string;
+  /** Virtual machine members of this group. */
+  members?: string[];
+  /**
+   * VM Group status.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly status?: VMGroupStatusEnum;
+  /**
+   * The provisioning state
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: WorkloadNetworkVMGroupProvisioningState;
+  /** NSX revision number. */
+  revision?: number;
+}
+
+/** Workload Network */
+export interface WorkloadNetwork extends ProxyResource {
+  /** The resource-specific properties for this resource. */
+  properties?: Record<string, unknown>;
+}
+
+/** Defines headers for LocationsOperations_checkQuotaAvailability operation. */
+export interface LocationsOperationsCheckQuotaAvailabilityExceptionHeaders {
+  /** String error code indicating what went wrong. */
+  xMsErrorCode?: string;
+}
+
+/** Defines headers for LocationsOperations_checkTrialAvailability operation. */
+export interface LocationsOperationsCheckTrialAvailabilityExceptionHeaders {
+  /** String error code indicating what went wrong. */
+  xMsErrorCode?: string;
+}
+
+/** Defines headers for PrivateClouds_createOrUpdate operation. */
+export interface PrivateCloudsCreateOrUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for PrivateClouds_update operation. */
+export interface PrivateCloudsUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for PrivateClouds_delete operation. */
+export interface PrivateCloudsDeleteHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for PrivateClouds_rotateNsxtPassword operation. */
+export interface PrivateCloudsRotateNsxtPasswordHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for PrivateClouds_rotateVcenterPassword operation. */
+export interface PrivateCloudsRotateVcenterPasswordHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for Addons_createOrUpdate operation. */
+export interface AddonsCreateOrUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for Addons_delete operation. */
+export interface AddonsDeleteHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for ExpressRouteAuthorizations_createOrUpdate operation. */
+export interface ExpressRouteAuthorizationsCreateOrUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for ExpressRouteAuthorizations_delete operation. */
+export interface ExpressRouteAuthorizationsDeleteHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for CloudLinks_createOrUpdate operation. */
+export interface CloudLinksCreateOrUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for CloudLinks_delete operation. */
+export interface CloudLinksDeleteHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for Clusters_createOrUpdate operation. */
+export interface ClustersCreateOrUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for Clusters_update operation. */
+export interface ClustersUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for Clusters_delete operation. */
+export interface ClustersDeleteHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for Datastores_createOrUpdate operation. */
+export interface DatastoresCreateOrUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for Datastores_delete operation. */
+export interface DatastoresDeleteHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for PlacementPolicies_createOrUpdate operation. */
+export interface PlacementPoliciesCreateOrUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for PlacementPolicies_update operation. */
+export interface PlacementPoliciesUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for PlacementPolicies_delete operation. */
+export interface PlacementPoliciesDeleteHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for VirtualMachines_restrictMovement operation. */
+export interface VirtualMachinesRestrictMovementHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for WorkloadNetworkDhcps_createDhcp operation. */
+export interface WorkloadNetworkDhcpsCreateDhcpHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for WorkloadNetworkDhcps_updateDhcp operation. */
+export interface WorkloadNetworkDhcpsUpdateDhcpHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for WorkloadNetworkDhcps_deleteDhcp operation. */
+export interface WorkloadNetworkDhcpsDeleteDhcpHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for WorkloadNetworkDnsServices_createDnsService operation. */
+export interface WorkloadNetworkDnsServicesCreateDnsServiceHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for WorkloadNetworkDnsServices_updateDnsService operation. */
+export interface WorkloadNetworkDnsServicesUpdateDnsServiceHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for WorkloadNetworkDnsServices_deleteDnsService operation. */
+export interface WorkloadNetworkDnsServicesDeleteDnsServiceHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for WorkloadNetworkDnsZones_createDnsZone operation. */
+export interface WorkloadNetworkDnsZonesCreateDnsZoneHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for WorkloadNetworkDnsZones_updateDnsZone operation. */
+export interface WorkloadNetworkDnsZonesUpdateDnsZoneHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for WorkloadNetworkDnsZones_deleteDnsZone operation. */
+export interface WorkloadNetworkDnsZonesDeleteDnsZoneHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for GlobalReachConnections_createOrUpdate operation. */
+export interface GlobalReachConnectionsCreateOrUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for GlobalReachConnections_delete operation. */
+export interface GlobalReachConnectionsDeleteHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for WorkloadNetworkPortMirrorings_createPortMirroring operation. */
+export interface WorkloadNetworkPortMirroringsCreatePortMirroringHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for WorkloadNetworkPortMirrorings_updatePortMirroring operation. */
+export interface WorkloadNetworkPortMirroringsUpdatePortMirroringHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for WorkloadNetworkPortMirrorings_deletePortMirroring operation. */
+export interface WorkloadNetworkPortMirroringsDeletePortMirroringHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for WorkloadNetworkPublicIps_createPublicIp operation. */
+export interface WorkloadNetworkPublicIpsCreatePublicIpHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for WorkloadNetworkPublicIps_deletePublicIp operation. */
+export interface WorkloadNetworkPublicIpsDeletePublicIpHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for ScriptExecutions_createOrUpdate operation. */
+export interface ScriptExecutionsCreateOrUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for ScriptExecutions_delete operation. */
+export interface ScriptExecutionsDeleteHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for WorkloadNetworkSegments_createSegments operation. */
+export interface WorkloadNetworkSegmentsCreateSegmentsHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for WorkloadNetworkSegments_updateSegments operation. */
+export interface WorkloadNetworkSegmentsUpdateSegmentsHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for WorkloadNetworkSegments_deleteSegment operation. */
+export interface WorkloadNetworkSegmentsDeleteSegmentHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for WorkloadNetworkVmGroups_createVmGroup operation. */
+export interface WorkloadNetworkVmGroupsCreateVmGroupHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for WorkloadNetworkVmGroups_updateVmGroup operation. */
+export interface WorkloadNetworkVmGroupsUpdateVmGroupHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Defines headers for WorkloadNetworkVmGroups_deleteVmGroup operation. */
+export interface WorkloadNetworkVmGroupsDeleteVmGroupHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+}
+
+/** Known values of {@link Origin} that the service accepts. */
+export enum KnownOrigin {
+  /** User */
+  User = "user",
+  /** System */
+  System = "system",
+  /** UserSystem */
+  UserSystem = "user,system"
+}
+
+/**
+ * Defines values for Origin. \
+ * {@link KnownOrigin} can be used interchangeably with Origin,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **user** \
+ * **system** \
+ * **user,system**
+ */
+export type Origin = string;
+
+/** Known values of {@link ActionType} that the service accepts. */
+export enum KnownActionType {
+  /** Internal */
+  Internal = "Internal"
+}
+
+/**
+ * Defines values for ActionType. \
+ * {@link KnownActionType} can be used interchangeably with ActionType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Internal**
+ */
+export type ActionType = string;
+
+/** Known values of {@link QuotaEnabled} that the service accepts. */
+export enum KnownQuotaEnabled {
+  /** Enabled */
+  Enabled = "Enabled",
+  /** Disabled */
+  Disabled = "Disabled"
+}
+
+/**
+ * Defines values for QuotaEnabled. \
+ * {@link KnownQuotaEnabled} can be used interchangeably with QuotaEnabled,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Enabled** \
+ * **Disabled**
+ */
+export type QuotaEnabled = string;
 
 /** Known values of {@link TrialStatus} that the service accepts. */
 export enum KnownTrialStatus {
@@ -1630,24 +2005,6 @@ export enum KnownTrialStatus {
  * **TrialDisabled**
  */
 export type TrialStatus = string;
-
-/** Known values of {@link QuotaEnabled} that the service accepts. */
-export enum KnownQuotaEnabled {
-  /** Enabled */
-  Enabled = "Enabled",
-  /** Disabled */
-  Disabled = "Disabled"
-}
-
-/**
- * Defines values for QuotaEnabled. \
- * {@link KnownQuotaEnabled} can be used interchangeably with QuotaEnabled,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Enabled** \
- * **Disabled**
- */
-export type QuotaEnabled = string;
 
 /** Known values of {@link PrivateCloudProvisioningState} that the service accepts. */
 export enum KnownPrivateCloudProvisioningState {
@@ -1703,6 +2060,138 @@ export enum KnownNsxPublicIpQuotaRaisedEnum {
  */
 export type NsxPublicIpQuotaRaisedEnum = string;
 
+/** Known values of {@link ManagedServiceIdentityType} that the service accepts. */
+export enum KnownManagedServiceIdentityType {
+  /** None */
+  None = "None",
+  /** SystemAssigned */
+  SystemAssigned = "SystemAssigned",
+  /** UserAssigned */
+  UserAssigned = "UserAssigned",
+  /** SystemAssignedUserAssigned */
+  SystemAssignedUserAssigned = "SystemAssigned, UserAssigned"
+}
+
+/**
+ * Defines values for ManagedServiceIdentityType. \
+ * {@link KnownManagedServiceIdentityType} can be used interchangeably with ManagedServiceIdentityType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **None** \
+ * **SystemAssigned** \
+ * **UserAssigned** \
+ * **SystemAssigned, UserAssigned**
+ */
+export type ManagedServiceIdentityType = string;
+
+/** Known values of {@link CreatedByType} that the service accepts. */
+export enum KnownCreatedByType {
+  /** User */
+  User = "User",
+  /** Application */
+  Application = "Application",
+  /** ManagedIdentity */
+  ManagedIdentity = "ManagedIdentity",
+  /** Key */
+  Key = "Key"
+}
+
+/**
+ * Defines values for CreatedByType. \
+ * {@link KnownCreatedByType} can be used interchangeably with CreatedByType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **User** \
+ * **Application** \
+ * **ManagedIdentity** \
+ * **Key**
+ */
+export type CreatedByType = string;
+
+/** Known values of {@link AddonProvisioningState} that the service accepts. */
+export enum KnownAddonProvisioningState {
+  /** Succeeded */
+  Succeeded = "Succeeded",
+  /** Failed */
+  Failed = "Failed",
+  /** Cancelled */
+  Cancelled = "Cancelled",
+  /** Building */
+  Building = "Building",
+  /** Deleting */
+  Deleting = "Deleting",
+  /** Updating */
+  Updating = "Updating",
+  /** Canceled */
+  Canceled = "Canceled"
+}
+
+/**
+ * Defines values for AddonProvisioningState. \
+ * {@link KnownAddonProvisioningState} can be used interchangeably with AddonProvisioningState,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Succeeded** \
+ * **Failed** \
+ * **Cancelled** \
+ * **Building** \
+ * **Deleting** \
+ * **Updating** \
+ * **Canceled**
+ */
+export type AddonProvisioningState = string;
+
+/** Known values of {@link ExpressRouteAuthorizationProvisioningState} that the service accepts. */
+export enum KnownExpressRouteAuthorizationProvisioningState {
+  /** Succeeded */
+  Succeeded = "Succeeded",
+  /** Failed */
+  Failed = "Failed",
+  /** Updating */
+  Updating = "Updating",
+  /** Canceled */
+  Canceled = "Canceled"
+}
+
+/**
+ * Defines values for ExpressRouteAuthorizationProvisioningState. \
+ * {@link KnownExpressRouteAuthorizationProvisioningState} can be used interchangeably with ExpressRouteAuthorizationProvisioningState,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Succeeded** \
+ * **Failed** \
+ * **Updating** \
+ * **Canceled**
+ */
+export type ExpressRouteAuthorizationProvisioningState = string;
+
+/** Known values of {@link CloudLinkStatus} that the service accepts. */
+export enum KnownCloudLinkStatus {
+  /** Active */
+  Active = "Active",
+  /** Building */
+  Building = "Building",
+  /** Deleting */
+  Deleting = "Deleting",
+  /** Failed */
+  Failed = "Failed",
+  /** Disconnected */
+  Disconnected = "Disconnected"
+}
+
+/**
+ * Defines values for CloudLinkStatus. \
+ * {@link KnownCloudLinkStatus} can be used interchangeably with CloudLinkStatus,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Active** \
+ * **Building** \
+ * **Deleting** \
+ * **Failed** \
+ * **Disconnected**
+ */
+export type CloudLinkStatus = string;
+
 /** Known values of {@link ClusterProvisioningState} that the service accepts. */
 export enum KnownClusterProvisioningState {
   /** Succeeded */
@@ -1732,132 +2221,6 @@ export enum KnownClusterProvisioningState {
  * **Canceled**
  */
 export type ClusterProvisioningState = string;
-
-/** Known values of {@link InternetEnum} that the service accepts. */
-export enum KnownInternetEnum {
-  /** Enabled */
-  Enabled = "Enabled",
-  /** Disabled */
-  Disabled = "Disabled"
-}
-
-/**
- * Defines values for InternetEnum. \
- * {@link KnownInternetEnum} can be used interchangeably with InternetEnum,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Enabled** \
- * **Disabled**
- */
-export type InternetEnum = string;
-
-/** Known values of {@link SslEnum} that the service accepts. */
-export enum KnownSslEnum {
-  /** Enabled */
-  Enabled = "Enabled",
-  /** Disabled */
-  Disabled = "Disabled"
-}
-
-/**
- * Defines values for SslEnum. \
- * {@link KnownSslEnum} can be used interchangeably with SslEnum,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Enabled** \
- * **Disabled**
- */
-export type SslEnum = string;
-
-/** Known values of {@link AvailabilityStrategy} that the service accepts. */
-export enum KnownAvailabilityStrategy {
-  /** SingleZone */
-  SingleZone = "SingleZone",
-  /** DualZone */
-  DualZone = "DualZone"
-}
-
-/**
- * Defines values for AvailabilityStrategy. \
- * {@link KnownAvailabilityStrategy} can be used interchangeably with AvailabilityStrategy,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **SingleZone** \
- * **DualZone**
- */
-export type AvailabilityStrategy = string;
-
-/** Known values of {@link EncryptionState} that the service accepts. */
-export enum KnownEncryptionState {
-  /** Enabled */
-  Enabled = "Enabled",
-  /** Disabled */
-  Disabled = "Disabled"
-}
-
-/**
- * Defines values for EncryptionState. \
- * {@link KnownEncryptionState} can be used interchangeably with EncryptionState,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Enabled** \
- * **Disabled**
- */
-export type EncryptionState = string;
-
-/** Known values of {@link EncryptionKeyStatus} that the service accepts. */
-export enum KnownEncryptionKeyStatus {
-  /** Connected */
-  Connected = "Connected",
-  /** AccessDenied */
-  AccessDenied = "AccessDenied"
-}
-
-/**
- * Defines values for EncryptionKeyStatus. \
- * {@link KnownEncryptionKeyStatus} can be used interchangeably with EncryptionKeyStatus,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Connected** \
- * **AccessDenied**
- */
-export type EncryptionKeyStatus = string;
-
-/** Known values of {@link EncryptionVersionType} that the service accepts. */
-export enum KnownEncryptionVersionType {
-  /** Fixed */
-  Fixed = "Fixed",
-  /** AutoDetected */
-  AutoDetected = "AutoDetected"
-}
-
-/**
- * Defines values for EncryptionVersionType. \
- * {@link KnownEncryptionVersionType} can be used interchangeably with EncryptionVersionType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Fixed** \
- * **AutoDetected**
- */
-export type EncryptionVersionType = string;
-
-/** Known values of {@link ResourceIdentityType} that the service accepts. */
-export enum KnownResourceIdentityType {
-  /** SystemAssigned */
-  SystemAssigned = "SystemAssigned",
-  /** None */
-  None = "None"
-}
-
-/**
- * Defines values for ResourceIdentityType. \
- * {@link KnownResourceIdentityType} can be used interchangeably with ResourceIdentityType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **SystemAssigned** \
- * **None**
- */
-export type ResourceIdentityType = string;
 
 /** Known values of {@link DatastoreProvisioningState} that the service accepts. */
 export enum KnownDatastoreProvisioningState {
@@ -1946,134 +2309,26 @@ export enum KnownDatastoreStatus {
  */
 export type DatastoreStatus = string;
 
-/** Known values of {@link HcxEnterpriseSiteStatus} that the service accepts. */
-export enum KnownHcxEnterpriseSiteStatus {
-  /** Available */
-  Available = "Available",
-  /** Consumed */
-  Consumed = "Consumed",
-  /** Deactivated */
-  Deactivated = "Deactivated",
-  /** Deleted */
-  Deleted = "Deleted"
+/** Known values of {@link PlacementPolicyState} that the service accepts. */
+export enum KnownPlacementPolicyState {
+  /** Enabled */
+  Enabled = "Enabled",
+  /** Disabled */
+  Disabled = "Disabled"
 }
 
 /**
- * Defines values for HcxEnterpriseSiteStatus. \
- * {@link KnownHcxEnterpriseSiteStatus} can be used interchangeably with HcxEnterpriseSiteStatus,
+ * Defines values for PlacementPolicyState. \
+ * {@link KnownPlacementPolicyState} can be used interchangeably with PlacementPolicyState,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Available** \
- * **Consumed** \
- * **Deactivated** \
- * **Deleted**
+ * **Enabled** \
+ * **Disabled**
  */
-export type HcxEnterpriseSiteStatus = string;
+export type PlacementPolicyState = string;
 
-/** Known values of {@link ExpressRouteAuthorizationProvisioningState} that the service accepts. */
-export enum KnownExpressRouteAuthorizationProvisioningState {
-  /** Succeeded */
-  Succeeded = "Succeeded",
-  /** Failed */
-  Failed = "Failed",
-  /** Updating */
-  Updating = "Updating",
-  /** Canceled */
-  Canceled = "Canceled"
-}
-
-/**
- * Defines values for ExpressRouteAuthorizationProvisioningState. \
- * {@link KnownExpressRouteAuthorizationProvisioningState} can be used interchangeably with ExpressRouteAuthorizationProvisioningState,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Succeeded** \
- * **Failed** \
- * **Updating** \
- * **Canceled**
- */
-export type ExpressRouteAuthorizationProvisioningState = string;
-
-/** Known values of {@link GlobalReachConnectionProvisioningState} that the service accepts. */
-export enum KnownGlobalReachConnectionProvisioningState {
-  /** Succeeded */
-  Succeeded = "Succeeded",
-  /** Failed */
-  Failed = "Failed",
-  /** Updating */
-  Updating = "Updating",
-  /** Canceled */
-  Canceled = "Canceled"
-}
-
-/**
- * Defines values for GlobalReachConnectionProvisioningState. \
- * {@link KnownGlobalReachConnectionProvisioningState} can be used interchangeably with GlobalReachConnectionProvisioningState,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Succeeded** \
- * **Failed** \
- * **Updating** \
- * **Canceled**
- */
-export type GlobalReachConnectionProvisioningState = string;
-
-/** Known values of {@link GlobalReachConnectionStatus} that the service accepts. */
-export enum KnownGlobalReachConnectionStatus {
-  /** Connected */
-  Connected = "Connected",
-  /** Connecting */
-  Connecting = "Connecting",
-  /** Disconnected */
-  Disconnected = "Disconnected"
-}
-
-/**
- * Defines values for GlobalReachConnectionStatus. \
- * {@link KnownGlobalReachConnectionStatus} can be used interchangeably with GlobalReachConnectionStatus,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Connected** \
- * **Connecting** \
- * **Disconnected**
- */
-export type GlobalReachConnectionStatus = string;
-
-/** Known values of {@link WorkloadNetworkName} that the service accepts. */
-export enum KnownWorkloadNetworkName {
-  /** Default */
-  Default = "default"
-}
-
-/**
- * Defines values for WorkloadNetworkName. \
- * {@link KnownWorkloadNetworkName} can be used interchangeably with WorkloadNetworkName,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **default**
- */
-export type WorkloadNetworkName = string;
-
-/** Known values of {@link SegmentStatusEnum} that the service accepts. */
-export enum KnownSegmentStatusEnum {
-  /** Success */
-  Success = "SUCCESS",
-  /** Failure */
-  Failure = "FAILURE"
-}
-
-/**
- * Defines values for SegmentStatusEnum. \
- * {@link KnownSegmentStatusEnum} can be used interchangeably with SegmentStatusEnum,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **SUCCESS** \
- * **FAILURE**
- */
-export type SegmentStatusEnum = string;
-
-/** Known values of {@link WorkloadNetworkSegmentProvisioningState} that the service accepts. */
-export enum KnownWorkloadNetworkSegmentProvisioningState {
+/** Known values of {@link PlacementPolicyProvisioningState} that the service accepts. */
+export enum KnownPlacementPolicyProvisioningState {
   /** Succeeded */
   Succeeded = "Succeeded",
   /** Failed */
@@ -2089,8 +2344,8 @@ export enum KnownWorkloadNetworkSegmentProvisioningState {
 }
 
 /**
- * Defines values for WorkloadNetworkSegmentProvisioningState. \
- * {@link KnownWorkloadNetworkSegmentProvisioningState} can be used interchangeably with WorkloadNetworkSegmentProvisioningState,
+ * Defines values for PlacementPolicyProvisioningState. \
+ * {@link KnownPlacementPolicyProvisioningState} can be used interchangeably with PlacementPolicyProvisioningState,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
  * **Succeeded** \
@@ -2100,25 +2355,25 @@ export enum KnownWorkloadNetworkSegmentProvisioningState {
  * **Updating** \
  * **Canceled**
  */
-export type WorkloadNetworkSegmentProvisioningState = string;
+export type PlacementPolicyProvisioningState = string;
 
-/** Known values of {@link DhcpTypeEnum} that the service accepts. */
-export enum KnownDhcpTypeEnum {
-  /** Server */
-  Server = "SERVER",
-  /** Relay */
-  Relay = "RELAY"
+/** Known values of {@link VirtualMachineRestrictMovementState} that the service accepts. */
+export enum KnownVirtualMachineRestrictMovementState {
+  /** Enabled */
+  Enabled = "Enabled",
+  /** Disabled */
+  Disabled = "Disabled"
 }
 
 /**
- * Defines values for DhcpTypeEnum. \
- * {@link KnownDhcpTypeEnum} can be used interchangeably with DhcpTypeEnum,
+ * Defines values for VirtualMachineRestrictMovementState. \
+ * {@link KnownVirtualMachineRestrictMovementState} can be used interchangeably with VirtualMachineRestrictMovementState,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **SERVER** \
- * **RELAY**
+ * **Enabled** \
+ * **Disabled**
  */
-export type DhcpTypeEnum = string;
+export type VirtualMachineRestrictMovementState = string;
 
 /** Known values of {@link WorkloadNetworkDhcpProvisioningState} that the service accepts. */
 export enum KnownWorkloadNetworkDhcpProvisioningState {
@@ -2149,144 +2404,6 @@ export enum KnownWorkloadNetworkDhcpProvisioningState {
  * **Canceled**
  */
 export type WorkloadNetworkDhcpProvisioningState = string;
-
-/** Known values of {@link PortMirroringDirectionEnum} that the service accepts. */
-export enum KnownPortMirroringDirectionEnum {
-  /** Ingress */
-  Ingress = "INGRESS",
-  /** Egress */
-  Egress = "EGRESS",
-  /** Bidirectional */
-  Bidirectional = "BIDIRECTIONAL"
-}
-
-/**
- * Defines values for PortMirroringDirectionEnum. \
- * {@link KnownPortMirroringDirectionEnum} can be used interchangeably with PortMirroringDirectionEnum,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **INGRESS** \
- * **EGRESS** \
- * **BIDIRECTIONAL**
- */
-export type PortMirroringDirectionEnum = string;
-
-/** Known values of {@link PortMirroringStatusEnum} that the service accepts. */
-export enum KnownPortMirroringStatusEnum {
-  /** Success */
-  Success = "SUCCESS",
-  /** Failure */
-  Failure = "FAILURE"
-}
-
-/**
- * Defines values for PortMirroringStatusEnum. \
- * {@link KnownPortMirroringStatusEnum} can be used interchangeably with PortMirroringStatusEnum,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **SUCCESS** \
- * **FAILURE**
- */
-export type PortMirroringStatusEnum = string;
-
-/** Known values of {@link WorkloadNetworkPortMirroringProvisioningState} that the service accepts. */
-export enum KnownWorkloadNetworkPortMirroringProvisioningState {
-  /** Succeeded */
-  Succeeded = "Succeeded",
-  /** Failed */
-  Failed = "Failed",
-  /** Building */
-  Building = "Building",
-  /** Deleting */
-  Deleting = "Deleting",
-  /** Updating */
-  Updating = "Updating",
-  /** Canceled */
-  Canceled = "Canceled"
-}
-
-/**
- * Defines values for WorkloadNetworkPortMirroringProvisioningState. \
- * {@link KnownWorkloadNetworkPortMirroringProvisioningState} can be used interchangeably with WorkloadNetworkPortMirroringProvisioningState,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Succeeded** \
- * **Failed** \
- * **Building** \
- * **Deleting** \
- * **Updating** \
- * **Canceled**
- */
-export type WorkloadNetworkPortMirroringProvisioningState = string;
-
-/** Known values of {@link VMGroupStatusEnum} that the service accepts. */
-export enum KnownVMGroupStatusEnum {
-  /** Success */
-  Success = "SUCCESS",
-  /** Failure */
-  Failure = "FAILURE"
-}
-
-/**
- * Defines values for VMGroupStatusEnum. \
- * {@link KnownVMGroupStatusEnum} can be used interchangeably with VMGroupStatusEnum,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **SUCCESS** \
- * **FAILURE**
- */
-export type VMGroupStatusEnum = string;
-
-/** Known values of {@link WorkloadNetworkVMGroupProvisioningState} that the service accepts. */
-export enum KnownWorkloadNetworkVMGroupProvisioningState {
-  /** Succeeded */
-  Succeeded = "Succeeded",
-  /** Failed */
-  Failed = "Failed",
-  /** Building */
-  Building = "Building",
-  /** Deleting */
-  Deleting = "Deleting",
-  /** Updating */
-  Updating = "Updating",
-  /** Canceled */
-  Canceled = "Canceled"
-}
-
-/**
- * Defines values for WorkloadNetworkVMGroupProvisioningState. \
- * {@link KnownWorkloadNetworkVMGroupProvisioningState} can be used interchangeably with WorkloadNetworkVMGroupProvisioningState,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Succeeded** \
- * **Failed** \
- * **Building** \
- * **Deleting** \
- * **Updating** \
- * **Canceled**
- */
-export type WorkloadNetworkVMGroupProvisioningState = string;
-
-/** Known values of {@link VMTypeEnum} that the service accepts. */
-export enum KnownVMTypeEnum {
-  /** Regular */
-  Regular = "REGULAR",
-  /** Edge */
-  Edge = "EDGE",
-  /** Service */
-  Service = "SERVICE"
-}
-
-/**
- * Defines values for VMTypeEnum. \
- * {@link KnownVMTypeEnum} can be used interchangeably with VMTypeEnum,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **REGULAR** \
- * **EDGE** \
- * **SERVICE**
- */
-export type VMTypeEnum = string;
 
 /** Known values of {@link DnsServiceLogLevelEnum} that the service accepts. */
 export enum KnownDnsServiceLogLevelEnum {
@@ -2393,6 +2510,144 @@ export enum KnownWorkloadNetworkDnsZoneProvisioningState {
  */
 export type WorkloadNetworkDnsZoneProvisioningState = string;
 
+/** Known values of {@link GlobalReachConnectionProvisioningState} that the service accepts. */
+export enum KnownGlobalReachConnectionProvisioningState {
+  /** Succeeded */
+  Succeeded = "Succeeded",
+  /** Failed */
+  Failed = "Failed",
+  /** Updating */
+  Updating = "Updating",
+  /** Canceled */
+  Canceled = "Canceled"
+}
+
+/**
+ * Defines values for GlobalReachConnectionProvisioningState. \
+ * {@link KnownGlobalReachConnectionProvisioningState} can be used interchangeably with GlobalReachConnectionProvisioningState,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Succeeded** \
+ * **Failed** \
+ * **Updating** \
+ * **Canceled**
+ */
+export type GlobalReachConnectionProvisioningState = string;
+
+/** Known values of {@link GlobalReachConnectionStatus} that the service accepts. */
+export enum KnownGlobalReachConnectionStatus {
+  /** Connected */
+  Connected = "Connected",
+  /** Connecting */
+  Connecting = "Connecting",
+  /** Disconnected */
+  Disconnected = "Disconnected"
+}
+
+/**
+ * Defines values for GlobalReachConnectionStatus. \
+ * {@link KnownGlobalReachConnectionStatus} can be used interchangeably with GlobalReachConnectionStatus,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Connected** \
+ * **Connecting** \
+ * **Disconnected**
+ */
+export type GlobalReachConnectionStatus = string;
+
+/** Known values of {@link HcxEnterpriseSiteStatus} that the service accepts. */
+export enum KnownHcxEnterpriseSiteStatus {
+  /** Available */
+  Available = "Available",
+  /** Consumed */
+  Consumed = "Consumed",
+  /** Deactivated */
+  Deactivated = "Deactivated",
+  /** Deleted */
+  Deleted = "Deleted"
+}
+
+/**
+ * Defines values for HcxEnterpriseSiteStatus. \
+ * {@link KnownHcxEnterpriseSiteStatus} can be used interchangeably with HcxEnterpriseSiteStatus,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Available** \
+ * **Consumed** \
+ * **Deactivated** \
+ * **Deleted**
+ */
+export type HcxEnterpriseSiteStatus = string;
+
+/** Known values of {@link PortMirroringDirectionEnum} that the service accepts. */
+export enum KnownPortMirroringDirectionEnum {
+  /** Ingress */
+  Ingress = "INGRESS",
+  /** Egress */
+  Egress = "EGRESS",
+  /** Bidirectional */
+  Bidirectional = "BIDIRECTIONAL"
+}
+
+/**
+ * Defines values for PortMirroringDirectionEnum. \
+ * {@link KnownPortMirroringDirectionEnum} can be used interchangeably with PortMirroringDirectionEnum,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **INGRESS** \
+ * **EGRESS** \
+ * **BIDIRECTIONAL**
+ */
+export type PortMirroringDirectionEnum = string;
+
+/** Known values of {@link PortMirroringStatusEnum} that the service accepts. */
+export enum KnownPortMirroringStatusEnum {
+  /** Success */
+  Success = "SUCCESS",
+  /** Failure */
+  Failure = "FAILURE"
+}
+
+/**
+ * Defines values for PortMirroringStatusEnum. \
+ * {@link KnownPortMirroringStatusEnum} can be used interchangeably with PortMirroringStatusEnum,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **SUCCESS** \
+ * **FAILURE**
+ */
+export type PortMirroringStatusEnum = string;
+
+/** Known values of {@link WorkloadNetworkPortMirroringProvisioningState} that the service accepts. */
+export enum KnownWorkloadNetworkPortMirroringProvisioningState {
+  /** Succeeded */
+  Succeeded = "Succeeded",
+  /** Failed */
+  Failed = "Failed",
+  /** Building */
+  Building = "Building",
+  /** Deleting */
+  Deleting = "Deleting",
+  /** Updating */
+  Updating = "Updating",
+  /** Canceled */
+  Canceled = "Canceled"
+}
+
+/**
+ * Defines values for WorkloadNetworkPortMirroringProvisioningState. \
+ * {@link KnownWorkloadNetworkPortMirroringProvisioningState} can be used interchangeably with WorkloadNetworkPortMirroringProvisioningState,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Succeeded** \
+ * **Failed** \
+ * **Building** \
+ * **Deleting** \
+ * **Updating** \
+ * **Canceled**
+ */
+export type WorkloadNetworkPortMirroringProvisioningState = string;
+
 /** Known values of {@link WorkloadNetworkPublicIPProvisioningState} that the service accepts. */
 export enum KnownWorkloadNetworkPublicIPProvisioningState {
   /** Succeeded */
@@ -2423,209 +2678,65 @@ export enum KnownWorkloadNetworkPublicIPProvisioningState {
  */
 export type WorkloadNetworkPublicIPProvisioningState = string;
 
-/** Known values of {@link CloudLinkStatus} that the service accepts. */
-export enum KnownCloudLinkStatus {
-  /** Active */
-  Active = "Active",
-  /** Building */
-  Building = "Building",
-  /** Deleting */
-  Deleting = "Deleting",
-  /** Failed */
-  Failed = "Failed",
-  /** Disconnected */
-  Disconnected = "Disconnected"
-}
-
-/**
- * Defines values for CloudLinkStatus. \
- * {@link KnownCloudLinkStatus} can be used interchangeably with CloudLinkStatus,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Active** \
- * **Building** \
- * **Deleting** \
- * **Failed** \
- * **Disconnected**
- */
-export type CloudLinkStatus = string;
-
-/** Known values of {@link AddonType} that the service accepts. */
-export enum KnownAddonType {
-  /** SRM */
-  SRM = "SRM",
-  /** VR */
-  VR = "VR",
-  /** HCX */
-  HCX = "HCX",
-  /** Arc */
-  Arc = "Arc"
-}
-
-/**
- * Defines values for AddonType. \
- * {@link KnownAddonType} can be used interchangeably with AddonType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **SRM** \
- * **VR** \
- * **HCX** \
- * **Arc**
- */
-export type AddonType = string;
-
-/** Known values of {@link AddonProvisioningState} that the service accepts. */
-export enum KnownAddonProvisioningState {
+/** Known values of {@link ScriptExecutionProvisioningState} that the service accepts. */
+export enum KnownScriptExecutionProvisioningState {
+  /** Pending */
+  Pending = "Pending",
+  /** Running */
+  Running = "Running",
   /** Succeeded */
   Succeeded = "Succeeded",
   /** Failed */
   Failed = "Failed",
+  /** Cancelling */
+  Cancelling = "Cancelling",
   /** Cancelled */
   Cancelled = "Cancelled",
-  /** Building */
-  Building = "Building",
   /** Deleting */
   Deleting = "Deleting",
-  /** Updating */
-  Updating = "Updating",
   /** Canceled */
   Canceled = "Canceled"
 }
 
 /**
- * Defines values for AddonProvisioningState. \
- * {@link KnownAddonProvisioningState} can be used interchangeably with AddonProvisioningState,
+ * Defines values for ScriptExecutionProvisioningState. \
+ * {@link KnownScriptExecutionProvisioningState} can be used interchangeably with ScriptExecutionProvisioningState,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
+ * **Pending** \
+ * **Running** \
  * **Succeeded** \
  * **Failed** \
+ * **Cancelling** \
  * **Cancelled** \
- * **Building** \
  * **Deleting** \
- * **Updating** \
  * **Canceled**
  */
-export type AddonProvisioningState = string;
+export type ScriptExecutionProvisioningState = string;
 
-/** Known values of {@link VirtualMachineRestrictMovementState} that the service accepts. */
-export enum KnownVirtualMachineRestrictMovementState {
-  /** Enabled */
-  Enabled = "Enabled",
-  /** Disabled */
-  Disabled = "Disabled"
+/** Known values of {@link ScriptOutputStreamType} that the service accepts. */
+export enum KnownScriptOutputStreamType {
+  /** Information */
+  Information = "Information",
+  /** Warning */
+  Warning = "Warning",
+  /** Output */
+  Output = "Output",
+  /** Error */
+  Error = "Error"
 }
 
 /**
- * Defines values for VirtualMachineRestrictMovementState. \
- * {@link KnownVirtualMachineRestrictMovementState} can be used interchangeably with VirtualMachineRestrictMovementState,
+ * Defines values for ScriptOutputStreamType. \
+ * {@link KnownScriptOutputStreamType} can be used interchangeably with ScriptOutputStreamType,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Enabled** \
- * **Disabled**
+ * **Information** \
+ * **Warning** \
+ * **Output** \
+ * **Error**
  */
-export type VirtualMachineRestrictMovementState = string;
-
-/** Known values of {@link PlacementPolicyType} that the service accepts. */
-export enum KnownPlacementPolicyType {
-  /** VmVm */
-  VmVm = "VmVm",
-  /** VmHost */
-  VmHost = "VmHost"
-}
-
-/**
- * Defines values for PlacementPolicyType. \
- * {@link KnownPlacementPolicyType} can be used interchangeably with PlacementPolicyType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **VmVm** \
- * **VmHost**
- */
-export type PlacementPolicyType = string;
-
-/** Known values of {@link PlacementPolicyState} that the service accepts. */
-export enum KnownPlacementPolicyState {
-  /** Enabled */
-  Enabled = "Enabled",
-  /** Disabled */
-  Disabled = "Disabled"
-}
-
-/**
- * Defines values for PlacementPolicyState. \
- * {@link KnownPlacementPolicyState} can be used interchangeably with PlacementPolicyState,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Enabled** \
- * **Disabled**
- */
-export type PlacementPolicyState = string;
-
-/** Known values of {@link PlacementPolicyProvisioningState} that the service accepts. */
-export enum KnownPlacementPolicyProvisioningState {
-  /** Succeeded */
-  Succeeded = "Succeeded",
-  /** Failed */
-  Failed = "Failed",
-  /** Building */
-  Building = "Building",
-  /** Deleting */
-  Deleting = "Deleting",
-  /** Updating */
-  Updating = "Updating",
-  /** Canceled */
-  Canceled = "Canceled"
-}
-
-/**
- * Defines values for PlacementPolicyProvisioningState. \
- * {@link KnownPlacementPolicyProvisioningState} can be used interchangeably with PlacementPolicyProvisioningState,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Succeeded** \
- * **Failed** \
- * **Building** \
- * **Deleting** \
- * **Updating** \
- * **Canceled**
- */
-export type PlacementPolicyProvisioningState = string;
-
-/** Known values of {@link AffinityStrength} that the service accepts. */
-export enum KnownAffinityStrength {
-  /** Should */
-  Should = "Should",
-  /** Must */
-  Must = "Must"
-}
-
-/**
- * Defines values for AffinityStrength. \
- * {@link KnownAffinityStrength} can be used interchangeably with AffinityStrength,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Should** \
- * **Must**
- */
-export type AffinityStrength = string;
-
-/** Known values of {@link AzureHybridBenefitType} that the service accepts. */
-export enum KnownAzureHybridBenefitType {
-  /** SqlHost */
-  SqlHost = "SqlHost",
-  /** None */
-  None = "None"
-}
-
-/**
- * Defines values for AzureHybridBenefitType. \
- * {@link KnownAzureHybridBenefitType} can be used interchangeably with AzureHybridBenefitType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **SqlHost** \
- * **None**
- */
-export type AzureHybridBenefitType = string;
+export type ScriptOutputStreamType = string;
 
 /** Known values of {@link ScriptParameterTypes} that the service accepts. */
 export enum KnownScriptParameterTypes {
@@ -2693,6 +2804,378 @@ export enum KnownOptionalParamEnum {
  */
 export type OptionalParamEnum = string;
 
+/** Known values of {@link SegmentStatusEnum} that the service accepts. */
+export enum KnownSegmentStatusEnum {
+  /** Success */
+  Success = "SUCCESS",
+  /** Failure */
+  Failure = "FAILURE"
+}
+
+/**
+ * Defines values for SegmentStatusEnum. \
+ * {@link KnownSegmentStatusEnum} can be used interchangeably with SegmentStatusEnum,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **SUCCESS** \
+ * **FAILURE**
+ */
+export type SegmentStatusEnum = string;
+
+/** Known values of {@link WorkloadNetworkSegmentProvisioningState} that the service accepts. */
+export enum KnownWorkloadNetworkSegmentProvisioningState {
+  /** Succeeded */
+  Succeeded = "Succeeded",
+  /** Failed */
+  Failed = "Failed",
+  /** Building */
+  Building = "Building",
+  /** Deleting */
+  Deleting = "Deleting",
+  /** Updating */
+  Updating = "Updating",
+  /** Canceled */
+  Canceled = "Canceled"
+}
+
+/**
+ * Defines values for WorkloadNetworkSegmentProvisioningState. \
+ * {@link KnownWorkloadNetworkSegmentProvisioningState} can be used interchangeably with WorkloadNetworkSegmentProvisioningState,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Succeeded** \
+ * **Failed** \
+ * **Building** \
+ * **Deleting** \
+ * **Updating** \
+ * **Canceled**
+ */
+export type WorkloadNetworkSegmentProvisioningState = string;
+
+/** Known values of {@link VMTypeEnum} that the service accepts. */
+export enum KnownVMTypeEnum {
+  /** Regular */
+  Regular = "REGULAR",
+  /** Edge */
+  Edge = "EDGE",
+  /** Service */
+  Service = "SERVICE"
+}
+
+/**
+ * Defines values for VMTypeEnum. \
+ * {@link KnownVMTypeEnum} can be used interchangeably with VMTypeEnum,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **REGULAR** \
+ * **EDGE** \
+ * **SERVICE**
+ */
+export type VMTypeEnum = string;
+
+/** Known values of {@link VMGroupStatusEnum} that the service accepts. */
+export enum KnownVMGroupStatusEnum {
+  /** Success */
+  Success = "SUCCESS",
+  /** Failure */
+  Failure = "FAILURE"
+}
+
+/**
+ * Defines values for VMGroupStatusEnum. \
+ * {@link KnownVMGroupStatusEnum} can be used interchangeably with VMGroupStatusEnum,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **SUCCESS** \
+ * **FAILURE**
+ */
+export type VMGroupStatusEnum = string;
+
+/** Known values of {@link WorkloadNetworkVMGroupProvisioningState} that the service accepts. */
+export enum KnownWorkloadNetworkVMGroupProvisioningState {
+  /** Succeeded */
+  Succeeded = "Succeeded",
+  /** Failed */
+  Failed = "Failed",
+  /** Building */
+  Building = "Building",
+  /** Deleting */
+  Deleting = "Deleting",
+  /** Updating */
+  Updating = "Updating",
+  /** Canceled */
+  Canceled = "Canceled"
+}
+
+/**
+ * Defines values for WorkloadNetworkVMGroupProvisioningState. \
+ * {@link KnownWorkloadNetworkVMGroupProvisioningState} can be used interchangeably with WorkloadNetworkVMGroupProvisioningState,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Succeeded** \
+ * **Failed** \
+ * **Building** \
+ * **Deleting** \
+ * **Updating** \
+ * **Canceled**
+ */
+export type WorkloadNetworkVMGroupProvisioningState = string;
+
+/** Known values of {@link WorkloadNetworkName} that the service accepts. */
+export enum KnownWorkloadNetworkName {
+  /** Default */
+  Default = "default"
+}
+
+/**
+ * Defines values for WorkloadNetworkName. \
+ * {@link KnownWorkloadNetworkName} can be used interchangeably with WorkloadNetworkName,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **default**
+ */
+export type WorkloadNetworkName = string;
+
+/** Known values of {@link AvailabilityStrategy} that the service accepts. */
+export enum KnownAvailabilityStrategy {
+  /** SingleZone */
+  SingleZone = "SingleZone",
+  /** DualZone */
+  DualZone = "DualZone"
+}
+
+/**
+ * Defines values for AvailabilityStrategy. \
+ * {@link KnownAvailabilityStrategy} can be used interchangeably with AvailabilityStrategy,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **SingleZone** \
+ * **DualZone**
+ */
+export type AvailabilityStrategy = string;
+
+/** Known values of {@link EncryptionState} that the service accepts. */
+export enum KnownEncryptionState {
+  /** Enabled */
+  Enabled = "Enabled",
+  /** Disabled */
+  Disabled = "Disabled"
+}
+
+/**
+ * Defines values for EncryptionState. \
+ * {@link KnownEncryptionState} can be used interchangeably with EncryptionState,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Enabled** \
+ * **Disabled**
+ */
+export type EncryptionState = string;
+
+/** Known values of {@link EncryptionKeyStatus} that the service accepts. */
+export enum KnownEncryptionKeyStatus {
+  /** Connected */
+  Connected = "Connected",
+  /** AccessDenied */
+  AccessDenied = "AccessDenied"
+}
+
+/**
+ * Defines values for EncryptionKeyStatus. \
+ * {@link KnownEncryptionKeyStatus} can be used interchangeably with EncryptionKeyStatus,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Connected** \
+ * **AccessDenied**
+ */
+export type EncryptionKeyStatus = string;
+
+/** Known values of {@link EncryptionVersionType} that the service accepts. */
+export enum KnownEncryptionVersionType {
+  /** Fixed */
+  Fixed = "Fixed",
+  /** AutoDetected */
+  AutoDetected = "AutoDetected"
+}
+
+/**
+ * Defines values for EncryptionVersionType. \
+ * {@link KnownEncryptionVersionType} can be used interchangeably with EncryptionVersionType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Fixed** \
+ * **AutoDetected**
+ */
+export type EncryptionVersionType = string;
+
+/** Known values of {@link SslEnum} that the service accepts. */
+export enum KnownSslEnum {
+  /** Enabled */
+  Enabled = "Enabled",
+  /** Disabled */
+  Disabled = "Disabled"
+}
+
+/**
+ * Defines values for SslEnum. \
+ * {@link KnownSslEnum} can be used interchangeably with SslEnum,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Enabled** \
+ * **Disabled**
+ */
+export type SslEnum = string;
+
+/** Known values of {@link ResourceIdentityType} that the service accepts. */
+export enum KnownResourceIdentityType {
+  /** SystemAssigned */
+  SystemAssigned = "SystemAssigned",
+  /** None */
+  None = "None"
+}
+
+/**
+ * Defines values for ResourceIdentityType. \
+ * {@link KnownResourceIdentityType} can be used interchangeably with ResourceIdentityType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **SystemAssigned** \
+ * **None**
+ */
+export type ResourceIdentityType = string;
+
+/** Known values of {@link AffinityType} that the service accepts. */
+export enum KnownAffinityType {
+  /** Affinity */
+  Affinity = "Affinity",
+  /** AntiAffinity */
+  AntiAffinity = "AntiAffinity"
+}
+
+/**
+ * Defines values for AffinityType. \
+ * {@link KnownAffinityType} can be used interchangeably with AffinityType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Affinity** \
+ * **AntiAffinity**
+ */
+export type AffinityType = string;
+
+/** Known values of {@link AffinityStrength} that the service accepts. */
+export enum KnownAffinityStrength {
+  /** Should */
+  Should = "Should",
+  /** Must */
+  Must = "Must"
+}
+
+/**
+ * Defines values for AffinityStrength. \
+ * {@link KnownAffinityStrength} can be used interchangeably with AffinityStrength,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Should** \
+ * **Must**
+ */
+export type AffinityStrength = string;
+
+/** Known values of {@link AzureHybridBenefitType} that the service accepts. */
+export enum KnownAzureHybridBenefitType {
+  /** SqlHost */
+  SqlHost = "SqlHost",
+  /** None */
+  None = "None"
+}
+
+/**
+ * Defines values for AzureHybridBenefitType. \
+ * {@link KnownAzureHybridBenefitType} can be used interchangeably with AzureHybridBenefitType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **SqlHost** \
+ * **None**
+ */
+export type AzureHybridBenefitType = string;
+
+/** Known values of {@link AddonType} that the service accepts. */
+export enum KnownAddonType {
+  /** SRM */
+  SRM = "SRM",
+  /** VR */
+  VR = "VR",
+  /** HCX */
+  HCX = "HCX",
+  /** Arc */
+  Arc = "Arc"
+}
+
+/**
+ * Defines values for AddonType. \
+ * {@link KnownAddonType} can be used interchangeably with AddonType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **SRM** \
+ * **VR** \
+ * **HCX** \
+ * **Arc**
+ */
+export type AddonType = string;
+
+/** Known values of {@link DhcpTypeEnum} that the service accepts. */
+export enum KnownDhcpTypeEnum {
+  /** Server */
+  Server = "SERVER",
+  /** Relay */
+  Relay = "RELAY"
+}
+
+/**
+ * Defines values for DhcpTypeEnum. \
+ * {@link KnownDhcpTypeEnum} can be used interchangeably with DhcpTypeEnum,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **SERVER** \
+ * **RELAY**
+ */
+export type DhcpTypeEnum = string;
+
+/** Known values of {@link InternetEnum} that the service accepts. */
+export enum KnownInternetEnum {
+  /** Enabled */
+  Enabled = "Enabled",
+  /** Disabled */
+  Disabled = "Disabled"
+}
+
+/**
+ * Defines values for InternetEnum. \
+ * {@link KnownInternetEnum} can be used interchangeably with InternetEnum,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Enabled** \
+ * **Disabled**
+ */
+export type InternetEnum = string;
+
+/** Known values of {@link PlacementPolicyType} that the service accepts. */
+export enum KnownPlacementPolicyType {
+  /** VmVm */
+  VmVm = "VmVm",
+  /** VmHost */
+  VmHost = "VmHost"
+}
+
+/**
+ * Defines values for PlacementPolicyType. \
+ * {@link KnownPlacementPolicyType} can be used interchangeably with PlacementPolicyType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **VmVm** \
+ * **VmHost**
+ */
+export type PlacementPolicyType = string;
+
 /** Known values of {@link ScriptExecutionParameterType} that the service accepts. */
 export enum KnownScriptExecutionParameterType {
   /** Value */
@@ -2714,128 +3197,82 @@ export enum KnownScriptExecutionParameterType {
  */
 export type ScriptExecutionParameterType = string;
 
-/** Known values of {@link ScriptExecutionProvisioningState} that the service accepts. */
-export enum KnownScriptExecutionProvisioningState {
-  /** Pending */
-  Pending = "Pending",
-  /** Running */
-  Running = "Running",
-  /** Succeeded */
-  Succeeded = "Succeeded",
-  /** Failed */
-  Failed = "Failed",
-  /** Cancelling */
-  Cancelling = "Cancelling",
-  /** Cancelled */
-  Cancelled = "Cancelled",
-  /** Deleting */
-  Deleting = "Deleting",
-  /** Canceled */
-  Canceled = "Canceled"
+/** Known values of {@link Versions} that the service accepts. */
+export enum KnownVersions {
+  /** V20230301 */
+  V20230301 = "2023-03-01"
 }
 
 /**
- * Defines values for ScriptExecutionProvisioningState. \
- * {@link KnownScriptExecutionProvisioningState} can be used interchangeably with ScriptExecutionProvisioningState,
+ * Defines values for Versions. \
+ * {@link KnownVersions} can be used interchangeably with Versions,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Pending** \
- * **Running** \
- * **Succeeded** \
- * **Failed** \
- * **Cancelling** \
- * **Cancelled** \
- * **Deleting** \
- * **Canceled**
+ * **2023-03-01**
  */
-export type ScriptExecutionProvisioningState = string;
+export type Versions = string;
 
-/** Known values of {@link ScriptOutputStreamType} that the service accepts. */
-export enum KnownScriptOutputStreamType {
-  /** Information */
-  Information = "Information",
-  /** Warning */
-  Warning = "Warning",
-  /** Output */
-  Output = "Output",
-  /** Error */
-  Error = "Error"
+/** Known values of {@link WorkloadNetworkNameAutoGenerated} that the service accepts. */
+export enum KnownWorkloadNetworkNameAutoGenerated {
+  /** Default */
+  Default = "default"
 }
 
 /**
- * Defines values for ScriptOutputStreamType. \
- * {@link KnownScriptOutputStreamType} can be used interchangeably with ScriptOutputStreamType,
+ * Defines values for WorkloadNetworkNameAutoGenerated. \
+ * {@link KnownWorkloadNetworkNameAutoGenerated} can be used interchangeably with WorkloadNetworkNameAutoGenerated,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Information** \
- * **Warning** \
- * **Output** \
- * **Error**
+ * **default**
  */
-export type ScriptOutputStreamType = string;
-
-/** Known values of {@link AffinityType} that the service accepts. */
-export enum KnownAffinityType {
-  /** Affinity */
-  Affinity = "Affinity",
-  /** AntiAffinity */
-  AntiAffinity = "AntiAffinity"
-}
-
-/**
- * Defines values for AffinityType. \
- * {@link KnownAffinityType} can be used interchangeably with AffinityType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Affinity** \
- * **AntiAffinity**
- */
-export type AffinityType = string;
+export type WorkloadNetworkNameAutoGenerated = string;
+/** Defines values for SkuTier. */
+export type SkuTier = "Free" | "Basic" | "Standard" | "Premium";
 
 /** Optional parameters. */
 export interface OperationsListOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
-export type OperationsListResponse = OperationList;
+export type OperationsListResponse = OperationListResult;
 
 /** Optional parameters. */
 export interface OperationsListNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
-export type OperationsListNextResponse = OperationList;
+export type OperationsListNextResponse = OperationListResult;
 
 /** Optional parameters. */
-export interface LocationsCheckTrialAvailabilityOptionalParams
+export interface LocationsOperationsCheckQuotaAvailabilityOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the checkQuotaAvailability operation. */
+export type LocationsOperationsCheckQuotaAvailabilityResponse = Quota;
+
+/** Optional parameters. */
+export interface LocationsOperationsCheckTrialAvailabilityOptionalParams
   extends coreClient.OperationOptions {
   /** The sku to check for trial availability */
   sku?: Sku;
 }
 
 /** Contains response data for the checkTrialAvailability operation. */
-export type LocationsCheckTrialAvailabilityResponse = Trial;
-
-/** Optional parameters. */
-export interface LocationsCheckQuotaAvailabilityOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the checkQuotaAvailability operation. */
-export type LocationsCheckQuotaAvailabilityResponse = Quota;
-
-/** Optional parameters. */
-export interface PrivateCloudsListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type PrivateCloudsListResponse = PrivateCloudList;
+export type LocationsOperationsCheckTrialAvailabilityResponse = Trial;
 
 /** Optional parameters. */
 export interface PrivateCloudsListInSubscriptionOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listInSubscription operation. */
-export type PrivateCloudsListInSubscriptionResponse = PrivateCloudList;
+export type PrivateCloudsListInSubscriptionResponse = PrivateCloudListResult;
+
+/** Optional parameters. */
+export interface PrivateCloudsListByResourceGroupOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroup operation. */
+export type PrivateCloudsListByResourceGroupResponse = PrivateCloudListResult;
 
 /** Optional parameters. */
 export interface PrivateCloudsGetOptionalParams
@@ -2878,13 +3315,11 @@ export interface PrivateCloudsDeleteOptionalParams
 }
 
 /** Optional parameters. */
-export interface PrivateCloudsRotateVcenterPasswordOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
+export interface PrivateCloudsListAdminCredentialsOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listAdminCredentials operation. */
+export type PrivateCloudsListAdminCredentialsResponse = AdminCredentials;
 
 /** Optional parameters. */
 export interface PrivateCloudsRotateNsxtPasswordOptionalParams
@@ -2895,33 +3330,166 @@ export interface PrivateCloudsRotateNsxtPasswordOptionalParams
   resumeFrom?: string;
 }
 
-/** Optional parameters. */
-export interface PrivateCloudsListAdminCredentialsOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listAdminCredentials operation. */
-export type PrivateCloudsListAdminCredentialsResponse = AdminCredentials;
+/** Contains response data for the rotateNsxtPassword operation. */
+export type PrivateCloudsRotateNsxtPasswordResponse = PrivateCloudsRotateNsxtPasswordHeaders;
 
 /** Optional parameters. */
-export interface PrivateCloudsListNextOptionalParams
-  extends coreClient.OperationOptions {}
+export interface PrivateCloudsRotateVcenterPasswordOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
 
-/** Contains response data for the listNext operation. */
-export type PrivateCloudsListNextResponse = PrivateCloudList;
+/** Contains response data for the rotateVcenterPassword operation. */
+export type PrivateCloudsRotateVcenterPasswordResponse = PrivateCloudsRotateVcenterPasswordHeaders;
 
 /** Optional parameters. */
 export interface PrivateCloudsListInSubscriptionNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listInSubscriptionNext operation. */
-export type PrivateCloudsListInSubscriptionNextResponse = PrivateCloudList;
+export type PrivateCloudsListInSubscriptionNextResponse = PrivateCloudListResult;
 
 /** Optional parameters. */
-export interface ClustersListOptionalParams
+export interface PrivateCloudsListByResourceGroupNextOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the list operation. */
-export type ClustersListResponse = ClusterList;
+/** Contains response data for the listByResourceGroupNext operation. */
+export type PrivateCloudsListByResourceGroupNextResponse = PrivateCloudListResult;
+
+/** Optional parameters. */
+export interface AddonsListByPrivateCloudOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloud operation. */
+export type AddonsListByPrivateCloudResponse = AddonListResult;
+
+/** Optional parameters. */
+export interface AddonsGetOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type AddonsGetResponse = Addon;
+
+/** Optional parameters. */
+export interface AddonsCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createOrUpdate operation. */
+export type AddonsCreateOrUpdateResponse = Addon;
+
+/** Optional parameters. */
+export interface AddonsDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface AddonsListByPrivateCloudNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloudNext operation. */
+export type AddonsListByPrivateCloudNextResponse = AddonListResult;
+
+/** Optional parameters. */
+export interface ExpressRouteAuthorizationsListByPrivateCloudOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloud operation. */
+export type ExpressRouteAuthorizationsListByPrivateCloudResponse = ExpressRouteAuthorizationListResult;
+
+/** Optional parameters. */
+export interface ExpressRouteAuthorizationsGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type ExpressRouteAuthorizationsGetResponse = ExpressRouteAuthorization;
+
+/** Optional parameters. */
+export interface ExpressRouteAuthorizationsCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createOrUpdate operation. */
+export type ExpressRouteAuthorizationsCreateOrUpdateResponse = ExpressRouteAuthorization;
+
+/** Optional parameters. */
+export interface ExpressRouteAuthorizationsDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface ExpressRouteAuthorizationsListByPrivateCloudNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloudNext operation. */
+export type ExpressRouteAuthorizationsListByPrivateCloudNextResponse = ExpressRouteAuthorizationListResult;
+
+/** Optional parameters. */
+export interface CloudLinksListByPrivateCloudOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloud operation. */
+export type CloudLinksListByPrivateCloudResponse = CloudLinkListResult;
+
+/** Optional parameters. */
+export interface CloudLinksGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type CloudLinksGetResponse = CloudLink;
+
+/** Optional parameters. */
+export interface CloudLinksCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createOrUpdate operation. */
+export type CloudLinksCreateOrUpdateResponse = CloudLink;
+
+/** Optional parameters. */
+export interface CloudLinksDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface CloudLinksListByPrivateCloudNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloudNext operation. */
+export type CloudLinksListByPrivateCloudNextResponse = CloudLinkListResult;
+
+/** Optional parameters. */
+export interface ClustersListByPrivateCloudOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloud operation. */
+export type ClustersListByPrivateCloudResponse = ClusterListResult;
 
 /** Optional parameters. */
 export interface ClustersGetOptionalParams
@@ -2971,18 +3539,18 @@ export interface ClustersListZonesOptionalParams
 export type ClustersListZonesResponse = ClusterZoneList;
 
 /** Optional parameters. */
-export interface ClustersListNextOptionalParams
+export interface ClustersListByPrivateCloudNextOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the listNext operation. */
-export type ClustersListNextResponse = ClusterList;
+/** Contains response data for the listByPrivateCloudNext operation. */
+export type ClustersListByPrivateCloudNextResponse = ClusterListResult;
 
 /** Optional parameters. */
-export interface DatastoresListOptionalParams
+export interface DatastoresListByClusterOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the list operation. */
-export type DatastoresListResponse = DatastoreList;
+/** Contains response data for the listByCluster operation. */
+export type DatastoresListByClusterResponse = DatastoreListResult;
 
 /** Optional parameters. */
 export interface DatastoresGetOptionalParams
@@ -3013,675 +3581,18 @@ export interface DatastoresDeleteOptionalParams
 }
 
 /** Optional parameters. */
-export interface DatastoresListNextOptionalParams
+export interface DatastoresListByClusterNextOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the listNext operation. */
-export type DatastoresListNextResponse = DatastoreList;
+/** Contains response data for the listByClusterNext operation. */
+export type DatastoresListByClusterNextResponse = DatastoreListResult;
 
 /** Optional parameters. */
-export interface HcxEnterpriseSitesListOptionalParams
+export interface PlacementPoliciesListByClusterOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the list operation. */
-export type HcxEnterpriseSitesListResponse = HcxEnterpriseSiteList;
-
-/** Optional parameters. */
-export interface HcxEnterpriseSitesGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type HcxEnterpriseSitesGetResponse = HcxEnterpriseSite;
-
-/** Optional parameters. */
-export interface HcxEnterpriseSitesCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the createOrUpdate operation. */
-export type HcxEnterpriseSitesCreateOrUpdateResponse = HcxEnterpriseSite;
-
-/** Optional parameters. */
-export interface HcxEnterpriseSitesDeleteOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface HcxEnterpriseSitesListNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listNext operation. */
-export type HcxEnterpriseSitesListNextResponse = HcxEnterpriseSiteList;
-
-/** Optional parameters. */
-export interface AuthorizationsListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type AuthorizationsListResponse = ExpressRouteAuthorizationList;
-
-/** Optional parameters. */
-export interface AuthorizationsGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type AuthorizationsGetResponse = ExpressRouteAuthorization;
-
-/** Optional parameters. */
-export interface AuthorizationsCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createOrUpdate operation. */
-export type AuthorizationsCreateOrUpdateResponse = ExpressRouteAuthorization;
-
-/** Optional parameters. */
-export interface AuthorizationsDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface AuthorizationsListNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listNext operation. */
-export type AuthorizationsListNextResponse = ExpressRouteAuthorizationList;
-
-/** Optional parameters. */
-export interface GlobalReachConnectionsListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type GlobalReachConnectionsListResponse = GlobalReachConnectionList;
-
-/** Optional parameters. */
-export interface GlobalReachConnectionsGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type GlobalReachConnectionsGetResponse = GlobalReachConnection;
-
-/** Optional parameters. */
-export interface GlobalReachConnectionsCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createOrUpdate operation. */
-export type GlobalReachConnectionsCreateOrUpdateResponse = GlobalReachConnection;
-
-/** Optional parameters. */
-export interface GlobalReachConnectionsDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface GlobalReachConnectionsListNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listNext operation. */
-export type GlobalReachConnectionsListNextResponse = GlobalReachConnectionList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type WorkloadNetworksGetResponse = WorkloadNetwork;
-
-/** Optional parameters. */
-export interface WorkloadNetworksListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type WorkloadNetworksListResponse = WorkloadNetworkList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksListSegmentsOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listSegments operation. */
-export type WorkloadNetworksListSegmentsResponse = WorkloadNetworkSegmentsList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksGetSegmentOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getSegment operation. */
-export type WorkloadNetworksGetSegmentResponse = WorkloadNetworkSegment;
-
-/** Optional parameters. */
-export interface WorkloadNetworksCreateSegmentsOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createSegments operation. */
-export type WorkloadNetworksCreateSegmentsResponse = WorkloadNetworkSegment;
-
-/** Optional parameters. */
-export interface WorkloadNetworksUpdateSegmentsOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the updateSegments operation. */
-export type WorkloadNetworksUpdateSegmentsResponse = WorkloadNetworkSegment;
-
-/** Optional parameters. */
-export interface WorkloadNetworksDeleteSegmentOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface WorkloadNetworksListDhcpOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listDhcp operation. */
-export type WorkloadNetworksListDhcpResponse = WorkloadNetworkDhcpList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksGetDhcpOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getDhcp operation. */
-export type WorkloadNetworksGetDhcpResponse = WorkloadNetworkDhcp;
-
-/** Optional parameters. */
-export interface WorkloadNetworksCreateDhcpOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createDhcp operation. */
-export type WorkloadNetworksCreateDhcpResponse = WorkloadNetworkDhcp;
-
-/** Optional parameters. */
-export interface WorkloadNetworksUpdateDhcpOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the updateDhcp operation. */
-export type WorkloadNetworksUpdateDhcpResponse = WorkloadNetworkDhcp;
-
-/** Optional parameters. */
-export interface WorkloadNetworksDeleteDhcpOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface WorkloadNetworksListGatewaysOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listGateways operation. */
-export type WorkloadNetworksListGatewaysResponse = WorkloadNetworkGatewayList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksGetGatewayOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getGateway operation. */
-export type WorkloadNetworksGetGatewayResponse = WorkloadNetworkGateway;
-
-/** Optional parameters. */
-export interface WorkloadNetworksListPortMirroringOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listPortMirroring operation. */
-export type WorkloadNetworksListPortMirroringResponse = WorkloadNetworkPortMirroringList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksGetPortMirroringOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getPortMirroring operation. */
-export type WorkloadNetworksGetPortMirroringResponse = WorkloadNetworkPortMirroring;
-
-/** Optional parameters. */
-export interface WorkloadNetworksCreatePortMirroringOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createPortMirroring operation. */
-export type WorkloadNetworksCreatePortMirroringResponse = WorkloadNetworkPortMirroring;
-
-/** Optional parameters. */
-export interface WorkloadNetworksUpdatePortMirroringOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the updatePortMirroring operation. */
-export type WorkloadNetworksUpdatePortMirroringResponse = WorkloadNetworkPortMirroring;
-
-/** Optional parameters. */
-export interface WorkloadNetworksDeletePortMirroringOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface WorkloadNetworksListVMGroupsOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listVMGroups operation. */
-export type WorkloadNetworksListVMGroupsResponse = WorkloadNetworkVMGroupsList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksGetVMGroupOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getVMGroup operation. */
-export type WorkloadNetworksGetVMGroupResponse = WorkloadNetworkVMGroup;
-
-/** Optional parameters. */
-export interface WorkloadNetworksCreateVMGroupOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createVMGroup operation. */
-export type WorkloadNetworksCreateVMGroupResponse = WorkloadNetworkVMGroup;
-
-/** Optional parameters. */
-export interface WorkloadNetworksUpdateVMGroupOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the updateVMGroup operation. */
-export type WorkloadNetworksUpdateVMGroupResponse = WorkloadNetworkVMGroup;
-
-/** Optional parameters. */
-export interface WorkloadNetworksDeleteVMGroupOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface WorkloadNetworksListVirtualMachinesOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listVirtualMachines operation. */
-export type WorkloadNetworksListVirtualMachinesResponse = WorkloadNetworkVirtualMachinesList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksGetVirtualMachineOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getVirtualMachine operation. */
-export type WorkloadNetworksGetVirtualMachineResponse = WorkloadNetworkVirtualMachine;
-
-/** Optional parameters. */
-export interface WorkloadNetworksListDnsServicesOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listDnsServices operation. */
-export type WorkloadNetworksListDnsServicesResponse = WorkloadNetworkDnsServicesList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksGetDnsServiceOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getDnsService operation. */
-export type WorkloadNetworksGetDnsServiceResponse = WorkloadNetworkDnsService;
-
-/** Optional parameters. */
-export interface WorkloadNetworksCreateDnsServiceOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createDnsService operation. */
-export type WorkloadNetworksCreateDnsServiceResponse = WorkloadNetworkDnsService;
-
-/** Optional parameters. */
-export interface WorkloadNetworksUpdateDnsServiceOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the updateDnsService operation. */
-export type WorkloadNetworksUpdateDnsServiceResponse = WorkloadNetworkDnsService;
-
-/** Optional parameters. */
-export interface WorkloadNetworksDeleteDnsServiceOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface WorkloadNetworksListDnsZonesOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listDnsZones operation. */
-export type WorkloadNetworksListDnsZonesResponse = WorkloadNetworkDnsZonesList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksGetDnsZoneOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getDnsZone operation. */
-export type WorkloadNetworksGetDnsZoneResponse = WorkloadNetworkDnsZone;
-
-/** Optional parameters. */
-export interface WorkloadNetworksCreateDnsZoneOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createDnsZone operation. */
-export type WorkloadNetworksCreateDnsZoneResponse = WorkloadNetworkDnsZone;
-
-/** Optional parameters. */
-export interface WorkloadNetworksUpdateDnsZoneOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the updateDnsZone operation. */
-export type WorkloadNetworksUpdateDnsZoneResponse = WorkloadNetworkDnsZone;
-
-/** Optional parameters. */
-export interface WorkloadNetworksDeleteDnsZoneOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface WorkloadNetworksListPublicIPsOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listPublicIPs operation. */
-export type WorkloadNetworksListPublicIPsResponse = WorkloadNetworkPublicIPsList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksGetPublicIPOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getPublicIP operation. */
-export type WorkloadNetworksGetPublicIPResponse = WorkloadNetworkPublicIP;
-
-/** Optional parameters. */
-export interface WorkloadNetworksCreatePublicIPOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createPublicIP operation. */
-export type WorkloadNetworksCreatePublicIPResponse = WorkloadNetworkPublicIP;
-
-/** Optional parameters. */
-export interface WorkloadNetworksDeletePublicIPOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface WorkloadNetworksListNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listNext operation. */
-export type WorkloadNetworksListNextResponse = WorkloadNetworkList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksListSegmentsNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listSegmentsNext operation. */
-export type WorkloadNetworksListSegmentsNextResponse = WorkloadNetworkSegmentsList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksListDhcpNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listDhcpNext operation. */
-export type WorkloadNetworksListDhcpNextResponse = WorkloadNetworkDhcpList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksListGatewaysNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listGatewaysNext operation. */
-export type WorkloadNetworksListGatewaysNextResponse = WorkloadNetworkGatewayList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksListPortMirroringNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listPortMirroringNext operation. */
-export type WorkloadNetworksListPortMirroringNextResponse = WorkloadNetworkPortMirroringList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksListVMGroupsNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listVMGroupsNext operation. */
-export type WorkloadNetworksListVMGroupsNextResponse = WorkloadNetworkVMGroupsList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksListVirtualMachinesNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listVirtualMachinesNext operation. */
-export type WorkloadNetworksListVirtualMachinesNextResponse = WorkloadNetworkVirtualMachinesList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksListDnsServicesNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listDnsServicesNext operation. */
-export type WorkloadNetworksListDnsServicesNextResponse = WorkloadNetworkDnsServicesList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksListDnsZonesNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listDnsZonesNext operation. */
-export type WorkloadNetworksListDnsZonesNextResponse = WorkloadNetworkDnsZonesList;
-
-/** Optional parameters. */
-export interface WorkloadNetworksListPublicIPsNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listPublicIPsNext operation. */
-export type WorkloadNetworksListPublicIPsNextResponse = WorkloadNetworkPublicIPsList;
-
-/** Optional parameters. */
-export interface CloudLinksListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type CloudLinksListResponse = CloudLinkList;
-
-/** Optional parameters. */
-export interface CloudLinksGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type CloudLinksGetResponse = CloudLink;
-
-/** Optional parameters. */
-export interface CloudLinksCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createOrUpdate operation. */
-export type CloudLinksCreateOrUpdateResponse = CloudLink;
-
-/** Optional parameters. */
-export interface CloudLinksDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface CloudLinksListNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listNext operation. */
-export type CloudLinksListNextResponse = CloudLinkList;
-
-/** Optional parameters. */
-export interface AddonsListOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type AddonsListResponse = AddonList;
-
-/** Optional parameters. */
-export interface AddonsGetOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type AddonsGetResponse = Addon;
-
-/** Optional parameters. */
-export interface AddonsCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createOrUpdate operation. */
-export type AddonsCreateOrUpdateResponse = Addon;
-
-/** Optional parameters. */
-export interface AddonsDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface AddonsListNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listNext operation. */
-export type AddonsListNextResponse = AddonList;
-
-/** Optional parameters. */
-export interface VirtualMachinesListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type VirtualMachinesListResponse = VirtualMachinesList;
-
-/** Optional parameters. */
-export interface VirtualMachinesGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type VirtualMachinesGetResponse = VirtualMachine;
-
-/** Optional parameters. */
-export interface VirtualMachinesRestrictMovementOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
-export interface VirtualMachinesListNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listNext operation. */
-export type VirtualMachinesListNextResponse = VirtualMachinesList;
-
-/** Optional parameters. */
-export interface PlacementPoliciesListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type PlacementPoliciesListResponse = PlacementPoliciesList;
+/** Contains response data for the listByCluster operation. */
+export type PlacementPoliciesListByClusterResponse = PlacementPolicyListResult;
 
 /** Optional parameters. */
 export interface PlacementPoliciesGetOptionalParams
@@ -3724,60 +3635,404 @@ export interface PlacementPoliciesDeleteOptionalParams
 }
 
 /** Optional parameters. */
-export interface PlacementPoliciesListNextOptionalParams
+export interface PlacementPoliciesListByClusterNextOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the listNext operation. */
-export type PlacementPoliciesListNextResponse = PlacementPoliciesList;
+/** Contains response data for the listByClusterNext operation. */
+export type PlacementPoliciesListByClusterNextResponse = PlacementPolicyListResult;
 
 /** Optional parameters. */
-export interface ScriptPackagesListOptionalParams
+export interface VirtualMachinesListByClusterOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the list operation. */
-export type ScriptPackagesListResponse = ScriptPackagesList;
+/** Contains response data for the listByCluster operation. */
+export type VirtualMachinesListByClusterResponse = VirtualMachineListResult;
 
 /** Optional parameters. */
-export interface ScriptPackagesGetOptionalParams
+export interface VirtualMachinesGetOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
-export type ScriptPackagesGetResponse = ScriptPackage;
+export type VirtualMachinesGetResponse = VirtualMachine;
 
 /** Optional parameters. */
-export interface ScriptPackagesListNextOptionalParams
+export interface VirtualMachinesRestrictMovementOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the restrictMovement operation. */
+export type VirtualMachinesRestrictMovementResponse = VirtualMachinesRestrictMovementHeaders;
+
+/** Optional parameters. */
+export interface VirtualMachinesListByClusterNextOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the listNext operation. */
-export type ScriptPackagesListNextResponse = ScriptPackagesList;
+/** Contains response data for the listByClusterNext operation. */
+export type VirtualMachinesListByClusterNextResponse = VirtualMachineListResult;
 
 /** Optional parameters. */
-export interface ScriptCmdletsListOptionalParams
+export interface WorkloadNetworkDhcpsListByPrivateCloudOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the list operation. */
-export type ScriptCmdletsListResponse = ScriptCmdletsList;
+/** Contains response data for the listByPrivateCloud operation. */
+export type WorkloadNetworkDhcpsListByPrivateCloudResponse = WorkloadNetworkDhcpListResult;
 
 /** Optional parameters. */
-export interface ScriptCmdletsGetOptionalParams
+export interface WorkloadNetworkDhcpsGetDhcpOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getDhcp operation. */
+export type WorkloadNetworkDhcpsGetDhcpResponse = WorkloadNetworkDhcp;
+
+/** Optional parameters. */
+export interface WorkloadNetworkDhcpsCreateDhcpOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createDhcp operation. */
+export type WorkloadNetworkDhcpsCreateDhcpResponse = WorkloadNetworkDhcp;
+
+/** Optional parameters. */
+export interface WorkloadNetworkDhcpsUpdateDhcpOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the updateDhcp operation. */
+export type WorkloadNetworkDhcpsUpdateDhcpResponse = WorkloadNetworkDhcp;
+
+/** Optional parameters. */
+export interface WorkloadNetworkDhcpsDeleteDhcpOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface WorkloadNetworkDhcpsListByPrivateCloudNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloudNext operation. */
+export type WorkloadNetworkDhcpsListByPrivateCloudNextResponse = WorkloadNetworkDhcpListResult;
+
+/** Optional parameters. */
+export interface WorkloadNetworkDnsServicesListByPrivateCloudOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloud operation. */
+export type WorkloadNetworkDnsServicesListByPrivateCloudResponse = WorkloadNetworkDnsServiceListResult;
+
+/** Optional parameters. */
+export interface WorkloadNetworkDnsServicesGetDnsServiceOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getDnsService operation. */
+export type WorkloadNetworkDnsServicesGetDnsServiceResponse = WorkloadNetworkDnsService;
+
+/** Optional parameters. */
+export interface WorkloadNetworkDnsServicesCreateDnsServiceOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createDnsService operation. */
+export type WorkloadNetworkDnsServicesCreateDnsServiceResponse = WorkloadNetworkDnsService;
+
+/** Optional parameters. */
+export interface WorkloadNetworkDnsServicesUpdateDnsServiceOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the updateDnsService operation. */
+export type WorkloadNetworkDnsServicesUpdateDnsServiceResponse = WorkloadNetworkDnsService;
+
+/** Optional parameters. */
+export interface WorkloadNetworkDnsServicesDeleteDnsServiceOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface WorkloadNetworkDnsServicesListByPrivateCloudNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloudNext operation. */
+export type WorkloadNetworkDnsServicesListByPrivateCloudNextResponse = WorkloadNetworkDnsServiceListResult;
+
+/** Optional parameters. */
+export interface WorkloadNetworkDnsZonesListByPrivateCloudOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloud operation. */
+export type WorkloadNetworkDnsZonesListByPrivateCloudResponse = WorkloadNetworkDnsZoneListResult;
+
+/** Optional parameters. */
+export interface WorkloadNetworkDnsZonesGetDnsZoneOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getDnsZone operation. */
+export type WorkloadNetworkDnsZonesGetDnsZoneResponse = WorkloadNetworkDnsZone;
+
+/** Optional parameters. */
+export interface WorkloadNetworkDnsZonesCreateDnsZoneOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createDnsZone operation. */
+export type WorkloadNetworkDnsZonesCreateDnsZoneResponse = WorkloadNetworkDnsZone;
+
+/** Optional parameters. */
+export interface WorkloadNetworkDnsZonesUpdateDnsZoneOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the updateDnsZone operation. */
+export type WorkloadNetworkDnsZonesUpdateDnsZoneResponse = WorkloadNetworkDnsZone;
+
+/** Optional parameters. */
+export interface WorkloadNetworkDnsZonesDeleteDnsZoneOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface WorkloadNetworkDnsZonesListByPrivateCloudNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloudNext operation. */
+export type WorkloadNetworkDnsZonesListByPrivateCloudNextResponse = WorkloadNetworkDnsZoneListResult;
+
+/** Optional parameters. */
+export interface WorkloadNetworkGatewaysListByPrivateCloudOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloud operation. */
+export type WorkloadNetworkGatewaysListByPrivateCloudResponse = WorkloadNetworkGatewayListResult;
+
+/** Optional parameters. */
+export interface WorkloadNetworkGatewaysGetGatewayOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getGateway operation. */
+export type WorkloadNetworkGatewaysGetGatewayResponse = WorkloadNetworkGateway;
+
+/** Optional parameters. */
+export interface WorkloadNetworkGatewaysListByPrivateCloudNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloudNext operation. */
+export type WorkloadNetworkGatewaysListByPrivateCloudNextResponse = WorkloadNetworkGatewayListResult;
+
+/** Optional parameters. */
+export interface GlobalReachConnectionsListByPrivateCloudOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloud operation. */
+export type GlobalReachConnectionsListByPrivateCloudResponse = GlobalReachConnectionListResult;
+
+/** Optional parameters. */
+export interface GlobalReachConnectionsGetOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
-export type ScriptCmdletsGetResponse = ScriptCmdlet;
+export type GlobalReachConnectionsGetResponse = GlobalReachConnection;
 
 /** Optional parameters. */
-export interface ScriptCmdletsListNextOptionalParams
-  extends coreClient.OperationOptions {}
+export interface GlobalReachConnectionsCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
 
-/** Contains response data for the listNext operation. */
-export type ScriptCmdletsListNextResponse = ScriptCmdletsList;
+/** Contains response data for the createOrUpdate operation. */
+export type GlobalReachConnectionsCreateOrUpdateResponse = GlobalReachConnection;
 
 /** Optional parameters. */
-export interface ScriptExecutionsListOptionalParams
+export interface GlobalReachConnectionsDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface GlobalReachConnectionsListByPrivateCloudNextOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the list operation. */
-export type ScriptExecutionsListResponse = ScriptExecutionsList;
+/** Contains response data for the listByPrivateCloudNext operation. */
+export type GlobalReachConnectionsListByPrivateCloudNextResponse = GlobalReachConnectionListResult;
+
+/** Optional parameters. */
+export interface HcxEnterpriseSitesListByPrivateCloudOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloud operation. */
+export type HcxEnterpriseSitesListByPrivateCloudResponse = HcxEnterpriseSiteListResult;
+
+/** Optional parameters. */
+export interface HcxEnterpriseSitesGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type HcxEnterpriseSitesGetResponse = HcxEnterpriseSite;
+
+/** Optional parameters. */
+export interface HcxEnterpriseSitesCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the createOrUpdate operation. */
+export type HcxEnterpriseSitesCreateOrUpdateResponse = HcxEnterpriseSite;
+
+/** Optional parameters. */
+export interface HcxEnterpriseSitesDeleteOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Optional parameters. */
+export interface HcxEnterpriseSitesListByPrivateCloudNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloudNext operation. */
+export type HcxEnterpriseSitesListByPrivateCloudNextResponse = HcxEnterpriseSiteListResult;
+
+/** Optional parameters. */
+export interface WorkloadNetworkPortMirroringsListByPrivateCloudOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloud operation. */
+export type WorkloadNetworkPortMirroringsListByPrivateCloudResponse = WorkloadNetworkPortMirroringListResult;
+
+/** Optional parameters. */
+export interface WorkloadNetworkPortMirroringsGetPortMirroringOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getPortMirroring operation. */
+export type WorkloadNetworkPortMirroringsGetPortMirroringResponse = WorkloadNetworkPortMirroring;
+
+/** Optional parameters. */
+export interface WorkloadNetworkPortMirroringsCreatePortMirroringOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createPortMirroring operation. */
+export type WorkloadNetworkPortMirroringsCreatePortMirroringResponse = WorkloadNetworkPortMirroring;
+
+/** Optional parameters. */
+export interface WorkloadNetworkPortMirroringsUpdatePortMirroringOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the updatePortMirroring operation. */
+export type WorkloadNetworkPortMirroringsUpdatePortMirroringResponse = WorkloadNetworkPortMirroring;
+
+/** Optional parameters. */
+export interface WorkloadNetworkPortMirroringsDeletePortMirroringOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface WorkloadNetworkPortMirroringsListByPrivateCloudNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloudNext operation. */
+export type WorkloadNetworkPortMirroringsListByPrivateCloudNextResponse = WorkloadNetworkPortMirroringListResult;
+
+/** Optional parameters. */
+export interface WorkloadNetworkPublicIpsListByPrivateCloudOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloud operation. */
+export type WorkloadNetworkPublicIpsListByPrivateCloudResponse = WorkloadNetworkPublicIPListResult;
+
+/** Optional parameters. */
+export interface WorkloadNetworkPublicIpsGetPublicIpOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getPublicIp operation. */
+export type WorkloadNetworkPublicIpsGetPublicIpResponse = WorkloadNetworkPublicIP;
+
+/** Optional parameters. */
+export interface WorkloadNetworkPublicIpsCreatePublicIpOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createPublicIp operation. */
+export type WorkloadNetworkPublicIpsCreatePublicIpResponse = WorkloadNetworkPublicIP;
+
+/** Optional parameters. */
+export interface WorkloadNetworkPublicIpsDeletePublicIpOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface WorkloadNetworkPublicIpsListByPrivateCloudNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloudNext operation. */
+export type WorkloadNetworkPublicIpsListByPrivateCloudNextResponse = WorkloadNetworkPublicIPListResult;
+
+/** Optional parameters. */
+export interface ScriptExecutionsListByPrivateCloudOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloud operation. */
+export type ScriptExecutionsListByPrivateCloudResponse = ScriptExecutionListResult;
 
 /** Optional parameters. */
 export interface ScriptExecutionsGetOptionalParams
@@ -3809,20 +4064,209 @@ export interface ScriptExecutionsDeleteOptionalParams
 
 /** Optional parameters. */
 export interface ScriptExecutionsGetExecutionLogsOptionalParams
-  extends coreClient.OperationOptions {
-  /** Name of the desired output stream to return. If not provided, will return all. An empty array will return nothing */
-  scriptOutputStreamType?: ScriptOutputStreamType[];
-}
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the getExecutionLogs operation. */
 export type ScriptExecutionsGetExecutionLogsResponse = ScriptExecution;
 
 /** Optional parameters. */
-export interface ScriptExecutionsListNextOptionalParams
+export interface ScriptExecutionsListByPrivateCloudNextOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the listNext operation. */
-export type ScriptExecutionsListNextResponse = ScriptExecutionsList;
+/** Contains response data for the listByPrivateCloudNext operation. */
+export type ScriptExecutionsListByPrivateCloudNextResponse = ScriptExecutionListResult;
+
+/** Optional parameters. */
+export interface ScriptPackagesListByPrivateCloudOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloud operation. */
+export type ScriptPackagesListByPrivateCloudResponse = ScriptPackageListResult;
+
+/** Optional parameters. */
+export interface ScriptPackagesGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type ScriptPackagesGetResponse = ScriptPackage;
+
+/** Optional parameters. */
+export interface ScriptPackagesListByPrivateCloudNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloudNext operation. */
+export type ScriptPackagesListByPrivateCloudNextResponse = ScriptPackageListResult;
+
+/** Optional parameters. */
+export interface ScriptCmdletsListByScriptPackageOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByScriptPackage operation. */
+export type ScriptCmdletsListByScriptPackageResponse = ScriptCmdletListResult;
+
+/** Optional parameters. */
+export interface ScriptCmdletsGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type ScriptCmdletsGetResponse = ScriptCmdlet;
+
+/** Optional parameters. */
+export interface ScriptCmdletsListByScriptPackageNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByScriptPackageNext operation. */
+export type ScriptCmdletsListByScriptPackageNextResponse = ScriptCmdletListResult;
+
+/** Optional parameters. */
+export interface WorkloadNetworkSegmentsListByPrivateCloudOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloud operation. */
+export type WorkloadNetworkSegmentsListByPrivateCloudResponse = WorkloadNetworkSegmentListResult;
+
+/** Optional parameters. */
+export interface WorkloadNetworkSegmentsGetSegmentOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getSegment operation. */
+export type WorkloadNetworkSegmentsGetSegmentResponse = WorkloadNetworkSegment;
+
+/** Optional parameters. */
+export interface WorkloadNetworkSegmentsCreateSegmentsOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createSegments operation. */
+export type WorkloadNetworkSegmentsCreateSegmentsResponse = WorkloadNetworkSegment;
+
+/** Optional parameters. */
+export interface WorkloadNetworkSegmentsUpdateSegmentsOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the updateSegments operation. */
+export type WorkloadNetworkSegmentsUpdateSegmentsResponse = WorkloadNetworkSegment;
+
+/** Optional parameters. */
+export interface WorkloadNetworkSegmentsDeleteSegmentOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface WorkloadNetworkSegmentsListByPrivateCloudNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloudNext operation. */
+export type WorkloadNetworkSegmentsListByPrivateCloudNextResponse = WorkloadNetworkSegmentListResult;
+
+/** Optional parameters. */
+export interface WorkloadNetworkVirtualMachinesListByPrivateCloudOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloud operation. */
+export type WorkloadNetworkVirtualMachinesListByPrivateCloudResponse = WorkloadNetworkVirtualMachineListResult;
+
+/** Optional parameters. */
+export interface WorkloadNetworkVirtualMachinesGetVirtualMachineOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getVirtualMachine operation. */
+export type WorkloadNetworkVirtualMachinesGetVirtualMachineResponse = WorkloadNetworkVirtualMachine;
+
+/** Optional parameters. */
+export interface WorkloadNetworkVirtualMachinesListByPrivateCloudNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloudNext operation. */
+export type WorkloadNetworkVirtualMachinesListByPrivateCloudNextResponse = WorkloadNetworkVirtualMachineListResult;
+
+/** Optional parameters. */
+export interface WorkloadNetworkVmGroupsListByPrivateCloudOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloud operation. */
+export type WorkloadNetworkVmGroupsListByPrivateCloudResponse = WorkloadNetworkVMGroupListResult;
+
+/** Optional parameters. */
+export interface WorkloadNetworkVmGroupsGetVmGroupOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getVmGroup operation. */
+export type WorkloadNetworkVmGroupsGetVmGroupResponse = WorkloadNetworkVMGroup;
+
+/** Optional parameters. */
+export interface WorkloadNetworkVmGroupsCreateVmGroupOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createVmGroup operation. */
+export type WorkloadNetworkVmGroupsCreateVmGroupResponse = WorkloadNetworkVMGroup;
+
+/** Optional parameters. */
+export interface WorkloadNetworkVmGroupsUpdateVmGroupOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the updateVmGroup operation. */
+export type WorkloadNetworkVmGroupsUpdateVmGroupResponse = WorkloadNetworkVMGroup;
+
+/** Optional parameters. */
+export interface WorkloadNetworkVmGroupsDeleteVmGroupOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface WorkloadNetworkVmGroupsListByPrivateCloudNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloudNext operation. */
+export type WorkloadNetworkVmGroupsListByPrivateCloudNextResponse = WorkloadNetworkVMGroupListResult;
+
+/** Optional parameters. */
+export interface WorkloadNetworksListByPrivateCloudOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloud operation. */
+export type WorkloadNetworksListByPrivateCloudResponse = WorkloadNetworkListResult;
+
+/** Optional parameters. */
+export interface WorkloadNetworksGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type WorkloadNetworksGetResponse = WorkloadNetwork;
+
+/** Optional parameters. */
+export interface WorkloadNetworksListByPrivateCloudNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByPrivateCloudNext operation. */
+export type WorkloadNetworksListByPrivateCloudNextResponse = WorkloadNetworkListResult;
 
 /** Optional parameters. */
 export interface AzureVMwareSolutionAPIOptionalParams

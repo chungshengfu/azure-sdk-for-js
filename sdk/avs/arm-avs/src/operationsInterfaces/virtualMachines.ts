@@ -10,11 +10,12 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   VirtualMachine,
-  VirtualMachinesListOptionalParams,
+  VirtualMachinesListByClusterOptionalParams,
   VirtualMachinesGetOptionalParams,
   VirtualMachinesGetResponse,
   VirtualMachineRestrictMovement,
-  VirtualMachinesRestrictMovementOptionalParams
+  VirtualMachinesRestrictMovementOptionalParams,
+  VirtualMachinesRestrictMovementResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -27,11 +28,11 @@ export interface VirtualMachines {
    * @param clusterName Name of the cluster in the private cloud
    * @param options The options parameters.
    */
-  list(
+  listByCluster(
     resourceGroupName: string,
     privateCloudName: string,
     clusterName: string,
-    options?: VirtualMachinesListOptionalParams
+    options?: VirtualMachinesListByClusterOptionalParams
   ): PagedAsyncIterableIterator<VirtualMachine>;
   /**
    * Get a virtual machine by id in a private cloud cluster
@@ -54,7 +55,7 @@ export interface VirtualMachines {
    * @param privateCloudName Name of the private cloud
    * @param clusterName Name of the cluster in the private cloud
    * @param virtualMachineId Virtual Machine identifier
-   * @param restrictMovement Whether VM DRS-driven movement is restricted (Enabled) or not (Disabled)
+   * @param body The content of the action request
    * @param options The options parameters.
    */
   beginRestrictMovement(
@@ -62,16 +63,21 @@ export interface VirtualMachines {
     privateCloudName: string,
     clusterName: string,
     virtualMachineId: string,
-    restrictMovement: VirtualMachineRestrictMovement,
+    body: VirtualMachineRestrictMovement,
     options?: VirtualMachinesRestrictMovementOptionalParams
-  ): Promise<SimplePollerLike<OperationState<void>, void>>;
+  ): Promise<
+    SimplePollerLike<
+      OperationState<VirtualMachinesRestrictMovementResponse>,
+      VirtualMachinesRestrictMovementResponse
+    >
+  >;
   /**
    * Enable or disable DRS-driven VM movement restriction
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
    * @param clusterName Name of the cluster in the private cloud
    * @param virtualMachineId Virtual Machine identifier
-   * @param restrictMovement Whether VM DRS-driven movement is restricted (Enabled) or not (Disabled)
+   * @param body The content of the action request
    * @param options The options parameters.
    */
   beginRestrictMovementAndWait(
@@ -79,7 +85,7 @@ export interface VirtualMachines {
     privateCloudName: string,
     clusterName: string,
     virtualMachineId: string,
-    restrictMovement: VirtualMachineRestrictMovement,
+    body: VirtualMachineRestrictMovement,
     options?: VirtualMachinesRestrictMovementOptionalParams
-  ): Promise<void>;
+  ): Promise<VirtualMachinesRestrictMovementResponse>;
 }

@@ -21,9 +21,9 @@ import {
 import { createLroSpec } from "../lroImpl";
 import {
   PlacementPolicy,
-  PlacementPoliciesListNextOptionalParams,
-  PlacementPoliciesListOptionalParams,
-  PlacementPoliciesListResponse,
+  PlacementPoliciesListByClusterNextOptionalParams,
+  PlacementPoliciesListByClusterOptionalParams,
+  PlacementPoliciesListByClusterResponse,
   PlacementPoliciesGetOptionalParams,
   PlacementPoliciesGetResponse,
   PlacementPoliciesCreateOrUpdateOptionalParams,
@@ -32,7 +32,7 @@ import {
   PlacementPoliciesUpdateOptionalParams,
   PlacementPoliciesUpdateResponse,
   PlacementPoliciesDeleteOptionalParams,
-  PlacementPoliciesListNextResponse
+  PlacementPoliciesListByClusterNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -55,13 +55,13 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
    * @param clusterName Name of the cluster in the private cloud
    * @param options The options parameters.
    */
-  public list(
+  public listByCluster(
     resourceGroupName: string,
     privateCloudName: string,
     clusterName: string,
-    options?: PlacementPoliciesListOptionalParams
+    options?: PlacementPoliciesListByClusterOptionalParams
   ): PagedAsyncIterableIterator<PlacementPolicy> {
-    const iter = this.listPagingAll(
+    const iter = this.listByClusterPagingAll(
       resourceGroupName,
       privateCloudName,
       clusterName,
@@ -78,7 +78,7 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
         if (settings?.maxPageSize) {
           throw new Error("maxPageSize is not supported by this operation.");
         }
-        return this.listPagingPage(
+        return this.listByClusterPagingPage(
           resourceGroupName,
           privateCloudName,
           clusterName,
@@ -89,17 +89,17 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
     };
   }
 
-  private async *listPagingPage(
+  private async *listByClusterPagingPage(
     resourceGroupName: string,
     privateCloudName: string,
     clusterName: string,
-    options?: PlacementPoliciesListOptionalParams,
+    options?: PlacementPoliciesListByClusterOptionalParams,
     settings?: PageSettings
   ): AsyncIterableIterator<PlacementPolicy[]> {
-    let result: PlacementPoliciesListResponse;
+    let result: PlacementPoliciesListByClusterResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._list(
+      result = await this._listByCluster(
         resourceGroupName,
         privateCloudName,
         clusterName,
@@ -111,7 +111,7 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
       yield page;
     }
     while (continuationToken) {
-      result = await this._listNext(
+      result = await this._listByClusterNext(
         resourceGroupName,
         privateCloudName,
         clusterName,
@@ -125,13 +125,13 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
     }
   }
 
-  private async *listPagingAll(
+  private async *listByClusterPagingAll(
     resourceGroupName: string,
     privateCloudName: string,
     clusterName: string,
-    options?: PlacementPoliciesListOptionalParams
+    options?: PlacementPoliciesListByClusterOptionalParams
   ): AsyncIterableIterator<PlacementPolicy> {
-    for await (const page of this.listPagingPage(
+    for await (const page of this.listByClusterPagingPage(
       resourceGroupName,
       privateCloudName,
       clusterName,
@@ -148,15 +148,15 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
    * @param clusterName Name of the cluster in the private cloud
    * @param options The options parameters.
    */
-  private _list(
+  private _listByCluster(
     resourceGroupName: string,
     privateCloudName: string,
     clusterName: string,
-    options?: PlacementPoliciesListOptionalParams
-  ): Promise<PlacementPoliciesListResponse> {
+    options?: PlacementPoliciesListByClusterOptionalParams
+  ): Promise<PlacementPoliciesListByClusterResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, privateCloudName, clusterName, options },
-      listOperationSpec
+      listByClusterOperationSpec
     );
   }
 
@@ -195,7 +195,7 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
    * @param clusterName Name of the cluster in the private cloud
    * @param placementPolicyName Name of the VMware vSphere Distributed Resource Scheduler (DRS) placement
    *                            policy
-   * @param placementPolicy A placement policy in the private cloud cluster
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
@@ -203,7 +203,7 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
     privateCloudName: string,
     clusterName: string,
     placementPolicyName: string,
-    placementPolicy: PlacementPolicy,
+    resource: PlacementPolicy,
     options?: PlacementPoliciesCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -257,7 +257,7 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
         privateCloudName,
         clusterName,
         placementPolicyName,
-        placementPolicy,
+        resource,
         options
       },
       spec: createOrUpdateOperationSpec
@@ -267,7 +267,8 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
       OperationState<PlacementPoliciesCreateOrUpdateResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "azure-async-operation"
     });
     await poller.poll();
     return poller;
@@ -280,7 +281,7 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
    * @param clusterName Name of the cluster in the private cloud
    * @param placementPolicyName Name of the VMware vSphere Distributed Resource Scheduler (DRS) placement
    *                            policy
-   * @param placementPolicy A placement policy in the private cloud cluster
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
@@ -288,7 +289,7 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
     privateCloudName: string,
     clusterName: string,
     placementPolicyName: string,
-    placementPolicy: PlacementPolicy,
+    resource: PlacementPolicy,
     options?: PlacementPoliciesCreateOrUpdateOptionalParams
   ): Promise<PlacementPoliciesCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
@@ -296,7 +297,7 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
       privateCloudName,
       clusterName,
       placementPolicyName,
-      placementPolicy,
+      resource,
       options
     );
     return poller.pollUntilDone();
@@ -309,7 +310,7 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
    * @param clusterName Name of the cluster in the private cloud
    * @param placementPolicyName Name of the VMware vSphere Distributed Resource Scheduler (DRS) placement
    *                            policy
-   * @param placementPolicyUpdate The placement policy properties that may be updated
+   * @param properties The resource properties to be updated.
    * @param options The options parameters.
    */
   async beginUpdate(
@@ -317,7 +318,7 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
     privateCloudName: string,
     clusterName: string,
     placementPolicyName: string,
-    placementPolicyUpdate: PlacementPolicyUpdate,
+    properties: PlacementPolicyUpdate,
     options?: PlacementPoliciesUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -371,7 +372,7 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
         privateCloudName,
         clusterName,
         placementPolicyName,
-        placementPolicyUpdate,
+        properties,
         options
       },
       spec: updateOperationSpec
@@ -381,7 +382,8 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
       OperationState<PlacementPoliciesUpdateResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "location"
     });
     await poller.poll();
     return poller;
@@ -394,7 +396,7 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
    * @param clusterName Name of the cluster in the private cloud
    * @param placementPolicyName Name of the VMware vSphere Distributed Resource Scheduler (DRS) placement
    *                            policy
-   * @param placementPolicyUpdate The placement policy properties that may be updated
+   * @param properties The resource properties to be updated.
    * @param options The options parameters.
    */
   async beginUpdateAndWait(
@@ -402,7 +404,7 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
     privateCloudName: string,
     clusterName: string,
     placementPolicyName: string,
-    placementPolicyUpdate: PlacementPolicyUpdate,
+    properties: PlacementPolicyUpdate,
     options?: PlacementPoliciesUpdateOptionalParams
   ): Promise<PlacementPoliciesUpdateResponse> {
     const poller = await this.beginUpdate(
@@ -410,7 +412,7 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
       privateCloudName,
       clusterName,
       placementPolicyName,
-      placementPolicyUpdate,
+      properties,
       options
     );
     return poller.pollUntilDone();
@@ -484,7 +486,8 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
     });
     const poller = await createHttpPoller<void, OperationState<void>>(lro, {
       restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "location"
     });
     await poller.poll();
     return poller;
@@ -517,36 +520,36 @@ export class PlacementPoliciesImpl implements PlacementPolicies {
   }
 
   /**
-   * ListNext
+   * ListByClusterNext
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
    * @param clusterName Name of the cluster in the private cloud
-   * @param nextLink The nextLink from the previous successful call to the List method.
+   * @param nextLink The nextLink from the previous successful call to the ListByCluster method.
    * @param options The options parameters.
    */
-  private _listNext(
+  private _listByClusterNext(
     resourceGroupName: string,
     privateCloudName: string,
     clusterName: string,
     nextLink: string,
-    options?: PlacementPoliciesListNextOptionalParams
-  ): Promise<PlacementPoliciesListNextResponse> {
+    options?: PlacementPoliciesListByClusterNextOptionalParams
+  ): Promise<PlacementPoliciesListByClusterNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, privateCloudName, clusterName, nextLink, options },
-      listNextOperationSpec
+      listByClusterNextOperationSpec
     );
   }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const listOperationSpec: coreClient.OperationSpec = {
+const listByClusterOperationSpec: coreClient.OperationSpec = {
   path:
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/clusters/{clusterName}/placementPolicies",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.PlacementPoliciesList
+      bodyMapper: Mappers.PlacementPolicyListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -555,7 +558,7 @@ const listOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
     Parameters.clusterName
@@ -578,7 +581,7 @@ const getOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
     Parameters.clusterName,
@@ -608,11 +611,11 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.placementPolicy,
+  requestBody: Parameters.resource6,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
     Parameters.clusterName,
@@ -643,11 +646,11 @@ const updateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.placementPolicyUpdate,
+  requestBody: Parameters.properties2,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
     Parameters.clusterName,
@@ -673,7 +676,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
     Parameters.clusterName,
@@ -682,12 +685,12 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept],
   serializer
 };
-const listNextOperationSpec: coreClient.OperationSpec = {
+const listByClusterNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.PlacementPoliciesList
+      bodyMapper: Mappers.PlacementPolicyListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -696,7 +699,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.nextLink,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
     Parameters.clusterName

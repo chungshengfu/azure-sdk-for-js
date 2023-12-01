@@ -16,46 +16,64 @@ import {
 import * as coreAuth from "@azure/core-auth";
 import {
   OperationsImpl,
-  LocationsImpl,
+  LocationsOperationsImpl,
   PrivateCloudsImpl,
+  AddonsImpl,
+  ExpressRouteAuthorizationsImpl,
+  CloudLinksImpl,
   ClustersImpl,
   DatastoresImpl,
-  HcxEnterpriseSitesImpl,
-  AuthorizationsImpl,
-  GlobalReachConnectionsImpl,
-  WorkloadNetworksImpl,
-  CloudLinksImpl,
-  AddonsImpl,
-  VirtualMachinesImpl,
   PlacementPoliciesImpl,
+  VirtualMachinesImpl,
+  WorkloadNetworkDhcpsImpl,
+  WorkloadNetworkDnsServicesImpl,
+  WorkloadNetworkDnsZonesImpl,
+  WorkloadNetworkGatewaysImpl,
+  GlobalReachConnectionsImpl,
+  HcxEnterpriseSitesImpl,
+  WorkloadNetworkPortMirroringsImpl,
+  WorkloadNetworkPublicIpsImpl,
+  ScriptExecutionsImpl,
   ScriptPackagesImpl,
   ScriptCmdletsImpl,
-  ScriptExecutionsImpl
+  WorkloadNetworkSegmentsImpl,
+  WorkloadNetworkVirtualMachinesImpl,
+  WorkloadNetworkVmGroupsImpl,
+  WorkloadNetworksImpl
 } from "./operations";
 import {
   Operations,
-  Locations,
+  LocationsOperations,
   PrivateClouds,
+  Addons,
+  ExpressRouteAuthorizations,
+  CloudLinks,
   Clusters,
   Datastores,
-  HcxEnterpriseSites,
-  Authorizations,
-  GlobalReachConnections,
-  WorkloadNetworks,
-  CloudLinks,
-  Addons,
-  VirtualMachines,
   PlacementPolicies,
+  VirtualMachines,
+  WorkloadNetworkDhcps,
+  WorkloadNetworkDnsServices,
+  WorkloadNetworkDnsZones,
+  WorkloadNetworkGateways,
+  GlobalReachConnections,
+  HcxEnterpriseSites,
+  WorkloadNetworkPortMirrorings,
+  WorkloadNetworkPublicIps,
+  ScriptExecutions,
   ScriptPackages,
   ScriptCmdlets,
-  ScriptExecutions
+  WorkloadNetworkSegments,
+  WorkloadNetworkVirtualMachines,
+  WorkloadNetworkVmGroups,
+  WorkloadNetworks
 } from "./operationsInterfaces";
 import { AzureVMwareSolutionAPIOptionalParams } from "./models";
 
 export class AzureVMwareSolutionAPI extends coreClient.ServiceClient {
   $host: string;
   apiVersion: string;
-  subscriptionId: string;
+  subscriptionId?: string;
 
   /**
    * Initializes a new instance of the AzureVMwareSolutionAPI class.
@@ -67,12 +85,26 @@ export class AzureVMwareSolutionAPI extends coreClient.ServiceClient {
     credentials: coreAuth.TokenCredential,
     subscriptionId: string,
     options?: AzureVMwareSolutionAPIOptionalParams
+  );
+  constructor(
+    credentials: coreAuth.TokenCredential,
+    options?: AzureVMwareSolutionAPIOptionalParams
+  );
+  constructor(
+    credentials: coreAuth.TokenCredential,
+    subscriptionIdOrOptions?: AzureVMwareSolutionAPIOptionalParams | string,
+    options?: AzureVMwareSolutionAPIOptionalParams
   ) {
     if (credentials === undefined) {
       throw new Error("'credentials' cannot be null");
     }
-    if (subscriptionId === undefined) {
-      throw new Error("'subscriptionId' cannot be null");
+
+    let subscriptionId: string | undefined;
+
+    if (typeof subscriptionIdOrOptions === "string") {
+      subscriptionId = subscriptionIdOrOptions;
+    } else if (typeof subscriptionIdOrOptions === "object") {
+      options = subscriptionIdOrOptions;
     }
 
     // Initializing default values for options
@@ -84,7 +116,7 @@ export class AzureVMwareSolutionAPI extends coreClient.ServiceClient {
       credential: credentials
     };
 
-    const packageDetails = `azsdk-js-arm-avs/4.0.0`;
+    const packageDetails = `azsdk-js-arm-avs/5.0.0`;
     const userAgentPrefix =
       options.userAgentOptions && options.userAgentOptions.userAgentPrefix
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
@@ -139,21 +171,34 @@ export class AzureVMwareSolutionAPI extends coreClient.ServiceClient {
     this.$host = options.$host || "https://management.azure.com";
     this.apiVersion = options.apiVersion || "2023-03-01";
     this.operations = new OperationsImpl(this);
-    this.locations = new LocationsImpl(this);
+    this.locationsOperations = new LocationsOperationsImpl(this);
     this.privateClouds = new PrivateCloudsImpl(this);
+    this.addons = new AddonsImpl(this);
+    this.expressRouteAuthorizations = new ExpressRouteAuthorizationsImpl(this);
+    this.cloudLinks = new CloudLinksImpl(this);
     this.clusters = new ClustersImpl(this);
     this.datastores = new DatastoresImpl(this);
-    this.hcxEnterpriseSites = new HcxEnterpriseSitesImpl(this);
-    this.authorizations = new AuthorizationsImpl(this);
-    this.globalReachConnections = new GlobalReachConnectionsImpl(this);
-    this.workloadNetworks = new WorkloadNetworksImpl(this);
-    this.cloudLinks = new CloudLinksImpl(this);
-    this.addons = new AddonsImpl(this);
-    this.virtualMachines = new VirtualMachinesImpl(this);
     this.placementPolicies = new PlacementPoliciesImpl(this);
+    this.virtualMachines = new VirtualMachinesImpl(this);
+    this.workloadNetworkDhcps = new WorkloadNetworkDhcpsImpl(this);
+    this.workloadNetworkDnsServices = new WorkloadNetworkDnsServicesImpl(this);
+    this.workloadNetworkDnsZones = new WorkloadNetworkDnsZonesImpl(this);
+    this.workloadNetworkGateways = new WorkloadNetworkGatewaysImpl(this);
+    this.globalReachConnections = new GlobalReachConnectionsImpl(this);
+    this.hcxEnterpriseSites = new HcxEnterpriseSitesImpl(this);
+    this.workloadNetworkPortMirrorings = new WorkloadNetworkPortMirroringsImpl(
+      this
+    );
+    this.workloadNetworkPublicIps = new WorkloadNetworkPublicIpsImpl(this);
+    this.scriptExecutions = new ScriptExecutionsImpl(this);
     this.scriptPackages = new ScriptPackagesImpl(this);
     this.scriptCmdlets = new ScriptCmdletsImpl(this);
-    this.scriptExecutions = new ScriptExecutionsImpl(this);
+    this.workloadNetworkSegments = new WorkloadNetworkSegmentsImpl(this);
+    this.workloadNetworkVirtualMachines = new WorkloadNetworkVirtualMachinesImpl(
+      this
+    );
+    this.workloadNetworkVmGroups = new WorkloadNetworkVmGroupsImpl(this);
+    this.workloadNetworks = new WorkloadNetworksImpl(this);
     this.addCustomApiVersionPolicy(options.apiVersion);
   }
 
@@ -186,19 +231,28 @@ export class AzureVMwareSolutionAPI extends coreClient.ServiceClient {
   }
 
   operations: Operations;
-  locations: Locations;
+  locationsOperations: LocationsOperations;
   privateClouds: PrivateClouds;
+  addons: Addons;
+  expressRouteAuthorizations: ExpressRouteAuthorizations;
+  cloudLinks: CloudLinks;
   clusters: Clusters;
   datastores: Datastores;
-  hcxEnterpriseSites: HcxEnterpriseSites;
-  authorizations: Authorizations;
-  globalReachConnections: GlobalReachConnections;
-  workloadNetworks: WorkloadNetworks;
-  cloudLinks: CloudLinks;
-  addons: Addons;
-  virtualMachines: VirtualMachines;
   placementPolicies: PlacementPolicies;
+  virtualMachines: VirtualMachines;
+  workloadNetworkDhcps: WorkloadNetworkDhcps;
+  workloadNetworkDnsServices: WorkloadNetworkDnsServices;
+  workloadNetworkDnsZones: WorkloadNetworkDnsZones;
+  workloadNetworkGateways: WorkloadNetworkGateways;
+  globalReachConnections: GlobalReachConnections;
+  hcxEnterpriseSites: HcxEnterpriseSites;
+  workloadNetworkPortMirrorings: WorkloadNetworkPortMirrorings;
+  workloadNetworkPublicIps: WorkloadNetworkPublicIps;
+  scriptExecutions: ScriptExecutions;
   scriptPackages: ScriptPackages;
   scriptCmdlets: ScriptCmdlets;
-  scriptExecutions: ScriptExecutions;
+  workloadNetworkSegments: WorkloadNetworkSegments;
+  workloadNetworkVirtualMachines: WorkloadNetworkVirtualMachines;
+  workloadNetworkVmGroups: WorkloadNetworkVmGroups;
+  workloadNetworks: WorkloadNetworks;
 }

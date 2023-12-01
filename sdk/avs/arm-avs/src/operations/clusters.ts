@@ -21,9 +21,9 @@ import {
 import { createLroSpec } from "../lroImpl";
 import {
   Cluster,
-  ClustersListNextOptionalParams,
-  ClustersListOptionalParams,
-  ClustersListResponse,
+  ClustersListByPrivateCloudNextOptionalParams,
+  ClustersListByPrivateCloudOptionalParams,
+  ClustersListByPrivateCloudResponse,
   ClustersGetOptionalParams,
   ClustersGetResponse,
   ClustersCreateOrUpdateOptionalParams,
@@ -34,7 +34,7 @@ import {
   ClustersDeleteOptionalParams,
   ClustersListZonesOptionalParams,
   ClustersListZonesResponse,
-  ClustersListNextResponse
+  ClustersListByPrivateCloudNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -56,12 +56,12 @@ export class ClustersImpl implements Clusters {
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
    */
-  public list(
+  public listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: ClustersListOptionalParams
+    options?: ClustersListByPrivateCloudOptionalParams
   ): PagedAsyncIterableIterator<Cluster> {
-    const iter = this.listPagingAll(
+    const iter = this.listByPrivateCloudPagingAll(
       resourceGroupName,
       privateCloudName,
       options
@@ -77,7 +77,7 @@ export class ClustersImpl implements Clusters {
         if (settings?.maxPageSize) {
           throw new Error("maxPageSize is not supported by this operation.");
         }
-        return this.listPagingPage(
+        return this.listByPrivateCloudPagingPage(
           resourceGroupName,
           privateCloudName,
           options,
@@ -87,23 +87,27 @@ export class ClustersImpl implements Clusters {
     };
   }
 
-  private async *listPagingPage(
+  private async *listByPrivateCloudPagingPage(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: ClustersListOptionalParams,
+    options?: ClustersListByPrivateCloudOptionalParams,
     settings?: PageSettings
   ): AsyncIterableIterator<Cluster[]> {
-    let result: ClustersListResponse;
+    let result: ClustersListByPrivateCloudResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._list(resourceGroupName, privateCloudName, options);
+      result = await this._listByPrivateCloud(
+        resourceGroupName,
+        privateCloudName,
+        options
+      );
       let page = result.value || [];
       continuationToken = result.nextLink;
       setContinuationToken(page, continuationToken);
       yield page;
     }
     while (continuationToken) {
-      result = await this._listNext(
+      result = await this._listByPrivateCloudNext(
         resourceGroupName,
         privateCloudName,
         continuationToken,
@@ -116,12 +120,12 @@ export class ClustersImpl implements Clusters {
     }
   }
 
-  private async *listPagingAll(
+  private async *listByPrivateCloudPagingAll(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: ClustersListOptionalParams
+    options?: ClustersListByPrivateCloudOptionalParams
   ): AsyncIterableIterator<Cluster> {
-    for await (const page of this.listPagingPage(
+    for await (const page of this.listByPrivateCloudPagingPage(
       resourceGroupName,
       privateCloudName,
       options
@@ -136,14 +140,14 @@ export class ClustersImpl implements Clusters {
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
    */
-  private _list(
+  private _listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: ClustersListOptionalParams
-  ): Promise<ClustersListResponse> {
+    options?: ClustersListByPrivateCloudOptionalParams
+  ): Promise<ClustersListByPrivateCloudResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, privateCloudName, options },
-      listOperationSpec
+      listByPrivateCloudOperationSpec
     );
   }
 
@@ -169,16 +173,16 @@ export class ClustersImpl implements Clusters {
   /**
    * Create or update a cluster in a private cloud
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName The name of the private cloud.
+   * @param privateCloudName Name of the private cloud
    * @param clusterName Name of the cluster in the private cloud
-   * @param cluster A cluster in the private cloud
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
     privateCloudName: string,
     clusterName: string,
-    cluster: Cluster,
+    resource: Cluster,
     options?: ClustersCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -231,7 +235,7 @@ export class ClustersImpl implements Clusters {
         resourceGroupName,
         privateCloudName,
         clusterName,
-        cluster,
+        resource,
         options
       },
       spec: createOrUpdateOperationSpec
@@ -241,7 +245,8 @@ export class ClustersImpl implements Clusters {
       OperationState<ClustersCreateOrUpdateResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "azure-async-operation"
     });
     await poller.poll();
     return poller;
@@ -250,23 +255,23 @@ export class ClustersImpl implements Clusters {
   /**
    * Create or update a cluster in a private cloud
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName The name of the private cloud.
+   * @param privateCloudName Name of the private cloud
    * @param clusterName Name of the cluster in the private cloud
-   * @param cluster A cluster in the private cloud
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     privateCloudName: string,
     clusterName: string,
-    cluster: Cluster,
+    resource: Cluster,
     options?: ClustersCreateOrUpdateOptionalParams
   ): Promise<ClustersCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
       privateCloudName,
       clusterName,
-      cluster,
+      resource,
       options
     );
     return poller.pollUntilDone();
@@ -277,14 +282,14 @@ export class ClustersImpl implements Clusters {
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
    * @param clusterName Name of the cluster in the private cloud
-   * @param clusterUpdate The cluster properties to be updated
+   * @param properties The resource properties to be updated.
    * @param options The options parameters.
    */
   async beginUpdate(
     resourceGroupName: string,
     privateCloudName: string,
     clusterName: string,
-    clusterUpdate: ClusterUpdate,
+    properties: ClusterUpdate,
     options?: ClustersUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -337,7 +342,7 @@ export class ClustersImpl implements Clusters {
         resourceGroupName,
         privateCloudName,
         clusterName,
-        clusterUpdate,
+        properties,
         options
       },
       spec: updateOperationSpec
@@ -347,7 +352,8 @@ export class ClustersImpl implements Clusters {
       OperationState<ClustersUpdateResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "location"
     });
     await poller.poll();
     return poller;
@@ -358,21 +364,21 @@ export class ClustersImpl implements Clusters {
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
    * @param clusterName Name of the cluster in the private cloud
-   * @param clusterUpdate The cluster properties to be updated
+   * @param properties The resource properties to be updated.
    * @param options The options parameters.
    */
   async beginUpdateAndWait(
     resourceGroupName: string,
     privateCloudName: string,
     clusterName: string,
-    clusterUpdate: ClusterUpdate,
+    properties: ClusterUpdate,
     options?: ClustersUpdateOptionalParams
   ): Promise<ClustersUpdateResponse> {
     const poller = await this.beginUpdate(
       resourceGroupName,
       privateCloudName,
       clusterName,
-      clusterUpdate,
+      properties,
       options
     );
     return poller.pollUntilDone();
@@ -437,7 +443,8 @@ export class ClustersImpl implements Clusters {
     });
     const poller = await createHttpPoller<void, OperationState<void>>(lro, {
       restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "location"
     });
     await poller.poll();
     return poller;
@@ -470,49 +477,51 @@ export class ClustersImpl implements Clusters {
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
    * @param clusterName Name of the cluster in the private cloud
+   * @param body The content of the action request
    * @param options The options parameters.
    */
   listZones(
     resourceGroupName: string,
     privateCloudName: string,
     clusterName: string,
+    body: Record<string, unknown>,
     options?: ClustersListZonesOptionalParams
   ): Promise<ClustersListZonesResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, privateCloudName, clusterName, options },
+      { resourceGroupName, privateCloudName, clusterName, body, options },
       listZonesOperationSpec
     );
   }
 
   /**
-   * ListNext
+   * ListByPrivateCloudNext
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param nextLink The nextLink from the previous successful call to the List method.
+   * @param nextLink The nextLink from the previous successful call to the ListByPrivateCloud method.
    * @param options The options parameters.
    */
-  private _listNext(
+  private _listByPrivateCloudNext(
     resourceGroupName: string,
     privateCloudName: string,
     nextLink: string,
-    options?: ClustersListNextOptionalParams
-  ): Promise<ClustersListNextResponse> {
+    options?: ClustersListByPrivateCloudNextOptionalParams
+  ): Promise<ClustersListByPrivateCloudNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, privateCloudName, nextLink, options },
-      listNextOperationSpec
+      listByPrivateCloudNextOperationSpec
     );
   }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const listOperationSpec: coreClient.OperationSpec = {
+const listByPrivateCloudOperationSpec: coreClient.OperationSpec = {
   path:
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/clusters",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ClusterList
+      bodyMapper: Mappers.ClusterListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -521,7 +530,7 @@ const listOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName
   ],
@@ -543,7 +552,7 @@ const getOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
     Parameters.clusterName
@@ -572,14 +581,14 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.cluster,
+  requestBody: Parameters.resource4,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
-    Parameters.clusterName,
-    Parameters.privateCloudName1
+    Parameters.privateCloudName,
+    Parameters.clusterName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -606,11 +615,11 @@ const updateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.clusterUpdate,
+  requestBody: Parameters.properties1,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
     Parameters.clusterName
@@ -635,7 +644,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
     Parameters.clusterName
@@ -655,23 +664,25 @@ const listZonesOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
+  requestBody: Parameters.body,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
     Parameters.clusterName
   ],
-  headerParameters: [Parameters.accept],
+  headerParameters: [Parameters.accept, Parameters.contentType],
+  mediaType: "json",
   serializer
 };
-const listNextOperationSpec: coreClient.OperationSpec = {
+const listByPrivateCloudNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ClusterList
+      bodyMapper: Mappers.ClusterListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -680,7 +691,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.nextLink,
-    Parameters.subscriptionId,
+    Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName
   ],

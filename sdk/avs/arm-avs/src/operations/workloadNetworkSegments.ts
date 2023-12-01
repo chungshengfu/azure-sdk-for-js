@@ -8,7 +8,7 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { CloudLinks } from "../operationsInterfaces";
+import { WorkloadNetworkSegments } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
@@ -20,25 +20,28 @@ import {
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
-  CloudLink,
-  CloudLinksListByPrivateCloudNextOptionalParams,
-  CloudLinksListByPrivateCloudOptionalParams,
-  CloudLinksListByPrivateCloudResponse,
-  CloudLinksGetOptionalParams,
-  CloudLinksGetResponse,
-  CloudLinksCreateOrUpdateOptionalParams,
-  CloudLinksCreateOrUpdateResponse,
-  CloudLinksDeleteOptionalParams,
-  CloudLinksListByPrivateCloudNextResponse
+  WorkloadNetworkSegment,
+  WorkloadNetworkSegmentsListByPrivateCloudNextOptionalParams,
+  WorkloadNetworkSegmentsListByPrivateCloudOptionalParams,
+  WorkloadNetworkSegmentsListByPrivateCloudResponse,
+  WorkloadNetworkSegmentsGetSegmentOptionalParams,
+  WorkloadNetworkSegmentsGetSegmentResponse,
+  WorkloadNetworkSegmentsCreateSegmentsOptionalParams,
+  WorkloadNetworkSegmentsCreateSegmentsResponse,
+  WorkloadNetworkSegmentUpdate,
+  WorkloadNetworkSegmentsUpdateSegmentsOptionalParams,
+  WorkloadNetworkSegmentsUpdateSegmentsResponse,
+  WorkloadNetworkSegmentsDeleteSegmentOptionalParams,
+  WorkloadNetworkSegmentsListByPrivateCloudNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing CloudLinks operations. */
-export class CloudLinksImpl implements CloudLinks {
+/** Class containing WorkloadNetworkSegments operations. */
+export class WorkloadNetworkSegmentsImpl implements WorkloadNetworkSegments {
   private readonly client: AzureVMwareSolutionAPI;
 
   /**
-   * Initialize a new instance of the class CloudLinks class.
+   * Initialize a new instance of the class WorkloadNetworkSegments class.
    * @param client Reference to the service client
    */
   constructor(client: AzureVMwareSolutionAPI) {
@@ -46,7 +49,7 @@ export class CloudLinksImpl implements CloudLinks {
   }
 
   /**
-   * List cloud link in a private cloud
+   * List of segments in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
@@ -54,8 +57,8 @@ export class CloudLinksImpl implements CloudLinks {
   public listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: CloudLinksListByPrivateCloudOptionalParams
-  ): PagedAsyncIterableIterator<CloudLink> {
+    options?: WorkloadNetworkSegmentsListByPrivateCloudOptionalParams
+  ): PagedAsyncIterableIterator<WorkloadNetworkSegment> {
     const iter = this.listByPrivateCloudPagingAll(
       resourceGroupName,
       privateCloudName,
@@ -85,10 +88,10 @@ export class CloudLinksImpl implements CloudLinks {
   private async *listByPrivateCloudPagingPage(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: CloudLinksListByPrivateCloudOptionalParams,
+    options?: WorkloadNetworkSegmentsListByPrivateCloudOptionalParams,
     settings?: PageSettings
-  ): AsyncIterableIterator<CloudLink[]> {
-    let result: CloudLinksListByPrivateCloudResponse;
+  ): AsyncIterableIterator<WorkloadNetworkSegment[]> {
+    let result: WorkloadNetworkSegmentsListByPrivateCloudResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
       result = await this._listByPrivateCloud(
@@ -118,8 +121,8 @@ export class CloudLinksImpl implements CloudLinks {
   private async *listByPrivateCloudPagingAll(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: CloudLinksListByPrivateCloudOptionalParams
-  ): AsyncIterableIterator<CloudLink> {
+    options?: WorkloadNetworkSegmentsListByPrivateCloudOptionalParams
+  ): AsyncIterableIterator<WorkloadNetworkSegment> {
     for await (const page of this.listByPrivateCloudPagingPage(
       resourceGroupName,
       privateCloudName,
@@ -130,7 +133,7 @@ export class CloudLinksImpl implements CloudLinks {
   }
 
   /**
-   * List cloud link in a private cloud
+   * List of segments in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
@@ -138,8 +141,8 @@ export class CloudLinksImpl implements CloudLinks {
   private _listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: CloudLinksListByPrivateCloudOptionalParams
-  ): Promise<CloudLinksListByPrivateCloudResponse> {
+    options?: WorkloadNetworkSegmentsListByPrivateCloudOptionalParams
+  ): Promise<WorkloadNetworkSegmentsListByPrivateCloudResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, privateCloudName, options },
       listByPrivateCloudOperationSpec
@@ -147,48 +150,48 @@ export class CloudLinksImpl implements CloudLinks {
   }
 
   /**
-   * Get an cloud link by name in a private cloud
+   * Get a segment by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param cloudLinkName Name of the cloud link resource
+   * @param segmentId NSX Segment identifier. Generally the same as the Segment's display name
    * @param options The options parameters.
    */
-  get(
+  getSegment(
     resourceGroupName: string,
     privateCloudName: string,
-    cloudLinkName: string,
-    options?: CloudLinksGetOptionalParams
-  ): Promise<CloudLinksGetResponse> {
+    segmentId: string,
+    options?: WorkloadNetworkSegmentsGetSegmentOptionalParams
+  ): Promise<WorkloadNetworkSegmentsGetSegmentResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, privateCloudName, cloudLinkName, options },
-      getOperationSpec
+      { resourceGroupName, privateCloudName, segmentId, options },
+      getSegmentOperationSpec
     );
   }
 
   /**
-   * Create or update a cloud link in a private cloud
+   * Create a segment by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param cloudLinkName Name of the cloud link resource
+   * @param segmentId NSX Segment identifier. Generally the same as the Segment's display name
    * @param resource Resource create parameters.
    * @param options The options parameters.
    */
-  async beginCreateOrUpdate(
+  async beginCreateSegments(
     resourceGroupName: string,
     privateCloudName: string,
-    cloudLinkName: string,
-    resource: CloudLink,
-    options?: CloudLinksCreateOrUpdateOptionalParams
+    segmentId: string,
+    resource: WorkloadNetworkSegment,
+    options?: WorkloadNetworkSegmentsCreateSegmentsOptionalParams
   ): Promise<
     SimplePollerLike<
-      OperationState<CloudLinksCreateOrUpdateResponse>,
-      CloudLinksCreateOrUpdateResponse
+      OperationState<WorkloadNetworkSegmentsCreateSegmentsResponse>,
+      WorkloadNetworkSegmentsCreateSegmentsResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
-    ): Promise<CloudLinksCreateOrUpdateResponse> => {
+    ): Promise<WorkloadNetworkSegmentsCreateSegmentsResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -229,15 +232,15 @@ export class CloudLinksImpl implements CloudLinks {
       args: {
         resourceGroupName,
         privateCloudName,
-        cloudLinkName,
+        segmentId,
         resource,
         options
       },
-      spec: createOrUpdateOperationSpec
+      spec: createSegmentsOperationSpec
     });
     const poller = await createHttpPoller<
-      CloudLinksCreateOrUpdateResponse,
-      OperationState<CloudLinksCreateOrUpdateResponse>
+      WorkloadNetworkSegmentsCreateSegmentsResponse,
+      OperationState<WorkloadNetworkSegmentsCreateSegmentsResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
@@ -248,24 +251,24 @@ export class CloudLinksImpl implements CloudLinks {
   }
 
   /**
-   * Create or update a cloud link in a private cloud
+   * Create a segment by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param cloudLinkName Name of the cloud link resource
+   * @param segmentId NSX Segment identifier. Generally the same as the Segment's display name
    * @param resource Resource create parameters.
    * @param options The options parameters.
    */
-  async beginCreateOrUpdateAndWait(
+  async beginCreateSegmentsAndWait(
     resourceGroupName: string,
     privateCloudName: string,
-    cloudLinkName: string,
-    resource: CloudLink,
-    options?: CloudLinksCreateOrUpdateOptionalParams
-  ): Promise<CloudLinksCreateOrUpdateResponse> {
-    const poller = await this.beginCreateOrUpdate(
+    segmentId: string,
+    resource: WorkloadNetworkSegment,
+    options?: WorkloadNetworkSegmentsCreateSegmentsOptionalParams
+  ): Promise<WorkloadNetworkSegmentsCreateSegmentsResponse> {
+    const poller = await this.beginCreateSegments(
       resourceGroupName,
       privateCloudName,
-      cloudLinkName,
+      segmentId,
       resource,
       options
     );
@@ -273,17 +276,124 @@ export class CloudLinksImpl implements CloudLinks {
   }
 
   /**
-   * Delete a cloud link in a private cloud
+   * Create or update a segment by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param cloudLinkName Name of the cloud link resource
+   * @param segmentId NSX Segment identifier. Generally the same as the Segment's display name
+   * @param properties The resource properties to be updated.
    * @param options The options parameters.
    */
-  async beginDelete(
+  async beginUpdateSegments(
     resourceGroupName: string,
     privateCloudName: string,
-    cloudLinkName: string,
-    options?: CloudLinksDeleteOptionalParams
+    segmentId: string,
+    properties: WorkloadNetworkSegmentUpdate,
+    options?: WorkloadNetworkSegmentsUpdateSegmentsOptionalParams
+  ): Promise<
+    SimplePollerLike<
+      OperationState<WorkloadNetworkSegmentsUpdateSegmentsResponse>,
+      WorkloadNetworkSegmentsUpdateSegmentsResponse
+    >
+  > {
+    const directSendOperation = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ): Promise<WorkloadNetworkSegmentsUpdateSegmentsResponse> => {
+      return this.client.sendOperationRequest(args, spec);
+    };
+    const sendOperationFn = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ) => {
+      let currentRawResponse:
+        | coreClient.FullOperationResponse
+        | undefined = undefined;
+      const providedCallback = args.options?.onResponse;
+      const callback: coreClient.RawResponseCallback = (
+        rawResponse: coreClient.FullOperationResponse,
+        flatResponse: unknown
+      ) => {
+        currentRawResponse = rawResponse;
+        providedCallback?.(rawResponse, flatResponse);
+      };
+      const updatedArgs = {
+        ...args,
+        options: {
+          ...args.options,
+          onResponse: callback
+        }
+      };
+      const flatResponse = await directSendOperation(updatedArgs, spec);
+      return {
+        flatResponse,
+        rawResponse: {
+          statusCode: currentRawResponse!.status,
+          body: currentRawResponse!.parsedBody,
+          headers: currentRawResponse!.headers.toJSON()
+        }
+      };
+    };
+
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: {
+        resourceGroupName,
+        privateCloudName,
+        segmentId,
+        properties,
+        options
+      },
+      spec: updateSegmentsOperationSpec
+    });
+    const poller = await createHttpPoller<
+      WorkloadNetworkSegmentsUpdateSegmentsResponse,
+      OperationState<WorkloadNetworkSegmentsUpdateSegmentsResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "location"
+    });
+    await poller.poll();
+    return poller;
+  }
+
+  /**
+   * Create or update a segment by id in a private cloud workload network.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param privateCloudName Name of the private cloud
+   * @param segmentId NSX Segment identifier. Generally the same as the Segment's display name
+   * @param properties The resource properties to be updated.
+   * @param options The options parameters.
+   */
+  async beginUpdateSegmentsAndWait(
+    resourceGroupName: string,
+    privateCloudName: string,
+    segmentId: string,
+    properties: WorkloadNetworkSegmentUpdate,
+    options?: WorkloadNetworkSegmentsUpdateSegmentsOptionalParams
+  ): Promise<WorkloadNetworkSegmentsUpdateSegmentsResponse> {
+    const poller = await this.beginUpdateSegments(
+      resourceGroupName,
+      privateCloudName,
+      segmentId,
+      properties,
+      options
+    );
+    return poller.pollUntilDone();
+  }
+
+  /**
+   * Delete a segment by id in a private cloud workload network.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param privateCloudName Name of the private cloud
+   * @param segmentId NSX Segment identifier. Generally the same as the Segment's display name
+   * @param options The options parameters.
+   */
+  async beginDeleteSegment(
+    resourceGroupName: string,
+    privateCloudName: string,
+    segmentId: string,
+    options?: WorkloadNetworkSegmentsDeleteSegmentOptionalParams
   ): Promise<SimplePollerLike<OperationState<void>, void>> {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
@@ -326,8 +436,8 @@ export class CloudLinksImpl implements CloudLinks {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, privateCloudName, cloudLinkName, options },
-      spec: deleteOperationSpec
+      args: { resourceGroupName, privateCloudName, segmentId, options },
+      spec: deleteSegmentOperationSpec
     });
     const poller = await createHttpPoller<void, OperationState<void>>(lro, {
       restoreFrom: options?.resumeFrom,
@@ -339,22 +449,22 @@ export class CloudLinksImpl implements CloudLinks {
   }
 
   /**
-   * Delete a cloud link in a private cloud
+   * Delete a segment by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param cloudLinkName Name of the cloud link resource
+   * @param segmentId NSX Segment identifier. Generally the same as the Segment's display name
    * @param options The options parameters.
    */
-  async beginDeleteAndWait(
+  async beginDeleteSegmentAndWait(
     resourceGroupName: string,
     privateCloudName: string,
-    cloudLinkName: string,
-    options?: CloudLinksDeleteOptionalParams
+    segmentId: string,
+    options?: WorkloadNetworkSegmentsDeleteSegmentOptionalParams
   ): Promise<void> {
-    const poller = await this.beginDelete(
+    const poller = await this.beginDeleteSegment(
       resourceGroupName,
       privateCloudName,
-      cloudLinkName,
+      segmentId,
       options
     );
     return poller.pollUntilDone();
@@ -371,8 +481,8 @@ export class CloudLinksImpl implements CloudLinks {
     resourceGroupName: string,
     privateCloudName: string,
     nextLink: string,
-    options?: CloudLinksListByPrivateCloudNextOptionalParams
-  ): Promise<CloudLinksListByPrivateCloudNextResponse> {
+    options?: WorkloadNetworkSegmentsListByPrivateCloudNextOptionalParams
+  ): Promise<WorkloadNetworkSegmentsListByPrivateCloudNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, privateCloudName, nextLink, options },
       listByPrivateCloudNextOperationSpec
@@ -384,11 +494,11 @@ const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listByPrivateCloudOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/cloudLinks",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/segments",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudLinkListResult
+      bodyMapper: Mappers.WorkloadNetworkSegmentListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -404,13 +514,13 @@ const listByPrivateCloudOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept],
   serializer
 };
-const getOperationSpec: coreClient.OperationSpec = {
+const getSegmentOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/cloudLinks/{cloudLinkName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/segments/{segmentId}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudLink
+      bodyMapper: Mappers.WorkloadNetworkSegment
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -422,48 +532,82 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
-    Parameters.cloudLinkName
+    Parameters.segmentId
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
-const createOrUpdateOperationSpec: coreClient.OperationSpec = {
+const createSegmentsOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/cloudLinks/{cloudLinkName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/segments/{segmentId}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudLink
+      bodyMapper: Mappers.WorkloadNetworkSegment
     },
     201: {
-      bodyMapper: Mappers.CloudLink
+      bodyMapper: Mappers.WorkloadNetworkSegment
     },
     202: {
-      bodyMapper: Mappers.CloudLink
+      bodyMapper: Mappers.WorkloadNetworkSegment
     },
     204: {
-      bodyMapper: Mappers.CloudLink
+      bodyMapper: Mappers.WorkloadNetworkSegment
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.resource3,
+  requestBody: Parameters.resource15,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
-    Parameters.cloudLinkName
+    Parameters.segmentId
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
   serializer
 };
-const deleteOperationSpec: coreClient.OperationSpec = {
+const updateSegmentsOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/cloudLinks/{cloudLinkName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/segments/{segmentId}",
+  httpMethod: "PATCH",
+  responses: {
+    200: {
+      bodyMapper: Mappers.WorkloadNetworkSegment
+    },
+    201: {
+      bodyMapper: Mappers.WorkloadNetworkSegment
+    },
+    202: {
+      bodyMapper: Mappers.WorkloadNetworkSegment
+    },
+    204: {
+      bodyMapper: Mappers.WorkloadNetworkSegment
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  requestBody: Parameters.properties7,
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId1,
+    Parameters.resourceGroupName,
+    Parameters.privateCloudName,
+    Parameters.segmentId
+  ],
+  headerParameters: [Parameters.accept, Parameters.contentType],
+  mediaType: "json",
+  serializer
+};
+const deleteSegmentOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/segments/{segmentId}",
   httpMethod: "DELETE",
   responses: {
     200: {},
@@ -480,7 +624,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
-    Parameters.cloudLinkName
+    Parameters.segmentId
   ],
   headerParameters: [Parameters.accept],
   serializer
@@ -490,7 +634,7 @@ const listByPrivateCloudNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudLinkListResult
+      bodyMapper: Mappers.WorkloadNetworkSegmentListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse

@@ -8,17 +8,17 @@
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
-  ScriptPackage,
-  ScriptPackagesListByPrivateCloudOptionalParams,
-  ScriptPackagesGetOptionalParams,
-  ScriptPackagesGetResponse
+  WorkloadNetworkGateway,
+  WorkloadNetworkGatewaysListByPrivateCloudOptionalParams,
+  WorkloadNetworkGatewaysGetGatewayOptionalParams,
+  WorkloadNetworkGatewaysGetGatewayResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Interface representing a ScriptPackages. */
-export interface ScriptPackages {
+/** Interface representing a WorkloadNetworkGateways. */
+export interface WorkloadNetworkGateways {
   /**
-   * List script packages available to run on the private cloud
+   * List of gateways in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
@@ -26,19 +26,19 @@ export interface ScriptPackages {
   listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: ScriptPackagesListByPrivateCloudOptionalParams
-  ): PagedAsyncIterableIterator<ScriptPackage>;
+    options?: WorkloadNetworkGatewaysListByPrivateCloudOptionalParams
+  ): PagedAsyncIterableIterator<WorkloadNetworkGateway>;
   /**
-   * Get a script package available to run on a private cloud
+   * Get a gateway by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param scriptPackageName Name of the script package in the private cloud
+   * @param gatewayId NSX Gateway identifier. Generally the same as the Gateway's display name
    * @param options The options parameters.
    */
-  get(
+  getGateway(
     resourceGroupName: string,
     privateCloudName: string,
-    scriptPackageName: string,
-    options?: ScriptPackagesGetOptionalParams
-  ): Promise<ScriptPackagesGetResponse>;
+    gatewayId: string,
+    options?: WorkloadNetworkGatewaysGetGatewayOptionalParams
+  ): Promise<WorkloadNetworkGatewaysGetGatewayResponse>;
 }

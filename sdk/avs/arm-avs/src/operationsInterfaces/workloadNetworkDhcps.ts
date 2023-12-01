@@ -9,25 +9,23 @@
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
-  Cluster,
-  ClustersListByPrivateCloudOptionalParams,
-  ClustersGetOptionalParams,
-  ClustersGetResponse,
-  ClustersCreateOrUpdateOptionalParams,
-  ClustersCreateOrUpdateResponse,
-  ClusterUpdate,
-  ClustersUpdateOptionalParams,
-  ClustersUpdateResponse,
-  ClustersDeleteOptionalParams,
-  ClustersListZonesOptionalParams,
-  ClustersListZonesResponse
+  WorkloadNetworkDhcp,
+  WorkloadNetworkDhcpsListByPrivateCloudOptionalParams,
+  WorkloadNetworkDhcpsGetDhcpOptionalParams,
+  WorkloadNetworkDhcpsGetDhcpResponse,
+  WorkloadNetworkDhcpsCreateDhcpOptionalParams,
+  WorkloadNetworkDhcpsCreateDhcpResponse,
+  WorkloadNetworkDhcpUpdate,
+  WorkloadNetworkDhcpsUpdateDhcpOptionalParams,
+  WorkloadNetworkDhcpsUpdateDhcpResponse,
+  WorkloadNetworkDhcpsDeleteDhcpOptionalParams
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Interface representing a Clusters. */
-export interface Clusters {
+/** Interface representing a WorkloadNetworkDhcps. */
+export interface WorkloadNetworkDhcps {
   /**
-   * List clusters in a private cloud
+   * List dhcp in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
@@ -35,130 +33,115 @@ export interface Clusters {
   listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: ClustersListByPrivateCloudOptionalParams
-  ): PagedAsyncIterableIterator<Cluster>;
+    options?: WorkloadNetworkDhcpsListByPrivateCloudOptionalParams
+  ): PagedAsyncIterableIterator<WorkloadNetworkDhcp>;
   /**
-   * Get a cluster by name in a private cloud
+   * Get dhcp by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param clusterName Name of the cluster in the private cloud
+   * @param dhcpId NSX DHCP identifier. Generally the same as the DHCP display name
    * @param options The options parameters.
    */
-  get(
+  getDhcp(
     resourceGroupName: string,
     privateCloudName: string,
-    clusterName: string,
-    options?: ClustersGetOptionalParams
-  ): Promise<ClustersGetResponse>;
+    dhcpId: string,
+    options?: WorkloadNetworkDhcpsGetDhcpOptionalParams
+  ): Promise<WorkloadNetworkDhcpsGetDhcpResponse>;
   /**
-   * Create or update a cluster in a private cloud
+   * Create dhcp by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param clusterName Name of the cluster in the private cloud
+   * @param dhcpId NSX DHCP identifier. Generally the same as the DHCP display name
    * @param resource Resource create parameters.
    * @param options The options parameters.
    */
-  beginCreateOrUpdate(
+  beginCreateDhcp(
     resourceGroupName: string,
     privateCloudName: string,
-    clusterName: string,
-    resource: Cluster,
-    options?: ClustersCreateOrUpdateOptionalParams
+    dhcpId: string,
+    resource: WorkloadNetworkDhcp,
+    options?: WorkloadNetworkDhcpsCreateDhcpOptionalParams
   ): Promise<
     SimplePollerLike<
-      OperationState<ClustersCreateOrUpdateResponse>,
-      ClustersCreateOrUpdateResponse
+      OperationState<WorkloadNetworkDhcpsCreateDhcpResponse>,
+      WorkloadNetworkDhcpsCreateDhcpResponse
     >
   >;
   /**
-   * Create or update a cluster in a private cloud
+   * Create dhcp by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param clusterName Name of the cluster in the private cloud
+   * @param dhcpId NSX DHCP identifier. Generally the same as the DHCP display name
    * @param resource Resource create parameters.
    * @param options The options parameters.
    */
-  beginCreateOrUpdateAndWait(
+  beginCreateDhcpAndWait(
     resourceGroupName: string,
     privateCloudName: string,
-    clusterName: string,
-    resource: Cluster,
-    options?: ClustersCreateOrUpdateOptionalParams
-  ): Promise<ClustersCreateOrUpdateResponse>;
+    dhcpId: string,
+    resource: WorkloadNetworkDhcp,
+    options?: WorkloadNetworkDhcpsCreateDhcpOptionalParams
+  ): Promise<WorkloadNetworkDhcpsCreateDhcpResponse>;
   /**
-   * Update a cluster in a private cloud
+   * Create or update dhcp by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param clusterName Name of the cluster in the private cloud
+   * @param dhcpId NSX DHCP identifier. Generally the same as the DHCP display name
    * @param properties The resource properties to be updated.
    * @param options The options parameters.
    */
-  beginUpdate(
+  beginUpdateDhcp(
     resourceGroupName: string,
     privateCloudName: string,
-    clusterName: string,
-    properties: ClusterUpdate,
-    options?: ClustersUpdateOptionalParams
+    dhcpId: string,
+    properties: WorkloadNetworkDhcpUpdate,
+    options?: WorkloadNetworkDhcpsUpdateDhcpOptionalParams
   ): Promise<
     SimplePollerLike<
-      OperationState<ClustersUpdateResponse>,
-      ClustersUpdateResponse
+      OperationState<WorkloadNetworkDhcpsUpdateDhcpResponse>,
+      WorkloadNetworkDhcpsUpdateDhcpResponse
     >
   >;
   /**
-   * Update a cluster in a private cloud
+   * Create or update dhcp by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param clusterName Name of the cluster in the private cloud
+   * @param dhcpId NSX DHCP identifier. Generally the same as the DHCP display name
    * @param properties The resource properties to be updated.
    * @param options The options parameters.
    */
-  beginUpdateAndWait(
+  beginUpdateDhcpAndWait(
     resourceGroupName: string,
     privateCloudName: string,
-    clusterName: string,
-    properties: ClusterUpdate,
-    options?: ClustersUpdateOptionalParams
-  ): Promise<ClustersUpdateResponse>;
+    dhcpId: string,
+    properties: WorkloadNetworkDhcpUpdate,
+    options?: WorkloadNetworkDhcpsUpdateDhcpOptionalParams
+  ): Promise<WorkloadNetworkDhcpsUpdateDhcpResponse>;
   /**
-   * Delete a cluster in a private cloud
+   * Delete dhcp by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param clusterName Name of the cluster in the private cloud
+   * @param dhcpId NSX DHCP identifier. Generally the same as the DHCP display name
    * @param options The options parameters.
    */
-  beginDelete(
+  beginDeleteDhcp(
     resourceGroupName: string,
     privateCloudName: string,
-    clusterName: string,
-    options?: ClustersDeleteOptionalParams
+    dhcpId: string,
+    options?: WorkloadNetworkDhcpsDeleteDhcpOptionalParams
   ): Promise<SimplePollerLike<OperationState<void>, void>>;
   /**
-   * Delete a cluster in a private cloud
+   * Delete dhcp by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param clusterName Name of the cluster in the private cloud
+   * @param dhcpId NSX DHCP identifier. Generally the same as the DHCP display name
    * @param options The options parameters.
    */
-  beginDeleteAndWait(
+  beginDeleteDhcpAndWait(
     resourceGroupName: string,
     privateCloudName: string,
-    clusterName: string,
-    options?: ClustersDeleteOptionalParams
+    dhcpId: string,
+    options?: WorkloadNetworkDhcpsDeleteDhcpOptionalParams
   ): Promise<void>;
-  /**
-   * List hosts by zone in a cluster
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName Name of the private cloud
-   * @param clusterName Name of the cluster in the private cloud
-   * @param body The content of the action request
-   * @param options The options parameters.
-   */
-  listZones(
-    resourceGroupName: string,
-    privateCloudName: string,
-    clusterName: string,
-    body: Record<string, unknown>,
-    options?: ClustersListZonesOptionalParams
-  ): Promise<ClustersListZonesResponse>;
 }

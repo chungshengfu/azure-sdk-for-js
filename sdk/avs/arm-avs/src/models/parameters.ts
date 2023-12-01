@@ -15,25 +15,31 @@ import {
   Sku as SkuMapper,
   PrivateCloud as PrivateCloudMapper,
   PrivateCloudUpdate as PrivateCloudUpdateMapper,
+  Addon as AddonMapper,
+  ExpressRouteAuthorization as ExpressRouteAuthorizationMapper,
+  CloudLink as CloudLinkMapper,
   Cluster as ClusterMapper,
   ClusterUpdate as ClusterUpdateMapper,
   Datastore as DatastoreMapper,
-  HcxEnterpriseSite as HcxEnterpriseSiteMapper,
-  ExpressRouteAuthorization as ExpressRouteAuthorizationMapper,
-  GlobalReachConnection as GlobalReachConnectionMapper,
-  WorkloadNetworkSegment as WorkloadNetworkSegmentMapper,
-  WorkloadNetworkDhcp as WorkloadNetworkDhcpMapper,
-  WorkloadNetworkPortMirroring as WorkloadNetworkPortMirroringMapper,
-  WorkloadNetworkVMGroup as WorkloadNetworkVMGroupMapper,
-  WorkloadNetworkDnsService as WorkloadNetworkDnsServiceMapper,
-  WorkloadNetworkDnsZone as WorkloadNetworkDnsZoneMapper,
-  WorkloadNetworkPublicIP as WorkloadNetworkPublicIPMapper,
-  CloudLink as CloudLinkMapper,
-  Addon as AddonMapper,
-  VirtualMachineRestrictMovement as VirtualMachineRestrictMovementMapper,
   PlacementPolicy as PlacementPolicyMapper,
   PlacementPolicyUpdate as PlacementPolicyUpdateMapper,
-  ScriptExecution as ScriptExecutionMapper
+  VirtualMachineRestrictMovement as VirtualMachineRestrictMovementMapper,
+  WorkloadNetworkDhcp as WorkloadNetworkDhcpMapper,
+  WorkloadNetworkDhcpUpdate as WorkloadNetworkDhcpUpdateMapper,
+  WorkloadNetworkDnsService as WorkloadNetworkDnsServiceMapper,
+  WorkloadNetworkDnsServiceUpdate as WorkloadNetworkDnsServiceUpdateMapper,
+  WorkloadNetworkDnsZone as WorkloadNetworkDnsZoneMapper,
+  WorkloadNetworkDnsZoneUpdate as WorkloadNetworkDnsZoneUpdateMapper,
+  GlobalReachConnection as GlobalReachConnectionMapper,
+  HcxEnterpriseSite as HcxEnterpriseSiteMapper,
+  WorkloadNetworkPortMirroring as WorkloadNetworkPortMirroringMapper,
+  WorkloadNetworkPortMirroringUpdate as WorkloadNetworkPortMirroringUpdateMapper,
+  WorkloadNetworkPublicIP as WorkloadNetworkPublicIPMapper,
+  ScriptExecution as ScriptExecutionMapper,
+  WorkloadNetworkSegment as WorkloadNetworkSegmentMapper,
+  WorkloadNetworkSegmentUpdate as WorkloadNetworkSegmentUpdateMapper,
+  WorkloadNetworkVMGroup as WorkloadNetworkVMGroupMapper,
+  WorkloadNetworkVMGroupUpdate as WorkloadNetworkVMGroupUpdateMapper
 } from "../models/mappers";
 
 export const accept: OperationParameter = {
@@ -84,23 +90,6 @@ export const nextLink: OperationURLParameter = {
   skipEncoding: true
 };
 
-export const contentType: OperationParameter = {
-  parameterPath: ["options", "contentType"],
-  mapper: {
-    defaultValue: "application/json",
-    isConstant: true,
-    serializedName: "Content-Type",
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const sku: OperationParameter = {
-  parameterPath: ["options", "sku"],
-  mapper: SkuMapper
-};
-
 export const subscriptionId: OperationURLParameter = {
   parameterPath: "subscriptionId",
   mapper: {
@@ -119,6 +108,37 @@ export const location: OperationURLParameter = {
   parameterPath: "location",
   mapper: {
     serializedName: "location",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const contentType: OperationParameter = {
+  parameterPath: ["options", "contentType"],
+  mapper: {
+    defaultValue: "application/json",
+    isConstant: true,
+    serializedName: "Content-Type",
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const sku: OperationParameter = {
+  parameterPath: ["options", "sku"],
+  mapper: SkuMapper
+};
+
+export const subscriptionId1: OperationURLParameter = {
+  parameterPath: "subscriptionId",
+  mapper: {
+    constraints: {
+      MinLength: 1
+    },
+    serializedName: "subscriptionId",
     required: true,
     type: {
       name: "String"
@@ -155,14 +175,83 @@ export const privateCloudName: OperationURLParameter = {
   }
 };
 
-export const privateCloud: OperationParameter = {
-  parameterPath: "privateCloud",
+export const resource: OperationParameter = {
+  parameterPath: "resource",
   mapper: PrivateCloudMapper
 };
 
-export const privateCloudUpdate: OperationParameter = {
-  parameterPath: "privateCloudUpdate",
+export const properties: OperationParameter = {
+  parameterPath: "properties",
   mapper: PrivateCloudUpdateMapper
+};
+
+export const body: OperationParameter = {
+  parameterPath: "body",
+  mapper: {
+    serializedName: "body",
+    required: true,
+    type: {
+      name: "Dictionary",
+      value: { type: { name: "any" } }
+    }
+  }
+};
+
+export const addonName: OperationURLParameter = {
+  parameterPath: "addonName",
+  mapper: {
+    constraints: {
+      Pattern: new RegExp("^[-\\w\\._]+$")
+    },
+    serializedName: "addonName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const resource1: OperationParameter = {
+  parameterPath: "resource",
+  mapper: AddonMapper
+};
+
+export const authorizationName: OperationURLParameter = {
+  parameterPath: "authorizationName",
+  mapper: {
+    constraints: {
+      Pattern: new RegExp("^[-\\w\\._]+$")
+    },
+    serializedName: "authorizationName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const resource2: OperationParameter = {
+  parameterPath: "resource",
+  mapper: ExpressRouteAuthorizationMapper
+};
+
+export const cloudLinkName: OperationURLParameter = {
+  parameterPath: "cloudLinkName",
+  mapper: {
+    constraints: {
+      Pattern: new RegExp("^[-\\w\\._]+$")
+    },
+    serializedName: "cloudLinkName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const resource3: OperationParameter = {
+  parameterPath: "resource",
+  mapper: CloudLinkMapper
 };
 
 export const clusterName: OperationURLParameter = {
@@ -179,24 +268,13 @@ export const clusterName: OperationURLParameter = {
   }
 };
 
-export const cluster: OperationParameter = {
-  parameterPath: "cluster",
+export const resource4: OperationParameter = {
+  parameterPath: "resource",
   mapper: ClusterMapper
 };
 
-export const privateCloudName1: OperationURLParameter = {
-  parameterPath: "privateCloudName",
-  mapper: {
-    serializedName: "privateCloudName",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const clusterUpdate: OperationParameter = {
-  parameterPath: "clusterUpdate",
+export const properties1: OperationParameter = {
+  parameterPath: "properties",
   mapper: ClusterUpdateMapper
 };
 
@@ -214,254 +292,9 @@ export const datastoreName: OperationURLParameter = {
   }
 };
 
-export const datastore: OperationParameter = {
-  parameterPath: "datastore",
+export const resource5: OperationParameter = {
+  parameterPath: "resource",
   mapper: DatastoreMapper
-};
-
-export const hcxEnterpriseSiteName: OperationURLParameter = {
-  parameterPath: "hcxEnterpriseSiteName",
-  mapper: {
-    constraints: {
-      Pattern: new RegExp("^[-\\w\\._]+$")
-    },
-    serializedName: "hcxEnterpriseSiteName",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const hcxEnterpriseSite: OperationParameter = {
-  parameterPath: "hcxEnterpriseSite",
-  mapper: HcxEnterpriseSiteMapper
-};
-
-export const authorizationName: OperationURLParameter = {
-  parameterPath: "authorizationName",
-  mapper: {
-    constraints: {
-      Pattern: new RegExp("^[-\\w\\._]+$")
-    },
-    serializedName: "authorizationName",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const authorization: OperationParameter = {
-  parameterPath: "authorization",
-  mapper: ExpressRouteAuthorizationMapper
-};
-
-export const globalReachConnectionName: OperationURLParameter = {
-  parameterPath: "globalReachConnectionName",
-  mapper: {
-    constraints: {
-      Pattern: new RegExp("^[-\\w\\._]+$")
-    },
-    serializedName: "globalReachConnectionName",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const globalReachConnection: OperationParameter = {
-  parameterPath: "globalReachConnection",
-  mapper: GlobalReachConnectionMapper
-};
-
-export const workloadNetworkName: OperationURLParameter = {
-  parameterPath: "workloadNetworkName",
-  mapper: {
-    serializedName: "workloadNetworkName",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const segmentId: OperationURLParameter = {
-  parameterPath: "segmentId",
-  mapper: {
-    serializedName: "segmentId",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const workloadNetworkSegment: OperationParameter = {
-  parameterPath: "workloadNetworkSegment",
-  mapper: WorkloadNetworkSegmentMapper
-};
-
-export const dhcpId: OperationURLParameter = {
-  parameterPath: "dhcpId",
-  mapper: {
-    serializedName: "dhcpId",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const workloadNetworkDhcp: OperationParameter = {
-  parameterPath: "workloadNetworkDhcp",
-  mapper: WorkloadNetworkDhcpMapper
-};
-
-export const gatewayId: OperationURLParameter = {
-  parameterPath: "gatewayId",
-  mapper: {
-    serializedName: "gatewayId",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const portMirroringId: OperationURLParameter = {
-  parameterPath: "portMirroringId",
-  mapper: {
-    serializedName: "portMirroringId",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const workloadNetworkPortMirroring: OperationParameter = {
-  parameterPath: "workloadNetworkPortMirroring",
-  mapper: WorkloadNetworkPortMirroringMapper
-};
-
-export const vmGroupId: OperationURLParameter = {
-  parameterPath: "vmGroupId",
-  mapper: {
-    serializedName: "vmGroupId",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const workloadNetworkVMGroup: OperationParameter = {
-  parameterPath: "workloadNetworkVMGroup",
-  mapper: WorkloadNetworkVMGroupMapper
-};
-
-export const virtualMachineId: OperationURLParameter = {
-  parameterPath: "virtualMachineId",
-  mapper: {
-    serializedName: "virtualMachineId",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const dnsServiceId: OperationURLParameter = {
-  parameterPath: "dnsServiceId",
-  mapper: {
-    serializedName: "dnsServiceId",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const workloadNetworkDnsService: OperationParameter = {
-  parameterPath: "workloadNetworkDnsService",
-  mapper: WorkloadNetworkDnsServiceMapper
-};
-
-export const dnsZoneId: OperationURLParameter = {
-  parameterPath: "dnsZoneId",
-  mapper: {
-    serializedName: "dnsZoneId",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const workloadNetworkDnsZone: OperationParameter = {
-  parameterPath: "workloadNetworkDnsZone",
-  mapper: WorkloadNetworkDnsZoneMapper
-};
-
-export const publicIPId: OperationURLParameter = {
-  parameterPath: "publicIPId",
-  mapper: {
-    serializedName: "publicIPId",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const workloadNetworkPublicIP: OperationParameter = {
-  parameterPath: "workloadNetworkPublicIP",
-  mapper: WorkloadNetworkPublicIPMapper
-};
-
-export const cloudLinkName: OperationURLParameter = {
-  parameterPath: "cloudLinkName",
-  mapper: {
-    constraints: {
-      Pattern: new RegExp("^[-\\w\\._]+$")
-    },
-    serializedName: "cloudLinkName",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const cloudLink: OperationParameter = {
-  parameterPath: "cloudLink",
-  mapper: CloudLinkMapper
-};
-
-export const addonName: OperationURLParameter = {
-  parameterPath: "addonName",
-  mapper: {
-    constraints: {
-      Pattern: new RegExp("^[-\\w\\._]+$")
-    },
-    serializedName: "addonName",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const addon: OperationParameter = {
-  parameterPath: "addon",
-  mapper: AddonMapper
-};
-
-export const restrictMovement: OperationParameter = {
-  parameterPath: "restrictMovement",
-  mapper: VirtualMachineRestrictMovementMapper
 };
 
 export const placementPolicyName: OperationURLParameter = {
@@ -478,14 +311,214 @@ export const placementPolicyName: OperationURLParameter = {
   }
 };
 
-export const placementPolicy: OperationParameter = {
-  parameterPath: "placementPolicy",
+export const resource6: OperationParameter = {
+  parameterPath: "resource",
   mapper: PlacementPolicyMapper
 };
 
-export const placementPolicyUpdate: OperationParameter = {
-  parameterPath: "placementPolicyUpdate",
+export const properties2: OperationParameter = {
+  parameterPath: "properties",
   mapper: PlacementPolicyUpdateMapper
+};
+
+export const virtualMachineId: OperationURLParameter = {
+  parameterPath: "virtualMachineId",
+  mapper: {
+    serializedName: "virtualMachineId",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const body1: OperationParameter = {
+  parameterPath: "body",
+  mapper: VirtualMachineRestrictMovementMapper
+};
+
+export const dhcpId: OperationURLParameter = {
+  parameterPath: "dhcpId",
+  mapper: {
+    serializedName: "dhcpId",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const resource7: OperationParameter = {
+  parameterPath: "resource",
+  mapper: WorkloadNetworkDhcpMapper
+};
+
+export const properties3: OperationParameter = {
+  parameterPath: "properties",
+  mapper: WorkloadNetworkDhcpUpdateMapper
+};
+
+export const dnsServiceId: OperationURLParameter = {
+  parameterPath: "dnsServiceId",
+  mapper: {
+    serializedName: "dnsServiceId",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const resource8: OperationParameter = {
+  parameterPath: "resource",
+  mapper: WorkloadNetworkDnsServiceMapper
+};
+
+export const properties4: OperationParameter = {
+  parameterPath: "properties",
+  mapper: WorkloadNetworkDnsServiceUpdateMapper
+};
+
+export const dnsZoneId: OperationURLParameter = {
+  parameterPath: "dnsZoneId",
+  mapper: {
+    serializedName: "dnsZoneId",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const resource9: OperationParameter = {
+  parameterPath: "resource",
+  mapper: WorkloadNetworkDnsZoneMapper
+};
+
+export const properties5: OperationParameter = {
+  parameterPath: "properties",
+  mapper: WorkloadNetworkDnsZoneUpdateMapper
+};
+
+export const gatewayId: OperationURLParameter = {
+  parameterPath: "gatewayId",
+  mapper: {
+    serializedName: "gatewayId",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const globalReachConnectionName: OperationURLParameter = {
+  parameterPath: "globalReachConnectionName",
+  mapper: {
+    constraints: {
+      Pattern: new RegExp("^[-\\w\\._]+$")
+    },
+    serializedName: "globalReachConnectionName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const resource10: OperationParameter = {
+  parameterPath: "resource",
+  mapper: GlobalReachConnectionMapper
+};
+
+export const hcxEnterpriseSiteName: OperationURLParameter = {
+  parameterPath: "hcxEnterpriseSiteName",
+  mapper: {
+    constraints: {
+      Pattern: new RegExp("^[-\\w\\._]+$")
+    },
+    serializedName: "hcxEnterpriseSiteName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const resource11: OperationParameter = {
+  parameterPath: "resource",
+  mapper: HcxEnterpriseSiteMapper
+};
+
+export const portMirroringId: OperationURLParameter = {
+  parameterPath: "portMirroringId",
+  mapper: {
+    serializedName: "portMirroringId",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const resource12: OperationParameter = {
+  parameterPath: "resource",
+  mapper: WorkloadNetworkPortMirroringMapper
+};
+
+export const properties6: OperationParameter = {
+  parameterPath: "properties",
+  mapper: WorkloadNetworkPortMirroringUpdateMapper
+};
+
+export const publicIPId: OperationURLParameter = {
+  parameterPath: "publicIPId",
+  mapper: {
+    serializedName: "publicIPId",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const resource13: OperationParameter = {
+  parameterPath: "resource",
+  mapper: WorkloadNetworkPublicIPMapper
+};
+
+export const scriptExecutionName: OperationURLParameter = {
+  parameterPath: "scriptExecutionName",
+  mapper: {
+    constraints: {
+      Pattern: new RegExp("^[-\\w\\._]+$")
+    },
+    serializedName: "scriptExecutionName",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const resource14: OperationParameter = {
+  parameterPath: "resource",
+  mapper: ScriptExecutionMapper
+};
+
+export const body2: OperationParameter = {
+  parameterPath: "body",
+  mapper: {
+    serializedName: "body",
+    required: true,
+    type: {
+      name: "Sequence",
+      element: {
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
 };
 
 export const scriptPackageName: OperationURLParameter = {
@@ -516,13 +549,10 @@ export const scriptCmdletName: OperationURLParameter = {
   }
 };
 
-export const scriptExecutionName: OperationURLParameter = {
-  parameterPath: "scriptExecutionName",
+export const segmentId: OperationURLParameter = {
+  parameterPath: "segmentId",
   mapper: {
-    constraints: {
-      Pattern: new RegExp("^[-\\w\\._]+$")
-    },
-    serializedName: "scriptExecutionName",
+    serializedName: "segmentId",
     required: true,
     type: {
       name: "String"
@@ -530,22 +560,44 @@ export const scriptExecutionName: OperationURLParameter = {
   }
 };
 
-export const scriptExecution: OperationParameter = {
-  parameterPath: "scriptExecution",
-  mapper: ScriptExecutionMapper
+export const resource15: OperationParameter = {
+  parameterPath: "resource",
+  mapper: WorkloadNetworkSegmentMapper
 };
 
-export const scriptOutputStreamType: OperationParameter = {
-  parameterPath: ["options", "scriptOutputStreamType"],
+export const properties7: OperationParameter = {
+  parameterPath: "properties",
+  mapper: WorkloadNetworkSegmentUpdateMapper
+};
+
+export const vmGroupId: OperationURLParameter = {
+  parameterPath: "vmGroupId",
   mapper: {
-    serializedName: "scriptOutputStreamType",
+    serializedName: "vmGroupId",
+    required: true,
     type: {
-      name: "Sequence",
-      element: {
-        type: {
-          name: "String"
-        }
-      }
+      name: "String"
+    }
+  }
+};
+
+export const resource16: OperationParameter = {
+  parameterPath: "resource",
+  mapper: WorkloadNetworkVMGroupMapper
+};
+
+export const properties8: OperationParameter = {
+  parameterPath: "properties",
+  mapper: WorkloadNetworkVMGroupUpdateMapper
+};
+
+export const workloadNetworkName: OperationURLParameter = {
+  parameterPath: "workloadNetworkName",
+  mapper: {
+    serializedName: "workloadNetworkName",
+    required: true,
+    type: {
+      name: "String"
     }
   }
 };

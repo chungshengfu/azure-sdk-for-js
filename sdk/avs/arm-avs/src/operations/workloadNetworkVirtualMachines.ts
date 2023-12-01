@@ -8,31 +8,29 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { HcxEnterpriseSites } from "../operationsInterfaces";
+import { WorkloadNetworkVirtualMachines } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { AzureVMwareSolutionAPI } from "../azureVMwareSolutionAPI";
 import {
-  HcxEnterpriseSite,
-  HcxEnterpriseSitesListByPrivateCloudNextOptionalParams,
-  HcxEnterpriseSitesListByPrivateCloudOptionalParams,
-  HcxEnterpriseSitesListByPrivateCloudResponse,
-  HcxEnterpriseSitesGetOptionalParams,
-  HcxEnterpriseSitesGetResponse,
-  HcxEnterpriseSitesCreateOrUpdateOptionalParams,
-  HcxEnterpriseSitesCreateOrUpdateResponse,
-  HcxEnterpriseSitesDeleteOptionalParams,
-  HcxEnterpriseSitesListByPrivateCloudNextResponse
+  WorkloadNetworkVirtualMachine,
+  WorkloadNetworkVirtualMachinesListByPrivateCloudNextOptionalParams,
+  WorkloadNetworkVirtualMachinesListByPrivateCloudOptionalParams,
+  WorkloadNetworkVirtualMachinesListByPrivateCloudResponse,
+  WorkloadNetworkVirtualMachinesGetVirtualMachineOptionalParams,
+  WorkloadNetworkVirtualMachinesGetVirtualMachineResponse,
+  WorkloadNetworkVirtualMachinesListByPrivateCloudNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing HcxEnterpriseSites operations. */
-export class HcxEnterpriseSitesImpl implements HcxEnterpriseSites {
+/** Class containing WorkloadNetworkVirtualMachines operations. */
+export class WorkloadNetworkVirtualMachinesImpl
+  implements WorkloadNetworkVirtualMachines {
   private readonly client: AzureVMwareSolutionAPI;
 
   /**
-   * Initialize a new instance of the class HcxEnterpriseSites class.
+   * Initialize a new instance of the class WorkloadNetworkVirtualMachines class.
    * @param client Reference to the service client
    */
   constructor(client: AzureVMwareSolutionAPI) {
@@ -40,7 +38,7 @@ export class HcxEnterpriseSitesImpl implements HcxEnterpriseSites {
   }
 
   /**
-   * List HCX on-premises key in a private cloud
+   * List of virtual machines in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
@@ -48,8 +46,8 @@ export class HcxEnterpriseSitesImpl implements HcxEnterpriseSites {
   public listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: HcxEnterpriseSitesListByPrivateCloudOptionalParams
-  ): PagedAsyncIterableIterator<HcxEnterpriseSite> {
+    options?: WorkloadNetworkVirtualMachinesListByPrivateCloudOptionalParams
+  ): PagedAsyncIterableIterator<WorkloadNetworkVirtualMachine> {
     const iter = this.listByPrivateCloudPagingAll(
       resourceGroupName,
       privateCloudName,
@@ -79,10 +77,10 @@ export class HcxEnterpriseSitesImpl implements HcxEnterpriseSites {
   private async *listByPrivateCloudPagingPage(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: HcxEnterpriseSitesListByPrivateCloudOptionalParams,
+    options?: WorkloadNetworkVirtualMachinesListByPrivateCloudOptionalParams,
     settings?: PageSettings
-  ): AsyncIterableIterator<HcxEnterpriseSite[]> {
-    let result: HcxEnterpriseSitesListByPrivateCloudResponse;
+  ): AsyncIterableIterator<WorkloadNetworkVirtualMachine[]> {
+    let result: WorkloadNetworkVirtualMachinesListByPrivateCloudResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
       result = await this._listByPrivateCloud(
@@ -112,8 +110,8 @@ export class HcxEnterpriseSitesImpl implements HcxEnterpriseSites {
   private async *listByPrivateCloudPagingAll(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: HcxEnterpriseSitesListByPrivateCloudOptionalParams
-  ): AsyncIterableIterator<HcxEnterpriseSite> {
+    options?: WorkloadNetworkVirtualMachinesListByPrivateCloudOptionalParams
+  ): AsyncIterableIterator<WorkloadNetworkVirtualMachine> {
     for await (const page of this.listByPrivateCloudPagingPage(
       resourceGroupName,
       privateCloudName,
@@ -124,7 +122,7 @@ export class HcxEnterpriseSitesImpl implements HcxEnterpriseSites {
   }
 
   /**
-   * List HCX on-premises key in a private cloud
+   * List of virtual machines in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
@@ -132,8 +130,8 @@ export class HcxEnterpriseSitesImpl implements HcxEnterpriseSites {
   private _listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: HcxEnterpriseSitesListByPrivateCloudOptionalParams
-  ): Promise<HcxEnterpriseSitesListByPrivateCloudResponse> {
+    options?: WorkloadNetworkVirtualMachinesListByPrivateCloudOptionalParams
+  ): Promise<WorkloadNetworkVirtualMachinesListByPrivateCloudResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, privateCloudName, options },
       listByPrivateCloudOperationSpec
@@ -141,67 +139,21 @@ export class HcxEnterpriseSitesImpl implements HcxEnterpriseSites {
   }
 
   /**
-   * Get an HCX on-premises key by name in a private cloud
+   * Get a virtual machine by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param hcxEnterpriseSiteName Name of the HCX Enterprise Site in the private cloud
+   * @param virtualMachineId Virtual Machine identifier
    * @param options The options parameters.
    */
-  get(
+  getVirtualMachine(
     resourceGroupName: string,
     privateCloudName: string,
-    hcxEnterpriseSiteName: string,
-    options?: HcxEnterpriseSitesGetOptionalParams
-  ): Promise<HcxEnterpriseSitesGetResponse> {
+    virtualMachineId: string,
+    options?: WorkloadNetworkVirtualMachinesGetVirtualMachineOptionalParams
+  ): Promise<WorkloadNetworkVirtualMachinesGetVirtualMachineResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, privateCloudName, hcxEnterpriseSiteName, options },
-      getOperationSpec
-    );
-  }
-
-  /**
-   * Create or update an activation key for on-premises HCX site
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName Name of the private cloud
-   * @param hcxEnterpriseSiteName Name of the HCX Enterprise Site in the private cloud
-   * @param resource Resource create parameters.
-   * @param options The options parameters.
-   */
-  createOrUpdate(
-    resourceGroupName: string,
-    privateCloudName: string,
-    hcxEnterpriseSiteName: string,
-    resource: HcxEnterpriseSite,
-    options?: HcxEnterpriseSitesCreateOrUpdateOptionalParams
-  ): Promise<HcxEnterpriseSitesCreateOrUpdateResponse> {
-    return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        privateCloudName,
-        hcxEnterpriseSiteName,
-        resource,
-        options
-      },
-      createOrUpdateOperationSpec
-    );
-  }
-
-  /**
-   * Delete HCX on-premises key in a private cloud
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName Name of the private cloud
-   * @param hcxEnterpriseSiteName Name of the HCX Enterprise Site in the private cloud
-   * @param options The options parameters.
-   */
-  delete(
-    resourceGroupName: string,
-    privateCloudName: string,
-    hcxEnterpriseSiteName: string,
-    options?: HcxEnterpriseSitesDeleteOptionalParams
-  ): Promise<void> {
-    return this.client.sendOperationRequest(
-      { resourceGroupName, privateCloudName, hcxEnterpriseSiteName, options },
-      deleteOperationSpec
+      { resourceGroupName, privateCloudName, virtualMachineId, options },
+      getVirtualMachineOperationSpec
     );
   }
 
@@ -216,8 +168,8 @@ export class HcxEnterpriseSitesImpl implements HcxEnterpriseSites {
     resourceGroupName: string,
     privateCloudName: string,
     nextLink: string,
-    options?: HcxEnterpriseSitesListByPrivateCloudNextOptionalParams
-  ): Promise<HcxEnterpriseSitesListByPrivateCloudNextResponse> {
+    options?: WorkloadNetworkVirtualMachinesListByPrivateCloudNextOptionalParams
+  ): Promise<WorkloadNetworkVirtualMachinesListByPrivateCloudNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, privateCloudName, nextLink, options },
       listByPrivateCloudNextOperationSpec
@@ -229,11 +181,11 @@ const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listByPrivateCloudOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/hcxEnterpriseSites",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/virtualMachines",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.HcxEnterpriseSiteListResult
+      bodyMapper: Mappers.WorkloadNetworkVirtualMachineListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -249,13 +201,13 @@ const listByPrivateCloudOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept],
   serializer
 };
-const getOperationSpec: coreClient.OperationSpec = {
+const getVirtualMachineOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/hcxEnterpriseSites/{hcxEnterpriseSiteName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/virtualMachines/{virtualMachineId}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.HcxEnterpriseSite
+      bodyMapper: Mappers.WorkloadNetworkVirtualMachine
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -267,57 +219,7 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
-    Parameters.hcxEnterpriseSiteName
-  ],
-  headerParameters: [Parameters.accept],
-  serializer
-};
-const createOrUpdateOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/hcxEnterpriseSites/{hcxEnterpriseSiteName}",
-  httpMethod: "PUT",
-  responses: {
-    200: {
-      bodyMapper: Mappers.HcxEnterpriseSite
-    },
-    201: {
-      bodyMapper: Mappers.HcxEnterpriseSite
-    },
-    default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
-  },
-  requestBody: Parameters.resource11,
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId1,
-    Parameters.resourceGroupName,
-    Parameters.privateCloudName,
-    Parameters.hcxEnterpriseSiteName
-  ],
-  headerParameters: [Parameters.accept, Parameters.contentType],
-  mediaType: "json",
-  serializer
-};
-const deleteOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/hcxEnterpriseSites/{hcxEnterpriseSiteName}",
-  httpMethod: "DELETE",
-  responses: {
-    200: {},
-    204: {},
-    default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
-  },
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId1,
-    Parameters.resourceGroupName,
-    Parameters.privateCloudName,
-    Parameters.hcxEnterpriseSiteName
+    Parameters.virtualMachineId
   ],
   headerParameters: [Parameters.accept],
   serializer
@@ -327,7 +229,7 @@ const listByPrivateCloudNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.HcxEnterpriseSiteListResult
+      bodyMapper: Mappers.WorkloadNetworkVirtualMachineListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse

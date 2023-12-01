@@ -8,7 +8,7 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { CloudLinks } from "../operationsInterfaces";
+import { WorkloadNetworkDnsServices } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
@@ -20,25 +20,29 @@ import {
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
-  CloudLink,
-  CloudLinksListByPrivateCloudNextOptionalParams,
-  CloudLinksListByPrivateCloudOptionalParams,
-  CloudLinksListByPrivateCloudResponse,
-  CloudLinksGetOptionalParams,
-  CloudLinksGetResponse,
-  CloudLinksCreateOrUpdateOptionalParams,
-  CloudLinksCreateOrUpdateResponse,
-  CloudLinksDeleteOptionalParams,
-  CloudLinksListByPrivateCloudNextResponse
+  WorkloadNetworkDnsService,
+  WorkloadNetworkDnsServicesListByPrivateCloudNextOptionalParams,
+  WorkloadNetworkDnsServicesListByPrivateCloudOptionalParams,
+  WorkloadNetworkDnsServicesListByPrivateCloudResponse,
+  WorkloadNetworkDnsServicesGetDnsServiceOptionalParams,
+  WorkloadNetworkDnsServicesGetDnsServiceResponse,
+  WorkloadNetworkDnsServicesCreateDnsServiceOptionalParams,
+  WorkloadNetworkDnsServicesCreateDnsServiceResponse,
+  WorkloadNetworkDnsServiceUpdate,
+  WorkloadNetworkDnsServicesUpdateDnsServiceOptionalParams,
+  WorkloadNetworkDnsServicesUpdateDnsServiceResponse,
+  WorkloadNetworkDnsServicesDeleteDnsServiceOptionalParams,
+  WorkloadNetworkDnsServicesListByPrivateCloudNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing CloudLinks operations. */
-export class CloudLinksImpl implements CloudLinks {
+/** Class containing WorkloadNetworkDnsServices operations. */
+export class WorkloadNetworkDnsServicesImpl
+  implements WorkloadNetworkDnsServices {
   private readonly client: AzureVMwareSolutionAPI;
 
   /**
-   * Initialize a new instance of the class CloudLinks class.
+   * Initialize a new instance of the class WorkloadNetworkDnsServices class.
    * @param client Reference to the service client
    */
   constructor(client: AzureVMwareSolutionAPI) {
@@ -46,7 +50,7 @@ export class CloudLinksImpl implements CloudLinks {
   }
 
   /**
-   * List cloud link in a private cloud
+   * List of DNS services in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
@@ -54,8 +58,8 @@ export class CloudLinksImpl implements CloudLinks {
   public listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: CloudLinksListByPrivateCloudOptionalParams
-  ): PagedAsyncIterableIterator<CloudLink> {
+    options?: WorkloadNetworkDnsServicesListByPrivateCloudOptionalParams
+  ): PagedAsyncIterableIterator<WorkloadNetworkDnsService> {
     const iter = this.listByPrivateCloudPagingAll(
       resourceGroupName,
       privateCloudName,
@@ -85,10 +89,10 @@ export class CloudLinksImpl implements CloudLinks {
   private async *listByPrivateCloudPagingPage(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: CloudLinksListByPrivateCloudOptionalParams,
+    options?: WorkloadNetworkDnsServicesListByPrivateCloudOptionalParams,
     settings?: PageSettings
-  ): AsyncIterableIterator<CloudLink[]> {
-    let result: CloudLinksListByPrivateCloudResponse;
+  ): AsyncIterableIterator<WorkloadNetworkDnsService[]> {
+    let result: WorkloadNetworkDnsServicesListByPrivateCloudResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
       result = await this._listByPrivateCloud(
@@ -118,8 +122,8 @@ export class CloudLinksImpl implements CloudLinks {
   private async *listByPrivateCloudPagingAll(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: CloudLinksListByPrivateCloudOptionalParams
-  ): AsyncIterableIterator<CloudLink> {
+    options?: WorkloadNetworkDnsServicesListByPrivateCloudOptionalParams
+  ): AsyncIterableIterator<WorkloadNetworkDnsService> {
     for await (const page of this.listByPrivateCloudPagingPage(
       resourceGroupName,
       privateCloudName,
@@ -130,7 +134,7 @@ export class CloudLinksImpl implements CloudLinks {
   }
 
   /**
-   * List cloud link in a private cloud
+   * List of DNS services in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
@@ -138,8 +142,8 @@ export class CloudLinksImpl implements CloudLinks {
   private _listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: CloudLinksListByPrivateCloudOptionalParams
-  ): Promise<CloudLinksListByPrivateCloudResponse> {
+    options?: WorkloadNetworkDnsServicesListByPrivateCloudOptionalParams
+  ): Promise<WorkloadNetworkDnsServicesListByPrivateCloudResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, privateCloudName, options },
       listByPrivateCloudOperationSpec
@@ -147,48 +151,48 @@ export class CloudLinksImpl implements CloudLinks {
   }
 
   /**
-   * Get an cloud link by name in a private cloud
+   * Get a DNS service by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param cloudLinkName Name of the cloud link resource
+   * @param dnsServiceId NSX DNS Service identifier. Generally the same as the DNS Service's display name
    * @param options The options parameters.
    */
-  get(
+  getDnsService(
     resourceGroupName: string,
     privateCloudName: string,
-    cloudLinkName: string,
-    options?: CloudLinksGetOptionalParams
-  ): Promise<CloudLinksGetResponse> {
+    dnsServiceId: string,
+    options?: WorkloadNetworkDnsServicesGetDnsServiceOptionalParams
+  ): Promise<WorkloadNetworkDnsServicesGetDnsServiceResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, privateCloudName, cloudLinkName, options },
-      getOperationSpec
+      { resourceGroupName, privateCloudName, dnsServiceId, options },
+      getDnsServiceOperationSpec
     );
   }
 
   /**
-   * Create or update a cloud link in a private cloud
+   * Create a DNS service by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param cloudLinkName Name of the cloud link resource
+   * @param dnsServiceId NSX DNS Service identifier. Generally the same as the DNS Service's display name
    * @param resource Resource create parameters.
    * @param options The options parameters.
    */
-  async beginCreateOrUpdate(
+  async beginCreateDnsService(
     resourceGroupName: string,
     privateCloudName: string,
-    cloudLinkName: string,
-    resource: CloudLink,
-    options?: CloudLinksCreateOrUpdateOptionalParams
+    dnsServiceId: string,
+    resource: WorkloadNetworkDnsService,
+    options?: WorkloadNetworkDnsServicesCreateDnsServiceOptionalParams
   ): Promise<
     SimplePollerLike<
-      OperationState<CloudLinksCreateOrUpdateResponse>,
-      CloudLinksCreateOrUpdateResponse
+      OperationState<WorkloadNetworkDnsServicesCreateDnsServiceResponse>,
+      WorkloadNetworkDnsServicesCreateDnsServiceResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
-    ): Promise<CloudLinksCreateOrUpdateResponse> => {
+    ): Promise<WorkloadNetworkDnsServicesCreateDnsServiceResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -229,15 +233,15 @@ export class CloudLinksImpl implements CloudLinks {
       args: {
         resourceGroupName,
         privateCloudName,
-        cloudLinkName,
+        dnsServiceId,
         resource,
         options
       },
-      spec: createOrUpdateOperationSpec
+      spec: createDnsServiceOperationSpec
     });
     const poller = await createHttpPoller<
-      CloudLinksCreateOrUpdateResponse,
-      OperationState<CloudLinksCreateOrUpdateResponse>
+      WorkloadNetworkDnsServicesCreateDnsServiceResponse,
+      OperationState<WorkloadNetworkDnsServicesCreateDnsServiceResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
@@ -248,24 +252,24 @@ export class CloudLinksImpl implements CloudLinks {
   }
 
   /**
-   * Create or update a cloud link in a private cloud
+   * Create a DNS service by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param cloudLinkName Name of the cloud link resource
+   * @param dnsServiceId NSX DNS Service identifier. Generally the same as the DNS Service's display name
    * @param resource Resource create parameters.
    * @param options The options parameters.
    */
-  async beginCreateOrUpdateAndWait(
+  async beginCreateDnsServiceAndWait(
     resourceGroupName: string,
     privateCloudName: string,
-    cloudLinkName: string,
-    resource: CloudLink,
-    options?: CloudLinksCreateOrUpdateOptionalParams
-  ): Promise<CloudLinksCreateOrUpdateResponse> {
-    const poller = await this.beginCreateOrUpdate(
+    dnsServiceId: string,
+    resource: WorkloadNetworkDnsService,
+    options?: WorkloadNetworkDnsServicesCreateDnsServiceOptionalParams
+  ): Promise<WorkloadNetworkDnsServicesCreateDnsServiceResponse> {
+    const poller = await this.beginCreateDnsService(
       resourceGroupName,
       privateCloudName,
-      cloudLinkName,
+      dnsServiceId,
       resource,
       options
     );
@@ -273,17 +277,124 @@ export class CloudLinksImpl implements CloudLinks {
   }
 
   /**
-   * Delete a cloud link in a private cloud
+   * Create or update a DNS service by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param cloudLinkName Name of the cloud link resource
+   * @param dnsServiceId NSX DNS Service identifier. Generally the same as the DNS Service's display name
+   * @param properties The resource properties to be updated.
    * @param options The options parameters.
    */
-  async beginDelete(
+  async beginUpdateDnsService(
     resourceGroupName: string,
     privateCloudName: string,
-    cloudLinkName: string,
-    options?: CloudLinksDeleteOptionalParams
+    dnsServiceId: string,
+    properties: WorkloadNetworkDnsServiceUpdate,
+    options?: WorkloadNetworkDnsServicesUpdateDnsServiceOptionalParams
+  ): Promise<
+    SimplePollerLike<
+      OperationState<WorkloadNetworkDnsServicesUpdateDnsServiceResponse>,
+      WorkloadNetworkDnsServicesUpdateDnsServiceResponse
+    >
+  > {
+    const directSendOperation = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ): Promise<WorkloadNetworkDnsServicesUpdateDnsServiceResponse> => {
+      return this.client.sendOperationRequest(args, spec);
+    };
+    const sendOperationFn = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec
+    ) => {
+      let currentRawResponse:
+        | coreClient.FullOperationResponse
+        | undefined = undefined;
+      const providedCallback = args.options?.onResponse;
+      const callback: coreClient.RawResponseCallback = (
+        rawResponse: coreClient.FullOperationResponse,
+        flatResponse: unknown
+      ) => {
+        currentRawResponse = rawResponse;
+        providedCallback?.(rawResponse, flatResponse);
+      };
+      const updatedArgs = {
+        ...args,
+        options: {
+          ...args.options,
+          onResponse: callback
+        }
+      };
+      const flatResponse = await directSendOperation(updatedArgs, spec);
+      return {
+        flatResponse,
+        rawResponse: {
+          statusCode: currentRawResponse!.status,
+          body: currentRawResponse!.parsedBody,
+          headers: currentRawResponse!.headers.toJSON()
+        }
+      };
+    };
+
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: {
+        resourceGroupName,
+        privateCloudName,
+        dnsServiceId,
+        properties,
+        options
+      },
+      spec: updateDnsServiceOperationSpec
+    });
+    const poller = await createHttpPoller<
+      WorkloadNetworkDnsServicesUpdateDnsServiceResponse,
+      OperationState<WorkloadNetworkDnsServicesUpdateDnsServiceResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "location"
+    });
+    await poller.poll();
+    return poller;
+  }
+
+  /**
+   * Create or update a DNS service by id in a private cloud workload network.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param privateCloudName Name of the private cloud
+   * @param dnsServiceId NSX DNS Service identifier. Generally the same as the DNS Service's display name
+   * @param properties The resource properties to be updated.
+   * @param options The options parameters.
+   */
+  async beginUpdateDnsServiceAndWait(
+    resourceGroupName: string,
+    privateCloudName: string,
+    dnsServiceId: string,
+    properties: WorkloadNetworkDnsServiceUpdate,
+    options?: WorkloadNetworkDnsServicesUpdateDnsServiceOptionalParams
+  ): Promise<WorkloadNetworkDnsServicesUpdateDnsServiceResponse> {
+    const poller = await this.beginUpdateDnsService(
+      resourceGroupName,
+      privateCloudName,
+      dnsServiceId,
+      properties,
+      options
+    );
+    return poller.pollUntilDone();
+  }
+
+  /**
+   * Delete a DNS service by id in a private cloud workload network.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param privateCloudName Name of the private cloud
+   * @param dnsServiceId NSX DNS Service identifier. Generally the same as the DNS Service's display name
+   * @param options The options parameters.
+   */
+  async beginDeleteDnsService(
+    resourceGroupName: string,
+    privateCloudName: string,
+    dnsServiceId: string,
+    options?: WorkloadNetworkDnsServicesDeleteDnsServiceOptionalParams
   ): Promise<SimplePollerLike<OperationState<void>, void>> {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
@@ -326,8 +437,8 @@ export class CloudLinksImpl implements CloudLinks {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, privateCloudName, cloudLinkName, options },
-      spec: deleteOperationSpec
+      args: { resourceGroupName, privateCloudName, dnsServiceId, options },
+      spec: deleteDnsServiceOperationSpec
     });
     const poller = await createHttpPoller<void, OperationState<void>>(lro, {
       restoreFrom: options?.resumeFrom,
@@ -339,22 +450,22 @@ export class CloudLinksImpl implements CloudLinks {
   }
 
   /**
-   * Delete a cloud link in a private cloud
+   * Delete a DNS service by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param cloudLinkName Name of the cloud link resource
+   * @param dnsServiceId NSX DNS Service identifier. Generally the same as the DNS Service's display name
    * @param options The options parameters.
    */
-  async beginDeleteAndWait(
+  async beginDeleteDnsServiceAndWait(
     resourceGroupName: string,
     privateCloudName: string,
-    cloudLinkName: string,
-    options?: CloudLinksDeleteOptionalParams
+    dnsServiceId: string,
+    options?: WorkloadNetworkDnsServicesDeleteDnsServiceOptionalParams
   ): Promise<void> {
-    const poller = await this.beginDelete(
+    const poller = await this.beginDeleteDnsService(
       resourceGroupName,
       privateCloudName,
-      cloudLinkName,
+      dnsServiceId,
       options
     );
     return poller.pollUntilDone();
@@ -371,8 +482,8 @@ export class CloudLinksImpl implements CloudLinks {
     resourceGroupName: string,
     privateCloudName: string,
     nextLink: string,
-    options?: CloudLinksListByPrivateCloudNextOptionalParams
-  ): Promise<CloudLinksListByPrivateCloudNextResponse> {
+    options?: WorkloadNetworkDnsServicesListByPrivateCloudNextOptionalParams
+  ): Promise<WorkloadNetworkDnsServicesListByPrivateCloudNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, privateCloudName, nextLink, options },
       listByPrivateCloudNextOperationSpec
@@ -384,11 +495,11 @@ const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listByPrivateCloudOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/cloudLinks",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/dnsServices",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudLinkListResult
+      bodyMapper: Mappers.WorkloadNetworkDnsServiceListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -404,13 +515,13 @@ const listByPrivateCloudOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept],
   serializer
 };
-const getOperationSpec: coreClient.OperationSpec = {
+const getDnsServiceOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/cloudLinks/{cloudLinkName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/dnsServices/{dnsServiceId}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudLink
+      bodyMapper: Mappers.WorkloadNetworkDnsService
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -422,48 +533,82 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
-    Parameters.cloudLinkName
+    Parameters.dnsServiceId
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
-const createOrUpdateOperationSpec: coreClient.OperationSpec = {
+const createDnsServiceOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/cloudLinks/{cloudLinkName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/dnsServices/{dnsServiceId}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudLink
+      bodyMapper: Mappers.WorkloadNetworkDnsService
     },
     201: {
-      bodyMapper: Mappers.CloudLink
+      bodyMapper: Mappers.WorkloadNetworkDnsService
     },
     202: {
-      bodyMapper: Mappers.CloudLink
+      bodyMapper: Mappers.WorkloadNetworkDnsService
     },
     204: {
-      bodyMapper: Mappers.CloudLink
+      bodyMapper: Mappers.WorkloadNetworkDnsService
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.resource3,
+  requestBody: Parameters.resource8,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
-    Parameters.cloudLinkName
+    Parameters.dnsServiceId
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
   serializer
 };
-const deleteOperationSpec: coreClient.OperationSpec = {
+const updateDnsServiceOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/cloudLinks/{cloudLinkName}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/dnsServices/{dnsServiceId}",
+  httpMethod: "PATCH",
+  responses: {
+    200: {
+      bodyMapper: Mappers.WorkloadNetworkDnsService
+    },
+    201: {
+      bodyMapper: Mappers.WorkloadNetworkDnsService
+    },
+    202: {
+      bodyMapper: Mappers.WorkloadNetworkDnsService
+    },
+    204: {
+      bodyMapper: Mappers.WorkloadNetworkDnsService
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  requestBody: Parameters.properties4,
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId1,
+    Parameters.resourceGroupName,
+    Parameters.privateCloudName,
+    Parameters.dnsServiceId
+  ],
+  headerParameters: [Parameters.accept, Parameters.contentType],
+  mediaType: "json",
+  serializer
+};
+const deleteDnsServiceOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AVS/privateClouds/{privateCloudName}/dnsServices/{dnsServiceId}",
   httpMethod: "DELETE",
   responses: {
     200: {},
@@ -480,7 +625,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId1,
     Parameters.resourceGroupName,
     Parameters.privateCloudName,
-    Parameters.cloudLinkName
+    Parameters.dnsServiceId
   ],
   headerParameters: [Parameters.accept],
   serializer
@@ -490,7 +635,7 @@ const listByPrivateCloudNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudLinkListResult
+      bodyMapper: Mappers.WorkloadNetworkDnsServiceListResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse

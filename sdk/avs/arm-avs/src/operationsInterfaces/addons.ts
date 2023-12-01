@@ -10,7 +10,7 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   Addon,
-  AddonsListOptionalParams,
+  AddonsListByPrivateCloudOptionalParams,
   AddonsGetOptionalParams,
   AddonsGetResponse,
   AddonsCreateOrUpdateOptionalParams,
@@ -27,10 +27,10 @@ export interface Addons {
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
    */
-  list(
+  listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: AddonsListOptionalParams
+    options?: AddonsListByPrivateCloudOptionalParams
   ): PagedAsyncIterableIterator<Addon>;
   /**
    * Get an addon by name in a private cloud
@@ -48,16 +48,16 @@ export interface Addons {
   /**
    * Create or update a addon in a private cloud
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName The name of the private cloud.
+   * @param privateCloudName Name of the private cloud
    * @param addonName Name of the addon for the private cloud
-   * @param addon A addon in the private cloud
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     privateCloudName: string,
     addonName: string,
-    addon: Addon,
+    resource: Addon,
     options?: AddonsCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -68,16 +68,16 @@ export interface Addons {
   /**
    * Create or update a addon in a private cloud
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName The name of the private cloud.
+   * @param privateCloudName Name of the private cloud
    * @param addonName Name of the addon for the private cloud
-   * @param addon A addon in the private cloud
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     privateCloudName: string,
     addonName: string,
-    addon: Addon,
+    resource: Addon,
     options?: AddonsCreateOrUpdateOptionalParams
   ): Promise<AddonsCreateOrUpdateResponse>;
   /**

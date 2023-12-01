@@ -8,17 +8,17 @@
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
-  ScriptPackage,
-  ScriptPackagesListByPrivateCloudOptionalParams,
-  ScriptPackagesGetOptionalParams,
-  ScriptPackagesGetResponse
+  WorkloadNetworkVirtualMachine,
+  WorkloadNetworkVirtualMachinesListByPrivateCloudOptionalParams,
+  WorkloadNetworkVirtualMachinesGetVirtualMachineOptionalParams,
+  WorkloadNetworkVirtualMachinesGetVirtualMachineResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Interface representing a ScriptPackages. */
-export interface ScriptPackages {
+/** Interface representing a WorkloadNetworkVirtualMachines. */
+export interface WorkloadNetworkVirtualMachines {
   /**
-   * List script packages available to run on the private cloud
+   * List of virtual machines in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
@@ -26,19 +26,19 @@ export interface ScriptPackages {
   listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: ScriptPackagesListByPrivateCloudOptionalParams
-  ): PagedAsyncIterableIterator<ScriptPackage>;
+    options?: WorkloadNetworkVirtualMachinesListByPrivateCloudOptionalParams
+  ): PagedAsyncIterableIterator<WorkloadNetworkVirtualMachine>;
   /**
-   * Get a script package available to run on a private cloud
+   * Get a virtual machine by id in a private cloud workload network.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
-   * @param scriptPackageName Name of the script package in the private cloud
+   * @param virtualMachineId Virtual Machine identifier
    * @param options The options parameters.
    */
-  get(
+  getVirtualMachine(
     resourceGroupName: string,
     privateCloudName: string,
-    scriptPackageName: string,
-    options?: ScriptPackagesGetOptionalParams
-  ): Promise<ScriptPackagesGetResponse>;
+    virtualMachineId: string,
+    options?: WorkloadNetworkVirtualMachinesGetVirtualMachineOptionalParams
+  ): Promise<WorkloadNetworkVirtualMachinesGetVirtualMachineResponse>;
 }

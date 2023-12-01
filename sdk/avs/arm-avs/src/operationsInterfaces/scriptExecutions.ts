@@ -10,12 +10,13 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   ScriptExecution,
-  ScriptExecutionsListOptionalParams,
+  ScriptExecutionsListByPrivateCloudOptionalParams,
   ScriptExecutionsGetOptionalParams,
   ScriptExecutionsGetResponse,
   ScriptExecutionsCreateOrUpdateOptionalParams,
   ScriptExecutionsCreateOrUpdateResponse,
   ScriptExecutionsDeleteOptionalParams,
+  ScriptOutputStreamType,
   ScriptExecutionsGetExecutionLogsOptionalParams,
   ScriptExecutionsGetExecutionLogsResponse
 } from "../models";
@@ -29,10 +30,10 @@ export interface ScriptExecutions {
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
    */
-  list(
+  listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: ScriptExecutionsListOptionalParams
+    options?: ScriptExecutionsListByPrivateCloudOptionalParams
   ): PagedAsyncIterableIterator<ScriptExecution>;
   /**
    * Get an script execution by name in a private cloud
@@ -50,16 +51,16 @@ export interface ScriptExecutions {
   /**
    * Create or update a script execution in a private cloud
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName The name of the private cloud.
+   * @param privateCloudName Name of the private cloud
    * @param scriptExecutionName Name of the user-invoked script execution resource
-   * @param scriptExecution A script running in the private cloud
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     privateCloudName: string,
     scriptExecutionName: string,
-    scriptExecution: ScriptExecution,
+    resource: ScriptExecution,
     options?: ScriptExecutionsCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -70,16 +71,16 @@ export interface ScriptExecutions {
   /**
    * Create or update a script execution in a private cloud
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName The name of the private cloud.
+   * @param privateCloudName Name of the private cloud
    * @param scriptExecutionName Name of the user-invoked script execution resource
-   * @param scriptExecution A script running in the private cloud
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     privateCloudName: string,
     scriptExecutionName: string,
-    scriptExecution: ScriptExecution,
+    resource: ScriptExecution,
     options?: ScriptExecutionsCreateOrUpdateOptionalParams
   ): Promise<ScriptExecutionsCreateOrUpdateResponse>;
   /**
@@ -113,12 +114,14 @@ export interface ScriptExecutions {
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
    * @param scriptExecutionName Name of the user-invoked script execution resource
+   * @param body The content of the action request
    * @param options The options parameters.
    */
   getExecutionLogs(
     resourceGroupName: string,
     privateCloudName: string,
     scriptExecutionName: string,
+    body: ScriptOutputStreamType[],
     options?: ScriptExecutionsGetExecutionLogsOptionalParams
   ): Promise<ScriptExecutionsGetExecutionLogsResponse>;
 }

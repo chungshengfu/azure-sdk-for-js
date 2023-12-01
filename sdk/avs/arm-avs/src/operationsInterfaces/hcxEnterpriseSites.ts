@@ -9,7 +9,7 @@
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
   HcxEnterpriseSite,
-  HcxEnterpriseSitesListOptionalParams,
+  HcxEnterpriseSitesListByPrivateCloudOptionalParams,
   HcxEnterpriseSitesGetOptionalParams,
   HcxEnterpriseSitesGetResponse,
   HcxEnterpriseSitesCreateOrUpdateOptionalParams,
@@ -26,10 +26,10 @@ export interface HcxEnterpriseSites {
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
    */
-  list(
+  listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: HcxEnterpriseSitesListOptionalParams
+    options?: HcxEnterpriseSitesListByPrivateCloudOptionalParams
   ): PagedAsyncIterableIterator<HcxEnterpriseSite>;
   /**
    * Get an HCX on-premises key by name in a private cloud
@@ -47,16 +47,16 @@ export interface HcxEnterpriseSites {
   /**
    * Create or update an activation key for on-premises HCX site
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName The name of the private cloud.
+   * @param privateCloudName Name of the private cloud
    * @param hcxEnterpriseSiteName Name of the HCX Enterprise Site in the private cloud
-   * @param hcxEnterpriseSite The HCX Enterprise Site
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
     privateCloudName: string,
     hcxEnterpriseSiteName: string,
-    hcxEnterpriseSite: HcxEnterpriseSite,
+    resource: HcxEnterpriseSite,
     options?: HcxEnterpriseSitesCreateOrUpdateOptionalParams
   ): Promise<HcxEnterpriseSitesCreateOrUpdateResponse>;
   /**

@@ -9,7 +9,7 @@
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
   ScriptCmdlet,
-  ScriptCmdletsListOptionalParams,
+  ScriptCmdletsListByScriptPackageOptionalParams,
   ScriptCmdletsGetOptionalParams,
   ScriptCmdletsGetResponse
 } from "../models";
@@ -25,11 +25,11 @@ export interface ScriptCmdlets {
    * @param scriptPackageName Name of the script package in the private cloud
    * @param options The options parameters.
    */
-  list(
+  listByScriptPackage(
     resourceGroupName: string,
     privateCloudName: string,
     scriptPackageName: string,
-    options?: ScriptCmdletsListOptionalParams
+    options?: ScriptCmdletsListByScriptPackageOptionalParams
   ): PagedAsyncIterableIterator<ScriptCmdlet>;
   /**
    * Return information about a script cmdlet resource in a specific package on a private cloud

@@ -1,5 +1,435 @@
 # Release History
     
+## 5.0.0 (2023-12-01)
+    
+**Features**
+
+  - Added operation group ExpressRouteAuthorizations
+  - Added operation group LocationsOperations
+  - Added operation group WorkloadNetworkDhcps
+  - Added operation group WorkloadNetworkDnsServices
+  - Added operation group WorkloadNetworkDnsZones
+  - Added operation group WorkloadNetworkGateways
+  - Added operation group WorkloadNetworkPortMirrorings
+  - Added operation group WorkloadNetworkPublicIps
+  - Added operation group WorkloadNetworkSegments
+  - Added operation group WorkloadNetworkVirtualMachines
+  - Added operation group WorkloadNetworkVmGroups
+  - Added operation Addons.listByPrivateCloud
+  - Added operation CloudLinks.listByPrivateCloud
+  - Added operation Clusters.listByPrivateCloud
+  - Added operation Datastores.listByCluster
+  - Added operation GlobalReachConnections.listByPrivateCloud
+  - Added operation HcxEnterpriseSites.listByPrivateCloud
+  - Added operation PlacementPolicies.listByCluster
+  - Added operation PrivateClouds.listByResourceGroup
+  - Added operation ScriptCmdlets.listByScriptPackage
+  - Added operation ScriptExecutions.listByPrivateCloud
+  - Added operation ScriptPackages.listByPrivateCloud
+  - Added operation VirtualMachines.listByCluster
+  - Added operation WorkloadNetworks.listByPrivateCloud
+  - Added Interface AddonListResult
+  - Added Interface AddonsCreateOrUpdateHeaders
+  - Added Interface AddonsDeleteHeaders
+  - Added Interface AddonsListByPrivateCloudNextOptionalParams
+  - Added Interface AddonsListByPrivateCloudOptionalParams
+  - Added Interface AzureCoreFoundationsError
+  - Added Interface AzureCoreFoundationsErrorResponse
+  - Added Interface AzureCoreFoundationsInnerError
+  - Added Interface CloudLinkListResult
+  - Added Interface CloudLinksCreateOrUpdateHeaders
+  - Added Interface CloudLinksDeleteHeaders
+  - Added Interface CloudLinksListByPrivateCloudNextOptionalParams
+  - Added Interface CloudLinksListByPrivateCloudOptionalParams
+  - Added Interface ClusterListResult
+  - Added Interface ClustersCreateOrUpdateHeaders
+  - Added Interface ClustersDeleteHeaders
+  - Added Interface ClustersListByPrivateCloudNextOptionalParams
+  - Added Interface ClustersListByPrivateCloudOptionalParams
+  - Added Interface ClustersUpdateHeaders
+  - Added Interface DatastoreListResult
+  - Added Interface DatastoresCreateOrUpdateHeaders
+  - Added Interface DatastoresDeleteHeaders
+  - Added Interface DatastoresListByClusterNextOptionalParams
+  - Added Interface DatastoresListByClusterOptionalParams
+  - Added Interface ExpressRouteAuthorizationListResult
+  - Added Interface ExpressRouteAuthorizationsCreateOrUpdateHeaders
+  - Added Interface ExpressRouteAuthorizationsCreateOrUpdateOptionalParams
+  - Added Interface ExpressRouteAuthorizationsDeleteHeaders
+  - Added Interface ExpressRouteAuthorizationsDeleteOptionalParams
+  - Added Interface ExpressRouteAuthorizationsGetOptionalParams
+  - Added Interface ExpressRouteAuthorizationsListByPrivateCloudNextOptionalParams
+  - Added Interface ExpressRouteAuthorizationsListByPrivateCloudOptionalParams
+  - Added Interface GlobalReachConnectionListResult
+  - Added Interface GlobalReachConnectionsCreateOrUpdateHeaders
+  - Added Interface GlobalReachConnectionsDeleteHeaders
+  - Added Interface GlobalReachConnectionsListByPrivateCloudNextOptionalParams
+  - Added Interface GlobalReachConnectionsListByPrivateCloudOptionalParams
+  - Added Interface HcxEnterpriseSiteListResult
+  - Added Interface HcxEnterpriseSitesListByPrivateCloudNextOptionalParams
+  - Added Interface HcxEnterpriseSitesListByPrivateCloudOptionalParams
+  - Added Interface LocationsOperationsCheckQuotaAvailabilityExceptionHeaders
+  - Added Interface LocationsOperationsCheckQuotaAvailabilityOptionalParams
+  - Added Interface LocationsOperationsCheckTrialAvailabilityExceptionHeaders
+  - Added Interface LocationsOperationsCheckTrialAvailabilityOptionalParams
+  - Added Interface ManagedServiceIdentity
+  - Added Interface OperationListResult
+  - Added Interface PlacementPoliciesCreateOrUpdateHeaders
+  - Added Interface PlacementPoliciesDeleteHeaders
+  - Added Interface PlacementPoliciesListByClusterNextOptionalParams
+  - Added Interface PlacementPoliciesListByClusterOptionalParams
+  - Added Interface PlacementPoliciesUpdateHeaders
+  - Added Interface PlacementPolicyListResult
+  - Added Interface PrivateCloudListResult
+  - Added Interface PrivateCloudsCreateOrUpdateHeaders
+  - Added Interface PrivateCloudsDeleteHeaders
+  - Added Interface PrivateCloudsListByResourceGroupNextOptionalParams
+  - Added Interface PrivateCloudsListByResourceGroupOptionalParams
+  - Added Interface PrivateCloudsRotateNsxtPasswordHeaders
+  - Added Interface PrivateCloudsRotateVcenterPasswordHeaders
+  - Added Interface PrivateCloudsUpdateHeaders
+  - Added Interface ScriptCmdletListResult
+  - Added Interface ScriptCmdletsListByScriptPackageNextOptionalParams
+  - Added Interface ScriptCmdletsListByScriptPackageOptionalParams
+  - Added Interface ScriptExecutionListResult
+  - Added Interface ScriptExecutionsCreateOrUpdateHeaders
+  - Added Interface ScriptExecutionsDeleteHeaders
+  - Added Interface ScriptExecutionsListByPrivateCloudNextOptionalParams
+  - Added Interface ScriptExecutionsListByPrivateCloudOptionalParams
+  - Added Interface ScriptPackageListResult
+  - Added Interface ScriptPackagesListByPrivateCloudNextOptionalParams
+  - Added Interface ScriptPackagesListByPrivateCloudOptionalParams
+  - Added Interface SkuAutoGenerated
+  - Added Interface SystemData
+  - Added Interface UserAssignedIdentity
+  - Added Interface VirtualMachineListResult
+  - Added Interface VirtualMachinesListByClusterNextOptionalParams
+  - Added Interface VirtualMachinesListByClusterOptionalParams
+  - Added Interface VirtualMachinesRestrictMovementHeaders
+  - Added Interface WorkloadNetworkDhcpListResult
+  - Added Interface WorkloadNetworkDhcpsCreateDhcpHeaders
+  - Added Interface WorkloadNetworkDhcpsCreateDhcpOptionalParams
+  - Added Interface WorkloadNetworkDhcpsDeleteDhcpHeaders
+  - Added Interface WorkloadNetworkDhcpsDeleteDhcpOptionalParams
+  - Added Interface WorkloadNetworkDhcpsGetDhcpOptionalParams
+  - Added Interface WorkloadNetworkDhcpsListByPrivateCloudNextOptionalParams
+  - Added Interface WorkloadNetworkDhcpsListByPrivateCloudOptionalParams
+  - Added Interface WorkloadNetworkDhcpsUpdateDhcpHeaders
+  - Added Interface WorkloadNetworkDhcpsUpdateDhcpOptionalParams
+  - Added Interface WorkloadNetworkDhcpUpdate
+  - Added Interface WorkloadNetworkDnsServiceListResult
+  - Added Interface WorkloadNetworkDnsServicesCreateDnsServiceHeaders
+  - Added Interface WorkloadNetworkDnsServicesCreateDnsServiceOptionalParams
+  - Added Interface WorkloadNetworkDnsServicesDeleteDnsServiceHeaders
+  - Added Interface WorkloadNetworkDnsServicesDeleteDnsServiceOptionalParams
+  - Added Interface WorkloadNetworkDnsServicesGetDnsServiceOptionalParams
+  - Added Interface WorkloadNetworkDnsServicesListByPrivateCloudNextOptionalParams
+  - Added Interface WorkloadNetworkDnsServicesListByPrivateCloudOptionalParams
+  - Added Interface WorkloadNetworkDnsServicesUpdateDnsServiceHeaders
+  - Added Interface WorkloadNetworkDnsServicesUpdateDnsServiceOptionalParams
+  - Added Interface WorkloadNetworkDnsServiceUpdate
+  - Added Interface WorkloadNetworkDnsZoneListResult
+  - Added Interface WorkloadNetworkDnsZonesCreateDnsZoneHeaders
+  - Added Interface WorkloadNetworkDnsZonesCreateDnsZoneOptionalParams
+  - Added Interface WorkloadNetworkDnsZonesDeleteDnsZoneHeaders
+  - Added Interface WorkloadNetworkDnsZonesDeleteDnsZoneOptionalParams
+  - Added Interface WorkloadNetworkDnsZonesGetDnsZoneOptionalParams
+  - Added Interface WorkloadNetworkDnsZonesListByPrivateCloudNextOptionalParams
+  - Added Interface WorkloadNetworkDnsZonesListByPrivateCloudOptionalParams
+  - Added Interface WorkloadNetworkDnsZonesUpdateDnsZoneHeaders
+  - Added Interface WorkloadNetworkDnsZonesUpdateDnsZoneOptionalParams
+  - Added Interface WorkloadNetworkDnsZoneUpdate
+  - Added Interface WorkloadNetworkGatewayListResult
+  - Added Interface WorkloadNetworkGatewaysGetGatewayOptionalParams
+  - Added Interface WorkloadNetworkGatewaysListByPrivateCloudNextOptionalParams
+  - Added Interface WorkloadNetworkGatewaysListByPrivateCloudOptionalParams
+  - Added Interface WorkloadNetworkListResult
+  - Added Interface WorkloadNetworkPortMirroringListResult
+  - Added Interface WorkloadNetworkPortMirroringsCreatePortMirroringHeaders
+  - Added Interface WorkloadNetworkPortMirroringsCreatePortMirroringOptionalParams
+  - Added Interface WorkloadNetworkPortMirroringsDeletePortMirroringHeaders
+  - Added Interface WorkloadNetworkPortMirroringsDeletePortMirroringOptionalParams
+  - Added Interface WorkloadNetworkPortMirroringsGetPortMirroringOptionalParams
+  - Added Interface WorkloadNetworkPortMirroringsListByPrivateCloudNextOptionalParams
+  - Added Interface WorkloadNetworkPortMirroringsListByPrivateCloudOptionalParams
+  - Added Interface WorkloadNetworkPortMirroringsUpdatePortMirroringHeaders
+  - Added Interface WorkloadNetworkPortMirroringsUpdatePortMirroringOptionalParams
+  - Added Interface WorkloadNetworkPortMirroringUpdate
+  - Added Interface WorkloadNetworkPublicIPListResult
+  - Added Interface WorkloadNetworkPublicIpsCreatePublicIpHeaders
+  - Added Interface WorkloadNetworkPublicIpsCreatePublicIpOptionalParams
+  - Added Interface WorkloadNetworkPublicIpsDeletePublicIpHeaders
+  - Added Interface WorkloadNetworkPublicIpsDeletePublicIpOptionalParams
+  - Added Interface WorkloadNetworkPublicIpsGetPublicIpOptionalParams
+  - Added Interface WorkloadNetworkPublicIpsListByPrivateCloudNextOptionalParams
+  - Added Interface WorkloadNetworkPublicIpsListByPrivateCloudOptionalParams
+  - Added Interface WorkloadNetworkSegmentListResult
+  - Added Interface WorkloadNetworkSegmentsCreateSegmentsHeaders
+  - Added Interface WorkloadNetworkSegmentsCreateSegmentsOptionalParams
+  - Added Interface WorkloadNetworkSegmentsDeleteSegmentHeaders
+  - Added Interface WorkloadNetworkSegmentsDeleteSegmentOptionalParams
+  - Added Interface WorkloadNetworkSegmentsGetSegmentOptionalParams
+  - Added Interface WorkloadNetworkSegmentsListByPrivateCloudNextOptionalParams
+  - Added Interface WorkloadNetworkSegmentsListByPrivateCloudOptionalParams
+  - Added Interface WorkloadNetworkSegmentsUpdateSegmentsHeaders
+  - Added Interface WorkloadNetworkSegmentsUpdateSegmentsOptionalParams
+  - Added Interface WorkloadNetworkSegmentUpdate
+  - Added Interface WorkloadNetworksListByPrivateCloudNextOptionalParams
+  - Added Interface WorkloadNetworksListByPrivateCloudOptionalParams
+  - Added Interface WorkloadNetworkVirtualMachineListResult
+  - Added Interface WorkloadNetworkVirtualMachinesGetVirtualMachineOptionalParams
+  - Added Interface WorkloadNetworkVirtualMachinesListByPrivateCloudNextOptionalParams
+  - Added Interface WorkloadNetworkVirtualMachinesListByPrivateCloudOptionalParams
+  - Added Interface WorkloadNetworkVMGroupListResult
+  - Added Interface WorkloadNetworkVmGroupsCreateVmGroupHeaders
+  - Added Interface WorkloadNetworkVmGroupsCreateVmGroupOptionalParams
+  - Added Interface WorkloadNetworkVmGroupsDeleteVmGroupHeaders
+  - Added Interface WorkloadNetworkVmGroupsDeleteVmGroupOptionalParams
+  - Added Interface WorkloadNetworkVmGroupsGetVmGroupOptionalParams
+  - Added Interface WorkloadNetworkVmGroupsListByPrivateCloudNextOptionalParams
+  - Added Interface WorkloadNetworkVmGroupsListByPrivateCloudOptionalParams
+  - Added Interface WorkloadNetworkVmGroupsUpdateVmGroupHeaders
+  - Added Interface WorkloadNetworkVmGroupsUpdateVmGroupOptionalParams
+  - Added Interface WorkloadNetworkVMGroupUpdate
+  - Added Type Alias ActionType
+  - Added Type Alias AddonsListByPrivateCloudNextResponse
+  - Added Type Alias AddonsListByPrivateCloudResponse
+  - Added Type Alias CloudLinksListByPrivateCloudNextResponse
+  - Added Type Alias CloudLinksListByPrivateCloudResponse
+  - Added Type Alias ClustersListByPrivateCloudNextResponse
+  - Added Type Alias ClustersListByPrivateCloudResponse
+  - Added Type Alias CreatedByType
+  - Added Type Alias DatastoresListByClusterNextResponse
+  - Added Type Alias DatastoresListByClusterResponse
+  - Added Type Alias ExpressRouteAuthorizationsCreateOrUpdateResponse
+  - Added Type Alias ExpressRouteAuthorizationsGetResponse
+  - Added Type Alias ExpressRouteAuthorizationsListByPrivateCloudNextResponse
+  - Added Type Alias ExpressRouteAuthorizationsListByPrivateCloudResponse
+  - Added Type Alias GlobalReachConnectionsListByPrivateCloudNextResponse
+  - Added Type Alias GlobalReachConnectionsListByPrivateCloudResponse
+  - Added Type Alias HcxEnterpriseSitesListByPrivateCloudNextResponse
+  - Added Type Alias HcxEnterpriseSitesListByPrivateCloudResponse
+  - Added Type Alias LocationsOperationsCheckQuotaAvailabilityResponse
+  - Added Type Alias LocationsOperationsCheckTrialAvailabilityResponse
+  - Added Type Alias ManagedServiceIdentityType
+  - Added Type Alias Origin
+  - Added Type Alias PlacementPoliciesListByClusterNextResponse
+  - Added Type Alias PlacementPoliciesListByClusterResponse
+  - Added Type Alias PrivateCloudsListByResourceGroupNextResponse
+  - Added Type Alias PrivateCloudsListByResourceGroupResponse
+  - Added Type Alias PrivateCloudsRotateNsxtPasswordResponse
+  - Added Type Alias PrivateCloudsRotateVcenterPasswordResponse
+  - Added Type Alias ScriptCmdletsListByScriptPackageNextResponse
+  - Added Type Alias ScriptCmdletsListByScriptPackageResponse
+  - Added Type Alias ScriptExecutionsListByPrivateCloudNextResponse
+  - Added Type Alias ScriptExecutionsListByPrivateCloudResponse
+  - Added Type Alias ScriptPackagesListByPrivateCloudNextResponse
+  - Added Type Alias ScriptPackagesListByPrivateCloudResponse
+  - Added Type Alias SkuTier
+  - Added Type Alias Versions
+  - Added Type Alias VirtualMachinesListByClusterNextResponse
+  - Added Type Alias VirtualMachinesListByClusterResponse
+  - Added Type Alias VirtualMachinesRestrictMovementResponse
+  - Added Type Alias WorkloadNetworkDhcpsCreateDhcpResponse
+  - Added Type Alias WorkloadNetworkDhcpsGetDhcpResponse
+  - Added Type Alias WorkloadNetworkDhcpsListByPrivateCloudNextResponse
+  - Added Type Alias WorkloadNetworkDhcpsListByPrivateCloudResponse
+  - Added Type Alias WorkloadNetworkDhcpsUpdateDhcpResponse
+  - Added Type Alias WorkloadNetworkDnsServicesCreateDnsServiceResponse
+  - Added Type Alias WorkloadNetworkDnsServicesGetDnsServiceResponse
+  - Added Type Alias WorkloadNetworkDnsServicesListByPrivateCloudNextResponse
+  - Added Type Alias WorkloadNetworkDnsServicesListByPrivateCloudResponse
+  - Added Type Alias WorkloadNetworkDnsServicesUpdateDnsServiceResponse
+  - Added Type Alias WorkloadNetworkDnsZonesCreateDnsZoneResponse
+  - Added Type Alias WorkloadNetworkDnsZonesGetDnsZoneResponse
+  - Added Type Alias WorkloadNetworkDnsZonesListByPrivateCloudNextResponse
+  - Added Type Alias WorkloadNetworkDnsZonesListByPrivateCloudResponse
+  - Added Type Alias WorkloadNetworkDnsZonesUpdateDnsZoneResponse
+  - Added Type Alias WorkloadNetworkGatewaysGetGatewayResponse
+  - Added Type Alias WorkloadNetworkGatewaysListByPrivateCloudNextResponse
+  - Added Type Alias WorkloadNetworkGatewaysListByPrivateCloudResponse
+  - Added Type Alias WorkloadNetworkNameAutoGenerated
+  - Added Type Alias WorkloadNetworkPortMirroringsCreatePortMirroringResponse
+  - Added Type Alias WorkloadNetworkPortMirroringsGetPortMirroringResponse
+  - Added Type Alias WorkloadNetworkPortMirroringsListByPrivateCloudNextResponse
+  - Added Type Alias WorkloadNetworkPortMirroringsListByPrivateCloudResponse
+  - Added Type Alias WorkloadNetworkPortMirroringsUpdatePortMirroringResponse
+  - Added Type Alias WorkloadNetworkPublicIpsCreatePublicIpResponse
+  - Added Type Alias WorkloadNetworkPublicIpsGetPublicIpResponse
+  - Added Type Alias WorkloadNetworkPublicIpsListByPrivateCloudNextResponse
+  - Added Type Alias WorkloadNetworkPublicIpsListByPrivateCloudResponse
+  - Added Type Alias WorkloadNetworkSegmentsCreateSegmentsResponse
+  - Added Type Alias WorkloadNetworkSegmentsGetSegmentResponse
+  - Added Type Alias WorkloadNetworkSegmentsListByPrivateCloudNextResponse
+  - Added Type Alias WorkloadNetworkSegmentsListByPrivateCloudResponse
+  - Added Type Alias WorkloadNetworkSegmentsUpdateSegmentsResponse
+  - Added Type Alias WorkloadNetworksListByPrivateCloudNextResponse
+  - Added Type Alias WorkloadNetworksListByPrivateCloudResponse
+  - Added Type Alias WorkloadNetworkVirtualMachinesGetVirtualMachineResponse
+  - Added Type Alias WorkloadNetworkVirtualMachinesListByPrivateCloudNextResponse
+  - Added Type Alias WorkloadNetworkVirtualMachinesListByPrivateCloudResponse
+  - Added Type Alias WorkloadNetworkVmGroupsCreateVmGroupResponse
+  - Added Type Alias WorkloadNetworkVmGroupsGetVmGroupResponse
+  - Added Type Alias WorkloadNetworkVmGroupsListByPrivateCloudNextResponse
+  - Added Type Alias WorkloadNetworkVmGroupsListByPrivateCloudResponse
+  - Added Type Alias WorkloadNetworkVmGroupsUpdateVmGroupResponse
+  - Interface Addon has a new optional parameter addonType
+  - Interface Addon has a new optional parameter provisioningState
+  - Interface ClusterUpdate has a new optional parameter sku
+  - Interface ManagementCluster has a new optional parameter clusterId
+  - Interface ManagementCluster has a new optional parameter clusterSize
+  - Interface ManagementCluster has a new optional parameter hosts
+  - Interface ManagementCluster has a new optional parameter provisioningState
+  - Interface Operation has a new optional parameter actionType
+  - Interface PlacementPolicy has a new optional parameter displayName
+  - Interface PlacementPolicy has a new optional parameter provisioningState
+  - Interface PlacementPolicy has a new optional parameter state
+  - Interface PlacementPolicy has a new optional parameter typePropertiesType
+  - Interface PlacementPolicyUpdate has a new optional parameter displayName
+  - Interface PrivateCloudUpdate has a new optional parameter circuit
+  - Interface PrivateCloudUpdate has a new optional parameter nsxtPassword
+  - Interface PrivateCloudUpdate has a new optional parameter secondaryCircuit
+  - Interface PrivateCloudUpdate has a new optional parameter sku
+  - Interface PrivateCloudUpdate has a new optional parameter vcenterPassword
+  - Interface Resource has a new optional parameter systemData
+  - Interface WorkloadNetwork has a new optional parameter properties
+  - Interface WorkloadNetworkDhcp has a new optional parameter dhcpType
+  - Interface WorkloadNetworkDhcp has a new optional parameter displayName
+  - Interface WorkloadNetworkDhcp has a new optional parameter provisioningState
+  - Interface WorkloadNetworkDhcp has a new optional parameter revision
+  - Interface WorkloadNetworkDhcp has a new optional parameter segments
+  - Type of parameter addonType of interface AddonProperties is changed from "SRM" | "VR" | "HCX" | "Arc" to "Arc" | "HCX" | "SRM" | "VR"
+  - Type of parameter type of interface PlacementPolicyProperties is changed from "VmVm" | "VmHost" to "VmHost" | "VmVm"
+  - Type of parameter type of interface ScriptExecutionParameter is changed from "SecureValue" | "Value" | "Credential" to "Credential" | "SecureValue" | "Value"
+  - Type of parameter dhcpType of interface WorkloadNetworkDhcpEntity is changed from "SERVER" | "RELAY" to "RELAY" | "SERVER"
+  - Added Enum KnownActionType
+  - Added Enum KnownCreatedByType
+  - Added Enum KnownManagedServiceIdentityType
+  - Added Enum KnownOrigin
+  - Added Enum KnownVersions
+  - Added Enum KnownWorkloadNetworkNameAutoGenerated
+
+**Breaking Changes**
+
+  - Removed operation group Authorizations
+  - Removed operation group Locations
+  - Removed operation Addons.list
+  - Removed operation CloudLinks.list
+  - Removed operation Clusters.list
+  - Removed operation Datastores.list
+  - Removed operation GlobalReachConnections.list
+  - Removed operation HcxEnterpriseSites.list
+  - Removed operation PlacementPolicies.list
+  - Removed operation PrivateClouds.list
+  - Removed operation ScriptCmdlets.list
+  - Removed operation ScriptExecutions.list
+  - Removed operation ScriptPackages.list
+  - Removed operation VirtualMachines.list
+  - Removed operation WorkloadNetworks.beginCreateDhcp
+  - Removed operation WorkloadNetworks.beginCreateDhcpAndWait
+  - Removed operation WorkloadNetworks.beginCreateDnsService
+  - Removed operation WorkloadNetworks.beginCreateDnsServiceAndWait
+  - Removed operation WorkloadNetworks.beginCreateDnsZone
+  - Removed operation WorkloadNetworks.beginCreateDnsZoneAndWait
+  - Removed operation WorkloadNetworks.beginCreatePortMirroring
+  - Removed operation WorkloadNetworks.beginCreatePortMirroringAndWait
+  - Removed operation WorkloadNetworks.beginCreatePublicIP
+  - Removed operation WorkloadNetworks.beginCreatePublicIPAndWait
+  - Removed operation WorkloadNetworks.beginCreateSegments
+  - Removed operation WorkloadNetworks.beginCreateSegmentsAndWait
+  - Removed operation WorkloadNetworks.beginCreateVMGroup
+  - Removed operation WorkloadNetworks.beginCreateVMGroupAndWait
+  - Removed operation WorkloadNetworks.beginDeleteDhcp
+  - Removed operation WorkloadNetworks.beginDeleteDhcpAndWait
+  - Removed operation WorkloadNetworks.beginDeleteDnsService
+  - Removed operation WorkloadNetworks.beginDeleteDnsServiceAndWait
+  - Removed operation WorkloadNetworks.beginDeleteDnsZone
+  - Removed operation WorkloadNetworks.beginDeleteDnsZoneAndWait
+  - Removed operation WorkloadNetworks.beginDeletePortMirroring
+  - Removed operation WorkloadNetworks.beginDeletePortMirroringAndWait
+  - Removed operation WorkloadNetworks.beginDeletePublicIP
+  - Removed operation WorkloadNetworks.beginDeletePublicIPAndWait
+  - Removed operation WorkloadNetworks.beginDeleteSegment
+  - Removed operation WorkloadNetworks.beginDeleteSegmentAndWait
+  - Removed operation WorkloadNetworks.beginDeleteVMGroup
+  - Removed operation WorkloadNetworks.beginDeleteVMGroupAndWait
+  - Removed operation WorkloadNetworks.beginUpdateDhcp
+  - Removed operation WorkloadNetworks.beginUpdateDhcpAndWait
+  - Removed operation WorkloadNetworks.beginUpdateDnsService
+  - Removed operation WorkloadNetworks.beginUpdateDnsServiceAndWait
+  - Removed operation WorkloadNetworks.beginUpdateDnsZone
+  - Removed operation WorkloadNetworks.beginUpdateDnsZoneAndWait
+  - Removed operation WorkloadNetworks.beginUpdatePortMirroring
+  - Removed operation WorkloadNetworks.beginUpdatePortMirroringAndWait
+  - Removed operation WorkloadNetworks.beginUpdateSegments
+  - Removed operation WorkloadNetworks.beginUpdateSegmentsAndWait
+  - Removed operation WorkloadNetworks.beginUpdateVMGroup
+  - Removed operation WorkloadNetworks.beginUpdateVMGroupAndWait
+  - Removed operation WorkloadNetworks.getDhcp
+  - Removed operation WorkloadNetworks.getDnsService
+  - Removed operation WorkloadNetworks.getDnsZone
+  - Removed operation WorkloadNetworks.getGateway
+  - Removed operation WorkloadNetworks.getPortMirroring
+  - Removed operation WorkloadNetworks.getPublicIP
+  - Removed operation WorkloadNetworks.getSegment
+  - Removed operation WorkloadNetworks.getVirtualMachine
+  - Removed operation WorkloadNetworks.getVMGroup
+  - Removed operation WorkloadNetworks.list
+  - Removed operation WorkloadNetworks.listDhcp
+  - Removed operation WorkloadNetworks.listDnsServices
+  - Removed operation WorkloadNetworks.listDnsZones
+  - Removed operation WorkloadNetworks.listGateways
+  - Removed operation WorkloadNetworks.listPortMirroring
+  - Removed operation WorkloadNetworks.listPublicIPs
+  - Removed operation WorkloadNetworks.listSegments
+  - Removed operation WorkloadNetworks.listVirtualMachines
+  - Removed operation WorkloadNetworks.listVMGroups
+  - Operation Clusters.listZones has a new signature
+  - Operation PrivateClouds.beginRotateNsxtPassword has a new signature
+  - Operation PrivateClouds.beginRotateNsxtPasswordAndWait has a new signature
+  - Operation PrivateClouds.beginRotateVcenterPassword has a new signature
+  - Operation PrivateClouds.beginRotateVcenterPasswordAndWait has a new signature
+  - Operation PrivateClouds.listAdminCredentials has a new signature
+  - Operation ScriptExecutions.getExecutionLogs has a new signature
+  - Class AzureVMwareSolutionAPI has a new signature
+  - Interface Addon no longer has parameter properties
+  - Interface Operation no longer has parameter properties
+  - Interface PlacementPolicy no longer has parameter properties
+  - Interface PlacementPolicyUpdate no longer has parameter affinityStrength
+  - Interface PlacementPolicyUpdate no longer has parameter azureHybridBenefitType
+  - Interface PlacementPolicyUpdate no longer has parameter hostMembers
+  - Interface PlacementPolicyUpdate no longer has parameter vmMembers
+  - Interface PrivateCloud no longer has parameter availability
+  - Interface PrivateCloud no longer has parameter encryption
+  - Interface PrivateCloud no longer has parameter extendedNetworkBlocks
+  - Interface PrivateCloud no longer has parameter identitySources
+  - Interface PrivateCloud no longer has parameter internet
+  - Interface PrivateCloud no longer has parameter managementCluster
+  - Interface PrivateCloudUpdate no longer has parameter availability
+  - Interface PrivateCloudUpdate no longer has parameter encryption
+  - Interface PrivateCloudUpdate no longer has parameter extendedNetworkBlocks
+  - Interface PrivateCloudUpdate no longer has parameter identitySources
+  - Interface PrivateCloudUpdate no longer has parameter internet
+  - Interface PrivateCloudUpdate no longer has parameter managementCluster
+  - Interface ScriptExecutionsGetExecutionLogsOptionalParams no longer has parameter scriptOutputStreamType
+  - Interface WorkloadNetworkDhcp no longer has parameter properties
+  - Parameter location of interface TrackedResource is now required
+  - Type of parameter sku of interface Cluster is changed from Sku to SkuAutoGenerated
+  - Type of parameter origin of interface Operation is changed from string to Origin
+  - Type of parameter identity of interface PrivateCloud is changed from PrivateCloudIdentity to ManagedServiceIdentity
+  - Type of parameter sku of interface PrivateCloud is changed from Sku to SkuAutoGenerated
+  - Type of parameter identity of interface PrivateCloudUpdate is changed from PrivateCloudIdentity to ManagedServiceIdentity
+  - Type of parameter namedOutputs of interface ScriptExecution is changed from {
+        [propertyName: string]: Record<string, unknown>;
+    } to {
+        [propertyName: string]: {
+            [propertyName: string]: any;
+        };
+    }
+  - Class AzureVMwareSolutionAPI no longer has parameter authorizations
+  - Class AzureVMwareSolutionAPI no longer has parameter locations
+    
+    
 ## 4.0.0 (2023-08-10)
     
 **Features**
@@ -138,4 +568,4 @@ To understand the detail of the change, please refer to [Changelog](https://aka.
 
 To migrate the existing applications to the latest version, please refer to [Migration Guide](https://aka.ms/js-track2-migration-guide).
 
-To learn more, please refer to our documentation [Quick Start](https://aka.ms/azsdk/js/mgmt/quickstart ).
+To learn more, please refer to our documentation [Quick Start](https://aka.ms/js-track2-quickstart).

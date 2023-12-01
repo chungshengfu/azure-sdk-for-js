@@ -10,27 +10,27 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   ExpressRouteAuthorization,
-  AuthorizationsListOptionalParams,
-  AuthorizationsGetOptionalParams,
-  AuthorizationsGetResponse,
-  AuthorizationsCreateOrUpdateOptionalParams,
-  AuthorizationsCreateOrUpdateResponse,
-  AuthorizationsDeleteOptionalParams
+  ExpressRouteAuthorizationsListByPrivateCloudOptionalParams,
+  ExpressRouteAuthorizationsGetOptionalParams,
+  ExpressRouteAuthorizationsGetResponse,
+  ExpressRouteAuthorizationsCreateOrUpdateOptionalParams,
+  ExpressRouteAuthorizationsCreateOrUpdateResponse,
+  ExpressRouteAuthorizationsDeleteOptionalParams
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Interface representing a Authorizations. */
-export interface Authorizations {
+/** Interface representing a ExpressRouteAuthorizations. */
+export interface ExpressRouteAuthorizations {
   /**
    * List ExpressRoute Circuit Authorizations in a private cloud
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param privateCloudName Name of the private cloud
    * @param options The options parameters.
    */
-  list(
+  listByPrivateCloud(
     resourceGroupName: string,
     privateCloudName: string,
-    options?: AuthorizationsListOptionalParams
+    options?: ExpressRouteAuthorizationsListByPrivateCloudOptionalParams
   ): PagedAsyncIterableIterator<ExpressRouteAuthorization>;
   /**
    * Get an ExpressRoute Circuit Authorization by name in a private cloud
@@ -43,43 +43,43 @@ export interface Authorizations {
     resourceGroupName: string,
     privateCloudName: string,
     authorizationName: string,
-    options?: AuthorizationsGetOptionalParams
-  ): Promise<AuthorizationsGetResponse>;
+    options?: ExpressRouteAuthorizationsGetOptionalParams
+  ): Promise<ExpressRouteAuthorizationsGetResponse>;
   /**
    * Create or update an ExpressRoute Circuit Authorization in a private cloud
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName The name of the private cloud.
+   * @param privateCloudName Name of the private cloud
    * @param authorizationName Name of the ExpressRoute Circuit Authorization in the private cloud
-   * @param authorization An ExpressRoute Circuit Authorization
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     privateCloudName: string,
     authorizationName: string,
-    authorization: ExpressRouteAuthorization,
-    options?: AuthorizationsCreateOrUpdateOptionalParams
+    resource: ExpressRouteAuthorization,
+    options?: ExpressRouteAuthorizationsCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
-      OperationState<AuthorizationsCreateOrUpdateResponse>,
-      AuthorizationsCreateOrUpdateResponse
+      OperationState<ExpressRouteAuthorizationsCreateOrUpdateResponse>,
+      ExpressRouteAuthorizationsCreateOrUpdateResponse
     >
   >;
   /**
    * Create or update an ExpressRoute Circuit Authorization in a private cloud
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param privateCloudName The name of the private cloud.
+   * @param privateCloudName Name of the private cloud
    * @param authorizationName Name of the ExpressRoute Circuit Authorization in the private cloud
-   * @param authorization An ExpressRoute Circuit Authorization
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     privateCloudName: string,
     authorizationName: string,
-    authorization: ExpressRouteAuthorization,
-    options?: AuthorizationsCreateOrUpdateOptionalParams
-  ): Promise<AuthorizationsCreateOrUpdateResponse>;
+    resource: ExpressRouteAuthorization,
+    options?: ExpressRouteAuthorizationsCreateOrUpdateOptionalParams
+  ): Promise<ExpressRouteAuthorizationsCreateOrUpdateResponse>;
   /**
    * Delete an ExpressRoute Circuit Authorization in a private cloud
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
@@ -91,7 +91,7 @@ export interface Authorizations {
     resourceGroupName: string,
     privateCloudName: string,
     authorizationName: string,
-    options?: AuthorizationsDeleteOptionalParams
+    options?: ExpressRouteAuthorizationsDeleteOptionalParams
   ): Promise<SimplePollerLike<OperationState<void>, void>>;
   /**
    * Delete an ExpressRoute Circuit Authorization in a private cloud
@@ -104,6 +104,6 @@ export interface Authorizations {
     resourceGroupName: string,
     privateCloudName: string,
     authorizationName: string,
-    options?: AuthorizationsDeleteOptionalParams
+    options?: ExpressRouteAuthorizationsDeleteOptionalParams
   ): Promise<void>;
 }

@@ -10,7 +10,7 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   Datastore,
-  DatastoresListOptionalParams,
+  DatastoresListByClusterOptionalParams,
   DatastoresGetOptionalParams,
   DatastoresGetResponse,
   DatastoresCreateOrUpdateOptionalParams,
@@ -28,11 +28,11 @@ export interface Datastores {
    * @param clusterName Name of the cluster in the private cloud
    * @param options The options parameters.
    */
-  list(
+  listByCluster(
     resourceGroupName: string,
     privateCloudName: string,
     clusterName: string,
-    options?: DatastoresListOptionalParams
+    options?: DatastoresListByClusterOptionalParams
   ): PagedAsyncIterableIterator<Datastore>;
   /**
    * Get a datastore in a private cloud cluster
@@ -55,7 +55,7 @@ export interface Datastores {
    * @param privateCloudName Name of the private cloud
    * @param clusterName Name of the cluster in the private cloud
    * @param datastoreName Name of the datastore in the private cloud cluster
-   * @param datastore A datastore in a private cloud cluster
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
@@ -63,7 +63,7 @@ export interface Datastores {
     privateCloudName: string,
     clusterName: string,
     datastoreName: string,
-    datastore: Datastore,
+    resource: Datastore,
     options?: DatastoresCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -77,7 +77,7 @@ export interface Datastores {
    * @param privateCloudName Name of the private cloud
    * @param clusterName Name of the cluster in the private cloud
    * @param datastoreName Name of the datastore in the private cloud cluster
-   * @param datastore A datastore in a private cloud cluster
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
@@ -85,7 +85,7 @@ export interface Datastores {
     privateCloudName: string,
     clusterName: string,
     datastoreName: string,
-    datastore: Datastore,
+    resource: Datastore,
     options?: DatastoresCreateOrUpdateOptionalParams
   ): Promise<DatastoresCreateOrUpdateResponse>;
   /**

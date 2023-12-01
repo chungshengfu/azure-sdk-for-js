@@ -10,7 +10,7 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   PlacementPolicy,
-  PlacementPoliciesListOptionalParams,
+  PlacementPoliciesListByClusterOptionalParams,
   PlacementPoliciesGetOptionalParams,
   PlacementPoliciesGetResponse,
   PlacementPoliciesCreateOrUpdateOptionalParams,
@@ -31,11 +31,11 @@ export interface PlacementPolicies {
    * @param clusterName Name of the cluster in the private cloud
    * @param options The options parameters.
    */
-  list(
+  listByCluster(
     resourceGroupName: string,
     privateCloudName: string,
     clusterName: string,
-    options?: PlacementPoliciesListOptionalParams
+    options?: PlacementPoliciesListByClusterOptionalParams
   ): PagedAsyncIterableIterator<PlacementPolicy>;
   /**
    * Get a placement policy by name in a private cloud cluster
@@ -60,7 +60,7 @@ export interface PlacementPolicies {
    * @param clusterName Name of the cluster in the private cloud
    * @param placementPolicyName Name of the VMware vSphere Distributed Resource Scheduler (DRS) placement
    *                            policy
-   * @param placementPolicy A placement policy in the private cloud cluster
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
@@ -68,7 +68,7 @@ export interface PlacementPolicies {
     privateCloudName: string,
     clusterName: string,
     placementPolicyName: string,
-    placementPolicy: PlacementPolicy,
+    resource: PlacementPolicy,
     options?: PlacementPoliciesCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -83,7 +83,7 @@ export interface PlacementPolicies {
    * @param clusterName Name of the cluster in the private cloud
    * @param placementPolicyName Name of the VMware vSphere Distributed Resource Scheduler (DRS) placement
    *                            policy
-   * @param placementPolicy A placement policy in the private cloud cluster
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
@@ -91,7 +91,7 @@ export interface PlacementPolicies {
     privateCloudName: string,
     clusterName: string,
     placementPolicyName: string,
-    placementPolicy: PlacementPolicy,
+    resource: PlacementPolicy,
     options?: PlacementPoliciesCreateOrUpdateOptionalParams
   ): Promise<PlacementPoliciesCreateOrUpdateResponse>;
   /**
@@ -101,7 +101,7 @@ export interface PlacementPolicies {
    * @param clusterName Name of the cluster in the private cloud
    * @param placementPolicyName Name of the VMware vSphere Distributed Resource Scheduler (DRS) placement
    *                            policy
-   * @param placementPolicyUpdate The placement policy properties that may be updated
+   * @param properties The resource properties to be updated.
    * @param options The options parameters.
    */
   beginUpdate(
@@ -109,7 +109,7 @@ export interface PlacementPolicies {
     privateCloudName: string,
     clusterName: string,
     placementPolicyName: string,
-    placementPolicyUpdate: PlacementPolicyUpdate,
+    properties: PlacementPolicyUpdate,
     options?: PlacementPoliciesUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -124,7 +124,7 @@ export interface PlacementPolicies {
    * @param clusterName Name of the cluster in the private cloud
    * @param placementPolicyName Name of the VMware vSphere Distributed Resource Scheduler (DRS) placement
    *                            policy
-   * @param placementPolicyUpdate The placement policy properties that may be updated
+   * @param properties The resource properties to be updated.
    * @param options The options parameters.
    */
   beginUpdateAndWait(
@@ -132,7 +132,7 @@ export interface PlacementPolicies {
     privateCloudName: string,
     clusterName: string,
     placementPolicyName: string,
-    placementPolicyUpdate: PlacementPolicyUpdate,
+    properties: PlacementPolicyUpdate,
     options?: PlacementPoliciesUpdateOptionalParams
   ): Promise<PlacementPoliciesUpdateResponse>;
   /**
