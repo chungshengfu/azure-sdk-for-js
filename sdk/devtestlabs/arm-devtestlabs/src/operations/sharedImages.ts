@@ -8,36 +8,34 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { NotificationChannels } from "../operationsInterfaces";
+import { SharedImages } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { DevTestLabsClient } from "../devTestLabsClient";
 import {
-  NotificationChannel,
-  NotificationChannelsListNextOptionalParams,
-  NotificationChannelsListOptionalParams,
-  NotificationChannelsListResponse,
-  NotificationChannelsGetOptionalParams,
-  NotificationChannelsGetResponse,
-  NotificationChannelsCreateOrUpdateOptionalParams,
-  NotificationChannelsCreateOrUpdateResponse,
-  NotificationChannelsDeleteOptionalParams,
-  NotificationChannelFragment,
-  NotificationChannelsUpdateOptionalParams,
-  NotificationChannelsUpdateResponse,
-  NotifyParameters,
-  NotificationChannelsNotifyOptionalParams,
-  NotificationChannelsListNextResponse
+  SharedImage,
+  SharedImagesListNextOptionalParams,
+  SharedImagesListOptionalParams,
+  SharedImagesListResponse,
+  SharedImagesGetOptionalParams,
+  SharedImagesGetResponse,
+  SharedImagesCreateOrUpdateOptionalParams,
+  SharedImagesCreateOrUpdateResponse,
+  SharedImagesDeleteOptionalParams,
+  SharedImageFragment,
+  SharedImagesUpdateOptionalParams,
+  SharedImagesUpdateResponse,
+  SharedImagesListNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing NotificationChannels operations. */
-export class NotificationChannelsImpl implements NotificationChannels {
+/** Class containing SharedImages operations. */
+export class SharedImagesImpl implements SharedImages {
   private readonly client: DevTestLabsClient;
 
   /**
-   * Initialize a new instance of the class NotificationChannels class.
+   * Initialize a new instance of the class SharedImages class.
    * @param client Reference to the service client
    */
   constructor(client: DevTestLabsClient) {
@@ -45,17 +43,24 @@ export class NotificationChannelsImpl implements NotificationChannels {
   }
 
   /**
-   * List notification channels in a given lab.
+   * List shared images in a given shared gallery.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
+   * @param sharedGalleryName The name of the shared gallery.
    * @param options The options parameters.
    */
   public list(
     resourceGroupName: string,
     labName: string,
-    options?: NotificationChannelsListOptionalParams
-  ): PagedAsyncIterableIterator<NotificationChannel> {
-    const iter = this.listPagingAll(resourceGroupName, labName, options);
+    sharedGalleryName: string,
+    options?: SharedImagesListOptionalParams
+  ): PagedAsyncIterableIterator<SharedImage> {
+    const iter = this.listPagingAll(
+      resourceGroupName,
+      labName,
+      sharedGalleryName,
+      options
+    );
     return {
       next() {
         return iter.next();
@@ -70,6 +75,7 @@ export class NotificationChannelsImpl implements NotificationChannels {
         return this.listPagingPage(
           resourceGroupName,
           labName,
+          sharedGalleryName,
           options,
           settings
         );
@@ -80,13 +86,19 @@ export class NotificationChannelsImpl implements NotificationChannels {
   private async *listPagingPage(
     resourceGroupName: string,
     labName: string,
-    options?: NotificationChannelsListOptionalParams,
+    sharedGalleryName: string,
+    options?: SharedImagesListOptionalParams,
     settings?: PageSettings
-  ): AsyncIterableIterator<NotificationChannel[]> {
-    let result: NotificationChannelsListResponse;
+  ): AsyncIterableIterator<SharedImage[]> {
+    let result: SharedImagesListResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._list(resourceGroupName, labName, options);
+      result = await this._list(
+        resourceGroupName,
+        labName,
+        sharedGalleryName,
+        options
+      );
       let page = result.value || [];
       continuationToken = result.nextLink;
       setContinuationToken(page, continuationToken);
@@ -96,6 +108,7 @@ export class NotificationChannelsImpl implements NotificationChannels {
       result = await this._listNext(
         resourceGroupName,
         labName,
+        sharedGalleryName,
         continuationToken,
         options
       );
@@ -109,11 +122,13 @@ export class NotificationChannelsImpl implements NotificationChannels {
   private async *listPagingAll(
     resourceGroupName: string,
     labName: string,
-    options?: NotificationChannelsListOptionalParams
-  ): AsyncIterableIterator<NotificationChannel> {
+    sharedGalleryName: string,
+    options?: SharedImagesListOptionalParams
+  ): AsyncIterableIterator<SharedImage> {
     for await (const page of this.listPagingPage(
       resourceGroupName,
       labName,
+      sharedGalleryName,
       options
     )) {
       yield* page;
@@ -121,121 +136,123 @@ export class NotificationChannelsImpl implements NotificationChannels {
   }
 
   /**
-   * List notification channels in a given lab.
+   * List shared images in a given shared gallery.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
+   * @param sharedGalleryName The name of the shared gallery.
    * @param options The options parameters.
    */
   private _list(
     resourceGroupName: string,
     labName: string,
-    options?: NotificationChannelsListOptionalParams
-  ): Promise<NotificationChannelsListResponse> {
+    sharedGalleryName: string,
+    options?: SharedImagesListOptionalParams
+  ): Promise<SharedImagesListResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, labName, options },
+      { resourceGroupName, labName, sharedGalleryName, options },
       listOperationSpec
     );
   }
 
   /**
-   * Get notification channel.
+   * Get shared image.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
-   * @param name The name of the notification channel.
+   * @param sharedGalleryName The name of the shared gallery.
+   * @param name The name of the shared image.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     labName: string,
+    sharedGalleryName: string,
     name: string,
-    options?: NotificationChannelsGetOptionalParams
-  ): Promise<NotificationChannelsGetResponse> {
+    options?: SharedImagesGetOptionalParams
+  ): Promise<SharedImagesGetResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, labName, name, options },
+      { resourceGroupName, labName, sharedGalleryName, name, options },
       getOperationSpec
     );
   }
 
   /**
-   * Create or replace an existing Notification Channel.
+   * Create or replace an existing Shared Image.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
-   * @param name The name of the notification channel.
-   * @param notificationChannel A notification.
+   * @param sharedGalleryName The name of the shared gallery.
+   * @param name The name of the shared image.
+   * @param sharedImage Properties of a shared image
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
     labName: string,
+    sharedGalleryName: string,
     name: string,
-    notificationChannel: NotificationChannel,
-    options?: NotificationChannelsCreateOrUpdateOptionalParams
-  ): Promise<NotificationChannelsCreateOrUpdateResponse> {
+    sharedImage: SharedImage,
+    options?: SharedImagesCreateOrUpdateOptionalParams
+  ): Promise<SharedImagesCreateOrUpdateResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, labName, name, notificationChannel, options },
+      {
+        resourceGroupName,
+        labName,
+        sharedGalleryName,
+        name,
+        sharedImage,
+        options
+      },
       createOrUpdateOperationSpec
     );
   }
 
   /**
-   * Delete notification channel.
+   * Delete shared image.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
-   * @param name The name of the notification channel.
+   * @param sharedGalleryName The name of the shared gallery.
+   * @param name The name of the shared image.
    * @param options The options parameters.
    */
   delete(
     resourceGroupName: string,
     labName: string,
+    sharedGalleryName: string,
     name: string,
-    options?: NotificationChannelsDeleteOptionalParams
+    options?: SharedImagesDeleteOptionalParams
   ): Promise<void> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, labName, name, options },
+      { resourceGroupName, labName, sharedGalleryName, name, options },
       deleteOperationSpec
     );
   }
 
   /**
-   * Allows modifying tags of notification channels. All other properties will be ignored.
+   * Allows modifying tags of shared images. All other properties will be ignored.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
-   * @param name The name of the notification channel.
-   * @param notificationChannel Allows modifying tags of notification channels. All other properties will
-   *                            be ignored.
+   * @param sharedGalleryName The name of the shared gallery.
+   * @param name The name of the shared image.
+   * @param sharedImage Allows modifying tags of shared images. All other properties will be ignored.
    * @param options The options parameters.
    */
   update(
     resourceGroupName: string,
     labName: string,
+    sharedGalleryName: string,
     name: string,
-    notificationChannel: NotificationChannelFragment,
-    options?: NotificationChannelsUpdateOptionalParams
-  ): Promise<NotificationChannelsUpdateResponse> {
+    sharedImage: SharedImageFragment,
+    options?: SharedImagesUpdateOptionalParams
+  ): Promise<SharedImagesUpdateResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, labName, name, notificationChannel, options },
+      {
+        resourceGroupName,
+        labName,
+        sharedGalleryName,
+        name,
+        sharedImage,
+        options
+      },
       updateOperationSpec
-    );
-  }
-
-  /**
-   * Send notification to provided channel.
-   * @param resourceGroupName The name of the resource group.
-   * @param labName The name of the lab.
-   * @param name The name of the notification channel.
-   * @param notifyParameters Properties for generating a Notification.
-   * @param options The options parameters.
-   */
-  notify(
-    resourceGroupName: string,
-    labName: string,
-    name: string,
-    notifyParameters: NotifyParameters,
-    options?: NotificationChannelsNotifyOptionalParams
-  ): Promise<void> {
-    return this.client.sendOperationRequest(
-      { resourceGroupName, labName, name, notifyParameters, options },
-      notifyOperationSpec
     );
   }
 
@@ -243,17 +260,19 @@ export class NotificationChannelsImpl implements NotificationChannels {
    * ListNext
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
+   * @param sharedGalleryName The name of the shared gallery.
    * @param nextLink The nextLink from the previous successful call to the List method.
    * @param options The options parameters.
    */
   private _listNext(
     resourceGroupName: string,
     labName: string,
+    sharedGalleryName: string,
     nextLink: string,
-    options?: NotificationChannelsListNextOptionalParams
-  ): Promise<NotificationChannelsListNextResponse> {
+    options?: SharedImagesListNextOptionalParams
+  ): Promise<SharedImagesListNextResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, labName, nextLink, options },
+      { resourceGroupName, labName, sharedGalleryName, nextLink, options },
       listNextOperationSpec
     );
   }
@@ -263,11 +282,11 @@ const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/notificationchannels",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/sharedgalleries/{sharedGalleryName}/sharedimages",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.NotificationChannelList
+      bodyMapper: Mappers.SharedImageList
     },
     default: {
       bodyMapper: Mappers.CloudError
@@ -284,18 +303,19 @@ const listOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.labName
+    Parameters.labName,
+    Parameters.sharedGalleryName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const getOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/notificationchannels/{name}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/sharedgalleries/{sharedGalleryName}/sharedimages/{name}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.NotificationChannel
+      bodyMapper: Mappers.SharedImage
     },
     default: {
       bodyMapper: Mappers.CloudError
@@ -307,34 +327,36 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.name,
-    Parameters.labName
+    Parameters.labName,
+    Parameters.sharedGalleryName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const createOrUpdateOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/notificationchannels/{name}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/sharedgalleries/{sharedGalleryName}/sharedimages/{name}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.NotificationChannel
+      bodyMapper: Mappers.SharedImage
     },
     201: {
-      bodyMapper: Mappers.NotificationChannel
+      bodyMapper: Mappers.SharedImage
     },
     default: {
       bodyMapper: Mappers.CloudError
     }
   },
-  requestBody: Parameters.notificationChannel,
+  requestBody: Parameters.sharedImage,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.name,
-    Parameters.labName
+    Parameters.labName,
+    Parameters.sharedGalleryName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -342,7 +364,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/notificationchannels/{name}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/sharedgalleries/{sharedGalleryName}/sharedimages/{name}",
   httpMethod: "DELETE",
   responses: {
     200: {},
@@ -357,54 +379,33 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.name,
-    Parameters.labName
+    Parameters.labName,
+    Parameters.sharedGalleryName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const updateOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/notificationchannels/{name}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/sharedgalleries/{sharedGalleryName}/sharedimages/{name}",
   httpMethod: "PATCH",
   responses: {
     200: {
-      bodyMapper: Mappers.NotificationChannel
+      bodyMapper: Mappers.SharedImage
     },
     default: {
       bodyMapper: Mappers.CloudError
     }
   },
-  requestBody: Parameters.notificationChannel1,
+  requestBody: Parameters.sharedImage1,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.name,
-    Parameters.labName
-  ],
-  headerParameters: [Parameters.accept, Parameters.contentType],
-  mediaType: "json",
-  serializer
-};
-const notifyOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/notificationchannels/{name}/notify",
-  httpMethod: "POST",
-  responses: {
-    200: {},
-    default: {
-      bodyMapper: Mappers.CloudError
-    }
-  },
-  requestBody: Parameters.notifyParameters,
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.name,
-    Parameters.labName
+    Parameters.labName,
+    Parameters.sharedGalleryName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -415,7 +416,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.NotificationChannelList
+      bodyMapper: Mappers.SharedImageList
     },
     default: {
       bodyMapper: Mappers.CloudError
@@ -426,7 +427,8 @@ const listNextOperationSpec: coreClient.OperationSpec = {
     Parameters.nextLink,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.labName
+    Parameters.labName,
+    Parameters.sharedGalleryName
   ],
   headerParameters: [Parameters.accept],
   serializer

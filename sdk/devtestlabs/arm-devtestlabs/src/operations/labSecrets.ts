@@ -8,7 +8,7 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { ServiceRunners } from "../operationsInterfaces";
+import { LabSecrets } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
@@ -20,25 +20,28 @@ import {
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
-  ServiceRunner,
-  ServiceRunnersListNextOptionalParams,
-  ServiceRunnersListOptionalParams,
-  ServiceRunnersListResponse,
-  ServiceRunnersGetOptionalParams,
-  ServiceRunnersGetResponse,
-  ServiceRunnersCreateOrUpdateOptionalParams,
-  ServiceRunnersCreateOrUpdateResponse,
-  ServiceRunnersDeleteOptionalParams,
-  ServiceRunnersListNextResponse
+  LabSecret,
+  LabSecretsListNextOptionalParams,
+  LabSecretsListOptionalParams,
+  LabSecretsListResponse,
+  LabSecretsGetOptionalParams,
+  LabSecretsGetResponse,
+  LabSecretsCreateOrUpdateOptionalParams,
+  LabSecretsCreateOrUpdateResponse,
+  LabSecretsDeleteOptionalParams,
+  SecretFragment,
+  LabSecretsUpdateOptionalParams,
+  LabSecretsUpdateResponse,
+  LabSecretsListNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing ServiceRunners operations. */
-export class ServiceRunnersImpl implements ServiceRunners {
+/** Class containing LabSecrets operations. */
+export class LabSecretsImpl implements LabSecrets {
   private readonly client: DevTestLabsClient;
 
   /**
-   * Initialize a new instance of the class ServiceRunners class.
+   * Initialize a new instance of the class LabSecrets class.
    * @param client Reference to the service client
    */
   constructor(client: DevTestLabsClient) {
@@ -46,7 +49,7 @@ export class ServiceRunnersImpl implements ServiceRunners {
   }
 
   /**
-   * List service runners in a given lab.
+   * List lab secrets in a given lab.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
    * @param options The options parameters.
@@ -54,8 +57,8 @@ export class ServiceRunnersImpl implements ServiceRunners {
   public list(
     resourceGroupName: string,
     labName: string,
-    options?: ServiceRunnersListOptionalParams
-  ): PagedAsyncIterableIterator<ServiceRunner> {
+    options?: LabSecretsListOptionalParams
+  ): PagedAsyncIterableIterator<LabSecret> {
     const iter = this.listPagingAll(resourceGroupName, labName, options);
     return {
       next() {
@@ -81,10 +84,10 @@ export class ServiceRunnersImpl implements ServiceRunners {
   private async *listPagingPage(
     resourceGroupName: string,
     labName: string,
-    options?: ServiceRunnersListOptionalParams,
+    options?: LabSecretsListOptionalParams,
     settings?: PageSettings
-  ): AsyncIterableIterator<ServiceRunner[]> {
-    let result: ServiceRunnersListResponse;
+  ): AsyncIterableIterator<LabSecret[]> {
+    let result: LabSecretsListResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
       result = await this._list(resourceGroupName, labName, options);
@@ -110,8 +113,8 @@ export class ServiceRunnersImpl implements ServiceRunners {
   private async *listPagingAll(
     resourceGroupName: string,
     labName: string,
-    options?: ServiceRunnersListOptionalParams
-  ): AsyncIterableIterator<ServiceRunner> {
+    options?: LabSecretsListOptionalParams
+  ): AsyncIterableIterator<LabSecret> {
     for await (const page of this.listPagingPage(
       resourceGroupName,
       labName,
@@ -122,7 +125,7 @@ export class ServiceRunnersImpl implements ServiceRunners {
   }
 
   /**
-   * List service runners in a given lab.
+   * List lab secrets in a given lab.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
    * @param options The options parameters.
@@ -130,8 +133,8 @@ export class ServiceRunnersImpl implements ServiceRunners {
   private _list(
     resourceGroupName: string,
     labName: string,
-    options?: ServiceRunnersListOptionalParams
-  ): Promise<ServiceRunnersListResponse> {
+    options?: LabSecretsListOptionalParams
+  ): Promise<LabSecretsListResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, labName, options },
       listOperationSpec
@@ -139,18 +142,18 @@ export class ServiceRunnersImpl implements ServiceRunners {
   }
 
   /**
-   * Get service runner.
+   * Get lab secret.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
-   * @param name The name of the service runner.
+   * @param name The name of the lab secret.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     labName: string,
     name: string,
-    options?: ServiceRunnersGetOptionalParams
-  ): Promise<ServiceRunnersGetResponse> {
+    options?: LabSecretsGetOptionalParams
+  ): Promise<LabSecretsGetResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, labName, name, options },
       getOperationSpec
@@ -158,29 +161,29 @@ export class ServiceRunnersImpl implements ServiceRunners {
   }
 
   /**
-   * Create or replace an existing Service runner. This operation can take a while to complete.
+   * Create or replace an existing Lab Secret. This operation can take a while to complete.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
-   * @param name The name of the service runner.
-   * @param serviceRunner A container for a managed identity to execute DevTest lab services.
+   * @param name The name of the lab secret.
+   * @param labSecret A shared secret in a lab.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
     labName: string,
     name: string,
-    serviceRunner: ServiceRunner,
-    options?: ServiceRunnersCreateOrUpdateOptionalParams
+    labSecret: LabSecret,
+    options?: LabSecretsCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
-      OperationState<ServiceRunnersCreateOrUpdateResponse>,
-      ServiceRunnersCreateOrUpdateResponse
+      OperationState<LabSecretsCreateOrUpdateResponse>,
+      LabSecretsCreateOrUpdateResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
-    ): Promise<ServiceRunnersCreateOrUpdateResponse> => {
+    ): Promise<LabSecretsCreateOrUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -218,12 +221,12 @@ export class ServiceRunnersImpl implements ServiceRunners {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, labName, name, serviceRunner, options },
+      args: { resourceGroupName, labName, name, labSecret, options },
       spec: createOrUpdateOperationSpec
     });
     const poller = await createHttpPoller<
-      ServiceRunnersCreateOrUpdateResponse,
-      OperationState<ServiceRunnersCreateOrUpdateResponse>
+      LabSecretsCreateOrUpdateResponse,
+      OperationState<LabSecretsCreateOrUpdateResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
@@ -233,42 +236,42 @@ export class ServiceRunnersImpl implements ServiceRunners {
   }
 
   /**
-   * Create or replace an existing Service runner. This operation can take a while to complete.
+   * Create or replace an existing Lab Secret. This operation can take a while to complete.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
-   * @param name The name of the service runner.
-   * @param serviceRunner A container for a managed identity to execute DevTest lab services.
+   * @param name The name of the lab secret.
+   * @param labSecret A shared secret in a lab.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     labName: string,
     name: string,
-    serviceRunner: ServiceRunner,
-    options?: ServiceRunnersCreateOrUpdateOptionalParams
-  ): Promise<ServiceRunnersCreateOrUpdateResponse> {
+    labSecret: LabSecret,
+    options?: LabSecretsCreateOrUpdateOptionalParams
+  ): Promise<LabSecretsCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
       labName,
       name,
-      serviceRunner,
+      labSecret,
       options
     );
     return poller.pollUntilDone();
   }
 
   /**
-   * Delete service runner. This operation can take a while to complete.
+   * Delete lab secret. This operation can take a while to complete.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
-   * @param name The name of the service runner.
+   * @param name The name of the lab secret.
    * @param options The options parameters.
    */
   async beginDelete(
     resourceGroupName: string,
     labName: string,
     name: string,
-    options?: ServiceRunnersDeleteOptionalParams
+    options?: LabSecretsDeleteOptionalParams
   ): Promise<SimplePollerLike<OperationState<void>, void>> {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
@@ -323,17 +326,17 @@ export class ServiceRunnersImpl implements ServiceRunners {
   }
 
   /**
-   * Delete service runner. This operation can take a while to complete.
+   * Delete lab secret. This operation can take a while to complete.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
-   * @param name The name of the service runner.
+   * @param name The name of the lab secret.
    * @param options The options parameters.
    */
   async beginDeleteAndWait(
     resourceGroupName: string,
     labName: string,
     name: string,
-    options?: ServiceRunnersDeleteOptionalParams
+    options?: LabSecretsDeleteOptionalParams
   ): Promise<void> {
     const poller = await this.beginDelete(
       resourceGroupName,
@@ -342,6 +345,27 @@ export class ServiceRunnersImpl implements ServiceRunners {
       options
     );
     return poller.pollUntilDone();
+  }
+
+  /**
+   * Allows modifying tags of lab secrets. All other properties will be ignored.
+   * @param resourceGroupName The name of the resource group.
+   * @param labName The name of the lab.
+   * @param name The name of the lab secret.
+   * @param secret Allows modifying tags of lab secrets. All other properties will be ignored.
+   * @param options The options parameters.
+   */
+  update(
+    resourceGroupName: string,
+    labName: string,
+    name: string,
+    secret: SecretFragment,
+    options?: LabSecretsUpdateOptionalParams
+  ): Promise<LabSecretsUpdateResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, labName, name, secret, options },
+      updateOperationSpec
+    );
   }
 
   /**
@@ -355,8 +379,8 @@ export class ServiceRunnersImpl implements ServiceRunners {
     resourceGroupName: string,
     labName: string,
     nextLink: string,
-    options?: ServiceRunnersListNextOptionalParams
-  ): Promise<ServiceRunnersListNextResponse> {
+    options?: LabSecretsListNextOptionalParams
+  ): Promise<LabSecretsListNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, labName, nextLink, options },
       listNextOperationSpec
@@ -368,11 +392,11 @@ const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/servicerunners",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/secrets",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ServiceRunnerList
+      bodyMapper: Mappers.LabSecretList
     },
     default: {
       bodyMapper: Mappers.CloudError
@@ -395,11 +419,11 @@ const listOperationSpec: coreClient.OperationSpec = {
 };
 const getOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/servicerunners/{name}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/secrets/{name}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ServiceRunner
+      bodyMapper: Mappers.LabSecret
     },
     default: {
       bodyMapper: Mappers.CloudError
@@ -418,26 +442,26 @@ const getOperationSpec: coreClient.OperationSpec = {
 };
 const createOrUpdateOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/servicerunners/{name}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/secrets/{name}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.ServiceRunner
+      bodyMapper: Mappers.LabSecret
     },
     201: {
-      bodyMapper: Mappers.ServiceRunner
+      bodyMapper: Mappers.LabSecret
     },
     202: {
-      bodyMapper: Mappers.ServiceRunner
+      bodyMapper: Mappers.LabSecret
     },
     204: {
-      bodyMapper: Mappers.ServiceRunner
+      bodyMapper: Mappers.LabSecret
     },
     default: {
       bodyMapper: Mappers.CloudError
     }
   },
-  requestBody: Parameters.serviceRunner,
+  requestBody: Parameters.labSecret,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -452,7 +476,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/servicerunners/{name}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/secrets/{name}",
   httpMethod: "DELETE",
   responses: {
     200: {},
@@ -474,12 +498,37 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept],
   serializer
 };
+const updateOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/secrets/{name}",
+  httpMethod: "PATCH",
+  responses: {
+    201: {
+      bodyMapper: Mappers.LabSecret
+    },
+    default: {
+      bodyMapper: Mappers.CloudError
+    }
+  },
+  requestBody: Parameters.secret,
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.name,
+    Parameters.labName
+  ],
+  headerParameters: [Parameters.accept, Parameters.contentType],
+  mediaType: "json",
+  serializer
+};
 const listNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ServiceRunnerList
+      bodyMapper: Mappers.LabSecretList
     },
     default: {
       bodyMapper: Mappers.CloudError

@@ -8,36 +8,34 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { NotificationChannels } from "../operationsInterfaces";
+import { SharedGalleries } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { DevTestLabsClient } from "../devTestLabsClient";
 import {
-  NotificationChannel,
-  NotificationChannelsListNextOptionalParams,
-  NotificationChannelsListOptionalParams,
-  NotificationChannelsListResponse,
-  NotificationChannelsGetOptionalParams,
-  NotificationChannelsGetResponse,
-  NotificationChannelsCreateOrUpdateOptionalParams,
-  NotificationChannelsCreateOrUpdateResponse,
-  NotificationChannelsDeleteOptionalParams,
-  NotificationChannelFragment,
-  NotificationChannelsUpdateOptionalParams,
-  NotificationChannelsUpdateResponse,
-  NotifyParameters,
-  NotificationChannelsNotifyOptionalParams,
-  NotificationChannelsListNextResponse
+  SharedGallery,
+  SharedGalleriesListNextOptionalParams,
+  SharedGalleriesListOptionalParams,
+  SharedGalleriesListResponse,
+  SharedGalleriesGetOptionalParams,
+  SharedGalleriesGetResponse,
+  SharedGalleriesCreateOrUpdateOptionalParams,
+  SharedGalleriesCreateOrUpdateResponse,
+  SharedGalleriesDeleteOptionalParams,
+  SharedGalleryFragment,
+  SharedGalleriesUpdateOptionalParams,
+  SharedGalleriesUpdateResponse,
+  SharedGalleriesListNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing NotificationChannels operations. */
-export class NotificationChannelsImpl implements NotificationChannels {
+/** Class containing SharedGalleries operations. */
+export class SharedGalleriesImpl implements SharedGalleries {
   private readonly client: DevTestLabsClient;
 
   /**
-   * Initialize a new instance of the class NotificationChannels class.
+   * Initialize a new instance of the class SharedGalleries class.
    * @param client Reference to the service client
    */
   constructor(client: DevTestLabsClient) {
@@ -45,7 +43,7 @@ export class NotificationChannelsImpl implements NotificationChannels {
   }
 
   /**
-   * List notification channels in a given lab.
+   * List shared galleries in a given lab.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
    * @param options The options parameters.
@@ -53,8 +51,8 @@ export class NotificationChannelsImpl implements NotificationChannels {
   public list(
     resourceGroupName: string,
     labName: string,
-    options?: NotificationChannelsListOptionalParams
-  ): PagedAsyncIterableIterator<NotificationChannel> {
+    options?: SharedGalleriesListOptionalParams
+  ): PagedAsyncIterableIterator<SharedGallery> {
     const iter = this.listPagingAll(resourceGroupName, labName, options);
     return {
       next() {
@@ -80,10 +78,10 @@ export class NotificationChannelsImpl implements NotificationChannels {
   private async *listPagingPage(
     resourceGroupName: string,
     labName: string,
-    options?: NotificationChannelsListOptionalParams,
+    options?: SharedGalleriesListOptionalParams,
     settings?: PageSettings
-  ): AsyncIterableIterator<NotificationChannel[]> {
-    let result: NotificationChannelsListResponse;
+  ): AsyncIterableIterator<SharedGallery[]> {
+    let result: SharedGalleriesListResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
       result = await this._list(resourceGroupName, labName, options);
@@ -109,8 +107,8 @@ export class NotificationChannelsImpl implements NotificationChannels {
   private async *listPagingAll(
     resourceGroupName: string,
     labName: string,
-    options?: NotificationChannelsListOptionalParams
-  ): AsyncIterableIterator<NotificationChannel> {
+    options?: SharedGalleriesListOptionalParams
+  ): AsyncIterableIterator<SharedGallery> {
     for await (const page of this.listPagingPage(
       resourceGroupName,
       labName,
@@ -121,7 +119,7 @@ export class NotificationChannelsImpl implements NotificationChannels {
   }
 
   /**
-   * List notification channels in a given lab.
+   * List shared galleries in a given lab.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
    * @param options The options parameters.
@@ -129,8 +127,8 @@ export class NotificationChannelsImpl implements NotificationChannels {
   private _list(
     resourceGroupName: string,
     labName: string,
-    options?: NotificationChannelsListOptionalParams
-  ): Promise<NotificationChannelsListResponse> {
+    options?: SharedGalleriesListOptionalParams
+  ): Promise<SharedGalleriesListResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, labName, options },
       listOperationSpec
@@ -138,18 +136,18 @@ export class NotificationChannelsImpl implements NotificationChannels {
   }
 
   /**
-   * Get notification channel.
+   * Get shared gallery.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
-   * @param name The name of the notification channel.
+   * @param name The name of the shared gallery.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     labName: string,
     name: string,
-    options?: NotificationChannelsGetOptionalParams
-  ): Promise<NotificationChannelsGetResponse> {
+    options?: SharedGalleriesGetOptionalParams
+  ): Promise<SharedGalleriesGetResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, labName, name, options },
       getOperationSpec
@@ -157,38 +155,38 @@ export class NotificationChannelsImpl implements NotificationChannels {
   }
 
   /**
-   * Create or replace an existing Notification Channel.
+   * Create or replace an existing Shared Gallery.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
-   * @param name The name of the notification channel.
-   * @param notificationChannel A notification.
+   * @param name The name of the shared gallery.
+   * @param sharedGallery Properties of a shared gallery
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
     labName: string,
     name: string,
-    notificationChannel: NotificationChannel,
-    options?: NotificationChannelsCreateOrUpdateOptionalParams
-  ): Promise<NotificationChannelsCreateOrUpdateResponse> {
+    sharedGallery: SharedGallery,
+    options?: SharedGalleriesCreateOrUpdateOptionalParams
+  ): Promise<SharedGalleriesCreateOrUpdateResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, labName, name, notificationChannel, options },
+      { resourceGroupName, labName, name, sharedGallery, options },
       createOrUpdateOperationSpec
     );
   }
 
   /**
-   * Delete notification channel.
+   * Delete shared gallery.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
-   * @param name The name of the notification channel.
+   * @param name The name of the shared gallery.
    * @param options The options parameters.
    */
   delete(
     resourceGroupName: string,
     labName: string,
     name: string,
-    options?: NotificationChannelsDeleteOptionalParams
+    options?: SharedGalleriesDeleteOptionalParams
   ): Promise<void> {
     return this.client.sendOperationRequest(
       { resourceGroupName, labName, name, options },
@@ -197,45 +195,24 @@ export class NotificationChannelsImpl implements NotificationChannels {
   }
 
   /**
-   * Allows modifying tags of notification channels. All other properties will be ignored.
+   * Allows modifying tags of shared galleries. All other properties will be ignored.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
-   * @param name The name of the notification channel.
-   * @param notificationChannel Allows modifying tags of notification channels. All other properties will
-   *                            be ignored.
+   * @param name The name of the shared gallery.
+   * @param sharedGallery Allows modifying tags of shared galleries. All other properties will be
+   *                      ignored.
    * @param options The options parameters.
    */
   update(
     resourceGroupName: string,
     labName: string,
     name: string,
-    notificationChannel: NotificationChannelFragment,
-    options?: NotificationChannelsUpdateOptionalParams
-  ): Promise<NotificationChannelsUpdateResponse> {
+    sharedGallery: SharedGalleryFragment,
+    options?: SharedGalleriesUpdateOptionalParams
+  ): Promise<SharedGalleriesUpdateResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, labName, name, notificationChannel, options },
+      { resourceGroupName, labName, name, sharedGallery, options },
       updateOperationSpec
-    );
-  }
-
-  /**
-   * Send notification to provided channel.
-   * @param resourceGroupName The name of the resource group.
-   * @param labName The name of the lab.
-   * @param name The name of the notification channel.
-   * @param notifyParameters Properties for generating a Notification.
-   * @param options The options parameters.
-   */
-  notify(
-    resourceGroupName: string,
-    labName: string,
-    name: string,
-    notifyParameters: NotifyParameters,
-    options?: NotificationChannelsNotifyOptionalParams
-  ): Promise<void> {
-    return this.client.sendOperationRequest(
-      { resourceGroupName, labName, name, notifyParameters, options },
-      notifyOperationSpec
     );
   }
 
@@ -250,8 +227,8 @@ export class NotificationChannelsImpl implements NotificationChannels {
     resourceGroupName: string,
     labName: string,
     nextLink: string,
-    options?: NotificationChannelsListNextOptionalParams
-  ): Promise<NotificationChannelsListNextResponse> {
+    options?: SharedGalleriesListNextOptionalParams
+  ): Promise<SharedGalleriesListNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, labName, nextLink, options },
       listNextOperationSpec
@@ -263,11 +240,11 @@ const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/notificationchannels",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/sharedgalleries",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.NotificationChannelList
+      bodyMapper: Mappers.SharedGalleryList
     },
     default: {
       bodyMapper: Mappers.CloudError
@@ -291,11 +268,11 @@ const listOperationSpec: coreClient.OperationSpec = {
 };
 const getOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/notificationchannels/{name}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/sharedgalleries/{name}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.NotificationChannel
+      bodyMapper: Mappers.SharedGallery
     },
     default: {
       bodyMapper: Mappers.CloudError
@@ -314,20 +291,20 @@ const getOperationSpec: coreClient.OperationSpec = {
 };
 const createOrUpdateOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/notificationchannels/{name}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/sharedgalleries/{name}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.NotificationChannel
+      bodyMapper: Mappers.SharedGallery
     },
     201: {
-      bodyMapper: Mappers.NotificationChannel
+      bodyMapper: Mappers.SharedGallery
     },
     default: {
       bodyMapper: Mappers.CloudError
     }
   },
-  requestBody: Parameters.notificationChannel,
+  requestBody: Parameters.sharedGallery,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -342,7 +319,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/notificationchannels/{name}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/sharedgalleries/{name}",
   httpMethod: "DELETE",
   responses: {
     200: {},
@@ -364,40 +341,17 @@ const deleteOperationSpec: coreClient.OperationSpec = {
 };
 const updateOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/notificationchannels/{name}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/sharedgalleries/{name}",
   httpMethod: "PATCH",
   responses: {
     200: {
-      bodyMapper: Mappers.NotificationChannel
+      bodyMapper: Mappers.SharedGallery
     },
     default: {
       bodyMapper: Mappers.CloudError
     }
   },
-  requestBody: Parameters.notificationChannel1,
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.name,
-    Parameters.labName
-  ],
-  headerParameters: [Parameters.accept, Parameters.contentType],
-  mediaType: "json",
-  serializer
-};
-const notifyOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/notificationchannels/{name}/notify",
-  httpMethod: "POST",
-  responses: {
-    200: {},
-    default: {
-      bodyMapper: Mappers.CloudError
-    }
-  },
-  requestBody: Parameters.notifyParameters,
+  requestBody: Parameters.sharedGallery1,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -415,7 +369,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.NotificationChannelList
+      bodyMapper: Mappers.SharedGalleryList
     },
     default: {
       bodyMapper: Mappers.CloudError

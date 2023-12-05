@@ -8,7 +8,7 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { ServiceRunners } from "../operationsInterfaces";
+import { BastionHosts } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
@@ -20,25 +20,28 @@ import {
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
-  ServiceRunner,
-  ServiceRunnersListNextOptionalParams,
-  ServiceRunnersListOptionalParams,
-  ServiceRunnersListResponse,
-  ServiceRunnersGetOptionalParams,
-  ServiceRunnersGetResponse,
-  ServiceRunnersCreateOrUpdateOptionalParams,
-  ServiceRunnersCreateOrUpdateResponse,
-  ServiceRunnersDeleteOptionalParams,
-  ServiceRunnersListNextResponse
+  BastionHost,
+  BastionHostsListNextOptionalParams,
+  BastionHostsListOptionalParams,
+  BastionHostsListResponse,
+  BastionHostsGetOptionalParams,
+  BastionHostsGetResponse,
+  BastionHostsCreateOrUpdateOptionalParams,
+  BastionHostsCreateOrUpdateResponse,
+  BastionHostsDeleteOptionalParams,
+  BastionHostFragment,
+  BastionHostsUpdateOptionalParams,
+  BastionHostsUpdateResponse,
+  BastionHostsListNextResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing ServiceRunners operations. */
-export class ServiceRunnersImpl implements ServiceRunners {
+/** Class containing BastionHosts operations. */
+export class BastionHostsImpl implements BastionHosts {
   private readonly client: DevTestLabsClient;
 
   /**
-   * Initialize a new instance of the class ServiceRunners class.
+   * Initialize a new instance of the class BastionHosts class.
    * @param client Reference to the service client
    */
   constructor(client: DevTestLabsClient) {
@@ -46,17 +49,24 @@ export class ServiceRunnersImpl implements ServiceRunners {
   }
 
   /**
-   * List service runners in a given lab.
+   * List bastionhosts in a given virtual network.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
+   * @param virtualNetworkName The name of the virtual network.
    * @param options The options parameters.
    */
   public list(
     resourceGroupName: string,
     labName: string,
-    options?: ServiceRunnersListOptionalParams
-  ): PagedAsyncIterableIterator<ServiceRunner> {
-    const iter = this.listPagingAll(resourceGroupName, labName, options);
+    virtualNetworkName: string,
+    options?: BastionHostsListOptionalParams
+  ): PagedAsyncIterableIterator<BastionHost> {
+    const iter = this.listPagingAll(
+      resourceGroupName,
+      labName,
+      virtualNetworkName,
+      options
+    );
     return {
       next() {
         return iter.next();
@@ -71,6 +81,7 @@ export class ServiceRunnersImpl implements ServiceRunners {
         return this.listPagingPage(
           resourceGroupName,
           labName,
+          virtualNetworkName,
           options,
           settings
         );
@@ -81,13 +92,19 @@ export class ServiceRunnersImpl implements ServiceRunners {
   private async *listPagingPage(
     resourceGroupName: string,
     labName: string,
-    options?: ServiceRunnersListOptionalParams,
+    virtualNetworkName: string,
+    options?: BastionHostsListOptionalParams,
     settings?: PageSettings
-  ): AsyncIterableIterator<ServiceRunner[]> {
-    let result: ServiceRunnersListResponse;
+  ): AsyncIterableIterator<BastionHost[]> {
+    let result: BastionHostsListResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._list(resourceGroupName, labName, options);
+      result = await this._list(
+        resourceGroupName,
+        labName,
+        virtualNetworkName,
+        options
+      );
       let page = result.value || [];
       continuationToken = result.nextLink;
       setContinuationToken(page, continuationToken);
@@ -97,6 +114,7 @@ export class ServiceRunnersImpl implements ServiceRunners {
       result = await this._listNext(
         resourceGroupName,
         labName,
+        virtualNetworkName,
         continuationToken,
         options
       );
@@ -110,11 +128,13 @@ export class ServiceRunnersImpl implements ServiceRunners {
   private async *listPagingAll(
     resourceGroupName: string,
     labName: string,
-    options?: ServiceRunnersListOptionalParams
-  ): AsyncIterableIterator<ServiceRunner> {
+    virtualNetworkName: string,
+    options?: BastionHostsListOptionalParams
+  ): AsyncIterableIterator<BastionHost> {
     for await (const page of this.listPagingPage(
       resourceGroupName,
       labName,
+      virtualNetworkName,
       options
     )) {
       yield* page;
@@ -122,65 +142,71 @@ export class ServiceRunnersImpl implements ServiceRunners {
   }
 
   /**
-   * List service runners in a given lab.
+   * List bastionhosts in a given virtual network.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
+   * @param virtualNetworkName The name of the virtual network.
    * @param options The options parameters.
    */
   private _list(
     resourceGroupName: string,
     labName: string,
-    options?: ServiceRunnersListOptionalParams
-  ): Promise<ServiceRunnersListResponse> {
+    virtualNetworkName: string,
+    options?: BastionHostsListOptionalParams
+  ): Promise<BastionHostsListResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, labName, options },
+      { resourceGroupName, labName, virtualNetworkName, options },
       listOperationSpec
     );
   }
 
   /**
-   * Get service runner.
+   * Get bastionhost.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
-   * @param name The name of the service runner.
+   * @param virtualNetworkName The name of the virtual network.
+   * @param name The name of the bastionhost.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     labName: string,
+    virtualNetworkName: string,
     name: string,
-    options?: ServiceRunnersGetOptionalParams
-  ): Promise<ServiceRunnersGetResponse> {
+    options?: BastionHostsGetOptionalParams
+  ): Promise<BastionHostsGetResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, labName, name, options },
+      { resourceGroupName, labName, virtualNetworkName, name, options },
       getOperationSpec
     );
   }
 
   /**
-   * Create or replace an existing Service runner. This operation can take a while to complete.
+   * Create or replace an existing bastionHost. This operation can take a while to complete.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
-   * @param name The name of the service runner.
-   * @param serviceRunner A container for a managed identity to execute DevTest lab services.
+   * @param virtualNetworkName The name of the virtual network.
+   * @param name The name of the bastionhost.
+   * @param bastionHost Profile of a Bastion Host
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
     labName: string,
+    virtualNetworkName: string,
     name: string,
-    serviceRunner: ServiceRunner,
-    options?: ServiceRunnersCreateOrUpdateOptionalParams
+    bastionHost: BastionHost,
+    options?: BastionHostsCreateOrUpdateOptionalParams
   ): Promise<
     SimplePollerLike<
-      OperationState<ServiceRunnersCreateOrUpdateResponse>,
-      ServiceRunnersCreateOrUpdateResponse
+      OperationState<BastionHostsCreateOrUpdateResponse>,
+      BastionHostsCreateOrUpdateResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
-    ): Promise<ServiceRunnersCreateOrUpdateResponse> => {
+    ): Promise<BastionHostsCreateOrUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -218,12 +244,19 @@ export class ServiceRunnersImpl implements ServiceRunners {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, labName, name, serviceRunner, options },
+      args: {
+        resourceGroupName,
+        labName,
+        virtualNetworkName,
+        name,
+        bastionHost,
+        options
+      },
       spec: createOrUpdateOperationSpec
     });
     const poller = await createHttpPoller<
-      ServiceRunnersCreateOrUpdateResponse,
-      OperationState<ServiceRunnersCreateOrUpdateResponse>
+      BastionHostsCreateOrUpdateResponse,
+      OperationState<BastionHostsCreateOrUpdateResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs
@@ -233,42 +266,47 @@ export class ServiceRunnersImpl implements ServiceRunners {
   }
 
   /**
-   * Create or replace an existing Service runner. This operation can take a while to complete.
+   * Create or replace an existing bastionHost. This operation can take a while to complete.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
-   * @param name The name of the service runner.
-   * @param serviceRunner A container for a managed identity to execute DevTest lab services.
+   * @param virtualNetworkName The name of the virtual network.
+   * @param name The name of the bastionhost.
+   * @param bastionHost Profile of a Bastion Host
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     labName: string,
+    virtualNetworkName: string,
     name: string,
-    serviceRunner: ServiceRunner,
-    options?: ServiceRunnersCreateOrUpdateOptionalParams
-  ): Promise<ServiceRunnersCreateOrUpdateResponse> {
+    bastionHost: BastionHost,
+    options?: BastionHostsCreateOrUpdateOptionalParams
+  ): Promise<BastionHostsCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
       labName,
+      virtualNetworkName,
       name,
-      serviceRunner,
+      bastionHost,
       options
     );
     return poller.pollUntilDone();
   }
 
   /**
-   * Delete service runner. This operation can take a while to complete.
+   * Delete bastionhost. This operation can take a while to complete.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
-   * @param name The name of the service runner.
+   * @param virtualNetworkName The name of the virtual network.
+   * @param name The name of the bastionhost.
    * @param options The options parameters.
    */
   async beginDelete(
     resourceGroupName: string,
     labName: string,
+    virtualNetworkName: string,
     name: string,
-    options?: ServiceRunnersDeleteOptionalParams
+    options?: BastionHostsDeleteOptionalParams
   ): Promise<SimplePollerLike<OperationState<void>, void>> {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
@@ -311,7 +349,7 @@ export class ServiceRunnersImpl implements ServiceRunners {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, labName, name, options },
+      args: { resourceGroupName, labName, virtualNetworkName, name, options },
       spec: deleteOperationSpec
     });
     const poller = await createHttpPoller<void, OperationState<void>>(lro, {
@@ -323,21 +361,24 @@ export class ServiceRunnersImpl implements ServiceRunners {
   }
 
   /**
-   * Delete service runner. This operation can take a while to complete.
+   * Delete bastionhost. This operation can take a while to complete.
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
-   * @param name The name of the service runner.
+   * @param virtualNetworkName The name of the virtual network.
+   * @param name The name of the bastionhost.
    * @param options The options parameters.
    */
   async beginDeleteAndWait(
     resourceGroupName: string,
     labName: string,
+    virtualNetworkName: string,
     name: string,
-    options?: ServiceRunnersDeleteOptionalParams
+    options?: BastionHostsDeleteOptionalParams
   ): Promise<void> {
     const poller = await this.beginDelete(
       resourceGroupName,
       labName,
+      virtualNetworkName,
       name,
       options
     );
@@ -345,20 +386,52 @@ export class ServiceRunnersImpl implements ServiceRunners {
   }
 
   /**
+   * Allows modifying tags of bastionhosts. All other properties will be ignored.
+   * @param resourceGroupName The name of the resource group.
+   * @param labName The name of the lab.
+   * @param virtualNetworkName The name of the virtual network.
+   * @param name The name of the bastionhost.
+   * @param bastionHost Allows modifying tags of bastionhosts. All other properties will be ignored.
+   * @param options The options parameters.
+   */
+  update(
+    resourceGroupName: string,
+    labName: string,
+    virtualNetworkName: string,
+    name: string,
+    bastionHost: BastionHostFragment,
+    options?: BastionHostsUpdateOptionalParams
+  ): Promise<BastionHostsUpdateResponse> {
+    return this.client.sendOperationRequest(
+      {
+        resourceGroupName,
+        labName,
+        virtualNetworkName,
+        name,
+        bastionHost,
+        options
+      },
+      updateOperationSpec
+    );
+  }
+
+  /**
    * ListNext
    * @param resourceGroupName The name of the resource group.
    * @param labName The name of the lab.
+   * @param virtualNetworkName The name of the virtual network.
    * @param nextLink The nextLink from the previous successful call to the List method.
    * @param options The options parameters.
    */
   private _listNext(
     resourceGroupName: string,
     labName: string,
+    virtualNetworkName: string,
     nextLink: string,
-    options?: ServiceRunnersListNextOptionalParams
-  ): Promise<ServiceRunnersListNextResponse> {
+    options?: BastionHostsListNextOptionalParams
+  ): Promise<BastionHostsListNextResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, labName, nextLink, options },
+      { resourceGroupName, labName, virtualNetworkName, nextLink, options },
       listNextOperationSpec
     );
   }
@@ -368,11 +441,11 @@ const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/servicerunners",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/virtualnetworks/{virtualNetworkName}/bastionhosts",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ServiceRunnerList
+      bodyMapper: Mappers.BastionHostList
     },
     default: {
       bodyMapper: Mappers.CloudError
@@ -388,18 +461,19 @@ const listOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.labName
+    Parameters.labName,
+    Parameters.virtualNetworkName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const getOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/servicerunners/{name}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/virtualnetworks/{virtualNetworkName}/bastionhosts/{name}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ServiceRunner
+      bodyMapper: Mappers.BastionHost
     },
     default: {
       bodyMapper: Mappers.CloudError
@@ -411,40 +485,42 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.name,
-    Parameters.labName
+    Parameters.labName,
+    Parameters.virtualNetworkName
   ],
   headerParameters: [Parameters.accept],
   serializer
 };
 const createOrUpdateOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/servicerunners/{name}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/virtualnetworks/{virtualNetworkName}/bastionhosts/{name}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.ServiceRunner
+      bodyMapper: Mappers.BastionHost
     },
     201: {
-      bodyMapper: Mappers.ServiceRunner
+      bodyMapper: Mappers.BastionHost
     },
     202: {
-      bodyMapper: Mappers.ServiceRunner
+      bodyMapper: Mappers.BastionHost
     },
     204: {
-      bodyMapper: Mappers.ServiceRunner
+      bodyMapper: Mappers.BastionHost
     },
     default: {
       bodyMapper: Mappers.CloudError
     }
   },
-  requestBody: Parameters.serviceRunner,
+  requestBody: Parameters.bastionHost,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.name,
-    Parameters.labName
+    Parameters.labName,
+    Parameters.virtualNetworkName
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -452,7 +528,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
   path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/servicerunners/{name}",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/virtualnetworks/{virtualNetworkName}/bastionhosts/{name}",
   httpMethod: "DELETE",
   responses: {
     200: {},
@@ -469,9 +545,36 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.name,
-    Parameters.labName
+    Parameters.labName,
+    Parameters.virtualNetworkName
   ],
   headerParameters: [Parameters.accept],
+  serializer
+};
+const updateOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestLab/labs/{labName}/virtualnetworks/{virtualNetworkName}/bastionhosts/{name}",
+  httpMethod: "PATCH",
+  responses: {
+    200: {
+      bodyMapper: Mappers.BastionHost
+    },
+    default: {
+      bodyMapper: Mappers.CloudError
+    }
+  },
+  requestBody: Parameters.bastionHost1,
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.name,
+    Parameters.labName,
+    Parameters.virtualNetworkName
+  ],
+  headerParameters: [Parameters.accept, Parameters.contentType],
+  mediaType: "json",
   serializer
 };
 const listNextOperationSpec: coreClient.OperationSpec = {
@@ -479,7 +582,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ServiceRunnerList
+      bodyMapper: Mappers.BastionHostList
     },
     default: {
       bodyMapper: Mappers.CloudError
@@ -490,7 +593,8 @@ const listNextOperationSpec: coreClient.OperationSpec = {
     Parameters.nextLink,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.labName
+    Parameters.labName,
+    Parameters.virtualNetworkName
   ],
   headerParameters: [Parameters.accept],
   serializer
