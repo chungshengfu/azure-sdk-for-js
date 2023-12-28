@@ -12,6 +12,11 @@ import {
   Machine,
   MachinesListByResourceGroupOptionalParams,
   MachinesListBySubscriptionOptionalParams,
+  MachinesCreateOrUpdateOptionalParams,
+  MachinesCreateOrUpdateResponse,
+  MachineUpdate,
+  MachinesUpdateOptionalParams,
+  MachinesUpdateResponse,
   MachinesDeleteOptionalParams,
   MachinesGetOptionalParams,
   MachinesGetResponse,
@@ -43,6 +48,33 @@ export interface Machines {
   listBySubscription(
     options?: MachinesListBySubscriptionOptionalParams
   ): PagedAsyncIterableIterator<Machine>;
+  /**
+   * The operation to create or update a hybrid machine. Please note some properties can be set only
+   * during machine creation.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param machineName The name of the hybrid machine.
+   * @param parameters Parameters supplied to the Create hybrid machine operation.
+   * @param options The options parameters.
+   */
+  createOrUpdate(
+    resourceGroupName: string,
+    machineName: string,
+    parameters: Machine,
+    options?: MachinesCreateOrUpdateOptionalParams
+  ): Promise<MachinesCreateOrUpdateResponse>;
+  /**
+   * The operation to update a hybrid machine.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param machineName The name of the hybrid machine.
+   * @param parameters Parameters supplied to the Update hybrid machine operation.
+   * @param options The options parameters.
+   */
+  update(
+    resourceGroupName: string,
+    machineName: string,
+    parameters: MachineUpdate,
+    options?: MachinesUpdateOptionalParams
+  ): Promise<MachinesUpdateResponse>;
   /**
    * The operation to delete a hybrid machine.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.

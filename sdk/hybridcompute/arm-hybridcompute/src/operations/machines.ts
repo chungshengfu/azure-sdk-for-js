@@ -27,6 +27,11 @@ import {
   MachinesListBySubscriptionNextOptionalParams,
   MachinesListBySubscriptionOptionalParams,
   MachinesListBySubscriptionResponse,
+  MachinesCreateOrUpdateOptionalParams,
+  MachinesCreateOrUpdateResponse,
+  MachineUpdate,
+  MachinesUpdateOptionalParams,
+  MachinesUpdateResponse,
   MachinesDeleteOptionalParams,
   MachinesGetOptionalParams,
   MachinesGetResponse,
@@ -175,6 +180,45 @@ export class MachinesImpl implements Machines {
     for await (const page of this.listBySubscriptionPagingPage(options)) {
       yield* page;
     }
+  }
+
+  /**
+   * The operation to create or update a hybrid machine. Please note some properties can be set only
+   * during machine creation.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param machineName The name of the hybrid machine.
+   * @param parameters Parameters supplied to the Create hybrid machine operation.
+   * @param options The options parameters.
+   */
+  createOrUpdate(
+    resourceGroupName: string,
+    machineName: string,
+    parameters: Machine,
+    options?: MachinesCreateOrUpdateOptionalParams
+  ): Promise<MachinesCreateOrUpdateResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, machineName, parameters, options },
+      createOrUpdateOperationSpec
+    );
+  }
+
+  /**
+   * The operation to update a hybrid machine.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param machineName The name of the hybrid machine.
+   * @param parameters Parameters supplied to the Update hybrid machine operation.
+   * @param options The options parameters.
+   */
+  update(
+    resourceGroupName: string,
+    machineName: string,
+    parameters: MachineUpdate,
+    options?: MachinesUpdateOptionalParams
+  ): Promise<MachinesUpdateResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, machineName, parameters, options },
+      updateOperationSpec
+    );
   }
 
   /**
@@ -463,6 +507,54 @@ export class MachinesImpl implements Machines {
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
+const createOrUpdateOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HybridCompute/machines/{machineName}",
+  httpMethod: "PUT",
+  responses: {
+    200: {
+      bodyMapper: Mappers.Machine
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  requestBody: Parameters.parameters2,
+  queryParameters: [Parameters.apiVersion, Parameters.expand],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.machineName
+  ],
+  headerParameters: [Parameters.contentType, Parameters.accept],
+  mediaType: "json",
+  serializer
+};
+const updateOperationSpec: coreClient.OperationSpec = {
+  path:
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HybridCompute/machines/{machineName}",
+  httpMethod: "PATCH",
+  responses: {
+    200: {
+      bodyMapper: Mappers.Machine
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  requestBody: Parameters.parameters3,
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.machineName
+  ],
+  headerParameters: [Parameters.contentType, Parameters.accept],
+  mediaType: "json",
+  serializer
+};
 const deleteOperationSpec: coreClient.OperationSpec = {
   path:
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HybridCompute/machines/{machineName}",
@@ -496,7 +588,7 @@ const getOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  queryParameters: [Parameters.apiVersion, Parameters.expand],
+  queryParameters: [Parameters.apiVersion, Parameters.expand1],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
@@ -582,7 +674,7 @@ const listByResourceGroupOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  queryParameters: [Parameters.apiVersion, Parameters.expand1],
+  queryParameters: [Parameters.apiVersion, Parameters.expand],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
