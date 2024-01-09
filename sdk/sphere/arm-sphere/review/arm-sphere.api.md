@@ -55,6 +55,7 @@ export type CapabilityType = string;
 
 // @public
 export interface Catalog extends TrackedResource {
+    readonly name: string;
     readonly provisioningState?: ProvisioningState;
 }
 
@@ -75,7 +76,7 @@ export interface Catalogs {
     listByResourceGroup(resourceGroupName: string, options?: CatalogsListByResourceGroupOptionalParams): PagedAsyncIterableIterator<Catalog>;
     listBySubscription(options?: CatalogsListBySubscriptionOptionalParams): PagedAsyncIterableIterator<Catalog>;
     listDeployments(resourceGroupName: string, catalogName: string, options?: CatalogsListDeploymentsOptionalParams): PagedAsyncIterableIterator<Deployment>;
-    listDeviceGroups(resourceGroupName: string, catalogName: string, listDeviceGroupsRequest: ListDeviceGroupsRequest, options?: CatalogsListDeviceGroupsOptionalParams): PagedAsyncIterableIterator<DeviceGroup>;
+    listDeviceGroups(resourceGroupName: string, catalogName: string, body: ListDeviceGroupsRequest, options?: CatalogsListDeviceGroupsOptionalParams): PagedAsyncIterableIterator<DeviceGroup>;
     listDeviceInsights(resourceGroupName: string, catalogName: string, options?: CatalogsListDeviceInsightsOptionalParams): PagedAsyncIterableIterator<DeviceInsight>;
     listDevices(resourceGroupName: string, catalogName: string, options?: CatalogsListDevicesOptionalParams): PagedAsyncIterableIterator<Device>;
     update(resourceGroupName: string, catalogName: string, properties: CatalogUpdate, options?: CatalogsUpdateOptionalParams): Promise<CatalogsUpdateResponse>;
@@ -273,7 +274,7 @@ export interface Certificates {
     get(resourceGroupName: string, catalogName: string, serialNumber: string, options?: CertificatesGetOptionalParams): Promise<CertificatesGetResponse>;
     listByCatalog(resourceGroupName: string, catalogName: string, options?: CertificatesListByCatalogOptionalParams): PagedAsyncIterableIterator<Certificate>;
     retrieveCertChain(resourceGroupName: string, catalogName: string, serialNumber: string, options?: CertificatesRetrieveCertChainOptionalParams): Promise<CertificatesRetrieveCertChainResponse>;
-    retrieveProofOfPossessionNonce(resourceGroupName: string, catalogName: string, serialNumber: string, proofOfPossessionNonceRequest: ProofOfPossessionNonceRequest, options?: CertificatesRetrieveProofOfPossessionNonceOptionalParams): Promise<CertificatesRetrieveProofOfPossessionNonceResponse>;
+    retrieveProofOfPossessionNonce(resourceGroupName: string, catalogName: string, serialNumber: string, body: ProofOfPossessionNonceRequest, options?: CertificatesRetrieveProofOfPossessionNonceOptionalParams): Promise<CertificatesRetrieveProofOfPossessionNonceResponse>;
 }
 
 // @public
@@ -418,6 +419,7 @@ export interface Device extends ProxyResource {
     readonly lastInstalledOsVersion?: string;
     readonly lastOsUpdateUtc?: Date;
     readonly lastUpdateRequestUtc?: Date;
+    readonly name: string;
     readonly provisioningState?: ProvisioningState;
 }
 
@@ -426,6 +428,7 @@ export interface DeviceGroup extends ProxyResource {
     allowCrashDumpsCollection?: AllowCrashDumpCollection;
     description?: string;
     readonly hasDeployment?: boolean;
+    readonly name: string;
     osFeedType?: OSFeedType;
     readonly provisioningState?: ProvisioningState;
     regionalDataBoundary?: RegionalDataBoundary;
@@ -440,8 +443,8 @@ export interface DeviceGroupListResult {
 
 // @public
 export interface DeviceGroups {
-    beginClaimDevices(resourceGroupName: string, catalogName: string, productName: string, deviceGroupName: string, claimDevicesRequest: ClaimDevicesRequest, options?: DeviceGroupsClaimDevicesOptionalParams): Promise<SimplePollerLike<OperationState<DeviceGroupsClaimDevicesResponse>, DeviceGroupsClaimDevicesResponse>>;
-    beginClaimDevicesAndWait(resourceGroupName: string, catalogName: string, productName: string, deviceGroupName: string, claimDevicesRequest: ClaimDevicesRequest, options?: DeviceGroupsClaimDevicesOptionalParams): Promise<DeviceGroupsClaimDevicesResponse>;
+    beginClaimDevices(resourceGroupName: string, catalogName: string, productName: string, deviceGroupName: string, body: ClaimDevicesRequest, options?: DeviceGroupsClaimDevicesOptionalParams): Promise<SimplePollerLike<OperationState<DeviceGroupsClaimDevicesResponse>, DeviceGroupsClaimDevicesResponse>>;
+    beginClaimDevicesAndWait(resourceGroupName: string, catalogName: string, productName: string, deviceGroupName: string, body: ClaimDevicesRequest, options?: DeviceGroupsClaimDevicesOptionalParams): Promise<DeviceGroupsClaimDevicesResponse>;
     beginCreateOrUpdate(resourceGroupName: string, catalogName: string, productName: string, deviceGroupName: string, resource: DeviceGroup, options?: DeviceGroupsCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<DeviceGroupsCreateOrUpdateResponse>, DeviceGroupsCreateOrUpdateResponse>>;
     beginCreateOrUpdateAndWait(resourceGroupName: string, catalogName: string, productName: string, deviceGroupName: string, resource: DeviceGroup, options?: DeviceGroupsCreateOrUpdateOptionalParams): Promise<DeviceGroupsCreateOrUpdateResponse>;
     beginDelete(resourceGroupName: string, catalogName: string, productName: string, deviceGroupName: string, options?: DeviceGroupsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
@@ -455,6 +458,7 @@ export interface DeviceGroups {
 
 // @public
 export interface DeviceGroupsClaimDevicesHeaders {
+    location?: string;
     retryAfter?: number;
 }
 
@@ -542,6 +546,11 @@ export type DeviceGroupsUpdateResponse = DeviceGroup;
 
 // @public
 export interface DeviceGroupUpdate {
+    properties?: DeviceGroupUpdateProperties;
+}
+
+// @public
+export interface DeviceGroupUpdateProperties {
     allowCrashDumpsCollection?: AllowCrashDumpCollection;
     description?: string;
     osFeedType?: OSFeedType;
@@ -578,8 +587,8 @@ export interface Devices {
     beginCreateOrUpdateAndWait(resourceGroupName: string, catalogName: string, productName: string, deviceGroupName: string, deviceName: string, resource: Device, options?: DevicesCreateOrUpdateOptionalParams): Promise<DevicesCreateOrUpdateResponse>;
     beginDelete(resourceGroupName: string, catalogName: string, productName: string, deviceGroupName: string, deviceName: string, options?: DevicesDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginDeleteAndWait(resourceGroupName: string, catalogName: string, productName: string, deviceGroupName: string, deviceName: string, options?: DevicesDeleteOptionalParams): Promise<void>;
-    beginGenerateCapabilityImage(resourceGroupName: string, catalogName: string, productName: string, deviceGroupName: string, deviceName: string, generateDeviceCapabilityRequest: GenerateCapabilityImageRequest, options?: DevicesGenerateCapabilityImageOptionalParams): Promise<SimplePollerLike<OperationState<DevicesGenerateCapabilityImageResponse>, DevicesGenerateCapabilityImageResponse>>;
-    beginGenerateCapabilityImageAndWait(resourceGroupName: string, catalogName: string, productName: string, deviceGroupName: string, deviceName: string, generateDeviceCapabilityRequest: GenerateCapabilityImageRequest, options?: DevicesGenerateCapabilityImageOptionalParams): Promise<DevicesGenerateCapabilityImageResponse>;
+    beginGenerateCapabilityImage(resourceGroupName: string, catalogName: string, productName: string, deviceGroupName: string, deviceName: string, body: GenerateCapabilityImageRequest, options?: DevicesGenerateCapabilityImageOptionalParams): Promise<SimplePollerLike<OperationState<DevicesGenerateCapabilityImageResponse>, DevicesGenerateCapabilityImageResponse>>;
+    beginGenerateCapabilityImageAndWait(resourceGroupName: string, catalogName: string, productName: string, deviceGroupName: string, deviceName: string, body: GenerateCapabilityImageRequest, options?: DevicesGenerateCapabilityImageOptionalParams): Promise<DevicesGenerateCapabilityImageResponse>;
     beginUpdate(resourceGroupName: string, catalogName: string, productName: string, deviceGroupName: string, deviceName: string, properties: DeviceUpdate, options?: DevicesUpdateOptionalParams): Promise<SimplePollerLike<OperationState<DevicesUpdateResponse>, DevicesUpdateResponse>>;
     beginUpdateAndWait(resourceGroupName: string, catalogName: string, productName: string, deviceGroupName: string, deviceName: string, properties: DeviceUpdate, options?: DevicesUpdateOptionalParams): Promise<DevicesUpdateResponse>;
     get(resourceGroupName: string, catalogName: string, productName: string, deviceGroupName: string, deviceName: string, options?: DevicesGetOptionalParams): Promise<DevicesGetResponse>;
@@ -614,6 +623,7 @@ export interface DevicesDeleteOptionalParams extends coreClient.OperationOptions
 
 // @public
 export interface DevicesGenerateCapabilityImageHeaders {
+    location?: string;
     retryAfter?: number;
 }
 
@@ -649,6 +659,7 @@ export type DevicesListByDeviceGroupResponse = DeviceListResult;
 
 // @public
 export interface DevicesUpdateHeaders {
+    location?: string;
     retryAfter?: number;
 }
 
@@ -663,6 +674,11 @@ export type DevicesUpdateResponse = Device;
 
 // @public
 export interface DeviceUpdate {
+    properties?: DeviceUpdateProperties;
+}
+
+// @public
+export interface DeviceUpdateProperties {
     deviceGroupId?: string;
 }
 
@@ -882,6 +898,11 @@ export enum KnownUpdatePolicy {
 }
 
 // @public
+export enum KnownVersions {
+    V20220901Preview = "2022-09-01-preview"
+}
+
+// @public
 export interface ListDeviceGroupsRequest {
     deviceGroupName?: string;
 }
@@ -943,6 +964,7 @@ export interface PagedDeviceInsight {
 // @public
 export interface Product extends ProxyResource {
     description?: string;
+    readonly name: string;
     readonly provisioningState?: ProvisioningState;
 }
 
@@ -1051,6 +1073,11 @@ export type ProductsUpdateResponse = Product;
 
 // @public
 export interface ProductUpdate {
+    properties?: ProductUpdateProperties;
+}
+
+// @public
+export interface ProductUpdateProperties {
     description?: string;
 }
 
@@ -1082,6 +1109,14 @@ export interface Resource {
 }
 
 // @public
+export interface ResourceAutoGenerated {
+    readonly id?: string;
+    readonly name?: string;
+    readonly systemData?: SystemData;
+    readonly type?: string;
+}
+
+// @public
 export interface SignedCapabilityImageResponse {
     readonly image?: string;
 }
@@ -1106,6 +1141,9 @@ export interface TrackedResource extends Resource {
 
 // @public
 export type UpdatePolicy = string;
+
+// @public
+export type Versions = string;
 
 // (No @packageDocumentation comment for this package)
 

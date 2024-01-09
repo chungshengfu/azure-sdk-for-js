@@ -563,7 +563,7 @@ export class DevicesImpl implements Devices {
    * @param productName Name of product.
    * @param deviceGroupName Name of device group.
    * @param deviceName Device name
-   * @param generateDeviceCapabilityRequest Generate capability image request body.
+   * @param body The content of the action request
    * @param options The options parameters.
    */
   async beginGenerateCapabilityImage(
@@ -572,7 +572,7 @@ export class DevicesImpl implements Devices {
     productName: string,
     deviceGroupName: string,
     deviceName: string,
-    generateDeviceCapabilityRequest: GenerateCapabilityImageRequest,
+    body: GenerateCapabilityImageRequest,
     options?: DevicesGenerateCapabilityImageOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -627,7 +627,7 @@ export class DevicesImpl implements Devices {
         productName,
         deviceGroupName,
         deviceName,
-        generateDeviceCapabilityRequest,
+        body,
         options
       },
       spec: generateCapabilityImageOperationSpec
@@ -653,7 +653,7 @@ export class DevicesImpl implements Devices {
    * @param productName Name of product.
    * @param deviceGroupName Name of device group.
    * @param deviceName Device name
-   * @param generateDeviceCapabilityRequest Generate capability image request body.
+   * @param body The content of the action request
    * @param options The options parameters.
    */
   async beginGenerateCapabilityImageAndWait(
@@ -662,7 +662,7 @@ export class DevicesImpl implements Devices {
     productName: string,
     deviceGroupName: string,
     deviceName: string,
-    generateDeviceCapabilityRequest: GenerateCapabilityImageRequest,
+    body: GenerateCapabilityImageRequest,
     options?: DevicesGenerateCapabilityImageOptionalParams
   ): Promise<DevicesGenerateCapabilityImageResponse> {
     const poller = await this.beginGenerateCapabilityImage(
@@ -671,7 +671,7 @@ export class DevicesImpl implements Devices {
       productName,
       deviceGroupName,
       deviceName,
-      generateDeviceCapabilityRequest,
+      body,
       options
     );
     return poller.pollUntilDone();
@@ -878,7 +878,7 @@ const generateCapabilityImageOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.generateDeviceCapabilityRequest,
+  requestBody: Parameters.body3,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,

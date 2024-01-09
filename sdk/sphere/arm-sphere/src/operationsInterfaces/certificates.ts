@@ -67,14 +67,14 @@ export interface Certificates {
    * @param catalogName Name of catalog
    * @param serialNumber Serial number of the certificate. Use '.default' to get current active
    *                     certificate.
-   * @param proofOfPossessionNonceRequest Proof of possession nonce request body
+   * @param body The content of the action request
    * @param options The options parameters.
    */
   retrieveProofOfPossessionNonce(
     resourceGroupName: string,
     catalogName: string,
     serialNumber: string,
-    proofOfPossessionNonceRequest: ProofOfPossessionNonceRequest,
+    body: ProofOfPossessionNonceRequest,
     options?: CertificatesRetrieveProofOfPossessionNonceOptionalParams
   ): Promise<CertificatesRetrieveProofOfPossessionNonceResponse>;
 }

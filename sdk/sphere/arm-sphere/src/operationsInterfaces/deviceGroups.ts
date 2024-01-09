@@ -180,7 +180,7 @@ export interface DeviceGroups {
    * @param catalogName Name of catalog
    * @param productName Name of product.
    * @param deviceGroupName Name of device group.
-   * @param claimDevicesRequest Bulk claim devices request body.
+   * @param body The content of the action request
    * @param options The options parameters.
    */
   beginClaimDevices(
@@ -188,7 +188,7 @@ export interface DeviceGroups {
     catalogName: string,
     productName: string,
     deviceGroupName: string,
-    claimDevicesRequest: ClaimDevicesRequest,
+    body: ClaimDevicesRequest,
     options?: DeviceGroupsClaimDevicesOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -203,7 +203,7 @@ export interface DeviceGroups {
    * @param catalogName Name of catalog
    * @param productName Name of product.
    * @param deviceGroupName Name of device group.
-   * @param claimDevicesRequest Bulk claim devices request body.
+   * @param body The content of the action request
    * @param options The options parameters.
    */
   beginClaimDevicesAndWait(
@@ -211,7 +211,7 @@ export interface DeviceGroups {
     catalogName: string,
     productName: string,
     deviceGroupName: string,
-    claimDevicesRequest: ClaimDevicesRequest,
+    body: ClaimDevicesRequest,
     options?: DeviceGroupsClaimDevicesOptionalParams
   ): Promise<DeviceGroupsClaimDevicesResponse>;
   /**

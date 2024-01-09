@@ -194,7 +194,7 @@ export interface Devices {
    * @param productName Name of product.
    * @param deviceGroupName Name of device group.
    * @param deviceName Device name
-   * @param generateDeviceCapabilityRequest Generate capability image request body.
+   * @param body The content of the action request
    * @param options The options parameters.
    */
   beginGenerateCapabilityImage(
@@ -203,7 +203,7 @@ export interface Devices {
     productName: string,
     deviceGroupName: string,
     deviceName: string,
-    generateDeviceCapabilityRequest: GenerateCapabilityImageRequest,
+    body: GenerateCapabilityImageRequest,
     options?: DevicesGenerateCapabilityImageOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -220,7 +220,7 @@ export interface Devices {
    * @param productName Name of product.
    * @param deviceGroupName Name of device group.
    * @param deviceName Device name
-   * @param generateDeviceCapabilityRequest Generate capability image request body.
+   * @param body The content of the action request
    * @param options The options parameters.
    */
   beginGenerateCapabilityImageAndWait(
@@ -229,7 +229,7 @@ export interface Devices {
     productName: string,
     deviceGroupName: string,
     deviceName: string,
-    generateDeviceCapabilityRequest: GenerateCapabilityImageRequest,
+    body: GenerateCapabilityImageRequest,
     options?: DevicesGenerateCapabilityImageOptionalParams
   ): Promise<DevicesGenerateCapabilityImageResponse>;
 }

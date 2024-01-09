@@ -181,8 +181,8 @@ export const maxpagesize: OperationQueryParameter = {
   }
 };
 
-export const listDeviceGroupsRequest: OperationParameter = {
-  parameterPath: "listDeviceGroupsRequest",
+export const body: OperationParameter = {
+  parameterPath: "body",
   mapper: ListDeviceGroupsRequestMapper
 };
 
@@ -197,8 +197,8 @@ export const serialNumber: OperationURLParameter = {
   }
 };
 
-export const proofOfPossessionNonceRequest: OperationParameter = {
-  parameterPath: "proofOfPossessionNonceRequest",
+export const body1: OperationParameter = {
+  parameterPath: "body",
   mapper: ProofOfPossessionNonceRequestMapper
 };
 
@@ -270,8 +270,8 @@ export const properties2: OperationParameter = {
   mapper: DeviceGroupUpdateMapper
 };
 
-export const claimDevicesRequest: OperationParameter = {
-  parameterPath: "claimDevicesRequest",
+export const body2: OperationParameter = {
+  parameterPath: "body",
   mapper: ClaimDevicesRequestMapper
 };
 
@@ -315,7 +315,7 @@ export const properties3: OperationParameter = {
   mapper: DeviceUpdateMapper
 };
 
-export const generateDeviceCapabilityRequest: OperationParameter = {
-  parameterPath: "generateDeviceCapabilityRequest",
+export const body3: OperationParameter = {
+  parameterPath: "body",
   mapper: GenerateCapabilityImageRequestMapper
 };

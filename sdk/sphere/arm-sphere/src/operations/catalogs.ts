@@ -286,19 +286,19 @@ export class CatalogsImpl implements Catalogs {
    * List the device groups for the catalog.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param catalogName Name of catalog
-   * @param listDeviceGroupsRequest List device groups for catalog.
+   * @param body The content of the action request
    * @param options The options parameters.
    */
   public listDeviceGroups(
     resourceGroupName: string,
     catalogName: string,
-    listDeviceGroupsRequest: ListDeviceGroupsRequest,
+    body: ListDeviceGroupsRequest,
     options?: CatalogsListDeviceGroupsOptionalParams
   ): PagedAsyncIterableIterator<DeviceGroup> {
     const iter = this.listDeviceGroupsPagingAll(
       resourceGroupName,
       catalogName,
-      listDeviceGroupsRequest,
+      body,
       options
     );
     return {
@@ -315,7 +315,7 @@ export class CatalogsImpl implements Catalogs {
         return this.listDeviceGroupsPagingPage(
           resourceGroupName,
           catalogName,
-          listDeviceGroupsRequest,
+          body,
           options,
           settings
         );
@@ -326,7 +326,7 @@ export class CatalogsImpl implements Catalogs {
   private async *listDeviceGroupsPagingPage(
     resourceGroupName: string,
     catalogName: string,
-    listDeviceGroupsRequest: ListDeviceGroupsRequest,
+    body: ListDeviceGroupsRequest,
     options?: CatalogsListDeviceGroupsOptionalParams,
     settings?: PageSettings
   ): AsyncIterableIterator<DeviceGroup[]> {
@@ -336,7 +336,7 @@ export class CatalogsImpl implements Catalogs {
       result = await this._listDeviceGroups(
         resourceGroupName,
         catalogName,
-        listDeviceGroupsRequest,
+        body,
         options
       );
       let page = result.value || [];
@@ -348,7 +348,7 @@ export class CatalogsImpl implements Catalogs {
       result = await this._listDeviceGroupsNext(
         resourceGroupName,
         catalogName,
-        listDeviceGroupsRequest,
+        body,
         continuationToken,
         options
       );
@@ -362,13 +362,13 @@ export class CatalogsImpl implements Catalogs {
   private async *listDeviceGroupsPagingAll(
     resourceGroupName: string,
     catalogName: string,
-    listDeviceGroupsRequest: ListDeviceGroupsRequest,
+    body: ListDeviceGroupsRequest,
     options?: CatalogsListDeviceGroupsOptionalParams
   ): AsyncIterableIterator<DeviceGroup> {
     for await (const page of this.listDeviceGroupsPagingPage(
       resourceGroupName,
       catalogName,
-      listDeviceGroupsRequest,
+      body,
       options
     )) {
       yield* page;
@@ -820,17 +820,17 @@ export class CatalogsImpl implements Catalogs {
    * List the device groups for the catalog.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param catalogName Name of catalog
-   * @param listDeviceGroupsRequest List device groups for catalog.
+   * @param body The content of the action request
    * @param options The options parameters.
    */
   private _listDeviceGroups(
     resourceGroupName: string,
     catalogName: string,
-    listDeviceGroupsRequest: ListDeviceGroupsRequest,
+    body: ListDeviceGroupsRequest,
     options?: CatalogsListDeviceGroupsOptionalParams
   ): Promise<CatalogsListDeviceGroupsResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, catalogName, listDeviceGroupsRequest, options },
+      { resourceGroupName, catalogName, body, options },
       listDeviceGroupsOperationSpec
     );
   }
@@ -924,25 +924,19 @@ export class CatalogsImpl implements Catalogs {
    * ListDeviceGroupsNext
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param catalogName Name of catalog
-   * @param listDeviceGroupsRequest List device groups for catalog.
+   * @param body The content of the action request
    * @param nextLink The nextLink from the previous successful call to the ListDeviceGroups method.
    * @param options The options parameters.
    */
   private _listDeviceGroupsNext(
     resourceGroupName: string,
     catalogName: string,
-    listDeviceGroupsRequest: ListDeviceGroupsRequest,
+    body: ListDeviceGroupsRequest,
     nextLink: string,
     options?: CatalogsListDeviceGroupsNextOptionalParams
   ): Promise<CatalogsListDeviceGroupsNextResponse> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        catalogName,
-        listDeviceGroupsRequest,
-        nextLink,
-        options
-      },
+      { resourceGroupName, catalogName, body, nextLink, options },
       listDeviceGroupsNextOperationSpec
     );
   }
@@ -1190,7 +1184,7 @@ const listDeviceGroupsOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.listDeviceGroupsRequest,
+  requestBody: Parameters.body,
   queryParameters: [
     Parameters.apiVersion,
     Parameters.filter,

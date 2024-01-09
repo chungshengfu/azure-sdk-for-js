@@ -527,7 +527,7 @@ export class DeviceGroupsImpl implements DeviceGroups {
    * @param catalogName Name of catalog
    * @param productName Name of product.
    * @param deviceGroupName Name of device group.
-   * @param claimDevicesRequest Bulk claim devices request body.
+   * @param body The content of the action request
    * @param options The options parameters.
    */
   async beginClaimDevices(
@@ -535,7 +535,7 @@ export class DeviceGroupsImpl implements DeviceGroups {
     catalogName: string,
     productName: string,
     deviceGroupName: string,
-    claimDevicesRequest: ClaimDevicesRequest,
+    body: ClaimDevicesRequest,
     options?: DeviceGroupsClaimDevicesOptionalParams
   ): Promise<
     SimplePollerLike<
@@ -589,7 +589,7 @@ export class DeviceGroupsImpl implements DeviceGroups {
         catalogName,
         productName,
         deviceGroupName,
-        claimDevicesRequest,
+        body,
         options
       },
       spec: claimDevicesOperationSpec
@@ -613,7 +613,7 @@ export class DeviceGroupsImpl implements DeviceGroups {
    * @param catalogName Name of catalog
    * @param productName Name of product.
    * @param deviceGroupName Name of device group.
-   * @param claimDevicesRequest Bulk claim devices request body.
+   * @param body The content of the action request
    * @param options The options parameters.
    */
   async beginClaimDevicesAndWait(
@@ -621,7 +621,7 @@ export class DeviceGroupsImpl implements DeviceGroups {
     catalogName: string,
     productName: string,
     deviceGroupName: string,
-    claimDevicesRequest: ClaimDevicesRequest,
+    body: ClaimDevicesRequest,
     options?: DeviceGroupsClaimDevicesOptionalParams
   ): Promise<DeviceGroupsClaimDevicesResponse> {
     const poller = await this.beginClaimDevices(
@@ -629,7 +629,7 @@ export class DeviceGroupsImpl implements DeviceGroups {
       catalogName,
       productName,
       deviceGroupName,
-      claimDevicesRequest,
+      body,
       options
     );
     return poller.pollUntilDone();
@@ -850,7 +850,7 @@ const claimDevicesOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.claimDevicesRequest,
+  requestBody: Parameters.body2,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,

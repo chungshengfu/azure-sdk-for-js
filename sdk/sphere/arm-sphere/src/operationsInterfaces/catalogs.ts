@@ -67,13 +67,13 @@ export interface Catalogs {
    * List the device groups for the catalog.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param catalogName Name of catalog
-   * @param listDeviceGroupsRequest List device groups for catalog.
+   * @param body The content of the action request
    * @param options The options parameters.
    */
   listDeviceGroups(
     resourceGroupName: string,
     catalogName: string,
-    listDeviceGroupsRequest: ListDeviceGroupsRequest,
+    body: ListDeviceGroupsRequest,
     options?: CatalogsListDeviceGroupsOptionalParams
   ): PagedAsyncIterableIterator<DeviceGroup>;
   /**

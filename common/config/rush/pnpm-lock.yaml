@@ -4897,7 +4897,7 @@ packages:
     dependencies:
       semver: 7.5.4
       shelljs: 0.8.5
-      typescript: 5.4.0-dev.20240107
+      typescript: 5.4.0-dev.20240109
     dev: false
 
   /eastasianwidth@0.2.0:
@@ -9661,8 +9661,8 @@ packages:
     hasBin: true
     dev: false
 
-  /typescript@5.4.0-dev.20240107:
-    resolution: {integrity: sha512-6EfwZFaO82JLhOUsgQ3+c4lHuYS4WAQ6xBC767qWwJGf7BKYYeSFUkSptSkNhWOdeCEhdooudx22mkU8LphAPg==}
+  /typescript@5.4.0-dev.20240109:
+    resolution: {integrity: sha512-pKDkvh+RizbUm4BEmfvmG74qycZsHw4oFB6jY9D+oKoxPzoZr/edCTks/t50kvU2RdiDn0UKSzZB4YVzrC9WTQ==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: false
@@ -16201,7 +16201,7 @@ packages:
     dev: false
 
   file:projects/arm-sphere.tgz:
-    resolution: {integrity: sha512-fRlA4jVRlu3pQ7HkwWVRTYCd0msB20m8xc7HWe8YB2VDC3dppNRoh2Jo0PDA4Lw7afxchBQA+oj/NoOu0+amOw==, tarball: file:projects/arm-sphere.tgz}
+    resolution: {integrity: sha512-zKYG0MIcLmbIPLpMQUg/IGHkqmkgVWFxRGHPLCXLkUbUyrTTBxw1ZFGvGAjfia3yIjV5Pr4uM8kkhVvB5OziqA==, tarball: file:projects/arm-sphere.tgz}
     name: '@rush-temp/arm-sphere'
     version: 0.0.0
     dependencies:
@@ -16209,13 +16209,15 @@ packages:
       '@azure/identity': 3.4.1
       '@microsoft/api-extractor': 7.39.1(@types/node@18.19.4)
       '@types/chai': 4.3.11
+      '@types/mocha': 10.0.6
       '@types/node': 18.19.4
       chai: 4.3.10
       cross-env: 7.0.3
       dotenv: 16.3.1
+      esm: 3.2.25
       mkdirp: 2.1.6
       mocha: 10.2.0
-      rimraf: 3.0.2
+      rimraf: 5.0.5
       ts-node: 10.9.2(@types/node@18.19.4)(typescript@5.2.2)
       tslib: 2.6.2
       typescript: 5.2.2
@@ -19778,7 +19780,7 @@ packages:
     dev: false
 
   file:projects/monitor-opentelemetry.tgz:
-    resolution: {integrity: sha512-aLsfcaP+DF0iM/PtOT2S4BN3J9gg44mC5L2HWhCabhsmWd0hkumWtlV0zSk/ttDoon/IwtA0xmMUh+H5LSEWeQ==, tarball: file:projects/monitor-opentelemetry.tgz}
+    resolution: {integrity: sha512-7Smjvd5psXM3ZTo62syji2p+w51o8F4/+ormqOX+WGCQFaTqUkqGMgpoCG2MrJYpr9gsxKozz6S9MmPJoxokKg==, tarball: file:projects/monitor-opentelemetry.tgz}
     name: '@rush-temp/monitor-opentelemetry'
     version: 0.0.0
     dependencies:
