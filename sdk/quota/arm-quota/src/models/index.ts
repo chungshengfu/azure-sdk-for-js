@@ -205,8 +205,25 @@ export interface QuotaRequestDetails {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly type?: string;
+  /**
+   * The quota request status.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: QuotaRequestState;
+  /**
+   * User-friendly status message.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly message?: string;
+  /** Error details of the quota request. */
+  error?: ServiceErrorDetail;
+  /**
+   * The quota request submission time. The date conforms to the following format specified by the ISO 8601 standard: yyyy-MM-ddTHH:mm:ssZ
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly requestSubmitTime?: Date;
   /** Quota request details. */
-  properties?: QuotaRequestProperties;
+  value?: SubRequest[];
 }
 
 /** Quota request properties. */
@@ -343,12 +360,6 @@ export interface QuotaRequestOneResourceSubmitResponse {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly type?: string;
-  /** Quota request details. */
-  properties?: QuotaRequestOneResourceProperties;
-}
-
-/** Quota request. */
-export interface QuotaRequestOneResourceProperties {
   /**
    * Quota request status.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -374,7 +385,7 @@ export interface QuotaRequestOneResourceProperties {
   /**  The quota limit units, such as Count and Bytes. When requesting quota, use the **unit** value returned in the GET response in the request body of your PUT operation. */
   unit?: string;
   /** Resource name provided by the resource provider. Use this property name when requesting quota. */
-  name?: ResourceName;
+  namePropertiesName?: ResourceName;
   /** The name of the resource type. Optional field. */
   resourceType?: string;
   /**
@@ -435,12 +446,6 @@ export interface QuotaRequestSubmitResponse202 {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly type?: string;
-  /** Quota request status. */
-  properties?: QuotaRequestStatusDetails;
-}
-
-/** Quota request status details. */
-export interface QuotaRequestStatusDetails {
   /**
    * Quota request status.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -456,7 +461,7 @@ export interface QuotaRequestStatusDetails {
   /**  The quota limit units, such as Count and Bytes. When requesting quota, use the **unit** value returned in the GET response in the request body of your PUT operation. */
   unit?: string;
   /** Resource name provided by the resource provider. Use this property name when requesting quota. */
-  name?: ResourceName;
+  namePropertiesName?: ResourceName;
   /** The name of the resource type. Optional field. */
   resourceType?: string;
   /**

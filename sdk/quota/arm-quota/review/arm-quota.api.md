@@ -241,10 +241,14 @@ export interface QuotaProperties {
 
 // @public
 export interface QuotaRequestDetails {
+    error?: ServiceErrorDetail;
     readonly id?: string;
+    readonly message?: string;
     readonly name?: string;
-    properties?: QuotaRequestProperties;
+    readonly provisioningState?: QuotaRequestState;
+    readonly requestSubmitTime?: Date;
     readonly type?: string;
+    value?: SubRequest[];
 }
 
 // @public
@@ -254,27 +258,22 @@ export interface QuotaRequestDetailsList {
 }
 
 // @public
-export interface QuotaRequestOneResourceProperties {
+export interface QuotaRequestOneResourceSubmitResponse {
     readonly currentValue?: number;
     error?: ServiceErrorDetail;
+    readonly id?: string;
     readonly isQuotaApplicable?: boolean;
     limit?: LimitObject;
     readonly message?: string;
-    name?: ResourceName;
+    readonly name?: string;
+    namePropertiesName?: ResourceName;
     properties?: Record<string, unknown>;
     readonly provisioningState?: QuotaRequestState;
     readonly quotaPeriod?: string;
     readonly requestSubmitTime?: Date;
     resourceType?: string;
-    unit?: string;
-}
-
-// @public
-export interface QuotaRequestOneResourceSubmitResponse {
-    readonly id?: string;
-    readonly name?: string;
-    properties?: QuotaRequestOneResourceProperties;
     readonly type?: string;
+    unit?: string;
 }
 
 // @public
@@ -293,18 +292,6 @@ export type QuotaRequestState = string;
 export interface QuotaRequestStatus {
     get(id: string, scope: string, options?: QuotaRequestStatusGetOptionalParams): Promise<QuotaRequestStatusGetResponse>;
     list(scope: string, options?: QuotaRequestStatusListOptionalParams): PagedAsyncIterableIterator<QuotaRequestDetails>;
-}
-
-// @public
-export interface QuotaRequestStatusDetails {
-    limit?: LimitObject;
-    readonly message?: string;
-    name?: ResourceName;
-    properties?: Record<string, unknown>;
-    readonly provisioningState?: QuotaRequestState;
-    readonly quotaPeriod?: string;
-    resourceType?: string;
-    unit?: string;
 }
 
 // @public
@@ -342,9 +329,16 @@ export interface QuotaRequestSubmitResponse {
 // @public
 export interface QuotaRequestSubmitResponse202 {
     readonly id?: string;
+    limit?: LimitObject;
+    readonly message?: string;
     readonly name?: string;
-    properties?: QuotaRequestStatusDetails;
+    namePropertiesName?: ResourceName;
+    properties?: Record<string, unknown>;
+    readonly provisioningState?: QuotaRequestState;
+    readonly quotaPeriod?: string;
+    resourceType?: string;
     readonly type?: string;
+    unit?: string;
 }
 
 // @public
