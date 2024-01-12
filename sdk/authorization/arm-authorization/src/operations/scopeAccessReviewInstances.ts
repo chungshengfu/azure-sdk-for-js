@@ -210,8 +210,8 @@ const listOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.filter1, Parameters.apiVersion3],
   urlParameters: [
     Parameters.$host,
-    Parameters.scheduleDefinitionId,
-    Parameters.scope1
+    Parameters.scope,
+    Parameters.scheduleDefinitionId
   ],
   headerParameters: [Parameters.accept],
   serializer
@@ -231,9 +231,9 @@ const getByIdOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion3],
   urlParameters: [
     Parameters.$host,
+    Parameters.scope,
     Parameters.scheduleDefinitionId,
-    Parameters.id,
-    Parameters.scope1
+    Parameters.id
   ],
   headerParameters: [Parameters.accept],
   serializer
@@ -254,9 +254,9 @@ const createOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion3],
   urlParameters: [
     Parameters.$host,
+    Parameters.scope,
     Parameters.scheduleDefinitionId,
-    Parameters.id,
-    Parameters.scope1
+    Parameters.id
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -276,8 +276,8 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.nextLink,
-    Parameters.scheduleDefinitionId,
-    Parameters.scope1
+    Parameters.scope,
+    Parameters.scheduleDefinitionId
   ],
   headerParameters: [Parameters.accept],
   serializer

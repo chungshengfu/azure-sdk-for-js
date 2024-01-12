@@ -4932,7 +4932,7 @@ packages:
     dependencies:
       semver: 7.5.4
       shelljs: 0.8.5
-      typescript: 5.4.0-dev.20240110
+      typescript: 5.4.0-dev.20240112
     dev: false
 
   /eastasianwidth@0.2.0:
@@ -9752,8 +9752,8 @@ packages:
     hasBin: true
     dev: false
 
-  /typescript@5.4.0-dev.20240110:
-    resolution: {integrity: sha512-OEtXRprxdta9A5qLObqsgCrFjAWxGuTj8T4W+GBWqDhxIT//BevP5MROHX8Zi18RlvTZSu5G76xJaQT1CK1YpQ==}
+  /typescript@5.4.0-dev.20240112:
+    resolution: {integrity: sha512-jpdPO53r47ZiTebHw2O9jKp1ItTtwPe9kc62LGCZHEexROJn1MXChI7l/UmRtItOhOKwe2ZXOBlNMQh4YTMhIg==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: false
@@ -11575,7 +11575,7 @@ packages:
     dev: false
 
   file:projects/arm-authorization.tgz:
-    resolution: {integrity: sha512-RnYDRHxhRymU+IMz1Bzc5izYVH4rnuPx3QyKrYgHDedBKpnWB+d5hkpFnLFNfftzLJ1Gv0minJDolgeEDiMQaw==, tarball: file:projects/arm-authorization.tgz}
+    resolution: {integrity: sha512-CKmnJLJ2RhJm9WG/G5U2DYGc0l9pW+0xMw4L0Vc5/JgneZPGI4Ys3AJSrFkEltEAOypkFl2KHTjb8rahOsWgJA==, tarball: file:projects/arm-authorization.tgz}
     name: '@rush-temp/arm-authorization'
     version: 0.0.0
     dependencies:
@@ -11583,13 +11583,15 @@ packages:
       '@azure/identity': 3.4.1
       '@microsoft/api-extractor': 7.39.0(@types/node@18.19.3)
       '@types/chai': 4.3.11
+      '@types/mocha': 10.0.6
       '@types/node': 18.19.3
       chai: 4.3.10
       cross-env: 7.0.3
       dotenv: 16.3.1
+      esm: 3.2.25
       mkdirp: 2.1.6
       mocha: 10.2.0
-      rimraf: 3.0.2
+      rimraf: 5.0.5
       ts-node: 10.9.2(@types/node@18.19.3)(typescript@5.2.2)
       tslib: 2.6.2
       typescript: 5.2.2

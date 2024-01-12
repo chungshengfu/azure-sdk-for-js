@@ -86,8 +86,8 @@ const createOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion3],
   urlParameters: [
     Parameters.$host,
-    Parameters.historyDefinitionId,
-    Parameters.scope1
+    Parameters.scope,
+    Parameters.historyDefinitionId
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -107,8 +107,8 @@ const deleteByIdOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion3],
   urlParameters: [
     Parameters.$host,
-    Parameters.historyDefinitionId,
-    Parameters.scope1
+    Parameters.scope,
+    Parameters.historyDefinitionId
   ],
   headerParameters: [Parameters.accept],
   serializer

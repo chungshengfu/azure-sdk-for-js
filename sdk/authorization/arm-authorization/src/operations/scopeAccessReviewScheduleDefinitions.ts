@@ -218,7 +218,7 @@ const listOperationSpec: coreClient.OperationSpec = {
     }
   },
   queryParameters: [Parameters.filter1, Parameters.apiVersion3],
-  urlParameters: [Parameters.$host, Parameters.scope1],
+  urlParameters: [Parameters.$host, Parameters.scope],
   headerParameters: [Parameters.accept],
   serializer
 };
@@ -237,8 +237,8 @@ const getByIdOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion3],
   urlParameters: [
     Parameters.$host,
-    Parameters.scheduleDefinitionId,
-    Parameters.scope1
+    Parameters.scope,
+    Parameters.scheduleDefinitionId
   ],
   headerParameters: [Parameters.accept],
   serializer
@@ -257,8 +257,8 @@ const deleteByIdOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion3],
   urlParameters: [
     Parameters.$host,
-    Parameters.scheduleDefinitionId,
-    Parameters.scope1
+    Parameters.scope,
+    Parameters.scheduleDefinitionId
   ],
   headerParameters: [Parameters.accept],
   serializer
@@ -279,8 +279,8 @@ const createOrUpdateByIdOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion3],
   urlParameters: [
     Parameters.$host,
-    Parameters.scheduleDefinitionId,
-    Parameters.scope1
+    Parameters.scope,
+    Parameters.scheduleDefinitionId
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
@@ -299,8 +299,8 @@ const stopOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion3],
   urlParameters: [
     Parameters.$host,
-    Parameters.scheduleDefinitionId,
-    Parameters.scope1
+    Parameters.scope,
+    Parameters.scheduleDefinitionId
   ],
   headerParameters: [Parameters.accept],
   serializer
@@ -316,7 +316,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorDefinition
     }
   },
-  urlParameters: [Parameters.$host, Parameters.nextLink, Parameters.scope1],
+  urlParameters: [Parameters.$host, Parameters.nextLink, Parameters.scope],
   headerParameters: [Parameters.accept],
   serializer
 };

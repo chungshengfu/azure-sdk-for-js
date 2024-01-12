@@ -80,7 +80,7 @@ const getOperationSpec: coreClient.OperationSpec = {
     }
   },
   queryParameters: [Parameters.apiVersion3],
-  urlParameters: [Parameters.$host, Parameters.scope1],
+  urlParameters: [Parameters.$host, Parameters.scope],
   headerParameters: [Parameters.accept],
   serializer
 };
@@ -98,7 +98,7 @@ const putOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.properties3,
   queryParameters: [Parameters.apiVersion3],
-  urlParameters: [Parameters.$host, Parameters.scope1],
+  urlParameters: [Parameters.$host, Parameters.scope],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
   serializer

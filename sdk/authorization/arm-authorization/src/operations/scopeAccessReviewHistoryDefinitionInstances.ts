@@ -165,8 +165,8 @@ const listOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion3],
   urlParameters: [
     Parameters.$host,
-    Parameters.historyDefinitionId,
-    Parameters.scope1
+    Parameters.scope,
+    Parameters.historyDefinitionId
   ],
   headerParameters: [Parameters.accept],
   serializer
@@ -185,8 +185,8 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   urlParameters: [
     Parameters.$host,
     Parameters.nextLink,
-    Parameters.historyDefinitionId,
-    Parameters.scope1
+    Parameters.scope,
+    Parameters.historyDefinitionId
   ],
   headerParameters: [Parameters.accept],
   serializer

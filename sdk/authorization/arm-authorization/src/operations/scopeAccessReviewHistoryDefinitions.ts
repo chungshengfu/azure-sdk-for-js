@@ -162,7 +162,7 @@ const listOperationSpec: coreClient.OperationSpec = {
     }
   },
   queryParameters: [Parameters.filter1, Parameters.apiVersion3],
-  urlParameters: [Parameters.$host, Parameters.scope1],
+  urlParameters: [Parameters.$host, Parameters.scope],
   headerParameters: [Parameters.accept],
   serializer
 };
@@ -181,8 +181,8 @@ const getByIdOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion3],
   urlParameters: [
     Parameters.$host,
-    Parameters.historyDefinitionId,
-    Parameters.scope1
+    Parameters.scope,
+    Parameters.historyDefinitionId
   ],
   headerParameters: [Parameters.accept],
   serializer
@@ -198,7 +198,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorDefinition
     }
   },
-  urlParameters: [Parameters.$host, Parameters.nextLink, Parameters.scope1],
+  urlParameters: [Parameters.$host, Parameters.nextLink, Parameters.scope],
   headerParameters: [Parameters.accept],
   serializer
 };

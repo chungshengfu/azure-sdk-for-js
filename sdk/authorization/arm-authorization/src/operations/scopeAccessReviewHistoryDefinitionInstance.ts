@@ -69,9 +69,9 @@ const generateDownloadUriOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion3],
   urlParameters: [
     Parameters.$host,
+    Parameters.scope,
     Parameters.historyDefinitionId,
-    Parameters.instanceId,
-    Parameters.scope1
+    Parameters.instanceId
   ],
   headerParameters: [Parameters.accept],
   serializer

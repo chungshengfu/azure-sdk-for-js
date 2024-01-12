@@ -435,17 +435,6 @@ export const properties3: OperationParameter = {
   mapper: AccessReviewScheduleSettingsMapper
 };
 
-export const scope1: OperationURLParameter = {
-  parameterPath: "scope",
-  mapper: {
-    serializedName: "scope",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
 export const properties4: OperationParameter = {
   parameterPath: "properties",
   mapper: RecordAllDecisionsPropertiesMapper
