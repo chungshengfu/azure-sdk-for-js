@@ -216,6 +216,27 @@ export interface TrafficAnalyticsConfigurationProperties {
   trafficAnalyticsInterval?: number;
 }
 
+/** Identity for the resource. */
+export interface ManagedIdentityObjectForUserAssigned {
+  /** The type of identity used for the resource. The type 'UserAssigned' includes set of user assigned identities. The type 'None' will remove any identities from the flowlog. */
+  type?: NetworkWatcherResourceIdentityType;
+  /** The list of user identities associated with resource. The user identity dictionary key references will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'. */
+  userAssignedIdentities?: { [propertyName: string]: UserIdentityProperties };
+}
+
+export interface UserIdentityProperties {
+  /**
+   * The principal id of user assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly principalId?: string;
+  /**
+   * The client id of user assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly clientId?: string;
+}
+
 /** The service endpoint properties. */
 export interface ServiceEndpointPropertiesFormat {
   /** The type of the endpoint service. */
@@ -3131,6 +3152,8 @@ export interface FlowLogInformation {
   retentionPolicy?: RetentionPolicyParameters;
   /** Parameters that define the flow log format. */
   format?: FlowLogFormatParameters;
+  /** Identity of the workspace */
+  identity?: ManagedIdentityObjectForUserAssigned;
 }
 
 /** Parameters that define a resource to query flow log and traffic analytics (optional) status. */
@@ -9147,6 +9170,8 @@ export interface FlowLog extends Resource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly provisioningState?: ProvisioningState;
+  /** Identity of the workspace */
+  identity?: ManagedIdentityObjectForUserAssigned;
 }
 
 /** NetworkSecurityGroup resource. */
@@ -9568,6 +9593,8 @@ export interface AzureFirewallFqdnTag extends Resource {
 
 /** Bastion Host resource. */
 export interface BastionHost extends Resource {
+  /** A list of availability zones denoting where the resource needs to come from. */
+  zones?: string[];
   /**
    * A unique read-only string that changes whenever the resource is updated.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -12401,7 +12428,11 @@ export enum KnownVirtualNetworkPrivateEndpointNetworkPolicies {
   /** Enabled */
   Enabled = "Enabled",
   /** Disabled */
-  Disabled = "Disabled"
+  Disabled = "Disabled",
+  /** NetworkSecurityGroupEnabled */
+  NetworkSecurityGroupEnabled = "NetworkSecurityGroupEnabled",
+  /** RouteTableEnabled */
+  RouteTableEnabled = "RouteTableEnabled"
 }
 
 /**
@@ -12410,7 +12441,9 @@ export enum KnownVirtualNetworkPrivateEndpointNetworkPolicies {
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
  * **Enabled** \
- * **Disabled**
+ * **Disabled** \
+ * **NetworkSecurityGroupEnabled** \
+ * **RouteTableEnabled**
  */
 export type VirtualNetworkPrivateEndpointNetworkPolicies = string;
 
@@ -16553,6 +16586,8 @@ export enum KnownHubVirtualNetworkConnectionStatus {
  * **NotConnected**
  */
 export type HubVirtualNetworkConnectionStatus = string;
+/** Defines values for NetworkWatcherResourceIdentityType. */
+export type NetworkWatcherResourceIdentityType = "UserAssigned" | "None";
 /** Defines values for PublicIpAddressDnsSettingsDomainNameLabelScope. */
 export type PublicIpAddressDnsSettingsDomainNameLabelScope =
   | "TenantReuse"

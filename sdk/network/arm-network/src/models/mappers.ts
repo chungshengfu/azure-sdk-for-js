@@ -515,6 +515,54 @@ export const TrafficAnalyticsConfigurationProperties: coreClient.CompositeMapper
   }
 };
 
+export const ManagedIdentityObjectForUserAssigned: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "ManagedIdentityObjectForUserAssigned",
+    modelProperties: {
+      type: {
+        serializedName: "type",
+        type: {
+          name: "Enum",
+          allowedValues: ["UserAssigned", "None"]
+        }
+      },
+      userAssignedIdentities: {
+        serializedName: "userAssignedIdentities",
+        type: {
+          name: "Dictionary",
+          value: {
+            type: { name: "Composite", className: "UserIdentityProperties" }
+          }
+        }
+      }
+    }
+  }
+};
+
+export const UserIdentityProperties: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "UserIdentityProperties",
+    modelProperties: {
+      principalId: {
+        serializedName: "principalId",
+        readOnly: true,
+        type: {
+          name: "String"
+        }
+      },
+      clientId: {
+        serializedName: "clientId",
+        readOnly: true,
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
 export const ServiceEndpointPropertiesFormat: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -8945,6 +8993,13 @@ export const FlowLogInformation: coreClient.CompositeMapper = {
         type: {
           name: "Composite",
           className: "FlowLogFormatParameters"
+        }
+      },
+      identity: {
+        serializedName: "properties.identity",
+        type: {
+          name: "Composite",
+          className: "ManagedIdentityObjectForUserAssigned"
         }
       }
     }
@@ -24442,6 +24497,13 @@ export const FlowLog: coreClient.CompositeMapper = {
         type: {
           name: "String"
         }
+      },
+      identity: {
+        serializedName: "properties.identity",
+        type: {
+          name: "Composite",
+          className: "ManagedIdentityObjectForUserAssigned"
+        }
       }
     }
   }
@@ -25683,6 +25745,17 @@ export const BastionHost: coreClient.CompositeMapper = {
     className: "BastionHost",
     modelProperties: {
       ...Resource.type.modelProperties,
+      zones: {
+        serializedName: "zones",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
       etag: {
         serializedName: "etag",
         readOnly: true,

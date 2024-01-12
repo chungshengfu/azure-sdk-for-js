@@ -1998,6 +1998,7 @@ export interface BastionHost extends Resource {
     scaleUnits?: number;
     sku?: Sku;
     virtualNetwork?: SubResource;
+    zones?: string[];
 }
 
 // @public
@@ -5121,6 +5122,7 @@ export interface FlowLog extends Resource {
     readonly etag?: string;
     flowAnalyticsConfiguration?: TrafficAnalyticsProperties;
     format?: FlowLogFormatParameters;
+    identity?: ManagedIdentityObjectForUserAssigned;
     readonly provisioningState?: ProvisioningState;
     retentionPolicy?: RetentionPolicyParameters;
     storageId?: string;
@@ -5142,6 +5144,7 @@ export interface FlowLogInformation {
     enabled: boolean;
     flowAnalyticsConfiguration?: TrafficAnalyticsProperties;
     format?: FlowLogFormatParameters;
+    identity?: ManagedIdentityObjectForUserAssigned;
     retentionPolicy?: RetentionPolicyParameters;
     storageId: string;
     targetResourceId: string;
@@ -7417,7 +7420,9 @@ export enum KnownVirtualNetworkPeeringState {
 // @public
 export enum KnownVirtualNetworkPrivateEndpointNetworkPolicies {
     Disabled = "Disabled",
-    Enabled = "Enabled"
+    Enabled = "Enabled",
+    NetworkSecurityGroupEnabled = "NetworkSecurityGroupEnabled",
+    RouteTableEnabled = "RouteTableEnabled"
 }
 
 // @public
@@ -8202,6 +8207,14 @@ export interface LogSpecification {
     blobDuration?: string;
     displayName?: string;
     name?: string;
+}
+
+// @public
+export interface ManagedIdentityObjectForUserAssigned {
+    type?: NetworkWatcherResourceIdentityType;
+    userAssignedIdentities?: {
+        [propertyName: string]: UserIdentityProperties;
+    };
 }
 
 // @public
@@ -9927,6 +9940,9 @@ export interface NetworkWatcher extends Resource {
 export interface NetworkWatcherListResult {
     value?: NetworkWatcher[];
 }
+
+// @public
+export type NetworkWatcherResourceIdentityType = "UserAssigned" | "None";
 
 // @public
 export interface NetworkWatchers {
@@ -13136,6 +13152,12 @@ export type UsageUnit = string;
 
 // @public
 export type UseHubGateway = string;
+
+// @public (undocumented)
+export interface UserIdentityProperties {
+    readonly clientId?: string;
+    readonly principalId?: string;
+}
 
 // @public
 export type VerbosityLevel = string;

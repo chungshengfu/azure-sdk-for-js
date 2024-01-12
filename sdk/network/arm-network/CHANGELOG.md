@@ -1,15 +1,19 @@
 # Release History
+    
+## 33.1.0-beta.1 (2024-01-12)
+    
+**Features**
 
-## 33.0.1 (Unreleased)
-
-### Features Added
-
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
+  - Added Interface ManagedIdentityObjectForUserAssigned
+  - Added Interface UserIdentityProperties
+  - Added Type Alias NetworkWatcherResourceIdentityType
+  - Interface BastionHost has a new optional parameter zones
+  - Interface FlowLog has a new optional parameter identity
+  - Interface FlowLogInformation has a new optional parameter identity
+  - Enum KnownVirtualNetworkPrivateEndpointNetworkPolicies has a new value NetworkSecurityGroupEnabled
+  - Enum KnownVirtualNetworkPrivateEndpointNetworkPolicies has a new value RouteTableEnabled
+    
+    
 ## 33.0.0 (2023-12-07)
     
 **Features**
