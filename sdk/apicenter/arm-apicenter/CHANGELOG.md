@@ -1,5 +1,173 @@
 # Release History
     
+## 1.0.0-beta.2 (2024-01-17)
+    
+**Features**
+
+  - Added operation group ApiDefinitions
+  - Added operation group Apis
+  - Added operation group ApiVersions
+  - Added operation group Deployments
+  - Added operation group Environments
+  - Added operation group MetadataSchemas
+  - Added operation group Workspaces
+  - Added operation Services.beginExportMetadataSchema
+  - Added operation Services.beginExportMetadataSchemaAndWait
+  - Added Interface Api
+  - Added Interface ApiCollection
+  - Added Interface ApiDefinition
+  - Added Interface ApiDefinitionCollection
+  - Added Interface ApiDefinitionPropertiesSpecification
+  - Added Interface ApiDefinitionsCreateOrUpdateHeaders
+  - Added Interface ApiDefinitionsCreateOrUpdateOptionalParams
+  - Added Interface ApiDefinitionsDeleteOptionalParams
+  - Added Interface ApiDefinitionsExportSpecificationOptionalParams
+  - Added Interface ApiDefinitionsGetHeaders
+  - Added Interface ApiDefinitionsGetOptionalParams
+  - Added Interface ApiDefinitionsHeadOptionalParams
+  - Added Interface ApiDefinitionsImportSpecificationOptionalParams
+  - Added Interface ApiDefinitionsListNextOptionalParams
+  - Added Interface ApiDefinitionsListOptionalParams
+  - Added Interface ApisCreateOrUpdateHeaders
+  - Added Interface ApisCreateOrUpdateOptionalParams
+  - Added Interface ApisDeleteOptionalParams
+  - Added Interface ApisGetHeaders
+  - Added Interface ApisGetOptionalParams
+  - Added Interface ApisHeadOptionalParams
+  - Added Interface ApisListNextOptionalParams
+  - Added Interface ApisListOptionalParams
+  - Added Interface ApiSpecExportResult
+  - Added Interface ApiSpecImportRequest
+  - Added Interface ApiSpecImportRequestSpecification
+  - Added Interface ApiVersion
+  - Added Interface ApiVersionCollection
+  - Added Interface ApiVersionsCreateOrUpdateHeaders
+  - Added Interface ApiVersionsCreateOrUpdateOptionalParams
+  - Added Interface ApiVersionsDeleteOptionalParams
+  - Added Interface ApiVersionsGetHeaders
+  - Added Interface ApiVersionsGetOptionalParams
+  - Added Interface ApiVersionsHeadOptionalParams
+  - Added Interface ApiVersionsListNextOptionalParams
+  - Added Interface ApiVersionsListOptionalParams
+  - Added Interface Contact
+  - Added Interface Deployment
+  - Added Interface DeploymentCollection
+  - Added Interface DeploymentsCreateOrUpdateHeaders
+  - Added Interface DeploymentsCreateOrUpdateOptionalParams
+  - Added Interface DeploymentsDeleteOptionalParams
+  - Added Interface DeploymentServer
+  - Added Interface DeploymentsGetHeaders
+  - Added Interface DeploymentsGetOptionalParams
+  - Added Interface DeploymentsHeadOptionalParams
+  - Added Interface DeploymentsListNextOptionalParams
+  - Added Interface DeploymentsListOptionalParams
+  - Added Interface Environment
+  - Added Interface EnvironmentCollection
+  - Added Interface EnvironmentsCreateOrUpdateHeaders
+  - Added Interface EnvironmentsCreateOrUpdateOptionalParams
+  - Added Interface EnvironmentsDeleteOptionalParams
+  - Added Interface EnvironmentServer
+  - Added Interface EnvironmentsGetHeaders
+  - Added Interface EnvironmentsGetOptionalParams
+  - Added Interface EnvironmentsHeadOptionalParams
+  - Added Interface EnvironmentsListNextOptionalParams
+  - Added Interface EnvironmentsListOptionalParams
+  - Added Interface ExternalDocumentation
+  - Added Interface ImportFromApimOptionalParams
+  - Added Interface ImportFromApimRequest
+  - Added Interface License
+  - Added Interface MetadataAssignment
+  - Added Interface MetadataSchema
+  - Added Interface MetadataSchemaCollection
+  - Added Interface MetadataSchemaExportRequest
+  - Added Interface MetadataSchemaExportResult
+  - Added Interface MetadataSchemasCreateOrUpdateHeaders
+  - Added Interface MetadataSchemasCreateOrUpdateOptionalParams
+  - Added Interface MetadataSchemasDeleteOptionalParams
+  - Added Interface MetadataSchemasGetHeaders
+  - Added Interface MetadataSchemasGetOptionalParams
+  - Added Interface MetadataSchemasHeadOptionalParams
+  - Added Interface MetadataSchemasListNextOptionalParams
+  - Added Interface MetadataSchemasListOptionalParams
+  - Added Interface Onboarding
+  - Added Interface ServicesExportMetadataSchemaOptionalParams
+  - Added Interface TermsOfService
+  - Added Interface Workspace
+  - Added Interface WorkspaceCollection
+  - Added Interface WorkspacesCreateOrUpdateHeaders
+  - Added Interface WorkspacesCreateOrUpdateOptionalParams
+  - Added Interface WorkspacesDeleteOptionalParams
+  - Added Interface WorkspacesGetHeaders
+  - Added Interface WorkspacesGetOptionalParams
+  - Added Interface WorkspacesHeadOptionalParams
+  - Added Interface WorkspacesListNextOptionalParams
+  - Added Interface WorkspacesListOptionalParams
+  - Added Type Alias ApiDefinitionsCreateOrUpdateResponse
+  - Added Type Alias ApiDefinitionsExportSpecificationResponse
+  - Added Type Alias ApiDefinitionsGetResponse
+  - Added Type Alias ApiDefinitionsHeadResponse
+  - Added Type Alias ApiDefinitionsListNextResponse
+  - Added Type Alias ApiDefinitionsListResponse
+  - Added Type Alias ApiKind
+  - Added Type Alias ApisCreateOrUpdateResponse
+  - Added Type Alias ApisGetResponse
+  - Added Type Alias ApisHeadResponse
+  - Added Type Alias ApisListNextResponse
+  - Added Type Alias ApisListResponse
+  - Added Type Alias ApiSpecExportResultFormat
+  - Added Type Alias ApiSpecImportSourceFormat
+  - Added Type Alias ApiVersionsCreateOrUpdateResponse
+  - Added Type Alias ApiVersionsGetResponse
+  - Added Type Alias ApiVersionsHeadResponse
+  - Added Type Alias ApiVersionsListNextResponse
+  - Added Type Alias ApiVersionsListResponse
+  - Added Type Alias DeploymentsCreateOrUpdateResponse
+  - Added Type Alias DeploymentsGetResponse
+  - Added Type Alias DeploymentsHeadResponse
+  - Added Type Alias DeploymentsListNextResponse
+  - Added Type Alias DeploymentsListResponse
+  - Added Type Alias DeploymentState
+  - Added Type Alias EnvironmentKind
+  - Added Type Alias EnvironmentsCreateOrUpdateResponse
+  - Added Type Alias EnvironmentServerType
+  - Added Type Alias EnvironmentsGetResponse
+  - Added Type Alias EnvironmentsHeadResponse
+  - Added Type Alias EnvironmentsListNextResponse
+  - Added Type Alias EnvironmentsListResponse
+  - Added Type Alias LifecycleStage
+  - Added Type Alias MetadataAssignmentEntity
+  - Added Type Alias MetadataSchemaExportFormat
+  - Added Type Alias MetadataSchemasCreateOrUpdateResponse
+  - Added Type Alias MetadataSchemasGetResponse
+  - Added Type Alias MetadataSchemasHeadResponse
+  - Added Type Alias MetadataSchemasListNextResponse
+  - Added Type Alias MetadataSchemasListResponse
+  - Added Type Alias ServicesExportMetadataSchemaResponse
+  - Added Type Alias WorkspacesCreateOrUpdateResponse
+  - Added Type Alias WorkspacesGetResponse
+  - Added Type Alias WorkspacesHeadResponse
+  - Added Type Alias WorkspacesListNextResponse
+  - Added Type Alias WorkspacesListResponse
+  - Interface AzureAPICenterOptionalParams has a new optional parameter filter
+  - Interface ServicesCreateOrUpdateOptionalParams has a new optional parameter payload
+  - Interface ServicesUpdateOptionalParams has a new optional parameter payload
+  - Added Enum KnownApiKind
+  - Added Enum KnownApiSpecExportResultFormat
+  - Added Enum KnownApiSpecImportSourceFormat
+  - Added Enum KnownDeploymentState
+  - Added Enum KnownEnvironmentKind
+  - Added Enum KnownEnvironmentServerType
+  - Added Enum KnownLifecycleStage
+  - Added Enum KnownMetadataAssignmentEntity
+  - Added Enum KnownMetadataSchemaExportFormat
+
+**Breaking Changes**
+
+  - Class AzureAPICenter has a new signature
+  - Interface ServicesCreateOrUpdateOptionalParams no longer has parameter resource
+  - Interface ServicesUpdateOptionalParams no longer has parameter parameters
+    
+    
 ## 1.0.0-beta.1 (2023-08-16)
 
-The package of @azure/arm-apicenter is using our next generation design principles. To learn more, please refer to our documentation [Quick Start](https://aka.ms/azsdk/js/mgmt/quickstart ).
+The package of @azure/arm-apicenter is using our next generation design principles. To learn more, please refer to our documentation [Quick Start](https://aka.ms/js-track2-quickstart).
