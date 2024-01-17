@@ -19,7 +19,7 @@ import {
   ChannelsGetOptionalParams,
   ChannelsGetResponse,
   ChannelsListWithKeysOptionalParams,
-  ChannelsListWithKeysResponse
+  ChannelsListWithKeysResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -34,7 +34,7 @@ export interface Channels {
   listByResourceGroup(
     resourceGroupName: string,
     resourceName: string,
-    options?: ChannelsListByResourceGroupOptionalParams
+    options?: ChannelsListByResourceGroupOptionalParams,
   ): PagedAsyncIterableIterator<BotChannel>;
   /**
    * Creates a Channel registration for a Bot Service
@@ -49,7 +49,7 @@ export interface Channels {
     resourceName: string,
     channelName: ChannelName,
     parameters: BotChannel,
-    options?: ChannelsCreateOptionalParams
+    options?: ChannelsCreateOptionalParams,
   ): Promise<ChannelsCreateResponse>;
   /**
    * Updates a Channel registration for a Bot Service
@@ -62,33 +62,33 @@ export interface Channels {
     resourceGroupName: string,
     resourceName: string,
     channelName: ChannelName,
-    options?: ChannelsUpdateOptionalParams
+    options?: ChannelsUpdateOptionalParams,
   ): Promise<ChannelsUpdateResponse>;
   /**
    * Deletes a Channel registration from a Bot Service
    * @param resourceGroupName The name of the Bot resource group in the user subscription.
    * @param resourceName The name of the Bot resource.
-   * @param channelName The name of the Bot resource.
+   * @param channelName The name of the Channel resource.
    * @param options The options parameters.
    */
   delete(
     resourceGroupName: string,
     resourceName: string,
-    channelName: string,
-    options?: ChannelsDeleteOptionalParams
+    channelName: ChannelName,
+    options?: ChannelsDeleteOptionalParams,
   ): Promise<void>;
   /**
    * Returns a BotService Channel registration specified by the parameters.
    * @param resourceGroupName The name of the Bot resource group in the user subscription.
    * @param resourceName The name of the Bot resource.
-   * @param channelName The name of the Bot resource.
+   * @param channelName The name of the Channel resource.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     resourceName: string,
-    channelName: string,
-    options?: ChannelsGetOptionalParams
+    channelName: ChannelName,
+    options?: ChannelsGetOptionalParams,
   ): Promise<ChannelsGetResponse>;
   /**
    * Lists a Channel registration for a Bot Service including secrets
@@ -101,6 +101,6 @@ export interface Channels {
     resourceGroupName: string,
     resourceName: string,
     channelName: ChannelName,
-    options?: ChannelsListWithKeysOptionalParams
+    options?: ChannelsListWithKeysOptionalParams,
   ): Promise<ChannelsListWithKeysResponse>;
 }
