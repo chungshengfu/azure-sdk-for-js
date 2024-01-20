@@ -635,6 +635,7 @@ export class ContainerRegistryManagementClient extends coreClient.ServiceClient 
     // (undocumented)
     $host: string;
     constructor(credentials: coreAuth.TokenCredential, subscriptionId: string, options?: ContainerRegistryManagementClientOptionalParams);
+    constructor(credentials: coreAuth.TokenCredential, options?: ContainerRegistryManagementClientOptionalParams);
     // (undocumented)
     agentPools: AgentPools;
     // (undocumented)
@@ -666,7 +667,7 @@ export class ContainerRegistryManagementClient extends coreClient.ServiceClient 
     // (undocumented)
     scopeMaps: ScopeMaps;
     // (undocumented)
-    subscriptionId: string;
+    subscriptionId?: string;
     // (undocumented)
     taskRuns: TaskRuns;
     // (undocumented)
@@ -3382,6 +3383,7 @@ export type WebhooksGetResponse = Webhook;
 
 // @public
 export interface WebhooksListEventsNextOptionalParams extends coreClient.OperationOptions {
+    skipToken?: string;
 }
 
 // @public
@@ -3389,6 +3391,7 @@ export type WebhooksListEventsNextResponse = EventListResult;
 
 // @public
 export interface WebhooksListEventsOptionalParams extends coreClient.OperationOptions {
+    skipToken?: string;
 }
 
 // @public
