@@ -325,6 +325,7 @@ export type DeleteEnvironmentParameters = RequestParameters;
 // @public
 export interface DevBox {
     localAdministrator?: string;
+    name: string;
     poolName: string;
 }
 
@@ -360,10 +361,10 @@ export interface DevBoxOutput {
     readonly imageReference?: ImageReferenceOutput;
     localAdministrator?: string;
     readonly location?: string;
-    readonly name: string;
+    name: string;
     readonly osType?: string;
     poolName: string;
-    readonly powerState?: string;
+    readonly powerState: string;
     readonly projectName?: string;
     readonly provisioningState?: string;
     readonly storageProfile?: StorageProfileOutput;
@@ -376,7 +377,7 @@ export interface Environment {
     catalogName: string;
     environmentDefinitionName: string;
     environmentType: string;
-    parameters?: unknown;
+    parameters?: string;
 }
 
 // @public
@@ -409,7 +410,7 @@ export interface EnvironmentOutput {
     environmentType: string;
     readonly error?: ErrorModel;
     readonly name?: string;
-    parameters?: any;
+    parameters?: string;
     readonly provisioningState?: string;
     readonly resourceGroupId?: string;
     readonly user?: string;
@@ -1431,30 +1432,24 @@ export interface ListSchedulesQueryParamProperties {
 }
 
 // @public
-export interface OperationStatusErrorOutput {
-    code?: string;
-    message?: string;
-}
-
-// @public
 export interface OperationStatusOutput {
     endTime?: string;
-    error?: OperationStatusErrorOutput;
+    error?: ErrorModel;
     id?: string;
     name?: string;
     percentComplete?: number;
-    properties?: any;
+    properties?: string;
     resourceId?: string;
     startTime?: string;
     status: string;
 }
 
 // @public
-export interface OSDisk {
+export interface OsDisk {
 }
 
 // @public
-export interface OSDiskOutput {
+export interface OsDiskOutput {
     readonly diskSizeGB?: number;
 }
 
@@ -1758,12 +1753,12 @@ export interface StopOnDisconnectConfigurationOutput {
 
 // @public
 export interface StorageProfile {
-    osDisk?: OSDisk;
+    osDisk?: OsDisk;
 }
 
 // @public
 export interface StorageProfileOutput {
-    osDisk?: OSDiskOutput;
+    osDisk?: OsDiskOutput;
 }
 
 // (No @packageDocumentation comment for this package)
