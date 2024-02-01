@@ -16,7 +16,7 @@ import { HybridContainerServiceClient } from "../hybridContainerServiceClient";
 import {
   SimplePollerLike,
   OperationState,
-  createHttpPoller
+  createHttpPoller,
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
@@ -30,19 +30,20 @@ import {
   ProvisionedClusterInstancesCreateOrUpdateResponse,
   ProvisionedClusterInstancesDeleteOptionalParams,
   ProvisionedClusterInstancesDeleteResponse,
-  ProvisionedClusterInstancesGetUpgradeProfileOptionalParams,
-  ProvisionedClusterInstancesGetUpgradeProfileResponse,
-  ProvisionedClusterInstancesListUserKubeconfigOptionalParams,
-  ProvisionedClusterInstancesListUserKubeconfigResponse,
   ProvisionedClusterInstancesListAdminKubeconfigOptionalParams,
   ProvisionedClusterInstancesListAdminKubeconfigResponse,
-  ProvisionedClusterInstancesListNextResponse
+  ProvisionedClusterInstancesListUserKubeconfigOptionalParams,
+  ProvisionedClusterInstancesListUserKubeconfigResponse,
+  ProvisionedClusterInstancesGetUpgradeProfileOptionalParams,
+  ProvisionedClusterInstancesGetUpgradeProfileResponse,
+  ProvisionedClusterInstancesListNextResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
 /** Class containing ProvisionedClusterInstances operations. */
 export class ProvisionedClusterInstancesImpl
-  implements ProvisionedClusterInstances {
+  implements ProvisionedClusterInstances
+{
   private readonly client: HybridContainerServiceClient;
 
   /**
@@ -55,15 +56,14 @@ export class ProvisionedClusterInstancesImpl
 
   /**
    * Lists the ProvisionedClusterInstance resource associated with the ConnectedCluster
-   * @param connectedClusterResourceUri The fully qualified Azure Resource Manager identifier of the
-   *                                    connected cluster resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param options The options parameters.
    */
   public list(
-    connectedClusterResourceUri: string,
-    options?: ProvisionedClusterInstancesListOptionalParams
+    resourceUri: string,
+    options?: ProvisionedClusterInstancesListOptionalParams,
   ): PagedAsyncIterableIterator<ProvisionedCluster> {
-    const iter = this.listPagingAll(connectedClusterResourceUri, options);
+    const iter = this.listPagingAll(resourceUri, options);
     return {
       next() {
         return iter.next();
@@ -75,35 +75,27 @@ export class ProvisionedClusterInstancesImpl
         if (settings?.maxPageSize) {
           throw new Error("maxPageSize is not supported by this operation.");
         }
-        return this.listPagingPage(
-          connectedClusterResourceUri,
-          options,
-          settings
-        );
-      }
+        return this.listPagingPage(resourceUri, options, settings);
+      },
     };
   }
 
   private async *listPagingPage(
-    connectedClusterResourceUri: string,
+    resourceUri: string,
     options?: ProvisionedClusterInstancesListOptionalParams,
-    settings?: PageSettings
+    settings?: PageSettings,
   ): AsyncIterableIterator<ProvisionedCluster[]> {
     let result: ProvisionedClusterInstancesListResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._list(connectedClusterResourceUri, options);
+      result = await this._list(resourceUri, options);
       let page = result.value || [];
       continuationToken = result.nextLink;
       setContinuationToken(page, continuationToken);
       yield page;
     }
     while (continuationToken) {
-      result = await this._listNext(
-        connectedClusterResourceUri,
-        continuationToken,
-        options
-      );
+      result = await this._listNext(resourceUri, continuationToken, options);
       continuationToken = result.nextLink;
       let page = result.value || [];
       setContinuationToken(page, continuationToken);
@@ -112,44 +104,54 @@ export class ProvisionedClusterInstancesImpl
   }
 
   private async *listPagingAll(
-    connectedClusterResourceUri: string,
-    options?: ProvisionedClusterInstancesListOptionalParams
+    resourceUri: string,
+    options?: ProvisionedClusterInstancesListOptionalParams,
   ): AsyncIterableIterator<ProvisionedCluster> {
-    for await (const page of this.listPagingPage(
-      connectedClusterResourceUri,
-      options
-    )) {
+    for await (const page of this.listPagingPage(resourceUri, options)) {
       yield* page;
     }
   }
 
   /**
+   * Lists the ProvisionedClusterInstance resource associated with the ConnectedCluster
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
+   * @param options The options parameters.
+   */
+  private _list(
+    resourceUri: string,
+    options?: ProvisionedClusterInstancesListOptionalParams,
+  ): Promise<ProvisionedClusterInstancesListResponse> {
+    return this.client.sendOperationRequest(
+      { resourceUri, options },
+      listOperationSpec,
+    );
+  }
+
+  /**
    * Gets the provisioned cluster instance
-   * @param connectedClusterResourceUri The fully qualified Azure Resource Manager identifier of the
-   *                                    connected cluster resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param options The options parameters.
    */
   get(
-    connectedClusterResourceUri: string,
-    options?: ProvisionedClusterInstancesGetOptionalParams
+    resourceUri: string,
+    options?: ProvisionedClusterInstancesGetOptionalParams,
   ): Promise<ProvisionedClusterInstancesGetResponse> {
     return this.client.sendOperationRequest(
-      { connectedClusterResourceUri, options },
-      getOperationSpec
+      { resourceUri, options },
+      getOperationSpec,
     );
   }
 
   /**
    * Creates or updates the provisioned cluster instance
-   * @param connectedClusterResourceUri The fully qualified Azure Resource Manager identifier of the
-   *                                    connected cluster resource.
-   * @param provisionedClusterInstance Provisioned Cluster resource definition
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
-    connectedClusterResourceUri: string,
-    provisionedClusterInstance: ProvisionedCluster,
-    options?: ProvisionedClusterInstancesCreateOrUpdateOptionalParams
+    resourceUri: string,
+    resource: ProvisionedCluster,
+    options?: ProvisionedClusterInstancesCreateOrUpdateOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<ProvisionedClusterInstancesCreateOrUpdateResponse>,
@@ -158,21 +160,20 @@ export class ProvisionedClusterInstancesImpl
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ): Promise<ProvisionedClusterInstancesCreateOrUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
       const providedCallback = args.options?.onResponse;
       const callback: coreClient.RawResponseCallback = (
         rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
+        flatResponse: unknown,
       ) => {
         currentRawResponse = rawResponse;
         providedCallback?.(rawResponse, flatResponse);
@@ -181,8 +182,8 @@ export class ProvisionedClusterInstancesImpl
         ...args,
         options: {
           ...args.options,
-          onResponse: callback
-        }
+          onResponse: callback,
+        },
       };
       const flatResponse = await directSendOperation(updatedArgs, spec);
       return {
@@ -190,19 +191,15 @@ export class ProvisionedClusterInstancesImpl
         rawResponse: {
           statusCode: currentRawResponse!.status,
           body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
+          headers: currentRawResponse!.headers.toJSON(),
+        },
       };
     };
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: {
-        connectedClusterResourceUri,
-        provisionedClusterInstance,
-        options
-      },
-      spec: createOrUpdateOperationSpec
+      args: { resourceUri, resource, options },
+      spec: createOrUpdateOperationSpec,
     });
     const poller = await createHttpPoller<
       ProvisionedClusterInstancesCreateOrUpdateResponse,
@@ -210,7 +207,7 @@ export class ProvisionedClusterInstancesImpl
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "azure-async-operation",
     });
     await poller.poll();
     return poller;
@@ -218,33 +215,31 @@ export class ProvisionedClusterInstancesImpl
 
   /**
    * Creates or updates the provisioned cluster instance
-   * @param connectedClusterResourceUri The fully qualified Azure Resource Manager identifier of the
-   *                                    connected cluster resource.
-   * @param provisionedClusterInstance Provisioned Cluster resource definition
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
-    connectedClusterResourceUri: string,
-    provisionedClusterInstance: ProvisionedCluster,
-    options?: ProvisionedClusterInstancesCreateOrUpdateOptionalParams
+    resourceUri: string,
+    resource: ProvisionedCluster,
+    options?: ProvisionedClusterInstancesCreateOrUpdateOptionalParams,
   ): Promise<ProvisionedClusterInstancesCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
-      connectedClusterResourceUri,
-      provisionedClusterInstance,
-      options
+      resourceUri,
+      resource,
+      options,
     );
     return poller.pollUntilDone();
   }
 
   /**
    * Deletes the provisioned cluster instance
-   * @param connectedClusterResourceUri The fully qualified Azure Resource Manager identifier of the
-   *                                    connected cluster resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param options The options parameters.
    */
   async beginDelete(
-    connectedClusterResourceUri: string,
-    options?: ProvisionedClusterInstancesDeleteOptionalParams
+    resourceUri: string,
+    options?: ProvisionedClusterInstancesDeleteOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<ProvisionedClusterInstancesDeleteResponse>,
@@ -253,21 +248,20 @@ export class ProvisionedClusterInstancesImpl
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ): Promise<ProvisionedClusterInstancesDeleteResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
       const providedCallback = args.options?.onResponse;
       const callback: coreClient.RawResponseCallback = (
         rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
+        flatResponse: unknown,
       ) => {
         currentRawResponse = rawResponse;
         providedCallback?.(rawResponse, flatResponse);
@@ -276,8 +270,8 @@ export class ProvisionedClusterInstancesImpl
         ...args,
         options: {
           ...args.options,
-          onResponse: callback
-        }
+          onResponse: callback,
+        },
       };
       const flatResponse = await directSendOperation(updatedArgs, spec);
       return {
@@ -285,15 +279,15 @@ export class ProvisionedClusterInstancesImpl
         rawResponse: {
           statusCode: currentRawResponse!.status,
           body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
+          headers: currentRawResponse!.headers.toJSON(),
+        },
       };
     };
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { connectedClusterResourceUri, options },
-      spec: deleteOperationSpec
+      args: { resourceUri, options },
+      spec: deleteOperationSpec,
     });
     const poller = await createHttpPoller<
       ProvisionedClusterInstancesDeleteResponse,
@@ -301,7 +295,7 @@ export class ProvisionedClusterInstancesImpl
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "location",
     });
     await poller.poll();
     return poller;
@@ -309,147 +303,25 @@ export class ProvisionedClusterInstancesImpl
 
   /**
    * Deletes the provisioned cluster instance
-   * @param connectedClusterResourceUri The fully qualified Azure Resource Manager identifier of the
-   *                                    connected cluster resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param options The options parameters.
    */
   async beginDeleteAndWait(
-    connectedClusterResourceUri: string,
-    options?: ProvisionedClusterInstancesDeleteOptionalParams
+    resourceUri: string,
+    options?: ProvisionedClusterInstancesDeleteOptionalParams,
   ): Promise<ProvisionedClusterInstancesDeleteResponse> {
-    const poller = await this.beginDelete(connectedClusterResourceUri, options);
-    return poller.pollUntilDone();
-  }
-
-  /**
-   * Lists the ProvisionedClusterInstance resource associated with the ConnectedCluster
-   * @param connectedClusterResourceUri The fully qualified Azure Resource Manager identifier of the
-   *                                    connected cluster resource.
-   * @param options The options parameters.
-   */
-  private _list(
-    connectedClusterResourceUri: string,
-    options?: ProvisionedClusterInstancesListOptionalParams
-  ): Promise<ProvisionedClusterInstancesListResponse> {
-    return this.client.sendOperationRequest(
-      { connectedClusterResourceUri, options },
-      listOperationSpec
-    );
-  }
-
-  /**
-   * Gets the upgrade profile of a provisioned cluster
-   * @param connectedClusterResourceUri The fully qualified Azure Resource Manager identifier of the
-   *                                    connected cluster resource.
-   * @param options The options parameters.
-   */
-  getUpgradeProfile(
-    connectedClusterResourceUri: string,
-    options?: ProvisionedClusterInstancesGetUpgradeProfileOptionalParams
-  ): Promise<ProvisionedClusterInstancesGetUpgradeProfileResponse> {
-    return this.client.sendOperationRequest(
-      { connectedClusterResourceUri, options },
-      getUpgradeProfileOperationSpec
-    );
-  }
-
-  /**
-   * Lists the user credentials of the provisioned cluster (can only be used within private network)
-   * @param connectedClusterResourceUri The fully qualified Azure Resource Manager identifier of the
-   *                                    connected cluster resource.
-   * @param options The options parameters.
-   */
-  async beginListUserKubeconfig(
-    connectedClusterResourceUri: string,
-    options?: ProvisionedClusterInstancesListUserKubeconfigOptionalParams
-  ): Promise<
-    SimplePollerLike<
-      OperationState<ProvisionedClusterInstancesListUserKubeconfigResponse>,
-      ProvisionedClusterInstancesListUserKubeconfigResponse
-    >
-  > {
-    const directSendOperation = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ): Promise<ProvisionedClusterInstancesListUserKubeconfigResponse> => {
-      return this.client.sendOperationRequest(args, spec);
-    };
-    const sendOperationFn = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
-      const providedCallback = args.options?.onResponse;
-      const callback: coreClient.RawResponseCallback = (
-        rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
-      ) => {
-        currentRawResponse = rawResponse;
-        providedCallback?.(rawResponse, flatResponse);
-      };
-      const updatedArgs = {
-        ...args,
-        options: {
-          ...args.options,
-          onResponse: callback
-        }
-      };
-      const flatResponse = await directSendOperation(updatedArgs, spec);
-      return {
-        flatResponse,
-        rawResponse: {
-          statusCode: currentRawResponse!.status,
-          body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
-      };
-    };
-
-    const lro = createLroSpec({
-      sendOperationFn,
-      args: { connectedClusterResourceUri, options },
-      spec: listUserKubeconfigOperationSpec
-    });
-    const poller = await createHttpPoller<
-      ProvisionedClusterInstancesListUserKubeconfigResponse,
-      OperationState<ProvisionedClusterInstancesListUserKubeconfigResponse>
-    >(lro, {
-      restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
-    });
-    await poller.poll();
-    return poller;
-  }
-
-  /**
-   * Lists the user credentials of the provisioned cluster (can only be used within private network)
-   * @param connectedClusterResourceUri The fully qualified Azure Resource Manager identifier of the
-   *                                    connected cluster resource.
-   * @param options The options parameters.
-   */
-  async beginListUserKubeconfigAndWait(
-    connectedClusterResourceUri: string,
-    options?: ProvisionedClusterInstancesListUserKubeconfigOptionalParams
-  ): Promise<ProvisionedClusterInstancesListUserKubeconfigResponse> {
-    const poller = await this.beginListUserKubeconfig(
-      connectedClusterResourceUri,
-      options
-    );
+    const poller = await this.beginDelete(resourceUri, options);
     return poller.pollUntilDone();
   }
 
   /**
    * Lists the admin credentials of the provisioned cluster (can only be used within private network)
-   * @param connectedClusterResourceUri The fully qualified Azure Resource Manager identifier of the
-   *                                    connected cluster resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param options The options parameters.
    */
   async beginListAdminKubeconfig(
-    connectedClusterResourceUri: string,
-    options?: ProvisionedClusterInstancesListAdminKubeconfigOptionalParams
+    resourceUri: string,
+    options?: ProvisionedClusterInstancesListAdminKubeconfigOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<ProvisionedClusterInstancesListAdminKubeconfigResponse>,
@@ -458,21 +330,20 @@ export class ProvisionedClusterInstancesImpl
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ): Promise<ProvisionedClusterInstancesListAdminKubeconfigResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
       const providedCallback = args.options?.onResponse;
       const callback: coreClient.RawResponseCallback = (
         rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
+        flatResponse: unknown,
       ) => {
         currentRawResponse = rawResponse;
         providedCallback?.(rawResponse, flatResponse);
@@ -481,8 +352,8 @@ export class ProvisionedClusterInstancesImpl
         ...args,
         options: {
           ...args.options,
-          onResponse: callback
-        }
+          onResponse: callback,
+        },
       };
       const flatResponse = await directSendOperation(updatedArgs, spec);
       return {
@@ -490,15 +361,15 @@ export class ProvisionedClusterInstancesImpl
         rawResponse: {
           statusCode: currentRawResponse!.status,
           body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
+          headers: currentRawResponse!.headers.toJSON(),
+        },
       };
     };
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { connectedClusterResourceUri, options },
-      spec: listAdminKubeconfigOperationSpec
+      args: { resourceUri, options },
+      spec: listAdminKubeconfigOperationSpec,
     });
     const poller = await createHttpPoller<
       ProvisionedClusterInstancesListAdminKubeconfigResponse,
@@ -506,7 +377,7 @@ export class ProvisionedClusterInstancesImpl
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "location",
     });
     await poller.poll();
     return poller;
@@ -514,215 +385,300 @@ export class ProvisionedClusterInstancesImpl
 
   /**
    * Lists the admin credentials of the provisioned cluster (can only be used within private network)
-   * @param connectedClusterResourceUri The fully qualified Azure Resource Manager identifier of the
-   *                                    connected cluster resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param options The options parameters.
    */
   async beginListAdminKubeconfigAndWait(
-    connectedClusterResourceUri: string,
-    options?: ProvisionedClusterInstancesListAdminKubeconfigOptionalParams
+    resourceUri: string,
+    options?: ProvisionedClusterInstancesListAdminKubeconfigOptionalParams,
   ): Promise<ProvisionedClusterInstancesListAdminKubeconfigResponse> {
-    const poller = await this.beginListAdminKubeconfig(
-      connectedClusterResourceUri,
-      options
-    );
+    const poller = await this.beginListAdminKubeconfig(resourceUri, options);
     return poller.pollUntilDone();
   }
 
   /**
+   * Lists the user credentials of the provisioned cluster (can only be used within private network)
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
+   * @param options The options parameters.
+   */
+  async beginListUserKubeconfig(
+    resourceUri: string,
+    options?: ProvisionedClusterInstancesListUserKubeconfigOptionalParams,
+  ): Promise<
+    SimplePollerLike<
+      OperationState<ProvisionedClusterInstancesListUserKubeconfigResponse>,
+      ProvisionedClusterInstancesListUserKubeconfigResponse
+    >
+  > {
+    const directSendOperation = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec,
+    ): Promise<ProvisionedClusterInstancesListUserKubeconfigResponse> => {
+      return this.client.sendOperationRequest(args, spec);
+    };
+    const sendOperationFn = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec,
+    ) => {
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
+      const providedCallback = args.options?.onResponse;
+      const callback: coreClient.RawResponseCallback = (
+        rawResponse: coreClient.FullOperationResponse,
+        flatResponse: unknown,
+      ) => {
+        currentRawResponse = rawResponse;
+        providedCallback?.(rawResponse, flatResponse);
+      };
+      const updatedArgs = {
+        ...args,
+        options: {
+          ...args.options,
+          onResponse: callback,
+        },
+      };
+      const flatResponse = await directSendOperation(updatedArgs, spec);
+      return {
+        flatResponse,
+        rawResponse: {
+          statusCode: currentRawResponse!.status,
+          body: currentRawResponse!.parsedBody,
+          headers: currentRawResponse!.headers.toJSON(),
+        },
+      };
+    };
+
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: { resourceUri, options },
+      spec: listUserKubeconfigOperationSpec,
+    });
+    const poller = await createHttpPoller<
+      ProvisionedClusterInstancesListUserKubeconfigResponse,
+      OperationState<ProvisionedClusterInstancesListUserKubeconfigResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "location",
+    });
+    await poller.poll();
+    return poller;
+  }
+
+  /**
+   * Lists the user credentials of the provisioned cluster (can only be used within private network)
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
+   * @param options The options parameters.
+   */
+  async beginListUserKubeconfigAndWait(
+    resourceUri: string,
+    options?: ProvisionedClusterInstancesListUserKubeconfigOptionalParams,
+  ): Promise<ProvisionedClusterInstancesListUserKubeconfigResponse> {
+    const poller = await this.beginListUserKubeconfig(resourceUri, options);
+    return poller.pollUntilDone();
+  }
+
+  /**
+   * Gets the upgrade profile of a provisioned cluster
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
+   * @param options The options parameters.
+   */
+  getUpgradeProfile(
+    resourceUri: string,
+    options?: ProvisionedClusterInstancesGetUpgradeProfileOptionalParams,
+  ): Promise<ProvisionedClusterInstancesGetUpgradeProfileResponse> {
+    return this.client.sendOperationRequest(
+      { resourceUri, options },
+      getUpgradeProfileOperationSpec,
+    );
+  }
+
+  /**
    * ListNext
-   * @param connectedClusterResourceUri The fully qualified Azure Resource Manager identifier of the
-   *                                    connected cluster resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param nextLink The nextLink from the previous successful call to the List method.
    * @param options The options parameters.
    */
   private _listNext(
-    connectedClusterResourceUri: string,
+    resourceUri: string,
     nextLink: string,
-    options?: ProvisionedClusterInstancesListNextOptionalParams
+    options?: ProvisionedClusterInstancesListNextOptionalParams,
   ): Promise<ProvisionedClusterInstancesListNextResponse> {
     return this.client.sendOperationRequest(
-      { connectedClusterResourceUri, nextLink, options },
-      listNextOperationSpec
+      { resourceUri, nextLink, options },
+      listNextOperationSpec,
     );
   }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const getOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/{connectedClusterResourceUri}/providers/Microsoft.HybridContainerService/provisionedClusterInstances/default",
+const listOperationSpec: coreClient.OperationSpec = {
+  path: "/{resourceUri}/providers/Microsoft.HybridContainerService/provisionedClusterInstances",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ProvisionedCluster
+      bodyMapper: Mappers.ProvisionedClusterListResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.$host, Parameters.connectedClusterResourceUri],
+  urlParameters: [Parameters.$host, Parameters.resourceUri],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
+};
+const getOperationSpec: coreClient.OperationSpec = {
+  path: "/{resourceUri}/providers/Microsoft.HybridContainerService/provisionedClusterInstances/default",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.ProvisionedCluster,
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse,
+    },
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [Parameters.$host, Parameters.resourceUri],
+  headerParameters: [Parameters.accept],
+  serializer,
 };
 const createOrUpdateOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/{connectedClusterResourceUri}/providers/Microsoft.HybridContainerService/provisionedClusterInstances/default",
+  path: "/{resourceUri}/providers/Microsoft.HybridContainerService/provisionedClusterInstances/default",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.ProvisionedCluster
+      bodyMapper: Mappers.ProvisionedCluster,
     },
     201: {
-      bodyMapper: Mappers.ProvisionedCluster
+      bodyMapper: Mappers.ProvisionedCluster,
     },
     202: {
-      bodyMapper: Mappers.ProvisionedCluster
+      bodyMapper: Mappers.ProvisionedCluster,
     },
     204: {
-      bodyMapper: Mappers.ProvisionedCluster
+      bodyMapper: Mappers.ProvisionedCluster,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
-  requestBody: Parameters.provisionedClusterInstance,
+  requestBody: Parameters.resource2,
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.$host, Parameters.connectedClusterResourceUri],
+  urlParameters: [Parameters.$host, Parameters.resourceUri],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
+  serializer,
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/{connectedClusterResourceUri}/providers/Microsoft.HybridContainerService/provisionedClusterInstances/default",
+  path: "/{resourceUri}/providers/Microsoft.HybridContainerService/provisionedClusterInstances/default",
   httpMethod: "DELETE",
   responses: {
     200: {
-      headersMapper: Mappers.ProvisionedClusterInstancesDeleteHeaders
+      headersMapper: Mappers.ProvisionedClusterInstancesDeleteHeaders,
     },
     201: {
-      headersMapper: Mappers.ProvisionedClusterInstancesDeleteHeaders
+      headersMapper: Mappers.ProvisionedClusterInstancesDeleteHeaders,
     },
     202: {
-      headersMapper: Mappers.ProvisionedClusterInstancesDeleteHeaders
+      headersMapper: Mappers.ProvisionedClusterInstancesDeleteHeaders,
     },
     204: {
-      headersMapper: Mappers.ProvisionedClusterInstancesDeleteHeaders
+      headersMapper: Mappers.ProvisionedClusterInstancesDeleteHeaders,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.$host, Parameters.connectedClusterResourceUri],
+  urlParameters: [Parameters.$host, Parameters.resourceUri],
   headerParameters: [Parameters.accept],
-  serializer
-};
-const listOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/{connectedClusterResourceUri}/providers/Microsoft.HybridContainerService/provisionedClusterInstances",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: Mappers.ProvisionedClusterListResult
-    },
-    default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
-  },
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.$host, Parameters.connectedClusterResourceUri],
-  headerParameters: [Parameters.accept],
-  serializer
-};
-const getUpgradeProfileOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/{connectedClusterResourceUri}/providers/Microsoft.HybridContainerService/provisionedClusterInstances/default/upgradeProfiles/default",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: Mappers.ProvisionedClusterUpgradeProfile
-    },
-    default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
-  },
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.$host, Parameters.connectedClusterResourceUri],
-  headerParameters: [Parameters.accept],
-  serializer
-};
-const listUserKubeconfigOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/{connectedClusterResourceUri}/providers/Microsoft.HybridContainerService/provisionedClusterInstances/default/listUserKubeconfig",
-  httpMethod: "POST",
-  responses: {
-    200: {
-      bodyMapper: Mappers.ListCredentialResponse
-    },
-    201: {
-      bodyMapper: Mappers.ListCredentialResponse
-    },
-    202: {
-      bodyMapper: Mappers.ListCredentialResponse
-    },
-    204: {
-      bodyMapper: Mappers.ListCredentialResponse
-    },
-    default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
-  },
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.$host, Parameters.connectedClusterResourceUri],
-  headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const listAdminKubeconfigOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/{connectedClusterResourceUri}/providers/Microsoft.HybridContainerService/provisionedClusterInstances/default/listAdminKubeconfig",
+  path: "/{resourceUri}/providers/Microsoft.HybridContainerService/provisionedClusterInstances/default/listAdminKubeconfig",
   httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.ListCredentialResponse
+      bodyMapper: Mappers.ListCredentialResponse,
     },
     201: {
-      bodyMapper: Mappers.ListCredentialResponse
+      bodyMapper: Mappers.ListCredentialResponse,
     },
     202: {
-      bodyMapper: Mappers.ListCredentialResponse
+      bodyMapper: Mappers.ListCredentialResponse,
     },
     204: {
-      bodyMapper: Mappers.ListCredentialResponse
+      bodyMapper: Mappers.ListCredentialResponse,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.$host, Parameters.connectedClusterResourceUri],
+  urlParameters: [Parameters.$host, Parameters.resourceUri],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
+};
+const listUserKubeconfigOperationSpec: coreClient.OperationSpec = {
+  path: "/{resourceUri}/providers/Microsoft.HybridContainerService/provisionedClusterInstances/default/listUserKubeconfig",
+  httpMethod: "POST",
+  responses: {
+    200: {
+      bodyMapper: Mappers.ListCredentialResponse,
+    },
+    201: {
+      bodyMapper: Mappers.ListCredentialResponse,
+    },
+    202: {
+      bodyMapper: Mappers.ListCredentialResponse,
+    },
+    204: {
+      bodyMapper: Mappers.ListCredentialResponse,
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse,
+    },
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [Parameters.$host, Parameters.resourceUri],
+  headerParameters: [Parameters.accept],
+  serializer,
+};
+const getUpgradeProfileOperationSpec: coreClient.OperationSpec = {
+  path: "/{resourceUri}/providers/Microsoft.HybridContainerService/provisionedClusterInstances/default/upgradeProfiles/default",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.ProvisionedClusterUpgradeProfile,
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse,
+    },
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [Parameters.$host, Parameters.resourceUri],
+  headerParameters: [Parameters.accept],
+  serializer,
 };
 const listNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ProvisionedClusterListResult
+      bodyMapper: Mappers.ProvisionedClusterListResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   urlParameters: [
     Parameters.$host,
-    Parameters.connectedClusterResourceUri,
-    Parameters.nextLink
+    Parameters.resourceUri,
+    Parameters.nextLink,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };

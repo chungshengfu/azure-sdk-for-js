@@ -10,22 +10,29 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   VirtualNetwork,
-  VirtualNetworksListByResourceGroupOptionalParams,
   VirtualNetworksListBySubscriptionOptionalParams,
+  VirtualNetworksListByResourceGroupOptionalParams,
   VirtualNetworksRetrieveOptionalParams,
   VirtualNetworksRetrieveResponse,
   VirtualNetworksCreateOrUpdateOptionalParams,
   VirtualNetworksCreateOrUpdateResponse,
-  VirtualNetworksDeleteOptionalParams,
-  VirtualNetworksDeleteResponse,
   VirtualNetworksPatch,
   VirtualNetworksUpdateOptionalParams,
-  VirtualNetworksUpdateResponse
+  VirtualNetworksUpdateResponse,
+  VirtualNetworksDeleteOptionalParams,
+  VirtualNetworksDeleteResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
 /** Interface representing a VirtualNetworks. */
 export interface VirtualNetworks {
+  /**
+   * Lists the virtual networks in the specified subscription
+   * @param options The options parameters.
+   */
+  listBySubscription(
+    options?: VirtualNetworksListBySubscriptionOptionalParams,
+  ): PagedAsyncIterableIterator<VirtualNetwork>;
   /**
    * Lists the virtual networks in the specified resource group
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
@@ -33,14 +40,7 @@ export interface VirtualNetworks {
    */
   listByResourceGroup(
     resourceGroupName: string,
-    options?: VirtualNetworksListByResourceGroupOptionalParams
-  ): PagedAsyncIterableIterator<VirtualNetwork>;
-  /**
-   * Lists the virtual networks in the specified subscription
-   * @param options The options parameters.
-   */
-  listBySubscription(
-    options?: VirtualNetworksListBySubscriptionOptionalParams
+    options?: VirtualNetworksListByResourceGroupOptionalParams,
   ): PagedAsyncIterableIterator<VirtualNetwork>;
   /**
    * Gets the specified virtual network resource
@@ -51,20 +51,20 @@ export interface VirtualNetworks {
   retrieve(
     resourceGroupName: string,
     virtualNetworkName: string,
-    options?: VirtualNetworksRetrieveOptionalParams
+    options?: VirtualNetworksRetrieveOptionalParams,
   ): Promise<VirtualNetworksRetrieveResponse>;
   /**
    * Creates or updates the virtual network resource
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param virtualNetworkName Parameter for the name of the virtual network
-   * @param virtualNetworks Virtual Network resource definition
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
     resourceGroupName: string,
     virtualNetworkName: string,
-    virtualNetworks: VirtualNetwork,
-    options?: VirtualNetworksCreateOrUpdateOptionalParams
+    resource: VirtualNetwork,
+    options?: VirtualNetworksCreateOrUpdateOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<VirtualNetworksCreateOrUpdateResponse>,
@@ -75,15 +75,46 @@ export interface VirtualNetworks {
    * Creates or updates the virtual network resource
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param virtualNetworkName Parameter for the name of the virtual network
-   * @param virtualNetworks Virtual Network resource definition
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     virtualNetworkName: string,
-    virtualNetworks: VirtualNetwork,
-    options?: VirtualNetworksCreateOrUpdateOptionalParams
+    resource: VirtualNetwork,
+    options?: VirtualNetworksCreateOrUpdateOptionalParams,
   ): Promise<VirtualNetworksCreateOrUpdateResponse>;
+  /**
+   * Patches the virtual network resource
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param virtualNetworkName Parameter for the name of the virtual network
+   * @param properties The resource properties to be updated.
+   * @param options The options parameters.
+   */
+  beginUpdate(
+    resourceGroupName: string,
+    virtualNetworkName: string,
+    properties: VirtualNetworksPatch,
+    options?: VirtualNetworksUpdateOptionalParams,
+  ): Promise<
+    SimplePollerLike<
+      OperationState<VirtualNetworksUpdateResponse>,
+      VirtualNetworksUpdateResponse
+    >
+  >;
+  /**
+   * Patches the virtual network resource
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param virtualNetworkName Parameter for the name of the virtual network
+   * @param properties The resource properties to be updated.
+   * @param options The options parameters.
+   */
+  beginUpdateAndWait(
+    resourceGroupName: string,
+    virtualNetworkName: string,
+    properties: VirtualNetworksPatch,
+    options?: VirtualNetworksUpdateOptionalParams,
+  ): Promise<VirtualNetworksUpdateResponse>;
   /**
    * Deletes the specified virtual network resource
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
@@ -93,7 +124,7 @@ export interface VirtualNetworks {
   beginDelete(
     resourceGroupName: string,
     virtualNetworkName: string,
-    options?: VirtualNetworksDeleteOptionalParams
+    options?: VirtualNetworksDeleteOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<VirtualNetworksDeleteResponse>,
@@ -109,37 +140,6 @@ export interface VirtualNetworks {
   beginDeleteAndWait(
     resourceGroupName: string,
     virtualNetworkName: string,
-    options?: VirtualNetworksDeleteOptionalParams
+    options?: VirtualNetworksDeleteOptionalParams,
   ): Promise<VirtualNetworksDeleteResponse>;
-  /**
-   * Patches the virtual network resource
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param virtualNetworkName Parameter for the name of the virtual network
-   * @param virtualNetworks Virtual Network resource patch definition
-   * @param options The options parameters.
-   */
-  beginUpdate(
-    resourceGroupName: string,
-    virtualNetworkName: string,
-    virtualNetworks: VirtualNetworksPatch,
-    options?: VirtualNetworksUpdateOptionalParams
-  ): Promise<
-    SimplePollerLike<
-      OperationState<VirtualNetworksUpdateResponse>,
-      VirtualNetworksUpdateResponse
-    >
-  >;
-  /**
-   * Patches the virtual network resource
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param virtualNetworkName Parameter for the name of the virtual network
-   * @param virtualNetworks Virtual Network resource patch definition
-   * @param options The options parameters.
-   */
-  beginUpdateAndWait(
-    resourceGroupName: string,
-    virtualNetworkName: string,
-    virtualNetworks: VirtualNetworksPatch,
-    options?: VirtualNetworksUpdateOptionalParams
-  ): Promise<VirtualNetworksUpdateResponse>;
 }

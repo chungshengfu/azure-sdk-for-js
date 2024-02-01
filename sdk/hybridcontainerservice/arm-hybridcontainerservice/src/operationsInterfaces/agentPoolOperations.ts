@@ -16,7 +16,7 @@ import {
   AgentPoolCreateOrUpdateOptionalParams,
   AgentPoolCreateOrUpdateResponse,
   AgentPoolDeleteOptionalParams,
-  AgentPoolDeleteResponse
+  AgentPoolDeleteResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -24,39 +24,36 @@ import {
 export interface AgentPoolOperations {
   /**
    * Gets the list of agent pools in the specified provisioned cluster
-   * @param connectedClusterResourceUri The fully qualified Azure Resource Manager identifier of the
-   *                                    connected cluster resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param options The options parameters.
    */
   listByProvisionedCluster(
-    connectedClusterResourceUri: string,
-    options?: AgentPoolListByProvisionedClusterOptionalParams
+    resourceUri: string,
+    options?: AgentPoolListByProvisionedClusterOptionalParams,
   ): PagedAsyncIterableIterator<AgentPool>;
   /**
    * Gets the specified agent pool in the provisioned cluster
-   * @param connectedClusterResourceUri The fully qualified Azure Resource Manager identifier of the
-   *                                    connected cluster resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param agentPoolName Parameter for the name of the agent pool in the provisioned cluster.
    * @param options The options parameters.
    */
   get(
-    connectedClusterResourceUri: string,
+    resourceUri: string,
     agentPoolName: string,
-    options?: AgentPoolGetOptionalParams
+    options?: AgentPoolGetOptionalParams,
   ): Promise<AgentPoolGetResponse>;
   /**
    * Creates or updates the agent pool in the provisioned cluster
-   * @param connectedClusterResourceUri The fully qualified Azure Resource Manager identifier of the
-   *                                    connected cluster resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param agentPoolName Parameter for the name of the agent pool in the provisioned cluster.
-   * @param agentPool Agent Pool resource definition
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   beginCreateOrUpdate(
-    connectedClusterResourceUri: string,
+    resourceUri: string,
     agentPoolName: string,
-    agentPool: AgentPool,
-    options?: AgentPoolCreateOrUpdateOptionalParams
+    resource: AgentPool,
+    options?: AgentPoolCreateOrUpdateOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<AgentPoolCreateOrUpdateResponse>,
@@ -65,29 +62,27 @@ export interface AgentPoolOperations {
   >;
   /**
    * Creates or updates the agent pool in the provisioned cluster
-   * @param connectedClusterResourceUri The fully qualified Azure Resource Manager identifier of the
-   *                                    connected cluster resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param agentPoolName Parameter for the name of the agent pool in the provisioned cluster.
-   * @param agentPool Agent Pool resource definition
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   beginCreateOrUpdateAndWait(
-    connectedClusterResourceUri: string,
+    resourceUri: string,
     agentPoolName: string,
-    agentPool: AgentPool,
-    options?: AgentPoolCreateOrUpdateOptionalParams
+    resource: AgentPool,
+    options?: AgentPoolCreateOrUpdateOptionalParams,
   ): Promise<AgentPoolCreateOrUpdateResponse>;
   /**
    * Deletes the specified agent pool in the provisioned cluster
-   * @param connectedClusterResourceUri The fully qualified Azure Resource Manager identifier of the
-   *                                    connected cluster resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param agentPoolName Parameter for the name of the agent pool in the provisioned cluster.
    * @param options The options parameters.
    */
   beginDelete(
-    connectedClusterResourceUri: string,
+    resourceUri: string,
     agentPoolName: string,
-    options?: AgentPoolDeleteOptionalParams
+    options?: AgentPoolDeleteOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<AgentPoolDeleteResponse>,
@@ -96,14 +91,13 @@ export interface AgentPoolOperations {
   >;
   /**
    * Deletes the specified agent pool in the provisioned cluster
-   * @param connectedClusterResourceUri The fully qualified Azure Resource Manager identifier of the
-   *                                    connected cluster resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param agentPoolName Parameter for the name of the agent pool in the provisioned cluster.
    * @param options The options parameters.
    */
   beginDeleteAndWait(
-    connectedClusterResourceUri: string,
+    resourceUri: string,
     agentPoolName: string,
-    options?: AgentPoolDeleteOptionalParams
+    options?: AgentPoolDeleteOptionalParams,
   ): Promise<AgentPoolDeleteResponse>;
 }

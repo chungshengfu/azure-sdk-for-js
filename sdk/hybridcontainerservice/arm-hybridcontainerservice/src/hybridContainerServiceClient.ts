@@ -11,32 +11,32 @@ import * as coreRestPipeline from "@azure/core-rest-pipeline";
 import {
   PipelineRequest,
   PipelineResponse,
-  SendRequest
+  SendRequest,
 } from "@azure/core-rest-pipeline";
 import * as coreAuth from "@azure/core-auth";
 import {
   SimplePollerLike,
   OperationState,
-  createHttpPoller
+  createHttpPoller,
 } from "@azure/core-lro";
 import { createLroSpec } from "./lroImpl";
 import {
-  ProvisionedClusterInstancesImpl,
-  HybridIdentityMetadataOperationsImpl,
-  AgentPoolOperationsImpl,
   KubernetesVersionsImpl,
+  ProvisionedClusterInstancesImpl,
+  AgentPoolOperationsImpl,
+  HybridIdentityMetadataOperationsImpl,
   VMSkusImpl,
   OperationsImpl,
-  VirtualNetworksImpl
+  VirtualNetworksImpl,
 } from "./operations";
 import {
-  ProvisionedClusterInstances,
-  HybridIdentityMetadataOperations,
-  AgentPoolOperations,
   KubernetesVersions,
+  ProvisionedClusterInstances,
+  AgentPoolOperations,
+  HybridIdentityMetadataOperations,
   VMSkus,
   Operations,
-  VirtualNetworks
+  VirtualNetworks,
 } from "./operationsInterfaces";
 import * as Parameters from "./models/parameters";
 import * as Mappers from "./models/mappers";
@@ -55,7 +55,7 @@ import {
   PutVMSkusOptionalParams,
   PutVMSkusResponse,
   DeleteVMSkusOptionalParams,
-  DeleteVMSkusResponse
+  DeleteVMSkusResponse,
 } from "./models";
 
 export class HybridContainerServiceClient extends coreClient.ServiceClient {
@@ -72,18 +72,18 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
   constructor(
     credentials: coreAuth.TokenCredential,
     subscriptionId: string,
-    options?: HybridContainerServiceClientOptionalParams
+    options?: HybridContainerServiceClientOptionalParams,
   );
   constructor(
     credentials: coreAuth.TokenCredential,
-    options?: HybridContainerServiceClientOptionalParams
+    options?: HybridContainerServiceClientOptionalParams,
   );
   constructor(
     credentials: coreAuth.TokenCredential,
     subscriptionIdOrOptions?:
       | HybridContainerServiceClientOptionalParams
       | string,
-    options?: HybridContainerServiceClientOptionalParams
+    options?: HybridContainerServiceClientOptionalParams,
   ) {
     if (credentials === undefined) {
       throw new Error("'credentials' cannot be null");
@@ -103,10 +103,10 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
     }
     const defaults: HybridContainerServiceClientOptionalParams = {
       requestContentType: "application/json; charset=utf-8",
-      credential: credentials
+      credential: credentials,
     };
 
-    const packageDetails = `azsdk-js-arm-hybridcontainerservice/1.0.1`;
+    const packageDetails = `azsdk-js-arm-hybridcontainerservice/2.0.0`;
     const userAgentPrefix =
       options.userAgentOptions && options.userAgentOptions.userAgentPrefix
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
@@ -116,20 +116,21 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
       ...defaults,
       ...options,
       userAgentOptions: {
-        userAgentPrefix
+        userAgentPrefix,
       },
       endpoint:
-        options.endpoint ?? options.baseUri ?? "https://management.azure.com"
+        options.endpoint ?? options.baseUri ?? "https://management.azure.com",
     };
     super(optionsWithDefaults);
 
     let bearerTokenAuthenticationPolicyFound: boolean = false;
     if (options?.pipeline && options.pipeline.getOrderedPolicies().length > 0) {
-      const pipelinePolicies: coreRestPipeline.PipelinePolicy[] = options.pipeline.getOrderedPolicies();
+      const pipelinePolicies: coreRestPipeline.PipelinePolicy[] =
+        options.pipeline.getOrderedPolicies();
       bearerTokenAuthenticationPolicyFound = pipelinePolicies.some(
         (pipelinePolicy) =>
           pipelinePolicy.name ===
-          coreRestPipeline.bearerTokenAuthenticationPolicyName
+          coreRestPipeline.bearerTokenAuthenticationPolicyName,
       );
     }
     if (
@@ -139,7 +140,7 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
       !bearerTokenAuthenticationPolicyFound
     ) {
       this.pipeline.removePolicy({
-        name: coreRestPipeline.bearerTokenAuthenticationPolicyName
+        name: coreRestPipeline.bearerTokenAuthenticationPolicyName,
       });
       this.pipeline.addPolicy(
         coreRestPipeline.bearerTokenAuthenticationPolicy({
@@ -149,9 +150,9 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
             `${optionsWithDefaults.endpoint}/.default`,
           challengeCallbacks: {
             authorizeRequestOnChallenge:
-              coreClient.authorizeRequestOnClaimChallenge
-          }
-        })
+              coreClient.authorizeRequestOnClaimChallenge,
+          },
+        }),
       );
     }
     // Parameter assignments
@@ -160,14 +161,13 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
     this.apiVersion = options.apiVersion || "2024-01-01";
+    this.kubernetesVersions = new KubernetesVersionsImpl(this);
     this.provisionedClusterInstances = new ProvisionedClusterInstancesImpl(
-      this
-    );
-    this.hybridIdentityMetadataOperations = new HybridIdentityMetadataOperationsImpl(
-      this
+      this,
     );
     this.agentPoolOperations = new AgentPoolOperationsImpl(this);
-    this.kubernetesVersions = new KubernetesVersionsImpl(this);
+    this.hybridIdentityMetadataOperations =
+      new HybridIdentityMetadataOperationsImpl(this);
     this.vMSkus = new VMSkusImpl(this);
     this.operations = new OperationsImpl(this);
     this.virtualNetworks = new VirtualNetworksImpl(this);
@@ -183,7 +183,7 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
       name: "CustomApiVersionPolicy",
       async sendRequest(
         request: PipelineRequest,
-        next: SendRequest
+        next: SendRequest,
       ): Promise<PipelineResponse> {
         const param = request.url.split("?");
         if (param.length > 1) {
@@ -197,39 +197,37 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
           request.url = param[0] + "?" + newParams.join("&");
         }
         return next(request);
-      }
+      },
     };
     this.pipeline.addPolicy(apiVersionPolicy);
   }
 
   /**
    * Lists the supported kubernetes versions for the specified custom location
-   * @param customLocationResourceUri The fully qualified Azure Resource Manager identifier of the custom
-   *                                  location resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param options The options parameters.
    */
   getKubernetesVersions(
-    customLocationResourceUri: string,
-    options?: GetKubernetesVersionsOptionalParams
+    resourceUri: string,
+    options?: GetKubernetesVersionsOptionalParams,
   ): Promise<GetKubernetesVersionsResponse> {
     return this.sendOperationRequest(
-      { customLocationResourceUri, options },
-      getKubernetesVersionsOperationSpec
+      { resourceUri, options },
+      getKubernetesVersionsOperationSpec,
     );
   }
 
   /**
    * Puts the default kubernetes version resource type (one time operation, before listing the kubernetes
    * versions)
-   * @param customLocationResourceUri The fully qualified Azure Resource Manager identifier of the custom
-   *                                  location resource.
-   * @param kubernetesVersions Kubernetes Versions resource definition
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   async beginPutKubernetesVersions(
-    customLocationResourceUri: string,
-    kubernetesVersions: KubernetesVersionProfile,
-    options?: PutKubernetesVersionsOptionalParams
+    resourceUri: string,
+    resource: KubernetesVersionProfile,
+    options?: PutKubernetesVersionsOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<PutKubernetesVersionsResponse>,
@@ -238,21 +236,20 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ): Promise<PutKubernetesVersionsResponse> => {
       return this.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
       const providedCallback = args.options?.onResponse;
       const callback: coreClient.RawResponseCallback = (
         rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
+        flatResponse: unknown,
       ) => {
         currentRawResponse = rawResponse;
         providedCallback?.(rawResponse, flatResponse);
@@ -261,8 +258,8 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
         ...args,
         options: {
           ...args.options,
-          onResponse: callback
-        }
+          onResponse: callback,
+        },
       };
       const flatResponse = await directSendOperation(updatedArgs, spec);
       return {
@@ -270,15 +267,15 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
         rawResponse: {
           statusCode: currentRawResponse!.status,
           body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
+          headers: currentRawResponse!.headers.toJSON(),
+        },
       };
     };
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { customLocationResourceUri, kubernetesVersions, options },
-      spec: putKubernetesVersionsOperationSpec
+      args: { resourceUri, resource, options },
+      spec: putKubernetesVersionsOperationSpec,
     });
     const poller = await createHttpPoller<
       PutKubernetesVersionsResponse,
@@ -286,7 +283,7 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "azure-async-operation",
     });
     await poller.poll();
     return poller;
@@ -295,33 +292,31 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
   /**
    * Puts the default kubernetes version resource type (one time operation, before listing the kubernetes
    * versions)
-   * @param customLocationResourceUri The fully qualified Azure Resource Manager identifier of the custom
-   *                                  location resource.
-   * @param kubernetesVersions Kubernetes Versions resource definition
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   async beginPutKubernetesVersionsAndWait(
-    customLocationResourceUri: string,
-    kubernetesVersions: KubernetesVersionProfile,
-    options?: PutKubernetesVersionsOptionalParams
+    resourceUri: string,
+    resource: KubernetesVersionProfile,
+    options?: PutKubernetesVersionsOptionalParams,
   ): Promise<PutKubernetesVersionsResponse> {
     const poller = await this.beginPutKubernetesVersions(
-      customLocationResourceUri,
-      kubernetesVersions,
-      options
+      resourceUri,
+      resource,
+      options,
     );
     return poller.pollUntilDone();
   }
 
   /**
    * Delete the default kubernetes versions resource type
-   * @param customLocationResourceUri The fully qualified Azure Resource Manager identifier of the custom
-   *                                  location resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param options The options parameters.
    */
   async beginDeleteKubernetesVersions(
-    customLocationResourceUri: string,
-    options?: DeleteKubernetesVersionsOptionalParams
+    resourceUri: string,
+    options?: DeleteKubernetesVersionsOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<DeleteKubernetesVersionsResponse>,
@@ -330,21 +325,20 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ): Promise<DeleteKubernetesVersionsResponse> => {
       return this.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
       const providedCallback = args.options?.onResponse;
       const callback: coreClient.RawResponseCallback = (
         rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
+        flatResponse: unknown,
       ) => {
         currentRawResponse = rawResponse;
         providedCallback?.(rawResponse, flatResponse);
@@ -353,8 +347,8 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
         ...args,
         options: {
           ...args.options,
-          onResponse: callback
-        }
+          onResponse: callback,
+        },
       };
       const flatResponse = await directSendOperation(updatedArgs, spec);
       return {
@@ -362,15 +356,15 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
         rawResponse: {
           statusCode: currentRawResponse!.status,
           body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
+          headers: currentRawResponse!.headers.toJSON(),
+        },
       };
     };
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { customLocationResourceUri, options },
-      spec: deleteKubernetesVersionsOperationSpec
+      args: { resourceUri, options },
+      spec: deleteKubernetesVersionsOperationSpec,
     });
     const poller = await createHttpPoller<
       DeleteKubernetesVersionsResponse,
@@ -378,7 +372,7 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "location",
     });
     await poller.poll();
     return poller;
@@ -386,68 +380,64 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
 
   /**
    * Delete the default kubernetes versions resource type
-   * @param customLocationResourceUri The fully qualified Azure Resource Manager identifier of the custom
-   *                                  location resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param options The options parameters.
    */
   async beginDeleteKubernetesVersionsAndWait(
-    customLocationResourceUri: string,
-    options?: DeleteKubernetesVersionsOptionalParams
+    resourceUri: string,
+    options?: DeleteKubernetesVersionsOptionalParams,
   ): Promise<DeleteKubernetesVersionsResponse> {
     const poller = await this.beginDeleteKubernetesVersions(
-      customLocationResourceUri,
-      options
+      resourceUri,
+      options,
     );
     return poller.pollUntilDone();
   }
 
   /**
    * Lists the supported VM skus for the specified custom location
-   * @param customLocationResourceUri The fully qualified Azure Resource Manager identifier of the custom
-   *                                  location resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param options The options parameters.
    */
   getVMSkus(
-    customLocationResourceUri: string,
-    options?: GetVMSkusOptionalParams
+    resourceUri: string,
+    options?: GetVMSkusOptionalParams,
   ): Promise<GetVMSkusResponse> {
     return this.sendOperationRequest(
-      { customLocationResourceUri, options },
-      getVMSkusOperationSpec
+      { resourceUri, options },
+      getVMSkusOperationSpec,
     );
   }
 
   /**
    * Puts the default VM skus resource type (one time operation, before listing the VM skus)
-   * @param customLocationResourceUri The fully qualified Azure Resource Manager identifier of the custom
-   *                                  location resource.
-   * @param skus VM SKUs resource definition
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   async beginPutVMSkus(
-    customLocationResourceUri: string,
-    skus: VmSkuProfile,
-    options?: PutVMSkusOptionalParams
+    resourceUri: string,
+    resource: VmSkuProfile,
+    options?: PutVMSkusOptionalParams,
   ): Promise<
     SimplePollerLike<OperationState<PutVMSkusResponse>, PutVMSkusResponse>
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ): Promise<PutVMSkusResponse> => {
       return this.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
       const providedCallback = args.options?.onResponse;
       const callback: coreClient.RawResponseCallback = (
         rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
+        flatResponse: unknown,
       ) => {
         currentRawResponse = rawResponse;
         providedCallback?.(rawResponse, flatResponse);
@@ -456,8 +446,8 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
         ...args,
         options: {
           ...args.options,
-          onResponse: callback
-        }
+          onResponse: callback,
+        },
       };
       const flatResponse = await directSendOperation(updatedArgs, spec);
       return {
@@ -465,15 +455,15 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
         rawResponse: {
           statusCode: currentRawResponse!.status,
           body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
+          headers: currentRawResponse!.headers.toJSON(),
+        },
       };
     };
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { customLocationResourceUri, skus, options },
-      spec: putVMSkusOperationSpec
+      args: { resourceUri, resource, options },
+      spec: putVMSkusOperationSpec,
     });
     const poller = await createHttpPoller<
       PutVMSkusResponse,
@@ -481,7 +471,7 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "azure-async-operation",
     });
     await poller.poll();
     return poller;
@@ -489,53 +479,46 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
 
   /**
    * Puts the default VM skus resource type (one time operation, before listing the VM skus)
-   * @param customLocationResourceUri The fully qualified Azure Resource Manager identifier of the custom
-   *                                  location resource.
-   * @param skus VM SKUs resource definition
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
+   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   async beginPutVMSkusAndWait(
-    customLocationResourceUri: string,
-    skus: VmSkuProfile,
-    options?: PutVMSkusOptionalParams
+    resourceUri: string,
+    resource: VmSkuProfile,
+    options?: PutVMSkusOptionalParams,
   ): Promise<PutVMSkusResponse> {
-    const poller = await this.beginPutVMSkus(
-      customLocationResourceUri,
-      skus,
-      options
-    );
+    const poller = await this.beginPutVMSkus(resourceUri, resource, options);
     return poller.pollUntilDone();
   }
 
   /**
    * Deletes the default VM skus resource type
-   * @param customLocationResourceUri The fully qualified Azure Resource Manager identifier of the custom
-   *                                  location resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param options The options parameters.
    */
   async beginDeleteVMSkus(
-    customLocationResourceUri: string,
-    options?: DeleteVMSkusOptionalParams
+    resourceUri: string,
+    options?: DeleteVMSkusOptionalParams,
   ): Promise<
     SimplePollerLike<OperationState<DeleteVMSkusResponse>, DeleteVMSkusResponse>
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ): Promise<DeleteVMSkusResponse> => {
       return this.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
       const providedCallback = args.options?.onResponse;
       const callback: coreClient.RawResponseCallback = (
         rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
+        flatResponse: unknown,
       ) => {
         currentRawResponse = rawResponse;
         providedCallback?.(rawResponse, flatResponse);
@@ -544,8 +527,8 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
         ...args,
         options: {
           ...args.options,
-          onResponse: callback
-        }
+          onResponse: callback,
+        },
       };
       const flatResponse = await directSendOperation(updatedArgs, spec);
       return {
@@ -553,15 +536,15 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
         rawResponse: {
           statusCode: currentRawResponse!.status,
           body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
+          headers: currentRawResponse!.headers.toJSON(),
+        },
       };
     };
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { customLocationResourceUri, options },
-      spec: deleteVMSkusOperationSpec
+      args: { resourceUri, options },
+      spec: deleteVMSkusOperationSpec,
     });
     const poller = await createHttpPoller<
       DeleteVMSkusResponse,
@@ -569,7 +552,7 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "location",
     });
     await poller.poll();
     return poller;
@@ -577,25 +560,21 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
 
   /**
    * Deletes the default VM skus resource type
-   * @param customLocationResourceUri The fully qualified Azure Resource Manager identifier of the custom
-   *                                  location resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param options The options parameters.
    */
   async beginDeleteVMSkusAndWait(
-    customLocationResourceUri: string,
-    options?: DeleteVMSkusOptionalParams
+    resourceUri: string,
+    options?: DeleteVMSkusOptionalParams,
   ): Promise<DeleteVMSkusResponse> {
-    const poller = await this.beginDeleteVMSkus(
-      customLocationResourceUri,
-      options
-    );
+    const poller = await this.beginDeleteVMSkus(resourceUri, options);
     return poller.pollUntilDone();
   }
 
-  provisionedClusterInstances: ProvisionedClusterInstances;
-  hybridIdentityMetadataOperations: HybridIdentityMetadataOperations;
-  agentPoolOperations: AgentPoolOperations;
   kubernetesVersions: KubernetesVersions;
+  provisionedClusterInstances: ProvisionedClusterInstances;
+  agentPoolOperations: AgentPoolOperations;
+  hybridIdentityMetadataOperations: HybridIdentityMetadataOperations;
   vMSkus: VMSkus;
   operations: Operations;
   virtualNetworks: VirtualNetworks;
@@ -604,148 +583,142 @@ export class HybridContainerServiceClient extends coreClient.ServiceClient {
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const getKubernetesVersionsOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/{customLocationResourceUri}/providers/Microsoft.HybridContainerService/kubernetesVersions/default",
+  path: "/{resourceUri}/providers/Microsoft.HybridContainerService/kubernetesVersions/default",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.KubernetesVersionProfile
+      bodyMapper: Mappers.KubernetesVersionProfile,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.$host, Parameters.customLocationResourceUri],
+  urlParameters: [Parameters.$host, Parameters.resourceUri],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const putKubernetesVersionsOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/{customLocationResourceUri}/providers/Microsoft.HybridContainerService/kubernetesVersions/default",
+  path: "/{resourceUri}/providers/Microsoft.HybridContainerService/kubernetesVersions/default",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.KubernetesVersionProfile
+      bodyMapper: Mappers.KubernetesVersionProfile,
     },
     201: {
-      bodyMapper: Mappers.KubernetesVersionProfile
+      bodyMapper: Mappers.KubernetesVersionProfile,
     },
     202: {
-      bodyMapper: Mappers.KubernetesVersionProfile
+      bodyMapper: Mappers.KubernetesVersionProfile,
     },
     204: {
-      bodyMapper: Mappers.KubernetesVersionProfile
+      bodyMapper: Mappers.KubernetesVersionProfile,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
-  requestBody: Parameters.kubernetesVersions,
+  requestBody: Parameters.resource,
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.$host, Parameters.customLocationResourceUri],
+  urlParameters: [Parameters.$host, Parameters.resourceUri],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
+  serializer,
 };
 const deleteKubernetesVersionsOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/{customLocationResourceUri}/providers/Microsoft.HybridContainerService/kubernetesVersions/default",
+  path: "/{resourceUri}/providers/Microsoft.HybridContainerService/kubernetesVersions/default",
   httpMethod: "DELETE",
   responses: {
     200: {
       headersMapper:
-        Mappers.HybridContainerServiceClientDeleteKubernetesVersionsHeaders
+        Mappers.HybridContainerServiceClientDeleteKubernetesVersionsHeaders,
     },
     201: {
       headersMapper:
-        Mappers.HybridContainerServiceClientDeleteKubernetesVersionsHeaders
+        Mappers.HybridContainerServiceClientDeleteKubernetesVersionsHeaders,
     },
     202: {
       headersMapper:
-        Mappers.HybridContainerServiceClientDeleteKubernetesVersionsHeaders
+        Mappers.HybridContainerServiceClientDeleteKubernetesVersionsHeaders,
     },
     204: {
       headersMapper:
-        Mappers.HybridContainerServiceClientDeleteKubernetesVersionsHeaders
+        Mappers.HybridContainerServiceClientDeleteKubernetesVersionsHeaders,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.$host, Parameters.customLocationResourceUri],
+  urlParameters: [Parameters.$host, Parameters.resourceUri],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const getVMSkusOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/{customLocationResourceUri}/providers/Microsoft.HybridContainerService/skus/default",
+  path: "/{resourceUri}/providers/Microsoft.HybridContainerService/skus/default",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.VmSkuProfile
+      bodyMapper: Mappers.VmSkuProfile,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.$host, Parameters.customLocationResourceUri],
+  urlParameters: [Parameters.$host, Parameters.resourceUri],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const putVMSkusOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/{customLocationResourceUri}/providers/Microsoft.HybridContainerService/skus/default",
+  path: "/{resourceUri}/providers/Microsoft.HybridContainerService/skus/default",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.VmSkuProfile
+      bodyMapper: Mappers.VmSkuProfile,
     },
     201: {
-      bodyMapper: Mappers.VmSkuProfile
+      bodyMapper: Mappers.VmSkuProfile,
     },
     202: {
-      bodyMapper: Mappers.VmSkuProfile
+      bodyMapper: Mappers.VmSkuProfile,
     },
     204: {
-      bodyMapper: Mappers.VmSkuProfile
+      bodyMapper: Mappers.VmSkuProfile,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
-  requestBody: Parameters.skus,
+  requestBody: Parameters.resource1,
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.$host, Parameters.customLocationResourceUri],
+  urlParameters: [Parameters.$host, Parameters.resourceUri],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
+  serializer,
 };
 const deleteVMSkusOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/{customLocationResourceUri}/providers/Microsoft.HybridContainerService/skus/default",
+  path: "/{resourceUri}/providers/Microsoft.HybridContainerService/skus/default",
   httpMethod: "DELETE",
   responses: {
     200: {
-      headersMapper: Mappers.HybridContainerServiceClientDeleteVMSkusHeaders
+      headersMapper: Mappers.HybridContainerServiceClientDeleteVMSkusHeaders,
     },
     201: {
-      headersMapper: Mappers.HybridContainerServiceClientDeleteVMSkusHeaders
+      headersMapper: Mappers.HybridContainerServiceClientDeleteVMSkusHeaders,
     },
     202: {
-      headersMapper: Mappers.HybridContainerServiceClientDeleteVMSkusHeaders
+      headersMapper: Mappers.HybridContainerServiceClientDeleteVMSkusHeaders,
     },
     204: {
-      headersMapper: Mappers.HybridContainerServiceClientDeleteVMSkusHeaders
+      headersMapper: Mappers.HybridContainerServiceClientDeleteVMSkusHeaders,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.$host, Parameters.customLocationResourceUri],
+  urlParameters: [Parameters.$host, Parameters.resourceUri],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };

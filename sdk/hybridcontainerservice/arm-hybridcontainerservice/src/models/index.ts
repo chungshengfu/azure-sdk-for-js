@@ -8,233 +8,60 @@
 
 import * as coreClient from "@azure/core-client";
 
-/** Properties of the provisioned cluster. */
-export interface ProvisionedClusterProperties {
-  /** The profile for Linux VMs in the provisioned cluster. */
-  linuxProfile?: LinuxProfileProperties;
-  /** The profile for control plane of the provisioned cluster. */
-  controlPlane?: ControlPlaneProfile;
-  /** The version of Kubernetes in use by the provisioned cluster. */
-  kubernetesVersion?: string;
-  /** The network configuration profile for the provisioned cluster. */
-  networkProfile?: NetworkProfile;
-  /** The storage configuration profile for the provisioned cluster. */
-  storageProfile?: StorageProfile;
-  /** The SSH restricted access profile for the VMs in the provisioned cluster. */
-  clusterVMAccessProfile?: ClusterVMAccessProfile;
-  /** The agent pool properties for the provisioned cluster. */
-  agentPoolProfiles?: NamedAgentPoolProfile[];
-  /** The profile for the underlying cloud infrastructure provider for the provisioned cluster. */
-  cloudProviderProfile?: CloudProviderProfile;
+/** The response of a KubernetesVersionProfile list operation. */
+export interface KubernetesVersionProfileListResult {
+  /** The KubernetesVersionProfile items on this page */
+  value: KubernetesVersionProfile[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** Kubernetes version profile for given major.minor release */
+export interface KubernetesVersionProperties {
   /**
-   * The status of the latest long running operation for the provisioned cluster.
+   * major.minor version of Kubernetes release
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly provisioningState?: ResourceProvisioningState;
+  readonly version?: string;
   /**
-   * The observed status of the provisioned cluster.
+   * Whether this version is in preview mode.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly status?: ProvisionedClusterPropertiesStatus;
-  /** The license profile of the provisioned cluster. */
-  licenseProfile?: ProvisionedClusterLicenseProfile;
-  /** Parameters to be applied to the cluster-autoscaler when auto scaling is enabled for the provisioned cluster. */
-  autoScalerProfile?: ProvisionedClusterPropertiesAutoScalerProfile;
+  readonly isPreview?: boolean;
+  /**
+   * Patch versions of a Kubernetes release
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly patchVersions?: { [propertyName: string]: KubernetesPatchVersions };
 }
 
-/** SSH profile for control plane and nodepool VMs of the provisioned cluster. */
-export interface LinuxProfileProperties {
-  /** SSH configuration for VMs of the provisioned cluster. */
-  ssh?: LinuxProfilePropertiesSsh;
+/** Kubernetes Patch Version profile */
+export interface KubernetesPatchVersions {
+  /** Indicates whether the kubernetes version image is ready or not */
+  readiness?: KubernetesVersionReadiness[];
+  /** Possible upgrade paths for given patch version */
+  upgrades?: string[];
 }
 
-/** SSH configuration for VMs of the provisioned cluster. */
-export interface LinuxProfilePropertiesSsh {
-  /** The list of SSH public keys used to authenticate with VMs. A maximum of 1 key may be specified. */
-  publicKeys?: LinuxProfilePropertiesSshPublicKeysItem[];
-}
-
-export interface LinuxProfilePropertiesSshPublicKeysItem {
-  /** Certificate public key used to authenticate with VMs through SSH. The certificate must be in PEM format with or without headers. */
-  keyData?: string;
-}
-
-/** The properties of the control plane nodes of the provisioned cluster */
-export interface ControlPlaneProfile {
-  /** Number of control plane nodes. The default value is 1, and the count should be an odd number */
-  count?: number;
-  /** VM sku size of the control plane nodes */
-  vmSize?: string;
-  /** IP Address of the Kubernetes API server */
-  controlPlaneEndpoint?: ControlPlaneProfileControlPlaneEndpoint;
-}
-
-/** IP Address of the Kubernetes API server */
-export interface ControlPlaneProfileControlPlaneEndpoint {
-  /** IP address of the Kubernetes API server */
-  hostIP?: string;
-}
-
-/** The network configuration profile for the provisioned cluster. */
-export interface NetworkProfile {
-  /** Profile of the HA Proxy load balancer. */
-  loadBalancerProfile?: NetworkProfileLoadBalancerProfile;
-  /** Network policy used for building Kubernetes network. Possible values include: 'calico'. */
-  networkPolicy?: NetworkPolicy;
-  /** A CIDR notation IP Address range from which to assign pod IPs. */
-  podCidr?: string;
-}
-
-/** Profile of the HA Proxy load balancer. */
-export interface NetworkProfileLoadBalancerProfile {
-  /** Number of HA Proxy load balancer VMs. The default value is 0. */
-  count?: number;
-}
-
-/** The storage configuration profile for the provisioned cluster. */
-export interface StorageProfile {
-  /** SMB CSI Driver settings for the storage profile. */
-  smbCsiDriver?: StorageProfileSmbCSIDriver;
-  /** NFS CSI Driver settings for the storage profile. */
-  nfsCsiDriver?: StorageProfileNfsCSIDriver;
-}
-
-/** SMB CSI Driver settings for the storage profile. */
-export interface StorageProfileSmbCSIDriver {
-  /** Indicates whether to enable SMB CSI Driver. The default value is true. */
-  enabled?: boolean;
-}
-
-/** NFS CSI Driver settings for the storage profile. */
-export interface StorageProfileNfsCSIDriver {
-  /** Indicates whether to enable NFS CSI Driver. The default value is true. */
-  enabled?: boolean;
-}
-
-/** The SSH restricted access profile for the VMs in the provisioned cluster. */
-export interface ClusterVMAccessProfile {
-  /** IP Address or CIDR for SSH access to VMs in the provisioned cluster */
-  authorizedIPRanges?: string;
-}
-
-/** Profile for agent pool properties specified during creation */
-export interface AgentPoolProfile {
-  /** The particular KubernetesVersion Image OS Type (Linux, Windows) */
-  osType?: OsType;
+/** Indicates whether the kubernetes version image is ready or not */
+export interface KubernetesVersionReadiness {
+  /**
+   * The particular KubernetesVersion Image OS Type (Linux, Windows)
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly osType?: OsType;
   /** Specifies the OS SKU used by the agent pool. The default is CBLMariner if OSType is Linux. The default is Windows2019 when OSType is Windows. */
-  osSKU?: Ossku;
-  /** The node labels to be persisted across all nodes in agent pool. */
-  nodeLabels?: { [propertyName: string]: string };
-  /** Taints added to new nodes during node pool create and scale. For example, key=value:NoSchedule. */
-  nodeTaints?: string[];
-  /** The maximum number of nodes for auto-scaling */
-  maxCount?: number;
-  /** The minimum number of nodes for auto-scaling */
-  minCount?: number;
-  /** Whether to enable auto-scaler. Default value is false */
-  enableAutoScaling?: boolean;
-  /** The maximum number of pods that can run on a node. */
-  maxPods?: number;
-}
-
-/** Profile for agent pool properties that can be updated */
-export interface AgentPoolUpdateProfile {
-  /** Number of nodes in the agent pool. The default value is 1. */
-  count?: number;
-  /** The VM sku size of the agent pool node VMs. */
-  vmSize?: string;
+  osSku?: Ossku;
   /**
-   * Version of Kubernetes in use by the agent pool. This is inherited from the kubernetesVersion of the provisioned cluster.
+   * Whether the kubernetes version image is ready or not
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly kubernetesVersion?: string;
-}
-
-/** Name of the default Agent Pool */
-export interface AgentPoolName {
-  /** Unique name of the default agent pool in the context of the provisioned cluster. Default value is <clusterName>-nodepool1 */
-  name?: string;
-}
-
-/** The profile for the underlying cloud infrastructure provider for the provisioned cluster. */
-export interface CloudProviderProfile {
-  /** The profile for the infrastructure networks used by the provisioned cluster */
-  infraNetworkProfile?: CloudProviderProfileInfraNetworkProfile;
-}
-
-/** The profile for the infrastructure networks used by the provisioned cluster */
-export interface CloudProviderProfileInfraNetworkProfile {
-  /** List of ARM resource Ids (maximum 1) for the infrastructure network object e.g. /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/logicalNetworks/{logicalNetworkName} */
-  vnetSubnetIds?: string[];
-}
-
-/** The observed status of the provisioned cluster. */
-export interface ProvisionedClusterPropertiesStatus {
-  /** The detailed status of the provisioned cluster components including addons. */
-  controlPlaneStatus?: AddonStatusProfile[];
+  readonly ready?: boolean;
   /**
-   * The current state of the provisioned cluster.
+   * The error message for version not being ready
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly currentState?: ResourceProvisioningState;
-  /** Error messages during a provisioned cluster operation or steady state. */
-  errorMessage?: string;
-}
-
-/** The status profile of the addons and other kubernetes components */
-export interface AddonStatusProfile {
-  /** Name of the addon or component */
-  name?: string;
-  /** Observed phase of the addon or component on the provisioned cluster. Possible values include: 'pending', 'provisioning', 'provisioning {HelmChartInstalled}', 'provisioning {MSICertificateDownloaded}', 'provisioned', 'deleting', 'failed', 'upgrading' */
-  phase?: AddonPhase;
-  /** Indicates whether the addon or component is ready */
-  ready?: boolean;
-  /** Observed error message from the addon or component */
-  errorMessage?: string;
-}
-
-/** The license profile of the provisioned cluster. */
-export interface ProvisionedClusterLicenseProfile {
-  /** Indicates whether Azure Hybrid Benefit is opted in. Default value is false */
-  azureHybridBenefit?: AzureHybridBenefit;
-}
-
-/** Parameters to be applied to the cluster-autoscaler when auto scaling is enabled for the provisioned cluster. */
-export interface ProvisionedClusterPropertiesAutoScalerProfile {
-  /** Valid values are 'true' and 'false' */
-  balanceSimilarNodeGroups?: string;
-  /** If not specified, the default is 'random'. See [expanders](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#what-are-expanders) for more information. */
-  expander?: Expander;
-  /** The default is 10. */
-  maxEmptyBulkDelete?: string;
-  /** The default is 600. */
-  maxGracefulTerminationSec?: string;
-  /** The default is '15m'. Values must be an integer followed by an 'm'. No unit of time other than minutes (m) is supported. */
-  maxNodeProvisionTime?: string;
-  /** The default is 45. The maximum is 100 and the minimum is 0. */
-  maxTotalUnreadyPercentage?: string;
-  /** For scenarios like burst/batch scale where you don't want CA to act before the kubernetes scheduler could schedule all the pods, you can tell CA to ignore unscheduled pods before they're a certain age. The default is '0s'. Values must be an integer followed by a unit ('s' for seconds, 'm' for minutes, 'h' for hours, etc). */
-  newPodScaleUpDelay?: string;
-  /** This must be an integer. The default is 3. */
-  okTotalUnreadyCount?: string;
-  /** The default is '10'. Values must be an integer number of seconds. */
-  scanInterval?: string;
-  /** The default is '10m'. Values must be an integer followed by an 'm'. No unit of time other than minutes (m) is supported. */
-  scaleDownDelayAfterAdd?: string;
-  /** The default is the scan-interval. Values must be an integer followed by an 'm'. No unit of time other than minutes (m) is supported. */
-  scaleDownDelayAfterDelete?: string;
-  /** The default is '3m'. Values must be an integer followed by an 'm'. No unit of time other than minutes (m) is supported. */
-  scaleDownDelayAfterFailure?: string;
-  /** The default is '10m'. Values must be an integer followed by an 'm'. No unit of time other than minutes (m) is supported. */
-  scaleDownUnneededTime?: string;
-  /** The default is '20m'. Values must be an integer followed by an 'm'. No unit of time other than minutes (m) is supported. */
-  scaleDownUnreadyTime?: string;
-  /** The default is '0.5'. */
-  scaleDownUtilizationThreshold?: string;
-  /** The default is true. */
-  skipNodesWithLocalStorage?: string;
-  /** The default is true. */
-  skipNodesWithSystemPods?: string;
+  readonly errorMessage?: string;
 }
 
 /** Extended location pointing to the underlying infrastructure */
@@ -334,83 +161,207 @@ export interface ErrorAdditionalInfo {
   readonly info?: Record<string, unknown>;
 }
 
-/** Lists the ProvisionedClusterInstance resource associated with the ConnectedCluster. */
+/** The response of a ProvisionedCluster list operation. */
 export interface ProvisionedClusterListResult {
-  value?: ProvisionedCluster[];
+  /** The ProvisionedCluster items on this page */
+  value: ProvisionedCluster[];
+  /** The link to the next page of items */
   nextLink?: string;
 }
 
-/** Control plane and agent pool upgrade profiles. */
-export interface ProvisionedClusterUpgradeProfileProperties {
-  /**
-   * Provisioning state of the resource
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: ResourceProvisioningState;
-  /** The list of available kubernetes version upgrades for the control plane. */
-  controlPlaneProfile: ProvisionedClusterPoolUpgradeProfile;
+/** SSH profile for control plane and nodepool VMs of the provisioned cluster. */
+export interface LinuxProfileProperties {
+  /** SSH configuration for VMs of the provisioned cluster. */
+  ssh?: LinuxProfilePropertiesSsh;
 }
 
-/** The list of available kubernetes versions for upgrade. */
-export interface ProvisionedClusterPoolUpgradeProfile {
+/** SSH configuration for VMs of the provisioned cluster. */
+export interface LinuxProfilePropertiesSsh {
+  /** The list of SSH public keys used to authenticate with VMs. A maximum of 1 key may be specified. */
+  publicKeys?: LinuxProfilePropertiesSshPublicKeysItem[];
+}
+
+export interface LinuxProfilePropertiesSshPublicKeysItem {
+  /** Certificate public key used to authenticate with VMs through SSH. The certificate must be in PEM format with or without headers. */
+  keyData?: string;
+}
+
+/** The properties of the control plane nodes of the provisioned cluster */
+export interface ControlPlaneProfile {
+  /** Number of control plane nodes. The default value is 1, and the count should be an odd number */
+  count?: number;
+  /** VM sku size of the control plane nodes */
+  vmSize?: string;
+  /** IP Address of the Kubernetes API server */
+  controlPlaneEndpoint?: ControlPlaneProfileControlPlaneEndpoint;
+}
+
+/** IP Address of the Kubernetes API server */
+export interface ControlPlaneProfileControlPlaneEndpoint {
+  /** IP address of the Kubernetes API server */
+  hostIP?: string;
+}
+
+/** The network configuration profile for the provisioned cluster. */
+export interface NetworkProfile {
+  /** Profile of the HA Proxy load balancer. */
+  loadBalancerProfile?: NetworkProfileLoadBalancerProfile;
+  /** Network policy used for building Kubernetes network. Possible values include: 'calico'. */
+  networkPolicy?: NetworkPolicy;
+  /** A CIDR notation IP Address range from which to assign pod IPs. */
+  podCidr?: string;
+}
+
+/** Profile of the HA Proxy load balancer. */
+export interface NetworkProfileLoadBalancerProfile {
+  /** Number of HA Proxy load balancer VMs. The default value is 0. */
+  count?: number;
+}
+
+/** The storage configuration profile for the provisioned cluster. */
+export interface StorageProfile {
+  /** SMB CSI Driver settings for the storage profile. */
+  smbCsiDriver?: StorageProfileSmbCSIDriver;
+  /** NFS CSI Driver settings for the storage profile. */
+  nfsCsiDriver?: StorageProfileNfsCSIDriver;
+}
+
+/** SMB CSI Driver settings for the storage profile. */
+export interface StorageProfileSmbCSIDriver {
+  /** Indicates whether to enable SMB CSI Driver. The default value is true. */
+  enabled?: boolean;
+}
+
+/** NFS CSI Driver settings for the storage profile. */
+export interface StorageProfileNfsCSIDriver {
+  /** Indicates whether to enable NFS CSI Driver. The default value is true. */
+  enabled?: boolean;
+}
+
+/** The SSH restricted access profile for the VMs in the provisioned cluster. */
+export interface ClusterVMAccessProfile {
+  /** IP Address or CIDR for SSH access to VMs in the provisioned cluster */
+  authorizedIPRanges?: string;
+}
+
+/** Profile of the default agent pool along with a name parameter */
+export interface NamedAgentPoolProfile {
+  /** The particular KubernetesVersion Image OS Type (Linux, Windows) */
+  osType?: OsType;
+  /** Specifies the OS SKU used by the agent pool. The default is CBLMariner if OSType is Linux. The default is Windows2019 when OSType is Windows. */
+  osSKU?: Ossku;
+  /** The node labels to be persisted across all nodes in agent pool. */
+  nodeLabels?: { [propertyName: string]: string };
+  /** Taints added to new nodes during node pool create and scale. For example, key=value:NoSchedule. */
+  nodeTaints?: string[];
+  /** The maximum number of nodes for auto-scaling */
+  maxCount?: number;
+  /** The minimum number of nodes for auto-scaling */
+  minCount?: number;
+  /** Whether to enable auto-scaler. Default value is false */
+  enableAutoScaling?: boolean;
+  /** The maximum number of pods that can run on a node. */
+  maxPods?: number;
+  /** Number of nodes in the agent pool. The default value is 1. */
+  count?: number;
+  /** The VM sku size of the agent pool node VMs. */
+  vmSize?: string;
   /**
-   * The Kubernetes version (major.minor.patch).
+   * Version of Kubernetes in use by the agent pool. This is inherited from the kubernetesVersion of the provisioned cluster.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly kubernetesVersion?: string;
-  /**
-   * The particular KubernetesVersion Image OS Type (Linux, Windows)
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly osType?: OsType;
-  /** List of available kubernetes versions for upgrade. */
-  upgrades?: ProvisionedClusterPoolUpgradeProfileProperties[];
+  /** Unique name of the default agent pool in the context of the provisioned cluster. Default value is <clusterName>-nodepool1 */
+  name?: string;
 }
 
-/** The upgrade properties. */
-export interface ProvisionedClusterPoolUpgradeProfileProperties {
-  /**
-   * The Kubernetes version (major.minor.patch).
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly kubernetesVersion?: string;
-  /**
-   * Whether the Kubernetes version is currently in preview.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly isPreview?: boolean;
+/** The profile for the underlying cloud infrastructure provider for the provisioned cluster. */
+export interface CloudProviderProfile {
+  /** The profile for the infrastructure networks used by the provisioned cluster */
+  infraNetworkProfile?: CloudProviderProfileInfraNetworkProfile;
 }
 
-/** Defines the resource properties for the hybrid identity metadata. */
-export interface HybridIdentityMetadataProperties {
-  /** Unique id of the parent provisioned cluster resource. */
-  resourceUid?: string;
-  /** Onboarding public key for provisioning the Managed identity for the connected cluster. */
-  publicKey?: string;
-  /**
-   * Provisioning state of the resource
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: ResourceProvisioningState;
+/** The profile for the infrastructure networks used by the provisioned cluster */
+export interface CloudProviderProfileInfraNetworkProfile {
+  /** List of ARM resource Ids (maximum 1) for the infrastructure network object e.g. /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/logicalNetworks/{logicalNetworkName} */
+  vnetSubnetIds?: string[];
 }
 
-/** List of hybridIdentityMetadata. */
-export interface HybridIdentityMetadataList {
-  /** Url to follow for getting next page of hybridIdentityMetadata. */
+/** The observed status of the provisioned cluster. */
+export interface ProvisionedClusterPropertiesStatus {
+  /** The detailed status of the provisioned cluster components including addons. */
+  controlPlaneStatus?: AddonStatusProfile[];
+  /**
+   * The current state of the provisioned cluster.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly currentState?: ResourceProvisioningState;
+  /** Error messages during a provisioned cluster operation or steady state. */
+  errorMessage?: string;
+}
+
+/** The status profile of the addons and other kubernetes components */
+export interface AddonStatusProfile {
+  /** Name of the addon or component */
+  name?: string;
+  /** Observed phase of the addon or component on the provisioned cluster. Possible values include: 'pending', 'provisioning', 'provisioning {HelmChartInstalled}', 'provisioning {MSICertificateDownloaded}', 'provisioned', 'deleting', 'failed', 'upgrading' */
+  phase?: AddonPhase;
+  /** Indicates whether the addon or component is ready */
+  ready?: boolean;
+  /** Observed error message from the addon or component */
+  errorMessage?: string;
+}
+
+/** The license profile of the provisioned cluster. */
+export interface ProvisionedClusterLicenseProfile {
+  /** Indicates whether Azure Hybrid Benefit is opted in. Default value is false */
+  azureHybridBenefit?: AzureHybridBenefit;
+}
+
+/** Parameters to be applied to the cluster-autoscaler when auto scaling is enabled for the provisioned cluster. */
+export interface ProvisionedClusterPropertiesAutoScalerProfile {
+  /** Valid values are 'true' and 'false' */
+  balanceSimilarNodeGroups?: string;
+  /** If not specified, the default is 'random'. See [expanders](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#what-are-expanders) for more information. */
+  expander?: Expander;
+  /** The default is 10. */
+  maxEmptyBulkDelete?: string;
+  /** The default is 600. */
+  maxGracefulTerminationSec?: string;
+  /** The default is '15m'. Values must be an integer followed by an 'm'. No unit of time other than minutes (m) is supported. */
+  maxNodeProvisionTime?: string;
+  /** The default is 45. The maximum is 100 and the minimum is 0. */
+  maxTotalUnreadyPercentage?: string;
+  /** For scenarios like burst/batch scale where you don't want CA to act before the kubernetes scheduler could schedule all the pods, you can tell CA to ignore unscheduled pods before they're a certain age. The default is '0s'. Values must be an integer followed by a unit ('s' for seconds, 'm' for minutes, 'h' for hours, etc). */
+  newPodScaleUpDelay?: string;
+  /** This must be an integer. The default is 3. */
+  okTotalUnreadyCount?: string;
+  /** The default is '10'. Values must be an integer number of seconds. */
+  scanInterval?: string;
+  /** The default is '10m'. Values must be an integer followed by an 'm'. No unit of time other than minutes (m) is supported. */
+  scaleDownDelayAfterAdd?: string;
+  /** The default is the scan-interval. Values must be an integer followed by an 'm'. No unit of time other than minutes (m) is supported. */
+  scaleDownDelayAfterDelete?: string;
+  /** The default is '3m'. Values must be an integer followed by an 'm'. No unit of time other than minutes (m) is supported. */
+  scaleDownDelayAfterFailure?: string;
+  /** The default is '10m'. Values must be an integer followed by an 'm'. No unit of time other than minutes (m) is supported. */
+  scaleDownUnneededTime?: string;
+  /** The default is '20m'. Values must be an integer followed by an 'm'. No unit of time other than minutes (m) is supported. */
+  scaleDownUnreadyTime?: string;
+  /** The default is '0.5'. */
+  scaleDownUtilizationThreshold?: string;
+  /** The default is true. */
+  skipNodesWithLocalStorage?: string;
+  /** The default is true. */
+  skipNodesWithSystemPods?: string;
+}
+
+/** The response of a AgentPool list operation. */
+export interface AgentPoolListResult {
+  /** The AgentPool items on this page */
+  value: AgentPool[];
+  /** The link to the next page of items */
   nextLink?: string;
-  /** Array of hybridIdentityMetadata */
-  value: HybridIdentityMetadata[];
-}
-
-/** The agentPool resource provisioning status definition */
-export interface AgentPoolProvisioningStatus {
-  /**
-   * The status of the latest long running operation for the agent pool.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: ResourceProvisioningState;
-  /** The observed status of the agent pool. */
-  status?: AgentPoolProvisioningStatusStatus;
 }
 
 /** The observed status of the agent pool. */
@@ -425,9 +376,24 @@ export interface AgentPoolProvisioningStatusStatus {
   readyReplicas?: AgentPoolUpdateProfile[];
 }
 
-/** List of all agent pool resources associated with the provisioned cluster. */
-export interface AgentPoolListResult {
-  value?: AgentPool[];
+/** Profile for agent pool properties that can be updated */
+export interface AgentPoolUpdateProfile {
+  /** Number of nodes in the agent pool. The default value is 1. */
+  count?: number;
+  /** The VM sku size of the agent pool node VMs. */
+  vmSize?: string;
+  /**
+   * Version of Kubernetes in use by the agent pool. This is inherited from the kubernetesVersion of the provisioned cluster.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly kubernetesVersion?: string;
+}
+
+/** The response of a HybridIdentityMetadata list operation. */
+export interface HybridIdentityMetadataListResult {
+  /** The HybridIdentityMetadata items on this page */
+  value: HybridIdentityMetadata[];
+  /** The link to the next page of items */
   nextLink?: string;
 }
 
@@ -484,78 +450,42 @@ export interface CredentialResult {
   readonly value?: Uint8Array;
 }
 
-export interface KubernetesVersionProfileProperties {
+/** The list of available kubernetes versions for upgrade. */
+export interface ProvisionedClusterPoolUpgradeProfile {
   /**
-   * Provisioning state of the resource
+   * The Kubernetes version (major.minor.patch).
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly provisioningState?: ResourceProvisioningState;
-  /** List of supported Kubernetes versions */
-  values?: KubernetesVersionProperties[];
-}
-
-/** Kubernetes version profile for given major.minor release */
-export interface KubernetesVersionProperties {
-  /**
-   * major.minor version of Kubernetes release
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly version?: string;
-  /**
-   * Whether this version is in preview mode.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly isPreview?: boolean;
-  /**
-   * Patch versions of a Kubernetes release
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly patchVersions?: { [propertyName: string]: KubernetesPatchVersions };
-}
-
-/** Kubernetes Patch Version profile */
-export interface KubernetesPatchVersions {
-  /** Indicates whether the kubernetes version image is ready or not */
-  readiness?: KubernetesVersionReadiness[];
-  /** Possible upgrade paths for given patch version */
-  upgrades?: string[];
-}
-
-/** Indicates whether the kubernetes version image is ready or not */
-export interface KubernetesVersionReadiness {
+  readonly kubernetesVersion?: string;
   /**
    * The particular KubernetesVersion Image OS Type (Linux, Windows)
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly osType?: OsType;
-  /** Specifies the OS SKU used by the agent pool. The default is CBLMariner if OSType is Linux. The default is Windows2019 when OSType is Windows. */
-  osSku?: Ossku;
-  /**
-   * Whether the kubernetes version image is ready or not
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly ready?: boolean;
-  /**
-   * The error message for version not being ready
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly errorMessage?: string;
+  /** List of available kubernetes versions for upgrade. */
+  upgrades?: ProvisionedClusterPoolUpgradeProfileProperties[];
 }
 
-/** List of supported kubernetes versions. */
-export interface KubernetesVersionProfileList {
-  value?: KubernetesVersionProfile[];
+/** The upgrade properties. */
+export interface ProvisionedClusterPoolUpgradeProfileProperties {
+  /**
+   * The Kubernetes version (major.minor.patch).
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly kubernetesVersion?: string;
+  /**
+   * Whether the Kubernetes version is currently in preview.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly isPreview?: boolean;
+}
+
+/** The response of a VmSkuProfile list operation. */
+export interface VmSkuProfileListResult {
+  /** The VmSkuProfile items on this page */
+  value: VmSkuProfile[];
+  /** The link to the next page of items */
   nextLink?: string;
-}
-
-export interface VmSkuProfileProperties {
-  /**
-   * Provisioning state of the resource
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: ResourceProvisioningState;
-  /** List of supported VM SKUs. */
-  values?: VmSkuProperties[];
 }
 
 /** The profile for supported VM SKUs */
@@ -599,12 +529,6 @@ export interface VmSkuCapabilities {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly value?: string;
-}
-
-/** The list of supported VM SKUs. */
-export interface VmSkuProfileList {
-  value?: VmSkuProfile[];
-  nextLink?: string;
 }
 
 /** A list of REST API operations supported by an Azure Resource Provider. It contains an URL link to get the next set of results. */
@@ -671,28 +595,12 @@ export interface OperationDisplay {
   readonly description?: string;
 }
 
-/** Properties of the virtual network resource */
-export interface VirtualNetworkProperties {
-  infraVnetProfile?: VirtualNetworkPropertiesInfraVnetProfile;
-  /** Range of IP Addresses for Kubernetes API Server and services if using HA Proxy load balancer */
-  vipPool?: VirtualNetworkPropertiesVipPoolItem[];
-  /** Range of IP Addresses for Kubernetes node VMs */
-  vmipPool?: VirtualNetworkPropertiesVmipPoolItem[];
-  /** List of DNS server IP Addresses associated with the network */
-  dnsServers?: string[];
-  /** IP Address of the Gateway associated with the network */
-  gateway?: string;
-  /** IP Address Prefix of the network */
-  ipAddressPrefix?: string;
-  /** VLAN Id used by the network */
-  vlanID?: number;
-  /** NOTE: This property will not be serialized. It can only be populated by the server. */
-  readonly provisioningState?: ProvisioningState;
-  /**
-   * Status of the virtual network resource
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly status?: VirtualNetworkPropertiesStatus;
+/** The response of a VirtualNetwork list operation. */
+export interface VirtualNetworkListResult {
+  /** The VirtualNetwork items on this page */
+  value: VirtualNetwork[];
+  /** The link to the next page of items */
+  nextLink?: string;
 }
 
 export interface VirtualNetworkPropertiesInfraVnetProfile {
@@ -762,10 +670,41 @@ export interface VirtualNetworksPatch {
   tags?: { [propertyName: string]: string };
 }
 
-/** A list of virtual network resources. */
-export interface VirtualNetworksListResult {
-  value?: VirtualNetwork[];
-  nextLink?: string;
+/** Name of the default Agent Pool */
+export interface AgentPoolName {
+  /** Unique name of the default agent pool in the context of the provisioned cluster. Default value is <clusterName>-nodepool1 */
+  name?: string;
+}
+
+/** Profile for agent pool properties specified during creation */
+export interface AgentPoolProfile {
+  /** The particular KubernetesVersion Image OS Type (Linux, Windows) */
+  osType?: OsType;
+  /** Specifies the OS SKU used by the agent pool. The default is CBLMariner if OSType is Linux. The default is Windows2019 when OSType is Windows. */
+  osSKU?: Ossku;
+  /** The node labels to be persisted across all nodes in agent pool. */
+  nodeLabels?: { [propertyName: string]: string };
+  /** Taints added to new nodes during node pool create and scale. For example, key=value:NoSchedule. */
+  nodeTaints?: string[];
+  /** The maximum number of nodes for auto-scaling */
+  maxCount?: number;
+  /** The minimum number of nodes for auto-scaling */
+  minCount?: number;
+  /** Whether to enable auto-scaler. Default value is false */
+  enableAutoScaling?: boolean;
+  /** The maximum number of pods that can run on a node. */
+  maxPods?: number;
+}
+
+/** The agentPool resource provisioning status definition */
+export interface AgentPoolProvisioningStatus {
+  /**
+   * The status of the latest long running operation for the agent pool.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ResourceProvisioningState;
+  /** The observed status of the agent pool. */
+  status?: AgentPoolProvisioningStatusStatus;
 }
 
 /** The profile for Linux VMs in the provisioned cluster. */
@@ -774,17 +713,29 @@ export interface LinuxProfile {
   linuxProfile?: LinuxProfileProperties;
 }
 
-/** Profile of the default agent pool along with a name parameter */
-export interface NamedAgentPoolProfile
-  extends AgentPoolProfile,
-    AgentPoolUpdateProfile,
-    AgentPoolName {}
-
-/** Properties of the agent pool resource */
-export interface AgentPoolProperties
-  extends AgentPoolProfile,
-    AgentPoolUpdateProfile,
-    AgentPoolProvisioningStatus {}
+/** Common fields that are returned in the response for all Azure Resource Manager resources */
+export interface ResourceAutoGenerated {
+  /**
+   * Fully qualified resource ID for the resource. E.g. "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}"
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly id?: string;
+  /**
+   * The name of the resource
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /**
+   * The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly type?: string;
+  /**
+   * Azure Resource Manager metadata containing createdBy and modifiedBy information.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly systemData?: SystemData;
+}
 
 /** The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location */
 export interface ProxyResource extends Resource {}
@@ -797,153 +748,267 @@ export interface TrackedResource extends Resource {
   location: string;
 }
 
-/** The provisioned cluster resource definition. */
-export interface ProvisionedCluster extends ProxyResource {
-  /** Properties of the provisioned cluster. */
-  properties?: ProvisionedClusterProperties;
-  /** Extended location pointing to the underlying infrastructure */
-  extendedLocation?: ExtendedLocation;
-}
-
-/** The list of available kubernetes version upgrades for the provisioned cluster. */
-export interface ProvisionedClusterUpgradeProfile extends ProxyResource {
-  /** The properties of the upgrade profile. */
-  properties: ProvisionedClusterUpgradeProfileProperties;
-}
-
-/** Defines the hybridIdentityMetadata. */
-export interface HybridIdentityMetadata extends ProxyResource {
-  /** Resource properties. */
-  properties: HybridIdentityMetadataProperties;
-}
-
-/** The agentPool resource definition */
-export interface AgentPool extends ProxyResource {
-  /** Properties of the agent pool resource */
-  properties?: AgentPoolProperties;
-  /** Resource tags */
-  tags?: { [propertyName: string]: string };
-  /** Extended location pointing to the underlying infrastructure */
-  extendedLocation?: ExtendedLocation;
-}
-
 /** The supported kubernetes versions. */
 export interface KubernetesVersionProfile extends ProxyResource {
   /** Extended location pointing to the underlying infrastructure */
   extendedLocation?: ExtendedLocation;
-  /** NOTE: This property will not be serialized. It can only be populated by the server. */
-  readonly properties?: KubernetesVersionProfileProperties;
+  /**
+   * Provisioning state of the resource
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ResourceProvisioningState;
+  /** List of supported Kubernetes versions */
+  values?: KubernetesVersionProperties[];
+}
+
+/** The provisioned cluster resource definition. */
+export interface ProvisionedCluster extends ProxyResource {
+  /** Extended location pointing to the underlying infrastructure */
+  extendedLocation?: ExtendedLocation;
+  /** The profile for Linux VMs in the provisioned cluster. */
+  linuxProfile?: LinuxProfileProperties;
+  /** The profile for control plane of the provisioned cluster. */
+  controlPlane?: ControlPlaneProfile;
+  /** The version of Kubernetes in use by the provisioned cluster. */
+  kubernetesVersion?: string;
+  /** The network configuration profile for the provisioned cluster. */
+  networkProfile?: NetworkProfile;
+  /** The storage configuration profile for the provisioned cluster. */
+  storageProfile?: StorageProfile;
+  /** The SSH restricted access profile for the VMs in the provisioned cluster. */
+  clusterVMAccessProfile?: ClusterVMAccessProfile;
+  /** The agent pool properties for the provisioned cluster. */
+  agentPoolProfiles?: NamedAgentPoolProfile[];
+  /** The profile for the underlying cloud infrastructure provider for the provisioned cluster. */
+  cloudProviderProfile?: CloudProviderProfile;
+  /**
+   * The status of the latest long running operation for the provisioned cluster.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ResourceProvisioningState;
+  /**
+   * The observed status of the provisioned cluster.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly status?: ProvisionedClusterPropertiesStatus;
+  /** The license profile of the provisioned cluster. */
+  licenseProfile?: ProvisionedClusterLicenseProfile;
+  /** Parameters to be applied to the cluster-autoscaler when auto scaling is enabled for the provisioned cluster. */
+  autoScalerProfile?: ProvisionedClusterPropertiesAutoScalerProfile;
+}
+
+/** The agentPool resource definition */
+export interface AgentPool extends ProxyResource {
+  /** Extended location pointing to the underlying infrastructure */
+  extendedLocation?: ExtendedLocation;
+  /** The particular KubernetesVersion Image OS Type (Linux, Windows) */
+  osType?: OsType;
+  /** Specifies the OS SKU used by the agent pool. The default is CBLMariner if OSType is Linux. The default is Windows2019 when OSType is Windows. */
+  osSKU?: Ossku;
+  /** The node labels to be persisted across all nodes in agent pool. */
+  nodeLabels?: { [propertyName: string]: string };
+  /** Taints added to new nodes during node pool create and scale. For example, key=value:NoSchedule. */
+  nodeTaints?: string[];
+  /** The maximum number of nodes for auto-scaling */
+  maxCount?: number;
+  /** The minimum number of nodes for auto-scaling */
+  minCount?: number;
+  /** Whether to enable auto-scaler. Default value is false */
+  enableAutoScaling?: boolean;
+  /** The maximum number of pods that can run on a node. */
+  maxPods?: number;
+  /** Number of nodes in the agent pool. The default value is 1. */
+  count?: number;
+  /** The VM sku size of the agent pool node VMs. */
+  vmSize?: string;
+  /**
+   * Version of Kubernetes in use by the agent pool. This is inherited from the kubernetesVersion of the provisioned cluster.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly kubernetesVersion?: string;
+  /**
+   * The status of the latest long running operation for the agent pool.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ResourceProvisioningState;
+  /** The observed status of the agent pool. */
+  status?: AgentPoolProvisioningStatusStatus;
+}
+
+/** Defines the hybridIdentityMetadata. */
+export interface HybridIdentityMetadata extends ProxyResource {
+  /** Unique id of the parent provisioned cluster resource. */
+  resourceUid?: string;
+  /** Onboarding public key for provisioning the Managed identity for the connected cluster. */
+  publicKey?: string;
+  /**
+   * Provisioning state of the resource
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ResourceProvisioningState;
+}
+
+/** The list of available kubernetes version upgrades for the provisioned cluster. */
+export interface ProvisionedClusterUpgradeProfile extends ProxyResource {
+  /**
+   * Provisioning state of the resource
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ResourceProvisioningState;
+  /** The list of available kubernetes version upgrades for the control plane. */
+  controlPlaneProfile?: ProvisionedClusterPoolUpgradeProfile;
 }
 
 /** The list of supported VM SKUs. */
 export interface VmSkuProfile extends ProxyResource {
   /** Extended location pointing to the underlying infrastructure */
   extendedLocation?: ExtendedLocation;
-  /** NOTE: This property will not be serialized. It can only be populated by the server. */
-  readonly properties?: VmSkuProfileProperties;
+  /**
+   * Provisioning state of the resource
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ResourceProvisioningState;
+  /** List of supported VM SKUs. */
+  values?: VmSkuProperties[];
 }
 
 /** The Virtual Network resource definition. */
 export interface VirtualNetwork extends TrackedResource {
-  /** Properties of the virtual network resource */
-  properties?: VirtualNetworkProperties;
   /** Extended location pointing to the underlying infrastructure */
   extendedLocation?: VirtualNetworkExtendedLocation;
+  infraVnetProfile?: VirtualNetworkPropertiesInfraVnetProfile;
+  /** Range of IP Addresses for Kubernetes API Server and services if using HA Proxy load balancer */
+  vipPool?: VirtualNetworkPropertiesVipPoolItem[];
+  /** Range of IP Addresses for Kubernetes node VMs */
+  vmipPool?: VirtualNetworkPropertiesVmipPoolItem[];
+  /** List of DNS server IP Addresses associated with the network */
+  dnsServers?: string[];
+  /** IP Address of the Gateway associated with the network */
+  gateway?: string;
+  /** IP Address Prefix of the network */
+  ipAddressPrefix?: string;
+  /** VLAN Id used by the network */
+  vlanID?: number;
+  /** NOTE: This property will not be serialized. It can only be populated by the server. */
+  readonly provisioningState?: ProvisioningState;
+  /**
+   * Status of the virtual network resource
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly status?: VirtualNetworkPropertiesStatus;
 }
 
-/** Defines headers for ProvisionedClusterInstances_delete operation. */
-export interface ProvisionedClusterInstancesDeleteHeaders {
-  location?: string;
-}
-
-/** Defines headers for ProvisionedClusterInstances_listUserKubeconfig operation. */
-export interface ProvisionedClusterInstancesListUserKubeconfigHeaders {
-  location?: string;
-}
-
-/** Defines headers for ProvisionedClusterInstances_listAdminKubeconfig operation. */
-export interface ProvisionedClusterInstancesListAdminKubeconfigHeaders {
-  location?: string;
-}
-
-/** Defines headers for HybridIdentityMetadata_delete operation. */
-export interface HybridIdentityMetadataDeleteHeaders {
-  location?: string;
-}
-
-/** Defines headers for AgentPool_delete operation. */
-export interface AgentPoolDeleteHeaders {
-  location?: string;
+/** Defines headers for HybridContainerServiceClient_putKubernetesVersions operation. */
+export interface HybridContainerServiceClientPutKubernetesVersionsHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** A link to the status monitor */
+  azureAsyncOperation?: string;
 }
 
 /** Defines headers for HybridContainerServiceClient_deleteKubernetesVersions operation. */
 export interface HybridContainerServiceClientDeleteKubernetesVersionsHeaders {
-  location?: string;
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** A link to the status monitor */
+  azureAsyncOperation?: string;
+}
+
+/** Defines headers for HybridContainerServiceClient_putVMSkus operation. */
+export interface HybridContainerServiceClientPutVMSkusHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** A link to the status monitor */
+  azureAsyncOperation?: string;
 }
 
 /** Defines headers for HybridContainerServiceClient_deleteVMSkus operation. */
 export interface HybridContainerServiceClientDeleteVMSkusHeaders {
-  location?: string;
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** A link to the status monitor */
+  azureAsyncOperation?: string;
+}
+
+/** Defines headers for ProvisionedClusterInstances_createOrUpdate operation. */
+export interface ProvisionedClusterInstancesCreateOrUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** A link to the status monitor */
+  azureAsyncOperation?: string;
+}
+
+/** Defines headers for ProvisionedClusterInstances_delete operation. */
+export interface ProvisionedClusterInstancesDeleteHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** A link to the status monitor */
+  azureAsyncOperation?: string;
+}
+
+/** Defines headers for ProvisionedClusterInstances_listAdminKubeconfig operation. */
+export interface ProvisionedClusterInstancesListAdminKubeconfigHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** A link to the status monitor */
+  azureAsyncOperation?: string;
+}
+
+/** Defines headers for ProvisionedClusterInstances_listUserKubeconfig operation. */
+export interface ProvisionedClusterInstancesListUserKubeconfigHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** A link to the status monitor */
+  azureAsyncOperation?: string;
+}
+
+/** Defines headers for AgentPool_createOrUpdate operation. */
+export interface AgentPoolCreateOrUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** A link to the status monitor */
+  azureAsyncOperation?: string;
+}
+
+/** Defines headers for AgentPool_delete operation. */
+export interface AgentPoolDeleteHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** A link to the status monitor */
+  azureAsyncOperation?: string;
+}
+
+/** Defines headers for HybridIdentityMetadata_delete operation. */
+export interface HybridIdentityMetadataDeleteHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** A link to the status monitor */
+  azureAsyncOperation?: string;
+}
+
+/** Defines headers for VirtualNetworks_createOrUpdate operation. */
+export interface VirtualNetworksCreateOrUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** A link to the status monitor */
+  azureAsyncOperation?: string;
+}
+
+/** Defines headers for VirtualNetworks_update operation. */
+export interface VirtualNetworksUpdateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** A link to the status monitor */
+  azureAsyncOperation?: string;
 }
 
 /** Defines headers for VirtualNetworks_delete operation. */
 export interface VirtualNetworksDeleteHeaders {
-  location?: string;
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+  /** A link to the status monitor */
+  azureAsyncOperation?: string;
 }
-
-/** Known values of {@link NetworkPolicy} that the service accepts. */
-export enum KnownNetworkPolicy {
-  /** Calico */
-  Calico = "calico"
-}
-
-/**
- * Defines values for NetworkPolicy. \
- * {@link KnownNetworkPolicy} can be used interchangeably with NetworkPolicy,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **calico**
- */
-export type NetworkPolicy = string;
-
-/** Known values of {@link OsType} that the service accepts. */
-export enum KnownOsType {
-  /** Windows */
-  Windows = "Windows",
-  /** Linux */
-  Linux = "Linux"
-}
-
-/**
- * Defines values for OsType. \
- * {@link KnownOsType} can be used interchangeably with OsType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Windows** \
- * **Linux**
- */
-export type OsType = string;
-
-/** Known values of {@link Ossku} that the service accepts. */
-export enum KnownOssku {
-  /** Use Mariner as the OS for node images. */
-  CBLMariner = "CBLMariner",
-  /** Use Windows2019 as the OS for node images. */
-  Windows2019 = "Windows2019",
-  /** Use Windows2022 as the OS for node images. */
-  Windows2022 = "Windows2022"
-}
-
-/**
- * Defines values for Ossku. \
- * {@link KnownOssku} can be used interchangeably with Ossku,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **CBLMariner**: Use Mariner as the OS for node images. \
- * **Windows2019**: Use Windows2019 as the OS for node images. \
- * **Windows2022**: Use Windows2022 as the OS for node images.
- */
-export type Ossku = string;
 
 /** Known values of {@link ResourceProvisioningState} that the service accepts. */
 export enum KnownResourceProvisioningState {
@@ -964,7 +1029,7 @@ export enum KnownResourceProvisioningState {
   /** Upgrading */
   Upgrading = "Upgrading",
   /** Accepted */
-  Accepted = "Accepted"
+  Accepted = "Accepted",
 }
 
 /**
@@ -984,6 +1049,99 @@ export enum KnownResourceProvisioningState {
  */
 export type ResourceProvisioningState = string;
 
+/** Known values of {@link OsType} that the service accepts. */
+export enum KnownOsType {
+  /** Windows */
+  Windows = "Windows",
+  /** Linux */
+  Linux = "Linux",
+}
+
+/**
+ * Defines values for OsType. \
+ * {@link KnownOsType} can be used interchangeably with OsType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Windows** \
+ * **Linux**
+ */
+export type OsType = string;
+
+/** Known values of {@link Ossku} that the service accepts. */
+export enum KnownOssku {
+  /** Use Mariner as the OS for node images. */
+  CBLMariner = "CBLMariner",
+  /** Use Windows2019 as the OS for node images. */
+  Windows2019 = "Windows2019",
+  /** Use Windows2022 as the OS for node images. */
+  Windows2022 = "Windows2022",
+}
+
+/**
+ * Defines values for Ossku. \
+ * {@link KnownOssku} can be used interchangeably with Ossku,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **CBLMariner**: Use Mariner as the OS for node images. \
+ * **Windows2019**: Use Windows2019 as the OS for node images. \
+ * **Windows2022**: Use Windows2022 as the OS for node images.
+ */
+export type Ossku = string;
+
+/** Known values of {@link ExtendedLocationTypes} that the service accepts. */
+export enum KnownExtendedLocationTypes {
+  /** CustomLocation */
+  CustomLocation = "CustomLocation",
+}
+
+/**
+ * Defines values for ExtendedLocationTypes. \
+ * {@link KnownExtendedLocationTypes} can be used interchangeably with ExtendedLocationTypes,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **CustomLocation**
+ */
+export type ExtendedLocationTypes = string;
+
+/** Known values of {@link CreatedByType} that the service accepts. */
+export enum KnownCreatedByType {
+  /** User */
+  User = "User",
+  /** Application */
+  Application = "Application",
+  /** ManagedIdentity */
+  ManagedIdentity = "ManagedIdentity",
+  /** Key */
+  Key = "Key",
+}
+
+/**
+ * Defines values for CreatedByType. \
+ * {@link KnownCreatedByType} can be used interchangeably with CreatedByType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **User** \
+ * **Application** \
+ * **ManagedIdentity** \
+ * **Key**
+ */
+export type CreatedByType = string;
+
+/** Known values of {@link NetworkPolicy} that the service accepts. */
+export enum KnownNetworkPolicy {
+  /** Calico */
+  Calico = "calico",
+}
+
+/**
+ * Defines values for NetworkPolicy. \
+ * {@link KnownNetworkPolicy} can be used interchangeably with NetworkPolicy,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **calico**
+ */
+export type NetworkPolicy = string;
+
 /** Known values of {@link AddonPhase} that the service accepts. */
 export enum KnownAddonPhase {
   /** Pending */
@@ -1001,7 +1159,7 @@ export enum KnownAddonPhase {
   /** Failed */
   Failed = "failed",
   /** Upgrading */
-  Upgrading = "upgrading"
+  Upgrading = "upgrading",
 }
 
 /**
@@ -1027,7 +1185,7 @@ export enum KnownAzureHybridBenefit {
   /** False */
   False = "False",
   /** NotApplicable */
-  NotApplicable = "NotApplicable"
+  NotApplicable = "NotApplicable",
 }
 
 /**
@@ -1050,7 +1208,7 @@ export enum KnownExpander {
   /** Selects the node group that has the highest priority assigned by the user. It's configuration is described in more details [here](https:\//github.com\/kubernetes\/autoscaler\/blob\/master\/cluster-autoscaler\/expander\/priority\/readme.md). */
   Priority = "priority",
   /** Used when you don't have a particular need for the node groups to scale differently. */
-  Random = "random"
+  Random = "random",
 }
 
 /**
@@ -1065,45 +1223,6 @@ export enum KnownExpander {
  */
 export type Expander = string;
 
-/** Known values of {@link ExtendedLocationTypes} that the service accepts. */
-export enum KnownExtendedLocationTypes {
-  /** CustomLocation */
-  CustomLocation = "CustomLocation"
-}
-
-/**
- * Defines values for ExtendedLocationTypes. \
- * {@link KnownExtendedLocationTypes} can be used interchangeably with ExtendedLocationTypes,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **CustomLocation**
- */
-export type ExtendedLocationTypes = string;
-
-/** Known values of {@link CreatedByType} that the service accepts. */
-export enum KnownCreatedByType {
-  /** User */
-  User = "User",
-  /** Application */
-  Application = "Application",
-  /** ManagedIdentity */
-  ManagedIdentity = "ManagedIdentity",
-  /** Key */
-  Key = "Key"
-}
-
-/**
- * Defines values for CreatedByType. \
- * {@link KnownCreatedByType} can be used interchangeably with CreatedByType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **User** \
- * **Application** \
- * **ManagedIdentity** \
- * **Key**
- */
-export type CreatedByType = string;
-
 /** Known values of {@link Origin} that the service accepts. */
 export enum KnownOrigin {
   /** User */
@@ -1111,7 +1230,7 @@ export enum KnownOrigin {
   /** System */
   System = "system",
   /** UserSystem */
-  UserSystem = "user,system"
+  UserSystem = "user,system",
 }
 
 /**
@@ -1128,7 +1247,7 @@ export type Origin = string;
 /** Known values of {@link ActionType} that the service accepts. */
 export enum KnownActionType {
   /** Internal */
-  Internal = "Internal"
+  Internal = "Internal",
 }
 
 /**
@@ -1157,7 +1276,7 @@ export enum KnownProvisioningState {
   /** Updating */
   Updating = "Updating",
   /** Accepted */
-  Accepted = "Accepted"
+  Accepted = "Accepted",
 }
 
 /**
@@ -1176,6 +1295,106 @@ export enum KnownProvisioningState {
  */
 export type ProvisioningState = string;
 
+/** Known values of {@link Versions} that the service accepts. */
+export enum KnownVersions {
+  /** V20240101 */
+  V20240101 = "2024-01-01",
+}
+
+/**
+ * Defines values for Versions. \
+ * {@link KnownVersions} can be used interchangeably with Versions,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **2024-01-01**
+ */
+export type Versions = string;
+
+/** Optional parameters. */
+export interface KubernetesVersionsListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type KubernetesVersionsListResponse = KubernetesVersionProfileListResult;
+
+/** Optional parameters. */
+export interface KubernetesVersionsListNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listNext operation. */
+export type KubernetesVersionsListNextResponse =
+  KubernetesVersionProfileListResult;
+
+/** Optional parameters. */
+export interface GetKubernetesVersionsOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getKubernetesVersions operation. */
+export type GetKubernetesVersionsResponse = KubernetesVersionProfile;
+
+/** Optional parameters. */
+export interface PutKubernetesVersionsOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the putKubernetesVersions operation. */
+export type PutKubernetesVersionsResponse = KubernetesVersionProfile;
+
+/** Optional parameters. */
+export interface DeleteKubernetesVersionsOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the deleteKubernetesVersions operation. */
+export type DeleteKubernetesVersionsResponse =
+  HybridContainerServiceClientDeleteKubernetesVersionsHeaders;
+
+/** Optional parameters. */
+export interface GetVMSkusOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the getVMSkus operation. */
+export type GetVMSkusResponse = VmSkuProfile;
+
+/** Optional parameters. */
+export interface PutVMSkusOptionalParams extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the putVMSkus operation. */
+export type PutVMSkusResponse = VmSkuProfile;
+
+/** Optional parameters. */
+export interface DeleteVMSkusOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the deleteVMSkus operation. */
+export type DeleteVMSkusResponse =
+  HybridContainerServiceClientDeleteVMSkusHeaders;
+
+/** Optional parameters. */
+export interface ProvisionedClusterInstancesListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type ProvisionedClusterInstancesListResponse =
+  ProvisionedClusterListResult;
+
 /** Optional parameters. */
 export interface ProvisionedClusterInstancesGetOptionalParams
   extends coreClient.OperationOptions {}
@@ -1193,7 +1412,8 @@ export interface ProvisionedClusterInstancesCreateOrUpdateOptionalParams
 }
 
 /** Contains response data for the createOrUpdate operation. */
-export type ProvisionedClusterInstancesCreateOrUpdateResponse = ProvisionedCluster;
+export type ProvisionedClusterInstancesCreateOrUpdateResponse =
+  ProvisionedCluster;
 
 /** Optional parameters. */
 export interface ProvisionedClusterInstancesDeleteOptionalParams
@@ -1205,33 +1425,8 @@ export interface ProvisionedClusterInstancesDeleteOptionalParams
 }
 
 /** Contains response data for the delete operation. */
-export type ProvisionedClusterInstancesDeleteResponse = ProvisionedClusterInstancesDeleteHeaders;
-
-/** Optional parameters. */
-export interface ProvisionedClusterInstancesListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type ProvisionedClusterInstancesListResponse = ProvisionedClusterListResult;
-
-/** Optional parameters. */
-export interface ProvisionedClusterInstancesGetUpgradeProfileOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getUpgradeProfile operation. */
-export type ProvisionedClusterInstancesGetUpgradeProfileResponse = ProvisionedClusterUpgradeProfile;
-
-/** Optional parameters. */
-export interface ProvisionedClusterInstancesListUserKubeconfigOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the listUserKubeconfig operation. */
-export type ProvisionedClusterInstancesListUserKubeconfigResponse = ListCredentialResponse;
+export type ProvisionedClusterInstancesDeleteResponse =
+  ProvisionedClusterInstancesDeleteHeaders;
 
 /** Optional parameters. */
 export interface ProvisionedClusterInstancesListAdminKubeconfigOptionalParams
@@ -1243,31 +1438,11 @@ export interface ProvisionedClusterInstancesListAdminKubeconfigOptionalParams
 }
 
 /** Contains response data for the listAdminKubeconfig operation. */
-export type ProvisionedClusterInstancesListAdminKubeconfigResponse = ListCredentialResponse;
+export type ProvisionedClusterInstancesListAdminKubeconfigResponse =
+  ListCredentialResponse;
 
 /** Optional parameters. */
-export interface ProvisionedClusterInstancesListNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listNext operation. */
-export type ProvisionedClusterInstancesListNextResponse = ProvisionedClusterListResult;
-
-/** Optional parameters. */
-export interface HybridIdentityMetadataPutOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the put operation. */
-export type HybridIdentityMetadataPutResponse = HybridIdentityMetadata;
-
-/** Optional parameters. */
-export interface HybridIdentityMetadataGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type HybridIdentityMetadataGetResponse = HybridIdentityMetadata;
-
-/** Optional parameters. */
-export interface HybridIdentityMetadataDeleteOptionalParams
+export interface ProvisionedClusterInstancesListUserKubeconfigOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
@@ -1275,22 +1450,32 @@ export interface HybridIdentityMetadataDeleteOptionalParams
   resumeFrom?: string;
 }
 
-/** Contains response data for the delete operation. */
-export type HybridIdentityMetadataDeleteResponse = HybridIdentityMetadataDeleteHeaders;
+/** Contains response data for the listUserKubeconfig operation. */
+export type ProvisionedClusterInstancesListUserKubeconfigResponse =
+  ListCredentialResponse;
 
 /** Optional parameters. */
-export interface HybridIdentityMetadataListByClusterOptionalParams
+export interface ProvisionedClusterInstancesGetUpgradeProfileOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the listByCluster operation. */
-export type HybridIdentityMetadataListByClusterResponse = HybridIdentityMetadataList;
+/** Contains response data for the getUpgradeProfile operation. */
+export type ProvisionedClusterInstancesGetUpgradeProfileResponse =
+  ProvisionedClusterUpgradeProfile;
 
 /** Optional parameters. */
-export interface HybridIdentityMetadataListByClusterNextOptionalParams
+export interface ProvisionedClusterInstancesListNextOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the listByClusterNext operation. */
-export type HybridIdentityMetadataListByClusterNextResponse = HybridIdentityMetadataList;
+/** Contains response data for the listNext operation. */
+export type ProvisionedClusterInstancesListNextResponse =
+  ProvisionedClusterListResult;
+
+/** Optional parameters. */
+export interface AgentPoolListByProvisionedClusterOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByProvisionedCluster operation. */
+export type AgentPoolListByProvisionedClusterResponse = AgentPoolListResult;
 
 /** Optional parameters. */
 export interface AgentPoolGetOptionalParams
@@ -1324,13 +1509,6 @@ export interface AgentPoolDeleteOptionalParams
 export type AgentPoolDeleteResponse = AgentPoolDeleteHeaders;
 
 /** Optional parameters. */
-export interface AgentPoolListByProvisionedClusterOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByProvisionedCluster operation. */
-export type AgentPoolListByProvisionedClusterResponse = AgentPoolListResult;
-
-/** Optional parameters. */
 export interface AgentPoolListByProvisionedClusterNextOptionalParams
   extends coreClient.OperationOptions {}
 
@@ -1338,14 +1516,29 @@ export interface AgentPoolListByProvisionedClusterNextOptionalParams
 export type AgentPoolListByProvisionedClusterNextResponse = AgentPoolListResult;
 
 /** Optional parameters. */
-export interface GetKubernetesVersionsOptionalParams
+export interface HybridIdentityMetadataListByProvisionedClusterOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the getKubernetesVersions operation. */
-export type GetKubernetesVersionsResponse = KubernetesVersionProfile;
+/** Contains response data for the listByProvisionedCluster operation. */
+export type HybridIdentityMetadataListByProvisionedClusterResponse =
+  HybridIdentityMetadataListResult;
 
 /** Optional parameters. */
-export interface PutKubernetesVersionsOptionalParams
+export interface HybridIdentityMetadataGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type HybridIdentityMetadataGetResponse = HybridIdentityMetadata;
+
+/** Optional parameters. */
+export interface HybridIdentityMetadataPutOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the put operation. */
+export type HybridIdentityMetadataPutResponse = HybridIdentityMetadata;
+
+/** Optional parameters. */
+export interface HybridIdentityMetadataDeleteOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
@@ -1353,76 +1546,30 @@ export interface PutKubernetesVersionsOptionalParams
   resumeFrom?: string;
 }
 
-/** Contains response data for the putKubernetesVersions operation. */
-export type PutKubernetesVersionsResponse = KubernetesVersionProfile;
+/** Contains response data for the delete operation. */
+export type HybridIdentityMetadataDeleteResponse =
+  HybridIdentityMetadataDeleteHeaders;
 
 /** Optional parameters. */
-export interface DeleteKubernetesVersionsOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the deleteKubernetesVersions operation. */
-export type DeleteKubernetesVersionsResponse = HybridContainerServiceClientDeleteKubernetesVersionsHeaders;
-
-/** Optional parameters. */
-export interface GetVMSkusOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the getVMSkus operation. */
-export type GetVMSkusResponse = VmSkuProfile;
-
-/** Optional parameters. */
-export interface PutVMSkusOptionalParams extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the putVMSkus operation. */
-export type PutVMSkusResponse = VmSkuProfile;
-
-/** Optional parameters. */
-export interface DeleteVMSkusOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the deleteVMSkus operation. */
-export type DeleteVMSkusResponse = HybridContainerServiceClientDeleteVMSkusHeaders;
-
-/** Optional parameters. */
-export interface KubernetesVersionsListOptionalParams
+export interface HybridIdentityMetadataListByProvisionedClusterNextOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the list operation. */
-export type KubernetesVersionsListResponse = KubernetesVersionProfileList;
-
-/** Optional parameters. */
-export interface KubernetesVersionsListNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listNext operation. */
-export type KubernetesVersionsListNextResponse = KubernetesVersionProfileList;
+/** Contains response data for the listByProvisionedClusterNext operation. */
+export type HybridIdentityMetadataListByProvisionedClusterNextResponse =
+  HybridIdentityMetadataListResult;
 
 /** Optional parameters. */
 export interface VMSkusListOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
-export type VMSkusListResponse = VmSkuProfileList;
+export type VMSkusListResponse = VmSkuProfileListResult;
 
 /** Optional parameters. */
 export interface VMSkusListNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
-export type VMSkusListNextResponse = VmSkuProfileList;
+export type VMSkusListNextResponse = VmSkuProfileListResult;
 
 /** Optional parameters. */
 export interface OperationsListOptionalParams
@@ -1437,6 +1584,22 @@ export interface OperationsListNextOptionalParams
 
 /** Contains response data for the listNext operation. */
 export type OperationsListNextResponse = OperationListResult;
+
+/** Optional parameters. */
+export interface VirtualNetworksListBySubscriptionOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listBySubscription operation. */
+export type VirtualNetworksListBySubscriptionResponse =
+  VirtualNetworkListResult;
+
+/** Optional parameters. */
+export interface VirtualNetworksListByResourceGroupOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroup operation. */
+export type VirtualNetworksListByResourceGroupResponse =
+  VirtualNetworkListResult;
 
 /** Optional parameters. */
 export interface VirtualNetworksRetrieveOptionalParams
@@ -1458,18 +1621,6 @@ export interface VirtualNetworksCreateOrUpdateOptionalParams
 export type VirtualNetworksCreateOrUpdateResponse = VirtualNetwork;
 
 /** Optional parameters. */
-export interface VirtualNetworksDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the delete operation. */
-export type VirtualNetworksDeleteResponse = VirtualNetworksDeleteHeaders;
-
-/** Optional parameters. */
 export interface VirtualNetworksUpdateOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
@@ -1482,32 +1633,32 @@ export interface VirtualNetworksUpdateOptionalParams
 export type VirtualNetworksUpdateResponse = VirtualNetwork;
 
 /** Optional parameters. */
-export interface VirtualNetworksListByResourceGroupOptionalParams
-  extends coreClient.OperationOptions {}
+export interface VirtualNetworksDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
 
-/** Contains response data for the listByResourceGroup operation. */
-export type VirtualNetworksListByResourceGroupResponse = VirtualNetworksListResult;
-
-/** Optional parameters. */
-export interface VirtualNetworksListBySubscriptionOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listBySubscription operation. */
-export type VirtualNetworksListBySubscriptionResponse = VirtualNetworksListResult;
-
-/** Optional parameters. */
-export interface VirtualNetworksListByResourceGroupNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByResourceGroupNext operation. */
-export type VirtualNetworksListByResourceGroupNextResponse = VirtualNetworksListResult;
+/** Contains response data for the delete operation. */
+export type VirtualNetworksDeleteResponse = VirtualNetworksDeleteHeaders;
 
 /** Optional parameters. */
 export interface VirtualNetworksListBySubscriptionNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listBySubscriptionNext operation. */
-export type VirtualNetworksListBySubscriptionNextResponse = VirtualNetworksListResult;
+export type VirtualNetworksListBySubscriptionNextResponse =
+  VirtualNetworkListResult;
+
+/** Optional parameters. */
+export interface VirtualNetworksListByResourceGroupNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroupNext operation. */
+export type VirtualNetworksListByResourceGroupNextResponse =
+  VirtualNetworkListResult;
 
 /** Optional parameters. */
 export interface HybridContainerServiceClientOptionalParams

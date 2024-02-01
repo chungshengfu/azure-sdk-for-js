@@ -14,12 +14,11 @@ import { VmSkuProfile, VMSkusListOptionalParams } from "../models";
 export interface VMSkus {
   /**
    * Lists the supported VM skus for the specified custom location
-   * @param customLocationResourceUri The fully qualified Azure Resource Manager identifier of the custom
-   *                                  location resource.
+   * @param resourceUri The fully qualified Azure Resource manager identifier of the resource.
    * @param options The options parameters.
    */
   list(
-    customLocationResourceUri: string,
-    options?: VMSkusListOptionalParams
+    resourceUri: string,
+    options?: VMSkusListOptionalParams,
   ): PagedAsyncIterableIterator<VmSkuProfile>;
 }
