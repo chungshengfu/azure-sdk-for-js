@@ -15,10 +15,10 @@ import {
   ScopeMapsGetResponse,
   ScopeMapsCreateOptionalParams,
   ScopeMapsCreateResponse,
-  ScopeMapsDeleteOptionalParams,
   ScopeMapUpdateParameters,
   ScopeMapsUpdateOptionalParams,
-  ScopeMapsUpdateResponse
+  ScopeMapsUpdateResponse,
+  ScopeMapsDeleteOptionalParams,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -33,7 +33,7 @@ export interface ScopeMaps {
   list(
     resourceGroupName: string,
     registryName: string,
-    options?: ScopeMapsListOptionalParams
+    options?: ScopeMapsListOptionalParams,
   ): PagedAsyncIterableIterator<ScopeMap>;
   /**
    * Gets the properties of the specified scope map.
@@ -46,7 +46,7 @@ export interface ScopeMaps {
     resourceGroupName: string,
     registryName: string,
     scopeMapName: string,
-    options?: ScopeMapsGetOptionalParams
+    options?: ScopeMapsGetOptionalParams,
   ): Promise<ScopeMapsGetResponse>;
   /**
    * Creates a scope map for a container registry with the specified parameters.
@@ -61,7 +61,7 @@ export interface ScopeMaps {
     registryName: string,
     scopeMapName: string,
     scopeMapCreateParameters: ScopeMap,
-    options?: ScopeMapsCreateOptionalParams
+    options?: ScopeMapsCreateOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<ScopeMapsCreateResponse>,
@@ -81,34 +81,8 @@ export interface ScopeMaps {
     registryName: string,
     scopeMapName: string,
     scopeMapCreateParameters: ScopeMap,
-    options?: ScopeMapsCreateOptionalParams
+    options?: ScopeMapsCreateOptionalParams,
   ): Promise<ScopeMapsCreateResponse>;
-  /**
-   * Deletes a scope map from a container registry.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param registryName The name of the container registry.
-   * @param scopeMapName The name of the scope map.
-   * @param options The options parameters.
-   */
-  beginDelete(
-    resourceGroupName: string,
-    registryName: string,
-    scopeMapName: string,
-    options?: ScopeMapsDeleteOptionalParams
-  ): Promise<SimplePollerLike<OperationState<void>, void>>;
-  /**
-   * Deletes a scope map from a container registry.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param registryName The name of the container registry.
-   * @param scopeMapName The name of the scope map.
-   * @param options The options parameters.
-   */
-  beginDeleteAndWait(
-    resourceGroupName: string,
-    registryName: string,
-    scopeMapName: string,
-    options?: ScopeMapsDeleteOptionalParams
-  ): Promise<void>;
   /**
    * Updates a scope map with the specified parameters.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
@@ -122,7 +96,7 @@ export interface ScopeMaps {
     registryName: string,
     scopeMapName: string,
     scopeMapUpdateParameters: ScopeMapUpdateParameters,
-    options?: ScopeMapsUpdateOptionalParams
+    options?: ScopeMapsUpdateOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<ScopeMapsUpdateResponse>,
@@ -142,6 +116,32 @@ export interface ScopeMaps {
     registryName: string,
     scopeMapName: string,
     scopeMapUpdateParameters: ScopeMapUpdateParameters,
-    options?: ScopeMapsUpdateOptionalParams
+    options?: ScopeMapsUpdateOptionalParams,
   ): Promise<ScopeMapsUpdateResponse>;
+  /**
+   * Deletes a scope map from a container registry.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param scopeMapName The name of the scope map.
+   * @param options The options parameters.
+   */
+  beginDelete(
+    resourceGroupName: string,
+    registryName: string,
+    scopeMapName: string,
+    options?: ScopeMapsDeleteOptionalParams,
+  ): Promise<SimplePollerLike<OperationState<void>, void>>;
+  /**
+   * Deletes a scope map from a container registry.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param scopeMapName The name of the scope map.
+   * @param options The options parameters.
+   */
+  beginDeleteAndWait(
+    resourceGroupName: string,
+    registryName: string,
+    scopeMapName: string,
+    options?: ScopeMapsDeleteOptionalParams,
+  ): Promise<void>;
 }

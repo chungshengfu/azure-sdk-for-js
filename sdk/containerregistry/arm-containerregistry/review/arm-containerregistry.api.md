@@ -138,12 +138,7 @@ export type Architecture = string;
 
 // @public
 export interface Archive extends ProxyResource {
-    packageSource?: ArchivePackageSourceProperties;
-    readonly provisioningState?: ProvisioningState;
-    publishedVersion?: string;
-    readonly repositoryEndpoint?: string;
-    // (undocumented)
-    repositoryEndpointPrefix?: string;
+    properties?: ArchiveProperties;
 }
 
 // @public
@@ -323,11 +318,28 @@ export interface Argument {
 }
 
 // @public
+export interface ArtifactSyncEstimateResult {
+    name?: string;
+}
+
+// @public
+export interface ArtifactSyncScopeFilterProperties {
+    query?: string;
+    type?: ArtifactSyncScopeFilterType;
+}
+
+// @public
+export type ArtifactSyncScopeFilterType = string;
+
+// @public
+export type ArtifactSyncStatus = string;
+
+// @public
 export type AuditLogStatus = string;
 
 // @public
 export interface AuthCredential {
-    readonly credentialHealth?: CredentialHealth;
+    credentialHealth?: CredentialHealth;
     name?: CredentialName;
     passwordSecretIdentifier?: string;
     usernameSecretIdentifier?: string;
@@ -394,11 +406,21 @@ export interface BaseImageTriggerUpdateParameters {
 
 // @public
 export interface CacheRule extends ProxyResource {
+    artifactSyncScopeFilterProperties?: ArtifactSyncScopeFilterProperties;
+    artifactSyncStatus?: ArtifactSyncStatus;
     readonly creationDate?: Date;
     credentialSetResourceId?: string;
     readonly provisioningState?: ProvisioningState;
     sourceRepository?: string;
     targetRepository?: string;
+}
+
+// @public
+export interface CacheRuleArtifactSyncEstimateResult {
+    filteredCount?: number;
+    name?: string;
+    results?: ArtifactSyncEstimateResult[];
+    totalCount?: number;
 }
 
 // @public
@@ -487,6 +509,8 @@ export type CacheRulesUpdateResponse = CacheRule;
 
 // @public
 export interface CacheRuleUpdateParameters {
+    artifactSyncScopeFilterProperties?: ArtifactSyncScopeFilterProperties;
+    artifactSyncStatus?: ArtifactSyncStatus;
     credentialSetResourceId?: string;
 }
 
@@ -895,6 +919,7 @@ export interface EncodedTaskStepUpdateParameters extends TaskStepUpdateParameter
 
 // @public (undocumented)
 export interface EncryptionProperty {
+    // (undocumented)
     keyVaultProperties?: KeyVaultProperties;
     status?: EncryptionStatus;
 }
@@ -1147,6 +1172,7 @@ export interface ImageUpdateTrigger {
 // @public (undocumented)
 export interface ImportImageParameters {
     mode?: ImportMode;
+    // (undocumented)
     source: ImportSource;
     targetTags?: string[];
     untaggedTargetRepositories?: string[];
@@ -1162,6 +1188,7 @@ export interface ImportPipeline extends ProxyResource {
     options?: PipelineOptions[];
     readonly provisioningState?: ProvisioningState;
     source?: ImportPipelineSourceProperties;
+    // (undocumented)
     trigger?: PipelineTriggerProperties;
 }
 
@@ -1238,6 +1265,8 @@ export interface ImportPipelineSourceProperties {
 
 // @public (undocumented)
 export interface ImportSource {
+    cacheRuleResourceId?: string;
+    // (undocumented)
     credentials?: ImportSourceCredentials;
     registryUri?: string;
     resourceId?: string;
@@ -1296,6 +1325,17 @@ export enum KnownArchitecture {
     Arm64 = "arm64",
     ThreeHundredEightySix = "386",
     X86 = "x86"
+}
+
+// @public
+export enum KnownArtifactSyncScopeFilterType {
+    KQL = "KQL"
+}
+
+// @public
+export enum KnownArtifactSyncStatus {
+    Active = "Active",
+    Inactive = "Inactive"
 }
 
 // @public
@@ -1745,12 +1785,6 @@ export interface OverrideTaskStepProperties {
 export type PackageSourceType = string;
 
 // @public
-export interface PackageType {
-    readonly endpoint?: string;
-    name?: string;
-}
-
-// @public
 export interface ParentProperties {
     id?: string;
     syncProperties: SyncProperties;
@@ -1781,7 +1815,9 @@ export interface PipelineRunRequest {
     artifacts?: string[];
     catalogDigest?: string;
     pipelineResourceId?: string;
+    // (undocumented)
     source?: PipelineRunSourceProperties;
+    // (undocumented)
     target?: PipelineRunTargetProperties;
 }
 
@@ -1791,11 +1827,13 @@ export interface PipelineRunResponse {
     finishTime?: Date;
     importedArtifacts?: string[];
     pipelineRunErrorMessage?: string;
+    // (undocumented)
     progress?: ProgressProperties;
     source?: ImportPipelineSourceProperties;
     startTime?: Date;
     status?: string;
     target?: ExportPipelineTargetProperties;
+    // (undocumented)
     trigger?: PipelineTriggerDescriptor;
 }
 
@@ -1890,11 +1928,13 @@ export type PipelineSourceType = string;
 
 // @public (undocumented)
 export interface PipelineTriggerDescriptor {
+    // (undocumented)
     sourceTrigger?: PipelineSourceTriggerDescriptor;
 }
 
 // @public (undocumented)
 export interface PipelineTriggerProperties {
+    // (undocumented)
     sourceTrigger?: PipelineSourceTriggerProperties;
 }
 
@@ -2067,6 +2107,7 @@ export interface Registries {
     beginScheduleRunAndWait(resourceGroupName: string, registryName: string, runRequest: RunRequestUnion, options?: RegistriesScheduleRunOptionalParams): Promise<RegistriesScheduleRunResponse>;
     beginUpdate(resourceGroupName: string, registryName: string, registryUpdateParameters: RegistryUpdateParameters, options?: RegistriesUpdateOptionalParams): Promise<SimplePollerLike<OperationState<RegistriesUpdateResponse>, RegistriesUpdateResponse>>;
     beginUpdateAndWait(resourceGroupName: string, registryName: string, registryUpdateParameters: RegistryUpdateParameters, options?: RegistriesUpdateOptionalParams): Promise<RegistriesUpdateResponse>;
+    checkCacheRuleArtifactSyncEstimate(resourceGroupName: string, registryName: string, cacheRuleCreateParameters: CacheRule, options?: RegistriesCheckCacheRuleArtifactSyncEstimateOptionalParams): Promise<RegistriesCheckCacheRuleArtifactSyncEstimateResponse>;
     checkNameAvailability(registryNameCheckRequest: RegistryNameCheckRequest, options?: RegistriesCheckNameAvailabilityOptionalParams): Promise<RegistriesCheckNameAvailabilityResponse>;
     get(resourceGroupName: string, registryName: string, options?: RegistriesGetOptionalParams): Promise<RegistriesGetResponse>;
     getBuildSourceUploadUrl(resourceGroupName: string, registryName: string, options?: RegistriesGetBuildSourceUploadUrlOptionalParams): Promise<RegistriesGetBuildSourceUploadUrlResponse>;
@@ -2078,6 +2119,13 @@ export interface Registries {
     listUsages(resourceGroupName: string, registryName: string, options?: RegistriesListUsagesOptionalParams): Promise<RegistriesListUsagesResponse>;
     regenerateCredential(resourceGroupName: string, registryName: string, regenerateCredentialParameters: RegenerateCredentialParameters, options?: RegistriesRegenerateCredentialOptionalParams): Promise<RegistriesRegenerateCredentialResponse>;
 }
+
+// @public
+export interface RegistriesCheckCacheRuleArtifactSyncEstimateOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type RegistriesCheckCacheRuleArtifactSyncEstimateResponse = CacheRuleArtifactSyncEstimateResult;
 
 // @public
 export interface RegistriesCheckNameAvailabilityOptionalParams extends coreClient.OperationOptions {
@@ -2255,6 +2303,7 @@ export interface Registry extends Resource {
     readonly creationDate?: Date;
     dataEndpointEnabled?: boolean;
     readonly dataEndpointHostNames?: string[];
+    // (undocumented)
     encryption?: EncryptionProperty;
     identity?: IdentityProperties;
     readonly loginServer?: string;
@@ -2306,6 +2355,7 @@ export interface RegistryUpdateParameters {
     adminUserEnabled?: boolean;
     anonymousPullEnabled?: boolean;
     dataEndpointEnabled?: boolean;
+    // (undocumented)
     encryption?: EncryptionProperty;
     identity?: IdentityProperties;
     metadataSearch?: MetadataSearch;
@@ -3143,9 +3193,7 @@ export type TokenCertificateName = string;
 
 // @public
 export interface TokenCredentialsProperties {
-    // (undocumented)
     certificates?: TokenCertificate[];
-    // (undocumented)
     passwords?: TokenPassword[];
 }
 

@@ -18,14 +18,14 @@ import {
   WebhookCreateParameters,
   WebhooksCreateOptionalParams,
   WebhooksCreateResponse,
-  WebhooksDeleteOptionalParams,
   WebhookUpdateParameters,
   WebhooksUpdateOptionalParams,
   WebhooksUpdateResponse,
+  WebhooksDeleteOptionalParams,
   WebhooksPingOptionalParams,
   WebhooksPingResponse,
   WebhooksGetCallbackConfigOptionalParams,
-  WebhooksGetCallbackConfigResponse
+  WebhooksGetCallbackConfigResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -40,7 +40,7 @@ export interface Webhooks {
   list(
     resourceGroupName: string,
     registryName: string,
-    options?: WebhooksListOptionalParams
+    options?: WebhooksListOptionalParams,
   ): PagedAsyncIterableIterator<Webhook>;
   /**
    * Lists recent events for the specified webhook.
@@ -53,7 +53,7 @@ export interface Webhooks {
     resourceGroupName: string,
     registryName: string,
     webhookName: string,
-    options?: WebhooksListEventsOptionalParams
+    options?: WebhooksListEventsOptionalParams,
   ): PagedAsyncIterableIterator<Event>;
   /**
    * Gets the properties of the specified webhook.
@@ -66,7 +66,7 @@ export interface Webhooks {
     resourceGroupName: string,
     registryName: string,
     webhookName: string,
-    options?: WebhooksGetOptionalParams
+    options?: WebhooksGetOptionalParams,
   ): Promise<WebhooksGetResponse>;
   /**
    * Creates a webhook for a container registry with the specified parameters.
@@ -81,7 +81,7 @@ export interface Webhooks {
     registryName: string,
     webhookName: string,
     webhookCreateParameters: WebhookCreateParameters,
-    options?: WebhooksCreateOptionalParams
+    options?: WebhooksCreateOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<WebhooksCreateResponse>,
@@ -101,34 +101,8 @@ export interface Webhooks {
     registryName: string,
     webhookName: string,
     webhookCreateParameters: WebhookCreateParameters,
-    options?: WebhooksCreateOptionalParams
+    options?: WebhooksCreateOptionalParams,
   ): Promise<WebhooksCreateResponse>;
-  /**
-   * Deletes a webhook from a container registry.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param registryName The name of the container registry.
-   * @param webhookName The name of the webhook.
-   * @param options The options parameters.
-   */
-  beginDelete(
-    resourceGroupName: string,
-    registryName: string,
-    webhookName: string,
-    options?: WebhooksDeleteOptionalParams
-  ): Promise<SimplePollerLike<OperationState<void>, void>>;
-  /**
-   * Deletes a webhook from a container registry.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param registryName The name of the container registry.
-   * @param webhookName The name of the webhook.
-   * @param options The options parameters.
-   */
-  beginDeleteAndWait(
-    resourceGroupName: string,
-    registryName: string,
-    webhookName: string,
-    options?: WebhooksDeleteOptionalParams
-  ): Promise<void>;
   /**
    * Updates a webhook with the specified parameters.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
@@ -142,7 +116,7 @@ export interface Webhooks {
     registryName: string,
     webhookName: string,
     webhookUpdateParameters: WebhookUpdateParameters,
-    options?: WebhooksUpdateOptionalParams
+    options?: WebhooksUpdateOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<WebhooksUpdateResponse>,
@@ -162,8 +136,34 @@ export interface Webhooks {
     registryName: string,
     webhookName: string,
     webhookUpdateParameters: WebhookUpdateParameters,
-    options?: WebhooksUpdateOptionalParams
+    options?: WebhooksUpdateOptionalParams,
   ): Promise<WebhooksUpdateResponse>;
+  /**
+   * Deletes a webhook from a container registry.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param webhookName The name of the webhook.
+   * @param options The options parameters.
+   */
+  beginDelete(
+    resourceGroupName: string,
+    registryName: string,
+    webhookName: string,
+    options?: WebhooksDeleteOptionalParams,
+  ): Promise<SimplePollerLike<OperationState<void>, void>>;
+  /**
+   * Deletes a webhook from a container registry.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param webhookName The name of the webhook.
+   * @param options The options parameters.
+   */
+  beginDeleteAndWait(
+    resourceGroupName: string,
+    registryName: string,
+    webhookName: string,
+    options?: WebhooksDeleteOptionalParams,
+  ): Promise<void>;
   /**
    * Triggers a ping event to be sent to the webhook.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
@@ -175,7 +175,7 @@ export interface Webhooks {
     resourceGroupName: string,
     registryName: string,
     webhookName: string,
-    options?: WebhooksPingOptionalParams
+    options?: WebhooksPingOptionalParams,
   ): Promise<WebhooksPingResponse>;
   /**
    * Gets the configuration of service URI and custom headers for the webhook.
@@ -188,6 +188,6 @@ export interface Webhooks {
     resourceGroupName: string,
     registryName: string,
     webhookName: string,
-    options?: WebhooksGetCallbackConfigOptionalParams
+    options?: WebhooksGetCallbackConfigOptionalParams,
   ): Promise<WebhooksGetCallbackConfigResponse>;
 }

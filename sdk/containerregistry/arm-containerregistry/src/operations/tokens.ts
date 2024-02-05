@@ -16,7 +16,7 @@ import { ContainerRegistryManagementClient } from "../containerRegistryManagemen
 import {
   SimplePollerLike,
   OperationState,
-  createHttpPoller
+  createHttpPoller,
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
@@ -28,11 +28,11 @@ import {
   TokensGetResponse,
   TokensCreateOptionalParams,
   TokensCreateResponse,
-  TokensDeleteOptionalParams,
   TokenUpdateParameters,
   TokensUpdateOptionalParams,
   TokensUpdateResponse,
-  TokensListNextResponse
+  TokensDeleteOptionalParams,
+  TokensListNextResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -57,7 +57,7 @@ export class TokensImpl implements Tokens {
   public list(
     resourceGroupName: string,
     registryName: string,
-    options?: TokensListOptionalParams
+    options?: TokensListOptionalParams,
   ): PagedAsyncIterableIterator<Token> {
     const iter = this.listPagingAll(resourceGroupName, registryName, options);
     return {
@@ -75,9 +75,9 @@ export class TokensImpl implements Tokens {
           resourceGroupName,
           registryName,
           options,
-          settings
+          settings,
         );
-      }
+      },
     };
   }
 
@@ -85,7 +85,7 @@ export class TokensImpl implements Tokens {
     resourceGroupName: string,
     registryName: string,
     options?: TokensListOptionalParams,
-    settings?: PageSettings
+    settings?: PageSettings,
   ): AsyncIterableIterator<Token[]> {
     let result: TokensListResponse;
     let continuationToken = settings?.continuationToken;
@@ -101,7 +101,7 @@ export class TokensImpl implements Tokens {
         resourceGroupName,
         registryName,
         continuationToken,
-        options
+        options,
       );
       continuationToken = result.nextLink;
       let page = result.value || [];
@@ -113,32 +113,15 @@ export class TokensImpl implements Tokens {
   private async *listPagingAll(
     resourceGroupName: string,
     registryName: string,
-    options?: TokensListOptionalParams
+    options?: TokensListOptionalParams,
   ): AsyncIterableIterator<Token> {
     for await (const page of this.listPagingPage(
       resourceGroupName,
       registryName,
-      options
+      options,
     )) {
       yield* page;
     }
-  }
-
-  /**
-   * Lists all the tokens for the specified container registry.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param registryName The name of the container registry.
-   * @param options The options parameters.
-   */
-  private _list(
-    resourceGroupName: string,
-    registryName: string,
-    options?: TokensListOptionalParams
-  ): Promise<TokensListResponse> {
-    return this.client.sendOperationRequest(
-      { resourceGroupName, registryName, options },
-      listOperationSpec
-    );
   }
 
   /**
@@ -152,11 +135,11 @@ export class TokensImpl implements Tokens {
     resourceGroupName: string,
     registryName: string,
     tokenName: string,
-    options?: TokensGetOptionalParams
+    options?: TokensGetOptionalParams,
   ): Promise<TokensGetResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, registryName, tokenName, options },
-      getOperationSpec
+      getOperationSpec,
     );
   }
 
@@ -173,27 +156,26 @@ export class TokensImpl implements Tokens {
     registryName: string,
     tokenName: string,
     tokenCreateParameters: Token,
-    options?: TokensCreateOptionalParams
+    options?: TokensCreateOptionalParams,
   ): Promise<
     SimplePollerLike<OperationState<TokensCreateResponse>, TokensCreateResponse>
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ): Promise<TokensCreateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
       const providedCallback = args.options?.onResponse;
       const callback: coreClient.RawResponseCallback = (
         rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
+        flatResponse: unknown,
       ) => {
         currentRawResponse = rawResponse;
         providedCallback?.(rawResponse, flatResponse);
@@ -202,8 +184,8 @@ export class TokensImpl implements Tokens {
         ...args,
         options: {
           ...args.options,
-          onResponse: callback
-        }
+          onResponse: callback,
+        },
       };
       const flatResponse = await directSendOperation(updatedArgs, spec);
       return {
@@ -211,8 +193,8 @@ export class TokensImpl implements Tokens {
         rawResponse: {
           statusCode: currentRawResponse!.status,
           body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
+          headers: currentRawResponse!.headers.toJSON(),
+        },
       };
     };
 
@@ -223,9 +205,9 @@ export class TokensImpl implements Tokens {
         registryName,
         tokenName,
         tokenCreateParameters,
-        options
+        options,
       },
-      spec: createOperationSpec
+      spec: createOperationSpec,
     });
     const poller = await createHttpPoller<
       TokensCreateResponse,
@@ -233,7 +215,7 @@ export class TokensImpl implements Tokens {
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "azure-async-operation",
     });
     await poller.poll();
     return poller;
@@ -252,102 +234,14 @@ export class TokensImpl implements Tokens {
     registryName: string,
     tokenName: string,
     tokenCreateParameters: Token,
-    options?: TokensCreateOptionalParams
+    options?: TokensCreateOptionalParams,
   ): Promise<TokensCreateResponse> {
     const poller = await this.beginCreate(
       resourceGroupName,
       registryName,
       tokenName,
       tokenCreateParameters,
-      options
-    );
-    return poller.pollUntilDone();
-  }
-
-  /**
-   * Deletes a token from a container registry.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param registryName The name of the container registry.
-   * @param tokenName The name of the token.
-   * @param options The options parameters.
-   */
-  async beginDelete(
-    resourceGroupName: string,
-    registryName: string,
-    tokenName: string,
-    options?: TokensDeleteOptionalParams
-  ): Promise<SimplePollerLike<OperationState<void>, void>> {
-    const directSendOperation = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ): Promise<void> => {
-      return this.client.sendOperationRequest(args, spec);
-    };
-    const sendOperationFn = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
-      const providedCallback = args.options?.onResponse;
-      const callback: coreClient.RawResponseCallback = (
-        rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
-      ) => {
-        currentRawResponse = rawResponse;
-        providedCallback?.(rawResponse, flatResponse);
-      };
-      const updatedArgs = {
-        ...args,
-        options: {
-          ...args.options,
-          onResponse: callback
-        }
-      };
-      const flatResponse = await directSendOperation(updatedArgs, spec);
-      return {
-        flatResponse,
-        rawResponse: {
-          statusCode: currentRawResponse!.status,
-          body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
-      };
-    };
-
-    const lro = createLroSpec({
-      sendOperationFn,
-      args: { resourceGroupName, registryName, tokenName, options },
-      spec: deleteOperationSpec
-    });
-    const poller = await createHttpPoller<void, OperationState<void>>(lro, {
-      restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "location"
-    });
-    await poller.poll();
-    return poller;
-  }
-
-  /**
-   * Deletes a token from a container registry.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param registryName The name of the container registry.
-   * @param tokenName The name of the token.
-   * @param options The options parameters.
-   */
-  async beginDeleteAndWait(
-    resourceGroupName: string,
-    registryName: string,
-    tokenName: string,
-    options?: TokensDeleteOptionalParams
-  ): Promise<void> {
-    const poller = await this.beginDelete(
-      resourceGroupName,
-      registryName,
-      tokenName,
-      options
+      options,
     );
     return poller.pollUntilDone();
   }
@@ -365,27 +259,26 @@ export class TokensImpl implements Tokens {
     registryName: string,
     tokenName: string,
     tokenUpdateParameters: TokenUpdateParameters,
-    options?: TokensUpdateOptionalParams
+    options?: TokensUpdateOptionalParams,
   ): Promise<
     SimplePollerLike<OperationState<TokensUpdateResponse>, TokensUpdateResponse>
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ): Promise<TokensUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
       const providedCallback = args.options?.onResponse;
       const callback: coreClient.RawResponseCallback = (
         rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
+        flatResponse: unknown,
       ) => {
         currentRawResponse = rawResponse;
         providedCallback?.(rawResponse, flatResponse);
@@ -394,8 +287,8 @@ export class TokensImpl implements Tokens {
         ...args,
         options: {
           ...args.options,
-          onResponse: callback
-        }
+          onResponse: callback,
+        },
       };
       const flatResponse = await directSendOperation(updatedArgs, spec);
       return {
@@ -403,8 +296,8 @@ export class TokensImpl implements Tokens {
         rawResponse: {
           statusCode: currentRawResponse!.status,
           body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
+          headers: currentRawResponse!.headers.toJSON(),
+        },
       };
     };
 
@@ -415,9 +308,9 @@ export class TokensImpl implements Tokens {
         registryName,
         tokenName,
         tokenUpdateParameters,
-        options
+        options,
       },
-      spec: updateOperationSpec
+      spec: updateOperationSpec,
     });
     const poller = await createHttpPoller<
       TokensUpdateResponse,
@@ -425,7 +318,7 @@ export class TokensImpl implements Tokens {
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "azure-async-operation",
     });
     await poller.poll();
     return poller;
@@ -444,16 +337,120 @@ export class TokensImpl implements Tokens {
     registryName: string,
     tokenName: string,
     tokenUpdateParameters: TokenUpdateParameters,
-    options?: TokensUpdateOptionalParams
+    options?: TokensUpdateOptionalParams,
   ): Promise<TokensUpdateResponse> {
     const poller = await this.beginUpdate(
       resourceGroupName,
       registryName,
       tokenName,
       tokenUpdateParameters,
-      options
+      options,
     );
     return poller.pollUntilDone();
+  }
+
+  /**
+   * Deletes a token from a container registry.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param tokenName The name of the token.
+   * @param options The options parameters.
+   */
+  async beginDelete(
+    resourceGroupName: string,
+    registryName: string,
+    tokenName: string,
+    options?: TokensDeleteOptionalParams,
+  ): Promise<SimplePollerLike<OperationState<void>, void>> {
+    const directSendOperation = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec,
+    ): Promise<void> => {
+      return this.client.sendOperationRequest(args, spec);
+    };
+    const sendOperationFn = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec,
+    ) => {
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
+      const providedCallback = args.options?.onResponse;
+      const callback: coreClient.RawResponseCallback = (
+        rawResponse: coreClient.FullOperationResponse,
+        flatResponse: unknown,
+      ) => {
+        currentRawResponse = rawResponse;
+        providedCallback?.(rawResponse, flatResponse);
+      };
+      const updatedArgs = {
+        ...args,
+        options: {
+          ...args.options,
+          onResponse: callback,
+        },
+      };
+      const flatResponse = await directSendOperation(updatedArgs, spec);
+      return {
+        flatResponse,
+        rawResponse: {
+          statusCode: currentRawResponse!.status,
+          body: currentRawResponse!.parsedBody,
+          headers: currentRawResponse!.headers.toJSON(),
+        },
+      };
+    };
+
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: { resourceGroupName, registryName, tokenName, options },
+      spec: deleteOperationSpec,
+    });
+    const poller = await createHttpPoller<void, OperationState<void>>(lro, {
+      restoreFrom: options?.resumeFrom,
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "location",
+    });
+    await poller.poll();
+    return poller;
+  }
+
+  /**
+   * Deletes a token from a container registry.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param tokenName The name of the token.
+   * @param options The options parameters.
+   */
+  async beginDeleteAndWait(
+    resourceGroupName: string,
+    registryName: string,
+    tokenName: string,
+    options?: TokensDeleteOptionalParams,
+  ): Promise<void> {
+    const poller = await this.beginDelete(
+      resourceGroupName,
+      registryName,
+      tokenName,
+      options,
+    );
+    return poller.pollUntilDone();
+  }
+
+  /**
+   * Lists all the tokens for the specified container registry.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param options The options parameters.
+   */
+  private _list(
+    resourceGroupName: string,
+    registryName: string,
+    options?: TokensListOptionalParams,
+  ): Promise<TokensListResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, registryName, options },
+      listOperationSpec,
+    );
   }
 
   /**
@@ -467,50 +464,27 @@ export class TokensImpl implements Tokens {
     resourceGroupName: string,
     registryName: string,
     nextLink: string,
-    options?: TokensListNextOptionalParams
+    options?: TokensListNextOptionalParams,
   ): Promise<TokensListNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, registryName, nextLink, options },
-      listNextOperationSpec
+      listNextOperationSpec,
     );
   }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const listOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/tokens",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: Mappers.TokenListResult
-    },
-    default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
-  },
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.registryName
-  ],
-  headerParameters: [Parameters.accept],
-  serializer
-};
 const getOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/tokens/{tokenName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/tokens/{tokenName}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.Token
+      bodyMapper: Mappers.Token,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
@@ -518,31 +492,30 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.registryName,
-    Parameters.tokenName
+    Parameters.tokenName,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const createOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/tokens/{tokenName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/tokens/{tokenName}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.Token
+      bodyMapper: Mappers.Token,
     },
     201: {
-      bodyMapper: Mappers.Token
+      bodyMapper: Mappers.Token,
     },
     202: {
-      bodyMapper: Mappers.Token
+      bodyMapper: Mappers.Token,
     },
     204: {
-      bodyMapper: Mappers.Token
+      bodyMapper: Mappers.Token,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   requestBody: Parameters.tokenCreateParameters,
   queryParameters: [Parameters.apiVersion],
@@ -551,56 +524,31 @@ const createOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.registryName,
-    Parameters.tokenName
+    Parameters.tokenName,
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
-};
-const deleteOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/tokens/{tokenName}",
-  httpMethod: "DELETE",
-  responses: {
-    200: {},
-    201: {},
-    202: {},
-    204: {},
-    default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
-  },
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.registryName,
-    Parameters.tokenName
-  ],
-  headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const updateOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/tokens/{tokenName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/tokens/{tokenName}",
   httpMethod: "PATCH",
   responses: {
     200: {
-      bodyMapper: Mappers.Token
+      bodyMapper: Mappers.Token,
     },
     201: {
-      bodyMapper: Mappers.Token
+      bodyMapper: Mappers.Token,
     },
     202: {
-      bodyMapper: Mappers.Token
+      bodyMapper: Mappers.Token,
     },
     204: {
-      bodyMapper: Mappers.Token
+      bodyMapper: Mappers.Token,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   requestBody: Parameters.tokenUpdateParameters,
   queryParameters: [Parameters.apiVersion],
@@ -609,30 +557,74 @@ const updateOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.registryName,
-    Parameters.tokenName
+    Parameters.tokenName,
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
+  serializer,
+};
+const deleteOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/tokens/{tokenName}",
+  httpMethod: "DELETE",
+  responses: {
+    200: {},
+    201: {},
+    202: {},
+    204: {},
+    default: {
+      bodyMapper: Mappers.ErrorResponse,
+    },
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.registryName,
+    Parameters.tokenName,
+  ],
+  headerParameters: [Parameters.accept],
+  serializer,
+};
+const listOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/tokens",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.TokenListResult,
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse,
+    },
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.registryName,
+  ],
+  headerParameters: [Parameters.accept],
+  serializer,
 };
 const listNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.TokenListResult
+      bodyMapper: Mappers.TokenListResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.registryName,
-    Parameters.nextLink
+    Parameters.nextLink,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };

@@ -15,11 +15,11 @@ import {
   CacheRulesGetResponse,
   CacheRulesCreateOptionalParams,
   CacheRulesCreateResponse,
-  CacheRulesDeleteOptionalParams,
-  CacheRulesDeleteResponse,
   CacheRuleUpdateParameters,
   CacheRulesUpdateOptionalParams,
-  CacheRulesUpdateResponse
+  CacheRulesUpdateResponse,
+  CacheRulesDeleteOptionalParams,
+  CacheRulesDeleteResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -34,7 +34,7 @@ export interface CacheRules {
   list(
     resourceGroupName: string,
     registryName: string,
-    options?: CacheRulesListOptionalParams
+    options?: CacheRulesListOptionalParams,
   ): PagedAsyncIterableIterator<CacheRule>;
   /**
    * Gets the properties of the specified cache rule resource.
@@ -47,7 +47,7 @@ export interface CacheRules {
     resourceGroupName: string,
     registryName: string,
     cacheRuleName: string,
-    options?: CacheRulesGetOptionalParams
+    options?: CacheRulesGetOptionalParams,
   ): Promise<CacheRulesGetResponse>;
   /**
    * Creates a cache rule for a container registry with the specified parameters.
@@ -62,7 +62,7 @@ export interface CacheRules {
     registryName: string,
     cacheRuleName: string,
     cacheRuleCreateParameters: CacheRule,
-    options?: CacheRulesCreateOptionalParams
+    options?: CacheRulesCreateOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<CacheRulesCreateResponse>,
@@ -82,39 +82,8 @@ export interface CacheRules {
     registryName: string,
     cacheRuleName: string,
     cacheRuleCreateParameters: CacheRule,
-    options?: CacheRulesCreateOptionalParams
+    options?: CacheRulesCreateOptionalParams,
   ): Promise<CacheRulesCreateResponse>;
-  /**
-   * Deletes a cache rule resource from a container registry.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param registryName The name of the container registry.
-   * @param cacheRuleName The name of the cache rule.
-   * @param options The options parameters.
-   */
-  beginDelete(
-    resourceGroupName: string,
-    registryName: string,
-    cacheRuleName: string,
-    options?: CacheRulesDeleteOptionalParams
-  ): Promise<
-    SimplePollerLike<
-      OperationState<CacheRulesDeleteResponse>,
-      CacheRulesDeleteResponse
-    >
-  >;
-  /**
-   * Deletes a cache rule resource from a container registry.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param registryName The name of the container registry.
-   * @param cacheRuleName The name of the cache rule.
-   * @param options The options parameters.
-   */
-  beginDeleteAndWait(
-    resourceGroupName: string,
-    registryName: string,
-    cacheRuleName: string,
-    options?: CacheRulesDeleteOptionalParams
-  ): Promise<CacheRulesDeleteResponse>;
   /**
    * Updates a cache rule for a container registry with the specified parameters.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
@@ -128,7 +97,7 @@ export interface CacheRules {
     registryName: string,
     cacheRuleName: string,
     cacheRuleUpdateParameters: CacheRuleUpdateParameters,
-    options?: CacheRulesUpdateOptionalParams
+    options?: CacheRulesUpdateOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<CacheRulesUpdateResponse>,
@@ -148,6 +117,37 @@ export interface CacheRules {
     registryName: string,
     cacheRuleName: string,
     cacheRuleUpdateParameters: CacheRuleUpdateParameters,
-    options?: CacheRulesUpdateOptionalParams
+    options?: CacheRulesUpdateOptionalParams,
   ): Promise<CacheRulesUpdateResponse>;
+  /**
+   * Deletes a cache rule resource from a container registry.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param cacheRuleName The name of the cache rule.
+   * @param options The options parameters.
+   */
+  beginDelete(
+    resourceGroupName: string,
+    registryName: string,
+    cacheRuleName: string,
+    options?: CacheRulesDeleteOptionalParams,
+  ): Promise<
+    SimplePollerLike<
+      OperationState<CacheRulesDeleteResponse>,
+      CacheRulesDeleteResponse
+    >
+  >;
+  /**
+   * Deletes a cache rule resource from a container registry.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param cacheRuleName The name of the cache rule.
+   * @param options The options parameters.
+   */
+  beginDeleteAndWait(
+    resourceGroupName: string,
+    registryName: string,
+    cacheRuleName: string,
+    options?: CacheRulesDeleteOptionalParams,
+  ): Promise<CacheRulesDeleteResponse>;
 }

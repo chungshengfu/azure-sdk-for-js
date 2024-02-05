@@ -15,10 +15,10 @@ import {
   TokensGetResponse,
   TokensCreateOptionalParams,
   TokensCreateResponse,
-  TokensDeleteOptionalParams,
   TokenUpdateParameters,
   TokensUpdateOptionalParams,
-  TokensUpdateResponse
+  TokensUpdateResponse,
+  TokensDeleteOptionalParams,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -33,7 +33,7 @@ export interface Tokens {
   list(
     resourceGroupName: string,
     registryName: string,
-    options?: TokensListOptionalParams
+    options?: TokensListOptionalParams,
   ): PagedAsyncIterableIterator<Token>;
   /**
    * Gets the properties of the specified token.
@@ -46,7 +46,7 @@ export interface Tokens {
     resourceGroupName: string,
     registryName: string,
     tokenName: string,
-    options?: TokensGetOptionalParams
+    options?: TokensGetOptionalParams,
   ): Promise<TokensGetResponse>;
   /**
    * Creates a token for a container registry with the specified parameters.
@@ -61,7 +61,7 @@ export interface Tokens {
     registryName: string,
     tokenName: string,
     tokenCreateParameters: Token,
-    options?: TokensCreateOptionalParams
+    options?: TokensCreateOptionalParams,
   ): Promise<
     SimplePollerLike<OperationState<TokensCreateResponse>, TokensCreateResponse>
   >;
@@ -78,34 +78,8 @@ export interface Tokens {
     registryName: string,
     tokenName: string,
     tokenCreateParameters: Token,
-    options?: TokensCreateOptionalParams
+    options?: TokensCreateOptionalParams,
   ): Promise<TokensCreateResponse>;
-  /**
-   * Deletes a token from a container registry.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param registryName The name of the container registry.
-   * @param tokenName The name of the token.
-   * @param options The options parameters.
-   */
-  beginDelete(
-    resourceGroupName: string,
-    registryName: string,
-    tokenName: string,
-    options?: TokensDeleteOptionalParams
-  ): Promise<SimplePollerLike<OperationState<void>, void>>;
-  /**
-   * Deletes a token from a container registry.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param registryName The name of the container registry.
-   * @param tokenName The name of the token.
-   * @param options The options parameters.
-   */
-  beginDeleteAndWait(
-    resourceGroupName: string,
-    registryName: string,
-    tokenName: string,
-    options?: TokensDeleteOptionalParams
-  ): Promise<void>;
   /**
    * Updates a token with the specified parameters.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
@@ -119,7 +93,7 @@ export interface Tokens {
     registryName: string,
     tokenName: string,
     tokenUpdateParameters: TokenUpdateParameters,
-    options?: TokensUpdateOptionalParams
+    options?: TokensUpdateOptionalParams,
   ): Promise<
     SimplePollerLike<OperationState<TokensUpdateResponse>, TokensUpdateResponse>
   >;
@@ -136,6 +110,32 @@ export interface Tokens {
     registryName: string,
     tokenName: string,
     tokenUpdateParameters: TokenUpdateParameters,
-    options?: TokensUpdateOptionalParams
+    options?: TokensUpdateOptionalParams,
   ): Promise<TokensUpdateResponse>;
+  /**
+   * Deletes a token from a container registry.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param tokenName The name of the token.
+   * @param options The options parameters.
+   */
+  beginDelete(
+    resourceGroupName: string,
+    registryName: string,
+    tokenName: string,
+    options?: TokensDeleteOptionalParams,
+  ): Promise<SimplePollerLike<OperationState<void>, void>>;
+  /**
+   * Deletes a token from a container registry.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param tokenName The name of the token.
+   * @param options The options parameters.
+   */
+  beginDeleteAndWait(
+    resourceGroupName: string,
+    registryName: string,
+    tokenName: string,
+    options?: TokensDeleteOptionalParams,
+  ): Promise<void>;
 }

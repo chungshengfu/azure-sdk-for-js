@@ -25,17 +25,9 @@ export type TaskStepUpdateParametersUnion =
   | FileTaskStepUpdateParameters
   | EncodedTaskStepUpdateParameters;
 
-/** The result of a request to list archives for a container registry. */
-export interface ArchiveListResult {
-  /** The list of archives. Since this list may be incomplete, the nextLink field should be used to request the next list of distributions. */
-  value?: Archive[];
-  /** The URI that can be used to request the next list of archives. */
-  nextLink?: string;
-}
-
 /** The properties of a archive. */
 export interface ArchiveProperties {
-  /** The package source of the archive. */
+  /** The properties of the archive package source. */
   packageSource?: ArchivePackageSourceProperties;
   /** The published version of the archive. */
   publishedVersion?: string;
@@ -152,6 +144,14 @@ export interface ArchiveUpdateParameters {
   publishedVersion?: string;
 }
 
+/** The result of a request to list archives for a container registry. */
+export interface ArchiveListResult {
+  /** The list of archives. Since this list may be incomplete, the nextLink field should be used to request the next list of distributions. */
+  value?: Archive[];
+  /** The URI that can be used to request the next list of archives. */
+  nextLink?: string;
+}
+
 /** The result of a request to list export pipelines for a container registry. */
 export interface ArchiveVersionListResult {
   /** The list of export pipelines. Since this list may be incomplete, the nextLink field should be used to request the next list of export pipelines. */
@@ -160,25 +160,29 @@ export interface ArchiveVersionListResult {
   nextLink?: string;
 }
 
-/** The result of a request to list cache rules for a container registry. */
-export interface CacheRulesListResult {
-  /** The list of cache rules. */
-  value?: CacheRule[];
-  /** If provided, client must use NextLink URI to request next list of cache rules. */
-  nextLink?: string;
+/** The scope filter properties of artifact sync. */
+export interface ArtifactSyncScopeFilterProperties {
+  /** The language type of the scope filter. */
+  type?: ArtifactSyncScopeFilterType;
+  /** The query to process with the source repository contents. */
+  query?: string;
 }
 
 /** The parameters for updating a cache rule. */
 export interface CacheRuleUpdateParameters {
   /** The ARM resource ID of the credential store which is associated with the Cache rule. */
   credentialSetResourceId?: string;
+  /** The status of artifact sync. */
+  artifactSyncStatus?: ArtifactSyncStatus;
+  /** The scope filter properties of artifact sync. */
+  artifactSyncScopeFilterProperties?: ArtifactSyncScopeFilterProperties;
 }
 
-/** The result of a request to list connected registries for a container registry. */
-export interface ConnectedRegistryListResult {
-  /** The list of connected registries. Since this list may be incomplete, the nextLink field should be used to request the next list of connected registries. */
-  value?: ConnectedRegistry[];
-  /** The URI that can be used to request the next list of connected registries. */
+/** The result of a request to list cache rules for a container registry. */
+export interface CacheRulesListResult {
+  /** The list of cache rules. */
+  value?: CacheRule[];
+  /** If provided, client must use NextLink URI to request next list of cache rules. */
   nextLink?: string;
 }
 
@@ -243,7 +247,7 @@ export interface TlsProperties {
    */
   readonly status?: TlsStatus;
   /**
-   * The certificate used to configure HTTPS for the login server.
+   * The TLS certificate properties of the connected registry login server.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly certificate?: TlsCertificateProperties;
@@ -302,7 +306,7 @@ export interface StatusDetailProperties {
 
 /** The parameters for updating a connected registry. */
 export interface ConnectedRegistryUpdateParameters {
-  /** The sync properties of the connected registry with its parent. */
+  /** The parameters for updating the sync properties of the connected registry with its parent. */
   syncProperties?: SyncUpdateProperties;
   /** The logging properties of the connected registry. */
   logging?: LoggingProperties;
@@ -322,11 +326,11 @@ export interface SyncUpdateProperties {
   messageTtl?: string;
 }
 
-/** The result of a request to list credential sets for a container registry. */
-export interface CredentialSetListResult {
-  /** The list of credential sets. Since this list may be incomplete, the nextLink field should be used to request the next list of credential sets. */
-  value?: CredentialSet[];
-  /** The URI that can be used to request the next list of credential sets. */
+/** The result of a request to list connected registries for a container registry. */
+export interface ConnectedRegistryListResult {
+  /** The list of connected registries. Since this list may be incomplete, the nextLink field should be used to request the next list of connected registries. */
+  value?: ConnectedRegistry[];
+  /** The URI that can be used to request the next list of connected registries. */
   nextLink?: string;
 }
 
@@ -374,11 +378,8 @@ export interface AuthCredential {
   usernameSecretIdentifier?: string;
   /** KeyVault Secret URI for accessing the password. */
   passwordSecretIdentifier?: string;
-  /**
-   * This provides data pertaining to the health of the auth credential.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly credentialHealth?: CredentialHealth;
+  /** The health of the auth credential. */
+  credentialHealth?: CredentialHealth;
 }
 
 /** The health of the auth credential. */
@@ -393,7 +394,7 @@ export interface CredentialHealth {
 
 /** The parameters for updating a credential set */
 export interface CredentialSetUpdateParameters {
-  /** Identities associated with the resource. This is used to access the KeyVault secrets. */
+  /** Managed identity for the resource. */
   identity?: IdentityProperties;
   /**
    * List of authentication credentials stored for an upstream.
@@ -402,11 +403,11 @@ export interface CredentialSetUpdateParameters {
   authCredentials?: AuthCredential[];
 }
 
-/** The result of a request to list export pipelines for a container registry. */
-export interface ExportPipelineListResult {
-  /** The list of export pipelines. Since this list may be incomplete, the nextLink field should be used to request the next list of export pipelines. */
-  value?: ExportPipeline[];
-  /** The URI that can be used to request the next list of pipeline runs. */
+/** The result of a request to list credential sets for a container registry. */
+export interface CredentialSetListResult {
+  /** The list of credential sets. Since this list may be incomplete, the nextLink field should be used to request the next list of credential sets. */
+  value?: CredentialSet[];
+  /** The URI that can be used to request the next list of credential sets. */
   nextLink?: string;
 }
 
@@ -424,8 +425,15 @@ export interface ExportPipelineTargetProperties {
   keyVaultUri: string;
 }
 
+/** The result of a request to list export pipelines for a container registry. */
+export interface ExportPipelineListResult {
+  /** The list of export pipelines. Since this list may be incomplete, the nextLink field should be used to request the next list of export pipelines. */
+  value?: ExportPipeline[];
+  /** The URI that can be used to request the next list of pipeline runs. */
+  nextLink?: string;
+}
+
 export interface ImportImageParameters {
-  /** The source of the image. */
   source: ImportSource;
   /** List of strings of the form repo[:tag]. When tag is omitted the source will be used (or 'latest' if source tag is also omitted). */
   targetTags?: string[];
@@ -440,7 +448,8 @@ export interface ImportSource {
   resourceId?: string;
   /** The address of the source registry (e.g. 'mcr.microsoft.com'). */
   registryUri?: string;
-  /** Credentials used when importing from a registry uri. */
+  /** The resource identifier of the source Cache Rule. */
+  cacheRuleResourceId?: string;
   credentials?: ImportSourceCredentials;
   /**
    * Repository name of the source image.
@@ -458,14 +467,6 @@ export interface ImportSourceCredentials {
   password: string;
 }
 
-/** The result of a request to list import pipelines for a container registry. */
-export interface ImportPipelineListResult {
-  /** The list of import pipelines. Since this list may be incomplete, the nextLink field should be used to request the next list of import pipelines. */
-  value?: ImportPipeline[];
-  /** The URI that can be used to request the next list of pipeline runs. */
-  nextLink?: string;
-}
-
 /** The properties of the import pipeline source. */
 export interface ImportPipelineSourceProperties {
   /** The type of source for the import pipeline. */
@@ -481,13 +482,38 @@ export interface ImportPipelineSourceProperties {
 }
 
 export interface PipelineTriggerProperties {
-  /** The source trigger properties of the pipeline. */
   sourceTrigger?: PipelineSourceTriggerProperties;
 }
 
 export interface PipelineSourceTriggerProperties {
   /** The current status of the source trigger. */
   status: TriggerStatus;
+}
+
+/** The result of a request to list import pipelines for a container registry. */
+export interface ImportPipelineListResult {
+  /** The list of import pipelines. Since this list may be incomplete, the nextLink field should be used to request the next list of import pipelines. */
+  value?: ImportPipeline[];
+  /** The URI that can be used to request the next list of pipeline runs. */
+  nextLink?: string;
+}
+
+/** A request to check whether a container registry name is available. */
+export interface RegistryNameCheckRequest {
+  /** The name of the container registry. */
+  name: string;
+  /** The resource type of the container registry. This field must be set to 'Microsoft.ContainerRegistry/registries'. */
+  type: "Microsoft.ContainerRegistry/registries";
+}
+
+/** The result of a request to check the availability of a container registry name. */
+export interface RegistryNameStatus {
+  /** The value that indicates whether the name is available. */
+  nameAvailable?: boolean;
+  /** If any, the reason that the name is not available. */
+  reason?: string;
+  /** If any, the error message that provides more detail for the reason that the name is not available. */
+  message?: string;
 }
 
 /** The result of a request to list container registry operations. */
@@ -504,14 +530,14 @@ export interface OperationDefinition {
   origin?: string;
   /** Operation name: {provider}/{resource}/{operation}. */
   name?: string;
-  /** The display information for the container registry operation. */
+  /** The display information for a container registry operation. */
   display?: OperationDisplayDefinition;
   /**
    * This property indicates if the operation is an action or a data action
    * ref: https://docs.microsoft.com/en-us/azure/role-based-access-control/role-definitions#management-and-data-operations
    */
   isDataAction?: boolean;
-  /** The definition of Azure Monitoring service. */
+  /** The definition of Azure Monitoring list. */
   serviceSpecification?: OperationServiceSpecificationDefinition;
 }
 
@@ -561,32 +587,6 @@ export interface OperationLogSpecificationDefinition {
   blobDuration?: string;
 }
 
-/** A request to check whether a container registry name is available. */
-export interface RegistryNameCheckRequest {
-  /** The name of the container registry. */
-  name: string;
-  /** The resource type of the container registry. This field must be set to 'Microsoft.ContainerRegistry/registries'. */
-  type: "Microsoft.ContainerRegistry/registries";
-}
-
-/** The result of a request to check the availability of a container registry name. */
-export interface RegistryNameStatus {
-  /** The value that indicates whether the name is available. */
-  nameAvailable?: boolean;
-  /** If any, the reason that the name is not available. */
-  reason?: string;
-  /** If any, the error message that provides more detail for the reason that the name is not available. */
-  message?: string;
-}
-
-/** The result of a request to list pipeline runs for a container registry. */
-export interface PipelineRunListResult {
-  /** The list of pipeline runs. Since this list may be incomplete, the nextLink field should be used to request the next list of pipeline runs. */
-  value?: PipelineRun[];
-  /** The URI that can be used to request the next list of pipeline runs. */
-  nextLink?: string;
-}
-
 /** The request properties provided for a pipeline run. */
 export interface PipelineRunRequest {
   /** The resource ID of the pipeline to run. */
@@ -598,9 +598,7 @@ export interface PipelineRunRequest {
    * Specify an image by sha256-based manifest digest ('hello-world@sha256:abc123').
    */
   artifacts?: string[];
-  /** The source properties of the pipeline run. */
   source?: PipelineRunSourceProperties;
-  /** The target properties of the pipeline run. */
   target?: PipelineRunTargetProperties;
   /** The digest of the tar used to transfer the artifacts. */
   catalogDigest?: string;
@@ -626,19 +624,17 @@ export interface PipelineRunResponse {
   status?: string;
   /** The artifacts imported in the pipeline run. */
   importedArtifacts?: string[];
-  /** The current progress of the copy operation. */
   progress?: ProgressProperties;
   /** The time the pipeline run started. */
   startTime?: Date;
   /** The time the pipeline run finished. */
   finishTime?: Date;
-  /** The source of the pipeline run. */
+  /** The properties of the import pipeline source. */
   source?: ImportPipelineSourceProperties;
-  /** The target of the pipeline run. */
+  /** The properties of the export pipeline target. */
   target?: ExportPipelineTargetProperties;
   /** The digest of the tar used to transfer the artifacts. */
   catalogDigest?: string;
-  /** The trigger that caused the pipeline run. */
   trigger?: PipelineTriggerDescriptor;
   /** The detailed error message for the pipeline run in the case of failure. */
   pipelineRunErrorMessage?: string;
@@ -650,7 +646,6 @@ export interface ProgressProperties {
 }
 
 export interface PipelineTriggerDescriptor {
-  /** The source trigger that caused the pipeline run. */
   sourceTrigger?: PipelineSourceTriggerDescriptor;
 }
 
@@ -659,11 +654,11 @@ export interface PipelineSourceTriggerDescriptor {
   timestamp?: Date;
 }
 
-/** The result of a request to list private endpoint connections for a container registry. */
-export interface PrivateEndpointConnectionListResult {
-  /** The list of private endpoint connections. Since this list may be incomplete, the nextLink field should be used to request the next list of private endpoint connections. */
-  value?: PrivateEndpointConnection[];
-  /** The URI that can be used to request the next list of private endpoint connections. */
+/** The result of a request to list pipeline runs for a container registry. */
+export interface PipelineRunListResult {
+  /** The list of pipeline runs. Since this list may be incomplete, the nextLink field should be used to request the next list of pipeline runs. */
+  value?: PipelineRun[];
+  /** The URI that can be used to request the next list of pipeline runs. */
   nextLink?: string;
 }
 
@@ -683,11 +678,11 @@ export interface PrivateLinkServiceConnectionState {
   actionsRequired?: ActionsRequired;
 }
 
-/** The result of a request to list container registries. */
-export interface RegistryListResult {
-  /** The list of container registries. Since this list may be incomplete, the nextLink field should be used to request the next list of container registries. */
-  value?: Registry[];
-  /** The URI that can be used to request the next list of container registries. */
+/** The result of a request to list private endpoint connections for a container registry. */
+export interface PrivateEndpointConnectionListResult {
+  /** The list of private endpoint connections. Since this list may be incomplete, the nextLink field should be used to request the next list of private endpoint connections. */
+  value?: PrivateEndpointConnection[];
+  /** The URI that can be used to request the next list of private endpoint connections. */
   nextLink?: string;
 }
 
@@ -749,7 +744,7 @@ export interface Policies {
   exportPolicy?: ExportPolicy;
   /** The policy for using ARM audience token for a container registry. */
   azureADAuthenticationAsArmPolicy?: AzureADAuthenticationAsArmPolicy;
-  /** The soft delete policy for a container registry. */
+  /** The soft delete policy for a container registry */
   softDeletePolicy?: SoftDeletePolicy;
 }
 
@@ -808,7 +803,6 @@ export interface SoftDeletePolicy {
 export interface EncryptionProperty {
   /** Indicates whether or not the encryption is enabled for container registry. */
   status?: EncryptionStatus;
-  /** Key vault properties. */
   keyVaultProperties?: KeyVaultProperties;
 }
 
@@ -864,11 +858,11 @@ export interface Resource {
 
 /** The parameters for updating a container registry. */
 export interface RegistryUpdateParameters {
-  /** The identity of the container registry. */
+  /** Managed identity for the resource. */
   identity?: IdentityProperties;
   /** The tags for the container registry. */
   tags?: { [propertyName: string]: string };
-  /** The SKU of the container registry. */
+  /** The SKU of a container registry. */
   sku?: Sku;
   /** The value that indicates whether the admin user is enabled. */
   adminUserEnabled?: boolean;
@@ -876,7 +870,6 @@ export interface RegistryUpdateParameters {
   networkRuleSet?: NetworkRuleSet;
   /** The policies for a container registry. */
   policies?: Policies;
-  /** The encryption settings of container registry. */
   encryption?: EncryptionProperty;
   /** Enable a single data endpoint per region for serving data. */
   dataEndpointEnabled?: boolean;
@@ -888,6 +881,36 @@ export interface RegistryUpdateParameters {
   anonymousPullEnabled?: boolean;
   /** Determines whether registry artifacts are indexed for metadata search. */
   metadataSearch?: MetadataSearch;
+}
+
+/** The result of a request to list container registries. */
+export interface RegistryListResult {
+  /** The list of container registries. Since this list may be incomplete, the nextLink field should be used to request the next list of container registries. */
+  value?: Registry[];
+  /** The URI that can be used to request the next list of container registries. */
+  nextLink?: string;
+}
+
+/** The response from the ListCredentials operation. */
+export interface RegistryListCredentialsResult {
+  /** The username for a container registry. */
+  username?: string;
+  /** The list of passwords for a container registry. */
+  passwords?: RegistryPassword[];
+}
+
+/** The login password for the container registry. */
+export interface RegistryPassword {
+  /** The password name. */
+  name?: PasswordName;
+  /** The password value. */
+  value?: string;
+}
+
+/** The parameters used to regenerate the login credential. */
+export interface RegenerateCredentialParameters {
+  /** Specifies name of the password which should be regenerated -- password or password2. */
+  name: PasswordName;
 }
 
 /** The result of a request to get container registry quota usages. */
@@ -935,34 +958,22 @@ export interface PrivateLinkResource {
   requiredZoneNames?: string[];
 }
 
-/** The response from the ListCredentials operation. */
-export interface RegistryListCredentialsResult {
-  /** The username for a container registry. */
-  username?: string;
-  /** The list of passwords for a container registry. */
-  passwords?: RegistryPassword[];
+/** The result of a request to check the cache rule artifact sync estimate */
+export interface CacheRuleArtifactSyncEstimateResult {
+  /** The name of the repository. */
+  name?: string;
+  /** The total count of results belonging to the repository. */
+  totalCount?: number;
+  /** The filtered count of results after processing the query. */
+  filteredCount?: number;
+  /** A sample of results processed by the query. */
+  results?: ArtifactSyncEstimateResult[];
 }
 
-/** The login password for the container registry. */
-export interface RegistryPassword {
-  /** The password name. */
-  name?: PasswordName;
-  /** The password value. */
-  value?: string;
-}
-
-/** The parameters used to regenerate the login credential. */
-export interface RegenerateCredentialParameters {
-  /** Specifies name of the password which should be regenerated -- password or password2. */
-  name: PasswordName;
-}
-
-/** The result of a request to list replications for a container registry. */
-export interface ReplicationListResult {
-  /** The list of replications. Since this list may be incomplete, the nextLink field should be used to request the next list of replications. */
-  value?: Replication[];
-  /** The URI that can be used to request the next list of replications. */
-  nextLink?: string;
+/** The result of processing the artifact sync query. */
+export interface ArtifactSyncEstimateResult {
+  /** The name of a result item. */
+  name?: string;
 }
 
 /** The parameters for updating a replication. */
@@ -973,11 +984,11 @@ export interface ReplicationUpdateParameters {
   regionEndpointEnabled?: boolean;
 }
 
-/** The result of a request to list scope maps for a container registry. */
-export interface ScopeMapListResult {
-  /** The list of scope maps. Since this list may be incomplete, the nextLink field should be used to request the next list of scope maps. */
-  value?: ScopeMap[];
-  /** The URI that can be used to request the next list of scope maps. */
+/** The result of a request to list replications for a container registry. */
+export interface ReplicationListResult {
+  /** The list of replications. Since this list may be incomplete, the nextLink field should be used to request the next list of replications. */
+  value?: Replication[];
+  /** The URI that can be used to request the next list of replications. */
   nextLink?: string;
 }
 
@@ -993,17 +1004,19 @@ export interface ScopeMapUpdateParameters {
   actions?: string[];
 }
 
-/** The result of a request to list tokens for a container registry. */
-export interface TokenListResult {
-  /** The list of tokens. Since this list may be incomplete, the nextLink field should be used to request the next list of tokens. */
-  value?: Token[];
-  /** The URI that can be used to request the next list of tokens. */
+/** The result of a request to list scope maps for a container registry. */
+export interface ScopeMapListResult {
+  /** The list of scope maps. Since this list may be incomplete, the nextLink field should be used to request the next list of scope maps. */
+  value?: ScopeMap[];
+  /** The URI that can be used to request the next list of scope maps. */
   nextLink?: string;
 }
 
 /** The properties of the credentials that can be used for authenticating the token. */
 export interface TokenCredentialsProperties {
+  /** The list of certificates configured with the token. */
   certificates?: TokenCertificate[];
+  /** The list of passwords generated for the token. */
   passwords?: TokenPassword[];
 }
 
@@ -1039,8 +1052,16 @@ export interface TokenUpdateParameters {
   scopeMapId?: string;
   /** The status of the token example enabled or disabled. */
   status?: TokenStatus;
-  /** The credentials that can be used for authenticating the token. */
+  /** The properties of the credentials that can be used for authenticating the token. */
   credentials?: TokenCredentialsProperties;
+}
+
+/** The result of a request to list tokens for a container registry. */
+export interface TokenListResult {
+  /** The list of tokens. Since this list may be incomplete, the nextLink field should be used to request the next list of tokens. */
+  value?: Token[];
+  /** The URI that can be used to request the next list of tokens. */
+  nextLink?: string;
 }
 
 /** The parameters used to generate credentials for a specified token or user of a container registry. */
@@ -1059,14 +1080,6 @@ export interface GenerateCredentialsResult {
   username?: string;
   /** The list of passwords for a container registry. */
   passwords?: TokenPassword[];
-}
-
-/** The result of a request to list webhooks for a container registry. */
-export interface WebhookListResult {
-  /** The list of webhooks. Since this list may be incomplete, the nextLink field should be used to request the next list of webhooks. */
-  value?: Webhook[];
-  /** The URI that can be used to request the next list of webhooks. */
-  nextLink?: string;
 }
 
 /** The parameters for creating a webhook. */
@@ -1103,10 +1116,26 @@ export interface WebhookUpdateParameters {
   actions?: WebhookAction[];
 }
 
+/** The result of a request to list webhooks for a container registry. */
+export interface WebhookListResult {
+  /** The list of webhooks. Since this list may be incomplete, the nextLink field should be used to request the next list of webhooks. */
+  value?: Webhook[];
+  /** The URI that can be used to request the next list of webhooks. */
+  nextLink?: string;
+}
+
 /** The basic information of an event. */
 export interface EventInfo {
   /** The event ID. */
   id?: string;
+}
+
+/** The configuration of service URI and custom headers for the webhook. */
+export interface CallbackConfig {
+  /** The service URI for the webhook to post notifications. */
+  serviceUri: string;
+  /** Custom headers that will be added to the webhook notifications. */
+  customHeaders?: { [propertyName: string]: string };
 }
 
 /** The result of a request to list events for a webhook. */
@@ -1211,14 +1240,6 @@ export interface EventResponseMessage {
   statusCode?: string;
   /** The HTTP message version. */
   version?: string;
-}
-
-/** The configuration of service URI and custom headers for the webhook. */
-export interface CallbackConfig {
-  /** The service URI for the webhook to post notifications. */
-  serviceUri: string;
-  /** Custom headers that will be added to the webhook notifications. */
-  customHeaders?: { [propertyName: string]: string };
 }
 
 /** An error response from the Azure Container Registry service. */
@@ -1691,29 +1712,18 @@ export interface BaseImageTriggerUpdateParameters {
   name: string;
 }
 
-/** The properties of a storage account for a container registry. Only applicable to Classic SKU. */
-export interface StorageAccountProperties {
-  /** The resource ID of the storage account. */
-  id: string;
-}
-
-/** The properties of a package type. */
-export interface PackageType {
-  /** The name of the package type. */
-  name?: string;
-  /**
-   * The endpoint of the package type.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly endpoint?: string;
-}
-
 /** The Active Directory Object that will be used for authenticating the token of a container registry. */
 export interface ActiveDirectoryObject {
   /** The user/group/application object ID for Active Directory Object that will be used for authenticating the token of a container registry. */
   objectId?: string;
   /** The tenant ID of user/group/application object Active Directory Object that will be used for authenticating the token of a container registry. */
   tenantId?: string;
+}
+
+/** The properties of a storage account for a container registry. Only applicable to Classic SKU. */
+export interface StorageAccountProperties {
+  /** The resource ID of the storage account. */
+  id: string;
 }
 
 /** Properties that are enabled for Odata querying on runs. */
@@ -1794,18 +1804,8 @@ export interface DebianArchivePackageSourceProperties
 
 /** An object that represents a archive for a container registry. */
 export interface Archive extends ProxyResource {
-  /** The package source of the archive. */
-  packageSource?: ArchivePackageSourceProperties;
-  /** The published version of the archive. */
-  publishedVersion?: string;
-  repositoryEndpointPrefix?: string;
-  /** NOTE: This property will not be serialized. It can only be populated by the server. */
-  readonly repositoryEndpoint?: string;
-  /**
-   * The provisioning state of the archive at the time the operation was called.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: ProvisioningState;
+  /** The properties of a archive. */
+  properties?: ArchiveProperties;
 }
 
 /** An object that represents an export pipeline for a container registry. */
@@ -1840,6 +1840,10 @@ export interface CacheRule extends ProxyResource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly provisioningState?: ProvisioningState;
+  /** The status of artifact sync. */
+  artifactSyncStatus?: ArtifactSyncStatus;
+  /** The scope filter properties of artifact sync. */
+  artifactSyncScopeFilterProperties?: ArtifactSyncScopeFilterProperties;
 }
 
 /** An object that represents a connected registry for a container registry. */
@@ -1871,7 +1875,7 @@ export interface ConnectedRegistry extends ProxyResource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly activation?: ActivationProperties;
-  /** The parent of the connected registry. */
+  /** The properties of the connected registry parent. */
   parent?: ParentProperties;
   /** The list of the ACR token resource IDs used to authenticate clients to the connected registry. */
   clientTokenIds?: string[];
@@ -1890,7 +1894,7 @@ export interface ConnectedRegistry extends ProxyResource {
 
 /** An object that represents a credential set resource for a container registry. */
 export interface CredentialSet extends ProxyResource {
-  /** Identities associated with the resource. This is used to access the KeyVault secrets. */
+  /** Managed identity for the resource. */
   identity?: IdentityProperties;
   /** The credentials are stored for this upstream or login server. */
   loginServer?: string;
@@ -1915,9 +1919,9 @@ export interface CredentialSet extends ProxyResource {
 export interface ExportPipeline extends ProxyResource {
   /** The location of the export pipeline. */
   location?: string;
-  /** The identity of the export pipeline. */
+  /** Managed identity for the resource. */
   identity?: IdentityProperties;
-  /** The target properties of the export pipeline. */
+  /** The properties of the export pipeline target. */
   target?: ExportPipelineTargetProperties;
   /** The list of all options configured for the pipeline. */
   options?: PipelineOptions[];
@@ -1932,11 +1936,10 @@ export interface ExportPipeline extends ProxyResource {
 export interface ImportPipeline extends ProxyResource {
   /** The location of the import pipeline. */
   location?: string;
-  /** The identity of the import pipeline. */
+  /** Managed identity for the resource. */
   identity?: IdentityProperties;
-  /** The source properties of the import pipeline. */
+  /** The properties of the import pipeline source. */
   source?: ImportPipelineSourceProperties;
-  /** The properties that describe the trigger of the import pipeline. */
   trigger?: PipelineTriggerProperties;
   /** The list of all options configured for the pipeline. */
   options?: PipelineOptions[];
@@ -1954,10 +1957,10 @@ export interface PipelineRun extends ProxyResource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly provisioningState?: ProvisioningState;
-  /** The request parameters for a pipeline run. */
+  /** The request properties provided for a pipeline run. */
   request?: PipelineRunRequest;
   /**
-   * The response of a pipeline run.
+   * The response properties returned for a pipeline run.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly response?: PipelineRunResponse;
@@ -1967,9 +1970,9 @@ export interface PipelineRun extends ProxyResource {
 
 /** An object that represents a private endpoint connection for a container registry. */
 export interface PrivateEndpointConnection extends ProxyResource {
-  /** The resource of private endpoint. */
+  /** The Private Endpoint resource. */
   privateEndpoint?: PrivateEndpoint;
-  /** A collection of information about the state of the connection between service consumer and provider. */
+  /** The state of a private link service connection. */
   privateLinkServiceConnectionState?: PrivateLinkServiceConnectionState;
   /**
    * The provisioning state of private endpoint connection resource.
@@ -2019,7 +2022,7 @@ export interface Token extends ProxyResource {
   readonly provisioningState?: ProvisioningState;
   /** The resource ID of the scope map to which the token will be associated with. */
   scopeMapId?: string;
-  /** The credentials that can be used for authenticating the token. */
+  /** The properties of the credentials that can be used for authenticating the token. */
   credentials?: TokenCredentialsProperties;
   /** The status of the token example enabled or disabled. */
   status?: TokenStatus;
@@ -2106,9 +2109,9 @@ export interface TaskRun extends ProxyResource {
 
 /** An object that represents a container registry. */
 export interface Registry extends Resource {
-  /** The SKU of the container registry. */
+  /** The SKU of a container registry. */
   sku: Sku;
-  /** The identity of the container registry. */
+  /** Managed identity for the resource. */
   identity?: IdentityProperties;
   /**
    * The URL that can be used to log into the container registry.
@@ -2126,7 +2129,7 @@ export interface Registry extends Resource {
    */
   readonly provisioningState?: ProvisioningState;
   /**
-   * The status of the container registry at the time the operation was called.
+   * The status of an Azure resource at the time the operation was called.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly status?: Status;
@@ -2136,7 +2139,6 @@ export interface Registry extends Resource {
   networkRuleSet?: NetworkRuleSet;
   /** The policies for a container registry. */
   policies?: Policies;
-  /** The encryption settings of container registry. */
   encryption?: EncryptionProperty;
   /** Enable a single data endpoint per region for serving data. */
   dataEndpointEnabled?: boolean;
@@ -2170,7 +2172,7 @@ export interface Replication extends Resource {
    */
   readonly provisioningState?: ProvisioningState;
   /**
-   * The status of the replication at the time the operation was called.
+   * The status of an Azure resource at the time the operation was called.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly status?: Status;
@@ -2464,14 +2466,14 @@ export interface CacheRulesCreateHeaders {
   azureAsyncOperation?: string;
 }
 
-/** Defines headers for CacheRules_delete operation. */
-export interface CacheRulesDeleteHeaders {
-  location?: string;
-}
-
 /** Defines headers for CacheRules_update operation. */
 export interface CacheRulesUpdateHeaders {
   azureAsyncOperation?: string;
+}
+
+/** Defines headers for CacheRules_delete operation. */
+export interface CacheRulesDeleteHeaders {
+  location?: string;
 }
 
 /** Defines headers for ConnectedRegistries_create operation. */
@@ -2479,14 +2481,14 @@ export interface ConnectedRegistriesCreateHeaders {
   azureAsyncOperation?: string;
 }
 
-/** Defines headers for ConnectedRegistries_delete operation. */
-export interface ConnectedRegistriesDeleteHeaders {
-  location?: string;
-}
-
 /** Defines headers for ConnectedRegistries_update operation. */
 export interface ConnectedRegistriesUpdateHeaders {
   azureAsyncOperation?: string;
+}
+
+/** Defines headers for ConnectedRegistries_delete operation. */
+export interface ConnectedRegistriesDeleteHeaders {
+  location?: string;
 }
 
 /** Defines headers for ConnectedRegistries_deactivate operation. */
@@ -2499,14 +2501,14 @@ export interface CredentialSetsCreateHeaders {
   azureAsyncOperation?: string;
 }
 
-/** Defines headers for CredentialSets_delete operation. */
-export interface CredentialSetsDeleteHeaders {
-  location?: string;
-}
-
 /** Defines headers for CredentialSets_update operation. */
 export interface CredentialSetsUpdateHeaders {
   azureAsyncOperation?: string;
+}
+
+/** Defines headers for CredentialSets_delete operation. */
+export interface CredentialSetsDeleteHeaders {
+  location?: string;
 }
 
 /** Defines headers for ExportPipelines_create operation. */
@@ -2529,14 +2531,14 @@ export interface RegistriesCreateHeaders {
   azureAsyncOperation?: string;
 }
 
-/** Defines headers for Registries_delete operation. */
-export interface RegistriesDeleteHeaders {
-  location?: string;
-}
-
 /** Defines headers for Registries_update operation. */
 export interface RegistriesUpdateHeaders {
   azureAsyncOperation?: string;
+}
+
+/** Defines headers for Registries_delete operation. */
+export interface RegistriesDeleteHeaders {
+  location?: string;
 }
 
 /** Defines headers for Registries_generateCredentials operation. */
@@ -2579,18 +2581,23 @@ export interface ReplicationsCreateHeaders {
   azureAsyncOperation?: string;
 }
 
-/** Defines headers for Replications_delete operation. */
-export interface ReplicationsDeleteHeaders {
-  location?: string;
-}
-
 /** Defines headers for Replications_update operation. */
 export interface ReplicationsUpdateHeaders {
   azureAsyncOperation?: string;
 }
 
+/** Defines headers for Replications_delete operation. */
+export interface ReplicationsDeleteHeaders {
+  location?: string;
+}
+
 /** Defines headers for ScopeMaps_create operation. */
 export interface ScopeMapsCreateHeaders {
+  azureAsyncOperation?: string;
+}
+
+/** Defines headers for ScopeMaps_update operation. */
+export interface ScopeMapsUpdateHeaders {
   azureAsyncOperation?: string;
 }
 
@@ -2599,13 +2606,13 @@ export interface ScopeMapsDeleteHeaders {
   location?: string;
 }
 
-/** Defines headers for ScopeMaps_update operation. */
-export interface ScopeMapsUpdateHeaders {
+/** Defines headers for Tokens_create operation. */
+export interface TokensCreateHeaders {
   azureAsyncOperation?: string;
 }
 
-/** Defines headers for Tokens_create operation. */
-export interface TokensCreateHeaders {
+/** Defines headers for Tokens_update operation. */
+export interface TokensUpdateHeaders {
   azureAsyncOperation?: string;
 }
 
@@ -2614,13 +2621,13 @@ export interface TokensDeleteHeaders {
   location?: string;
 }
 
-/** Defines headers for Tokens_update operation. */
-export interface TokensUpdateHeaders {
+/** Defines headers for Webhooks_create operation. */
+export interface WebhooksCreateHeaders {
   azureAsyncOperation?: string;
 }
 
-/** Defines headers for Webhooks_create operation. */
-export interface WebhooksCreateHeaders {
+/** Defines headers for Webhooks_update operation. */
+export interface WebhooksUpdateHeaders {
   azureAsyncOperation?: string;
 }
 
@@ -2629,15 +2636,10 @@ export interface WebhooksDeleteHeaders {
   location?: string;
 }
 
-/** Defines headers for Webhooks_update operation. */
-export interface WebhooksUpdateHeaders {
-  azureAsyncOperation?: string;
-}
-
 /** Known values of {@link PackageSourceType} that the service accepts. */
 export enum KnownPackageSourceType {
   /** Remote */
-  Remote = "remote"
+  Remote = "remote",
 }
 
 /**
@@ -2662,7 +2664,7 @@ export enum KnownProvisioningState {
   /** Failed */
   Failed = "Failed",
   /** Canceled */
-  Canceled = "Canceled"
+  Canceled = "Canceled",
 }
 
 /**
@@ -2688,7 +2690,7 @@ export enum KnownCreatedByType {
   /** ManagedIdentity */
   ManagedIdentity = "ManagedIdentity",
   /** Key */
-  Key = "Key"
+  Key = "Key",
 }
 
 /**
@@ -2712,7 +2714,7 @@ export enum KnownLastModifiedByType {
   /** ManagedIdentity */
   ManagedIdentity = "ManagedIdentity",
   /** Key */
-  Key = "Key"
+  Key = "Key",
 }
 
 /**
@@ -2727,6 +2729,39 @@ export enum KnownLastModifiedByType {
  */
 export type LastModifiedByType = string;
 
+/** Known values of {@link ArtifactSyncStatus} that the service accepts. */
+export enum KnownArtifactSyncStatus {
+  /** Active */
+  Active = "Active",
+  /** Inactive */
+  Inactive = "Inactive",
+}
+
+/**
+ * Defines values for ArtifactSyncStatus. \
+ * {@link KnownArtifactSyncStatus} can be used interchangeably with ArtifactSyncStatus,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Active** \
+ * **Inactive**
+ */
+export type ArtifactSyncStatus = string;
+
+/** Known values of {@link ArtifactSyncScopeFilterType} that the service accepts. */
+export enum KnownArtifactSyncScopeFilterType {
+  /** KQL */
+  KQL = "KQL",
+}
+
+/**
+ * Defines values for ArtifactSyncScopeFilterType. \
+ * {@link KnownArtifactSyncScopeFilterType} can be used interchangeably with ArtifactSyncScopeFilterType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **KQL**
+ */
+export type ArtifactSyncScopeFilterType = string;
+
 /** Known values of {@link ConnectedRegistryMode} that the service accepts. */
 export enum KnownConnectedRegistryMode {
   /** ReadWrite */
@@ -2736,7 +2771,7 @@ export enum KnownConnectedRegistryMode {
   /** Registry */
   Registry = "Registry",
   /** Mirror */
-  Mirror = "Mirror"
+  Mirror = "Mirror",
 }
 
 /**
@@ -2760,7 +2795,7 @@ export enum KnownConnectionState {
   /** Syncing */
   Syncing = "Syncing",
   /** Unhealthy */
-  Unhealthy = "Unhealthy"
+  Unhealthy = "Unhealthy",
 }
 
 /**
@@ -2780,7 +2815,7 @@ export enum KnownActivationStatus {
   /** Active */
   Active = "Active",
   /** Inactive */
-  Inactive = "Inactive"
+  Inactive = "Inactive",
 }
 
 /**
@@ -2798,7 +2833,7 @@ export enum KnownTlsStatus {
   /** Enabled */
   Enabled = "Enabled",
   /** Disabled */
-  Disabled = "Disabled"
+  Disabled = "Disabled",
 }
 
 /**
@@ -2814,7 +2849,7 @@ export type TlsStatus = string;
 /** Known values of {@link CertificateType} that the service accepts. */
 export enum KnownCertificateType {
   /** LocalDirectory */
-  LocalDirectory = "LocalDirectory"
+  LocalDirectory = "LocalDirectory",
 }
 
 /**
@@ -2837,7 +2872,7 @@ export enum KnownLogLevel {
   /** Error */
   Error = "Error",
   /** None */
-  None = "None"
+  None = "None",
 }
 
 /**
@@ -2858,7 +2893,7 @@ export enum KnownAuditLogStatus {
   /** Enabled */
   Enabled = "Enabled",
   /** Disabled */
-  Disabled = "Disabled"
+  Disabled = "Disabled",
 }
 
 /**
@@ -2874,7 +2909,7 @@ export type AuditLogStatus = string;
 /** Known values of {@link CredentialName} that the service accepts. */
 export enum KnownCredentialName {
   /** Credential1 */
-  Credential1 = "Credential1"
+  Credential1 = "Credential1",
 }
 
 /**
@@ -2891,7 +2926,7 @@ export enum KnownCredentialHealthStatus {
   /** Healthy */
   Healthy = "Healthy",
   /** Unhealthy */
-  Unhealthy = "Unhealthy"
+  Unhealthy = "Unhealthy",
 }
 
 /**
@@ -2913,7 +2948,7 @@ export enum KnownPipelineOptions {
   /** DeleteSourceBlobOnSuccess */
   DeleteSourceBlobOnSuccess = "DeleteSourceBlobOnSuccess",
   /** ContinueOnErrors */
-  ContinueOnErrors = "ContinueOnErrors"
+  ContinueOnErrors = "ContinueOnErrors",
 }
 
 /**
@@ -2933,7 +2968,7 @@ export enum KnownImportMode {
   /** NoForce */
   NoForce = "NoForce",
   /** Force */
-  Force = "Force"
+  Force = "Force",
 }
 
 /**
@@ -2949,7 +2984,7 @@ export type ImportMode = string;
 /** Known values of {@link PipelineSourceType} that the service accepts. */
 export enum KnownPipelineSourceType {
   /** AzureStorageBlobContainer */
-  AzureStorageBlobContainer = "AzureStorageBlobContainer"
+  AzureStorageBlobContainer = "AzureStorageBlobContainer",
 }
 
 /**
@@ -2966,7 +3001,7 @@ export enum KnownTriggerStatus {
   /** Disabled */
   Disabled = "Disabled",
   /** Enabled */
-  Enabled = "Enabled"
+  Enabled = "Enabled",
 }
 
 /**
@@ -2982,7 +3017,7 @@ export type TriggerStatus = string;
 /** Known values of {@link PipelineRunSourceType} that the service accepts. */
 export enum KnownPipelineRunSourceType {
   /** AzureStorageBlob */
-  AzureStorageBlob = "AzureStorageBlob"
+  AzureStorageBlob = "AzureStorageBlob",
 }
 
 /**
@@ -2997,7 +3032,7 @@ export type PipelineRunSourceType = string;
 /** Known values of {@link PipelineRunTargetType} that the service accepts. */
 export enum KnownPipelineRunTargetType {
   /** AzureStorageBlob */
-  AzureStorageBlob = "AzureStorageBlob"
+  AzureStorageBlob = "AzureStorageBlob",
 }
 
 /**
@@ -3018,7 +3053,7 @@ export enum KnownConnectionStatus {
   /** Rejected */
   Rejected = "Rejected",
   /** Disconnected */
-  Disconnected = "Disconnected"
+  Disconnected = "Disconnected",
 }
 
 /**
@@ -3038,7 +3073,7 @@ export enum KnownActionsRequired {
   /** None */
   None = "None",
   /** Recreate */
-  Recreate = "Recreate"
+  Recreate = "Recreate",
 }
 
 /**
@@ -3060,7 +3095,7 @@ export enum KnownSkuName {
   /** Standard */
   Standard = "Standard",
   /** Premium */
-  Premium = "Premium"
+  Premium = "Premium",
 }
 
 /**
@@ -3084,7 +3119,7 @@ export enum KnownSkuTier {
   /** Standard */
   Standard = "Standard",
   /** Premium */
-  Premium = "Premium"
+  Premium = "Premium",
 }
 
 /**
@@ -3104,7 +3139,7 @@ export enum KnownDefaultAction {
   /** Allow */
   Allow = "Allow",
   /** Deny */
-  Deny = "Deny"
+  Deny = "Deny",
 }
 
 /**
@@ -3120,7 +3155,7 @@ export type DefaultAction = string;
 /** Known values of {@link Action} that the service accepts. */
 export enum KnownAction {
   /** Allow */
-  Allow = "Allow"
+  Allow = "Allow",
 }
 
 /**
@@ -3137,7 +3172,7 @@ export enum KnownPolicyStatus {
   /** Enabled */
   Enabled = "enabled",
   /** Disabled */
-  Disabled = "disabled"
+  Disabled = "disabled",
 }
 
 /**
@@ -3153,7 +3188,7 @@ export type PolicyStatus = string;
 /** Known values of {@link TrustPolicyType} that the service accepts. */
 export enum KnownTrustPolicyType {
   /** Notary */
-  Notary = "Notary"
+  Notary = "Notary",
 }
 
 /**
@@ -3170,7 +3205,7 @@ export enum KnownExportPolicyStatus {
   /** Enabled */
   Enabled = "enabled",
   /** Disabled */
-  Disabled = "disabled"
+  Disabled = "disabled",
 }
 
 /**
@@ -3188,7 +3223,7 @@ export enum KnownAzureADAuthenticationAsArmPolicyStatus {
   /** Enabled */
   Enabled = "enabled",
   /** Disabled */
-  Disabled = "disabled"
+  Disabled = "disabled",
 }
 
 /**
@@ -3206,7 +3241,7 @@ export enum KnownEncryptionStatus {
   /** Enabled */
   Enabled = "enabled",
   /** Disabled */
-  Disabled = "disabled"
+  Disabled = "disabled",
 }
 
 /**
@@ -3224,7 +3259,7 @@ export enum KnownPublicNetworkAccess {
   /** Enabled */
   Enabled = "Enabled",
   /** Disabled */
-  Disabled = "Disabled"
+  Disabled = "Disabled",
 }
 
 /**
@@ -3242,7 +3277,7 @@ export enum KnownNetworkRuleBypassOptions {
   /** AzureServices */
   AzureServices = "AzureServices",
   /** None */
-  None = "None"
+  None = "None",
 }
 
 /**
@@ -3260,7 +3295,7 @@ export enum KnownZoneRedundancy {
   /** Enabled */
   Enabled = "Enabled",
   /** Disabled */
-  Disabled = "Disabled"
+  Disabled = "Disabled",
 }
 
 /**
@@ -3278,7 +3313,7 @@ export enum KnownMetadataSearch {
   /** Enabled */
   Enabled = "Enabled",
   /** Disabled */
-  Disabled = "Disabled"
+  Disabled = "Disabled",
 }
 
 /**
@@ -3296,7 +3331,7 @@ export enum KnownRegistryUsageUnit {
   /** Count */
   Count = "Count",
   /** Bytes */
-  Bytes = "Bytes"
+  Bytes = "Bytes",
 }
 
 /**
@@ -3314,7 +3349,7 @@ export enum KnownTokenCertificateName {
   /** Certificate1 */
   Certificate1 = "certificate1",
   /** Certificate2 */
-  Certificate2 = "certificate2"
+  Certificate2 = "certificate2",
 }
 
 /**
@@ -3332,7 +3367,7 @@ export enum KnownTokenPasswordName {
   /** Password1 */
   Password1 = "password1",
   /** Password2 */
-  Password2 = "password2"
+  Password2 = "password2",
 }
 
 /**
@@ -3350,7 +3385,7 @@ export enum KnownTokenStatus {
   /** Enabled */
   Enabled = "enabled",
   /** Disabled */
-  Disabled = "disabled"
+  Disabled = "disabled",
 }
 
 /**
@@ -3368,7 +3403,7 @@ export enum KnownWebhookStatus {
   /** Enabled */
   Enabled = "enabled",
   /** Disabled */
-  Disabled = "disabled"
+  Disabled = "disabled",
 }
 
 /**
@@ -3392,7 +3427,7 @@ export enum KnownWebhookAction {
   /** ChartPush */
   ChartPush = "chart_push",
   /** ChartDelete */
-  ChartDelete = "chart_delete"
+  ChartDelete = "chart_delete",
 }
 
 /**
@@ -3413,7 +3448,7 @@ export enum KnownOS {
   /** Windows */
   Windows = "Windows",
   /** Linux */
-  Linux = "Linux"
+  Linux = "Linux",
 }
 
 /**
@@ -3443,7 +3478,7 @@ export enum KnownRunStatus {
   /** Error */
   Error = "Error",
   /** Timeout */
-  Timeout = "Timeout"
+  Timeout = "Timeout",
 }
 
 /**
@@ -3471,7 +3506,7 @@ export enum KnownRunType {
   /** AutoBuild */
   AutoBuild = "AutoBuild",
   /** AutoRun */
-  AutoRun = "AutoRun"
+  AutoRun = "AutoRun",
 }
 
 /**
@@ -3497,7 +3532,7 @@ export enum KnownArchitecture {
   /** Arm */
   Arm = "arm",
   /** Arm64 */
-  Arm64 = "arm64"
+  Arm64 = "arm64",
 }
 
 /**
@@ -3520,7 +3555,7 @@ export enum KnownVariant {
   /** V7 */
   V7 = "v7",
   /** V8 */
-  V8 = "v8"
+  V8 = "v8",
 }
 
 /**
@@ -3539,7 +3574,7 @@ export enum KnownTaskStatus {
   /** Disabled */
   Disabled = "Disabled",
   /** Enabled */
-  Enabled = "Enabled"
+  Enabled = "Enabled",
 }
 
 /**
@@ -3559,7 +3594,7 @@ export enum KnownStepType {
   /** FileTask */
   FileTask = "FileTask",
   /** EncodedTask */
-  EncodedTask = "EncodedTask"
+  EncodedTask = "EncodedTask",
 }
 
 /**
@@ -3578,7 +3613,7 @@ export enum KnownBaseImageDependencyType {
   /** BuildTime */
   BuildTime = "BuildTime",
   /** RunTime */
-  RunTime = "RunTime"
+  RunTime = "RunTime",
 }
 
 /**
@@ -3596,7 +3631,7 @@ export enum KnownSourceControlType {
   /** Github */
   Github = "Github",
   /** VisualStudioTeamService */
-  VisualStudioTeamService = "VisualStudioTeamService"
+  VisualStudioTeamService = "VisualStudioTeamService",
 }
 
 /**
@@ -3614,7 +3649,7 @@ export enum KnownTokenType {
   /** PAT */
   PAT = "PAT",
   /** OAuth */
-  OAuth = "OAuth"
+  OAuth = "OAuth",
 }
 
 /**
@@ -3632,7 +3667,7 @@ export enum KnownSourceTriggerEvent {
   /** Commit */
   Commit = "commit",
   /** Pullrequest */
-  Pullrequest = "pullrequest"
+  Pullrequest = "pullrequest",
 }
 
 /**
@@ -3650,7 +3685,7 @@ export enum KnownBaseImageTriggerType {
   /** All */
   All = "All",
   /** Runtime */
-  Runtime = "Runtime"
+  Runtime = "Runtime",
 }
 
 /**
@@ -3668,7 +3703,7 @@ export enum KnownUpdateTriggerPayloadType {
   /** Default */
   Default = "Default",
   /** Token */
-  Token = "Token"
+  Token = "Token",
 }
 
 /**
@@ -3686,7 +3721,7 @@ export enum KnownSourceRegistryLoginMode {
   /** None */
   None = "None",
   /** Default */
-  Default = "Default"
+  Default = "Default",
 }
 
 /**
@@ -3704,7 +3739,7 @@ export enum KnownSecretObjectType {
   /** Opaque */
   Opaque = "Opaque",
   /** Vaultsecret */
-  Vaultsecret = "Vaultsecret"
+  Vaultsecret = "Vaultsecret",
 }
 
 /**
@@ -3726,13 +3761,6 @@ export type ResourceIdentityType =
 export type PasswordName = "password" | "password2";
 
 /** Optional parameters. */
-export interface ArchivesListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type ArchivesListResponse = ArchiveListResult;
-
-/** Optional parameters. */
 export interface ArchivesGetOptionalParams
   extends coreClient.OperationOptions {}
 
@@ -3752,6 +3780,13 @@ export interface ArchivesCreateOptionalParams
 export type ArchivesCreateResponse = Archive;
 
 /** Optional parameters. */
+export interface ArchivesUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the update operation. */
+export type ArchivesUpdateResponse = Archive;
+
+/** Optional parameters. */
 export interface ArchivesDeleteOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
@@ -3764,11 +3799,11 @@ export interface ArchivesDeleteOptionalParams
 export type ArchivesDeleteResponse = ArchivesDeleteHeaders;
 
 /** Optional parameters. */
-export interface ArchivesUpdateOptionalParams
+export interface ArchivesListOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the update operation. */
-export type ArchivesUpdateResponse = Archive;
+/** Contains response data for the list operation. */
+export type ArchivesListResponse = ArchiveListResult;
 
 /** Optional parameters. */
 export interface ArchivesListNextOptionalParams
@@ -3776,13 +3811,6 @@ export interface ArchivesListNextOptionalParams
 
 /** Contains response data for the listNext operation. */
 export type ArchivesListNextResponse = ArchiveListResult;
-
-/** Optional parameters. */
-export interface ArchiveVersionsListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type ArchiveVersionsListResponse = ArchiveVersionListResult;
 
 /** Optional parameters. */
 export interface ArchiveVersionsGetOptionalParams
@@ -3816,18 +3844,18 @@ export interface ArchiveVersionsDeleteOptionalParams
 export type ArchiveVersionsDeleteResponse = ArchiveVersionsDeleteHeaders;
 
 /** Optional parameters. */
+export interface ArchiveVersionsListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type ArchiveVersionsListResponse = ArchiveVersionListResult;
+
+/** Optional parameters. */
 export interface ArchiveVersionsListNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type ArchiveVersionsListNextResponse = ArchiveVersionListResult;
-
-/** Optional parameters. */
-export interface CacheRulesListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type CacheRulesListResponse = CacheRulesListResult;
 
 /** Optional parameters. */
 export interface CacheRulesGetOptionalParams
@@ -3849,18 +3877,6 @@ export interface CacheRulesCreateOptionalParams
 export type CacheRulesCreateResponse = CacheRule;
 
 /** Optional parameters. */
-export interface CacheRulesDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the delete operation. */
-export type CacheRulesDeleteResponse = CacheRulesDeleteHeaders;
-
-/** Optional parameters. */
 export interface CacheRulesUpdateOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
@@ -3873,21 +3889,30 @@ export interface CacheRulesUpdateOptionalParams
 export type CacheRulesUpdateResponse = CacheRule;
 
 /** Optional parameters. */
+export interface CacheRulesDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the delete operation. */
+export type CacheRulesDeleteResponse = CacheRulesDeleteHeaders;
+
+/** Optional parameters. */
+export interface CacheRulesListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type CacheRulesListResponse = CacheRulesListResult;
+
+/** Optional parameters. */
 export interface CacheRulesListNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type CacheRulesListNextResponse = CacheRulesListResult;
-
-/** Optional parameters. */
-export interface ConnectedRegistriesListOptionalParams
-  extends coreClient.OperationOptions {
-  /** An OData filter expression that describes a subset of connectedRegistries to return. The parameters that can be filtered are parent.id (the resource id of the connectedRegistry parent), mode, and connectionState. The supported operator is eq. */
-  filter?: string;
-}
-
-/** Contains response data for the list operation. */
-export type ConnectedRegistriesListResponse = ConnectedRegistryListResult;
 
 /** Optional parameters. */
 export interface ConnectedRegistriesGetOptionalParams
@@ -3909,15 +3934,6 @@ export interface ConnectedRegistriesCreateOptionalParams
 export type ConnectedRegistriesCreateResponse = ConnectedRegistry;
 
 /** Optional parameters. */
-export interface ConnectedRegistriesDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
 export interface ConnectedRegistriesUpdateOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
@@ -3928,6 +3944,25 @@ export interface ConnectedRegistriesUpdateOptionalParams
 
 /** Contains response data for the update operation. */
 export type ConnectedRegistriesUpdateResponse = ConnectedRegistry;
+
+/** Optional parameters. */
+export interface ConnectedRegistriesDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface ConnectedRegistriesListOptionalParams
+  extends coreClient.OperationOptions {
+  /** An OData filter expression that describes a subset of connectedRegistries to return. The parameters that can be filtered are parent.id (the resource id of the connectedRegistry parent), mode, and connectionState. The supported operator is eq. */
+  filter?: string;
+}
+
+/** Contains response data for the list operation. */
+export type ConnectedRegistriesListResponse = ConnectedRegistryListResult;
 
 /** Optional parameters. */
 export interface ConnectedRegistriesDeactivateOptionalParams
@@ -3944,13 +3979,6 @@ export interface ConnectedRegistriesListNextOptionalParams
 
 /** Contains response data for the listNext operation. */
 export type ConnectedRegistriesListNextResponse = ConnectedRegistryListResult;
-
-/** Optional parameters. */
-export interface CredentialSetsListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type CredentialSetsListResponse = CredentialSetListResult;
 
 /** Optional parameters. */
 export interface CredentialSetsGetOptionalParams
@@ -3972,18 +4000,6 @@ export interface CredentialSetsCreateOptionalParams
 export type CredentialSetsCreateResponse = CredentialSet;
 
 /** Optional parameters. */
-export interface CredentialSetsDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the delete operation. */
-export type CredentialSetsDeleteResponse = CredentialSetsDeleteHeaders;
-
-/** Optional parameters. */
 export interface CredentialSetsUpdateOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
@@ -3996,18 +4012,30 @@ export interface CredentialSetsUpdateOptionalParams
 export type CredentialSetsUpdateResponse = CredentialSet;
 
 /** Optional parameters. */
+export interface CredentialSetsDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the delete operation. */
+export type CredentialSetsDeleteResponse = CredentialSetsDeleteHeaders;
+
+/** Optional parameters. */
+export interface CredentialSetsListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type CredentialSetsListResponse = CredentialSetListResult;
+
+/** Optional parameters. */
 export interface CredentialSetsListNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type CredentialSetsListNextResponse = CredentialSetListResult;
-
-/** Optional parameters. */
-export interface ExportPipelinesListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type ExportPipelinesListResponse = ExportPipelineListResult;
 
 /** Optional parameters. */
 export interface ExportPipelinesGetOptionalParams
@@ -4038,6 +4066,13 @@ export interface ExportPipelinesDeleteOptionalParams
 }
 
 /** Optional parameters. */
+export interface ExportPipelinesListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type ExportPipelinesListResponse = ExportPipelineListResult;
+
+/** Optional parameters. */
 export interface ExportPipelinesListNextOptionalParams
   extends coreClient.OperationOptions {}
 
@@ -4061,20 +4096,6 @@ export interface RegistriesCheckNameAvailabilityOptionalParams
 export type RegistriesCheckNameAvailabilityResponse = RegistryNameStatus;
 
 /** Optional parameters. */
-export interface RegistriesListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type RegistriesListResponse = RegistryListResult;
-
-/** Optional parameters. */
-export interface RegistriesListByResourceGroupOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByResourceGroup operation. */
-export type RegistriesListByResourceGroupResponse = RegistryListResult;
-
-/** Optional parameters. */
 export interface RegistriesGetOptionalParams
   extends coreClient.OperationOptions {}
 
@@ -4094,15 +4115,6 @@ export interface RegistriesCreateOptionalParams
 export type RegistriesCreateResponse = Registry;
 
 /** Optional parameters. */
-export interface RegistriesDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
 export interface RegistriesUpdateOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
@@ -4115,25 +4127,27 @@ export interface RegistriesUpdateOptionalParams
 export type RegistriesUpdateResponse = Registry;
 
 /** Optional parameters. */
-export interface RegistriesListUsagesOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listUsages operation. */
-export type RegistriesListUsagesResponse = RegistryUsageListResult;
-
-/** Optional parameters. */
-export interface RegistriesListPrivateLinkResourcesOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listPrivateLinkResources operation. */
-export type RegistriesListPrivateLinkResourcesResponse = PrivateLinkResourceListResult;
+export interface RegistriesDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
 
 /** Optional parameters. */
-export interface RegistriesGetPrivateLinkResourceOptionalParams
+export interface RegistriesListByResourceGroupOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the getPrivateLinkResource operation. */
-export type RegistriesGetPrivateLinkResourceResponse = PrivateLinkResource;
+/** Contains response data for the listByResourceGroup operation. */
+export type RegistriesListByResourceGroupResponse = RegistryListResult;
+
+/** Optional parameters. */
+export interface RegistriesListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type RegistriesListResponse = RegistryListResult;
 
 /** Optional parameters. */
 export interface RegistriesListCredentialsOptionalParams
@@ -4147,7 +4161,38 @@ export interface RegistriesRegenerateCredentialOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the regenerateCredential operation. */
-export type RegistriesRegenerateCredentialResponse = RegistryListCredentialsResult;
+export type RegistriesRegenerateCredentialResponse =
+  RegistryListCredentialsResult;
+
+/** Optional parameters. */
+export interface RegistriesListUsagesOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listUsages operation. */
+export type RegistriesListUsagesResponse = RegistryUsageListResult;
+
+/** Optional parameters. */
+export interface RegistriesListPrivateLinkResourcesOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listPrivateLinkResources operation. */
+export type RegistriesListPrivateLinkResourcesResponse =
+  PrivateLinkResourceListResult;
+
+/** Optional parameters. */
+export interface RegistriesGetPrivateLinkResourceOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getPrivateLinkResource operation. */
+export type RegistriesGetPrivateLinkResourceResponse = PrivateLinkResource;
+
+/** Optional parameters. */
+export interface RegistriesCheckCacheRuleArtifactSyncEstimateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the checkCacheRuleArtifactSyncEstimate operation. */
+export type RegistriesCheckCacheRuleArtifactSyncEstimateResponse =
+  CacheRuleArtifactSyncEstimateResult;
 
 /** Optional parameters. */
 export interface RegistriesGenerateCredentialsOptionalParams
@@ -4181,13 +4226,6 @@ export interface RegistriesGetBuildSourceUploadUrlOptionalParams
 export type RegistriesGetBuildSourceUploadUrlResponse = SourceUploadDefinition;
 
 /** Optional parameters. */
-export interface RegistriesListNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listNext operation. */
-export type RegistriesListNextResponse = RegistryListResult;
-
-/** Optional parameters. */
 export interface RegistriesListByResourceGroupNextOptionalParams
   extends coreClient.OperationOptions {}
 
@@ -4195,18 +4233,19 @@ export interface RegistriesListByResourceGroupNextOptionalParams
 export type RegistriesListByResourceGroupNextResponse = RegistryListResult;
 
 /** Optional parameters. */
+export interface RegistriesListNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listNext operation. */
+export type RegistriesListNextResponse = RegistryListResult;
+
+/** Optional parameters. */
 export interface RegistriesListPrivateLinkResourcesNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listPrivateLinkResourcesNext operation. */
-export type RegistriesListPrivateLinkResourcesNextResponse = PrivateLinkResourceListResult;
-
-/** Optional parameters. */
-export interface ImportPipelinesListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type ImportPipelinesListResponse = ImportPipelineListResult;
+export type RegistriesListPrivateLinkResourcesNextResponse =
+  PrivateLinkResourceListResult;
 
 /** Optional parameters. */
 export interface ImportPipelinesGetOptionalParams
@@ -4237,6 +4276,13 @@ export interface ImportPipelinesDeleteOptionalParams
 }
 
 /** Optional parameters. */
+export interface ImportPipelinesListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type ImportPipelinesListResponse = ImportPipelineListResult;
+
+/** Optional parameters. */
 export interface ImportPipelinesListNextOptionalParams
   extends coreClient.OperationOptions {}
 
@@ -4256,13 +4302,6 @@ export interface OperationsListNextOptionalParams
 
 /** Contains response data for the listNext operation. */
 export type OperationsListNextResponse = OperationListResult;
-
-/** Optional parameters. */
-export interface PipelineRunsListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type PipelineRunsListResponse = PipelineRunListResult;
 
 /** Optional parameters. */
 export interface PipelineRunsGetOptionalParams
@@ -4293,25 +4332,18 @@ export interface PipelineRunsDeleteOptionalParams
 }
 
 /** Optional parameters. */
+export interface PipelineRunsListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type PipelineRunsListResponse = PipelineRunListResult;
+
+/** Optional parameters. */
 export interface PipelineRunsListNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type PipelineRunsListNextResponse = PipelineRunListResult;
-
-/** Optional parameters. */
-export interface PrivateEndpointConnectionsListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type PrivateEndpointConnectionsListResponse = PrivateEndpointConnectionListResult;
-
-/** Optional parameters. */
-export interface PrivateEndpointConnectionsGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type PrivateEndpointConnectionsGetResponse = PrivateEndpointConnection;
 
 /** Optional parameters. */
 export interface PrivateEndpointConnectionsCreateOrUpdateOptionalParams
@@ -4323,7 +4355,15 @@ export interface PrivateEndpointConnectionsCreateOrUpdateOptionalParams
 }
 
 /** Contains response data for the createOrUpdate operation. */
-export type PrivateEndpointConnectionsCreateOrUpdateResponse = PrivateEndpointConnection;
+export type PrivateEndpointConnectionsCreateOrUpdateResponse =
+  PrivateEndpointConnection;
+
+/** Optional parameters. */
+export interface PrivateEndpointConnectionsGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type PrivateEndpointConnectionsGetResponse = PrivateEndpointConnection;
 
 /** Optional parameters. */
 export interface PrivateEndpointConnectionsDeleteOptionalParams
@@ -4335,18 +4375,20 @@ export interface PrivateEndpointConnectionsDeleteOptionalParams
 }
 
 /** Optional parameters. */
+export interface PrivateEndpointConnectionsListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type PrivateEndpointConnectionsListResponse =
+  PrivateEndpointConnectionListResult;
+
+/** Optional parameters. */
 export interface PrivateEndpointConnectionsListNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
-export type PrivateEndpointConnectionsListNextResponse = PrivateEndpointConnectionListResult;
-
-/** Optional parameters. */
-export interface ReplicationsListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type ReplicationsListResponse = ReplicationListResult;
+export type PrivateEndpointConnectionsListNextResponse =
+  PrivateEndpointConnectionListResult;
 
 /** Optional parameters. */
 export interface ReplicationsGetOptionalParams
@@ -4368,15 +4410,6 @@ export interface ReplicationsCreateOptionalParams
 export type ReplicationsCreateResponse = Replication;
 
 /** Optional parameters. */
-export interface ReplicationsDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
 export interface ReplicationsUpdateOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
@@ -4389,18 +4422,27 @@ export interface ReplicationsUpdateOptionalParams
 export type ReplicationsUpdateResponse = Replication;
 
 /** Optional parameters. */
+export interface ReplicationsDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface ReplicationsListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type ReplicationsListResponse = ReplicationListResult;
+
+/** Optional parameters. */
 export interface ReplicationsListNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type ReplicationsListNextResponse = ReplicationListResult;
-
-/** Optional parameters. */
-export interface ScopeMapsListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type ScopeMapsListResponse = ScopeMapListResult;
 
 /** Optional parameters. */
 export interface ScopeMapsGetOptionalParams
@@ -4422,15 +4464,6 @@ export interface ScopeMapsCreateOptionalParams
 export type ScopeMapsCreateResponse = ScopeMap;
 
 /** Optional parameters. */
-export interface ScopeMapsDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
 export interface ScopeMapsUpdateOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
@@ -4443,17 +4476,27 @@ export interface ScopeMapsUpdateOptionalParams
 export type ScopeMapsUpdateResponse = ScopeMap;
 
 /** Optional parameters. */
+export interface ScopeMapsDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface ScopeMapsListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type ScopeMapsListResponse = ScopeMapListResult;
+
+/** Optional parameters. */
 export interface ScopeMapsListNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type ScopeMapsListNextResponse = ScopeMapListResult;
-
-/** Optional parameters. */
-export interface TokensListOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type TokensListResponse = TokenListResult;
 
 /** Optional parameters. */
 export interface TokensGetOptionalParams extends coreClient.OperationOptions {}
@@ -4474,15 +4517,6 @@ export interface TokensCreateOptionalParams
 export type TokensCreateResponse = Token;
 
 /** Optional parameters. */
-export interface TokensDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
 export interface TokensUpdateOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
@@ -4495,18 +4529,26 @@ export interface TokensUpdateOptionalParams
 export type TokensUpdateResponse = Token;
 
 /** Optional parameters. */
+export interface TokensDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface TokensListOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type TokensListResponse = TokenListResult;
+
+/** Optional parameters. */
 export interface TokensListNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type TokensListNextResponse = TokenListResult;
-
-/** Optional parameters. */
-export interface WebhooksListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type WebhooksListResponse = WebhookListResult;
 
 /** Optional parameters. */
 export interface WebhooksGetOptionalParams
@@ -4528,15 +4570,6 @@ export interface WebhooksCreateOptionalParams
 export type WebhooksCreateResponse = Webhook;
 
 /** Optional parameters. */
-export interface WebhooksDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Optional parameters. */
 export interface WebhooksUpdateOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
@@ -4549,6 +4582,22 @@ export interface WebhooksUpdateOptionalParams
 export type WebhooksUpdateResponse = Webhook;
 
 /** Optional parameters. */
+export interface WebhooksDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface WebhooksListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type WebhooksListResponse = WebhookListResult;
+
+/** Optional parameters. */
 export interface WebhooksPingOptionalParams
   extends coreClient.OperationOptions {}
 
@@ -4556,18 +4605,18 @@ export interface WebhooksPingOptionalParams
 export type WebhooksPingResponse = EventInfo;
 
 /** Optional parameters. */
-export interface WebhooksListEventsOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listEvents operation. */
-export type WebhooksListEventsResponse = EventListResult;
-
-/** Optional parameters. */
 export interface WebhooksGetCallbackConfigOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the getCallbackConfig operation. */
 export type WebhooksGetCallbackConfigResponse = CallbackConfig;
+
+/** Optional parameters. */
+export interface WebhooksListEventsOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listEvents operation. */
+export type WebhooksListEventsResponse = EventListResult;
 
 /** Optional parameters. */
 export interface WebhooksListNextOptionalParams

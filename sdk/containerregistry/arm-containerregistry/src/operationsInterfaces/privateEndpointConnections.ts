@@ -11,11 +11,11 @@ import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   PrivateEndpointConnection,
   PrivateEndpointConnectionsListOptionalParams,
-  PrivateEndpointConnectionsGetOptionalParams,
-  PrivateEndpointConnectionsGetResponse,
   PrivateEndpointConnectionsCreateOrUpdateOptionalParams,
   PrivateEndpointConnectionsCreateOrUpdateResponse,
-  PrivateEndpointConnectionsDeleteOptionalParams
+  PrivateEndpointConnectionsGetOptionalParams,
+  PrivateEndpointConnectionsGetResponse,
+  PrivateEndpointConnectionsDeleteOptionalParams,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -30,21 +30,8 @@ export interface PrivateEndpointConnections {
   list(
     resourceGroupName: string,
     registryName: string,
-    options?: PrivateEndpointConnectionsListOptionalParams
+    options?: PrivateEndpointConnectionsListOptionalParams,
   ): PagedAsyncIterableIterator<PrivateEndpointConnection>;
-  /**
-   * Get the specified private endpoint connection associated with the container registry.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param registryName The name of the container registry.
-   * @param privateEndpointConnectionName The name of the private endpoint connection.
-   * @param options The options parameters.
-   */
-  get(
-    resourceGroupName: string,
-    registryName: string,
-    privateEndpointConnectionName: string,
-    options?: PrivateEndpointConnectionsGetOptionalParams
-  ): Promise<PrivateEndpointConnectionsGetResponse>;
   /**
    * Update the state of specified private endpoint connection associated with the container registry.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
@@ -58,7 +45,7 @@ export interface PrivateEndpointConnections {
     registryName: string,
     privateEndpointConnectionName: string,
     privateEndpointConnection: PrivateEndpointConnection,
-    options?: PrivateEndpointConnectionsCreateOrUpdateOptionalParams
+    options?: PrivateEndpointConnectionsCreateOrUpdateOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<PrivateEndpointConnectionsCreateOrUpdateResponse>,
@@ -78,8 +65,21 @@ export interface PrivateEndpointConnections {
     registryName: string,
     privateEndpointConnectionName: string,
     privateEndpointConnection: PrivateEndpointConnection,
-    options?: PrivateEndpointConnectionsCreateOrUpdateOptionalParams
+    options?: PrivateEndpointConnectionsCreateOrUpdateOptionalParams,
   ): Promise<PrivateEndpointConnectionsCreateOrUpdateResponse>;
+  /**
+   * Get the specified private endpoint connection associated with the container registry.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param privateEndpointConnectionName The name of the private endpoint connection.
+   * @param options The options parameters.
+   */
+  get(
+    resourceGroupName: string,
+    registryName: string,
+    privateEndpointConnectionName: string,
+    options?: PrivateEndpointConnectionsGetOptionalParams,
+  ): Promise<PrivateEndpointConnectionsGetResponse>;
   /**
    * Deletes the specified private endpoint connection associated with the container registry.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
@@ -91,7 +91,7 @@ export interface PrivateEndpointConnections {
     resourceGroupName: string,
     registryName: string,
     privateEndpointConnectionName: string,
-    options?: PrivateEndpointConnectionsDeleteOptionalParams
+    options?: PrivateEndpointConnectionsDeleteOptionalParams,
   ): Promise<SimplePollerLike<OperationState<void>, void>>;
   /**
    * Deletes the specified private endpoint connection associated with the container registry.
@@ -104,6 +104,6 @@ export interface PrivateEndpointConnections {
     resourceGroupName: string,
     registryName: string,
     privateEndpointConnectionName: string,
-    options?: PrivateEndpointConnectionsDeleteOptionalParams
+    options?: PrivateEndpointConnectionsDeleteOptionalParams,
   ): Promise<void>;
 }

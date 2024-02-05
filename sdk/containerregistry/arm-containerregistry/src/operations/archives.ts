@@ -16,7 +16,7 @@ import { ContainerRegistryManagementClient } from "../containerRegistryManagemen
 import {
   SimplePollerLike,
   OperationState,
-  createHttpPoller
+  createHttpPoller,
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
@@ -28,12 +28,12 @@ import {
   ArchivesGetResponse,
   ArchivesCreateOptionalParams,
   ArchivesCreateResponse,
-  ArchivesDeleteOptionalParams,
-  ArchivesDeleteResponse,
   ArchiveUpdateParameters,
   ArchivesUpdateOptionalParams,
   ArchivesUpdateResponse,
-  ArchivesListNextResponse
+  ArchivesDeleteOptionalParams,
+  ArchivesDeleteResponse,
+  ArchivesListNextResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -53,20 +53,20 @@ export class ArchivesImpl implements Archives {
    * Lists all archives for the specified container registry and package type.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param registryName The name of the container registry.
-   * @param packageType The type of the package resource.
+   * @param packageType The type of the repository resource.
    * @param options The options parameters.
    */
   public list(
     resourceGroupName: string,
     registryName: string,
     packageType: string,
-    options?: ArchivesListOptionalParams
+    options?: ArchivesListOptionalParams,
   ): PagedAsyncIterableIterator<Archive> {
     const iter = this.listPagingAll(
       resourceGroupName,
       registryName,
       packageType,
-      options
+      options,
     );
     return {
       next() {
@@ -84,9 +84,9 @@ export class ArchivesImpl implements Archives {
           registryName,
           packageType,
           options,
-          settings
+          settings,
         );
-      }
+      },
     };
   }
 
@@ -95,7 +95,7 @@ export class ArchivesImpl implements Archives {
     registryName: string,
     packageType: string,
     options?: ArchivesListOptionalParams,
-    settings?: PageSettings
+    settings?: PageSettings,
   ): AsyncIterableIterator<Archive[]> {
     let result: ArchivesListResponse;
     let continuationToken = settings?.continuationToken;
@@ -104,7 +104,7 @@ export class ArchivesImpl implements Archives {
         resourceGroupName,
         registryName,
         packageType,
-        options
+        options,
       );
       let page = result.value || [];
       continuationToken = result.nextLink;
@@ -117,7 +117,7 @@ export class ArchivesImpl implements Archives {
         registryName,
         packageType,
         continuationToken,
-        options
+        options,
       );
       continuationToken = result.nextLink;
       let page = result.value || [];
@@ -130,42 +130,23 @@ export class ArchivesImpl implements Archives {
     resourceGroupName: string,
     registryName: string,
     packageType: string,
-    options?: ArchivesListOptionalParams
+    options?: ArchivesListOptionalParams,
   ): AsyncIterableIterator<Archive> {
     for await (const page of this.listPagingPage(
       resourceGroupName,
       registryName,
       packageType,
-      options
+      options,
     )) {
       yield* page;
     }
   }
 
   /**
-   * Lists all archives for the specified container registry and package type.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param registryName The name of the container registry.
-   * @param packageType The type of the package resource.
-   * @param options The options parameters.
-   */
-  private _list(
-    resourceGroupName: string,
-    registryName: string,
-    packageType: string,
-    options?: ArchivesListOptionalParams
-  ): Promise<ArchivesListResponse> {
-    return this.client.sendOperationRequest(
-      { resourceGroupName, registryName, packageType, options },
-      listOperationSpec
-    );
-  }
-
-  /**
    * Gets the properties of the archive.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param registryName The name of the container registry.
-   * @param packageType The type of the package resource.
+   * @param packageType The type of the repository resource.
    * @param archiveName The name of the archive resource.
    * @param options The options parameters.
    */
@@ -174,11 +155,11 @@ export class ArchivesImpl implements Archives {
     registryName: string,
     packageType: string,
     archiveName: string,
-    options?: ArchivesGetOptionalParams
+    options?: ArchivesGetOptionalParams,
   ): Promise<ArchivesGetResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, registryName, packageType, archiveName, options },
-      getOperationSpec
+      getOperationSpec,
     );
   }
 
@@ -186,7 +167,7 @@ export class ArchivesImpl implements Archives {
    * Creates a archive for a container registry with the specified parameters.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param registryName The name of the container registry.
-   * @param packageType The type of the package resource.
+   * @param packageType The type of the repository resource.
    * @param archiveName The name of the archive resource.
    * @param archiveCreateParameters The parameters for creating a archive.
    * @param options The options parameters.
@@ -197,7 +178,7 @@ export class ArchivesImpl implements Archives {
     packageType: string,
     archiveName: string,
     archiveCreateParameters: Archive,
-    options?: ArchivesCreateOptionalParams
+    options?: ArchivesCreateOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<ArchivesCreateResponse>,
@@ -206,21 +187,20 @@ export class ArchivesImpl implements Archives {
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ): Promise<ArchivesCreateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
       const providedCallback = args.options?.onResponse;
       const callback: coreClient.RawResponseCallback = (
         rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
+        flatResponse: unknown,
       ) => {
         currentRawResponse = rawResponse;
         providedCallback?.(rawResponse, flatResponse);
@@ -229,8 +209,8 @@ export class ArchivesImpl implements Archives {
         ...args,
         options: {
           ...args.options,
-          onResponse: callback
-        }
+          onResponse: callback,
+        },
       };
       const flatResponse = await directSendOperation(updatedArgs, spec);
       return {
@@ -238,8 +218,8 @@ export class ArchivesImpl implements Archives {
         rawResponse: {
           statusCode: currentRawResponse!.status,
           body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
+          headers: currentRawResponse!.headers.toJSON(),
+        },
       };
     };
 
@@ -251,9 +231,9 @@ export class ArchivesImpl implements Archives {
         packageType,
         archiveName,
         archiveCreateParameters,
-        options
+        options,
       },
-      spec: createOperationSpec
+      spec: createOperationSpec,
     });
     const poller = await createHttpPoller<
       ArchivesCreateResponse,
@@ -261,7 +241,7 @@ export class ArchivesImpl implements Archives {
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "azure-async-operation",
     });
     await poller.poll();
     return poller;
@@ -271,7 +251,7 @@ export class ArchivesImpl implements Archives {
    * Creates a archive for a container registry with the specified parameters.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param registryName The name of the container registry.
-   * @param packageType The type of the package resource.
+   * @param packageType The type of the repository resource.
    * @param archiveName The name of the archive resource.
    * @param archiveCreateParameters The parameters for creating a archive.
    * @param options The options parameters.
@@ -282,7 +262,7 @@ export class ArchivesImpl implements Archives {
     packageType: string,
     archiveName: string,
     archiveCreateParameters: Archive,
-    options?: ArchivesCreateOptionalParams
+    options?: ArchivesCreateOptionalParams,
   ): Promise<ArchivesCreateResponse> {
     const poller = await this.beginCreate(
       resourceGroupName,
@@ -290,114 +270,7 @@ export class ArchivesImpl implements Archives {
       packageType,
       archiveName,
       archiveCreateParameters,
-      options
-    );
-    return poller.pollUntilDone();
-  }
-
-  /**
-   * Deletes a archive from a container registry.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param registryName The name of the container registry.
-   * @param packageType The type of the package resource.
-   * @param archiveName The name of the archive resource.
-   * @param options The options parameters.
-   */
-  async beginDelete(
-    resourceGroupName: string,
-    registryName: string,
-    packageType: string,
-    archiveName: string,
-    options?: ArchivesDeleteOptionalParams
-  ): Promise<
-    SimplePollerLike<
-      OperationState<ArchivesDeleteResponse>,
-      ArchivesDeleteResponse
-    >
-  > {
-    const directSendOperation = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ): Promise<ArchivesDeleteResponse> => {
-      return this.client.sendOperationRequest(args, spec);
-    };
-    const sendOperationFn = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
-      const providedCallback = args.options?.onResponse;
-      const callback: coreClient.RawResponseCallback = (
-        rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
-      ) => {
-        currentRawResponse = rawResponse;
-        providedCallback?.(rawResponse, flatResponse);
-      };
-      const updatedArgs = {
-        ...args,
-        options: {
-          ...args.options,
-          onResponse: callback
-        }
-      };
-      const flatResponse = await directSendOperation(updatedArgs, spec);
-      return {
-        flatResponse,
-        rawResponse: {
-          statusCode: currentRawResponse!.status,
-          body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
-      };
-    };
-
-    const lro = createLroSpec({
-      sendOperationFn,
-      args: {
-        resourceGroupName,
-        registryName,
-        packageType,
-        archiveName,
-        options
-      },
-      spec: deleteOperationSpec
-    });
-    const poller = await createHttpPoller<
-      ArchivesDeleteResponse,
-      OperationState<ArchivesDeleteResponse>
-    >(lro, {
-      restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "location"
-    });
-    await poller.poll();
-    return poller;
-  }
-
-  /**
-   * Deletes a archive from a container registry.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param registryName The name of the container registry.
-   * @param packageType The type of the package resource.
-   * @param archiveName The name of the archive resource.
-   * @param options The options parameters.
-   */
-  async beginDeleteAndWait(
-    resourceGroupName: string,
-    registryName: string,
-    packageType: string,
-    archiveName: string,
-    options?: ArchivesDeleteOptionalParams
-  ): Promise<ArchivesDeleteResponse> {
-    const poller = await this.beginDelete(
-      resourceGroupName,
-      registryName,
-      packageType,
-      archiveName,
-      options
+      options,
     );
     return poller.pollUntilDone();
   }
@@ -406,7 +279,7 @@ export class ArchivesImpl implements Archives {
    * Updates a archive for a container registry with the specified parameters.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param registryName The name of the container registry.
-   * @param packageType The type of the package resource.
+   * @param packageType The type of the repository resource.
    * @param archiveName The name of the archive resource.
    * @param archiveUpdateParameters The parameters for updating a archive.
    * @param options The options parameters.
@@ -417,7 +290,7 @@ export class ArchivesImpl implements Archives {
     packageType: string,
     archiveName: string,
     archiveUpdateParameters: ArchiveUpdateParameters,
-    options?: ArchivesUpdateOptionalParams
+    options?: ArchivesUpdateOptionalParams,
   ): Promise<ArchivesUpdateResponse> {
     return this.client.sendOperationRequest(
       {
@@ -426,9 +299,134 @@ export class ArchivesImpl implements Archives {
         packageType,
         archiveName,
         archiveUpdateParameters,
-        options
+        options,
       },
-      updateOperationSpec
+      updateOperationSpec,
+    );
+  }
+
+  /**
+   * Deletes a archive from a container registry.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param packageType The type of the repository resource.
+   * @param archiveName The name of the archive resource.
+   * @param options The options parameters.
+   */
+  async beginDelete(
+    resourceGroupName: string,
+    registryName: string,
+    packageType: string,
+    archiveName: string,
+    options?: ArchivesDeleteOptionalParams,
+  ): Promise<
+    SimplePollerLike<
+      OperationState<ArchivesDeleteResponse>,
+      ArchivesDeleteResponse
+    >
+  > {
+    const directSendOperation = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec,
+    ): Promise<ArchivesDeleteResponse> => {
+      return this.client.sendOperationRequest(args, spec);
+    };
+    const sendOperationFn = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec,
+    ) => {
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
+      const providedCallback = args.options?.onResponse;
+      const callback: coreClient.RawResponseCallback = (
+        rawResponse: coreClient.FullOperationResponse,
+        flatResponse: unknown,
+      ) => {
+        currentRawResponse = rawResponse;
+        providedCallback?.(rawResponse, flatResponse);
+      };
+      const updatedArgs = {
+        ...args,
+        options: {
+          ...args.options,
+          onResponse: callback,
+        },
+      };
+      const flatResponse = await directSendOperation(updatedArgs, spec);
+      return {
+        flatResponse,
+        rawResponse: {
+          statusCode: currentRawResponse!.status,
+          body: currentRawResponse!.parsedBody,
+          headers: currentRawResponse!.headers.toJSON(),
+        },
+      };
+    };
+
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: {
+        resourceGroupName,
+        registryName,
+        packageType,
+        archiveName,
+        options,
+      },
+      spec: deleteOperationSpec,
+    });
+    const poller = await createHttpPoller<
+      ArchivesDeleteResponse,
+      OperationState<ArchivesDeleteResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "location",
+    });
+    await poller.poll();
+    return poller;
+  }
+
+  /**
+   * Deletes a archive from a container registry.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param packageType The type of the repository resource.
+   * @param archiveName The name of the archive resource.
+   * @param options The options parameters.
+   */
+  async beginDeleteAndWait(
+    resourceGroupName: string,
+    registryName: string,
+    packageType: string,
+    archiveName: string,
+    options?: ArchivesDeleteOptionalParams,
+  ): Promise<ArchivesDeleteResponse> {
+    const poller = await this.beginDelete(
+      resourceGroupName,
+      registryName,
+      packageType,
+      archiveName,
+      options,
+    );
+    return poller.pollUntilDone();
+  }
+
+  /**
+   * Lists all archives for the specified container registry and package type.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param registryName The name of the container registry.
+   * @param packageType The type of the repository resource.
+   * @param options The options parameters.
+   */
+  private _list(
+    resourceGroupName: string,
+    registryName: string,
+    packageType: string,
+    options?: ArchivesListOptionalParams,
+  ): Promise<ArchivesListResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, registryName, packageType, options },
+      listOperationSpec,
     );
   }
 
@@ -436,7 +434,7 @@ export class ArchivesImpl implements Archives {
    * ListNext
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param registryName The name of the container registry.
-   * @param packageType The type of the package resource.
+   * @param packageType The type of the repository resource.
    * @param nextLink The nextLink from the previous successful call to the List method.
    * @param options The options parameters.
    */
@@ -445,51 +443,27 @@ export class ArchivesImpl implements Archives {
     registryName: string,
     packageType: string,
     nextLink: string,
-    options?: ArchivesListNextOptionalParams
+    options?: ArchivesListNextOptionalParams,
   ): Promise<ArchivesListNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, registryName, packageType, nextLink, options },
-      listNextOperationSpec
+      listNextOperationSpec,
     );
   }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const listOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/packages/{packageType}/archives",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: Mappers.ArchiveListResult
-    },
-    default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
-  },
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.registryName,
-    Parameters.packageType
-  ],
-  headerParameters: [Parameters.accept],
-  serializer
-};
 const getOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/packages/{packageType}/archives/{archiveName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/packages/{packageType}/archives/{archiveName}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.Archive
+      bodyMapper: Mappers.Archive,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
@@ -498,31 +472,30 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceGroupName,
     Parameters.registryName,
     Parameters.packageType,
-    Parameters.archiveName
+    Parameters.archiveName,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const createOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/packages/{packageType}/archives/{archiveName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/packages/{packageType}/archives/{archiveName}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.Archive
+      bodyMapper: Mappers.Archive,
     },
     201: {
-      bodyMapper: Mappers.Archive
+      bodyMapper: Mappers.Archive,
     },
     202: {
-      bodyMapper: Mappers.Archive
+      bodyMapper: Mappers.Archive,
     },
     204: {
-      bodyMapper: Mappers.Archive
+      bodyMapper: Mappers.Archive,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   requestBody: Parameters.archiveCreateParameters,
   queryParameters: [Parameters.apiVersion],
@@ -532,56 +505,22 @@ const createOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceGroupName,
     Parameters.registryName,
     Parameters.packageType,
-    Parameters.archiveName
+    Parameters.archiveName,
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
-};
-const deleteOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/packages/{packageType}/archives/{archiveName}",
-  httpMethod: "DELETE",
-  responses: {
-    200: {
-      headersMapper: Mappers.ArchivesDeleteHeaders
-    },
-    201: {
-      headersMapper: Mappers.ArchivesDeleteHeaders
-    },
-    202: {
-      headersMapper: Mappers.ArchivesDeleteHeaders
-    },
-    204: {
-      headersMapper: Mappers.ArchivesDeleteHeaders
-    },
-    default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
-  },
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.registryName,
-    Parameters.packageType,
-    Parameters.archiveName
-  ],
-  headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const updateOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/packages/{packageType}/archives/{archiveName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/packages/{packageType}/archives/{archiveName}",
   httpMethod: "PATCH",
   responses: {
     200: {
-      bodyMapper: Mappers.Archive
+      bodyMapper: Mappers.Archive,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   requestBody: Parameters.archiveUpdateParameters,
   queryParameters: [Parameters.apiVersion],
@@ -591,22 +530,76 @@ const updateOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceGroupName,
     Parameters.registryName,
     Parameters.packageType,
-    Parameters.archiveName
+    Parameters.archiveName,
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
+  serializer,
+};
+const deleteOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/packages/{packageType}/archives/{archiveName}",
+  httpMethod: "DELETE",
+  responses: {
+    200: {
+      headersMapper: Mappers.ArchivesDeleteHeaders,
+    },
+    201: {
+      headersMapper: Mappers.ArchivesDeleteHeaders,
+    },
+    202: {
+      headersMapper: Mappers.ArchivesDeleteHeaders,
+    },
+    204: {
+      headersMapper: Mappers.ArchivesDeleteHeaders,
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse,
+    },
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.registryName,
+    Parameters.packageType,
+    Parameters.archiveName,
+  ],
+  headerParameters: [Parameters.accept],
+  serializer,
+};
+const listOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/packages/{packageType}/archives",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.ArchiveListResult,
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse,
+    },
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.registryName,
+    Parameters.packageType,
+  ],
+  headerParameters: [Parameters.accept],
+  serializer,
 };
 const listNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ArchiveListResult
+      bodyMapper: Mappers.ArchiveListResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   urlParameters: [
     Parameters.$host,
@@ -614,8 +607,8 @@ const listNextOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceGroupName,
     Parameters.registryName,
     Parameters.packageType,
-    Parameters.nextLink
+    Parameters.nextLink,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
