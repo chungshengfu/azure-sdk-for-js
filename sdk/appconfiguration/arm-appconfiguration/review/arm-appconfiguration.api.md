@@ -11,6 +11,9 @@ import { PagedAsyncIterableIterator } from '@azure/core-paging';
 import { SimplePollerLike } from '@azure/core-lro';
 
 // @public
+export type AccessRuleDirection = string;
+
+// @public
 export type ActionsRequired = string;
 
 // @public
@@ -33,13 +36,17 @@ export interface ApiKeyListResult {
 export class AppConfigurationManagementClient extends coreClient.ServiceClient {
     // (undocumented)
     $host: string;
-    constructor(credentials: coreAuth.TokenCredential, subscriptionId: string, options?: AppConfigurationManagementClientOptionalParams);
+    constructor(credentials: coreAuth.TokenCredential, subscriptionId: string, nspConfigurationName: string, options?: AppConfigurationManagementClientOptionalParams);
     // (undocumented)
     apiVersion: string;
     // (undocumented)
     configurationStores: ConfigurationStores;
     // (undocumented)
     keyValues: KeyValues;
+    // (undocumented)
+    networkSecurityPerimeterConfigurations: NetworkSecurityPerimeterConfigurations;
+    // (undocumented)
+    nspConfigurationName: string;
     // (undocumented)
     operations: Operations;
     // (undocumented)
@@ -48,6 +55,8 @@ export class AppConfigurationManagementClient extends coreClient.ServiceClient {
     privateLinkResources: PrivateLinkResources;
     // (undocumented)
     replicas: Replicas;
+    // (undocumented)
+    snapshots: Snapshots;
     // (undocumented)
     subscriptionId: string;
 }
@@ -60,10 +69,16 @@ export interface AppConfigurationManagementClientOptionalParams extends coreClie
 }
 
 // @public
+export type AuthenticationMode = string;
+
+// @public
 export interface CheckNameAvailabilityParameters {
     name: string;
     type: ConfigurationResourceType;
 }
+
+// @public
+export type CompositionType = string;
 
 // @public
 export type ConfigurationResourceType = string;
@@ -72,10 +87,12 @@ export type ConfigurationResourceType = string;
 export interface ConfigurationStore extends TrackedResource {
     createMode?: CreateMode;
     readonly creationDate?: Date;
+    dataPlaneProxy?: DataPlaneProxyProperties;
     disableLocalAuth?: boolean;
     enablePurgeProtection?: boolean;
     encryption?: EncryptionProperties;
     readonly endpoint?: string;
+    experimentation?: ExperimentationProperties;
     identity?: ResourceIdentity;
     readonly privateEndpointConnections?: PrivateEndpointConnectionReference[];
     readonly provisioningState?: ProvisioningState;
@@ -83,6 +100,7 @@ export interface ConfigurationStore extends TrackedResource {
     sku: Sku;
     softDeleteRetentionInDays?: number;
     readonly systemData?: SystemData;
+    telemetry?: TelemetryProperties;
 }
 
 // @public
@@ -118,6 +136,12 @@ export interface ConfigurationStoresCreateOptionalParams extends coreClient.Oper
 
 // @public
 export type ConfigurationStoresCreateResponse = ConfigurationStore;
+
+// @public
+export interface ConfigurationStoresDeleteHeaders {
+    azureAsyncOperation?: string;
+    location?: string;
+}
 
 // @public
 export interface ConfigurationStoresDeleteOptionalParams extends coreClient.OperationOptions {
@@ -199,6 +223,12 @@ export interface ConfigurationStoresListOptionalParams extends coreClient.Operat
 export type ConfigurationStoresListResponse = ConfigurationStoreListResult;
 
 // @public
+export interface ConfigurationStoresPurgeDeletedHeaders {
+    azureAsyncOperation?: string;
+    location?: string;
+}
+
+// @public
 export interface ConfigurationStoresPurgeDeletedOptionalParams extends coreClient.OperationOptions {
     resumeFrom?: string;
     updateIntervalInMs?: number;
@@ -222,15 +252,18 @@ export type ConfigurationStoresUpdateResponse = ConfigurationStore;
 
 // @public
 export interface ConfigurationStoreUpdateParameters {
+    dataPlaneProxy?: DataPlaneProxyProperties;
     disableLocalAuth?: boolean;
     enablePurgeProtection?: boolean;
     encryption?: EncryptionProperties;
+    experimentation?: ExperimentationProperties;
     identity?: ResourceIdentity;
     publicNetworkAccess?: PublicNetworkAccess;
     sku?: Sku;
     tags?: {
         [propertyName: string]: string;
     };
+    telemetry?: TelemetryProperties;
 }
 
 // @public
@@ -241,6 +274,12 @@ export type CreatedByType = string;
 
 // @public
 export type CreateMode = "Recover" | "Default";
+
+// @public
+export interface DataPlaneProxyProperties {
+    authenticationMode?: AuthenticationMode;
+    privateLinkDelegation?: PrivateLinkDelegation;
+}
 
 // @public
 export interface DeletedConfigurationStore {
@@ -275,6 +314,15 @@ export interface ErrorAdditionalInfo {
 }
 
 // @public
+export interface ErrorDetail {
+    readonly additionalInfo?: ErrorAdditionalInfo[];
+    readonly code?: string;
+    readonly details?: ErrorDetail[];
+    readonly message?: string;
+    readonly target?: string;
+}
+
+// @public
 export interface ErrorDetails {
     readonly additionalInfo?: ErrorAdditionalInfo[];
     readonly code?: string;
@@ -284,6 +332,17 @@ export interface ErrorDetails {
 // @public
 export interface ErrorResponse {
     error?: ErrorDetails;
+}
+
+// @public
+export interface ErrorResponseAutoGenerated {
+    error?: ErrorDetail;
+}
+
+// @public
+export interface ExperimentationProperties {
+    dataPlaneEndpoint?: string;
+    resourceId?: string;
 }
 
 // @public
@@ -310,6 +369,12 @@ export interface KeyValue {
 }
 
 // @public
+export interface KeyValueFilter {
+    key: string;
+    label?: string;
+}
+
+// @public
 export interface KeyValueListResult {
     nextLink?: string;
     value?: KeyValue[];
@@ -332,6 +397,12 @@ export interface KeyValuesCreateOrUpdateOptionalParams extends coreClient.Operat
 export type KeyValuesCreateOrUpdateResponse = KeyValue;
 
 // @public
+export interface KeyValuesDeleteHeaders {
+    azureAsyncOperation?: string;
+    location?: string;
+}
+
+// @public
 export interface KeyValuesDeleteOptionalParams extends coreClient.OperationOptions {
     resumeFrom?: string;
     updateIntervalInMs?: number;
@@ -351,9 +422,27 @@ export interface KeyVaultProperties {
 }
 
 // @public
+export enum KnownAccessRuleDirection {
+    Inbound = "Inbound",
+    Outbound = "Outbound"
+}
+
+// @public
 export enum KnownActionsRequired {
     None = "None",
     Recreate = "Recreate"
+}
+
+// @public
+export enum KnownAuthenticationMode {
+    Local = "Local",
+    PassThrough = "Pass-through"
+}
+
+// @public
+export enum KnownCompositionType {
+    Key = "Key",
+    KeyLabel = "Key_Label"
 }
 
 // @public
@@ -386,6 +475,43 @@ export enum KnownIdentityType {
 }
 
 // @public
+export enum KnownNSPProvisioningIssueSeverity {
+    Error = "Error",
+    Warning = "Warning"
+}
+
+// @public
+export enum KnownNSPProvisioningIssueType {
+    ConfigurationPropagationFailure = "ConfigurationPropagationFailure",
+    MissingIdentityConfiguration = "MissingIdentityConfiguration",
+    MissingPerimeterConfiguration = "MissingPerimeterConfiguration",
+    Other = "Other"
+}
+
+// @public
+export enum KnownNSPProvisioningState {
+    Accepted = "Accepted",
+    Canceled = "Canceled",
+    Creating = "Creating",
+    Deleting = "Deleting",
+    Failed = "Failed",
+    Succeeded = "Succeeded",
+    Updating = "Updating"
+}
+
+// @public
+export enum KnownNSPResourceAssociationAccessMode {
+    Enforced = "Enforced",
+    Learning = "Learning"
+}
+
+// @public
+export enum KnownPrivateLinkDelegation {
+    Disabled = "Disabled",
+    Enabled = "Enabled"
+}
+
+// @public
 export enum KnownProvisioningState {
     Canceled = "Canceled",
     Creating = "Creating",
@@ -398,7 +524,8 @@ export enum KnownProvisioningState {
 // @public
 export enum KnownPublicNetworkAccess {
     Disabled = "Disabled",
-    Enabled = "Enabled"
+    Enabled = "Enabled",
+    SecuredByPerimeter = "SecuredByPerimeter"
 }
 
 // @public
@@ -408,6 +535,14 @@ export enum KnownReplicaProvisioningState {
     Deleting = "Deleting",
     Failed = "Failed",
     Succeeded = "Succeeded"
+}
+
+// @public
+export enum KnownSnapshotStatus {
+    Archived = "Archived",
+    Failed = "Failed",
+    Provisioning = "Provisioning",
+    Ready = "Ready"
 }
 
 // @public
@@ -442,6 +577,131 @@ export interface NameAvailabilityStatus {
     readonly nameAvailable?: boolean;
     readonly reason?: string;
 }
+
+// @public
+export interface NetworkSecurityPerimeterConfiguration extends ProxyResource {
+    properties?: NetworkSecurityPerimeterConfigurationProperties;
+}
+
+// @public
+export interface NetworkSecurityPerimeterConfigurationListResult {
+    nextLink?: string;
+    readonly value?: NetworkSecurityPerimeterConfiguration[];
+}
+
+// @public
+export interface NetworkSecurityPerimeterConfigurationProperties {
+    networkSecurityPerimeter?: NSPProperties;
+    profile?: NSPProfile;
+    readonly provisioningIssues?: NSPProvisioningIssue[];
+    readonly provisioningState?: NSPProvisioningState;
+    resourceAssociation?: NSPResourceAssociation;
+}
+
+// @public
+export interface NetworkSecurityPerimeterConfigurations {
+    beginReconcile(resourceGroupName: string, configStoreName: string, options?: NetworkSecurityPerimeterConfigurationsReconcileOptionalParams): Promise<SimplePollerLike<OperationState<NetworkSecurityPerimeterConfigurationsReconcileResponse>, NetworkSecurityPerimeterConfigurationsReconcileResponse>>;
+    beginReconcileAndWait(resourceGroupName: string, configStoreName: string, options?: NetworkSecurityPerimeterConfigurationsReconcileOptionalParams): Promise<NetworkSecurityPerimeterConfigurationsReconcileResponse>;
+    get(resourceGroupName: string, configStoreName: string, options?: NetworkSecurityPerimeterConfigurationsGetOptionalParams): Promise<NetworkSecurityPerimeterConfigurationsGetResponse>;
+    listByConfigurationStore(resourceGroupName: string, configStoreName: string, options?: NetworkSecurityPerimeterConfigurationsListByConfigurationStoreOptionalParams): PagedAsyncIterableIterator<NetworkSecurityPerimeterConfiguration>;
+}
+
+// @public
+export interface NetworkSecurityPerimeterConfigurationsGetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type NetworkSecurityPerimeterConfigurationsGetResponse = NetworkSecurityPerimeterConfiguration;
+
+// @public
+export interface NetworkSecurityPerimeterConfigurationsListByConfigurationStoreNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type NetworkSecurityPerimeterConfigurationsListByConfigurationStoreNextResponse = NetworkSecurityPerimeterConfigurationListResult;
+
+// @public
+export interface NetworkSecurityPerimeterConfigurationsListByConfigurationStoreOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type NetworkSecurityPerimeterConfigurationsListByConfigurationStoreResponse = NetworkSecurityPerimeterConfigurationListResult;
+
+// @public
+export interface NetworkSecurityPerimeterConfigurationsReconcileHeaders {
+    azureAsyncOperation?: string;
+    location?: string;
+}
+
+// @public
+export interface NetworkSecurityPerimeterConfigurationsReconcileOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type NetworkSecurityPerimeterConfigurationsReconcileResponse = NetworkSecurityPerimeterConfigurationsReconcileHeaders;
+
+// @public
+export interface NSPAccessRuleProperties {
+    readonly addressPrefixes?: string[];
+    readonly direction?: AccessRuleDirection;
+}
+
+// @public
+export interface NSPProfile {
+    readonly accessRules?: NSPProfileAccessRule[];
+    readonly accessRulesVersion?: string;
+    readonly diagnosticSettingsVersion?: string;
+    readonly enabledLogCategories?: string[];
+    readonly name?: string;
+}
+
+// @public
+export interface NSPProfileAccessRule {
+    readonly name?: string;
+    properties?: NSPAccessRuleProperties;
+}
+
+// @public
+export interface NSPProperties {
+    readonly id?: string;
+    readonly location?: string;
+    readonly perimeterGuid?: string;
+}
+
+// @public
+export interface NSPProvisioningIssue {
+    readonly name?: string;
+    properties?: NSPProvisioningIssueProperties;
+}
+
+// @public
+export interface NSPProvisioningIssueProperties {
+    readonly description?: string;
+    readonly issueType?: NSPProvisioningIssueType;
+    readonly severity?: NSPProvisioningIssueSeverity;
+    readonly suggestedAccessRules?: NSPProfileAccessRule[];
+    readonly suggestedResourceIds?: string[];
+}
+
+// @public
+export type NSPProvisioningIssueSeverity = string;
+
+// @public
+export type NSPProvisioningIssueType = string;
+
+// @public
+export type NSPProvisioningState = string;
+
+// @public
+export interface NSPResourceAssociation {
+    readonly accessMode?: NSPResourceAssociationAccessMode;
+    readonly name?: string;
+}
+
+// @public
+export type NSPResourceAssociationAccessMode = string;
 
 // @public
 export interface OperationDefinition {
@@ -558,6 +818,12 @@ export interface PrivateEndpointConnectionsCreateOrUpdateOptionalParams extends 
 export type PrivateEndpointConnectionsCreateOrUpdateResponse = PrivateEndpointConnection;
 
 // @public
+export interface PrivateEndpointConnectionsDeleteHeaders {
+    azureAsyncOperation?: string;
+    location?: string;
+}
+
+// @public
 export interface PrivateEndpointConnectionsDeleteOptionalParams extends coreClient.OperationOptions {
     resumeFrom?: string;
     updateIntervalInMs?: number;
@@ -583,6 +849,9 @@ export interface PrivateEndpointConnectionsListByConfigurationStoreOptionalParam
 
 // @public
 export type PrivateEndpointConnectionsListByConfigurationStoreResponse = PrivateEndpointConnectionListResult;
+
+// @public
+export type PrivateLinkDelegation = string;
 
 // @public
 export interface PrivateLinkResource {
@@ -638,6 +907,10 @@ export interface PrivateLinkServiceConnectionState {
 export type ProvisioningState = string;
 
 // @public
+export interface ProxyResource extends ResourceAutoGenerated {
+}
+
+// @public
 export type PublicNetworkAccess = string;
 
 // @public
@@ -687,6 +960,7 @@ export type ReplicasCreateResponse = Replica;
 // @public
 export interface ReplicasDeleteHeaders {
     azureAsyncOperation?: string;
+    location?: string;
 }
 
 // @public
@@ -725,6 +999,14 @@ export interface Resource {
 }
 
 // @public
+export interface ResourceAutoGenerated {
+    readonly id?: string;
+    readonly name?: string;
+    readonly systemData?: SystemData;
+    readonly type?: string;
+}
+
+// @public
 export interface ResourceIdentity {
     readonly principalId?: string;
     readonly tenantId?: string;
@@ -746,6 +1028,52 @@ export interface Sku {
 }
 
 // @public
+export interface Snapshot {
+    compositionType?: CompositionType;
+    readonly created?: Date;
+    readonly etag?: string;
+    readonly expires?: Date;
+    filters?: KeyValueFilter[];
+    readonly id?: string;
+    readonly itemsCount?: number;
+    readonly name?: string;
+    readonly provisioningState?: ProvisioningState;
+    retentionPeriod?: number;
+    readonly size?: number;
+    readonly status?: SnapshotStatus;
+    tags?: {
+        [propertyName: string]: string;
+    };
+    readonly type?: string;
+}
+
+// @public
+export interface Snapshots {
+    beginCreate(resourceGroupName: string, configStoreName: string, snapshotName: string, body: Snapshot, options?: SnapshotsCreateOptionalParams): Promise<SimplePollerLike<OperationState<SnapshotsCreateResponse>, SnapshotsCreateResponse>>;
+    beginCreateAndWait(resourceGroupName: string, configStoreName: string, snapshotName: string, body: Snapshot, options?: SnapshotsCreateOptionalParams): Promise<SnapshotsCreateResponse>;
+    get(resourceGroupName: string, configStoreName: string, snapshotName: string, options?: SnapshotsGetOptionalParams): Promise<SnapshotsGetResponse>;
+}
+
+// @public
+export interface SnapshotsCreateOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type SnapshotsCreateResponse = Snapshot;
+
+// @public
+export interface SnapshotsGetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type SnapshotsGetResponse = Snapshot;
+
+// @public
+export type SnapshotStatus = string;
+
+// @public
 export interface SystemData {
     createdAt?: Date;
     createdBy?: string;
@@ -753,6 +1081,11 @@ export interface SystemData {
     lastModifiedAt?: Date;
     lastModifiedBy?: string;
     lastModifiedByType?: CreatedByType;
+}
+
+// @public
+export interface TelemetryProperties {
+    resourceId?: string;
 }
 
 // @public

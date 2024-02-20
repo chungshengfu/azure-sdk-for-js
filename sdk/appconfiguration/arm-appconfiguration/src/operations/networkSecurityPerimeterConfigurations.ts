@@ -8,7 +8,7 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { Replicas } from "../operationsInterfaces";
+import { NetworkSecurityPerimeterConfigurations } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
@@ -20,25 +20,26 @@ import {
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
-  Replica,
-  ReplicasListByConfigurationStoreNextOptionalParams,
-  ReplicasListByConfigurationStoreOptionalParams,
-  ReplicasListByConfigurationStoreResponse,
-  ReplicasGetOptionalParams,
-  ReplicasGetResponse,
-  ReplicasCreateOptionalParams,
-  ReplicasCreateResponse,
-  ReplicasDeleteOptionalParams,
-  ReplicasListByConfigurationStoreNextResponse,
+  NetworkSecurityPerimeterConfiguration,
+  NetworkSecurityPerimeterConfigurationsListByConfigurationStoreNextOptionalParams,
+  NetworkSecurityPerimeterConfigurationsListByConfigurationStoreOptionalParams,
+  NetworkSecurityPerimeterConfigurationsListByConfigurationStoreResponse,
+  NetworkSecurityPerimeterConfigurationsGetOptionalParams,
+  NetworkSecurityPerimeterConfigurationsGetResponse,
+  NetworkSecurityPerimeterConfigurationsReconcileOptionalParams,
+  NetworkSecurityPerimeterConfigurationsReconcileResponse,
+  NetworkSecurityPerimeterConfigurationsListByConfigurationStoreNextResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing Replicas operations. */
-export class ReplicasImpl implements Replicas {
+/** Class containing NetworkSecurityPerimeterConfigurations operations. */
+export class NetworkSecurityPerimeterConfigurationsImpl
+  implements NetworkSecurityPerimeterConfigurations
+{
   private readonly client: AppConfigurationManagementClient;
 
   /**
-   * Initialize a new instance of the class Replicas class.
+   * Initialize a new instance of the class NetworkSecurityPerimeterConfigurations class.
    * @param client Reference to the service client
    */
   constructor(client: AppConfigurationManagementClient) {
@@ -46,7 +47,7 @@ export class ReplicasImpl implements Replicas {
   }
 
   /**
-   * Lists the replicas for a given configuration store.
+   * Lists all network security perimeter configurations for a configuration store.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param configStoreName The name of the configuration store.
    * @param options The options parameters.
@@ -54,8 +55,8 @@ export class ReplicasImpl implements Replicas {
   public listByConfigurationStore(
     resourceGroupName: string,
     configStoreName: string,
-    options?: ReplicasListByConfigurationStoreOptionalParams,
-  ): PagedAsyncIterableIterator<Replica> {
+    options?: NetworkSecurityPerimeterConfigurationsListByConfigurationStoreOptionalParams,
+  ): PagedAsyncIterableIterator<NetworkSecurityPerimeterConfiguration> {
     const iter = this.listByConfigurationStorePagingAll(
       resourceGroupName,
       configStoreName,
@@ -85,10 +86,10 @@ export class ReplicasImpl implements Replicas {
   private async *listByConfigurationStorePagingPage(
     resourceGroupName: string,
     configStoreName: string,
-    options?: ReplicasListByConfigurationStoreOptionalParams,
+    options?: NetworkSecurityPerimeterConfigurationsListByConfigurationStoreOptionalParams,
     settings?: PageSettings,
-  ): AsyncIterableIterator<Replica[]> {
-    let result: ReplicasListByConfigurationStoreResponse;
+  ): AsyncIterableIterator<NetworkSecurityPerimeterConfiguration[]> {
+    let result: NetworkSecurityPerimeterConfigurationsListByConfigurationStoreResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
       result = await this._listByConfigurationStore(
@@ -118,8 +119,8 @@ export class ReplicasImpl implements Replicas {
   private async *listByConfigurationStorePagingAll(
     resourceGroupName: string,
     configStoreName: string,
-    options?: ReplicasListByConfigurationStoreOptionalParams,
-  ): AsyncIterableIterator<Replica> {
+    options?: NetworkSecurityPerimeterConfigurationsListByConfigurationStoreOptionalParams,
+  ): AsyncIterableIterator<NetworkSecurityPerimeterConfiguration> {
     for await (const page of this.listByConfigurationStorePagingPage(
       resourceGroupName,
       configStoreName,
@@ -130,7 +131,7 @@ export class ReplicasImpl implements Replicas {
   }
 
   /**
-   * Lists the replicas for a given configuration store.
+   * Lists all network security perimeter configurations for a configuration store.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param configStoreName The name of the configuration store.
    * @param options The options parameters.
@@ -138,8 +139,8 @@ export class ReplicasImpl implements Replicas {
   private _listByConfigurationStore(
     resourceGroupName: string,
     configStoreName: string,
-    options?: ReplicasListByConfigurationStoreOptionalParams,
-  ): Promise<ReplicasListByConfigurationStoreResponse> {
+    options?: NetworkSecurityPerimeterConfigurationsListByConfigurationStoreOptionalParams,
+  ): Promise<NetworkSecurityPerimeterConfigurationsListByConfigurationStoreResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, configStoreName, options },
       listByConfigurationStoreOperationSpec,
@@ -147,48 +148,42 @@ export class ReplicasImpl implements Replicas {
   }
 
   /**
-   * Gets the properties of the specified replica.
+   * Gets the specified network security perimeter configuration associated with the configuration store.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param configStoreName The name of the configuration store.
-   * @param replicaName The name of the replica.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     configStoreName: string,
-    replicaName: string,
-    options?: ReplicasGetOptionalParams,
-  ): Promise<ReplicasGetResponse> {
+    options?: NetworkSecurityPerimeterConfigurationsGetOptionalParams,
+  ): Promise<NetworkSecurityPerimeterConfigurationsGetResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, configStoreName, replicaName, options },
+      { resourceGroupName, configStoreName, options },
       getOperationSpec,
     );
   }
 
   /**
-   * Creates a replica with the specified parameters.
+   * Forces a refresh of the specified network security perimeter configuration.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param configStoreName The name of the configuration store.
-   * @param replicaName The name of the replica.
-   * @param replicaCreationParameters The parameters for creating a replica.
    * @param options The options parameters.
    */
-  async beginCreate(
+  async beginReconcile(
     resourceGroupName: string,
     configStoreName: string,
-    replicaName: string,
-    replicaCreationParameters: Replica,
-    options?: ReplicasCreateOptionalParams,
+    options?: NetworkSecurityPerimeterConfigurationsReconcileOptionalParams,
   ): Promise<
     SimplePollerLike<
-      OperationState<ReplicasCreateResponse>,
-      ReplicasCreateResponse
+      OperationState<NetworkSecurityPerimeterConfigurationsReconcileResponse>,
+      NetworkSecurityPerimeterConfigurationsReconcileResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec,
-    ): Promise<ReplicasCreateResponse> => {
+    ): Promise<NetworkSecurityPerimeterConfigurationsReconcileResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -225,134 +220,34 @@ export class ReplicasImpl implements Replicas {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: {
-        resourceGroupName,
-        configStoreName,
-        replicaName,
-        replicaCreationParameters,
-        options,
-      },
-      spec: createOperationSpec,
+      args: { resourceGroupName, configStoreName, options },
+      spec: reconcileOperationSpec,
     });
     const poller = await createHttpPoller<
-      ReplicasCreateResponse,
-      OperationState<ReplicasCreateResponse>
+      NetworkSecurityPerimeterConfigurationsReconcileResponse,
+      OperationState<NetworkSecurityPerimeterConfigurationsReconcileResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation",
     });
     await poller.poll();
     return poller;
   }
 
   /**
-   * Creates a replica with the specified parameters.
+   * Forces a refresh of the specified network security perimeter configuration.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param configStoreName The name of the configuration store.
-   * @param replicaName The name of the replica.
-   * @param replicaCreationParameters The parameters for creating a replica.
    * @param options The options parameters.
    */
-  async beginCreateAndWait(
+  async beginReconcileAndWait(
     resourceGroupName: string,
     configStoreName: string,
-    replicaName: string,
-    replicaCreationParameters: Replica,
-    options?: ReplicasCreateOptionalParams,
-  ): Promise<ReplicasCreateResponse> {
-    const poller = await this.beginCreate(
+    options?: NetworkSecurityPerimeterConfigurationsReconcileOptionalParams,
+  ): Promise<NetworkSecurityPerimeterConfigurationsReconcileResponse> {
+    const poller = await this.beginReconcile(
       resourceGroupName,
       configStoreName,
-      replicaName,
-      replicaCreationParameters,
-      options,
-    );
-    return poller.pollUntilDone();
-  }
-
-  /**
-   * Deletes a replica.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param configStoreName The name of the configuration store.
-   * @param replicaName The name of the replica.
-   * @param options The options parameters.
-   */
-  async beginDelete(
-    resourceGroupName: string,
-    configStoreName: string,
-    replicaName: string,
-    options?: ReplicasDeleteOptionalParams,
-  ): Promise<SimplePollerLike<OperationState<void>, void>> {
-    const directSendOperation = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec,
-    ): Promise<void> => {
-      return this.client.sendOperationRequest(args, spec);
-    };
-    const sendOperationFn = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec,
-    ) => {
-      let currentRawResponse: coreClient.FullOperationResponse | undefined =
-        undefined;
-      const providedCallback = args.options?.onResponse;
-      const callback: coreClient.RawResponseCallback = (
-        rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown,
-      ) => {
-        currentRawResponse = rawResponse;
-        providedCallback?.(rawResponse, flatResponse);
-      };
-      const updatedArgs = {
-        ...args,
-        options: {
-          ...args.options,
-          onResponse: callback,
-        },
-      };
-      const flatResponse = await directSendOperation(updatedArgs, spec);
-      return {
-        flatResponse,
-        rawResponse: {
-          statusCode: currentRawResponse!.status,
-          body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON(),
-        },
-      };
-    };
-
-    const lro = createLroSpec({
-      sendOperationFn,
-      args: { resourceGroupName, configStoreName, replicaName, options },
-      spec: deleteOperationSpec,
-    });
-    const poller = await createHttpPoller<void, OperationState<void>>(lro, {
-      restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation",
-    });
-    await poller.poll();
-    return poller;
-  }
-
-  /**
-   * Deletes a replica.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param configStoreName The name of the configuration store.
-   * @param replicaName The name of the replica.
-   * @param options The options parameters.
-   */
-  async beginDeleteAndWait(
-    resourceGroupName: string,
-    configStoreName: string,
-    replicaName: string,
-    options?: ReplicasDeleteOptionalParams,
-  ): Promise<void> {
-    const poller = await this.beginDelete(
-      resourceGroupName,
-      configStoreName,
-      replicaName,
       options,
     );
     return poller.pollUntilDone();
@@ -370,8 +265,8 @@ export class ReplicasImpl implements Replicas {
     resourceGroupName: string,
     configStoreName: string,
     nextLink: string,
-    options?: ReplicasListByConfigurationStoreNextOptionalParams,
-  ): Promise<ReplicasListByConfigurationStoreNextResponse> {
+    options?: NetworkSecurityPerimeterConfigurationsListByConfigurationStoreNextOptionalParams,
+  ): Promise<NetworkSecurityPerimeterConfigurationsListByConfigurationStoreNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, configStoreName, nextLink, options },
       listByConfigurationStoreNextOperationSpec,
@@ -382,17 +277,17 @@ export class ReplicasImpl implements Replicas {
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listByConfigurationStoreOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AppConfiguration/configurationStores/{configStoreName}/replicas",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AppConfiguration/configurationStores/{configStoreName}/networkSecurityPerimeterConfigurations",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ReplicaListResult,
+      bodyMapper: Mappers.NetworkSecurityPerimeterConfigurationListResult,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,
     },
   },
-  queryParameters: [Parameters.apiVersion, Parameters.skipToken],
+  queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
@@ -403,11 +298,11 @@ const listByConfigurationStoreOperationSpec: coreClient.OperationSpec = {
   serializer,
 };
 const getOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AppConfiguration/configurationStores/{configStoreName}/replicas/{replicaName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AppConfiguration/configurationStores/{configStoreName}/networkSecurityPerimeterConfigurations/{nspConfigurationName}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.Replica,
+      bodyMapper: Mappers.NetworkSecurityPerimeterConfiguration,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,
@@ -419,54 +314,33 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.configStoreName,
-    Parameters.replicaName,
+    Parameters.nspConfigurationName,
   ],
   headerParameters: [Parameters.accept],
   serializer,
 };
-const createOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AppConfiguration/configurationStores/{configStoreName}/replicas/{replicaName}",
-  httpMethod: "PUT",
+const reconcileOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AppConfiguration/configurationStores/{configStoreName}/networkSecurityPerimeterConfigurations/{nspConfigurationName}/reconcile",
+  httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.Replica,
+      headersMapper:
+        Mappers.NetworkSecurityPerimeterConfigurationsReconcileHeaders,
     },
     201: {
-      bodyMapper: Mappers.Replica,
+      headersMapper:
+        Mappers.NetworkSecurityPerimeterConfigurationsReconcileHeaders,
     },
     202: {
-      bodyMapper: Mappers.Replica,
+      headersMapper:
+        Mappers.NetworkSecurityPerimeterConfigurationsReconcileHeaders,
     },
     204: {
-      bodyMapper: Mappers.Replica,
+      headersMapper:
+        Mappers.NetworkSecurityPerimeterConfigurationsReconcileHeaders,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse,
-    },
-  },
-  requestBody: Parameters.replicaCreationParameters,
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.configStoreName,
-    Parameters.replicaName1,
-  ],
-  headerParameters: [Parameters.accept, Parameters.contentType],
-  mediaType: "json",
-  serializer,
-};
-const deleteOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AppConfiguration/configurationStores/{configStoreName}/replicas/{replicaName}",
-  httpMethod: "DELETE",
-  responses: {
-    200: {},
-    201: {},
-    202: {},
-    204: {},
-    default: {
-      bodyMapper: Mappers.ErrorResponse,
+      bodyMapper: Mappers.ErrorResponseAutoGenerated,
     },
   },
   queryParameters: [Parameters.apiVersion],
@@ -475,7 +349,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.configStoreName,
-    Parameters.replicaName1,
+    Parameters.nspConfigurationName,
   ],
   headerParameters: [Parameters.accept],
   serializer,
@@ -485,7 +359,7 @@ const listByConfigurationStoreNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ReplicaListResult,
+      bodyMapper: Mappers.NetworkSecurityPerimeterConfigurationListResult,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,

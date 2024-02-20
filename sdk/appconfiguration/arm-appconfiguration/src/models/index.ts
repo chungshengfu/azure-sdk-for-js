@@ -109,6 +109,28 @@ export interface PrivateLinkServiceConnectionState {
   readonly actionsRequired?: ActionsRequired;
 }
 
+/** The data plane proxy settings for a configuration store. */
+export interface DataPlaneProxyProperties {
+  /** The data plane proxy authentication mode. This property manages the authentication mode of request to the data plane resources. */
+  authenticationMode?: AuthenticationMode;
+  /** The data plane proxy private link delegation. This property manages if a request from delegated ARM private link is allowed when the data plane resource requires private link. */
+  privateLinkDelegation?: PrivateLinkDelegation;
+}
+
+/** Telemetry settings */
+export interface TelemetryProperties {
+  /** Resource ID of a resource enabling telemetry collection */
+  resourceId?: string;
+}
+
+/** Experimentation settings */
+export interface ExperimentationProperties {
+  /** Resource ID of a resource enabling experimentation */
+  resourceId?: string;
+  /** The data plane endpoint of the Split experimentation workspace resource where experimentation data can be retrieved */
+  dataPlaneEndpoint?: string;
+}
+
 /** Describes a configuration store SKU. */
 export interface Sku {
   /** The SKU name of the configuration store. */
@@ -205,6 +227,12 @@ export interface ConfigurationStoreUpdateParameters {
   publicNetworkAccess?: PublicNetworkAccess;
   /** Property specifying whether protection against purge is enabled for this configuration store. */
   enablePurgeProtection?: boolean;
+  /** Property specifying the configuration of data plane proxy for Azure Resource Manager (ARM). */
+  dataPlaneProxy?: DataPlaneProxyProperties;
+  /** Property specifying the configuration of telemetry to update for this configuration store */
+  telemetry?: TelemetryProperties;
+  /** Property specifying the configuration of experimentation to update for this configuration store */
+  experimentation?: ExperimentationProperties;
 }
 
 /** Parameters used for checking whether a resource name is available. */
@@ -608,6 +636,293 @@ export interface Replica {
   readonly provisioningState?: ReplicaProvisioningState;
 }
 
+/** The snapshot resource. */
+export interface Snapshot {
+  /**
+   * The resource ID.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly id?: string;
+  /**
+   * The name of the snapshot.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /**
+   * The type of the resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly type?: string;
+  /**
+   * The provisioning state of the snapshot.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ProvisioningState;
+  /**
+   * The current status of the snapshot.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly status?: SnapshotStatus;
+  /** A list of filters used to filter the key-values included in the snapshot. */
+  filters?: KeyValueFilter[];
+  /** The composition type describes how the key-values within the snapshot are composed. The 'key' composition type ensures there are no two key-values containing the same key. The 'key_label' composition type ensures there are no two key-values containing the same key and label. */
+  compositionType?: CompositionType;
+  /**
+   * The time that the snapshot was created.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly created?: Date;
+  /**
+   * The time that the snapshot will expire.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly expires?: Date;
+  /** The amount of time, in seconds, that a snapshot will remain in the archived state before expiring. This property is only writable during the creation of a snapshot. If not specified, the default lifetime of key-value revisions will be used. */
+  retentionPeriod?: number;
+  /**
+   * The size in bytes of the snapshot.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly size?: number;
+  /**
+   * The amount of key-values in the snapshot.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly itemsCount?: number;
+  /** The tags of the snapshot. NOTE: These are data plane tags, not ARM tags. */
+  tags?: { [propertyName: string]: string };
+  /**
+   * A value representing the current state of the snapshot.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly etag?: string;
+}
+
+/** Enables filtering of key-values. */
+export interface KeyValueFilter {
+  /** Filters key-values by their key field. */
+  key: string;
+  /** Filters key-values by their label field. */
+  label?: string;
+}
+
+/** Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.). */
+export interface ErrorResponseAutoGenerated {
+  /** The error object. */
+  error?: ErrorDetail;
+}
+
+/** The error detail. */
+export interface ErrorDetail {
+  /**
+   * The error code.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly code?: string;
+  /**
+   * The error message.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly message?: string;
+  /**
+   * The error target.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly target?: string;
+  /**
+   * The error details.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly details?: ErrorDetail[];
+  /**
+   * The error additional info.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly additionalInfo?: ErrorAdditionalInfo[];
+}
+
+/** A list of network security perimeter configurations */
+export interface NetworkSecurityPerimeterConfigurationListResult {
+  /**
+   * The collection value.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly value?: NetworkSecurityPerimeterConfiguration[];
+  /** The URI that can be used to request the next set of paged results. */
+  nextLink?: string;
+}
+
+/** The properties of a network security perimeter configuration. */
+export interface NetworkSecurityPerimeterConfigurationProperties {
+  /**
+   * The provisioning status of the network security perimeter configuration.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: NSPProvisioningState;
+  /**
+   * List of warnings and errors related to network security perimeter provisioning.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningIssues?: NSPProvisioningIssue[];
+  /** Properties of the network security perimeter */
+  networkSecurityPerimeter?: NSPProperties;
+  /** Properties of the related Resource Association */
+  resourceAssociation?: NSPResourceAssociation;
+  /** Properties of the related network profile */
+  profile?: NSPProfile;
+}
+
+/** A network security perimeter provisioning issue */
+export interface NSPProvisioningIssue {
+  /**
+   * The name of the provisioning issue
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /** Properties of a network security perimeter provisioning issue */
+  properties?: NSPProvisioningIssueProperties;
+}
+
+/** Properties of a network security perimeter provisioning issue */
+export interface NSPProvisioningIssueProperties {
+  /**
+   * The type of provisioning issue
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly issueType?: NSPProvisioningIssueType;
+  /**
+   * The severity of the provisioning issue
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly severity?: NSPProvisioningIssueSeverity;
+  /**
+   * The description of the provisioning issue
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly description?: string;
+  /**
+   * List of IDs of Azure resources that can be associated to the same perimeter to remediate the issue
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly suggestedResourceIds?: string[];
+  /**
+   * Access rules that can be added to the perimeter to remediate the issue
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly suggestedAccessRules?: NSPProfileAccessRule[];
+}
+
+/** Details of an access rule on a network profile */
+export interface NSPProfileAccessRule {
+  /**
+   * The name of the access rule
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /** Properties of an access rule on a network profile */
+  properties?: NSPAccessRuleProperties;
+}
+
+/** Properties of an access rule on a network profile */
+export interface NSPAccessRuleProperties {
+  /**
+   * The direction of the access rule
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly direction?: AccessRuleDirection;
+  /**
+   * List of IPv4 or IPv6 address prefixes granted access
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly addressPrefixes?: string[];
+}
+
+/** Properties of the network security perimeter */
+export interface NSPProperties {
+  /**
+   * Azure resource ID of the network security perimeter
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly id?: string;
+  /**
+   * The network security perimeter GUID
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly perimeterGuid?: string;
+  /**
+   * The geo-location of the network security perimeter
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly location?: string;
+}
+
+/** Properties of the related Resource Association */
+export interface NSPResourceAssociation {
+  /**
+   * The name of the Resource Association
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /**
+   * The access mode of the Resource Association
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly accessMode?: NSPResourceAssociationAccessMode;
+}
+
+/** Properties of the related network profile */
+export interface NSPProfile {
+  /**
+   * The name of the network profile
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /**
+   * The access rules version number
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly accessRulesVersion?: string;
+  /**
+   * List of access rules on the associated network profile
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly accessRules?: NSPProfileAccessRule[];
+  /**
+   * The diagnostic settings version number
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly diagnosticSettingsVersion?: string;
+  /**
+   * List of enabled log categories
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly enabledLogCategories?: string[];
+}
+
+/** Common fields that are returned in the response for all Azure Resource Manager resources */
+export interface ResourceAutoGenerated {
+  /**
+   * Fully qualified resource ID for the resource. E.g. "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}"
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly id?: string;
+  /**
+   * The name of the resource
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /**
+   * The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly type?: string;
+  /**
+   * Azure Resource Manager metadata containing createdBy and modifiedBy information.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly systemData?: SystemData;
+}
+
 /** The result of a request to list key-values. */
 export interface KeyValueListResult {
   /** The collection value. */
@@ -623,6 +938,9 @@ export interface TrackedResource extends Resource {
   /** The geo-location where the resource lives */
   location: string;
 }
+
+/** The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location */
+export interface ProxyResource extends ResourceAutoGenerated {}
 
 /** The configuration store along with all resource properties. The Configuration Store will have all information to begin utilizing it. */
 export interface ConfigurationStore extends TrackedResource {
@@ -657,7 +975,7 @@ export interface ConfigurationStore extends TrackedResource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly privateEndpointConnections?: PrivateEndpointConnectionReference[];
-  /** Control permission for data plane traffic coming from public networks while private endpoint is enabled. */
+  /** Property to specify whether the data plane will accept traffic from the public internet. */
   publicNetworkAccess?: PublicNetworkAccess;
   /** Disables all authentication methods other than AAD authentication. */
   disableLocalAuth?: boolean;
@@ -665,14 +983,68 @@ export interface ConfigurationStore extends TrackedResource {
   softDeleteRetentionInDays?: number;
   /** Property specifying whether protection against purge is enabled for this configuration store. */
   enablePurgeProtection?: boolean;
+  /** Property specifying the configuration of data plane proxy for Azure Resource Manager (ARM). */
+  dataPlaneProxy?: DataPlaneProxyProperties;
   /** Indicates whether the configuration store need to be recovered. */
   createMode?: CreateMode;
+  /** Property specifying the configuration of telemetry for this configuration store */
+  telemetry?: TelemetryProperties;
+  /** Property specifying the configuration of experimentation for this configuration store */
+  experimentation?: ExperimentationProperties;
+}
+
+/** A network security perimeter configuration */
+export interface NetworkSecurityPerimeterConfiguration extends ProxyResource {
+  /** The properties of a network security perimeter configuration. */
+  properties?: NetworkSecurityPerimeterConfigurationProperties;
+}
+
+/** Defines headers for ConfigurationStores_delete operation. */
+export interface ConfigurationStoresDeleteHeaders {
+  /** URL to query for status of the operation. */
+  azureAsyncOperation?: string;
+  /** URL to query for the operation result */
+  location?: string;
+}
+
+/** Defines headers for ConfigurationStores_purgeDeleted operation. */
+export interface ConfigurationStoresPurgeDeletedHeaders {
+  /** URL to query for status of the operation. */
+  azureAsyncOperation?: string;
+  /** URL to query for the operation result */
+  location?: string;
+}
+
+/** Defines headers for PrivateEndpointConnections_delete operation. */
+export interface PrivateEndpointConnectionsDeleteHeaders {
+  /** URL to query for status of the operation. */
+  azureAsyncOperation?: string;
+  /** URL to query for the operation result */
+  location?: string;
+}
+
+/** Defines headers for KeyValues_delete operation. */
+export interface KeyValuesDeleteHeaders {
+  /** URL to query for status of the operation. */
+  azureAsyncOperation?: string;
+  /** URL to query for the operation result */
+  location?: string;
 }
 
 /** Defines headers for Replicas_delete operation. */
 export interface ReplicasDeleteHeaders {
   /** URL to query for status of the operation. */
   azureAsyncOperation?: string;
+  /** URL to query for the operation result */
+  location?: string;
+}
+
+/** Defines headers for NetworkSecurityPerimeterConfigurations_reconcile operation. */
+export interface NetworkSecurityPerimeterConfigurationsReconcileHeaders {
+  /** URL to query for status of the operation. */
+  azureAsyncOperation?: string;
+  /** URL to query for the operation result */
+  location?: string;
 }
 
 /** Known values of {@link IdentityType} that the service accepts. */
@@ -684,7 +1056,7 @@ export enum KnownIdentityType {
   /** UserAssigned */
   UserAssigned = "UserAssigned",
   /** SystemAssignedUserAssigned */
-  SystemAssignedUserAssigned = "SystemAssigned, UserAssigned"
+  SystemAssignedUserAssigned = "SystemAssigned, UserAssigned",
 }
 
 /**
@@ -712,7 +1084,7 @@ export enum KnownProvisioningState {
   /** Failed */
   Failed = "Failed",
   /** Canceled */
-  Canceled = "Canceled"
+  Canceled = "Canceled",
 }
 
 /**
@@ -738,7 +1110,7 @@ export enum KnownConnectionStatus {
   /** Rejected */
   Rejected = "Rejected",
   /** Disconnected */
-  Disconnected = "Disconnected"
+  Disconnected = "Disconnected",
 }
 
 /**
@@ -758,7 +1130,7 @@ export enum KnownActionsRequired {
   /** None */
   None = "None",
   /** Recreate */
-  Recreate = "Recreate"
+  Recreate = "Recreate",
 }
 
 /**
@@ -776,7 +1148,9 @@ export enum KnownPublicNetworkAccess {
   /** Enabled */
   Enabled = "Enabled",
   /** Disabled */
-  Disabled = "Disabled"
+  Disabled = "Disabled",
+  /** SecuredByPerimeter */
+  SecuredByPerimeter = "SecuredByPerimeter",
 }
 
 /**
@@ -785,9 +1159,46 @@ export enum KnownPublicNetworkAccess {
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
  * **Enabled** \
- * **Disabled**
+ * **Disabled** \
+ * **SecuredByPerimeter**
  */
 export type PublicNetworkAccess = string;
+
+/** Known values of {@link AuthenticationMode} that the service accepts. */
+export enum KnownAuthenticationMode {
+  /** The local authentication mode. Users are not required to have data plane permissions if local authentication is not disabled. */
+  Local = "Local",
+  /** The pass-through authentication mode. User identity will be passed through from ARM, requiring user to have data plane action permissions (Available via App Configuration Data Owner\/ App Configuration Data Reader). */
+  PassThrough = "Pass-through",
+}
+
+/**
+ * Defines values for AuthenticationMode. \
+ * {@link KnownAuthenticationMode} can be used interchangeably with AuthenticationMode,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Local**: The local authentication mode. Users are not required to have data plane permissions if local authentication is not disabled. \
+ * **Pass-through**: The pass-through authentication mode. User identity will be passed through from ARM, requiring user to have data plane action permissions (Available via App Configuration Data Owner\/ App Configuration Data Reader).
+ */
+export type AuthenticationMode = string;
+
+/** Known values of {@link PrivateLinkDelegation} that the service accepts. */
+export enum KnownPrivateLinkDelegation {
+  /** ARM private endpoint is required if the resource requires private link. */
+  Enabled = "Enabled",
+  /** Request is denied if the resource requires private link. */
+  Disabled = "Disabled",
+}
+
+/**
+ * Defines values for PrivateLinkDelegation. \
+ * {@link KnownPrivateLinkDelegation} can be used interchangeably with PrivateLinkDelegation,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Enabled**: ARM private endpoint is required if the resource requires private link. \
+ * **Disabled**: Request is denied if the resource requires private link.
+ */
+export type PrivateLinkDelegation = string;
 
 /** Known values of {@link CreatedByType} that the service accepts. */
 export enum KnownCreatedByType {
@@ -798,7 +1209,7 @@ export enum KnownCreatedByType {
   /** ManagedIdentity */
   ManagedIdentity = "ManagedIdentity",
   /** Key */
-  Key = "Key"
+  Key = "Key",
 }
 
 /**
@@ -816,7 +1227,7 @@ export type CreatedByType = string;
 /** Known values of {@link ConfigurationResourceType} that the service accepts. */
 export enum KnownConfigurationResourceType {
   /** MicrosoftAppConfigurationConfigurationStores */
-  MicrosoftAppConfigurationConfigurationStores = "Microsoft.AppConfiguration/configurationStores"
+  MicrosoftAppConfigurationConfigurationStores = "Microsoft.AppConfiguration/configurationStores",
 }
 
 /**
@@ -839,7 +1250,7 @@ export enum KnownReplicaProvisioningState {
   /** Failed */
   Failed = "Failed",
   /** Canceled */
-  Canceled = "Canceled"
+  Canceled = "Canceled",
 }
 
 /**
@@ -854,6 +1265,159 @@ export enum KnownReplicaProvisioningState {
  * **Canceled**
  */
 export type ReplicaProvisioningState = string;
+
+/** Known values of {@link SnapshotStatus} that the service accepts. */
+export enum KnownSnapshotStatus {
+  /** Provisioning */
+  Provisioning = "Provisioning",
+  /** Ready */
+  Ready = "Ready",
+  /** Archived */
+  Archived = "Archived",
+  /** Failed */
+  Failed = "Failed",
+}
+
+/**
+ * Defines values for SnapshotStatus. \
+ * {@link KnownSnapshotStatus} can be used interchangeably with SnapshotStatus,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Provisioning** \
+ * **Ready** \
+ * **Archived** \
+ * **Failed**
+ */
+export type SnapshotStatus = string;
+
+/** Known values of {@link CompositionType} that the service accepts. */
+export enum KnownCompositionType {
+  /** Key */
+  Key = "Key",
+  /** KeyLabel */
+  KeyLabel = "Key_Label",
+}
+
+/**
+ * Defines values for CompositionType. \
+ * {@link KnownCompositionType} can be used interchangeably with CompositionType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Key** \
+ * **Key_Label**
+ */
+export type CompositionType = string;
+
+/** Known values of {@link NSPProvisioningState} that the service accepts. */
+export enum KnownNSPProvisioningState {
+  /** Succeeded */
+  Succeeded = "Succeeded",
+  /** Failed */
+  Failed = "Failed",
+  /** Accepted */
+  Accepted = "Accepted",
+  /** Creating */
+  Creating = "Creating",
+  /** Updating */
+  Updating = "Updating",
+  /** Deleting */
+  Deleting = "Deleting",
+  /** Canceled */
+  Canceled = "Canceled",
+}
+
+/**
+ * Defines values for NSPProvisioningState. \
+ * {@link KnownNSPProvisioningState} can be used interchangeably with NSPProvisioningState,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Succeeded** \
+ * **Failed** \
+ * **Accepted** \
+ * **Creating** \
+ * **Updating** \
+ * **Deleting** \
+ * **Canceled**
+ */
+export type NSPProvisioningState = string;
+
+/** Known values of {@link NSPProvisioningIssueType} that the service accepts. */
+export enum KnownNSPProvisioningIssueType {
+  /** MissingPerimeterConfiguration */
+  MissingPerimeterConfiguration = "MissingPerimeterConfiguration",
+  /** MissingIdentityConfiguration */
+  MissingIdentityConfiguration = "MissingIdentityConfiguration",
+  /** ConfigurationPropagationFailure */
+  ConfigurationPropagationFailure = "ConfigurationPropagationFailure",
+  /** Other */
+  Other = "Other",
+}
+
+/**
+ * Defines values for NSPProvisioningIssueType. \
+ * {@link KnownNSPProvisioningIssueType} can be used interchangeably with NSPProvisioningIssueType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **MissingPerimeterConfiguration** \
+ * **MissingIdentityConfiguration** \
+ * **ConfigurationPropagationFailure** \
+ * **Other**
+ */
+export type NSPProvisioningIssueType = string;
+
+/** Known values of {@link NSPProvisioningIssueSeverity} that the service accepts. */
+export enum KnownNSPProvisioningIssueSeverity {
+  /** Warning */
+  Warning = "Warning",
+  /** Error */
+  Error = "Error",
+}
+
+/**
+ * Defines values for NSPProvisioningIssueSeverity. \
+ * {@link KnownNSPProvisioningIssueSeverity} can be used interchangeably with NSPProvisioningIssueSeverity,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Warning** \
+ * **Error**
+ */
+export type NSPProvisioningIssueSeverity = string;
+
+/** Known values of {@link AccessRuleDirection} that the service accepts. */
+export enum KnownAccessRuleDirection {
+  /** Inbound */
+  Inbound = "Inbound",
+  /** Outbound */
+  Outbound = "Outbound",
+}
+
+/**
+ * Defines values for AccessRuleDirection. \
+ * {@link KnownAccessRuleDirection} can be used interchangeably with AccessRuleDirection,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Inbound** \
+ * **Outbound**
+ */
+export type AccessRuleDirection = string;
+
+/** Known values of {@link NSPResourceAssociationAccessMode} that the service accepts. */
+export enum KnownNSPResourceAssociationAccessMode {
+  /** Learning */
+  Learning = "Learning",
+  /** Enforced */
+  Enforced = "Enforced",
+}
+
+/**
+ * Defines values for NSPResourceAssociationAccessMode. \
+ * {@link KnownNSPResourceAssociationAccessMode} can be used interchangeably with NSPResourceAssociationAccessMode,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Learning** \
+ * **Enforced**
+ */
+export type NSPResourceAssociationAccessMode = string;
 /** Defines values for CreateMode. */
 export type CreateMode = "Recover" | "Default";
 
@@ -875,7 +1439,8 @@ export interface ConfigurationStoresListByResourceGroupOptionalParams
 }
 
 /** Contains response data for the listByResourceGroup operation. */
-export type ConfigurationStoresListByResourceGroupResponse = ConfigurationStoreListResult;
+export type ConfigurationStoresListByResourceGroupResponse =
+  ConfigurationStoreListResult;
 
 /** Optional parameters. */
 export interface ConfigurationStoresGetOptionalParams
@@ -939,7 +1504,8 @@ export interface ConfigurationStoresListDeletedOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listDeleted operation. */
-export type ConfigurationStoresListDeletedResponse = DeletedConfigurationStoreListResult;
+export type ConfigurationStoresListDeletedResponse =
+  DeletedConfigurationStoreListResult;
 
 /** Optional parameters. */
 export interface ConfigurationStoresGetDeletedOptionalParams
@@ -969,7 +1535,8 @@ export interface ConfigurationStoresListByResourceGroupNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroupNext operation. */
-export type ConfigurationStoresListByResourceGroupNextResponse = ConfigurationStoreListResult;
+export type ConfigurationStoresListByResourceGroupNextResponse =
+  ConfigurationStoreListResult;
 
 /** Optional parameters. */
 export interface ConfigurationStoresListKeysNextOptionalParams
@@ -983,7 +1550,8 @@ export interface ConfigurationStoresListDeletedNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listDeletedNext operation. */
-export type ConfigurationStoresListDeletedNextResponse = DeletedConfigurationStoreListResult;
+export type ConfigurationStoresListDeletedNextResponse =
+  DeletedConfigurationStoreListResult;
 
 /** Optional parameters. */
 export interface OperationsCheckNameAvailabilityOptionalParams
@@ -1007,7 +1575,8 @@ export interface OperationsRegionalCheckNameAvailabilityOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the regionalCheckNameAvailability operation. */
-export type OperationsRegionalCheckNameAvailabilityResponse = NameAvailabilityStatus;
+export type OperationsRegionalCheckNameAvailabilityResponse =
+  NameAvailabilityStatus;
 
 /** Optional parameters. */
 export interface OperationsListNextOptionalParams
@@ -1021,7 +1590,8 @@ export interface PrivateEndpointConnectionsListByConfigurationStoreOptionalParam
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByConfigurationStore operation. */
-export type PrivateEndpointConnectionsListByConfigurationStoreResponse = PrivateEndpointConnectionListResult;
+export type PrivateEndpointConnectionsListByConfigurationStoreResponse =
+  PrivateEndpointConnectionListResult;
 
 /** Optional parameters. */
 export interface PrivateEndpointConnectionsGetOptionalParams
@@ -1040,7 +1610,8 @@ export interface PrivateEndpointConnectionsCreateOrUpdateOptionalParams
 }
 
 /** Contains response data for the createOrUpdate operation. */
-export type PrivateEndpointConnectionsCreateOrUpdateResponse = PrivateEndpointConnection;
+export type PrivateEndpointConnectionsCreateOrUpdateResponse =
+  PrivateEndpointConnection;
 
 /** Optional parameters. */
 export interface PrivateEndpointConnectionsDeleteOptionalParams
@@ -1056,14 +1627,16 @@ export interface PrivateEndpointConnectionsListByConfigurationStoreNextOptionalP
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByConfigurationStoreNext operation. */
-export type PrivateEndpointConnectionsListByConfigurationStoreNextResponse = PrivateEndpointConnectionListResult;
+export type PrivateEndpointConnectionsListByConfigurationStoreNextResponse =
+  PrivateEndpointConnectionListResult;
 
 /** Optional parameters. */
 export interface PrivateLinkResourcesListByConfigurationStoreOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByConfigurationStore operation. */
-export type PrivateLinkResourcesListByConfigurationStoreResponse = PrivateLinkResourceListResult;
+export type PrivateLinkResourcesListByConfigurationStoreResponse =
+  PrivateLinkResourceListResult;
 
 /** Optional parameters. */
 export interface PrivateLinkResourcesGetOptionalParams
@@ -1077,7 +1650,8 @@ export interface PrivateLinkResourcesListByConfigurationStoreNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByConfigurationStoreNext operation. */
-export type PrivateLinkResourcesListByConfigurationStoreNextResponse = PrivateLinkResourceListResult;
+export type PrivateLinkResourcesListByConfigurationStoreNextResponse =
+  PrivateLinkResourceListResult;
 
 /** Optional parameters. */
 export interface KeyValuesGetOptionalParams
@@ -1149,6 +1723,62 @@ export interface ReplicasListByConfigurationStoreNextOptionalParams
 
 /** Contains response data for the listByConfigurationStoreNext operation. */
 export type ReplicasListByConfigurationStoreNextResponse = ReplicaListResult;
+
+/** Optional parameters. */
+export interface SnapshotsGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type SnapshotsGetResponse = Snapshot;
+
+/** Optional parameters. */
+export interface SnapshotsCreateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the create operation. */
+export type SnapshotsCreateResponse = Snapshot;
+
+/** Optional parameters. */
+export interface NetworkSecurityPerimeterConfigurationsListByConfigurationStoreOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByConfigurationStore operation. */
+export type NetworkSecurityPerimeterConfigurationsListByConfigurationStoreResponse =
+  NetworkSecurityPerimeterConfigurationListResult;
+
+/** Optional parameters. */
+export interface NetworkSecurityPerimeterConfigurationsGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type NetworkSecurityPerimeterConfigurationsGetResponse =
+  NetworkSecurityPerimeterConfiguration;
+
+/** Optional parameters. */
+export interface NetworkSecurityPerimeterConfigurationsReconcileOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the reconcile operation. */
+export type NetworkSecurityPerimeterConfigurationsReconcileResponse =
+  NetworkSecurityPerimeterConfigurationsReconcileHeaders;
+
+/** Optional parameters. */
+export interface NetworkSecurityPerimeterConfigurationsListByConfigurationStoreNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByConfigurationStoreNext operation. */
+export type NetworkSecurityPerimeterConfigurationsListByConfigurationStoreNextResponse =
+  NetworkSecurityPerimeterConfigurationListResult;
 
 /** Optional parameters. */
 export interface AppConfigurationManagementClientOptionalParams
