@@ -311,6 +311,64 @@ export interface ManagedIdentityDefinition {
   clientId?: string;
 }
 
+/** Parameters to reconcile to the OCIRepository source kind type. */
+export interface OCIRepositoryDefinition {
+  /** The URL to sync for the flux configuration OCI repository. */
+  url?: string;
+  /** The maximum time to attempt to reconcile the cluster OCI repository source with the remote. */
+  timeoutInSeconds?: number;
+  /** The interval at which to re-reconcile the cluster OCI repository source with the remote. */
+  syncIntervalInSeconds?: number;
+  /** The source reference for the OCIRepository object. */
+  repositoryRef?: OCIRepositoryRefDefinition;
+  /** The layer to be pulled from the OCI artifact. */
+  layerSelector?: OCIRepositoryLayerSelectorDefinition;
+  /** Verification of the authenticity of an OCI Artifact. */
+  verify?: OCIRepositoryVerifyDefinition;
+  /** The service account name to authenticate with the OCI repository. */
+  serviceAccountName?: string;
+  /** The name of the Secret containing client certificate and private key or CA certificate for connecting to the registry. */
+  certSecretRef?: string;
+  /** Name of a local secret on the Kubernetes cluster to use as the authentication secret rather than the managed or user-provided configuration secrets. */
+  localAuthRef?: string;
+}
+
+/** The source reference for the OCIRepository object. */
+export interface OCIRepositoryRefDefinition {
+  /** The OCI repository image tag name to pull. This defaults to 'latest'. */
+  tag?: string;
+  /** The semver range used to match against OCI repository tags. This takes precedence over tag. */
+  semver?: string;
+  /** The image digest to pull from OCI repository, the value should be in the format ‘sha256:’. This takes precedence over semver. */
+  digest?: string;
+}
+
+/** Parameters to specify which layer to pull from the OCI artifact. By default, the first layer in the artifact is pulled. */
+export interface OCIRepositoryLayerSelectorDefinition {
+  /** The first layer matching the specified media type will be used. */
+  mediaType?: string;
+  /** The operation to be performed on the selected layer. The default value is 'extract', but it can be set to 'copy'. */
+  operation?: string;
+}
+
+/** Parameters to verify the authenticity of an OCI Artifact. */
+export interface OCIRepositoryVerifyDefinition {
+  /** Verification provider name. */
+  provider?: string;
+  /** Kubernetes Secret that contains the trusted public keys of trusted authors. */
+  secretRef?: string;
+  /** Array defining the criteria for matching the identity while verifying an OCI artifact. */
+  matchOidcIdentity?: (MatchOidcIdentityDefinition | null)[];
+}
+
+/** MatchOIDCIdentity defines the criteria for matching the identity while verifying an OCI artifact. */
+export interface MatchOidcIdentityDefinition {
+  /** The regex pattern to match against to verify the OIDC issuer. */
+  issuer?: string;
+  /** The regex pattern to match against to verify the identity subject. */
+  subject?: string;
+}
+
 /** The Kustomization defining how to reconcile the artifact pulled by the source type on the cluster. */
 export interface KustomizationDefinition {
   /**
@@ -422,6 +480,8 @@ export interface FluxConfigurationPatch {
   bucket?: BucketPatchDefinition;
   /** Parameters to reconcile to the AzureBlob source kind type. */
   azureBlob?: AzureBlobPatchDefinition;
+  /** Parameters to reconcile to the OCIRepository source kind type. */
+  ociRepository?: OCIRepositoryPatchDefinition;
   /** Array of kustomizations used to reconcile the artifact pulled by the source type on the cluster. */
   kustomizations?: {
     [propertyName: string]: KustomizationPatchDefinition | null;
@@ -510,6 +570,64 @@ export interface ServicePrincipalPatchDefinition {
 export interface ManagedIdentityPatchDefinition {
   /** The client Id for authenticating a Managed Identity. */
   clientId?: string;
+}
+
+/** Parameters to reconcile to the OCIRepository source kind type. */
+export interface OCIRepositoryPatchDefinition {
+  /** The URL to sync for the flux configuration OCI repository. */
+  url?: string;
+  /** The maximum time to attempt to reconcile the cluster OCI repository source with the remote. */
+  timeoutInSeconds?: number;
+  /** The interval at which to re-reconcile the cluster OCI repository source with the remote. */
+  syncIntervalInSeconds?: number;
+  /** The source reference for the OCIRepository object. */
+  repositoryRef?: OCIRepositoryRefPatchDefinition;
+  /** The layer to be pulled from the OCI artifact. */
+  layerSelector?: OCIRepositoryLayerSelectorPatchDefinition;
+  /** Verification of the authenticity of an OCI Artifact. */
+  verify?: OCIRepositoryVerifyPatchDefinition;
+  /** The service account name to authenticate with the OCI repository. */
+  serviceAccountName?: string;
+  /** The name of the Secret containing client certificate and private key or CA certificate for connecting to the registry. */
+  certSecretRef?: string;
+  /** Name of a local secret on the Kubernetes cluster to use as the authentication secret rather than the managed or user-provided configuration secrets. */
+  localAuthRef?: string;
+}
+
+/** The source reference for the OCIRepository object. */
+export interface OCIRepositoryRefPatchDefinition {
+  /** The OCI repository image tag name to pull. This defaults to 'latest'. */
+  tag?: string;
+  /** The semver range used to match against OCI repository tags. This takes precedence over tag. */
+  semver?: string;
+  /** The image digest to pull from OCI repository, the value should be in the format ‘sha256:’. This takes precedence over semver. */
+  digest?: string;
+}
+
+/** Parameters to specify which layer to pull from the OCI artifact. By default, the first layer in the artifact is pulled. */
+export interface OCIRepositoryLayerSelectorPatchDefinition {
+  /** The first layer matching the specified media type will be used. */
+  mediaType?: string;
+  /** The operation to be performed on the selected layer. The default value is 'extract', but it can be set to 'copy'. */
+  operation?: string;
+}
+
+/** Parameters to verify the authenticity of an OCI Artifact. */
+export interface OCIRepositoryVerifyPatchDefinition {
+  /** Verification provider name. */
+  provider?: string;
+  /** Kubernetes Secret that contains the trusted public keys of trusted authors. */
+  secretRef?: string;
+  /** Array defining the criteria for matching the identity while verifying an OCI artifact. */
+  matchOidcIdentity?: (MatchOidcIdentityPatchDefinition | null)[];
+}
+
+/** MatchOIDCIdentity defines the criteria for matching the identity while verifying an OCI artifact. */
+export interface MatchOidcIdentityPatchDefinition {
+  /** The regex pattern to match against to verify the OIDC issuer. */
+  issuer?: string;
+  /** The regex pattern to match against to verify the identity subject. */
+  subject?: string;
 }
 
 /** The Kustomization defining how to reconcile the artifact pulled by the source type on the cluster. */
@@ -725,6 +843,8 @@ export interface FluxConfiguration extends ProxyResource {
   bucket?: BucketDefinition;
   /** Parameters to reconcile to the AzureBlob source kind type. */
   azureBlob?: AzureBlobDefinition;
+  /** Parameters to reconcile to the OCIRepository source kind type. */
+  ociRepository?: OCIRepositoryDefinition;
   /** Array of kustomizations used to reconcile the artifact pulled by the source type on the cluster. */
   kustomizations?: { [propertyName: string]: KustomizationDefinition | null };
   /** Key-value pairs of protected configuration settings for the configuration */
@@ -832,7 +952,7 @@ export enum KnownProvisioningState {
   /** Updating */
   Updating = "Updating",
   /** Deleting */
-  Deleting = "Deleting"
+  Deleting = "Deleting",
 }
 
 /**
@@ -856,7 +976,7 @@ export enum KnownLevelType {
   /** Warning */
   Warning = "Warning",
   /** Information */
-  Information = "Information"
+  Information = "Information",
 }
 
 /**
@@ -879,7 +999,7 @@ export enum KnownCreatedByType {
   /** ManagedIdentity */
   ManagedIdentity = "ManagedIdentity",
   /** Key */
-  Key = "Key"
+  Key = "Key",
 }
 
 /**
@@ -899,7 +1019,7 @@ export enum KnownScopeType {
   /** Cluster */
   Cluster = "cluster",
   /** Namespace */
-  Namespace = "namespace"
+  Namespace = "namespace",
 }
 
 /**
@@ -919,7 +1039,9 @@ export enum KnownSourceKindType {
   /** Bucket */
   Bucket = "Bucket",
   /** AzureBlob */
-  AzureBlob = "AzureBlob"
+  AzureBlob = "AzureBlob",
+  /** OCIRepository */
+  OCIRepository = "OCIRepository",
 }
 
 /**
@@ -929,7 +1051,8 @@ export enum KnownSourceKindType {
  * ### Known values supported by the service
  * **GitRepository** \
  * **Bucket** \
- * **AzureBlob**
+ * **AzureBlob** \
+ * **OCIRepository**
  */
 export type SourceKindType = string;
 
@@ -944,7 +1067,7 @@ export enum KnownFluxComplianceState {
   /** Suspended */
   Suspended = "Suspended",
   /** Unknown */
-  Unknown = "Unknown"
+  Unknown = "Unknown",
 }
 
 /**
@@ -963,7 +1086,7 @@ export type FluxComplianceState = string;
 /** Known values of {@link OperatorType} that the service accepts. */
 export enum KnownOperatorType {
   /** Flux */
-  Flux = "Flux"
+  Flux = "Flux",
 }
 
 /**
@@ -980,7 +1103,7 @@ export enum KnownOperatorScopeType {
   /** Cluster */
   Cluster = "cluster",
   /** Namespace */
-  Namespace = "namespace"
+  Namespace = "namespace",
 }
 
 /**
@@ -1004,7 +1127,7 @@ export enum KnownProvisioningStateType {
   /** Succeeded */
   Succeeded = "Succeeded",
   /** Failed */
-  Failed = "Failed"
+  Failed = "Failed",
 }
 
 /**
@@ -1031,7 +1154,7 @@ export enum KnownComplianceStateType {
   /** Installed */
   Installed = "Installed",
   /** Failed */
-  Failed = "Failed"
+  Failed = "Failed",
 }
 
 /**
@@ -1054,7 +1177,7 @@ export enum KnownMessageLevelType {
   /** Warning */
   Warning = "Warning",
   /** Information */
-  Information = "Information"
+  Information = "Information",
 }
 
 /**
@@ -1075,7 +1198,7 @@ export enum KnownKustomizationValidationType {
   /** Client */
   Client = "client",
   /** Server */
-  Server = "server"
+  Server = "server",
 }
 
 /**
@@ -1243,7 +1366,8 @@ export interface SourceControlConfigurationsCreateOrUpdateOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the createOrUpdate operation. */
-export type SourceControlConfigurationsCreateOrUpdateResponse = SourceControlConfiguration;
+export type SourceControlConfigurationsCreateOrUpdateResponse =
+  SourceControlConfiguration;
 
 /** Optional parameters. */
 export interface SourceControlConfigurationsDeleteOptionalParams
@@ -1259,14 +1383,16 @@ export interface SourceControlConfigurationsListOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
-export type SourceControlConfigurationsListResponse = SourceControlConfigurationList;
+export type SourceControlConfigurationsListResponse =
+  SourceControlConfigurationList;
 
 /** Optional parameters. */
 export interface SourceControlConfigurationsListNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
-export type SourceControlConfigurationsListNextResponse = SourceControlConfigurationList;
+export type SourceControlConfigurationsListNextResponse =
+  SourceControlConfigurationList;
 
 /** Optional parameters. */
 export interface OperationsListOptionalParams

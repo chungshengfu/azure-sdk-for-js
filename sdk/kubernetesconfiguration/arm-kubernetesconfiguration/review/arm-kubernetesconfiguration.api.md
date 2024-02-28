@@ -232,6 +232,7 @@ export interface FluxConfiguration extends ProxyResource {
         [propertyName: string]: KustomizationDefinition | null;
     };
     namespace?: string;
+    ociRepository?: OCIRepositoryDefinition;
     readonly provisioningState?: ProvisioningState;
     reconciliationWaitDuration?: string;
     readonly repositoryPublicKey?: string;
@@ -257,6 +258,7 @@ export interface FluxConfigurationPatch {
     kustomizations?: {
         [propertyName: string]: KustomizationPatchDefinition | null;
     };
+    ociRepository?: OCIRepositoryPatchDefinition;
     sourceKind?: SourceKindType;
     suspend?: boolean;
 }
@@ -461,7 +463,8 @@ export enum KnownScopeType {
 export enum KnownSourceKindType {
     AzureBlob = "AzureBlob",
     Bucket = "Bucket",
-    GitRepository = "GitRepository"
+    GitRepository = "GitRepository",
+    OCIRepository = "OCIRepository"
 }
 
 // @public
@@ -508,6 +511,18 @@ export interface ManagedIdentityPatchDefinition {
 }
 
 // @public
+export interface MatchOidcIdentityDefinition {
+    issuer?: string;
+    subject?: string;
+}
+
+// @public
+export interface MatchOidcIdentityPatchDefinition {
+    issuer?: string;
+    subject?: string;
+}
+
+// @public
 export type MessageLevelType = string;
 
 // @public
@@ -534,6 +549,72 @@ export interface ObjectStatusDefinition {
     name?: string;
     namespace?: string;
     statusConditions?: ObjectStatusConditionDefinition[];
+}
+
+// @public
+export interface OCIRepositoryDefinition {
+    certSecretRef?: string;
+    layerSelector?: OCIRepositoryLayerSelectorDefinition;
+    localAuthRef?: string;
+    repositoryRef?: OCIRepositoryRefDefinition;
+    serviceAccountName?: string;
+    syncIntervalInSeconds?: number;
+    timeoutInSeconds?: number;
+    url?: string;
+    verify?: OCIRepositoryVerifyDefinition;
+}
+
+// @public
+export interface OCIRepositoryLayerSelectorDefinition {
+    mediaType?: string;
+    operation?: string;
+}
+
+// @public
+export interface OCIRepositoryLayerSelectorPatchDefinition {
+    mediaType?: string;
+    operation?: string;
+}
+
+// @public
+export interface OCIRepositoryPatchDefinition {
+    certSecretRef?: string;
+    layerSelector?: OCIRepositoryLayerSelectorPatchDefinition;
+    localAuthRef?: string;
+    repositoryRef?: OCIRepositoryRefPatchDefinition;
+    serviceAccountName?: string;
+    syncIntervalInSeconds?: number;
+    timeoutInSeconds?: number;
+    url?: string;
+    verify?: OCIRepositoryVerifyPatchDefinition;
+}
+
+// @public
+export interface OCIRepositoryRefDefinition {
+    digest?: string;
+    semver?: string;
+    tag?: string;
+}
+
+// @public
+export interface OCIRepositoryRefPatchDefinition {
+    digest?: string;
+    semver?: string;
+    tag?: string;
+}
+
+// @public
+export interface OCIRepositoryVerifyDefinition {
+    matchOidcIdentity?: (MatchOidcIdentityDefinition | null)[];
+    provider?: string;
+    secretRef?: string;
+}
+
+// @public
+export interface OCIRepositoryVerifyPatchDefinition {
+    matchOidcIdentity?: (MatchOidcIdentityPatchDefinition | null)[];
+    provider?: string;
+    secretRef?: string;
 }
 
 // @public
