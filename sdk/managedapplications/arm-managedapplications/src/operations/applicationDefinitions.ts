@@ -37,7 +37,7 @@ import {
   ApplicationDefinitionsUpdateByIdOptionalParams,
   ApplicationDefinitionsUpdateByIdResponse,
   ApplicationDefinitionsListByResourceGroupNextResponse,
-  ApplicationDefinitionsListBySubscriptionNextResponse
+  ApplicationDefinitionsListBySubscriptionNextResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -60,7 +60,7 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
    */
   public listByResourceGroup(
     resourceGroupName: string,
-    options?: ApplicationDefinitionsListByResourceGroupOptionalParams
+    options?: ApplicationDefinitionsListByResourceGroupOptionalParams,
   ): PagedAsyncIterableIterator<ApplicationDefinition> {
     const iter = this.listByResourceGroupPagingAll(resourceGroupName, options);
     return {
@@ -77,16 +77,16 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
         return this.listByResourceGroupPagingPage(
           resourceGroupName,
           options,
-          settings
+          settings,
         );
-      }
+      },
     };
   }
 
   private async *listByResourceGroupPagingPage(
     resourceGroupName: string,
     options?: ApplicationDefinitionsListByResourceGroupOptionalParams,
-    settings?: PageSettings
+    settings?: PageSettings,
   ): AsyncIterableIterator<ApplicationDefinition[]> {
     let result: ApplicationDefinitionsListByResourceGroupResponse;
     let continuationToken = settings?.continuationToken;
@@ -101,7 +101,7 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
       result = await this._listByResourceGroupNext(
         resourceGroupName,
         continuationToken,
-        options
+        options,
       );
       continuationToken = result.nextLink;
       let page = result.value || [];
@@ -112,11 +112,11 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
 
   private async *listByResourceGroupPagingAll(
     resourceGroupName: string,
-    options?: ApplicationDefinitionsListByResourceGroupOptionalParams
+    options?: ApplicationDefinitionsListByResourceGroupOptionalParams,
   ): AsyncIterableIterator<ApplicationDefinition> {
     for await (const page of this.listByResourceGroupPagingPage(
       resourceGroupName,
-      options
+      options,
     )) {
       yield* page;
     }
@@ -127,7 +127,7 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
    * @param options The options parameters.
    */
   public listBySubscription(
-    options?: ApplicationDefinitionsListBySubscriptionOptionalParams
+    options?: ApplicationDefinitionsListBySubscriptionOptionalParams,
   ): PagedAsyncIterableIterator<ApplicationDefinition> {
     const iter = this.listBySubscriptionPagingAll(options);
     return {
@@ -142,13 +142,13 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
           throw new Error("maxPageSize is not supported by this operation.");
         }
         return this.listBySubscriptionPagingPage(options, settings);
-      }
+      },
     };
   }
 
   private async *listBySubscriptionPagingPage(
     options?: ApplicationDefinitionsListBySubscriptionOptionalParams,
-    settings?: PageSettings
+    settings?: PageSettings,
   ): AsyncIterableIterator<ApplicationDefinition[]> {
     let result: ApplicationDefinitionsListBySubscriptionResponse;
     let continuationToken = settings?.continuationToken;
@@ -169,7 +169,7 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
   }
 
   private async *listBySubscriptionPagingAll(
-    options?: ApplicationDefinitionsListBySubscriptionOptionalParams
+    options?: ApplicationDefinitionsListBySubscriptionOptionalParams,
   ): AsyncIterableIterator<ApplicationDefinition> {
     for await (const page of this.listBySubscriptionPagingPage(options)) {
       yield* page;
@@ -185,11 +185,11 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
   get(
     resourceGroupName: string,
     applicationDefinitionName: string,
-    options?: ApplicationDefinitionsGetOptionalParams
+    options?: ApplicationDefinitionsGetOptionalParams,
   ): Promise<ApplicationDefinitionsGetResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, applicationDefinitionName, options },
-      getOperationSpec
+      getOperationSpec,
     );
   }
 
@@ -202,11 +202,11 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
   delete(
     resourceGroupName: string,
     applicationDefinitionName: string,
-    options?: ApplicationDefinitionsDeleteOptionalParams
+    options?: ApplicationDefinitionsDeleteOptionalParams,
   ): Promise<void> {
     return this.client.sendOperationRequest(
       { resourceGroupName, applicationDefinitionName, options },
-      deleteOperationSpec
+      deleteOperationSpec,
     );
   }
 
@@ -221,11 +221,11 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
     resourceGroupName: string,
     applicationDefinitionName: string,
     parameters: ApplicationDefinition,
-    options?: ApplicationDefinitionsCreateOrUpdateOptionalParams
+    options?: ApplicationDefinitionsCreateOrUpdateOptionalParams,
   ): Promise<ApplicationDefinitionsCreateOrUpdateResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, applicationDefinitionName, parameters, options },
-      createOrUpdateOperationSpec
+      createOrUpdateOperationSpec,
     );
   }
 
@@ -240,11 +240,11 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
     resourceGroupName: string,
     applicationDefinitionName: string,
     parameters: ApplicationDefinitionPatchable,
-    options?: ApplicationDefinitionsUpdateOptionalParams
+    options?: ApplicationDefinitionsUpdateOptionalParams,
   ): Promise<ApplicationDefinitionsUpdateResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, applicationDefinitionName, parameters, options },
-      updateOperationSpec
+      updateOperationSpec,
     );
   }
 
@@ -255,11 +255,11 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
    */
   private _listByResourceGroup(
     resourceGroupName: string,
-    options?: ApplicationDefinitionsListByResourceGroupOptionalParams
+    options?: ApplicationDefinitionsListByResourceGroupOptionalParams,
   ): Promise<ApplicationDefinitionsListByResourceGroupResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, options },
-      listByResourceGroupOperationSpec
+      listByResourceGroupOperationSpec,
     );
   }
 
@@ -268,11 +268,11 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
    * @param options The options parameters.
    */
   private _listBySubscription(
-    options?: ApplicationDefinitionsListBySubscriptionOptionalParams
+    options?: ApplicationDefinitionsListBySubscriptionOptionalParams,
   ): Promise<ApplicationDefinitionsListBySubscriptionResponse> {
     return this.client.sendOperationRequest(
       { options },
-      listBySubscriptionOperationSpec
+      listBySubscriptionOperationSpec,
     );
   }
 
@@ -285,11 +285,11 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
   getById(
     resourceGroupName: string,
     applicationDefinitionName: string,
-    options?: ApplicationDefinitionsGetByIdOptionalParams
+    options?: ApplicationDefinitionsGetByIdOptionalParams,
   ): Promise<ApplicationDefinitionsGetByIdResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, applicationDefinitionName, options },
-      getByIdOperationSpec
+      getByIdOperationSpec,
     );
   }
 
@@ -302,11 +302,11 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
   deleteById(
     resourceGroupName: string,
     applicationDefinitionName: string,
-    options?: ApplicationDefinitionsDeleteByIdOptionalParams
+    options?: ApplicationDefinitionsDeleteByIdOptionalParams,
   ): Promise<void> {
     return this.client.sendOperationRequest(
       { resourceGroupName, applicationDefinitionName, options },
-      deleteByIdOperationSpec
+      deleteByIdOperationSpec,
     );
   }
 
@@ -321,11 +321,11 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
     resourceGroupName: string,
     applicationDefinitionName: string,
     parameters: ApplicationDefinition,
-    options?: ApplicationDefinitionsCreateOrUpdateByIdOptionalParams
+    options?: ApplicationDefinitionsCreateOrUpdateByIdOptionalParams,
   ): Promise<ApplicationDefinitionsCreateOrUpdateByIdResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, applicationDefinitionName, parameters, options },
-      createOrUpdateByIdOperationSpec
+      createOrUpdateByIdOperationSpec,
     );
   }
 
@@ -340,11 +340,11 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
     resourceGroupName: string,
     applicationDefinitionName: string,
     parameters: ApplicationDefinitionPatchable,
-    options?: ApplicationDefinitionsUpdateByIdOptionalParams
+    options?: ApplicationDefinitionsUpdateByIdOptionalParams,
   ): Promise<ApplicationDefinitionsUpdateByIdResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, applicationDefinitionName, parameters, options },
-      updateByIdOperationSpec
+      updateByIdOperationSpec,
     );
   }
 
@@ -357,11 +357,11 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
   private _listByResourceGroupNext(
     resourceGroupName: string,
     nextLink: string,
-    options?: ApplicationDefinitionsListByResourceGroupNextOptionalParams
+    options?: ApplicationDefinitionsListByResourceGroupNextOptionalParams,
   ): Promise<ApplicationDefinitionsListByResourceGroupNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, nextLink, options },
-      listByResourceGroupNextOperationSpec
+      listByResourceGroupNextOperationSpec,
     );
   }
 
@@ -372,11 +372,11 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
    */
   private _listBySubscriptionNext(
     nextLink: string,
-    options?: ApplicationDefinitionsListBySubscriptionNextOptionalParams
+    options?: ApplicationDefinitionsListBySubscriptionNextOptionalParams,
   ): Promise<ApplicationDefinitionsListBySubscriptionNextResponse> {
     return this.client.sendOperationRequest(
       { nextLink, options },
-      listBySubscriptionNextOperationSpec
+      listBySubscriptionNextOperationSpec,
     );
   }
 }
@@ -384,63 +384,60 @@ export class ApplicationDefinitionsImpl implements ApplicationDefinitions {
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const getOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/applicationDefinitions/{applicationDefinitionName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/applicationDefinitions/{applicationDefinitionName}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ApplicationDefinition
+      bodyMapper: Mappers.ApplicationDefinition,
     },
     404: {},
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.applicationDefinitionName
+    Parameters.applicationDefinitionName,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/applicationDefinitions/{applicationDefinitionName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/applicationDefinitions/{applicationDefinitionName}",
   httpMethod: "DELETE",
   responses: {
     200: {},
     204: {},
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.applicationDefinitionName
+    Parameters.applicationDefinitionName,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const createOrUpdateOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/applicationDefinitions/{applicationDefinitionName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/applicationDefinitions/{applicationDefinitionName}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.ApplicationDefinition
+      bodyMapper: Mappers.ApplicationDefinition,
     },
     201: {
-      bodyMapper: Mappers.ApplicationDefinition
+      bodyMapper: Mappers.ApplicationDefinition,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   requestBody: Parameters.parameters4,
   queryParameters: [Parameters.apiVersion],
@@ -448,23 +445,22 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.applicationDefinitionName
+    Parameters.applicationDefinitionName,
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
+  serializer,
 };
 const updateOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/applicationDefinitions/{applicationDefinitionName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/applicationDefinitions/{applicationDefinitionName}",
   httpMethod: "PATCH",
   responses: {
     200: {
-      bodyMapper: Mappers.ApplicationDefinition
+      bodyMapper: Mappers.ApplicationDefinition,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   requestBody: Parameters.parameters5,
   queryParameters: [Parameters.apiVersion],
@@ -472,108 +468,103 @@ const updateOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.applicationDefinitionName
+    Parameters.applicationDefinitionName,
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
+  serializer,
 };
 const listByResourceGroupOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/applicationDefinitions",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/applicationDefinitions",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ApplicationDefinitionListResult
+      bodyMapper: Mappers.ApplicationDefinitionListResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
-    Parameters.resourceGroupName
+    Parameters.resourceGroupName,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const listBySubscriptionOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/providers/Microsoft.Solutions/applicationDefinitions",
+  path: "/subscriptions/{subscriptionId}/providers/Microsoft.Solutions/applicationDefinitions",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ApplicationDefinitionListResult
+      bodyMapper: Mappers.ApplicationDefinitionListResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host, Parameters.subscriptionId],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const getByIdOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/applicationDefinitions/{applicationDefinitionName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/applicationDefinitions/{applicationDefinitionName}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ApplicationDefinition
+      bodyMapper: Mappers.ApplicationDefinition,
     },
     404: {},
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.applicationDefinitionName,
-    Parameters.resourceGroupName1
+    Parameters.resourceGroupName1,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const deleteByIdOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/applicationDefinitions/{applicationDefinitionName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/applicationDefinitions/{applicationDefinitionName}",
   httpMethod: "DELETE",
   responses: {
     200: {},
     204: {},
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.applicationDefinitionName,
-    Parameters.resourceGroupName1
+    Parameters.resourceGroupName1,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const createOrUpdateByIdOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/applicationDefinitions/{applicationDefinitionName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/applicationDefinitions/{applicationDefinitionName}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.ApplicationDefinition
+      bodyMapper: Mappers.ApplicationDefinition,
     },
     201: {
-      bodyMapper: Mappers.ApplicationDefinition
+      bodyMapper: Mappers.ApplicationDefinition,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   requestBody: Parameters.parameters4,
   queryParameters: [Parameters.apiVersion],
@@ -581,23 +572,22 @@ const createOrUpdateByIdOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.applicationDefinitionName,
-    Parameters.resourceGroupName1
+    Parameters.resourceGroupName1,
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
+  serializer,
 };
 const updateByIdOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/applicationDefinitions/{applicationDefinitionName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/applicationDefinitions/{applicationDefinitionName}",
   httpMethod: "PATCH",
   responses: {
     200: {
-      bodyMapper: Mappers.ApplicationDefinition
+      bodyMapper: Mappers.ApplicationDefinition,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   requestBody: Parameters.parameters5,
   queryParameters: [Parameters.apiVersion],
@@ -605,48 +595,48 @@ const updateByIdOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.applicationDefinitionName
+    Parameters.applicationDefinitionName,
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
+  serializer,
 };
 const listByResourceGroupNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ApplicationDefinitionListResult
+      bodyMapper: Mappers.ApplicationDefinitionListResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   urlParameters: [
     Parameters.$host,
     Parameters.nextLink,
     Parameters.subscriptionId,
-    Parameters.resourceGroupName
+    Parameters.resourceGroupName,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const listBySubscriptionNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ApplicationDefinitionListResult
+      bodyMapper: Mappers.ApplicationDefinitionListResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   urlParameters: [
     Parameters.$host,
     Parameters.nextLink,
-    Parameters.subscriptionId
+    Parameters.subscriptionId,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };

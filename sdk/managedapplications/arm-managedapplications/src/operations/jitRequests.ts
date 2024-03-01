@@ -14,7 +14,7 @@ import { ApplicationClient } from "../applicationClient";
 import {
   SimplePollerLike,
   OperationState,
-  createHttpPoller
+  createHttpPoller,
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
@@ -30,7 +30,7 @@ import {
   JitRequestsListBySubscriptionOptionalParams,
   JitRequestsListBySubscriptionResponse,
   JitRequestsListByResourceGroupOptionalParams,
-  JitRequestsListByResourceGroupResponse
+  JitRequestsListByResourceGroupResponse,
 } from "../models";
 
 /** Class containing JitRequests operations. */
@@ -54,11 +54,11 @@ export class JitRequestsImpl implements JitRequests {
   get(
     resourceGroupName: string,
     jitRequestName: string,
-    options?: JitRequestsGetOptionalParams
+    options?: JitRequestsGetOptionalParams,
   ): Promise<JitRequestsGetResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, jitRequestName, options },
-      getOperationSpec
+      getOperationSpec,
     );
   }
 
@@ -73,7 +73,7 @@ export class JitRequestsImpl implements JitRequests {
     resourceGroupName: string,
     jitRequestName: string,
     parameters: JitRequestDefinition,
-    options?: JitRequestsCreateOrUpdateOptionalParams
+    options?: JitRequestsCreateOrUpdateOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<JitRequestsCreateOrUpdateResponse>,
@@ -82,21 +82,20 @@ export class JitRequestsImpl implements JitRequests {
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ): Promise<JitRequestsCreateOrUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
       const providedCallback = args.options?.onResponse;
       const callback: coreClient.RawResponseCallback = (
         rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
+        flatResponse: unknown,
       ) => {
         currentRawResponse = rawResponse;
         providedCallback?.(rawResponse, flatResponse);
@@ -105,8 +104,8 @@ export class JitRequestsImpl implements JitRequests {
         ...args,
         options: {
           ...args.options,
-          onResponse: callback
-        }
+          onResponse: callback,
+        },
       };
       const flatResponse = await directSendOperation(updatedArgs, spec);
       return {
@@ -114,15 +113,15 @@ export class JitRequestsImpl implements JitRequests {
         rawResponse: {
           statusCode: currentRawResponse!.status,
           body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
+          headers: currentRawResponse!.headers.toJSON(),
+        },
       };
     };
 
     const lro = createLroSpec({
       sendOperationFn,
       args: { resourceGroupName, jitRequestName, parameters, options },
-      spec: createOrUpdateOperationSpec
+      spec: createOrUpdateOperationSpec,
     });
     const poller = await createHttpPoller<
       JitRequestsCreateOrUpdateResponse,
@@ -130,7 +129,7 @@ export class JitRequestsImpl implements JitRequests {
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "azure-async-operation",
     });
     await poller.poll();
     return poller;
@@ -147,13 +146,13 @@ export class JitRequestsImpl implements JitRequests {
     resourceGroupName: string,
     jitRequestName: string,
     parameters: JitRequestDefinition,
-    options?: JitRequestsCreateOrUpdateOptionalParams
+    options?: JitRequestsCreateOrUpdateOptionalParams,
   ): Promise<JitRequestsCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
       jitRequestName,
       parameters,
-      options
+      options,
     );
     return poller.pollUntilDone();
   }
@@ -169,11 +168,11 @@ export class JitRequestsImpl implements JitRequests {
     resourceGroupName: string,
     jitRequestName: string,
     parameters: JitRequestPatchable,
-    options?: JitRequestsUpdateOptionalParams
+    options?: JitRequestsUpdateOptionalParams,
   ): Promise<JitRequestsUpdateResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, jitRequestName, parameters, options },
-      updateOperationSpec
+      updateOperationSpec,
     );
   }
 
@@ -186,11 +185,11 @@ export class JitRequestsImpl implements JitRequests {
   delete(
     resourceGroupName: string,
     jitRequestName: string,
-    options?: JitRequestsDeleteOptionalParams
+    options?: JitRequestsDeleteOptionalParams,
   ): Promise<void> {
     return this.client.sendOperationRequest(
       { resourceGroupName, jitRequestName, options },
-      deleteOperationSpec
+      deleteOperationSpec,
     );
   }
 
@@ -199,11 +198,11 @@ export class JitRequestsImpl implements JitRequests {
    * @param options The options parameters.
    */
   listBySubscription(
-    options?: JitRequestsListBySubscriptionOptionalParams
+    options?: JitRequestsListBySubscriptionOptionalParams,
   ): Promise<JitRequestsListBySubscriptionResponse> {
     return this.client.sendOperationRequest(
       { options },
-      listBySubscriptionOperationSpec
+      listBySubscriptionOperationSpec,
     );
   }
 
@@ -214,11 +213,11 @@ export class JitRequestsImpl implements JitRequests {
    */
   listByResourceGroup(
     resourceGroupName: string,
-    options?: JitRequestsListByResourceGroupOptionalParams
+    options?: JitRequestsListByResourceGroupOptionalParams,
   ): Promise<JitRequestsListByResourceGroupResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, options },
-      listByResourceGroupOperationSpec
+      listByResourceGroupOperationSpec,
     );
   }
 }
@@ -226,48 +225,46 @@ export class JitRequestsImpl implements JitRequests {
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const getOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/jitRequests/{jitRequestName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/jitRequests/{jitRequestName}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.JitRequestDefinition
+      bodyMapper: Mappers.JitRequestDefinition,
     },
     404: {},
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.jitRequestName
+    Parameters.jitRequestName,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const createOrUpdateOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/jitRequests/{jitRequestName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/jitRequests/{jitRequestName}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.JitRequestDefinition
+      bodyMapper: Mappers.JitRequestDefinition,
     },
     201: {
-      bodyMapper: Mappers.JitRequestDefinition
+      bodyMapper: Mappers.JitRequestDefinition,
     },
     202: {
-      bodyMapper: Mappers.JitRequestDefinition
+      bodyMapper: Mappers.JitRequestDefinition,
     },
     204: {
-      bodyMapper: Mappers.JitRequestDefinition
+      bodyMapper: Mappers.JitRequestDefinition,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   requestBody: Parameters.parameters6,
   queryParameters: [Parameters.apiVersion],
@@ -275,23 +272,22 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.jitRequestName
+    Parameters.jitRequestName,
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
+  serializer,
 };
 const updateOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/jitRequests/{jitRequestName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/jitRequests/{jitRequestName}",
   httpMethod: "PATCH",
   responses: {
     200: {
-      bodyMapper: Mappers.JitRequestDefinition
+      bodyMapper: Mappers.JitRequestDefinition,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   requestBody: Parameters.parameters7,
   queryParameters: [Parameters.apiVersion],
@@ -299,68 +295,65 @@ const updateOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.jitRequestName
+    Parameters.jitRequestName,
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
+  serializer,
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/jitRequests/{jitRequestName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/jitRequests/{jitRequestName}",
   httpMethod: "DELETE",
   responses: {
     200: {},
     204: {},
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.jitRequestName
+    Parameters.jitRequestName,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const listBySubscriptionOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/providers/Microsoft.Solutions/jitRequests",
+  path: "/subscriptions/{subscriptionId}/providers/Microsoft.Solutions/jitRequests",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.JitRequestDefinitionListResult
+      bodyMapper: Mappers.JitRequestDefinitionListResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host, Parameters.subscriptionId],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const listByResourceGroupOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/jitRequests",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Solutions/jitRequests",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.JitRequestDefinitionListResult
+      bodyMapper: Mappers.JitRequestDefinitionListResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
-    Parameters.resourceGroupName
+    Parameters.resourceGroupName,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };

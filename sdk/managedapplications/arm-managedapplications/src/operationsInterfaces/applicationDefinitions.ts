@@ -25,7 +25,7 @@ import {
   ApplicationDefinitionsCreateOrUpdateByIdOptionalParams,
   ApplicationDefinitionsCreateOrUpdateByIdResponse,
   ApplicationDefinitionsUpdateByIdOptionalParams,
-  ApplicationDefinitionsUpdateByIdResponse
+  ApplicationDefinitionsUpdateByIdResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -38,14 +38,14 @@ export interface ApplicationDefinitions {
    */
   listByResourceGroup(
     resourceGroupName: string,
-    options?: ApplicationDefinitionsListByResourceGroupOptionalParams
+    options?: ApplicationDefinitionsListByResourceGroupOptionalParams,
   ): PagedAsyncIterableIterator<ApplicationDefinition>;
   /**
    * Lists all the application definitions within a subscription.
    * @param options The options parameters.
    */
   listBySubscription(
-    options?: ApplicationDefinitionsListBySubscriptionOptionalParams
+    options?: ApplicationDefinitionsListBySubscriptionOptionalParams,
   ): PagedAsyncIterableIterator<ApplicationDefinition>;
   /**
    * Gets the managed application definition.
@@ -56,7 +56,7 @@ export interface ApplicationDefinitions {
   get(
     resourceGroupName: string,
     applicationDefinitionName: string,
-    options?: ApplicationDefinitionsGetOptionalParams
+    options?: ApplicationDefinitionsGetOptionalParams,
   ): Promise<ApplicationDefinitionsGetResponse>;
   /**
    * Deletes the managed application definition.
@@ -67,7 +67,7 @@ export interface ApplicationDefinitions {
   delete(
     resourceGroupName: string,
     applicationDefinitionName: string,
-    options?: ApplicationDefinitionsDeleteOptionalParams
+    options?: ApplicationDefinitionsDeleteOptionalParams,
   ): Promise<void>;
   /**
    * Creates or updates a managed application definition.
@@ -80,7 +80,7 @@ export interface ApplicationDefinitions {
     resourceGroupName: string,
     applicationDefinitionName: string,
     parameters: ApplicationDefinition,
-    options?: ApplicationDefinitionsCreateOrUpdateOptionalParams
+    options?: ApplicationDefinitionsCreateOrUpdateOptionalParams,
   ): Promise<ApplicationDefinitionsCreateOrUpdateResponse>;
   /**
    * Updates the managed application definition.
@@ -93,7 +93,7 @@ export interface ApplicationDefinitions {
     resourceGroupName: string,
     applicationDefinitionName: string,
     parameters: ApplicationDefinitionPatchable,
-    options?: ApplicationDefinitionsUpdateOptionalParams
+    options?: ApplicationDefinitionsUpdateOptionalParams,
   ): Promise<ApplicationDefinitionsUpdateResponse>;
   /**
    * Gets the managed application definition.
@@ -104,7 +104,7 @@ export interface ApplicationDefinitions {
   getById(
     resourceGroupName: string,
     applicationDefinitionName: string,
-    options?: ApplicationDefinitionsGetByIdOptionalParams
+    options?: ApplicationDefinitionsGetByIdOptionalParams,
   ): Promise<ApplicationDefinitionsGetByIdResponse>;
   /**
    * Deletes the managed application definition.
@@ -115,7 +115,7 @@ export interface ApplicationDefinitions {
   deleteById(
     resourceGroupName: string,
     applicationDefinitionName: string,
-    options?: ApplicationDefinitionsDeleteByIdOptionalParams
+    options?: ApplicationDefinitionsDeleteByIdOptionalParams,
   ): Promise<void>;
   /**
    * Creates or updates a managed application definition.
@@ -128,7 +128,7 @@ export interface ApplicationDefinitions {
     resourceGroupName: string,
     applicationDefinitionName: string,
     parameters: ApplicationDefinition,
-    options?: ApplicationDefinitionsCreateOrUpdateByIdOptionalParams
+    options?: ApplicationDefinitionsCreateOrUpdateByIdOptionalParams,
   ): Promise<ApplicationDefinitionsCreateOrUpdateByIdResponse>;
   /**
    * Updates the managed application definition.
@@ -141,6 +141,6 @@ export interface ApplicationDefinitions {
     resourceGroupName: string,
     applicationDefinitionName: string,
     parameters: ApplicationDefinitionPatchable,
-    options?: ApplicationDefinitionsUpdateByIdOptionalParams
+    options?: ApplicationDefinitionsUpdateByIdOptionalParams,
   ): Promise<ApplicationDefinitionsUpdateByIdResponse>;
 }
