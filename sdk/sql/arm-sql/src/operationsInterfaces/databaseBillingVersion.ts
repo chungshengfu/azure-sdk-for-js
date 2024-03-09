@@ -6,27 +6,25 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
-  ElasticPoolActivity,
-  ElasticPoolActivitiesListByElasticPoolOptionalParams
+  DatabaseBillingVersionCreateOptionalParams,
+  DatabaseBillingVersionCreateResponse,
 } from "../models";
 
-/// <reference lib="esnext.asynciterable" />
-/** Interface representing a ElasticPoolActivities. */
-export interface ElasticPoolActivities {
+/** Interface representing a DatabaseBillingVersion. */
+export interface DatabaseBillingVersion {
   /**
-   * Returns elastic pool activities.
+   * Request a specific billing version for a database.
    * @param resourceGroupName The name of the resource group that contains the resource. You can obtain
    *                          this value from the Azure Resource Manager API or the portal.
    * @param serverName The name of the server.
-   * @param elasticPoolName The name of the elastic pool for which to get the current activity.
+   * @param databaseName The name of the database.
    * @param options The options parameters.
    */
-  listByElasticPool(
+  create(
     resourceGroupName: string,
     serverName: string,
-    elasticPoolName: string,
-    options?: ElasticPoolActivitiesListByElasticPoolOptionalParams
-  ): PagedAsyncIterableIterator<ElasticPoolActivity>;
+    databaseName: string,
+    options?: DatabaseBillingVersionCreateOptionalParams,
+  ): Promise<DatabaseBillingVersionCreateResponse>;
 }
