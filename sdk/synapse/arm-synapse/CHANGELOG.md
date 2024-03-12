@@ -1,16 +1,6 @@
 # Release History
-
-## 9.0.0-beta.2 (Unreleased)
-
-### Features Added
-
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
-## 9.0.0-beta.1 (2023-02-08)
+    
+## 9.0.0-beta.2 (2024-03-12)
     
 **Features**
 
@@ -18,6 +8,7 @@
   - Added operation group KustoPoolPrivateLinkResourcesOperations
   - Added operation group PrivateLinkResourcesOperations
   - Added operation group WorkspaceManagedSqlServerDedicatedSQLMinimalTlsSettings
+  - Added operation Operations.getWorkspacePerSubscriptionQuota
   - Added operation SqlPoolOperationResults.beginGetLocationHeaderResult
   - Added operation SqlPoolOperationResults.beginGetLocationHeaderResultAndWait
   - Added operation SqlPools.beginUpdate
@@ -69,6 +60,7 @@
   - Added Interface ManagedIntegrationRuntime
   - Added Interface ManagedIntegrationRuntimeStatus
   - Added Interface MetadataSyncConfig
+  - Added Interface OperationsGetWorkspacePerSubscriptionQuotaOptionalParams
   - Added Interface PrivateEndpointConnection
   - Added Interface PrivateEndpointConnectionForPrivateLinkHub
   - Added Interface PrivateLinkHub
@@ -118,6 +110,7 @@
   - Added Interface WorkspaceManagedSqlServerDedicatedSQLMinimalTlsSettingsListNextOptionalParams
   - Added Interface WorkspaceManagedSqlServerDedicatedSQLMinimalTlsSettingsListOptionalParams
   - Added Interface WorkspaceManagedSqlServerDedicatedSQLMinimalTlsSettingsUpdateOptionalParams
+  - Added Interface WorkspaceUsageQuotaResponse
   - Added Type Alias ActualState
   - Added Type Alias DedicatedSQLMinimalTlsSettingsName
   - Added Type Alias DesiredState
@@ -125,6 +118,7 @@
   - Added Type Alias GetIntegrationRuntimeStartResponse
   - Added Type Alias GetIntegrationRuntimeStopResponse
   - Added Type Alias KustoPoolPrivateLinkResourcesListResponse
+  - Added Type Alias OperationsGetWorkspacePerSubscriptionQuotaResponse
   - Added Type Alias WorkspaceManagedSqlServerDedicatedSQLMinimalTlsSettingsGetResponse
   - Added Type Alias WorkspaceManagedSqlServerDedicatedSQLMinimalTlsSettingsListNextResponse
   - Added Type Alias WorkspaceManagedSqlServerDedicatedSQLMinimalTlsSettingsListResponse
@@ -144,7 +138,9 @@
 
   - Removed operation group PrivateLinkResources
   - Removed operation SqlPoolOperationResults.getLocationHeaderResult
+  - Removed operation SqlPools.rename
   - Removed operation SqlPools.update
+  - Class SynapseManagementClient has a new signature
   - Interface IntegrationRuntimeStatusResponse no longer has parameter properties
   - Interface SqlPoolSchemasListNextOptionalParams no longer has parameter filter
   - Interface SqlPoolSensitivityLabelsListCurrentNextOptionalParams no longer has parameter filter
@@ -169,4 +165,4 @@ To understand the detail of the change, please refer to [Changelog](https://aka.
 
 To migrate the existing applications to the latest version, please refer to [Migration Guide](https://aka.ms/js-track2-migration-guide).
 
-To learn more, please refer to our documentation [Quick Start](https://aka.ms/azsdk/js/mgmt/quickstart ).
+To learn more, please refer to our documentation [Quick Start](https://aka.ms/js-track2-quickstart).

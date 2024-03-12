@@ -19,7 +19,9 @@ import {
   OperationsListResponse,
   OperationsGetLocationHeaderResultOptionalParams,
   OperationsGetAzureAsyncHeaderResultOptionalParams,
-  OperationsGetAzureAsyncHeaderResultResponse
+  OperationsGetAzureAsyncHeaderResultResponse,
+  OperationsGetWorkspacePerSubscriptionQuotaOptionalParams,
+  OperationsGetWorkspacePerSubscriptionQuotaResponse,
 } from "../models";
 
 /** Class containing Operations operations. */
@@ -41,11 +43,11 @@ export class OperationsImpl implements Operations {
    */
   checkNameAvailability(
     request: CheckNameAvailabilityRequest,
-    options?: OperationsCheckNameAvailabilityOptionalParams
+    options?: OperationsCheckNameAvailabilityOptionalParams,
   ): Promise<OperationsCheckNameAvailabilityResponse> {
     return this.client.sendOperationRequest(
       { request, options },
-      checkNameAvailabilityOperationSpec
+      checkNameAvailabilityOperationSpec,
     );
   }
 
@@ -54,7 +56,7 @@ export class OperationsImpl implements Operations {
    * @param options The options parameters.
    */
   list(
-    options?: OperationsListOptionalParams
+    options?: OperationsListOptionalParams,
   ): Promise<OperationsListResponse> {
     return this.client.sendOperationRequest({ options }, listOperationSpec);
   }
@@ -70,11 +72,11 @@ export class OperationsImpl implements Operations {
     resourceGroupName: string,
     workspaceName: string,
     operationId: string,
-    options?: OperationsGetLocationHeaderResultOptionalParams
+    options?: OperationsGetLocationHeaderResultOptionalParams,
   ): Promise<void> {
     return this.client.sendOperationRequest(
       { resourceGroupName, workspaceName, operationId, options },
-      getLocationHeaderResultOperationSpec
+      getLocationHeaderResultOperationSpec,
     );
   }
 
@@ -89,11 +91,26 @@ export class OperationsImpl implements Operations {
     resourceGroupName: string,
     workspaceName: string,
     operationId: string,
-    options?: OperationsGetAzureAsyncHeaderResultOptionalParams
+    options?: OperationsGetAzureAsyncHeaderResultOptionalParams,
   ): Promise<OperationsGetAzureAsyncHeaderResultResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, workspaceName, operationId, options },
-      getAzureAsyncHeaderResultOperationSpec
+      getAzureAsyncHeaderResultOperationSpec,
+    );
+  }
+
+  /**
+   * Gets the current usage and quota of workspaces in a subscription/region
+   * @param location The location on which resource usage is queried.
+   * @param options The options parameters.
+   */
+  getWorkspacePerSubscriptionQuota(
+    location: string,
+    options?: OperationsGetWorkspacePerSubscriptionQuotaOptionalParams,
+  ): Promise<OperationsGetWorkspacePerSubscriptionQuotaResponse> {
+    return this.client.sendOperationRequest(
+      { location, options },
+      getWorkspacePerSubscriptionQuotaOperationSpec,
     );
   }
 }
@@ -101,23 +118,22 @@ export class OperationsImpl implements Operations {
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const checkNameAvailabilityOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/providers/Microsoft.Synapse/checkNameAvailability",
+  path: "/subscriptions/{subscriptionId}/providers/Microsoft.Synapse/checkNameAvailability",
   httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.CheckNameAvailabilityResponse
+      bodyMapper: Mappers.CheckNameAvailabilityResponse,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   requestBody: Parameters.request,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host, Parameters.subscriptionId],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
+  serializer,
 };
 const listOperationSpec: coreClient.OperationSpec = {
   path: "/providers/Microsoft.Synapse/operations",
@@ -128,22 +144,21 @@ const listOperationSpec: coreClient.OperationSpec = {
         type: {
           name: "Sequence",
           element: {
-            type: { name: "Composite", className: "AvailableRpOperation" }
-          }
-        }
-      }
+            type: { name: "Composite", className: "AvailableRpOperation" },
+          },
+        },
+      },
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   urlParameters: [Parameters.$host],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const getLocationHeaderResultOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/operationResults/{operationId}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/operationResults/{operationId}",
   httpMethod: "GET",
   responses: {
     200: {},
@@ -151,8 +166,8 @@ const getLocationHeaderResultOperationSpec: coreClient.OperationSpec = {
     202: {},
     204: {},
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
@@ -160,23 +175,22 @@ const getLocationHeaderResultOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.workspaceName,
-    Parameters.operationId
+    Parameters.operationId,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const getAzureAsyncHeaderResultOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/operationStatuses/{operationId}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/operationStatuses/{operationId}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.OperationResource
+      bodyMapper: Mappers.OperationResource,
     },
     404: {},
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
@@ -184,8 +198,29 @@ const getAzureAsyncHeaderResultOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.workspaceName,
-    Parameters.operationId
+    Parameters.operationId,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
+const getWorkspacePerSubscriptionQuotaOperationSpec: coreClient.OperationSpec =
+  {
+    path: "/subscriptions/{subscriptionId}/providers/Microsoft.Synapse/locations/{location}/usages",
+    httpMethod: "GET",
+    responses: {
+      200: {
+        bodyMapper: Mappers.WorkspaceUsageQuotaResponse,
+      },
+      default: {
+        bodyMapper: Mappers.ErrorResponse,
+      },
+    },
+    queryParameters: [Parameters.apiVersion],
+    urlParameters: [
+      Parameters.$host,
+      Parameters.subscriptionId,
+      Parameters.location,
+    ],
+    headerParameters: [Parameters.accept],
+    serializer,
+  };
