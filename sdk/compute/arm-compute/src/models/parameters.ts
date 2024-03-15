@@ -79,6 +79,10 @@ import {
   GalleryApplicationVersion as GalleryApplicationVersionMapper,
   GalleryApplicationVersionUpdate as GalleryApplicationVersionUpdateMapper,
   SharingUpdate as SharingUpdateMapper,
+  GallerySecurityPosture as GallerySecurityPostureMapper,
+  GallerySecurityPostureUpdate as GallerySecurityPostureUpdateMapper,
+  GallerySecurityPostureVersion as GallerySecurityPostureVersionMapper,
+  GallerySecurityPostureVersionUpdate as GallerySecurityPostureVersionUpdateMapper,
   CloudService as CloudServiceMapper,
   CloudServiceUpdate as CloudServiceUpdateMapper,
   RoleInstances as RoleInstancesMapper,
@@ -1159,7 +1163,7 @@ export const galleryName: OperationURLParameter = {
 export const apiVersion3: OperationQueryParameter = {
   parameterPath: "apiVersion",
   mapper: {
-    defaultValue: "2023-07-03",
+    defaultValue: "2024-03-03",
     isConstant: true,
     serializedName: "api-version",
     type: {
@@ -1290,6 +1294,48 @@ export const galleryApplicationVersion1: OperationParameter = {
 export const sharingUpdate: OperationParameter = {
   parameterPath: "sharingUpdate",
   mapper: SharingUpdateMapper,
+};
+
+export const gallerySecurityPosture: OperationParameter = {
+  parameterPath: "gallerySecurityPosture",
+  mapper: GallerySecurityPostureMapper,
+};
+
+export const securityPostureName: OperationURLParameter = {
+  parameterPath: "securityPostureName",
+  mapper: {
+    serializedName: "securityPostureName",
+    required: true,
+    type: {
+      name: "String",
+    },
+  },
+};
+
+export const gallerySecurityPosture1: OperationParameter = {
+  parameterPath: "gallerySecurityPosture",
+  mapper: GallerySecurityPostureUpdateMapper,
+};
+
+export const gallerySecurityPostureVersion: OperationParameter = {
+  parameterPath: "gallerySecurityPostureVersion",
+  mapper: GallerySecurityPostureVersionMapper,
+};
+
+export const securityPostureVersionName: OperationURLParameter = {
+  parameterPath: "securityPostureVersionName",
+  mapper: {
+    serializedName: "securityPostureVersionName",
+    required: true,
+    type: {
+      name: "String",
+    },
+  },
+};
+
+export const gallerySecurityPostureVersion1: OperationParameter = {
+  parameterPath: "gallerySecurityPostureVersion",
+  mapper: GallerySecurityPostureVersionUpdateMapper,
 };
 
 export const sharedTo: OperationQueryParameter = {
