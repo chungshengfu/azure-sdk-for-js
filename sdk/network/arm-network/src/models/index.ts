@@ -5843,6 +5843,11 @@ export interface ManagedRuleSet {
   ruleSetVersion: string;
   /** Defines the rule group overrides to apply to the rule set. */
   ruleGroupOverrides?: ManagedRuleGroupOverride[];
+  /**
+   * Stores the final list of disabled rule groups
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly computedDisabledRuleGroups?: ManagedRuleSetRuleGroup[];
 }
 
 /** Defines a managed rule group override setting. */
@@ -5861,6 +5866,14 @@ export interface ManagedRuleOverride {
   state?: ManagedRuleEnabledState;
   /** Describes the override action to be applied when rule matches. */
   action?: ActionType;
+}
+
+/** Defines a managed rule set rule group */
+export interface ManagedRuleSetRuleGroup {
+  /** Name of the rule group */
+  ruleGroupName: string;
+  /** List of rules within the rule group */
+  rules?: string[];
 }
 
 /** Properties of the FirewallPolicyNatRuleCollectionAction. */

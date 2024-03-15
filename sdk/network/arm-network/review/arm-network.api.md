@@ -8231,9 +8231,16 @@ export interface ManagedRulesDefinition {
 
 // @public
 export interface ManagedRuleSet {
+    readonly computedDisabledRuleGroups?: ManagedRuleSetRuleGroup[];
     ruleGroupOverrides?: ManagedRuleGroupOverride[];
     ruleSetType: string;
     ruleSetVersion: string;
+}
+
+// @public
+export interface ManagedRuleSetRuleGroup {
+    ruleGroupName: string;
+    rules?: string[];
 }
 
 // @public

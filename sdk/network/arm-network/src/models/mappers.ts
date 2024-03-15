@@ -16686,6 +16686,19 @@ export const ManagedRuleSet: coreClient.CompositeMapper = {
           },
         },
       },
+      computedDisabledRuleGroups: {
+        serializedName: "computedDisabledRuleGroups",
+        readOnly: true,
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "ManagedRuleSetRuleGroup",
+            },
+          },
+        },
+      },
     },
   },
 };
@@ -16740,6 +16753,33 @@ export const ManagedRuleOverride: coreClient.CompositeMapper = {
         serializedName: "action",
         type: {
           name: "String",
+        },
+      },
+    },
+  },
+};
+
+export const ManagedRuleSetRuleGroup: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "ManagedRuleSetRuleGroup",
+    modelProperties: {
+      ruleGroupName: {
+        serializedName: "ruleGroupName",
+        required: true,
+        type: {
+          name: "String",
+        },
+      },
+      rules: {
+        serializedName: "rules",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String",
+            },
+          },
         },
       },
     },

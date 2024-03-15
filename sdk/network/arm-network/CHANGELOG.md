@@ -1,5 +1,13 @@
 # Release History
     
+## 33.2.0 (2024-03-15)
+    
+**Features**
+
+  - Added Interface ManagedRuleSetRuleGroup
+  - Interface ManagedRuleSet has a new optional parameter computedDisabledRuleGroups
+    
+    
 ## 33.1.0 (2024-02-02)
     
 **Features**
