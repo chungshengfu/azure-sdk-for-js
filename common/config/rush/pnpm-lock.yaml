@@ -8568,6 +8568,7 @@ packages:
 
   /queue-tick@1.0.1:
     resolution: {integrity: sha512-kJt5qhMxoszgU/62PLP1CJytzd2NKetjSRnyuj31fDd3Rlcz3fzlFdFLD1SItunPwyqEOkca6GbV612BWfaBag==}
+    requiresBuild: true
     dev: false
 
   /randombytes@2.1.0:
@@ -12454,10 +12455,11 @@ packages:
     dev: false
 
   file:projects/arm-consumption.tgz:
-    resolution: {integrity: sha512-gIGza2f9pMwhSMoWvuoOMowtkiBRZ4FLs4eo3jWkQOdfUV8yW7Aqs4pcve0CLxCtD7juxoQ+VsCyAbJNwiPIag==, tarball: file:projects/arm-consumption.tgz}
+    resolution: {integrity: sha512-9jK8h+vFnHH5yYMSYx6lPmGIbo1NTNFUov9vD31JJ4IA5b3jazA8C2lU8w2DnvQNus6kDloiH5g3qIH1uYvxZg==, tarball: file:projects/arm-consumption.tgz}
     name: '@rush-temp/arm-consumption'
     version: 0.0.0
     dependencies:
+      '@azure/abort-controller': 1.1.0
       '@azure/identity': 4.0.1
       '@microsoft/api-extractor': 7.42.3(@types/node@18.19.22)
       '@types/chai': 4.3.12
@@ -12466,7 +12468,8 @@ packages:
       chai: 4.3.10
       cross-env: 7.0.3
       dotenv: 16.4.5
-      mkdirp: 1.0.4
+      esm: 3.2.25
+      mkdirp: 2.1.6
       mocha: 10.3.0
       rimraf: 5.0.5
       ts-node: 10.9.2(@types/node@18.19.22)(typescript@5.3.3)
