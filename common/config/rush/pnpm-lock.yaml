@@ -12662,7 +12662,7 @@ packages:
     dev: false
 
   file:projects/arm-cosmosdbforpostgresql.tgz:
-    resolution: {integrity: sha512-oolLtC+bh7x7BChJYnlqD3JM5TOeiyN4KMITqWQnVrzp4kL8W9CSGoT3eCJptWWGLIIdDds5pUx07PbB2VyK2w==, tarball: file:projects/arm-cosmosdbforpostgresql.tgz}
+    resolution: {integrity: sha512-keP2egw8zzpzq/eIIu0SDNsPVWFoTpdLCS/vYRnXPAmWxIgkxyk4Fkihm68g7A0PUozaEktH2pp97yav0wfmeA==, tarball: file:projects/arm-cosmosdbforpostgresql.tgz}
     name: '@rush-temp/arm-cosmosdbforpostgresql'
     version: 0.0.0
     dependencies:
@@ -12675,6 +12675,7 @@ packages:
       chai: 4.3.10
       cross-env: 7.0.3
       dotenv: 16.4.5
+      esm: 3.2.25
       mkdirp: 2.1.6
       mocha: 10.3.0
       rimraf: 5.0.5
