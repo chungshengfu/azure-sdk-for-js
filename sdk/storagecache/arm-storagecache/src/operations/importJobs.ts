@@ -8,7 +8,7 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { AmlFilesystems } from "../operationsInterfaces";
+import { ImportJobs } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
@@ -20,34 +20,29 @@ import {
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
-  AmlFilesystem,
-  AmlFilesystemsListNextOptionalParams,
-  AmlFilesystemsListOptionalParams,
-  AmlFilesystemsListResponse,
-  AmlFilesystemsListByResourceGroupNextOptionalParams,
-  AmlFilesystemsListByResourceGroupOptionalParams,
-  AmlFilesystemsListByResourceGroupResponse,
-  AmlFilesystemsDeleteOptionalParams,
-  AmlFilesystemsGetOptionalParams,
-  AmlFilesystemsGetResponse,
-  AmlFilesystemsCreateOrUpdateOptionalParams,
-  AmlFilesystemsCreateOrUpdateResponse,
-  AmlFilesystemUpdate,
-  AmlFilesystemsUpdateOptionalParams,
-  AmlFilesystemsUpdateResponse,
-  AmlFilesystemsArchiveOptionalParams,
-  AmlFilesystemsCancelArchiveOptionalParams,
-  AmlFilesystemsListNextResponse,
-  AmlFilesystemsListByResourceGroupNextResponse,
+  ImportJob,
+  ImportJobsListByAmlFilesystemNextOptionalParams,
+  ImportJobsListByAmlFilesystemOptionalParams,
+  ImportJobsListByAmlFilesystemResponse,
+  ImportJobsDeleteOptionalParams,
+  ImportJobsDeleteResponse,
+  ImportJobsGetOptionalParams,
+  ImportJobsGetResponse,
+  ImportJobsCreateOrUpdateOptionalParams,
+  ImportJobsCreateOrUpdateResponse,
+  ImportJobUpdate,
+  ImportJobsUpdateOptionalParams,
+  ImportJobsUpdateResponse,
+  ImportJobsListByAmlFilesystemNextResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing AmlFilesystems operations. */
-export class AmlFilesystemsImpl implements AmlFilesystems {
+/** Class containing ImportJobs operations. */
+export class ImportJobsImpl implements ImportJobs {
   private readonly client: StorageCacheManagementClient;
 
   /**
-   * Initialize a new instance of the class AmlFilesystems class.
+   * Initialize a new instance of the class ImportJobs class.
    * @param client Reference to the service client
    */
   constructor(client: StorageCacheManagementClient) {
@@ -55,69 +50,22 @@ export class AmlFilesystemsImpl implements AmlFilesystems {
   }
 
   /**
-   * Returns all AML file systems the user has access to under a subscription.
-   * @param options The options parameters.
-   */
-  public list(
-    options?: AmlFilesystemsListOptionalParams,
-  ): PagedAsyncIterableIterator<AmlFilesystem> {
-    const iter = this.listPagingAll(options);
-    return {
-      next() {
-        return iter.next();
-      },
-      [Symbol.asyncIterator]() {
-        return this;
-      },
-      byPage: (settings?: PageSettings) => {
-        if (settings?.maxPageSize) {
-          throw new Error("maxPageSize is not supported by this operation.");
-        }
-        return this.listPagingPage(options, settings);
-      },
-    };
-  }
-
-  private async *listPagingPage(
-    options?: AmlFilesystemsListOptionalParams,
-    settings?: PageSettings,
-  ): AsyncIterableIterator<AmlFilesystem[]> {
-    let result: AmlFilesystemsListResponse;
-    let continuationToken = settings?.continuationToken;
-    if (!continuationToken) {
-      result = await this._list(options);
-      let page = result.value || [];
-      continuationToken = result.nextLink;
-      setContinuationToken(page, continuationToken);
-      yield page;
-    }
-    while (continuationToken) {
-      result = await this._listNext(continuationToken, options);
-      continuationToken = result.nextLink;
-      let page = result.value || [];
-      setContinuationToken(page, continuationToken);
-      yield page;
-    }
-  }
-
-  private async *listPagingAll(
-    options?: AmlFilesystemsListOptionalParams,
-  ): AsyncIterableIterator<AmlFilesystem> {
-    for await (const page of this.listPagingPage(options)) {
-      yield* page;
-    }
-  }
-
-  /**
-   * Returns all AML file systems the user has access to under a resource group.
+   * Returns all import jobs the user has access to under an AML File System.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param amlFilesystemName Name for the AML file system. Allows alphanumerics, underscores, and
+   *                          hyphens. Start and end with alphanumeric.
    * @param options The options parameters.
    */
-  public listByResourceGroup(
+  public listByAmlFilesystem(
     resourceGroupName: string,
-    options?: AmlFilesystemsListByResourceGroupOptionalParams,
-  ): PagedAsyncIterableIterator<AmlFilesystem> {
-    const iter = this.listByResourceGroupPagingAll(resourceGroupName, options);
+    amlFilesystemName: string,
+    options?: ImportJobsListByAmlFilesystemOptionalParams,
+  ): PagedAsyncIterableIterator<ImportJob> {
+    const iter = this.listByAmlFilesystemPagingAll(
+      resourceGroupName,
+      amlFilesystemName,
+      options,
+    );
     return {
       next() {
         return iter.next();
@@ -129,8 +77,9 @@ export class AmlFilesystemsImpl implements AmlFilesystems {
         if (settings?.maxPageSize) {
           throw new Error("maxPageSize is not supported by this operation.");
         }
-        return this.listByResourceGroupPagingPage(
+        return this.listByAmlFilesystemPagingPage(
           resourceGroupName,
+          amlFilesystemName,
           options,
           settings,
         );
@@ -138,23 +87,29 @@ export class AmlFilesystemsImpl implements AmlFilesystems {
     };
   }
 
-  private async *listByResourceGroupPagingPage(
+  private async *listByAmlFilesystemPagingPage(
     resourceGroupName: string,
-    options?: AmlFilesystemsListByResourceGroupOptionalParams,
+    amlFilesystemName: string,
+    options?: ImportJobsListByAmlFilesystemOptionalParams,
     settings?: PageSettings,
-  ): AsyncIterableIterator<AmlFilesystem[]> {
-    let result: AmlFilesystemsListByResourceGroupResponse;
+  ): AsyncIterableIterator<ImportJob[]> {
+    let result: ImportJobsListByAmlFilesystemResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._listByResourceGroup(resourceGroupName, options);
+      result = await this._listByAmlFilesystem(
+        resourceGroupName,
+        amlFilesystemName,
+        options,
+      );
       let page = result.value || [];
       continuationToken = result.nextLink;
       setContinuationToken(page, continuationToken);
       yield page;
     }
     while (continuationToken) {
-      result = await this._listByResourceGroupNext(
+      result = await this._listByAmlFilesystemNext(
         resourceGroupName,
+        amlFilesystemName,
         continuationToken,
         options,
       );
@@ -165,12 +120,14 @@ export class AmlFilesystemsImpl implements AmlFilesystems {
     }
   }
 
-  private async *listByResourceGroupPagingAll(
+  private async *listByAmlFilesystemPagingAll(
     resourceGroupName: string,
-    options?: AmlFilesystemsListByResourceGroupOptionalParams,
-  ): AsyncIterableIterator<AmlFilesystem> {
-    for await (const page of this.listByResourceGroupPagingPage(
+    amlFilesystemName: string,
+    options?: ImportJobsListByAmlFilesystemOptionalParams,
+  ): AsyncIterableIterator<ImportJob> {
+    for await (const page of this.listByAmlFilesystemPagingPage(
       resourceGroupName,
+      amlFilesystemName,
       options,
     )) {
       yield* page;
@@ -178,46 +135,29 @@ export class AmlFilesystemsImpl implements AmlFilesystems {
   }
 
   /**
-   * Returns all AML file systems the user has access to under a subscription.
-   * @param options The options parameters.
-   */
-  private _list(
-    options?: AmlFilesystemsListOptionalParams,
-  ): Promise<AmlFilesystemsListResponse> {
-    return this.client.sendOperationRequest({ options }, listOperationSpec);
-  }
-
-  /**
-   * Returns all AML file systems the user has access to under a resource group.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param options The options parameters.
-   */
-  private _listByResourceGroup(
-    resourceGroupName: string,
-    options?: AmlFilesystemsListByResourceGroupOptionalParams,
-  ): Promise<AmlFilesystemsListByResourceGroupResponse> {
-    return this.client.sendOperationRequest(
-      { resourceGroupName, options },
-      listByResourceGroupOperationSpec,
-    );
-  }
-
-  /**
-   * Schedules an AML file system for deletion.
+   * Schedules an import job for deletion.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param amlFilesystemName Name for the AML file system. Allows alphanumerics, underscores, and
    *                          hyphens. Start and end with alphanumeric.
+   * @param importJobName Name for the import job. Allows alphanumerics, underscores, and hyphens. Start
+   *                      and end with alphanumeric.
    * @param options The options parameters.
    */
   async beginDelete(
     resourceGroupName: string,
     amlFilesystemName: string,
-    options?: AmlFilesystemsDeleteOptionalParams,
-  ): Promise<SimplePollerLike<OperationState<void>, void>> {
+    importJobName: string,
+    options?: ImportJobsDeleteOptionalParams,
+  ): Promise<
+    SimplePollerLike<
+      OperationState<ImportJobsDeleteResponse>,
+      ImportJobsDeleteResponse
+    >
+  > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec,
-    ): Promise<void> => {
+    ): Promise<ImportJobsDeleteResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -254,10 +194,13 @@ export class AmlFilesystemsImpl implements AmlFilesystems {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, amlFilesystemName, options },
+      args: { resourceGroupName, amlFilesystemName, importJobName, options },
       spec: deleteOperationSpec,
     });
-    const poller = await createHttpPoller<void, OperationState<void>>(lro, {
+    const poller = await createHttpPoller<
+      ImportJobsDeleteResponse,
+      OperationState<ImportJobsDeleteResponse>
+    >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
       resourceLocationConfig: "location",
@@ -267,67 +210,77 @@ export class AmlFilesystemsImpl implements AmlFilesystems {
   }
 
   /**
-   * Schedules an AML file system for deletion.
+   * Schedules an import job for deletion.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param amlFilesystemName Name for the AML file system. Allows alphanumerics, underscores, and
    *                          hyphens. Start and end with alphanumeric.
+   * @param importJobName Name for the import job. Allows alphanumerics, underscores, and hyphens. Start
+   *                      and end with alphanumeric.
    * @param options The options parameters.
    */
   async beginDeleteAndWait(
     resourceGroupName: string,
     amlFilesystemName: string,
-    options?: AmlFilesystemsDeleteOptionalParams,
-  ): Promise<void> {
+    importJobName: string,
+    options?: ImportJobsDeleteOptionalParams,
+  ): Promise<ImportJobsDeleteResponse> {
     const poller = await this.beginDelete(
       resourceGroupName,
       amlFilesystemName,
+      importJobName,
       options,
     );
     return poller.pollUntilDone();
   }
 
   /**
-   * Returns an AML file system.
+   * Returns an import job.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param amlFilesystemName Name for the AML file system. Allows alphanumerics, underscores, and
    *                          hyphens. Start and end with alphanumeric.
+   * @param importJobName Name for the import job. Allows alphanumerics, underscores, and hyphens. Start
+   *                      and end with alphanumeric.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     amlFilesystemName: string,
-    options?: AmlFilesystemsGetOptionalParams,
-  ): Promise<AmlFilesystemsGetResponse> {
+    importJobName: string,
+    options?: ImportJobsGetOptionalParams,
+  ): Promise<ImportJobsGetResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, amlFilesystemName, options },
+      { resourceGroupName, amlFilesystemName, importJobName, options },
       getOperationSpec,
     );
   }
 
   /**
-   * Create or update an AML file system.
+   * Create or update an import job. Import jobs are automatically deleted 72 hours after completion.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param amlFilesystemName Name for the AML file system. Allows alphanumerics, underscores, and
    *                          hyphens. Start and end with alphanumeric.
-   * @param amlFilesystem Object containing the user-selectable properties of the AML file system. If
-   *                      read-only properties are included, they must match the existing values of those properties.
+   * @param importJobName Name for the import job. Allows alphanumerics, underscores, and hyphens. Start
+   *                      and end with alphanumeric.
+   * @param importJob Object containing the user-selectable properties of the import job. If read-only
+   *                  properties are included, they must match the existing values of those properties.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
     amlFilesystemName: string,
-    amlFilesystem: AmlFilesystem,
-    options?: AmlFilesystemsCreateOrUpdateOptionalParams,
+    importJobName: string,
+    importJob: ImportJob,
+    options?: ImportJobsCreateOrUpdateOptionalParams,
   ): Promise<
     SimplePollerLike<
-      OperationState<AmlFilesystemsCreateOrUpdateResponse>,
-      AmlFilesystemsCreateOrUpdateResponse
+      OperationState<ImportJobsCreateOrUpdateResponse>,
+      ImportJobsCreateOrUpdateResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec,
-    ): Promise<AmlFilesystemsCreateOrUpdateResponse> => {
+    ): Promise<ImportJobsCreateOrUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -364,12 +317,18 @@ export class AmlFilesystemsImpl implements AmlFilesystems {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, amlFilesystemName, amlFilesystem, options },
+      args: {
+        resourceGroupName,
+        amlFilesystemName,
+        importJobName,
+        importJob,
+        options,
+      },
       spec: createOrUpdateOperationSpec,
     });
     const poller = await createHttpPoller<
-      AmlFilesystemsCreateOrUpdateResponse,
-      OperationState<AmlFilesystemsCreateOrUpdateResponse>
+      ImportJobsCreateOrUpdateResponse,
+      OperationState<ImportJobsCreateOrUpdateResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
@@ -380,53 +339,60 @@ export class AmlFilesystemsImpl implements AmlFilesystems {
   }
 
   /**
-   * Create or update an AML file system.
+   * Create or update an import job. Import jobs are automatically deleted 72 hours after completion.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param amlFilesystemName Name for the AML file system. Allows alphanumerics, underscores, and
    *                          hyphens. Start and end with alphanumeric.
-   * @param amlFilesystem Object containing the user-selectable properties of the AML file system. If
-   *                      read-only properties are included, they must match the existing values of those properties.
+   * @param importJobName Name for the import job. Allows alphanumerics, underscores, and hyphens. Start
+   *                      and end with alphanumeric.
+   * @param importJob Object containing the user-selectable properties of the import job. If read-only
+   *                  properties are included, they must match the existing values of those properties.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
     amlFilesystemName: string,
-    amlFilesystem: AmlFilesystem,
-    options?: AmlFilesystemsCreateOrUpdateOptionalParams,
-  ): Promise<AmlFilesystemsCreateOrUpdateResponse> {
+    importJobName: string,
+    importJob: ImportJob,
+    options?: ImportJobsCreateOrUpdateOptionalParams,
+  ): Promise<ImportJobsCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
       amlFilesystemName,
-      amlFilesystem,
+      importJobName,
+      importJob,
       options,
     );
     return poller.pollUntilDone();
   }
 
   /**
-   * Update an AML file system instance.
+   * Update an import job instance.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param amlFilesystemName Name for the AML file system. Allows alphanumerics, underscores, and
    *                          hyphens. Start and end with alphanumeric.
-   * @param amlFilesystem Object containing the user-selectable properties of the AML file system. If
-   *                      read-only properties are included, they must match the existing values of those properties.
+   * @param importJobName Name for the import job. Allows alphanumerics, underscores, and hyphens. Start
+   *                      and end with alphanumeric.
+   * @param importJob Object containing the user-selectable properties of the import job. If read-only
+   *                  properties are included, they must match the existing values of those properties.
    * @param options The options parameters.
    */
   async beginUpdate(
     resourceGroupName: string,
     amlFilesystemName: string,
-    amlFilesystem: AmlFilesystemUpdate,
-    options?: AmlFilesystemsUpdateOptionalParams,
+    importJobName: string,
+    importJob: ImportJobUpdate,
+    options?: ImportJobsUpdateOptionalParams,
   ): Promise<
     SimplePollerLike<
-      OperationState<AmlFilesystemsUpdateResponse>,
-      AmlFilesystemsUpdateResponse
+      OperationState<ImportJobsUpdateResponse>,
+      ImportJobsUpdateResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec,
-    ): Promise<AmlFilesystemsUpdateResponse> => {
+    ): Promise<ImportJobsUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -463,12 +429,18 @@ export class AmlFilesystemsImpl implements AmlFilesystems {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, amlFilesystemName, amlFilesystem, options },
+      args: {
+        resourceGroupName,
+        amlFilesystemName,
+        importJobName,
+        importJob,
+        options,
+      },
       spec: updateOperationSpec,
     });
     const poller = await createHttpPoller<
-      AmlFilesystemsUpdateResponse,
-      OperationState<AmlFilesystemsUpdateResponse>
+      ImportJobsUpdateResponse,
+      OperationState<ImportJobsUpdateResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
@@ -479,146 +451,92 @@ export class AmlFilesystemsImpl implements AmlFilesystems {
   }
 
   /**
-   * Update an AML file system instance.
+   * Update an import job instance.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param amlFilesystemName Name for the AML file system. Allows alphanumerics, underscores, and
    *                          hyphens. Start and end with alphanumeric.
-   * @param amlFilesystem Object containing the user-selectable properties of the AML file system. If
-   *                      read-only properties are included, they must match the existing values of those properties.
+   * @param importJobName Name for the import job. Allows alphanumerics, underscores, and hyphens. Start
+   *                      and end with alphanumeric.
+   * @param importJob Object containing the user-selectable properties of the import job. If read-only
+   *                  properties are included, they must match the existing values of those properties.
    * @param options The options parameters.
    */
   async beginUpdateAndWait(
     resourceGroupName: string,
     amlFilesystemName: string,
-    amlFilesystem: AmlFilesystemUpdate,
-    options?: AmlFilesystemsUpdateOptionalParams,
-  ): Promise<AmlFilesystemsUpdateResponse> {
+    importJobName: string,
+    importJob: ImportJobUpdate,
+    options?: ImportJobsUpdateOptionalParams,
+  ): Promise<ImportJobsUpdateResponse> {
     const poller = await this.beginUpdate(
       resourceGroupName,
       amlFilesystemName,
-      amlFilesystem,
+      importJobName,
+      importJob,
       options,
     );
     return poller.pollUntilDone();
   }
 
   /**
-   * Archive data from the AML file system.
+   * Returns all import jobs the user has access to under an AML File System.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param amlFilesystemName Name for the AML file system. Allows alphanumerics, underscores, and
    *                          hyphens. Start and end with alphanumeric.
    * @param options The options parameters.
    */
-  archive(
+  private _listByAmlFilesystem(
     resourceGroupName: string,
     amlFilesystemName: string,
-    options?: AmlFilesystemsArchiveOptionalParams,
-  ): Promise<void> {
+    options?: ImportJobsListByAmlFilesystemOptionalParams,
+  ): Promise<ImportJobsListByAmlFilesystemResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, amlFilesystemName, options },
-      archiveOperationSpec,
+      listByAmlFilesystemOperationSpec,
     );
   }
 
   /**
-   * Cancel archiving data from the AML file system.
+   * ListByAmlFilesystemNext
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param amlFilesystemName Name for the AML file system. Allows alphanumerics, underscores, and
    *                          hyphens. Start and end with alphanumeric.
+   * @param nextLink The nextLink from the previous successful call to the ListByAmlFilesystem method.
    * @param options The options parameters.
    */
-  cancelArchive(
+  private _listByAmlFilesystemNext(
     resourceGroupName: string,
     amlFilesystemName: string,
-    options?: AmlFilesystemsCancelArchiveOptionalParams,
-  ): Promise<void> {
-    return this.client.sendOperationRequest(
-      { resourceGroupName, amlFilesystemName, options },
-      cancelArchiveOperationSpec,
-    );
-  }
-
-  /**
-   * ListNext
-   * @param nextLink The nextLink from the previous successful call to the List method.
-   * @param options The options parameters.
-   */
-  private _listNext(
     nextLink: string,
-    options?: AmlFilesystemsListNextOptionalParams,
-  ): Promise<AmlFilesystemsListNextResponse> {
+    options?: ImportJobsListByAmlFilesystemNextOptionalParams,
+  ): Promise<ImportJobsListByAmlFilesystemNextResponse> {
     return this.client.sendOperationRequest(
-      { nextLink, options },
-      listNextOperationSpec,
-    );
-  }
-
-  /**
-   * ListByResourceGroupNext
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param nextLink The nextLink from the previous successful call to the ListByResourceGroup method.
-   * @param options The options parameters.
-   */
-  private _listByResourceGroupNext(
-    resourceGroupName: string,
-    nextLink: string,
-    options?: AmlFilesystemsListByResourceGroupNextOptionalParams,
-  ): Promise<AmlFilesystemsListByResourceGroupNextResponse> {
-    return this.client.sendOperationRequest(
-      { resourceGroupName, nextLink, options },
-      listByResourceGroupNextOperationSpec,
+      { resourceGroupName, amlFilesystemName, nextLink, options },
+      listByAmlFilesystemNextOperationSpec,
     );
   }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const listOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/providers/Microsoft.StorageCache/amlFilesystems",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: Mappers.AmlFilesystemsListResult,
-    },
-    default: {
-      bodyMapper: Mappers.CloudError,
-    },
-  },
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.$host, Parameters.subscriptionId],
-  headerParameters: [Parameters.accept],
-  serializer,
-};
-const listByResourceGroupOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.StorageCache/amlFilesystems",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: Mappers.AmlFilesystemsListResult,
-    },
-    default: {
-      bodyMapper: Mappers.CloudError,
-    },
-  },
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-  ],
-  headerParameters: [Parameters.accept],
-  serializer,
-};
 const deleteOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.StorageCache/amlFilesystems/{amlFilesystemName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.StorageCache/amlFilesystems/{amlFilesystemName}/importJobs/{importJobName}",
   httpMethod: "DELETE",
   responses: {
-    200: {},
-    201: {},
-    202: {},
-    204: {},
+    200: {
+      headersMapper: Mappers.ImportJobsDeleteHeaders,
+    },
+    201: {
+      headersMapper: Mappers.ImportJobsDeleteHeaders,
+    },
+    202: {
+      headersMapper: Mappers.ImportJobsDeleteHeaders,
+    },
+    204: {
+      headersMapper: Mappers.ImportJobsDeleteHeaders,
+    },
     default: {
-      bodyMapper: Mappers.CloudError,
+      bodyMapper: Mappers.ErrorResponse,
     },
   },
   queryParameters: [Parameters.apiVersion],
@@ -627,19 +545,20 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.amlFilesystemName,
+    Parameters.importJobName,
   ],
   headerParameters: [Parameters.accept],
   serializer,
 };
 const getOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.StorageCache/amlFilesystems/{amlFilesystemName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.StorageCache/amlFilesystems/{amlFilesystemName}/importJobs/{importJobName}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.AmlFilesystem,
+      bodyMapper: Mappers.ImportJob,
     },
     default: {
-      bodyMapper: Mappers.CloudError,
+      bodyMapper: Mappers.ErrorResponse,
     },
   },
   queryParameters: [Parameters.apiVersion],
@@ -648,100 +567,84 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.amlFilesystemName,
+    Parameters.importJobName,
   ],
   headerParameters: [Parameters.accept],
   serializer,
 };
 const createOrUpdateOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.StorageCache/amlFilesystems/{amlFilesystemName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.StorageCache/amlFilesystems/{amlFilesystemName}/importJobs/{importJobName}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.AmlFilesystem,
+      bodyMapper: Mappers.ImportJob,
     },
     201: {
-      bodyMapper: Mappers.AmlFilesystem,
+      bodyMapper: Mappers.ImportJob,
     },
     202: {
-      bodyMapper: Mappers.AmlFilesystem,
+      bodyMapper: Mappers.ImportJob,
     },
     204: {
-      bodyMapper: Mappers.AmlFilesystem,
+      bodyMapper: Mappers.ImportJob,
     },
     default: {
-      bodyMapper: Mappers.CloudError,
+      bodyMapper: Mappers.ErrorResponse,
     },
   },
-  requestBody: Parameters.amlFilesystem,
+  requestBody: Parameters.importJob,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.amlFilesystemName,
+    Parameters.importJobName,
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
   serializer,
 };
 const updateOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.StorageCache/amlFilesystems/{amlFilesystemName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.StorageCache/amlFilesystems/{amlFilesystemName}/importJobs/{importJobName}",
   httpMethod: "PATCH",
   responses: {
     200: {
-      bodyMapper: Mappers.AmlFilesystem,
+      bodyMapper: Mappers.ImportJob,
     },
     201: {
-      bodyMapper: Mappers.AmlFilesystem,
+      bodyMapper: Mappers.ImportJob,
     },
     202: {
-      bodyMapper: Mappers.AmlFilesystem,
+      bodyMapper: Mappers.ImportJob,
     },
     204: {
-      bodyMapper: Mappers.AmlFilesystem,
+      bodyMapper: Mappers.ImportJob,
     },
     default: {
-      bodyMapper: Mappers.CloudError,
+      bodyMapper: Mappers.ErrorResponse,
     },
   },
-  requestBody: Parameters.amlFilesystem1,
+  requestBody: Parameters.importJob1,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.amlFilesystemName,
+    Parameters.importJobName,
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
   serializer,
 };
-const archiveOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.StorageCache/amlFilesystems/{amlFilesystemName}/archive",
-  httpMethod: "POST",
+const listByAmlFilesystemOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.StorageCache/amlFilesystems/{amlFilesystemName}/importJobs",
+  httpMethod: "GET",
   responses: {
-    200: {},
-    default: {
-      bodyMapper: Mappers.CloudError,
+    200: {
+      bodyMapper: Mappers.ImportJobsListResult,
     },
-  },
-  requestBody: Parameters.archiveInfo,
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.amlFilesystemName,
-  ],
-  headerParameters: [Parameters.accept, Parameters.contentType],
-  mediaType: "json",
-  serializer,
-};
-const cancelArchiveOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.StorageCache/amlFilesystems/{amlFilesystemName}/cancelArchive",
-  httpMethod: "POST",
-  responses: {
-    200: {},
     default: {
       bodyMapper: Mappers.CloudError,
     },
@@ -756,31 +659,12 @@ const cancelArchiveOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept],
   serializer,
 };
-const listNextOperationSpec: coreClient.OperationSpec = {
+const listByAmlFilesystemNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.AmlFilesystemsListResult,
-    },
-    default: {
-      bodyMapper: Mappers.CloudError,
-    },
-  },
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.nextLink,
-  ],
-  headerParameters: [Parameters.accept],
-  serializer,
-};
-const listByResourceGroupNextOperationSpec: coreClient.OperationSpec = {
-  path: "{nextLink}",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: Mappers.AmlFilesystemsListResult,
+      bodyMapper: Mappers.ImportJobsListResult,
     },
     default: {
       bodyMapper: Mappers.CloudError,
@@ -790,6 +674,7 @@ const listByResourceGroupNextOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
+    Parameters.amlFilesystemName,
     Parameters.nextLink,
   ],
   headerParameters: [Parameters.accept],
