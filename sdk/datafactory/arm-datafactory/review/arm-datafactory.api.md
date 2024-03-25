@@ -747,7 +747,7 @@ export interface AzureFunctionActivity extends ExecutionActivity {
     body?: any;
     functionName: any;
     headers?: {
-        [propertyName: string]: string;
+        [propertyName: string]: any;
     };
     method: AzureFunctionActivityMethod;
     type: "AzureFunctionActivity";
@@ -1621,15 +1621,15 @@ export { Credential_2 as Credential }
 // @public
 export interface CredentialListResponse {
     nextLink?: string;
-    value: ManagedIdentityCredentialResource[];
+    value: CredentialResource[];
 }
 
 // @public
 export interface CredentialOperations {
-    createOrUpdate(resourceGroupName: string, factoryName: string, credentialName: string, credential: ManagedIdentityCredentialResource, options?: CredentialOperationsCreateOrUpdateOptionalParams): Promise<CredentialOperationsCreateOrUpdateResponse>;
+    createOrUpdate(resourceGroupName: string, factoryName: string, credentialName: string, credential: CredentialResource, options?: CredentialOperationsCreateOrUpdateOptionalParams): Promise<CredentialOperationsCreateOrUpdateResponse>;
     delete(resourceGroupName: string, factoryName: string, credentialName: string, options?: CredentialOperationsDeleteOptionalParams): Promise<void>;
     get(resourceGroupName: string, factoryName: string, credentialName: string, options?: CredentialOperationsGetOptionalParams): Promise<CredentialOperationsGetResponse>;
-    listByFactory(resourceGroupName: string, factoryName: string, options?: CredentialOperationsListByFactoryOptionalParams): PagedAsyncIterableIterator<ManagedIdentityCredentialResource>;
+    listByFactory(resourceGroupName: string, factoryName: string, options?: CredentialOperationsListByFactoryOptionalParams): PagedAsyncIterableIterator<CredentialResource>;
 }
 
 // @public
@@ -1638,7 +1638,7 @@ export interface CredentialOperationsCreateOrUpdateOptionalParams extends coreCl
 }
 
 // @public
-export type CredentialOperationsCreateOrUpdateResponse = ManagedIdentityCredentialResource;
+export type CredentialOperationsCreateOrUpdateResponse = CredentialResource;
 
 // @public
 export interface CredentialOperationsDeleteOptionalParams extends coreClient.OperationOptions {
@@ -1650,7 +1650,7 @@ export interface CredentialOperationsGetOptionalParams extends coreClient.Operat
 }
 
 // @public
-export type CredentialOperationsGetResponse = ManagedIdentityCredentialResource;
+export type CredentialOperationsGetResponse = CredentialResource;
 
 // @public
 export interface CredentialOperationsListByFactoryNextOptionalParams extends coreClient.OperationOptions {
@@ -3961,7 +3961,7 @@ export interface IntegrationRuntimeOutboundNetworkDependenciesEndpointsResponse 
 }
 
 // @public
-export interface IntegrationRuntimeReference {
+export interface IntegrationRuntimeReference extends Reference {
     parameters?: {
         [propertyName: string]: any;
     };
@@ -5095,11 +5095,6 @@ export enum KnownTumblingWindowFrequency {
 }
 
 // @public
-export enum KnownType {
-    LinkedServiceReference = "LinkedServiceReference"
-}
-
-// @public
 export enum KnownVariableType {
     Array = "Array",
     Bool = "Bool",
@@ -5250,12 +5245,12 @@ export interface LinkedServiceListResponse {
 }
 
 // @public
-export interface LinkedServiceReference {
+export interface LinkedServiceReference extends Reference {
     parameters?: {
         [propertyName: string]: any;
     };
     referenceName: string;
-    type: Type;
+    type: "LinkedServiceReference";
 }
 
 // @public
@@ -5363,12 +5358,11 @@ export interface MagentoSource extends TabularSource {
 
 // @public
 export interface ManagedIdentityCredential extends Credential_2 {
-    resourceId?: string;
     type: "ManagedIdentity";
 }
 
 // @public
-export interface ManagedIdentityCredentialResource extends SubResource {
+export interface ManagedIdentityCredentialResource extends CredentialResource {
     properties: ManagedIdentityCredential;
 }
 
@@ -6831,6 +6825,14 @@ export interface RedshiftUnloadSettings {
 }
 
 // @public
+export interface Reference {
+    type: "IntegrationRuntimeReference" | "LinkedServiceReference";
+}
+
+// @public (undocumented)
+export type ReferenceUnion = Reference | IntegrationRuntimeReference | LinkedServiceReference;
+
+// @public
 export interface RelationalSource extends CopySource {
     additionalColumns?: any;
     query?: any;
@@ -7618,6 +7620,11 @@ export interface ServicePrincipalCredential extends Credential_2 {
     servicePrincipalKey?: AzureKeyVaultSecretReference;
     tenant?: any;
     type: "ServicePrincipal";
+}
+
+// @public
+export interface ServicePrincipalCredentialResource extends CredentialResource {
+    properties: ServicePrincipalCredential;
 }
 
 // @public
@@ -8742,9 +8749,6 @@ export interface TwilioLinkedService extends LinkedService {
 }
 
 // @public
-export type Type = string;
-
-// @public
 export interface TypeConversionSettings {
     allowDataTruncation?: any;
     culture?: any;
@@ -8885,7 +8889,7 @@ export interface WebActivity extends ExecutionActivity {
     datasets?: DatasetReference[];
     disableCertValidation?: boolean;
     headers?: {
-        [propertyName: string]: string;
+        [propertyName: string]: any;
     };
     httpRequestTimeout?: any;
     linkedServices?: LinkedServiceReference[];
@@ -8936,7 +8940,7 @@ export interface WebHookActivity extends ControlActivity {
     authentication?: WebActivityAuthentication;
     body?: any;
     headers?: {
-        [propertyName: string]: string;
+        [propertyName: string]: any;
     };
     method: WebHookActivityMethod;
     policy?: SecureInputOutputPolicy;

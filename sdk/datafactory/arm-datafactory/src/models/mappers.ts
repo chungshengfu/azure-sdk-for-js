@@ -1752,31 +1752,21 @@ export const LinkedService: coreClient.CompositeMapper = {
   },
 };
 
-export const IntegrationRuntimeReference: coreClient.CompositeMapper = {
+export const Reference: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "IntegrationRuntimeReference",
+    className: "Reference",
+    uberParent: "Reference",
+    polymorphicDiscriminator: {
+      serializedName: "type",
+      clientName: "type",
+    },
     modelProperties: {
       type: {
-        defaultValue: "IntegrationRuntimeReference",
-        isConstant: true,
         serializedName: "type",
-        type: {
-          name: "String",
-        },
-      },
-      referenceName: {
-        serializedName: "referenceName",
         required: true,
         type: {
           name: "String",
-        },
-      },
-      parameters: {
-        serializedName: "parameters",
-        type: {
-          name: "Dictionary",
-          value: { type: { name: "any" } },
         },
       },
     },
@@ -1902,36 +1892,6 @@ export const Dataset: coreClient.CompositeMapper = {
         type: {
           name: "Composite",
           className: "DatasetFolder",
-        },
-      },
-    },
-  },
-};
-
-export const LinkedServiceReference: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "LinkedServiceReference",
-    modelProperties: {
-      type: {
-        serializedName: "type",
-        required: true,
-        type: {
-          name: "String",
-        },
-      },
-      referenceName: {
-        serializedName: "referenceName",
-        required: true,
-        type: {
-          name: "String",
-        },
-      },
-      parameters: {
-        serializedName: "parameters",
-        type: {
-          name: "Dictionary",
-          value: { type: { name: "any" } },
         },
       },
     },
@@ -3558,7 +3518,7 @@ export const CredentialListResponse: coreClient.CompositeMapper = {
           element: {
             type: {
               name: "Composite",
-              className: "ManagedIdentityCredentialResource",
+              className: "CredentialResource",
             },
           },
         },
@@ -8225,17 +8185,17 @@ export const ManagedPrivateEndpointResource: coreClient.CompositeMapper = {
   },
 };
 
-export const ManagedIdentityCredentialResource: coreClient.CompositeMapper = {
+export const CredentialResource: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "ManagedIdentityCredentialResource",
+    className: "CredentialResource",
     modelProperties: {
       ...SubResource.type.modelProperties,
       properties: {
         serializedName: "properties",
         type: {
           name: "Composite",
-          className: "ManagedIdentityCredential",
+          className: "Credential",
         },
       },
     },
@@ -8380,23 +8340,6 @@ export const ChangeDataCaptureResource: coreClient.CompositeMapper = {
         serializedName: "properties.status",
         type: {
           name: "String",
-        },
-      },
-    },
-  },
-};
-
-export const CredentialResource: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "CredentialResource",
-    modelProperties: {
-      ...SubResource.type.modelProperties,
-      properties: {
-        serializedName: "properties",
-        type: {
-          name: "Composite",
-          className: "Credential",
         },
       },
     },
@@ -16247,6 +16190,60 @@ export const ServiceNowV2LinkedService: coreClient.CompositeMapper = {
   },
 };
 
+export const IntegrationRuntimeReference: coreClient.CompositeMapper = {
+  serializedName: "IntegrationRuntimeReference",
+  type: {
+    name: "Composite",
+    className: "IntegrationRuntimeReference",
+    uberParent: "Reference",
+    polymorphicDiscriminator: Reference.type.polymorphicDiscriminator,
+    modelProperties: {
+      ...Reference.type.modelProperties,
+      referenceName: {
+        serializedName: "referenceName",
+        required: true,
+        type: {
+          name: "String",
+        },
+      },
+      parameters: {
+        serializedName: "parameters",
+        type: {
+          name: "Dictionary",
+          value: { type: { name: "any" } },
+        },
+      },
+    },
+  },
+};
+
+export const LinkedServiceReference: coreClient.CompositeMapper = {
+  serializedName: "LinkedServiceReference",
+  type: {
+    name: "Composite",
+    className: "LinkedServiceReference",
+    uberParent: "Reference",
+    polymorphicDiscriminator: Reference.type.polymorphicDiscriminator,
+    modelProperties: {
+      ...Reference.type.modelProperties,
+      referenceName: {
+        serializedName: "referenceName",
+        required: true,
+        type: {
+          name: "String",
+        },
+      },
+      parameters: {
+        serializedName: "parameters",
+        type: {
+          name: "Dictionary",
+          value: { type: { name: "any" } },
+        },
+      },
+    },
+  },
+};
+
 export const AmazonS3Dataset: coreClient.CompositeMapper = {
   serializedName: "AmazonS3Object",
   type: {
@@ -19655,12 +19652,6 @@ export const ManagedIdentityCredential: coreClient.CompositeMapper = {
     polymorphicDiscriminator: Credential.type.polymorphicDiscriminator,
     modelProperties: {
       ...Credential.type.modelProperties,
-      resourceId: {
-        serializedName: "typeProperties.resourceId",
-        type: {
-          name: "String",
-        },
-      },
     },
   },
 };
@@ -24889,6 +24880,40 @@ export const SelfDependencyTumblingWindowTriggerReference: coreClient.CompositeM
     },
   };
 
+export const ManagedIdentityCredentialResource: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "ManagedIdentityCredentialResource",
+    modelProperties: {
+      ...CredentialResource.type.modelProperties,
+      properties: {
+        serializedName: "properties",
+        type: {
+          name: "Composite",
+          className: "ManagedIdentityCredential",
+        },
+      },
+    },
+  },
+};
+
+export const ServicePrincipalCredentialResource: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "ServicePrincipalCredentialResource",
+    modelProperties: {
+      ...CredentialResource.type.modelProperties,
+      properties: {
+        serializedName: "properties",
+        type: {
+          name: "Composite",
+          className: "ServicePrincipalCredential",
+        },
+      },
+    },
+  },
+};
+
 export const ExecutePipelineActivity: coreClient.CompositeMapper = {
   serializedName: "ExecutePipeline",
   type: {
@@ -25337,7 +25362,7 @@ export const WebHookActivity: coreClient.CompositeMapper = {
         serializedName: "typeProperties.headers",
         type: {
           name: "Dictionary",
-          value: { type: { name: "String" } },
+          value: { type: { name: "any" } },
         },
       },
       body: {
@@ -26262,7 +26287,7 @@ export const WebActivity: coreClient.CompositeMapper = {
         serializedName: "typeProperties.headers",
         type: {
           name: "Dictionary",
-          value: { type: { name: "String" } },
+          value: { type: { name: "any" } },
         },
       },
       body: {
@@ -26728,7 +26753,7 @@ export const AzureFunctionActivity: coreClient.CompositeMapper = {
         serializedName: "typeProperties.headers",
         type: {
           name: "Dictionary",
-          value: { type: { name: "String" } },
+          value: { type: { name: "any" } },
         },
       },
       body: {
@@ -29028,6 +29053,7 @@ export let discriminators = {
   IntegrationRuntimeStatus: IntegrationRuntimeStatus,
   SsisObjectMetadata: SsisObjectMetadata,
   LinkedService: LinkedService,
+  Reference: Reference,
   Dataset: Dataset,
   Activity: Activity,
   Trigger: Trigger,
@@ -29186,6 +29212,8 @@ export let discriminators = {
     SalesforceServiceCloudV2LinkedService,
   "LinkedService.Warehouse": WarehouseLinkedService,
   "LinkedService.ServiceNowV2": ServiceNowV2LinkedService,
+  "Reference.IntegrationRuntimeReference": IntegrationRuntimeReference,
+  "Reference.LinkedServiceReference": LinkedServiceReference,
   "Dataset.AmazonS3Object": AmazonS3Dataset,
   "Dataset.Avro": AvroDataset,
   "Dataset.Excel": ExcelDataset,
