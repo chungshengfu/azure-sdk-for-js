@@ -747,7 +747,7 @@ export interface AzureFunctionActivity extends ExecutionActivity {
     body?: any;
     functionName: any;
     headers?: {
-        [propertyName: string]: string;
+        [propertyName: string]: any;
     };
     method: AzureFunctionActivityMethod;
     type: "AzureFunctionActivity";
@@ -1621,15 +1621,15 @@ export { Credential_2 as Credential }
 // @public
 export interface CredentialListResponse {
     nextLink?: string;
-    value: ManagedIdentityCredentialResource[];
+    value: CredentialResource[];
 }
 
 // @public
 export interface CredentialOperations {
-    createOrUpdate(resourceGroupName: string, factoryName: string, credentialName: string, credential: ManagedIdentityCredentialResource, options?: CredentialOperationsCreateOrUpdateOptionalParams): Promise<CredentialOperationsCreateOrUpdateResponse>;
+    createOrUpdate(resourceGroupName: string, factoryName: string, credentialName: string, credential: CredentialResource, options?: CredentialOperationsCreateOrUpdateOptionalParams): Promise<CredentialOperationsCreateOrUpdateResponse>;
     delete(resourceGroupName: string, factoryName: string, credentialName: string, options?: CredentialOperationsDeleteOptionalParams): Promise<void>;
     get(resourceGroupName: string, factoryName: string, credentialName: string, options?: CredentialOperationsGetOptionalParams): Promise<CredentialOperationsGetResponse>;
-    listByFactory(resourceGroupName: string, factoryName: string, options?: CredentialOperationsListByFactoryOptionalParams): PagedAsyncIterableIterator<ManagedIdentityCredentialResource>;
+    listByFactory(resourceGroupName: string, factoryName: string, options?: CredentialOperationsListByFactoryOptionalParams): PagedAsyncIterableIterator<CredentialResource>;
 }
 
 // @public
@@ -1638,7 +1638,7 @@ export interface CredentialOperationsCreateOrUpdateOptionalParams extends coreCl
 }
 
 // @public
-export type CredentialOperationsCreateOrUpdateResponse = ManagedIdentityCredentialResource;
+export type CredentialOperationsCreateOrUpdateResponse = CredentialResource;
 
 // @public
 export interface CredentialOperationsDeleteOptionalParams extends coreClient.OperationOptions {
@@ -1650,7 +1650,7 @@ export interface CredentialOperationsGetOptionalParams extends coreClient.Operat
 }
 
 // @public
-export type CredentialOperationsGetResponse = ManagedIdentityCredentialResource;
+export type CredentialOperationsGetResponse = CredentialResource;
 
 // @public
 export interface CredentialOperationsListByFactoryNextOptionalParams extends coreClient.OperationOptions {
@@ -2154,8 +2154,11 @@ export interface DatasetReference {
         [propertyName: string]: any;
     };
     referenceName: string;
-    type: "DatasetReference";
+    type: DataSetReferenceType;
 }
+
+// @public
+export type DataSetReferenceType = string;
 
 // @public
 export interface DatasetResource extends SubResource {
@@ -2760,9 +2763,12 @@ export interface ExposureControlResponse {
 
 // @public
 export interface Expression {
-    type: "Expression";
+    type: ExpressionType;
     value: string;
 }
+
+// @public
+export type ExpressionType = string;
 
 // @public
 export interface ExpressionV2 {
@@ -3966,8 +3972,11 @@ export interface IntegrationRuntimeReference {
         [propertyName: string]: any;
     };
     referenceName: string;
-    type: "IntegrationRuntimeReference";
+    type: IntegrationRuntimeReferenceType;
 }
+
+// @public
+export type IntegrationRuntimeReferenceType = string;
 
 // @public
 export interface IntegrationRuntimeRegenerateKeyParameters {
@@ -4415,6 +4424,11 @@ export enum KnownDatasetCompressionLevel {
 }
 
 // @public
+export enum KnownDataSetReferenceType {
+    DatasetReference = "DatasetReference"
+}
+
+// @public
 export enum KnownDb2AuthenticationType {
     Basic = "Basic"
 }
@@ -4452,6 +4466,11 @@ export enum KnownEventSubscriptionStatus {
     Enabled = "Enabled",
     Provisioning = "Provisioning",
     Unknown = "Unknown"
+}
+
+// @public
+export enum KnownExpressionType {
+    Expression = "Expression"
 }
 
 // @public
@@ -4606,6 +4625,11 @@ export enum KnownIntegrationRuntimeLicenseType {
 }
 
 // @public
+export enum KnownIntegrationRuntimeReferenceType {
+    IntegrationRuntimeReference = "IntegrationRuntimeReference"
+}
+
+// @public
 export enum KnownIntegrationRuntimeSsisCatalogPricingTier {
     Basic = "Basic",
     Premium = "Premium",
@@ -4744,6 +4768,11 @@ export enum KnownPhoenixAuthenticationType {
     Anonymous = "Anonymous",
     UsernameAndPassword = "UsernameAndPassword",
     WindowsAzureHDInsightService = "WindowsAzureHDInsightService"
+}
+
+// @public
+export enum KnownPipelineReferenceType {
+    PipelineReference = "PipelineReference"
 }
 
 // @public
@@ -5363,12 +5392,11 @@ export interface MagentoSource extends TabularSource {
 
 // @public
 export interface ManagedIdentityCredential extends Credential_2 {
-    resourceId?: string;
     type: "ManagedIdentity";
 }
 
 // @public
-export interface ManagedIdentityCredentialResource extends SubResource {
+export interface ManagedIdentityCredentialResource extends CredentialResource {
     properties: ManagedIdentityCredential;
 }
 
@@ -6373,8 +6401,11 @@ export interface PipelinePolicy {
 export interface PipelineReference {
     name?: string;
     referenceName: string;
-    type: "PipelineReference";
+    type: PipelineReferenceType;
 }
+
+// @public
+export type PipelineReferenceType = string;
 
 // @public
 export interface PipelineResource extends SubResource {
@@ -7618,6 +7649,11 @@ export interface ServicePrincipalCredential extends Credential_2 {
     servicePrincipalKey?: AzureKeyVaultSecretReference;
     tenant?: any;
     type: "ServicePrincipal";
+}
+
+// @public
+export interface ServicePrincipalCredentialResource extends CredentialResource {
+    properties: ServicePrincipalCredential;
 }
 
 // @public
@@ -8885,7 +8921,7 @@ export interface WebActivity extends ExecutionActivity {
     datasets?: DatasetReference[];
     disableCertValidation?: boolean;
     headers?: {
-        [propertyName: string]: string;
+        [propertyName: string]: any;
     };
     httpRequestTimeout?: any;
     linkedServices?: LinkedServiceReference[];
@@ -8936,7 +8972,7 @@ export interface WebHookActivity extends ControlActivity {
     authentication?: WebActivityAuthentication;
     body?: any;
     headers?: {
-        [propertyName: string]: string;
+        [propertyName: string]: any;
     };
     method: WebHookActivityMethod;
     policy?: SecureInputOutputPolicy;

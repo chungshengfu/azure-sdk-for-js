@@ -1,5 +1,45 @@
 # Release History
     
+## 15.0.0 (2024-03-26)
+    
+**Features**
+
+  - Added Interface ServicePrincipalCredentialResource
+  - Added Type Alias DataSetReferenceType
+  - Added Type Alias ExpressionType
+  - Added Type Alias IntegrationRuntimeReferenceType
+  - Added Type Alias PipelineReferenceType
+  - Added Enum KnownDataSetReferenceType
+  - Added Enum KnownExpressionType
+  - Added Enum KnownIntegrationRuntimeReferenceType
+  - Added Enum KnownPipelineReferenceType
+
+**Breaking Changes**
+
+  - Operation CredentialOperations.createOrUpdate has a new signature
+  - Interface ManagedIdentityCredential no longer has parameter resourceId
+  - Type of parameter headers of interface AzureFunctionActivity is changed from {
+        [propertyName: string]: string;
+    } to {
+        [propertyName: string]: any;
+    }
+  - Type of parameter value of interface CredentialListResponse is changed from ManagedIdentityCredentialResource[] to CredentialResource[]
+  - Type of parameter type of interface DatasetReference is changed from "DatasetReference" to DataSetReferenceType
+  - Type of parameter type of interface Expression is changed from "Expression" to ExpressionType
+  - Type of parameter type of interface IntegrationRuntimeReference is changed from "IntegrationRuntimeReference" to IntegrationRuntimeReferenceType
+  - Type of parameter type of interface PipelineReference is changed from "PipelineReference" to PipelineReferenceType
+  - Type of parameter headers of interface WebActivity is changed from {
+        [propertyName: string]: string;
+    } to {
+        [propertyName: string]: any;
+    }
+  - Type of parameter headers of interface WebHookActivity is changed from {
+        [propertyName: string]: string;
+    } to {
+        [propertyName: string]: any;
+    }
+    
+    
 ## 14.1.0 (2024-03-11)
     
 **Features**
