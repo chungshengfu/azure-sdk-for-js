@@ -832,7 +832,7 @@ export enum KnownProvisioningState {
   /** Updating */
   Updating = "Updating",
   /** Deleting */
-  Deleting = "Deleting"
+  Deleting = "Deleting",
 }
 
 /**
@@ -856,7 +856,7 @@ export enum KnownLevelType {
   /** Warning */
   Warning = "Warning",
   /** Information */
-  Information = "Information"
+  Information = "Information",
 }
 
 /**
@@ -879,7 +879,7 @@ export enum KnownCreatedByType {
   /** ManagedIdentity */
   ManagedIdentity = "ManagedIdentity",
   /** Key */
-  Key = "Key"
+  Key = "Key",
 }
 
 /**
@@ -899,7 +899,7 @@ export enum KnownScopeType {
   /** Cluster */
   Cluster = "cluster",
   /** Namespace */
-  Namespace = "namespace"
+  Namespace = "namespace",
 }
 
 /**
@@ -919,7 +919,7 @@ export enum KnownSourceKindType {
   /** Bucket */
   Bucket = "Bucket",
   /** AzureBlob */
-  AzureBlob = "AzureBlob"
+  AzureBlob = "AzureBlob",
 }
 
 /**
@@ -944,7 +944,7 @@ export enum KnownFluxComplianceState {
   /** Suspended */
   Suspended = "Suspended",
   /** Unknown */
-  Unknown = "Unknown"
+  Unknown = "Unknown",
 }
 
 /**
@@ -963,7 +963,7 @@ export type FluxComplianceState = string;
 /** Known values of {@link OperatorType} that the service accepts. */
 export enum KnownOperatorType {
   /** Flux */
-  Flux = "Flux"
+  Flux = "Flux",
 }
 
 /**
@@ -980,7 +980,7 @@ export enum KnownOperatorScopeType {
   /** Cluster */
   Cluster = "cluster",
   /** Namespace */
-  Namespace = "namespace"
+  Namespace = "namespace",
 }
 
 /**
@@ -1004,7 +1004,7 @@ export enum KnownProvisioningStateType {
   /** Succeeded */
   Succeeded = "Succeeded",
   /** Failed */
-  Failed = "Failed"
+  Failed = "Failed",
 }
 
 /**
@@ -1031,7 +1031,7 @@ export enum KnownComplianceStateType {
   /** Installed */
   Installed = "Installed",
   /** Failed */
-  Failed = "Failed"
+  Failed = "Failed",
 }
 
 /**
@@ -1054,7 +1054,7 @@ export enum KnownMessageLevelType {
   /** Warning */
   Warning = "Warning",
   /** Information */
-  Information = "Information"
+  Information = "Information",
 }
 
 /**
@@ -1075,7 +1075,7 @@ export enum KnownKustomizationValidationType {
   /** Client */
   Client = "client",
   /** Server */
-  Server = "server"
+  Server = "server",
 }
 
 /**
@@ -1243,7 +1243,8 @@ export interface SourceControlConfigurationsCreateOrUpdateOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the createOrUpdate operation. */
-export type SourceControlConfigurationsCreateOrUpdateResponse = SourceControlConfiguration;
+export type SourceControlConfigurationsCreateOrUpdateResponse =
+  SourceControlConfiguration;
 
 /** Optional parameters. */
 export interface SourceControlConfigurationsDeleteOptionalParams
@@ -1259,14 +1260,16 @@ export interface SourceControlConfigurationsListOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
-export type SourceControlConfigurationsListResponse = SourceControlConfigurationList;
+export type SourceControlConfigurationsListResponse =
+  SourceControlConfigurationList;
 
 /** Optional parameters. */
 export interface SourceControlConfigurationsListNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
-export type SourceControlConfigurationsListNextResponse = SourceControlConfigurationList;
+export type SourceControlConfigurationsListNextResponse =
+  SourceControlConfigurationList;
 
 /** Optional parameters. */
 export interface OperationsListOptionalParams
