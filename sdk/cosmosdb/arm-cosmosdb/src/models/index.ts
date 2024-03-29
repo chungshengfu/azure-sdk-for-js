@@ -236,6 +236,31 @@ export interface Capacity {
   totalThroughputLimit?: number;
 }
 
+/** The transition state information related capacity mode change with update request. */
+export interface CapacityModeChangeTransitionState {
+  /** The transition status of capacity mode. */
+  capacityModeTransitionStatus?: CapacityModeTransitionStatus;
+  /** Indicates the current capacity mode of the account. */
+  currentCapacityMode?: CapacityMode;
+  /** Indicates the previous capacity mode of the account before successful transition. */
+  previousCapacityMode?: CapacityMode;
+  /**
+   * Begin time in UTC of the capacity mode change.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly capacityModeTransitionBeginTimestamp?: Date;
+  /**
+   * End time in UTC of the capacity mode change.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly capacityModeTransitionEndTimestamp?: Date;
+  /**
+   * End time in UTC of the last successful capacity mode change.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly capacityModeLastSuccessfulTransitionEndTimestamp?: Date;
+}
+
 /** The metadata related to each access key for the given Cosmos DB database account. */
 export interface DatabaseAccountKeysMetadata {
   /**
@@ -387,6 +412,8 @@ export interface DatabaseAccountUpdateParameters {
   disableLocalAuth?: boolean;
   /** The object that represents all properties related to capacity enforcement on an account. */
   capacity?: Capacity;
+  /** Indicates the capacityMode of the Cosmos DB account. */
+  capacityMode?: CapacityMode;
   /** Flag to indicate whether to enable MaterializedViews on the Cosmos DB account */
   enableMaterializedViews?: boolean;
   /**
@@ -3265,6 +3292,10 @@ export interface DatabaseAccountGetResults extends ARMResourceProperties {
   disableLocalAuth?: boolean;
   /** The object that represents all properties related to capacity enforcement on an account. */
   capacity?: Capacity;
+  /** Indicates the capacityMode of the Cosmos DB account. */
+  capacityMode?: CapacityMode;
+  /** The object that represents the migration state for the CapacityMode of the Cosmos DB account. */
+  capacityModeChangeTransitionState?: CapacityModeChangeTransitionState;
   /** Flag to indicate whether to enable MaterializedViews on the Cosmos DB account */
   enableMaterializedViews?: boolean;
   /**
@@ -3349,6 +3380,8 @@ export interface DatabaseAccountCreateUpdateParameters
   restoreParameters?: RestoreParameters;
   /** The object that represents all properties related to capacity enforcement on an account. */
   capacity?: Capacity;
+  /** Indicates the capacityMode of the Cosmos DB account. */
+  capacityMode?: CapacityMode;
   /** Flag to indicate whether to enable MaterializedViews on the Cosmos DB account */
   enableMaterializedViews?: boolean;
   /**
@@ -4968,6 +5001,10 @@ export enum KnownServerVersion {
   Four0 = "4.0",
   /** Four2 */
   Four2 = "4.2",
+  /** Five0 */
+  Five0 = "5.0",
+  /** Six0 */
+  Six0 = "6.0",
 }
 
 /**
@@ -4978,7 +5015,9 @@ export enum KnownServerVersion {
  * **3.2** \
  * **3.6** \
  * **4.0** \
- * **4.2**
+ * **4.2** \
+ * **5.0** \
+ * **6.0**
  */
 export type ServerVersion = string;
 
@@ -5077,6 +5116,54 @@ export enum KnownBackupPolicyMigrationStatus {
  * **Failed**
  */
 export type BackupPolicyMigrationStatus = string;
+
+/** Known values of {@link CapacityMode} that the service accepts. */
+export enum KnownCapacityMode {
+  /** None */
+  None = "None",
+  /** Provisioned */
+  Provisioned = "Provisioned",
+  /** Serverless */
+  Serverless = "Serverless",
+}
+
+/**
+ * Defines values for CapacityMode. \
+ * {@link KnownCapacityMode} can be used interchangeably with CapacityMode,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **None** \
+ * **Provisioned** \
+ * **Serverless**
+ */
+export type CapacityMode = string;
+
+/** Known values of {@link CapacityModeTransitionStatus} that the service accepts. */
+export enum KnownCapacityModeTransitionStatus {
+  /** Invalid */
+  Invalid = "Invalid",
+  /** Initialized */
+  Initialized = "Initialized",
+  /** InProgress */
+  InProgress = "InProgress",
+  /** Completed */
+  Completed = "Completed",
+  /** Failed */
+  Failed = "Failed",
+}
+
+/**
+ * Defines values for CapacityModeTransitionStatus. \
+ * {@link KnownCapacityModeTransitionStatus} can be used interchangeably with CapacityModeTransitionStatus,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Invalid** \
+ * **Initialized** \
+ * **InProgress** \
+ * **Completed** \
+ * **Failed**
+ */
+export type CapacityModeTransitionStatus = string;
 
 /** Known values of {@link MinimalTlsVersion} that the service accepts. */
 export enum KnownMinimalTlsVersion {
