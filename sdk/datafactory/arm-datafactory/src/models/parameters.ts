@@ -39,11 +39,28 @@ import {
   DataFlowDebugCommandRequest as DataFlowDebugCommandRequestMapper,
   ManagedVirtualNetworkResource as ManagedVirtualNetworkResourceMapper,
   ManagedPrivateEndpointResource as ManagedPrivateEndpointResourceMapper,
-  ManagedIdentityCredentialResource as ManagedIdentityCredentialResourceMapper,
+  CredentialResource as CredentialResourceMapper,
   PrivateLinkConnectionApprovalRequestResource as PrivateLinkConnectionApprovalRequestResourceMapper,
   GlobalParameterResource as GlobalParameterResourceMapper,
   ChangeDataCaptureResource as ChangeDataCaptureResourceMapper,
 } from "../models/mappers";
+
+export const contentType: OperationParameter = {
+  parameterPath: ["options", "contentType"],
+  mapper: {
+    defaultValue: "application/json",
+    isConstant: true,
+    serializedName: "Content-Type",
+    type: {
+      name: "String",
+    },
+  },
+};
+
+export const factoryRepoUpdate: OperationParameter = {
+  parameterPath: "factoryRepoUpdate",
+  mapper: FactoryRepoUpdateMapper,
+};
 
 export const accept: OperationParameter = {
   parameterPath: "accept",
@@ -69,30 +86,6 @@ export const $host: OperationURLParameter = {
   skipEncoding: true,
 };
 
-export const apiVersion: OperationQueryParameter = {
-  parameterPath: "apiVersion",
-  mapper: {
-    defaultValue: "2018-06-01",
-    isConstant: true,
-    serializedName: "api-version",
-    type: {
-      name: "String",
-    },
-  },
-};
-
-export const nextLink: OperationURLParameter = {
-  parameterPath: "nextLink",
-  mapper: {
-    serializedName: "nextLink",
-    required: true,
-    type: {
-      name: "String",
-    },
-  },
-  skipEncoding: true,
-};
-
 export const subscriptionId: OperationURLParameter = {
   parameterPath: "subscriptionId",
   mapper: {
@@ -104,28 +97,23 @@ export const subscriptionId: OperationURLParameter = {
   },
 };
 
-export const contentType: OperationParameter = {
-  parameterPath: ["options", "contentType"],
+export const locationId: OperationURLParameter = {
+  parameterPath: "locationId",
   mapper: {
-    defaultValue: "application/json",
-    isConstant: true,
-    serializedName: "Content-Type",
+    serializedName: "locationId",
+    required: true,
     type: {
       name: "String",
     },
   },
 };
 
-export const factoryRepoUpdate: OperationParameter = {
-  parameterPath: "factoryRepoUpdate",
-  mapper: FactoryRepoUpdateMapper,
-};
-
-export const locationId: OperationURLParameter = {
-  parameterPath: "locationId",
+export const apiVersion: OperationQueryParameter = {
+  parameterPath: "apiVersion",
   mapper: {
-    serializedName: "locationId",
-    required: true,
+    defaultValue: "2018-06-01",
+    isConstant: true,
+    serializedName: "api-version",
     type: {
       name: "String",
     },
@@ -202,6 +190,18 @@ export const gitHubAccessTokenRequest: OperationParameter = {
 export const policy: OperationParameter = {
   parameterPath: "policy",
   mapper: UserAccessPolicyMapper,
+};
+
+export const nextLink: OperationURLParameter = {
+  parameterPath: "nextLink",
+  mapper: {
+    serializedName: "nextLink",
+    required: true,
+    type: {
+      name: "String",
+    },
+  },
+  skipEncoding: true,
 };
 
 export const exposureControlRequest: OperationParameter = {
@@ -536,7 +536,7 @@ export const managedPrivateEndpointName: OperationURLParameter = {
 
 export const credential: OperationParameter = {
   parameterPath: "credential",
-  mapper: ManagedIdentityCredentialResourceMapper,
+  mapper: CredentialResourceMapper,
 };
 
 export const credentialName: OperationURLParameter = {
