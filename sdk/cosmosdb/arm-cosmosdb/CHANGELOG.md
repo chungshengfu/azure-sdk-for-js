@@ -1,16 +1,6 @@
 # Release History
-
-## 16.0.0-beta.8 (Unreleased)
-
-### Features Added
-
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
-## 16.0.0-beta.7 (2024-03-08)
+    
+## 16.0.0-beta.8 (2024-04-02)
     
 **Features**
 
@@ -25,8 +15,10 @@
   - Added operation CassandraClusters.beginInvokeCommandAsyncAndWait
   - Added operation CassandraClusters.getBackup
   - Added operation CassandraClusters.getCommandAsync
+  - Added operation CassandraClusters.getRestore
   - Added operation CassandraClusters.listBackups
   - Added operation CassandraClusters.listCommand
+  - Added operation CassandraClusters.restoreBackup
   - Added operation CassandraResources.beginCreateUpdateCassandraView
   - Added operation CassandraResources.beginCreateUpdateCassandraViewAndWait
   - Added operation CassandraResources.beginDeleteCassandraView
@@ -68,12 +60,16 @@
   - Added Interface BackupResource
   - Added Interface BackupSchedule
   - Added Interface BaseCosmosDataTransferDataSourceSink
+  - Added Interface CassandraClusterRestoreInfo
+  - Added Interface CassandraClusterRestoreResult
   - Added Interface CassandraClustersGetBackupOptionalParams
   - Added Interface CassandraClustersGetCommandAsyncOptionalParams
+  - Added Interface CassandraClustersGetRestoreOptionalParams
   - Added Interface CassandraClustersInvokeCommandAsyncHeaders
   - Added Interface CassandraClustersInvokeCommandAsyncOptionalParams
   - Added Interface CassandraClustersListBackupsOptionalParams
   - Added Interface CassandraClustersListCommandOptionalParams
+  - Added Interface CassandraClustersRestoreBackupOptionalParams
   - Added Interface CassandraResourcesCreateUpdateCassandraViewHeaders
   - Added Interface CassandraResourcesCreateUpdateCassandraViewOptionalParams
   - Added Interface CassandraResourcesDeleteCassandraViewHeaders
@@ -224,9 +220,11 @@
   - Added Type Alias BaseCosmosDataTransferDataSourceSinkUnion
   - Added Type Alias CassandraClustersGetBackupResponse
   - Added Type Alias CassandraClustersGetCommandAsyncResponse
+  - Added Type Alias CassandraClustersGetRestoreResponse
   - Added Type Alias CassandraClustersInvokeCommandAsyncResponse
   - Added Type Alias CassandraClustersListBackupsResponse
   - Added Type Alias CassandraClustersListCommandResponse
+  - Added Type Alias CassandraClustersRestoreBackupResponse
   - Added Type Alias CassandraResourcesCreateUpdateCassandraViewResponse
   - Added Type Alias CassandraResourcesGetCassandraViewResponse
   - Added Type Alias CassandraResourcesGetCassandraViewThroughputResponse
@@ -349,13 +347,13 @@
   - Enum KnownStatus has a new value Failed
   - Enum KnownStatus has a new value Succeeded
   - Enum KnownStatus has a new value Updating
-  - Type of parameter arguments of interface CommandPostBody is changed from {
-        [propertyName: string]: string;
-    } to Record<string, unknown>
 
 **Breaking Changes**
 
   - Interface CommandPostBody no longer has parameter readwrite
+  - Type of parameter arguments of interface CommandPostBody is changed from {
+        [propertyName: string]: string;
+    } to Record<string, unknown>
     
     
 ## 15.6.0 (2023-12-25)

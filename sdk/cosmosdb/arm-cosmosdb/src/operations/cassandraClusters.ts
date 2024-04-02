@@ -46,6 +46,10 @@ import {
   CassandraClustersGetCommandAsyncResponse,
   CassandraClustersGetBackupOptionalParams,
   CassandraClustersGetBackupResponse,
+  CassandraClustersRestoreBackupOptionalParams,
+  CassandraClustersRestoreBackupResponse,
+  CassandraClustersGetRestoreOptionalParams,
+  CassandraClustersGetRestoreResponse,
   CassandraClustersDeallocateOptionalParams,
   CassandraClustersStartOptionalParams,
   CassandraClustersStatusOptionalParams,
@@ -859,6 +863,44 @@ export class CassandraClustersImpl implements CassandraClusters {
   }
 
   /**
+   * Trigger an in-place restore
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param clusterName Managed Cassandra cluster name.
+   * @param backupId Id of a restorable backup of a Cassandra cluster.
+   * @param options The options parameters.
+   */
+  restoreBackup(
+    resourceGroupName: string,
+    clusterName: string,
+    backupId: string,
+    options?: CassandraClustersRestoreBackupOptionalParams,
+  ): Promise<CassandraClustersRestoreBackupResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, clusterName, backupId, options },
+      restoreBackupOperationSpec,
+    );
+  }
+
+  /**
+   * Get information about a restore that has been triggered.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param clusterName Managed Cassandra cluster name.
+   * @param backupId Id of a restorable backup of a Cassandra cluster.
+   * @param options The options parameters.
+   */
+  getRestore(
+    resourceGroupName: string,
+    clusterName: string,
+    backupId: string,
+    options?: CassandraClustersGetRestoreOptionalParams,
+  ): Promise<CassandraClustersGetRestoreResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, clusterName, backupId, options },
+      getRestoreOperationSpec,
+    );
+  }
+
+  /**
    * Deallocate the Managed Cassandra Cluster and Associated Data Centers. Deallocation will deallocate
    * the host virtual machine of this cluster, and reserved the data disk. This won't do anything on an
    * already deallocated cluster. Use Start to restart the cluster.
@@ -1325,6 +1367,50 @@ const getBackupOperationSpec: coreClient.OperationSpec = {
   responses: {
     200: {
       bodyMapper: Mappers.BackupResource,
+    },
+    default: {
+      bodyMapper: Mappers.CloudError,
+    },
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.clusterName,
+    Parameters.backupId,
+  ],
+  headerParameters: [Parameters.accept],
+  serializer,
+};
+const restoreBackupOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/cassandraClusters/{clusterName}/backupRestores/{backupId}",
+  httpMethod: "POST",
+  responses: {
+    200: {
+      bodyMapper: Mappers.CassandraClusterRestoreResult,
+    },
+    default: {
+      bodyMapper: Mappers.CloudError,
+    },
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.clusterName,
+    Parameters.backupId,
+  ],
+  headerParameters: [Parameters.accept],
+  serializer,
+};
+const getRestoreOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/cassandraClusters/{clusterName}/backupRestores/{backupId}",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.CassandraClusterRestoreInfo,
     },
     default: {
       bodyMapper: Mappers.CloudError,

@@ -186,6 +186,21 @@ export interface CassandraClusterPublicStatusDataCentersItem {
     seedNodes?: string[];
 }
 
+// @public (undocumented)
+export interface CassandraClusterRestoreInfo {
+    backupId?: string;
+    startTimestamp?: string;
+}
+
+// @public (undocumented)
+export interface CassandraClusterRestoreResult {
+    backupId?: string;
+    commandErrorOutput?: string;
+    commandOutput?: string;
+    exitCode?: number;
+    startTimestamp?: string;
+}
+
 // @public
 export interface CassandraClusters {
     beginCreateUpdate(resourceGroupName: string, clusterName: string, body: ClusterResource, options?: CassandraClustersCreateUpdateOptionalParams): Promise<SimplePollerLike<OperationState<CassandraClustersCreateUpdateResponse>, CassandraClustersCreateUpdateResponse>>;
@@ -205,10 +220,12 @@ export interface CassandraClusters {
     get(resourceGroupName: string, clusterName: string, options?: CassandraClustersGetOptionalParams): Promise<CassandraClustersGetResponse>;
     getBackup(resourceGroupName: string, clusterName: string, backupId: string, options?: CassandraClustersGetBackupOptionalParams): Promise<CassandraClustersGetBackupResponse>;
     getCommandAsync(resourceGroupName: string, clusterName: string, commandId: string, options?: CassandraClustersGetCommandAsyncOptionalParams): Promise<CassandraClustersGetCommandAsyncResponse>;
+    getRestore(resourceGroupName: string, clusterName: string, backupId: string, options?: CassandraClustersGetRestoreOptionalParams): Promise<CassandraClustersGetRestoreResponse>;
     listBackups(resourceGroupName: string, clusterName: string, options?: CassandraClustersListBackupsOptionalParams): PagedAsyncIterableIterator<BackupResource>;
     listByResourceGroup(resourceGroupName: string, options?: CassandraClustersListByResourceGroupOptionalParams): PagedAsyncIterableIterator<ClusterResource>;
     listBySubscription(options?: CassandraClustersListBySubscriptionOptionalParams): PagedAsyncIterableIterator<ClusterResource>;
     listCommand(resourceGroupName: string, clusterName: string, options?: CassandraClustersListCommandOptionalParams): PagedAsyncIterableIterator<CommandPublicResource>;
+    restoreBackup(resourceGroupName: string, clusterName: string, backupId: string, options?: CassandraClustersRestoreBackupOptionalParams): Promise<CassandraClustersRestoreBackupResponse>;
     status(resourceGroupName: string, clusterName: string, options?: CassandraClustersStatusOptionalParams): Promise<CassandraClustersStatusResponse>;
 }
 
@@ -254,6 +271,13 @@ export interface CassandraClustersGetOptionalParams extends coreClient.Operation
 
 // @public
 export type CassandraClustersGetResponse = ClusterResource;
+
+// @public
+export interface CassandraClustersGetRestoreOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type CassandraClustersGetRestoreResponse = CassandraClusterRestoreInfo;
 
 // @public
 export interface CassandraClustersInvokeCommandAsyncHeaders {
@@ -306,6 +330,13 @@ export interface CassandraClustersListCommandOptionalParams extends coreClient.O
 
 // @public
 export type CassandraClustersListCommandResponse = ListCommands;
+
+// @public
+export interface CassandraClustersRestoreBackupOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type CassandraClustersRestoreBackupResponse = CassandraClusterRestoreResult;
 
 // @public
 export interface CassandraClustersStartOptionalParams extends coreClient.OperationOptions {

@@ -4487,6 +4487,66 @@ export const BackupResource: coreClient.CompositeMapper = {
   },
 };
 
+export const CassandraClusterRestoreResult: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CassandraClusterRestoreResult",
+    modelProperties: {
+      exitCode: {
+        serializedName: "exitCode",
+        type: {
+          name: "Number",
+        },
+      },
+      commandOutput: {
+        serializedName: "commandOutput",
+        type: {
+          name: "String",
+        },
+      },
+      commandErrorOutput: {
+        serializedName: "commandErrorOutput",
+        type: {
+          name: "String",
+        },
+      },
+      backupId: {
+        serializedName: "backupId",
+        type: {
+          name: "String",
+        },
+      },
+      startTimestamp: {
+        serializedName: "startTimestamp",
+        type: {
+          name: "String",
+        },
+      },
+    },
+  },
+};
+
+export const CassandraClusterRestoreInfo: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CassandraClusterRestoreInfo",
+    modelProperties: {
+      backupId: {
+        serializedName: "backupId",
+        type: {
+          name: "String",
+        },
+      },
+      startTimestamp: {
+        serializedName: "startTimestamp",
+        type: {
+          name: "String",
+        },
+      },
+    },
+  },
+};
+
 export const ListDataCenters: coreClient.CompositeMapper = {
   type: {
     name: "Composite",

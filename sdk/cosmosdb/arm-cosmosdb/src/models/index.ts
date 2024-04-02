@@ -1793,6 +1793,26 @@ export interface BackupResource {
   backupExpiryTimestamp?: Date;
 }
 
+export interface CassandraClusterRestoreResult {
+  /** The exit code returned by the command. */
+  exitCode?: number;
+  /** The output from the command. */
+  commandOutput?: string;
+  /** The error generated from the command. */
+  commandErrorOutput?: string;
+  /** Backup Id to restore. */
+  backupId?: string;
+  /** Starting time of restore. */
+  startTimestamp?: string;
+}
+
+export interface CassandraClusterRestoreInfo {
+  /** Restore's Backup Id. */
+  backupId?: string;
+  /** Time that the restore started. */
+  startTimestamp?: string;
+}
+
 /** List of managed Cassandra data centers and their properties. */
 export interface ListDataCenters {
   /**
@@ -8048,6 +8068,21 @@ export interface CassandraClustersGetBackupOptionalParams
 
 /** Contains response data for the getBackup operation. */
 export type CassandraClustersGetBackupResponse = BackupResource;
+
+/** Optional parameters. */
+export interface CassandraClustersRestoreBackupOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the restoreBackup operation. */
+export type CassandraClustersRestoreBackupResponse =
+  CassandraClusterRestoreResult;
+
+/** Optional parameters. */
+export interface CassandraClustersGetRestoreOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getRestore operation. */
+export type CassandraClustersGetRestoreResponse = CassandraClusterRestoreInfo;
 
 /** Optional parameters. */
 export interface CassandraClustersDeallocateOptionalParams

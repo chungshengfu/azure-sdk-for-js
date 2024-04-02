@@ -32,6 +32,10 @@ import {
   CassandraClustersGetCommandAsyncResponse,
   CassandraClustersGetBackupOptionalParams,
   CassandraClustersGetBackupResponse,
+  CassandraClustersRestoreBackupOptionalParams,
+  CassandraClustersRestoreBackupResponse,
+  CassandraClustersGetRestoreOptionalParams,
+  CassandraClustersGetRestoreResponse,
   CassandraClustersDeallocateOptionalParams,
   CassandraClustersStartOptionalParams,
   CassandraClustersStatusOptionalParams,
@@ -264,6 +268,32 @@ export interface CassandraClusters {
     backupId: string,
     options?: CassandraClustersGetBackupOptionalParams,
   ): Promise<CassandraClustersGetBackupResponse>;
+  /**
+   * Trigger an in-place restore
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param clusterName Managed Cassandra cluster name.
+   * @param backupId Id of a restorable backup of a Cassandra cluster.
+   * @param options The options parameters.
+   */
+  restoreBackup(
+    resourceGroupName: string,
+    clusterName: string,
+    backupId: string,
+    options?: CassandraClustersRestoreBackupOptionalParams,
+  ): Promise<CassandraClustersRestoreBackupResponse>;
+  /**
+   * Get information about a restore that has been triggered.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param clusterName Managed Cassandra cluster name.
+   * @param backupId Id of a restorable backup of a Cassandra cluster.
+   * @param options The options parameters.
+   */
+  getRestore(
+    resourceGroupName: string,
+    clusterName: string,
+    backupId: string,
+    options?: CassandraClustersGetRestoreOptionalParams,
+  ): Promise<CassandraClustersGetRestoreResponse>;
   /**
    * Deallocate the Managed Cassandra Cluster and Associated Data Centers. Deallocation will deallocate
    * the host virtual machine of this cluster, and reserved the data disk. This won't do anything on an
