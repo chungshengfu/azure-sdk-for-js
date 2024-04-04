@@ -1,5 +1,18 @@
 # Release History
     
+## 33.2.0 (2024-04-04)
+    
+**Features**
+
+  - Added Interface AzureFirewallsDeleteHeaders
+  - Added Interface CertificateAuthentication
+  - Added Type Alias ConnectionAuthenticationType
+  - Interface VirtualNetworkGateway has a new optional parameter identity
+  - Interface VirtualNetworkGatewayConnection has a new optional parameter authenticationType
+  - Interface VirtualNetworkGatewayConnection has a new optional parameter certificateAuthentication
+  - Added Enum KnownConnectionAuthenticationType
+    
+    
 ## 33.1.0 (2024-02-02)
     
 **Features**

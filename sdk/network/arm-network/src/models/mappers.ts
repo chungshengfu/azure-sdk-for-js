@@ -13797,6 +13797,38 @@ export const VpnPacketCaptureStopParameters: coreClient.CompositeMapper = {
   },
 };
 
+export const CertificateAuthentication: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CertificateAuthentication",
+    modelProperties: {
+      outboundAuthCertificate: {
+        serializedName: "outboundAuthCertificate",
+        type: {
+          name: "String",
+        },
+      },
+      inboundAuthCertificateSubjectName: {
+        serializedName: "inboundAuthCertificateSubjectName",
+        type: {
+          name: "String",
+        },
+      },
+      inboundAuthCertificateChain: {
+        serializedName: "inboundAuthCertificateChain",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String",
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
 export const VirtualNetworkGatewayConnectionListResult: coreClient.CompositeMapper =
   {
     type: {
@@ -27968,6 +28000,13 @@ export const VirtualNetworkGateway: coreClient.CompositeMapper = {
           name: "String",
         },
       },
+      identity: {
+        serializedName: "identity",
+        type: {
+          name: "Composite",
+          className: "ManagedServiceIdentity",
+        },
+      },
       autoScaleConfiguration: {
         serializedName: "properties.autoScaleConfiguration",
         type: {
@@ -28617,6 +28656,19 @@ export const VirtualNetworkGatewayConnection: coreClient.CompositeMapper = {
         serializedName: "properties.enablePrivateLinkFastPath",
         type: {
           name: "Boolean",
+        },
+      },
+      authenticationType: {
+        serializedName: "properties.authenticationType",
+        type: {
+          name: "String",
+        },
+      },
+      certificateAuthentication: {
+        serializedName: "properties.certificateAuthentication",
+        type: {
+          name: "Composite",
+          className: "CertificateAuthentication",
         },
       },
     },
@@ -31057,6 +31109,21 @@ export const DefaultAdminRule: coreClient.CompositeMapper = {
       resourceGuid: {
         serializedName: "properties.resourceGuid",
         readOnly: true,
+        type: {
+          name: "String",
+        },
+      },
+    },
+  },
+};
+
+export const AzureFirewallsDeleteHeaders: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "AzureFirewallsDeleteHeaders",
+    modelProperties: {
+      location: {
+        serializedName: "location",
         type: {
           name: "String",
         },

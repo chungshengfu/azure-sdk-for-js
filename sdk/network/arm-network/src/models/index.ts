@@ -4874,6 +4874,16 @@ export interface VpnPacketCaptureStopParameters {
   sasUrl?: string;
 }
 
+/** Certificate Authentication information for a certificate based authentication connection. */
+export interface CertificateAuthentication {
+  /** Outbound authentication certificate. */
+  outboundAuthCertificate?: string;
+  /** Inbound authentication certificate subject name. */
+  inboundAuthCertificateSubjectName?: string;
+  /** Inbound authentication certificate chain. */
+  inboundAuthCertificateChain?: string[];
+}
+
 /** Response for the ListVirtualNetworkGatewayConnections API service call. */
 export interface VirtualNetworkGatewayConnectionListResult {
   /** A list of VirtualNetworkGatewayConnection resources that exists in a resource group. */
@@ -10437,6 +10447,8 @@ export interface VirtualNetworkGateway extends Resource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly etag?: string;
+  /** The identity of the virtual network gateway, if configured. */
+  identity?: ManagedServiceIdentity;
   /** Autoscale configuration for virutal network gateway */
   autoScaleConfiguration?: VirtualNetworkGatewayAutoScaleConfiguration;
   /** IP configurations for virtual network gateway. */
@@ -10677,6 +10689,10 @@ export interface VirtualNetworkGatewayConnection extends Resource {
   expressRouteGatewayBypass?: boolean;
   /** Bypass the ExpressRoute gateway when accessing private-links. ExpressRoute FastPath (expressRouteGatewayBypass) must be enabled. */
   enablePrivateLinkFastPath?: boolean;
+  /** Gateway connection authentication type. */
+  authenticationType?: ConnectionAuthenticationType;
+  /** Certificate Authentication information for a certificate based authentication connection. */
+  certificateAuthentication?: CertificateAuthentication;
 }
 
 /** VirtualRouter Resource. */
@@ -11625,8 +11641,15 @@ export interface DefaultAdminRule extends BaseAdminRule {
   readonly resourceGuid?: string;
 }
 
+/** Defines headers for AzureFirewalls_delete operation. */
+export interface AzureFirewallsDeleteHeaders {
+  /** The URL of the resource used to check the status of the asynchronous operation. */
+  location?: string;
+}
+
 /** Defines headers for AzureFirewalls_packetCapture operation. */
 export interface AzureFirewallsPacketCaptureHeaders {
+  /** The URL of the resource used to check the status of the asynchronous operation. */
   location?: string;
 }
 
@@ -15543,6 +15566,24 @@ export enum KnownBgpPeerState {
  * **Connected**
  */
 export type BgpPeerState = string;
+
+/** Known values of {@link ConnectionAuthenticationType} that the service accepts. */
+export enum KnownConnectionAuthenticationType {
+  /** PSK */
+  PSK = "PSK",
+  /** Certificate */
+  Certificate = "Certificate",
+}
+
+/**
+ * Defines values for ConnectionAuthenticationType. \
+ * {@link KnownConnectionAuthenticationType} can be used interchangeably with ConnectionAuthenticationType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **PSK** \
+ * **Certificate**
+ */
+export type ConnectionAuthenticationType = string;
 
 /** Known values of {@link OfficeTrafficCategory} that the service accepts. */
 export enum KnownOfficeTrafficCategory {

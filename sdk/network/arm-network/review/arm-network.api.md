@@ -1785,6 +1785,11 @@ export interface AzureFirewallsCreateOrUpdateOptionalParams extends coreClient.O
 export type AzureFirewallsCreateOrUpdateResponse = AzureFirewall;
 
 // @public
+export interface AzureFirewallsDeleteHeaders {
+    location?: string;
+}
+
+// @public
 export interface AzureFirewallsDeleteOptionalParams extends coreClient.OperationOptions {
     resumeFrom?: string;
     updateIntervalInMs?: number;
@@ -1848,7 +1853,6 @@ export type AzureFirewallsListResponse = AzureFirewallListResult;
 
 // @public
 export interface AzureFirewallsPacketCaptureHeaders {
-    // (undocumented)
     location?: string;
 }
 
@@ -2224,6 +2228,13 @@ export interface BreakOutCategoryPolicies {
 }
 
 // @public
+export interface CertificateAuthentication {
+    inboundAuthCertificateChain?: string[];
+    inboundAuthCertificateSubjectName?: string;
+    outboundAuthCertificate?: string;
+}
+
+// @public
 export interface CheckDnsNameAvailabilityOptionalParams extends coreClient.OperationOptions {
 }
 
@@ -2324,6 +2335,9 @@ export type ConfigurationPolicyGroupsListByVpnServerConfigurationResponse = List
 
 // @public
 export type ConfigurationType = string;
+
+// @public
+export type ConnectionAuthenticationType = string;
 
 // @public
 export interface ConnectionMonitor {
@@ -6340,6 +6354,12 @@ export enum KnownCommissionedState {
 export enum KnownConfigurationType {
     Connectivity = "Connectivity",
     SecurityAdmin = "SecurityAdmin"
+}
+
+// @public
+export enum KnownConnectionAuthenticationType {
+    Certificate = "Certificate",
+    PSK = "PSK"
 }
 
 // @public
@@ -13703,6 +13723,7 @@ export interface VirtualNetworkGateway extends Resource {
     extendedLocation?: ExtendedLocation;
     gatewayDefaultSite?: SubResource;
     gatewayType?: VirtualNetworkGatewayType;
+    identity?: ManagedServiceIdentity;
     readonly inboundDnsForwardingEndpoint?: string;
     ipConfigurations?: VirtualNetworkGatewayIPConfiguration[];
     natRules?: VirtualNetworkGatewayNatRule[];
@@ -13729,7 +13750,9 @@ export interface VirtualNetworkGatewayAutoScaleConfiguration {
 
 // @public
 export interface VirtualNetworkGatewayConnection extends Resource {
+    authenticationType?: ConnectionAuthenticationType;
     authorizationKey?: string;
+    certificateAuthentication?: CertificateAuthentication;
     connectionMode?: VirtualNetworkGatewayConnectionMode;
     connectionProtocol?: VirtualNetworkGatewayConnectionProtocol;
     readonly connectionStatus?: VirtualNetworkGatewayConnectionStatus;
