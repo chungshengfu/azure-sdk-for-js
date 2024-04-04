@@ -1,5 +1,45 @@
 # Release History
+    
+## 1.3.0-beta.2 (2024-04-04)
+    
+**Features**
 
+  - Added operation Ledger.beginBackup
+  - Added operation Ledger.beginBackupAndWait
+  - Added operation Ledger.beginRestore
+  - Added operation Ledger.beginRestoreAndWait
+  - Added operation ManagedCCFOperations.beginBackup
+  - Added operation ManagedCCFOperations.beginBackupAndWait
+  - Added operation ManagedCCFOperations.beginRestore
+  - Added operation ManagedCCFOperations.beginRestoreAndWait
+  - Added Interface ConfidentialLedgerBackup
+  - Added Interface ConfidentialLedgerBackupResponse
+  - Added Interface ConfidentialLedgerRestore
+  - Added Interface ConfidentialLedgerRestoreResponse
+  - Added Interface CustomizationData
+  - Added Interface LedgerBackupOptionalParams
+  - Added Interface LedgerRestoreOptionalParams
+  - Added Interface ManagedCCFBackup
+  - Added Interface ManagedCCFBackupOptionalParams
+  - Added Interface ManagedCCFBackupResponse
+  - Added Interface ManagedCCFRestore
+  - Added Interface ManagedCCFRestoreOptionalParams
+  - Added Interface ManagedCCFRestoreResponse
+  - Added Type Alias EnclavePlatform
+  - Added Type Alias LedgerBackupResponse
+  - Added Type Alias LedgerRestoreResponse
+  - Added Type Alias LedgerSku
+  - Added Type Alias ManagedCCFBackupOperationResponse
+  - Added Type Alias ManagedCCFRestoreOperationResponse
+  - Added Type Alias ManagedCCFUpdateResponse
+  - Interface LedgerProperties has a new optional parameter enclavePlatform
+  - Interface LedgerProperties has a new optional parameter ledgerSku
+  - Interface ManagedCCFProperties has a new optional parameter customizationData
+  - Interface ManagedCCFProperties has a new optional parameter enclavePlatform
+  - Interface ManagedCCFProperties has a new optional parameter runningState
+  - Added Enum KnownEnclavePlatform
+  - Added Enum KnownLedgerSku
+    
 ## 1.3.0-beta.2 (Unreleased)
 
 ### Features Added

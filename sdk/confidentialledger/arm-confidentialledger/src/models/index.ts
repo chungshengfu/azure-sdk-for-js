@@ -114,6 +114,11 @@ export interface CheckNameAvailabilityResponse {
 /** Additional Confidential Ledger properties. */
 export interface LedgerProperties {
   /**
+   * Enclave Platform on which Ledger Application is deployed, defaults to IntelSgx
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly enclavePlatform?: EnclavePlatform;
+  /**
    * Unique name for the Confidential Ledger.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
@@ -142,6 +147,8 @@ export interface LedgerProperties {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly provisioningState?: ProvisioningState;
+  /** SKU associated with the ledger */
+  ledgerSku?: LedgerSku;
   /** Array of all AAD based Security Principals. */
   aadBasedSecurityPrincipals?: AADBasedSecurityPrincipal[];
   /** Array of all cert based Security Principals. */
@@ -214,6 +221,42 @@ export interface ConfidentialLedgerList {
   nextLink?: string;
 }
 
+/** Object representing Backup properties of a Confidential Ledger Resource. */
+export interface ConfidentialLedgerBackup {
+  /** The region where the backup of the ledger will eventually be restored to. */
+  restoreRegion?: string;
+  /** SAS URI used to access the backup Fileshare. */
+  uri: string;
+}
+
+/** Object representing the backup response of a Confidential Ledger Resource. */
+export interface ConfidentialLedgerBackupResponse {
+  /**
+   * Response body stating if the ledger is being backed up.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly message?: string;
+}
+
+/** Object representing Restore properties of a Confidential Ledger Resource. */
+export interface ConfidentialLedgerRestore {
+  /** Fileshare where the ledger backup is stored. */
+  fileShareName: string;
+  /** The region the ledger is being restored to. */
+  restoreRegion: string;
+  /** SAS URI used to access the backup fileshare. */
+  uri: string;
+}
+
+/** Object representing the restore response of a Confidential Ledger Resource. */
+export interface ConfidentialLedgerRestoreResponse {
+  /**
+   * Response body stating if the ledger is being restored.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly message?: string;
+}
+
 /** Additional Managed CCF properties. */
 export interface ManagedCCFProperties {
   /**
@@ -235,13 +278,19 @@ export interface ManagedCCFProperties {
   memberIdentityCertificates?: MemberIdentityCertificate[];
   /** Deployment Type of Managed CCF */
   deploymentType?: DeploymentType;
+  /** Enclave Platform on which MCCF Application is deployed, defaults to IntelSgx */
+  enclavePlatform?: EnclavePlatform;
+  /** Object representing RunningState for Managed CCF. */
+  runningState?: RunningState;
   /**
-   * Provisioning state of Ledger Resource
+   * Provisioning state of Managed CCF Resource
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly provisioningState?: ProvisioningState;
   /** Number of CCF nodes in the Managed CCF. */
   nodeCount?: number;
+  /** Additional Managed CCF deployment-time customizations. */
+  customizationData?: CustomizationData;
 }
 
 /** Object representing MemberIdentityCertificate for Managed CCF. */
@@ -262,12 +311,58 @@ export interface DeploymentType {
   appSourceUri?: string;
 }
 
+/** Object representing the different fields of customization data. */
+export interface CustomizationData {
+  /** CCF Property for the logging level for the untrusted host: Trace, Debug, Info, Fail, Fatal. */
+  hostLevel?: string;
+  /** CCF Property for the maximum size of the http request body: 1MB, 5MB, 10MB. */
+  maxBodySize?: string;
+  /** CCF Property for the subject name to include in the node certificate. Default: CN=CCF Node. */
+  subjectName?: string;
+}
+
 /** Object that includes an array of Managed CCF and a possible link for next set. */
 export interface ManagedCCFList {
   /** List of Managed CCF */
   value?: ManagedCCF[];
   /** The URL the client should use to fetch the next page (per server side paging). */
   nextLink?: string;
+}
+
+/** Object representing Backup properties of a Managed CCF Resource. */
+export interface ManagedCCFBackup {
+  /** The region where the backup of the managed CCF resource will eventually be restored to. */
+  restoreRegion?: string;
+  /** SAS URI used to access the backup Fileshare. */
+  uri: string;
+}
+
+/** Object representing the backup response of a Managed CCF Resource. */
+export interface ManagedCCFBackupResponse {
+  /**
+   * Response body stating if the managed CCF resource is being backed up.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly message?: string;
+}
+
+/** Object representing Restore properties of Managed CCF Resource. */
+export interface ManagedCCFRestore {
+  /** Fileshare where the managed CCF resource backup is stored. */
+  fileShareName: string;
+  /** The region the managed CCF resource is being restored to. */
+  restoreRegion: string;
+  /** SAS URI used to access the backup Fileshare. */
+  uri: string;
+}
+
+/** Object representing the restore response of a Managed CCF Resource. */
+export interface ManagedCCFRestoreResponse {
+  /**
+   * Response body stating if the managed CCF resource is being restored.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly message?: string;
 }
 
 /** Tags for Managed CCF Certificates */
@@ -301,7 +396,7 @@ export enum KnownCheckNameAvailabilityReason {
   /** Invalid */
   Invalid = "Invalid",
   /** AlreadyExists */
-  AlreadyExists = "AlreadyExists"
+  AlreadyExists = "AlreadyExists",
 }
 
 /**
@@ -314,6 +409,24 @@ export enum KnownCheckNameAvailabilityReason {
  */
 export type CheckNameAvailabilityReason = string;
 
+/** Known values of {@link EnclavePlatform} that the service accepts. */
+export enum KnownEnclavePlatform {
+  /** IntelSgx */
+  IntelSgx = "IntelSgx",
+  /** AmdSevSnp */
+  AmdSevSnp = "AmdSevSnp",
+}
+
+/**
+ * Defines values for EnclavePlatform. \
+ * {@link KnownEnclavePlatform} can be used interchangeably with EnclavePlatform,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **IntelSgx** \
+ * **AmdSevSnp**
+ */
+export type EnclavePlatform = string;
+
 /** Known values of {@link RunningState} that the service accepts. */
 export enum KnownRunningState {
   /** Active */
@@ -325,7 +438,7 @@ export enum KnownRunningState {
   /** Pausing */
   Pausing = "Pausing",
   /** Resuming */
-  Resuming = "Resuming"
+  Resuming = "Resuming",
 }
 
 /**
@@ -348,7 +461,7 @@ export enum KnownLedgerType {
   /** Public */
   Public = "Public",
   /** Private */
-  Private = "Private"
+  Private = "Private",
 }
 
 /**
@@ -377,7 +490,7 @@ export enum KnownProvisioningState {
   /** Deleting */
   Deleting = "Deleting",
   /** Updating */
-  Updating = "Updating"
+  Updating = "Updating",
 }
 
 /**
@@ -395,6 +508,27 @@ export enum KnownProvisioningState {
  */
 export type ProvisioningState = string;
 
+/** Known values of {@link LedgerSku} that the service accepts. */
+export enum KnownLedgerSku {
+  /** Standard */
+  Standard = "Standard",
+  /** Basic */
+  Basic = "Basic",
+  /** Unknown */
+  Unknown = "Unknown",
+}
+
+/**
+ * Defines values for LedgerSku. \
+ * {@link KnownLedgerSku} can be used interchangeably with LedgerSku,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Standard** \
+ * **Basic** \
+ * **Unknown**
+ */
+export type LedgerSku = string;
+
 /** Known values of {@link LedgerRoleName} that the service accepts. */
 export enum KnownLedgerRoleName {
   /** Reader */
@@ -402,7 +536,7 @@ export enum KnownLedgerRoleName {
   /** Contributor */
   Contributor = "Contributor",
   /** Administrator */
-  Administrator = "Administrator"
+  Administrator = "Administrator",
 }
 
 /**
@@ -425,7 +559,7 @@ export enum KnownCreatedByType {
   /** ManagedIdentity */
   ManagedIdentity = "ManagedIdentity",
   /** Key */
-  Key = "Key"
+  Key = "Key",
 }
 
 /**
@@ -445,7 +579,7 @@ export enum KnownLanguageRuntime {
   /** CPP */
   CPP = "CPP",
   /** JS */
-  JS = "JS"
+  JS = "JS",
 }
 
 /**
@@ -477,7 +611,8 @@ export interface CheckNameAvailabilityOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the checkNameAvailability operation. */
-export type CheckNameAvailabilityOperationResponse = CheckNameAvailabilityResponse;
+export type CheckNameAvailabilityOperationResponse =
+  CheckNameAvailabilityResponse;
 
 /** Optional parameters. */
 export interface LedgerGetOptionalParams extends coreClient.OperationOptions {}
@@ -539,6 +674,30 @@ export interface LedgerListBySubscriptionOptionalParams
 export type LedgerListBySubscriptionResponse = ConfidentialLedgerList;
 
 /** Optional parameters. */
+export interface LedgerBackupOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the backup operation. */
+export type LedgerBackupResponse = ConfidentialLedgerBackupResponse;
+
+/** Optional parameters. */
+export interface LedgerRestoreOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the restore operation. */
+export type LedgerRestoreResponse = ConfidentialLedgerRestoreResponse;
+
+/** Optional parameters. */
 export interface LedgerListByResourceGroupNextOptionalParams
   extends coreClient.OperationOptions {}
 
@@ -589,6 +748,9 @@ export interface ManagedCCFUpdateOptionalParams
   resumeFrom?: string;
 }
 
+/** Contains response data for the update operation. */
+export type ManagedCCFUpdateResponse = ManagedCCF;
+
 /** Optional parameters. */
 export interface ManagedCCFListByResourceGroupOptionalParams
   extends coreClient.OperationOptions {
@@ -608,6 +770,30 @@ export interface ManagedCCFListBySubscriptionOptionalParams
 
 /** Contains response data for the listBySubscription operation. */
 export type ManagedCCFListBySubscriptionResponse = ManagedCCFList;
+
+/** Optional parameters. */
+export interface ManagedCCFBackupOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the backup operation. */
+export type ManagedCCFBackupOperationResponse = ManagedCCFBackupResponse;
+
+/** Optional parameters. */
+export interface ManagedCCFRestoreOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the restore operation. */
+export type ManagedCCFRestoreOperationResponse = ManagedCCFRestoreResponse;
 
 /** Optional parameters. */
 export interface ManagedCCFListByResourceGroupNextOptionalParams
