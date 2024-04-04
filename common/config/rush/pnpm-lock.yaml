@@ -11817,7 +11817,7 @@ packages:
     dev: false
 
   file:projects/arm-appinsights.tgz:
-    resolution: {integrity: sha512-dJNWwcTOH4BYMFpN2P91rUMqmHCFJ1fGQYvbpVrF/7w/Q33l5E4T86v4DNVyFkuFmtdg9/xherLYjCrDgfVywQ==, tarball: file:projects/arm-appinsights.tgz}
+    resolution: {integrity: sha512-Icuw41c3xlroSM+ZKO/01vVGENXjeDMBeYcTsTL76Eh2tghlmZVv2u6DSy7/qyB1+6WudjhNfGfMwGh4t368ww==, tarball: file:projects/arm-appinsights.tgz}
     name: '@rush-temp/arm-appinsights'
     version: 0.0.0
     dependencies:
@@ -11830,7 +11830,9 @@ packages:
       '@types/node': 18.19.28
       chai: 4.3.10
       cross-env: 7.0.3
-      mkdirp: 1.0.4
+      dotenv: 16.4.5
+      esm: 3.2.25
+      mkdirp: 2.1.6
       mocha: 10.4.0
       rimraf: 5.0.5
       ts-node: 10.9.2(@types/node@18.19.28)(typescript@5.3.3)
