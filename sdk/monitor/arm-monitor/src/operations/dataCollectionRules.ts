@@ -393,7 +393,7 @@ const updateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponseCommonV2,
     },
   },
-  requestBody: Parameters.body2,
+  requestBody: Parameters.body5,
   queryParameters: [Parameters.apiVersion14],
   urlParameters: [
     Parameters.$host,
@@ -415,7 +415,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponseCommonV2,
     },
   },
-  queryParameters: [Parameters.apiVersion14],
+  queryParameters: [Parameters.apiVersion14, Parameters.deleteAssociations],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
