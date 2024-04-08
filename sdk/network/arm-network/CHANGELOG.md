@@ -1,15 +1,13 @@
 # Release History
+    
+## 33.2.0 (2024-04-08)
+    
+**Features**
 
-## 33.1.1 (Unreleased)
-
-### Features Added
-
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
+  - Added Interface AzureFirewallsDeleteHeaders
+  - Added Interface VirtualHubsGetEffectiveVirtualHubRoutesHeaders
+    
+    
 ## 33.1.0 (2024-02-02)
     
 **Features**

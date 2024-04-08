@@ -1785,6 +1785,11 @@ export interface AzureFirewallsCreateOrUpdateOptionalParams extends coreClient.O
 export type AzureFirewallsCreateOrUpdateResponse = AzureFirewall;
 
 // @public
+export interface AzureFirewallsDeleteHeaders {
+    location?: string;
+}
+
+// @public
 export interface AzureFirewallsDeleteOptionalParams extends coreClient.OperationOptions {
     resumeFrom?: string;
     updateIntervalInMs?: number;
@@ -1848,7 +1853,6 @@ export type AzureFirewallsListResponse = AzureFirewallListResult;
 
 // @public
 export interface AzureFirewallsPacketCaptureHeaders {
-    // (undocumented)
     location?: string;
 }
 
@@ -13567,6 +13571,11 @@ export type VirtualHubsCreateOrUpdateResponse = VirtualHub;
 export interface VirtualHubsDeleteOptionalParams extends coreClient.OperationOptions {
     resumeFrom?: string;
     updateIntervalInMs?: number;
+}
+
+// @public
+export interface VirtualHubsGetEffectiveVirtualHubRoutesHeaders {
+    location?: string;
 }
 
 // @public

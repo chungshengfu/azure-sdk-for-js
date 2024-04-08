@@ -31065,6 +31065,21 @@ export const DefaultAdminRule: coreClient.CompositeMapper = {
   },
 };
 
+export const AzureFirewallsDeleteHeaders: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "AzureFirewallsDeleteHeaders",
+    modelProperties: {
+      location: {
+        serializedName: "location",
+        type: {
+          name: "String",
+        },
+      },
+    },
+  },
+};
+
 export const AzureFirewallsPacketCaptureHeaders: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -31301,6 +31316,22 @@ export const NetworkVirtualAppliancesCreateOrUpdateHeaders: coreClient.Composite
     type: {
       name: "Composite",
       className: "NetworkVirtualAppliancesCreateOrUpdateHeaders",
+      modelProperties: {
+        location: {
+          serializedName: "location",
+          type: {
+            name: "String",
+          },
+        },
+      },
+    },
+  };
+
+export const VirtualHubsGetEffectiveVirtualHubRoutesHeaders: coreClient.CompositeMapper =
+  {
+    type: {
+      name: "Composite",
+      className: "VirtualHubsGetEffectiveVirtualHubRoutesHeaders",
       modelProperties: {
         location: {
           serializedName: "location",
