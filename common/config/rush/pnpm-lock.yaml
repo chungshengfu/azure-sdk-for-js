@@ -743,6 +743,9 @@ dependencies:
   '@rush-temp/attestation':
     specifier: file:./projects/attestation.tgz
     version: file:projects/attestation.tgz
+  '@rush-temp/codetransparency-rest':
+    specifier: file:./projects/codetransparency-rest.tgz
+    version: file:projects/codetransparency-rest.tgz
   '@rush-temp/communication-alpha-ids':
     specifier: file:./projects/communication-alpha-ids.tgz
     version: file:projects/communication-alpha-ids.tgz
@@ -8904,6 +8907,7 @@ packages:
 
   /queue-tick@1.0.1:
     resolution: {integrity: sha512-kJt5qhMxoszgU/62PLP1CJytzd2NKetjSRnyuj31fDd3Rlcz3fzlFdFLD1SItunPwyqEOkca6GbV612BWfaBag==}
+    requiresBuild: true
     dev: false
 
   /randombytes@2.1.0:
@@ -10200,8 +10204,8 @@ packages:
     hasBin: true
     dev: false
 
-  /typescript@5.4.3:
-    resolution: {integrity: sha512-KrPd3PKaCLr78MalgiwJnA25Nm8HAmdwN3mYUYZgG/wizIo9EainNVQI9/yDavtVFRN2h3k8uf3GLHuhDMgEHg==}
+  /typescript@5.4.4:
+    resolution: {integrity: sha512-dGE2Vv8cpVvw28v8HCPqyb08EzbBURxDpuhJvTrusShUfGnhHBafDsLdS1EhhxyL6BJQE+2cT3dDPAv+MQ6oLw==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: false
@@ -18296,6 +18300,44 @@ packages:
       - utf-8-validate
     dev: false
 
+  file:projects/codetransparency-rest.tgz:
+    resolution: {integrity: sha512-hY8YKrfrd+ldtupni4NHrokZZYFldZ/VcvtXn+qE4jBJqqyn/dWY+XjTimgEzfaVSihrnEqD/Blchw5mZMuIcg==, tarball: file:projects/codetransparency-rest.tgz}
+    name: '@rush-temp/codetransparency-rest'
+    version: 0.0.0
+    dependencies:
+      '@azure-tools/test-credential': 1.0.4
+      '@azure-tools/test-recorder': 3.1.0
+      '@azure/identity': 4.0.1
+      '@microsoft/api-extractor': 7.43.0(@types/node@18.19.28)
+      '@types/node': 18.19.28
+      '@vitest/browser': 1.4.0(playwright@1.42.1)(vitest@1.4.0)
+      '@vitest/coverage-istanbul': 1.4.0(vitest@1.4.0)
+      dotenv: 16.4.5
+      eslint: 8.57.0
+      mkdirp: 2.1.6
+      playwright: 1.42.1
+      prettier: 3.2.5
+      rimraf: 5.0.5
+      tshy: 1.13.0
+      tslib: 2.6.2
+      typescript: 5.3.3
+      vitest: 1.4.0(@types/node@18.19.28)(@vitest/browser@1.4.0)
+    transitivePeerDependencies:
+      - '@edge-runtime/vm'
+      - '@vitest/ui'
+      - happy-dom
+      - jsdom
+      - less
+      - lightningcss
+      - safaridriver
+      - sass
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - webdriverio
+    dev: false
+
   file:projects/communication-alpha-ids.tgz:
     resolution: {integrity: sha512-r/DfdtIEWFxkWwr7HQosoZZ1i9jA0A0oe1pjYBBlRXi1ENmrPQux/Agd9b6GO4wTwi1UxXu8jADydZN0eeSvMg==, tarball: file:projects/communication-alpha-ids.tgz}
     name: '@rush-temp/communication-alpha-ids'
@@ -19651,7 +19693,7 @@ packages:
     name: '@rush-temp/dev-tool'
     version: 0.0.0
     dependencies:
-      '@_ts/max': /typescript@5.4.3
+      '@_ts/max': /typescript@5.4.4
       '@_ts/min': /typescript@4.2.4
       '@microsoft/api-extractor': 7.43.0(@types/node@18.19.28)
       '@rollup/plugin-commonjs': 25.0.7(rollup@4.13.2)
@@ -20254,7 +20296,7 @@ packages:
     dev: false
 
   file:projects/identity-broker.tgz:
-    resolution: {integrity: sha512-vx9xKcy+ZhlA5PuFj3b7Wy96HXvMEp7BQ/NHiT+iIVUcMhrp6n40MuaPGh0dxLS/2XQnLLLmu1L7BHH0Gtqqaw==, tarball: file:projects/identity-broker.tgz}
+    resolution: {integrity: sha512-/1yRGPEHyWuO8GlEku4koWnbUYXwSdeA35zFn8p+U1YmNPSdDgz/0E/1/mw+Q3++Kpc9lbOeHFwxZ1dE/HrT0g==, tarball: file:projects/identity-broker.tgz}
     name: '@rush-temp/identity-broker'
     version: 0.0.0
     dependencies:
@@ -20282,7 +20324,7 @@ packages:
     dev: false
 
   file:projects/identity-cache-persistence.tgz:
-    resolution: {integrity: sha512-nvsuxkC8hNuUFrT4Hoxkuz10oArGS3SUs0Ssaq9hICOrUJdNcFEjRlgYRiPqpuM3oxC/HEBZ9AE5ppVHOCEcSg==, tarball: file:projects/identity-cache-persistence.tgz}
+    resolution: {integrity: sha512-Xxl1uL7DnRM0WyFOUhr11fyMK6M5H+693acw72m1AhOUbQ+rbDYWtWPJ8gpPxkSpoad2WQ74Bp5XWL3K3EyAyw==, tarball: file:projects/identity-cache-persistence.tgz}
     name: '@rush-temp/identity-cache-persistence'
     version: 0.0.0
     dependencies:
@@ -20318,7 +20360,7 @@ packages:
     dev: false
 
   file:projects/identity-vscode.tgz:
-    resolution: {integrity: sha512-LEj3TH59TnCC5VMd+EEm1lsbPq92b2MZWzMUQclrt69cNc/fR5wueyWkDVKUeIpL3juf9gIaDlTAW6TARoV6qQ==, tarball: file:projects/identity-vscode.tgz}
+    resolution: {integrity: sha512-4HZqGJZyak/tpbtgUeuajlrZ95S9q61bfAWy1kdmDMYWAhAmchZJTjBA4XI1kwqLnxCgxC1xQWyWYyz1O5i4pQ==, tarball: file:projects/identity-vscode.tgz}
     name: '@rush-temp/identity-vscode'
     version: 0.0.0
     dependencies:
