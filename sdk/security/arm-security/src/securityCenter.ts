@@ -8,138 +8,162 @@
 
 import * as coreClient from "@azure/core-client";
 import * as coreRestPipeline from "@azure/core-rest-pipeline";
+import {
+  PipelineRequest,
+  PipelineResponse,
+  SendRequest,
+} from "@azure/core-rest-pipeline";
 import * as coreAuth from "@azure/core-auth";
 import {
-  MdeOnboardingsImpl,
-  CustomAssessmentAutomationsImpl,
-  CustomEntityStoreAssignmentsImpl,
-  ComplianceResultsImpl,
-  PricingsImpl,
-  AdvancedThreatProtectionImpl,
-  DeviceSecurityGroupsImpl,
-  IotSecuritySolutionImpl,
-  IotSecuritySolutionAnalyticsImpl,
-  IotSecuritySolutionsAnalyticsAggregatedAlertImpl,
-  IotSecuritySolutionsAnalyticsRecommendationImpl,
-  LocationsImpl,
-  OperationsImpl,
-  TasksImpl,
-  AutoProvisioningSettingsImpl,
-  CompliancesImpl,
-  InformationProtectionPoliciesImpl,
-  SecurityContactsImpl,
-  WorkspaceSettingsImpl,
-  RegulatoryComplianceStandardsImpl,
-  RegulatoryComplianceControlsImpl,
-  RegulatoryComplianceAssessmentsImpl,
-  SubAssessmentsImpl,
-  AutomationsImpl,
-  AlertsSuppressionRulesImpl,
-  ServerVulnerabilityAssessmentOperationsImpl,
-  AssessmentsMetadataImpl,
-  AssessmentsImpl,
-  AdaptiveApplicationControlsImpl,
   AdaptiveNetworkHardeningsImpl,
-  AllowedConnectionsImpl,
-  TopologyImpl,
-  JitNetworkAccessPoliciesImpl,
-  DiscoveredSecuritySolutionsImpl,
-  SecuritySolutionsReferenceDataOperationsImpl,
-  ExternalSecuritySolutionsImpl,
-  SecureScoresImpl,
-  SecureScoreControlsImpl,
-  SecureScoreControlDefinitionsImpl,
-  SecuritySolutionsImpl,
-  ConnectorsImpl,
+  AdvancedThreatProtectionImpl,
   AlertsImpl,
-  SettingsImpl,
-  IngestionSettingsImpl,
-  SoftwareInventoriesImpl,
-  GovernanceRulesImpl,
-  GovernanceAssignmentsImpl,
+  AlertsSuppressionRulesImpl,
+  AllowedConnectionsImpl,
+  APICollectionsImpl,
   ApplicationsImpl,
   ApplicationOperationsImpl,
   SecurityConnectorApplicationsImpl,
   SecurityConnectorApplicationImpl,
-  APICollectionImpl,
-  APICollectionOnboardingImpl,
-  APICollectionOffboardingImpl,
+  AdaptiveApplicationControlsImpl,
+  AssessmentsMetadataImpl,
+  AssessmentsImpl,
+  AutomationsImpl,
+  AutoProvisioningSettingsImpl,
+  ComplianceResultsImpl,
+  CompliancesImpl,
+  ConnectorsImpl,
+  CustomAssessmentAutomationsImpl,
+  CustomEntityStoreAssignmentsImpl,
+  DefenderForStorageImpl,
+  DeviceSecurityGroupsImpl,
+  DiscoveredSecuritySolutionsImpl,
+  ExternalSecuritySolutionsImpl,
+  GovernanceAssignmentsImpl,
+  GovernanceRulesImpl,
   HealthReportsImpl,
-  HealthReportOperationsImpl,
+  InformationProtectionPoliciesImpl,
+  IotSecuritySolutionAnalyticsImpl,
+  IotSecuritySolutionsAnalyticsAggregatedAlertImpl,
+  IotSecuritySolutionsAnalyticsRecommendationImpl,
+  IotSecuritySolutionImpl,
+  JitNetworkAccessPoliciesImpl,
+  LocationsImpl,
+  MdeOnboardingsImpl,
+  OperationsImpl,
+  PricingsImpl,
+  RegulatoryComplianceStandardsImpl,
+  RegulatoryComplianceControlsImpl,
+  RegulatoryComplianceAssessmentsImpl,
+  SecureScoresImpl,
+  SecureScoreControlsImpl,
+  SecureScoreControlDefinitionsImpl,
+  SecurityConnectorsImpl,
+  AzureDevOpsOrgsImpl,
+  AzureDevOpsProjectsImpl,
+  AzureDevOpsReposImpl,
+  DevOpsConfigurationsImpl,
+  GitHubOwnersImpl,
+  GitHubReposImpl,
+  GitLabGroupsImpl,
+  GitLabSubgroupsImpl,
+  GitLabProjectsImpl,
+  DevOpsOperationResultsImpl,
+  SecurityContactsImpl,
+  SecurityOperatorsImpl,
+  SecuritySolutionsImpl,
+  SecuritySolutionsReferenceDataOperationsImpl,
+  SensitivitySettingsImpl,
+  ServerVulnerabilityAssessmentOperationsImpl,
+  ServerVulnerabilityAssessmentsSettingsImpl,
+  SettingsImpl,
+  SoftwareInventoriesImpl,
+  SqlVulnerabilityAssessmentBaselineRulesImpl,
   SqlVulnerabilityAssessmentScansImpl,
   SqlVulnerabilityAssessmentScanResultsImpl,
-  SqlVulnerabilityAssessmentBaselineRulesImpl,
-  SecurityConnectorsImpl,
-  SecurityOperatorsImpl
+  SubAssessmentsImpl,
+  TasksImpl,
+  TopologyImpl,
+  WorkspaceSettingsImpl,
 } from "./operations";
 import {
-  MdeOnboardings,
-  CustomAssessmentAutomations,
-  CustomEntityStoreAssignments,
-  ComplianceResults,
-  Pricings,
-  AdvancedThreatProtection,
-  DeviceSecurityGroups,
-  IotSecuritySolution,
-  IotSecuritySolutionAnalytics,
-  IotSecuritySolutionsAnalyticsAggregatedAlert,
-  IotSecuritySolutionsAnalyticsRecommendation,
-  Locations,
-  Operations,
-  Tasks,
-  AutoProvisioningSettings,
-  Compliances,
-  InformationProtectionPolicies,
-  SecurityContacts,
-  WorkspaceSettings,
-  RegulatoryComplianceStandards,
-  RegulatoryComplianceControls,
-  RegulatoryComplianceAssessments,
-  SubAssessments,
-  Automations,
-  AlertsSuppressionRules,
-  ServerVulnerabilityAssessmentOperations,
-  AssessmentsMetadata,
-  Assessments,
-  AdaptiveApplicationControls,
   AdaptiveNetworkHardenings,
-  AllowedConnections,
-  Topology,
-  JitNetworkAccessPolicies,
-  DiscoveredSecuritySolutions,
-  SecuritySolutionsReferenceDataOperations,
-  ExternalSecuritySolutions,
-  SecureScores,
-  SecureScoreControls,
-  SecureScoreControlDefinitions,
-  SecuritySolutions,
-  Connectors,
+  AdvancedThreatProtection,
   Alerts,
-  Settings,
-  IngestionSettings,
-  SoftwareInventories,
-  GovernanceRules,
-  GovernanceAssignments,
+  AlertsSuppressionRules,
+  AllowedConnections,
+  APICollections,
   Applications,
   ApplicationOperations,
   SecurityConnectorApplications,
   SecurityConnectorApplication,
-  APICollection,
-  APICollectionOnboarding,
-  APICollectionOffboarding,
+  AdaptiveApplicationControls,
+  AssessmentsMetadata,
+  Assessments,
+  Automations,
+  AutoProvisioningSettings,
+  ComplianceResults,
+  Compliances,
+  Connectors,
+  CustomAssessmentAutomations,
+  CustomEntityStoreAssignments,
+  DefenderForStorage,
+  DeviceSecurityGroups,
+  DiscoveredSecuritySolutions,
+  ExternalSecuritySolutions,
+  GovernanceAssignments,
+  GovernanceRules,
   HealthReports,
-  HealthReportOperations,
+  InformationProtectionPolicies,
+  IotSecuritySolutionAnalytics,
+  IotSecuritySolutionsAnalyticsAggregatedAlert,
+  IotSecuritySolutionsAnalyticsRecommendation,
+  IotSecuritySolution,
+  JitNetworkAccessPolicies,
+  Locations,
+  MdeOnboardings,
+  Operations,
+  Pricings,
+  RegulatoryComplianceStandards,
+  RegulatoryComplianceControls,
+  RegulatoryComplianceAssessments,
+  SecureScores,
+  SecureScoreControls,
+  SecureScoreControlDefinitions,
+  SecurityConnectors,
+  AzureDevOpsOrgs,
+  AzureDevOpsProjects,
+  AzureDevOpsRepos,
+  DevOpsConfigurations,
+  GitHubOwners,
+  GitHubRepos,
+  GitLabGroups,
+  GitLabSubgroups,
+  GitLabProjects,
+  DevOpsOperationResults,
+  SecurityContacts,
+  SecurityOperators,
+  SecuritySolutions,
+  SecuritySolutionsReferenceDataOperations,
+  SensitivitySettings,
+  ServerVulnerabilityAssessmentOperations,
+  ServerVulnerabilityAssessmentsSettings,
+  Settings,
+  SoftwareInventories,
+  SqlVulnerabilityAssessmentBaselineRules,
   SqlVulnerabilityAssessmentScans,
   SqlVulnerabilityAssessmentScanResults,
-  SqlVulnerabilityAssessmentBaselineRules,
-  SecurityConnectors,
-  SecurityOperators
+  SubAssessments,
+  Tasks,
+  Topology,
+  WorkspaceSettings,
 } from "./operationsInterfaces";
 import { SecurityCenterOptionalParams } from "./models";
 
 export class SecurityCenter extends coreClient.ServiceClient {
   $host: string;
-  subscriptionId: string;
+  subscriptionId?: string;
+  apiVersion: string;
 
   /**
    * Initializes a new instance of the SecurityCenter class.
@@ -150,13 +174,27 @@ export class SecurityCenter extends coreClient.ServiceClient {
   constructor(
     credentials: coreAuth.TokenCredential,
     subscriptionId: string,
-    options?: SecurityCenterOptionalParams
+    options?: SecurityCenterOptionalParams,
+  );
+  constructor(
+    credentials: coreAuth.TokenCredential,
+    options?: SecurityCenterOptionalParams,
+  );
+  constructor(
+    credentials: coreAuth.TokenCredential,
+    subscriptionIdOrOptions?: SecurityCenterOptionalParams | string,
+    options?: SecurityCenterOptionalParams,
   ) {
     if (credentials === undefined) {
       throw new Error("'credentials' cannot be null");
     }
-    if (subscriptionId === undefined) {
-      throw new Error("'subscriptionId' cannot be null");
+
+    let subscriptionId: string | undefined;
+
+    if (typeof subscriptionIdOrOptions === "string") {
+      subscriptionId = subscriptionIdOrOptions;
+    } else if (typeof subscriptionIdOrOptions === "object") {
+      options = subscriptionIdOrOptions;
     }
 
     // Initializing default values for options
@@ -165,7 +203,7 @@ export class SecurityCenter extends coreClient.ServiceClient {
     }
     const defaults: SecurityCenterOptionalParams = {
       requestContentType: "application/json; charset=utf-8",
-      credential: credentials
+      credential: credentials,
     };
 
     const packageDetails = `azsdk-js-arm-security/6.0.0-beta.5`;
@@ -178,20 +216,21 @@ export class SecurityCenter extends coreClient.ServiceClient {
       ...defaults,
       ...options,
       userAgentOptions: {
-        userAgentPrefix
+        userAgentPrefix,
       },
       endpoint:
-        options.endpoint ?? options.baseUri ?? "https://management.azure.com"
+        options.endpoint ?? options.baseUri ?? "https://management.azure.com",
     };
     super(optionsWithDefaults);
 
     let bearerTokenAuthenticationPolicyFound: boolean = false;
     if (options?.pipeline && options.pipeline.getOrderedPolicies().length > 0) {
-      const pipelinePolicies: coreRestPipeline.PipelinePolicy[] = options.pipeline.getOrderedPolicies();
+      const pipelinePolicies: coreRestPipeline.PipelinePolicy[] =
+        options.pipeline.getOrderedPolicies();
       bearerTokenAuthenticationPolicyFound = pipelinePolicies.some(
         (pipelinePolicy) =>
           pipelinePolicy.name ===
-          coreRestPipeline.bearerTokenAuthenticationPolicyName
+          coreRestPipeline.bearerTokenAuthenticationPolicyName,
       );
     }
     if (
@@ -201,7 +240,7 @@ export class SecurityCenter extends coreClient.ServiceClient {
       !bearerTokenAuthenticationPolicyFound
     ) {
       this.pipeline.removePolicy({
-        name: coreRestPipeline.bearerTokenAuthenticationPolicyName
+        name: coreRestPipeline.bearerTokenAuthenticationPolicyName,
       });
       this.pipeline.addPolicy(
         coreRestPipeline.bearerTokenAuthenticationPolicy({
@@ -211,9 +250,9 @@ export class SecurityCenter extends coreClient.ServiceClient {
             `${optionsWithDefaults.endpoint}/.default`,
           challengeCallbacks: {
             authorizeRequestOnChallenge:
-              coreClient.authorizeRequestOnClaimChallenge
-          }
-        })
+              coreClient.authorizeRequestOnClaimChallenge,
+          },
+        }),
       );
     }
     // Parameter assignments
@@ -221,166 +260,207 @@ export class SecurityCenter extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
-    this.mdeOnboardings = new MdeOnboardingsImpl(this);
-    this.customAssessmentAutomations = new CustomAssessmentAutomationsImpl(
-      this
-    );
-    this.customEntityStoreAssignments = new CustomEntityStoreAssignmentsImpl(
-      this
-    );
-    this.complianceResults = new ComplianceResultsImpl(this);
-    this.pricings = new PricingsImpl(this);
-    this.advancedThreatProtection = new AdvancedThreatProtectionImpl(this);
-    this.deviceSecurityGroups = new DeviceSecurityGroupsImpl(this);
-    this.iotSecuritySolution = new IotSecuritySolutionImpl(this);
-    this.iotSecuritySolutionAnalytics = new IotSecuritySolutionAnalyticsImpl(
-      this
-    );
-    this.iotSecuritySolutionsAnalyticsAggregatedAlert = new IotSecuritySolutionsAnalyticsAggregatedAlertImpl(
-      this
-    );
-    this.iotSecuritySolutionsAnalyticsRecommendation = new IotSecuritySolutionsAnalyticsRecommendationImpl(
-      this
-    );
-    this.locations = new LocationsImpl(this);
-    this.operations = new OperationsImpl(this);
-    this.tasks = new TasksImpl(this);
-    this.autoProvisioningSettings = new AutoProvisioningSettingsImpl(this);
-    this.compliances = new CompliancesImpl(this);
-    this.informationProtectionPolicies = new InformationProtectionPoliciesImpl(
-      this
-    );
-    this.securityContacts = new SecurityContactsImpl(this);
-    this.workspaceSettings = new WorkspaceSettingsImpl(this);
-    this.regulatoryComplianceStandards = new RegulatoryComplianceStandardsImpl(
-      this
-    );
-    this.regulatoryComplianceControls = new RegulatoryComplianceControlsImpl(
-      this
-    );
-    this.regulatoryComplianceAssessments = new RegulatoryComplianceAssessmentsImpl(
-      this
-    );
-    this.subAssessments = new SubAssessmentsImpl(this);
-    this.automations = new AutomationsImpl(this);
-    this.alertsSuppressionRules = new AlertsSuppressionRulesImpl(this);
-    this.serverVulnerabilityAssessmentOperations = new ServerVulnerabilityAssessmentOperationsImpl(
-      this
-    );
-    this.assessmentsMetadata = new AssessmentsMetadataImpl(this);
-    this.assessments = new AssessmentsImpl(this);
-    this.adaptiveApplicationControls = new AdaptiveApplicationControlsImpl(
-      this
-    );
+    this.apiVersion = options.apiVersion || "2024-05-01-preview";
     this.adaptiveNetworkHardenings = new AdaptiveNetworkHardeningsImpl(this);
-    this.allowedConnections = new AllowedConnectionsImpl(this);
-    this.topology = new TopologyImpl(this);
-    this.jitNetworkAccessPolicies = new JitNetworkAccessPoliciesImpl(this);
-    this.discoveredSecuritySolutions = new DiscoveredSecuritySolutionsImpl(
-      this
-    );
-    this.securitySolutionsReferenceDataOperations = new SecuritySolutionsReferenceDataOperationsImpl(
-      this
-    );
-    this.externalSecuritySolutions = new ExternalSecuritySolutionsImpl(this);
-    this.secureScores = new SecureScoresImpl(this);
-    this.secureScoreControls = new SecureScoreControlsImpl(this);
-    this.secureScoreControlDefinitions = new SecureScoreControlDefinitionsImpl(
-      this
-    );
-    this.securitySolutions = new SecuritySolutionsImpl(this);
-    this.connectors = new ConnectorsImpl(this);
+    this.advancedThreatProtection = new AdvancedThreatProtectionImpl(this);
     this.alerts = new AlertsImpl(this);
-    this.settings = new SettingsImpl(this);
-    this.ingestionSettings = new IngestionSettingsImpl(this);
-    this.softwareInventories = new SoftwareInventoriesImpl(this);
-    this.governanceRules = new GovernanceRulesImpl(this);
-    this.governanceAssignments = new GovernanceAssignmentsImpl(this);
+    this.alertsSuppressionRules = new AlertsSuppressionRulesImpl(this);
+    this.allowedConnections = new AllowedConnectionsImpl(this);
+    this.aPICollections = new APICollectionsImpl(this);
     this.applications = new ApplicationsImpl(this);
     this.applicationOperations = new ApplicationOperationsImpl(this);
     this.securityConnectorApplications = new SecurityConnectorApplicationsImpl(
-      this
+      this,
     );
     this.securityConnectorApplication = new SecurityConnectorApplicationImpl(
-      this
+      this,
     );
-    this.aPICollection = new APICollectionImpl(this);
-    this.aPICollectionOnboarding = new APICollectionOnboardingImpl(this);
-    this.aPICollectionOffboarding = new APICollectionOffboardingImpl(this);
+    this.adaptiveApplicationControls = new AdaptiveApplicationControlsImpl(
+      this,
+    );
+    this.assessmentsMetadata = new AssessmentsMetadataImpl(this);
+    this.assessments = new AssessmentsImpl(this);
+    this.automations = new AutomationsImpl(this);
+    this.autoProvisioningSettings = new AutoProvisioningSettingsImpl(this);
+    this.complianceResults = new ComplianceResultsImpl(this);
+    this.compliances = new CompliancesImpl(this);
+    this.connectors = new ConnectorsImpl(this);
+    this.customAssessmentAutomations = new CustomAssessmentAutomationsImpl(
+      this,
+    );
+    this.customEntityStoreAssignments = new CustomEntityStoreAssignmentsImpl(
+      this,
+    );
+    this.defenderForStorage = new DefenderForStorageImpl(this);
+    this.deviceSecurityGroups = new DeviceSecurityGroupsImpl(this);
+    this.discoveredSecuritySolutions = new DiscoveredSecuritySolutionsImpl(
+      this,
+    );
+    this.externalSecuritySolutions = new ExternalSecuritySolutionsImpl(this);
+    this.governanceAssignments = new GovernanceAssignmentsImpl(this);
+    this.governanceRules = new GovernanceRulesImpl(this);
     this.healthReports = new HealthReportsImpl(this);
-    this.healthReportOperations = new HealthReportOperationsImpl(this);
-    this.sqlVulnerabilityAssessmentScans = new SqlVulnerabilityAssessmentScansImpl(
-      this
+    this.informationProtectionPolicies = new InformationProtectionPoliciesImpl(
+      this,
     );
-    this.sqlVulnerabilityAssessmentScanResults = new SqlVulnerabilityAssessmentScanResultsImpl(
-      this
+    this.iotSecuritySolutionAnalytics = new IotSecuritySolutionAnalyticsImpl(
+      this,
     );
-    this.sqlVulnerabilityAssessmentBaselineRules = new SqlVulnerabilityAssessmentBaselineRulesImpl(
-      this
+    this.iotSecuritySolutionsAnalyticsAggregatedAlert =
+      new IotSecuritySolutionsAnalyticsAggregatedAlertImpl(this);
+    this.iotSecuritySolutionsAnalyticsRecommendation =
+      new IotSecuritySolutionsAnalyticsRecommendationImpl(this);
+    this.iotSecuritySolution = new IotSecuritySolutionImpl(this);
+    this.jitNetworkAccessPolicies = new JitNetworkAccessPoliciesImpl(this);
+    this.locations = new LocationsImpl(this);
+    this.mdeOnboardings = new MdeOnboardingsImpl(this);
+    this.operations = new OperationsImpl(this);
+    this.pricings = new PricingsImpl(this);
+    this.regulatoryComplianceStandards = new RegulatoryComplianceStandardsImpl(
+      this,
+    );
+    this.regulatoryComplianceControls = new RegulatoryComplianceControlsImpl(
+      this,
+    );
+    this.regulatoryComplianceAssessments =
+      new RegulatoryComplianceAssessmentsImpl(this);
+    this.secureScores = new SecureScoresImpl(this);
+    this.secureScoreControls = new SecureScoreControlsImpl(this);
+    this.secureScoreControlDefinitions = new SecureScoreControlDefinitionsImpl(
+      this,
     );
     this.securityConnectors = new SecurityConnectorsImpl(this);
+    this.azureDevOpsOrgs = new AzureDevOpsOrgsImpl(this);
+    this.azureDevOpsProjects = new AzureDevOpsProjectsImpl(this);
+    this.azureDevOpsRepos = new AzureDevOpsReposImpl(this);
+    this.devOpsConfigurations = new DevOpsConfigurationsImpl(this);
+    this.gitHubOwners = new GitHubOwnersImpl(this);
+    this.gitHubRepos = new GitHubReposImpl(this);
+    this.gitLabGroups = new GitLabGroupsImpl(this);
+    this.gitLabSubgroups = new GitLabSubgroupsImpl(this);
+    this.gitLabProjects = new GitLabProjectsImpl(this);
+    this.devOpsOperationResults = new DevOpsOperationResultsImpl(this);
+    this.securityContacts = new SecurityContactsImpl(this);
     this.securityOperators = new SecurityOperatorsImpl(this);
+    this.securitySolutions = new SecuritySolutionsImpl(this);
+    this.securitySolutionsReferenceDataOperations =
+      new SecuritySolutionsReferenceDataOperationsImpl(this);
+    this.sensitivitySettings = new SensitivitySettingsImpl(this);
+    this.serverVulnerabilityAssessmentOperations =
+      new ServerVulnerabilityAssessmentOperationsImpl(this);
+    this.serverVulnerabilityAssessmentsSettings =
+      new ServerVulnerabilityAssessmentsSettingsImpl(this);
+    this.settings = new SettingsImpl(this);
+    this.softwareInventories = new SoftwareInventoriesImpl(this);
+    this.sqlVulnerabilityAssessmentBaselineRules =
+      new SqlVulnerabilityAssessmentBaselineRulesImpl(this);
+    this.sqlVulnerabilityAssessmentScans =
+      new SqlVulnerabilityAssessmentScansImpl(this);
+    this.sqlVulnerabilityAssessmentScanResults =
+      new SqlVulnerabilityAssessmentScanResultsImpl(this);
+    this.subAssessments = new SubAssessmentsImpl(this);
+    this.tasks = new TasksImpl(this);
+    this.topology = new TopologyImpl(this);
+    this.workspaceSettings = new WorkspaceSettingsImpl(this);
+    this.addCustomApiVersionPolicy(options.apiVersion);
   }
 
-  mdeOnboardings: MdeOnboardings;
-  customAssessmentAutomations: CustomAssessmentAutomations;
-  customEntityStoreAssignments: CustomEntityStoreAssignments;
-  complianceResults: ComplianceResults;
-  pricings: Pricings;
-  advancedThreatProtection: AdvancedThreatProtection;
-  deviceSecurityGroups: DeviceSecurityGroups;
-  iotSecuritySolution: IotSecuritySolution;
-  iotSecuritySolutionAnalytics: IotSecuritySolutionAnalytics;
-  iotSecuritySolutionsAnalyticsAggregatedAlert: IotSecuritySolutionsAnalyticsAggregatedAlert;
-  iotSecuritySolutionsAnalyticsRecommendation: IotSecuritySolutionsAnalyticsRecommendation;
-  locations: Locations;
-  operations: Operations;
-  tasks: Tasks;
-  autoProvisioningSettings: AutoProvisioningSettings;
-  compliances: Compliances;
-  informationProtectionPolicies: InformationProtectionPolicies;
-  securityContacts: SecurityContacts;
-  workspaceSettings: WorkspaceSettings;
-  regulatoryComplianceStandards: RegulatoryComplianceStandards;
-  regulatoryComplianceControls: RegulatoryComplianceControls;
-  regulatoryComplianceAssessments: RegulatoryComplianceAssessments;
-  subAssessments: SubAssessments;
-  automations: Automations;
-  alertsSuppressionRules: AlertsSuppressionRules;
-  serverVulnerabilityAssessmentOperations: ServerVulnerabilityAssessmentOperations;
-  assessmentsMetadata: AssessmentsMetadata;
-  assessments: Assessments;
-  adaptiveApplicationControls: AdaptiveApplicationControls;
+  /** A function that adds a policy that sets the api-version (or equivalent) to reflect the library version. */
+  private addCustomApiVersionPolicy(apiVersion?: string) {
+    if (!apiVersion) {
+      return;
+    }
+    const apiVersionPolicy = {
+      name: "CustomApiVersionPolicy",
+      async sendRequest(
+        request: PipelineRequest,
+        next: SendRequest,
+      ): Promise<PipelineResponse> {
+        const param = request.url.split("?");
+        if (param.length > 1) {
+          const newParams = param[1].split("&").map((item) => {
+            if (item.indexOf("api-version") > -1) {
+              return "api-version=" + apiVersion;
+            } else {
+              return item;
+            }
+          });
+          request.url = param[0] + "?" + newParams.join("&");
+        }
+        return next(request);
+      },
+    };
+    this.pipeline.addPolicy(apiVersionPolicy);
+  }
+
   adaptiveNetworkHardenings: AdaptiveNetworkHardenings;
-  allowedConnections: AllowedConnections;
-  topology: Topology;
-  jitNetworkAccessPolicies: JitNetworkAccessPolicies;
-  discoveredSecuritySolutions: DiscoveredSecuritySolutions;
-  securitySolutionsReferenceDataOperations: SecuritySolutionsReferenceDataOperations;
-  externalSecuritySolutions: ExternalSecuritySolutions;
-  secureScores: SecureScores;
-  secureScoreControls: SecureScoreControls;
-  secureScoreControlDefinitions: SecureScoreControlDefinitions;
-  securitySolutions: SecuritySolutions;
-  connectors: Connectors;
+  advancedThreatProtection: AdvancedThreatProtection;
   alerts: Alerts;
-  settings: Settings;
-  ingestionSettings: IngestionSettings;
-  softwareInventories: SoftwareInventories;
-  governanceRules: GovernanceRules;
-  governanceAssignments: GovernanceAssignments;
+  alertsSuppressionRules: AlertsSuppressionRules;
+  allowedConnections: AllowedConnections;
+  aPICollections: APICollections;
   applications: Applications;
   applicationOperations: ApplicationOperations;
   securityConnectorApplications: SecurityConnectorApplications;
   securityConnectorApplication: SecurityConnectorApplication;
-  aPICollection: APICollection;
-  aPICollectionOnboarding: APICollectionOnboarding;
-  aPICollectionOffboarding: APICollectionOffboarding;
+  adaptiveApplicationControls: AdaptiveApplicationControls;
+  assessmentsMetadata: AssessmentsMetadata;
+  assessments: Assessments;
+  automations: Automations;
+  autoProvisioningSettings: AutoProvisioningSettings;
+  complianceResults: ComplianceResults;
+  compliances: Compliances;
+  connectors: Connectors;
+  customAssessmentAutomations: CustomAssessmentAutomations;
+  customEntityStoreAssignments: CustomEntityStoreAssignments;
+  defenderForStorage: DefenderForStorage;
+  deviceSecurityGroups: DeviceSecurityGroups;
+  discoveredSecuritySolutions: DiscoveredSecuritySolutions;
+  externalSecuritySolutions: ExternalSecuritySolutions;
+  governanceAssignments: GovernanceAssignments;
+  governanceRules: GovernanceRules;
   healthReports: HealthReports;
-  healthReportOperations: HealthReportOperations;
+  informationProtectionPolicies: InformationProtectionPolicies;
+  iotSecuritySolutionAnalytics: IotSecuritySolutionAnalytics;
+  iotSecuritySolutionsAnalyticsAggregatedAlert: IotSecuritySolutionsAnalyticsAggregatedAlert;
+  iotSecuritySolutionsAnalyticsRecommendation: IotSecuritySolutionsAnalyticsRecommendation;
+  iotSecuritySolution: IotSecuritySolution;
+  jitNetworkAccessPolicies: JitNetworkAccessPolicies;
+  locations: Locations;
+  mdeOnboardings: MdeOnboardings;
+  operations: Operations;
+  pricings: Pricings;
+  regulatoryComplianceStandards: RegulatoryComplianceStandards;
+  regulatoryComplianceControls: RegulatoryComplianceControls;
+  regulatoryComplianceAssessments: RegulatoryComplianceAssessments;
+  secureScores: SecureScores;
+  secureScoreControls: SecureScoreControls;
+  secureScoreControlDefinitions: SecureScoreControlDefinitions;
+  securityConnectors: SecurityConnectors;
+  azureDevOpsOrgs: AzureDevOpsOrgs;
+  azureDevOpsProjects: AzureDevOpsProjects;
+  azureDevOpsRepos: AzureDevOpsRepos;
+  devOpsConfigurations: DevOpsConfigurations;
+  gitHubOwners: GitHubOwners;
+  gitHubRepos: GitHubRepos;
+  gitLabGroups: GitLabGroups;
+  gitLabSubgroups: GitLabSubgroups;
+  gitLabProjects: GitLabProjects;
+  devOpsOperationResults: DevOpsOperationResults;
+  securityContacts: SecurityContacts;
+  securityOperators: SecurityOperators;
+  securitySolutions: SecuritySolutions;
+  securitySolutionsReferenceDataOperations: SecuritySolutionsReferenceDataOperations;
+  sensitivitySettings: SensitivitySettings;
+  serverVulnerabilityAssessmentOperations: ServerVulnerabilityAssessmentOperations;
+  serverVulnerabilityAssessmentsSettings: ServerVulnerabilityAssessmentsSettings;
+  settings: Settings;
+  softwareInventories: SoftwareInventories;
+  sqlVulnerabilityAssessmentBaselineRules: SqlVulnerabilityAssessmentBaselineRules;
   sqlVulnerabilityAssessmentScans: SqlVulnerabilityAssessmentScans;
   sqlVulnerabilityAssessmentScanResults: SqlVulnerabilityAssessmentScanResults;
-  sqlVulnerabilityAssessmentBaselineRules: SqlVulnerabilityAssessmentBaselineRules;
-  securityConnectors: SecurityConnectors;
-  securityOperators: SecurityOperators;
+  subAssessments: SubAssessments;
+  tasks: Tasks;
+  topology: Topology;
+  workspaceSettings: WorkspaceSettings;
 }
