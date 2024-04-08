@@ -112,151 +112,6 @@ export interface CloudErrorBody {
   details?: CloudErrorBody[];
 }
 
-/** List of SKU Information objects. */
-export interface DataBoxEdgeSkuList {
-  /**
-   * List of ResourceType Sku
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: DataBoxEdgeSku[];
-  /**
-   * Links to the next set of results
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** The Sku information. */
-export interface DataBoxEdgeSku {
-  /**
-   * The type of the resource.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly resourceType?: string;
-  /**
-   * The Sku name.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly name?: SkuName;
-  /**
-   * The Sku kind.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly kind?: string;
-  /**
-   * The Sku tier.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly tier?: SkuTier;
-  /**
-   * The Sku kind.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly size?: string;
-  /**
-   * The Sku family.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly family?: string;
-  /**
-   * Availability of the Sku for the region.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly locations?: string[];
-  /**
-   * The API versions in which Sku is available.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly apiVersions?: string[];
-  /**
-   * Availability of the Sku for the location/zone/site.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly locationInfo?: SkuLocationInfo[];
-  /**
-   * The pricing info of the Sku.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly costs?: SkuCost[];
-  /**
-   * Sku can be signed up by customer or not.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly signupOption?: SkuSignupOption;
-  /**
-   * Availability of the Sku as preview/stable.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly version?: SkuVersion;
-  /**
-   * Links to the next set of results
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly availability?: SkuAvailability;
-  /**
-   * List of Shipment Types supported by this SKU
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly shipmentTypes?: ShipmentType[];
-  /**
-   * The capability info of the SKU.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly capabilities?: SkuCapability[];
-}
-
-/** The location info. */
-export interface SkuLocationInfo {
-  /**
-   * The location.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly location?: string;
-  /**
-   * The zones.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly zones?: string[];
-  /**
-   * The sites.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly sites?: string[];
-}
-
-/** The metadata for retrieving price info. */
-export interface SkuCost {
-  /**
-   * Used for querying price from commerce.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly meterId?: string;
-  /**
-   * The cost quantity.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly quantity?: number;
-  /**
-   * The extended unit.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly extendedUnit?: string;
-}
-
-/** The metadata to describe the capability. */
-export interface SkuCapability {
-  /**
-   * An invariant to describe the feature.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly name?: string;
-  /**
-   * An invariant if the feature is measured by quantity.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: string;
-}
-
 /** The collection of Data Box Edge/Gateway devices. */
 export interface DataBoxEdgeDeviceList {
   /**
@@ -307,7 +162,7 @@ export interface SystemData {
   lastModifiedBy?: string;
   /** The type of identity that last modified the resource. */
   lastModifiedByType?: CreatedByType;
-  /** The type of identity that last modified the resource. */
+  /** The timestamp of resource last modification (UTC) */
   lastModifiedAt?: Date;
 }
 
@@ -438,6 +293,126 @@ export interface BandwidthSchedulesList {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly nextLink?: string;
+}
+
+/** Object for Capturing DeviceCapacityRequestInfo */
+export interface DeviceCapacityRequestInfo {
+  /** Array containing the sizes of the VMs for checking if its feasible to create them on the appliance. */
+  vmPlacementQuery: string[][];
+  /** Array of the VMs of the sizes in VmSizes can be provisioned on the appliance. */
+  vmPlacementResults?: VmPlacementRequestResult[];
+}
+
+/** List of VM sizes being checked for creation on appliance along with corresponding result. */
+export interface VmPlacementRequestResult {
+  /** List of VM sizes being checked. */
+  vmSize?: string[];
+  /** Boolean value indicating if the VM(s) in VmSize can be created. */
+  isFeasible?: boolean;
+  /** MessageCode indicating reason for success or failure. */
+  messageCode?: string;
+  /** Localized message to be displayed to the user to explain the check result. */
+  message?: string;
+}
+
+/** Cluster Storage Data. */
+export interface ClusterStorageViewData {
+  /** Total storage on the cluster in MB. */
+  clusterTotalStorageMb?: number;
+  /** The available or free storage on the cluster in MB. */
+  clusterFreeStorageMb?: number;
+}
+
+/** Cluster Compute Data. */
+export interface ClusterCapacityViewData {
+  /** The FQDN of the cluster. */
+  fqdn?: string;
+  /** The cluster's GPU capacity. */
+  gpuCapacity?: ClusterGpuCapacity;
+  /** The cluster's memory capacity. */
+  memoryCapacity?: ClusterMemoryCapacity;
+  /** The last time at which the ClusterCapacityViewData was set. */
+  lastRefreshedTime?: Date;
+  /** The total # of vCPUs provisioned by non-HPN VM per appliance. */
+  totalProvisionedNonHpnCores?: number;
+}
+
+/** Cluster GPU Data. */
+export interface ClusterGpuCapacity {
+  /** The cluster GPU Type. */
+  gpuType?: string;
+  /** The used GPU units count in the cluster. */
+  gpuUsedUnitsCount?: number;
+  /** The free GPU units count in the cluster. */
+  gpuFreeUnitsCount?: number;
+  /** The GPU units count reserved for failover in the cluster. */
+  gpuReservedForFailoverUnitsCount?: number;
+  /** The total GPU units count in the cluster. */
+  gpuTotalUnitsCount?: number;
+}
+
+/** NodeCapacityInfo defines the required information to determine the placement of a VM. */
+export interface ClusterMemoryCapacity {
+  /** The free memory in the cluster in MB. */
+  clusterFreeMemoryMb?: number;
+  /** The used memory in the cluster in MB. */
+  clusterUsedMemoryMb?: number;
+  /** The failover memory in the cluster in MB. */
+  clusterFailoverMemoryMb?: number;
+  /** The fragmentation memory in the cluster in MB. */
+  clusterFragmentationMemoryMb?: number;
+  /** The memory reserved for Hyper-V in the cluster in MB. */
+  clusterHypervReserveMemoryMb?: number;
+  /** The memory of the Infra VM in the cluster in MB. */
+  clusterInfraVmMemoryMb?: number;
+  /** The total memory in the cluster in MB. */
+  clusterTotalMemoryMb?: number;
+  /** The non-failover memory in the cluster in MB. */
+  clusterNonFailoverVmMb?: number;
+  /** The memory used by VMs in the cluster in MB. */
+  clusterMemoryUsedByVmsMb?: number;
+}
+
+/** Host Capacity Data. */
+export interface HostCapacity {
+  /** The name of the host. */
+  hostName?: string;
+  /** The available memory on the host accounting for VM placement size and any host VM reservations. */
+  effectiveAvailableMemoryMbOnHost?: number;
+  /** The available amount of GPUs on the host to use after accounting for GPUS used by reservations on the host. */
+  availableGpuCount?: number;
+  /** The VM used memory per VmId. */
+  vmUsedMemory?: { [propertyName: string]: VmMemory };
+  /** The GPU type of the VM. */
+  gpuType?: string;
+  /** The numa nodes information for Hpn VMs. */
+  numaNodesData?: NumaNodeData[];
+}
+
+/** VmMemory Data. */
+export interface VmMemory {
+  /** The total amount of RAM in the virtual machine, as seen by the guest  operating system. For a virtual machine with dynamic memory enabled, this represents the initial memory available at startup. */
+  startupMemoryMB?: number;
+  /** The current memory used by the virtual machine. */
+  currentMemoryUsageMB?: number;
+}
+
+/** NUMA node data. */
+export interface NumaNodeData {
+  /** The NUMA node index. */
+  numaNodeIndex?: number;
+  /** The total memory on the NUMA node. */
+  totalMemoryInMb?: number;
+  /** The logical cores per core count. */
+  logicalCoreCountPerCore?: number;
+  /** The effective available memory on the NUMA node in MB. */
+  effectiveAvailableMemoryInMb?: number;
+  /** The free VCPU indices for the Hpn VMs. */
+  freeVCpuIndexesForHpn?: number[];
+  /** The VCPU indices for Hpn VMs */
+  vCpuIndexesForHpn?: number[];
+  /** The VCPU indices for the root. */
+  vCpuIndexesForRoot?: number[];
 }
 
 /** RemoteApplicationType for which remote support settings is being modified */
@@ -1254,6 +1229,151 @@ export interface DataBoxEdgeMoveRequest {
   resources: string[];
 }
 
+/** The Sku information. */
+export interface DataBoxEdgeSku {
+  /**
+   * The type of the resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly resourceType?: string;
+  /**
+   * The Sku name.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: SkuName;
+  /**
+   * The Sku kind.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly kind?: string;
+  /**
+   * The Sku tier.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly tier?: SkuTier;
+  /**
+   * The Sku kind.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly size?: string;
+  /**
+   * The Sku family.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly family?: string;
+  /**
+   * Availability of the Sku for the region.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly locations?: string[];
+  /**
+   * The API versions in which Sku is available.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly apiVersions?: string[];
+  /**
+   * Availability of the Sku for the location/zone/site.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly locationInfo?: SkuLocationInfo[];
+  /**
+   * The pricing info of the Sku.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly costs?: SkuCost[];
+  /**
+   * Sku can be signed up by customer or not.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly signupOption?: SkuSignupOption;
+  /**
+   * Availability of the Sku as preview/stable.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly version?: SkuVersion;
+  /**
+   * Links to the next set of results
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly availability?: SkuAvailability;
+  /**
+   * List of Shipment Types supported by this SKU
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly shipmentTypes?: ShipmentType[];
+  /**
+   * The capability info of the SKU.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly capabilities?: SkuCapability[];
+}
+
+/** The location info. */
+export interface SkuLocationInfo {
+  /**
+   * The location.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly location?: string;
+  /**
+   * The zones.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly zones?: string[];
+  /**
+   * The sites.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly sites?: string[];
+}
+
+/** The metadata for retrieving price info. */
+export interface SkuCost {
+  /**
+   * Used for querying price from commerce.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly meterId?: string;
+  /**
+   * The cost quantity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly quantity?: number;
+  /**
+   * The extended unit.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly extendedUnit?: string;
+}
+
+/** The metadata to describe the capability. */
+export interface SkuCapability {
+  /**
+   * An invariant to describe the feature.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /**
+   * An invariant if the feature is measured by quantity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly value?: string;
+}
+
+/** List of SKU Information objects. */
+export interface DataBoxEdgeSkuList {
+  /**
+   * List of ResourceType Sku
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly value?: DataBoxEdgeSku[];
+  /**
+   * Links to the next set of results
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly nextLink?: string;
+}
+
 /** Etcd configuration */
 export interface EtcdInfo {
   /**
@@ -1440,6 +1560,8 @@ export interface LoadBalancerConfig {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly version?: string;
+  /** Load balancer ipconfig */
+  ipRange?: string[];
 }
 
 /** Periodic timer event source. */
@@ -1450,83 +1572,6 @@ export interface PeriodicTimerSourceInfo {
   schedule: string;
   /** Topic where periodic events are published to IoT device. */
   topic?: string;
-}
-
-/** Resource type Sku object */
-export interface ResourceTypeSku {
-  /**
-   * The resource type.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly resourceType?: string;
-  /**
-   * The skus.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly skus?: SkuInformation[];
-}
-
-/** Sku information */
-export interface SkuInformation {
-  /**
-   * The sku name.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly name?: string;
-  /**
-   * The sku tier.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly tier?: string;
-  /**
-   * The sku kind.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly kind?: string;
-  /**
-   * The Sku family.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly family?: string;
-  /**
-   * The pricing info of the Sku.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly costs?: SkuCost[];
-  /**
-   * The locations where Sku is available.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly locations?: string[];
-  /**
-   * The locations where Sku is available with zones and sites info
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly locationInfo?: SkuLocationInfo[];
-  /**
-   * The required quotaIds for the sku to be available.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly requiredQuotaIds?: string[];
-  /**
-   * The required features for the sku to be available.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly requiredFeatures?: string[];
-}
-
-/** List of SKU Information objects */
-export interface SkuInformationList {
-  /**
-   * List of ResourceTypeSku objects
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: ResourceTypeSku[];
-  /**
-   * Links to the next set of results
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
 }
 
 /** The Data Box Edge/Gateway device. */
@@ -1541,8 +1586,11 @@ export interface DataBoxEdgeDevice extends ARMBaseModel {
   etag?: string;
   /** Msi identity of the resource */
   identity?: ResourceIdentity;
-  /** The kind of the device. */
-  kind?: DataBoxEdgeDeviceKind;
+  /**
+   * The kind of the device.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly kind?: DataBoxEdgeDeviceKind;
   /**
    * DataBoxEdge Resource
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -1553,8 +1601,11 @@ export interface DataBoxEdgeDevice extends ARMBaseModel {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly systemDataPropertiesSystemData?: SystemData;
-  /** The status of the Data Box Edge/Gateway device. */
-  dataBoxEdgeDeviceStatus?: DataBoxEdgeDeviceStatus;
+  /**
+   * The status of the Data Box Edge/Gateway device.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly dataBoxEdgeDeviceStatus?: DataBoxEdgeDeviceStatus;
   /**
    * The Serial Number of Data Box Edge/Gateway device.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -1632,12 +1683,17 @@ export interface DataBoxEdgeDevice extends ARMBaseModel {
   readonly edgeProfile?: EdgeProfile;
   /** The details of data-residency related properties for this resource */
   dataResidency?: DataResidency;
+  /**
+   * Kubernetes Workload Profile
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly kubernetesWorkloadProfile?: string;
 }
 
 /** Alert on the data box edge/gateway device. */
 export interface Alert extends ARMBaseModel {
   /**
-   * Alert generated in the resource
+   * Metadata pertaining to creation and last modification of Alert
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly systemData?: SystemData;
@@ -1681,7 +1737,7 @@ export interface Alert extends ARMBaseModel {
 /** The bandwidth schedule details. */
 export interface BandwidthSchedule extends ARMBaseModel {
   /**
-   * Bandwidth object related to ASE resource
+   * Metadata pertaining to creation and last modification of BandwidthSchedule
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly systemData?: SystemData;
@@ -1695,10 +1751,27 @@ export interface BandwidthSchedule extends ARMBaseModel {
   days: DayOfWeek[];
 }
 
+/** Object for Capturing DeviceCapacityInfo */
+export interface DeviceCapacityInfo extends ARMBaseModel {
+  /**
+   * Metadata pertaining to device capacity info.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly systemData?: SystemData;
+  /** Timestamp of request in UTC */
+  timeStamp?: Date;
+  /** Cluster capacity data for storage resources (CSV). */
+  clusterStorageCapacityInfo?: ClusterStorageViewData;
+  /** Cluster capacity data for compute resources (Memory and GPU). */
+  clusterComputeCapacityInfo?: ClusterCapacityViewData;
+  /** The dictionary of individual node names and node capacities in the cluster. */
+  nodeCapacityInfos?: { [propertyName: string]: HostCapacity };
+}
+
 /** The diagnostic proactive log collection settings of a device. */
 export interface DiagnosticProactiveLogCollectionSettings extends ARMBaseModel {
   /**
-   * DiagnosticProactiveLogCollectionSettings
+   * Metadata pertaining to creation and last modification of DiagnosticProactiveLogCollectionSettings
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly systemData?: SystemData;
@@ -1709,7 +1782,7 @@ export interface DiagnosticProactiveLogCollectionSettings extends ARMBaseModel {
 /** The remote support settings of a device. */
 export interface DiagnosticRemoteSupportSettings extends ARMBaseModel {
   /**
-   * DiagnosticRemoteSupportSettings
+   * Represents resource creation and updation time
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly systemData?: SystemData;
@@ -1719,6 +1792,11 @@ export interface DiagnosticRemoteSupportSettings extends ARMBaseModel {
 
 /** The extended Info of the Data Box Edge/Gateway device. */
 export interface DataBoxEdgeDeviceExtendedInfo extends ARMBaseModel {
+  /**
+   * Metadata pertaining to creation and last modification of DataBoxEdgeDevice
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly systemData?: SystemData;
   /** The digital signature of encrypted certificate. */
   encryptionKeyThumbprint?: string;
   /** The public part of the encryption certificate. Client uses this to encrypt any secret. */
@@ -1743,12 +1821,42 @@ export interface DataBoxEdgeDeviceExtendedInfo extends ARMBaseModel {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly deviceSecrets?: { [propertyName: string]: Secret };
+  /**
+   * Cluster Witness Type
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly clusterWitnessType?: ClusterWitnessType;
+  /**
+   * The witness location of file share.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly fileShareWitnessLocation?: string;
+  /**
+   * The username of file share.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly fileShareWitnessUsername?: string;
+  /**
+   * The Cloud Witness Storage account name.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly cloudWitnessStorageAccountName?: string;
+  /**
+   * The Container for cloud witness in the storage account.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly cloudWitnessContainerName?: string;
+  /**
+   * The Azure service endpoint of the cloud witness storage account.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly cloudWitnessStorageEndpoint?: string;
 }
 
 /** The network settings of a device. */
 export interface NetworkSettings extends ARMBaseModel {
   /**
-   * NetworkSettings on ASE device
+   * Metadata pertaining to creation and last modification of NetworkSettings
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly systemData?: SystemData;
@@ -1805,10 +1913,20 @@ export interface Node extends ARMBaseModel {
 /** The order details. */
 export interface Order extends ARMBaseModel {
   /**
-   * Order configured on ASE resource
+   * It specify the order api version.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly kind?: string;
+  /**
+   * Metadata pertaining to creation and last modification of Order
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly systemData?: SystemData;
+  /**
+   * It specify the order resource id.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly orderId?: string;
   /** The contact details. */
   contactInformation?: ContactDetails;
   /** The shipping address. */
@@ -1847,7 +1965,7 @@ export interface Role extends ARMBaseModel {
   /** Role type. */
   kind: RoleTypes;
   /**
-   * Role configured on ASE resource
+   * Metadata pertaining to creation and last modification of Role
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly systemData?: SystemData;
@@ -1858,7 +1976,7 @@ export interface Addon extends ARMBaseModel {
   /** Addon type. */
   kind: AddonType;
   /**
-   * Addon type
+   * Metadata pertaining to creation and last modification of Addon
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly systemData?: SystemData;
@@ -1867,7 +1985,7 @@ export interface Addon extends ARMBaseModel {
 /** The metric setting details for the role */
 export interface MonitoringMetricConfiguration extends ARMBaseModel {
   /**
-   * MonitoringConfiguration on ASE device
+   * Metadata pertaining to creation and last modification of MonitoringConfiguration
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly systemData?: SystemData;
@@ -1884,7 +2002,7 @@ export interface SecuritySettings extends ARMBaseModel {
 /** Represents a share on the  Data Box Edge/Gateway device. */
 export interface Share extends ARMBaseModel {
   /**
-   * Share on ASE device
+   * Metadata pertaining to creation and last modification of Share
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly systemData?: SystemData;
@@ -1916,7 +2034,7 @@ export interface Share extends ARMBaseModel {
 /** The storage account credential. */
 export interface StorageAccountCredential extends ARMBaseModel {
   /**
-   * StorageAccountCredential object
+   * Metadata pertaining to creation and last modification of StorageAccountCredential
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly systemData?: SystemData;
@@ -1941,7 +2059,7 @@ export interface StorageAccountCredential extends ARMBaseModel {
 /** Represents a Storage Account on the  Data Box Edge/Gateway device. */
 export interface StorageAccount extends ARMBaseModel {
   /**
-   * StorageAccount object on ASE device
+   * Metadata pertaining to creation and last modification of StorageAccount
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly systemData?: SystemData;
@@ -1968,7 +2086,7 @@ export interface StorageAccount extends ARMBaseModel {
 /** Represents a container on the  Data Box Edge/Gateway device. */
 export interface Container extends ARMBaseModel {
   /**
-   * Container in DataBoxEdge Resource
+   * Metadata pertaining to creation and last modification of Container
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly systemData?: SystemData;
@@ -1993,20 +2111,20 @@ export interface Container extends ARMBaseModel {
 
 /** Trigger details. */
 export interface Trigger extends ARMBaseModel {
+  /** Trigger Kind. */
+  kind: TriggerEventType;
   /**
-   * Trigger in DataBoxEdge Resource
+   * Metadata pertaining to creation and last modification of Trigger
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly systemData?: SystemData;
-  /** Trigger Kind. */
-  kind: TriggerEventType;
 }
 
 /** The request object for trigger support package. */
 export interface TriggerSupportPackageRequest extends ARMBaseModel {
-  /** Start of the timespan of the log collection */
+  /** MinimumTimeStamp from where logs need to be collected */
   minimumTimeStamp?: Date;
-  /** MaximumTimeStamp until where logs need to be collected */
+  /** Start of the timespan of the log collection */
   maximumTimeStamp?: Date;
   /**
    * Type of files, which need to be included in the logs
@@ -2019,7 +2137,7 @@ export interface TriggerSupportPackageRequest extends ARMBaseModel {
 /** Details about ongoing updates and availability of updates on the device. */
 export interface UpdateSummary extends ARMBaseModel {
   /**
-   * UpdateSummary Result
+   * Metadata pertaining to creation and last modification of UpdateSummary
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly systemData?: SystemData;
@@ -2135,7 +2253,7 @@ export interface UpdateSummary extends ARMBaseModel {
 /** Represents a user who has access to one or more shares on the Data Box Edge/Gateway device. */
 export interface User extends ARMBaseModel {
   /**
-   * User in DataBoxEdge Resource
+   * Metadata pertaining to creation and last modification of User
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly systemData?: SystemData;
@@ -2150,7 +2268,11 @@ export interface User extends ARMBaseModel {
   userType: UserType;
 }
 
-/** CloudEdgeManagementRole role. */
+/**
+ * The preview of Virtual Machine Cloud Management from the Azure supports deploying and managing VMs on your Azure Stack Edge device from Azure Portal.
+ * For more information, refer to: https://docs.microsoft.com/en-us/azure/databox-online/azure-stack-edge-gpu-virtual-machine-overview
+ * By using this feature, you agree to the preview legal terms. See the https://azure.microsoft.com/en-us/support/legal/preview-supplemental-terms/ for additional details.
+ */
 export interface CloudEdgeManagementRole extends Role {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   kind: "CloudEdgeManagement";
@@ -2193,7 +2315,16 @@ export interface IoTRole extends Role {
   roleStatus?: RoleStatus;
 }
 
-/** Kubernetes role. */
+/**
+ * The limited preview of Kubernetes Cluster Management from the Azure supports:
+ * 1. Using a simple turn-key option in Azure Portal, deploy a Kubernetes cluster on your Azure Stack Edge device.
+ * 2. Configure Kubernetes cluster running on your device with Arc enabled Kubernetes with a click of a button in the Azure Portal.
+ *  Azure Arc enables organizations to view, manage, and govern their on-premises Kubernetes clusters using the Azure Portal, command line tools, and APIs.
+ * 3. Easily configure Persistent Volumes using SMB and NFS shares for storing container data.
+ *  For more information, refer to the document here: https://databoxupdatepackages.blob.core.windows.net/documentation/Microsoft-Azure-Stack-Edge-K8-Cloud-Management-20210323.pdf
+ *  Or Demo: https://databoxupdatepackages.blob.core.windows.net/documentation/Microsoft-Azure-Stack-Edge-K8S-Cloud-Management-20210323.mp4
+ *  By using this feature, you agree to the preview legal terms. See the https://azure.microsoft.com/en-us/support/legal/preview-supplemental-terms/
+ */
 export interface KubernetesRole extends Role {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   kind: "Kubernetes";
@@ -2336,7 +2467,7 @@ export enum KnownMetricUnit {
   /** BytesPerSecond */
   BytesPerSecond = "BytesPerSecond",
   /** CountPerSecond */
-  CountPerSecond = "CountPerSecond"
+  CountPerSecond = "CountPerSecond",
 }
 
 /**
@@ -2370,7 +2501,7 @@ export enum KnownMetricAggregationType {
   /** Total */
   Total = "Total",
   /** Count */
-  Count = "Count"
+  Count = "Count",
 }
 
 /**
@@ -2393,7 +2524,7 @@ export enum KnownMetricCategory {
   /** Capacity */
   Capacity = "Capacity",
   /** Transaction */
-  Transaction = "Transaction"
+  Transaction = "Transaction",
 }
 
 /**
@@ -2423,7 +2554,7 @@ export enum KnownTimeGrain {
   /** PT12H */
   PT12H = "PT12H",
   /** PT1D */
-  PT1D = "PT1D"
+  PT1D = "PT1D",
 }
 
 /**
@@ -2493,7 +2624,15 @@ export enum KnownSkuName {
   /** RDC */
   RDC = "RDC",
   /** Management */
-  Management = "Management"
+  Management = "Management",
+  /** EP264Mx1W */
+  EP264Mx1W = "EP2_64_Mx1_W",
+  /** EP2128GPU1Mx1W */
+  EP2128GPU1Mx1W = "EP2_128_GPU1_Mx1_W",
+  /** EP2256GPU2Mx1 */
+  EP2256GPU2Mx1 = "EP2_256_GPU2_Mx1",
+  /** EdgeMRTCP */
+  EdgeMRTCP = "EdgeMR_TCP",
 }
 
 /**
@@ -2525,14 +2664,18 @@ export enum KnownSkuName {
  * **RCA_Small** \
  * **RCA_Large** \
  * **RDC** \
- * **Management**
+ * **Management** \
+ * **EP2_64_Mx1_W** \
+ * **EP2_128_GPU1_Mx1_W** \
+ * **EP2_256_GPU2_Mx1** \
+ * **EdgeMR_TCP**
  */
 export type SkuName = string;
 
 /** Known values of {@link SkuTier} that the service accepts. */
 export enum KnownSkuTier {
   /** Standard */
-  Standard = "Standard"
+  Standard = "Standard",
 }
 
 /**
@@ -2544,81 +2687,6 @@ export enum KnownSkuTier {
  */
 export type SkuTier = string;
 
-/** Known values of {@link SkuSignupOption} that the service accepts. */
-export enum KnownSkuSignupOption {
-  /** None */
-  None = "None",
-  /** Available */
-  Available = "Available"
-}
-
-/**
- * Defines values for SkuSignupOption. \
- * {@link KnownSkuSignupOption} can be used interchangeably with SkuSignupOption,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **None** \
- * **Available**
- */
-export type SkuSignupOption = string;
-
-/** Known values of {@link SkuVersion} that the service accepts. */
-export enum KnownSkuVersion {
-  /** Stable */
-  Stable = "Stable",
-  /** Preview */
-  Preview = "Preview"
-}
-
-/**
- * Defines values for SkuVersion. \
- * {@link KnownSkuVersion} can be used interchangeably with SkuVersion,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Stable** \
- * **Preview**
- */
-export type SkuVersion = string;
-
-/** Known values of {@link SkuAvailability} that the service accepts. */
-export enum KnownSkuAvailability {
-  /** Available */
-  Available = "Available",
-  /** Unavailable */
-  Unavailable = "Unavailable"
-}
-
-/**
- * Defines values for SkuAvailability. \
- * {@link KnownSkuAvailability} can be used interchangeably with SkuAvailability,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Available** \
- * **Unavailable**
- */
-export type SkuAvailability = string;
-
-/** Known values of {@link ShipmentType} that the service accepts. */
-export enum KnownShipmentType {
-  /** NotApplicable */
-  NotApplicable = "NotApplicable",
-  /** ShippedToCustomer */
-  ShippedToCustomer = "ShippedToCustomer",
-  /** SelfPickup */
-  SelfPickup = "SelfPickup"
-}
-
-/**
- * Defines values for ShipmentType. \
- * {@link KnownShipmentType} can be used interchangeably with ShipmentType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **NotApplicable** \
- * **ShippedToCustomer** \
- * **SelfPickup**
- */
-export type ShipmentType = string;
-
 /** Known values of {@link MsiIdentityType} that the service accepts. */
 export enum KnownMsiIdentityType {
   /** None */
@@ -2626,7 +2694,7 @@ export enum KnownMsiIdentityType {
   /** SystemAssigned */
   SystemAssigned = "SystemAssigned",
   /** UserAssigned */
-  UserAssigned = "UserAssigned"
+  UserAssigned = "UserAssigned",
 }
 
 /**
@@ -2649,7 +2717,7 @@ export enum KnownDataBoxEdgeDeviceKind {
   /** AzureStackHub */
   AzureStackHub = "AzureStackHub",
   /** AzureModularDataCentre */
-  AzureModularDataCentre = "AzureModularDataCentre"
+  AzureModularDataCentre = "AzureModularDataCentre",
 }
 
 /**
@@ -2673,7 +2741,7 @@ export enum KnownCreatedByType {
   /** ManagedIdentity */
   ManagedIdentity = "ManagedIdentity",
   /** Key */
-  Key = "Key"
+  Key = "Key",
 }
 
 /**
@@ -2703,7 +2771,7 @@ export enum KnownDataBoxEdgeDeviceStatus {
   /** PartiallyDisconnected */
   PartiallyDisconnected = "PartiallyDisconnected",
   /** Maintenance */
-  Maintenance = "Maintenance"
+  Maintenance = "Maintenance",
 }
 
 /**
@@ -2724,7 +2792,7 @@ export type DataBoxEdgeDeviceStatus = string;
 /** Known values of {@link DeviceType} that the service accepts. */
 export enum KnownDeviceType {
   /** DataBoxEdgeDevice */
-  DataBoxEdgeDevice = "DataBoxEdgeDevice"
+  DataBoxEdgeDevice = "DataBoxEdgeDevice",
 }
 
 /**
@@ -2751,7 +2819,7 @@ export enum KnownRoleTypes {
   /** CloudEdgeManagement */
   CloudEdgeManagement = "CloudEdgeManagement",
   /** Kubernetes */
-  Kubernetes = "Kubernetes"
+  Kubernetes = "Kubernetes",
 }
 
 /**
@@ -2776,7 +2844,7 @@ export enum KnownResourceMoveStatus {
   /** ResourceMoveInProgress */
   ResourceMoveInProgress = "ResourceMoveInProgress",
   /** ResourceMoveFailed */
-  ResourceMoveFailed = "ResourceMoveFailed"
+  ResourceMoveFailed = "ResourceMoveFailed",
 }
 
 /**
@@ -2801,7 +2869,7 @@ export enum KnownSubscriptionState {
   /** Deleted */
   Deleted = "Deleted",
   /** Unregistered */
-  Unregistered = "Unregistered"
+  Unregistered = "Unregistered",
 }
 
 /**
@@ -2822,7 +2890,7 @@ export enum KnownDataResidencyType {
   /** GeoZoneReplication */
   GeoZoneReplication = "GeoZoneReplication",
   /** ZoneReplication */
-  ZoneReplication = "ZoneReplication"
+  ZoneReplication = "ZoneReplication",
 }
 
 /**
@@ -2842,7 +2910,7 @@ export enum KnownAlertSeverity {
   /** Warning */
   Warning = "Warning",
   /** Critical */
-  Critical = "Critical"
+  Critical = "Critical",
 }
 
 /**
@@ -2871,7 +2939,7 @@ export enum KnownDayOfWeek {
   /** Friday */
   Friday = "Friday",
   /** Saturday */
-  Saturday = "Saturday"
+  Saturday = "Saturday",
 }
 
 /**
@@ -2894,7 +2962,7 @@ export enum KnownProactiveDiagnosticsConsent {
   /** Enabled */
   Enabled = "Enabled",
   /** Disabled */
-  Disabled = "Disabled"
+  Disabled = "Disabled",
 }
 
 /**
@@ -2916,7 +2984,7 @@ export enum KnownRemoteApplicationType {
   /** LocalUI */
   LocalUI = "LocalUI",
   /** AllApplications */
-  AllApplications = "AllApplications"
+  AllApplications = "AllApplications",
 }
 
 /**
@@ -2940,7 +3008,7 @@ export enum KnownAccessLevel {
   /** ReadWrite */
   ReadWrite = "ReadWrite",
   /** FullAccess */
-  FullAccess = "FullAccess"
+  FullAccess = "FullAccess",
 }
 
 /**
@@ -2968,7 +3036,7 @@ export enum KnownKeyVaultSyncStatus {
   /** KeyVaultSyncing */
   KeyVaultSyncing = "KeyVaultSyncing",
   /** KeyVaultNotSynced */
-  KeyVaultNotSynced = "KeyVaultNotSynced"
+  KeyVaultNotSynced = "KeyVaultNotSynced",
 }
 
 /**
@@ -2992,7 +3060,7 @@ export enum KnownEncryptionAlgorithm {
   /** AES256 */
   AES256 = "AES256",
   /** RsaesPkcs1V15 */
-  RsaesPkcs1V15 = "RSAES_PKCS1_v_1_5"
+  RsaesPkcs1V15 = "RSAES_PKCS1_v_1_5",
 }
 
 /**
@@ -3005,6 +3073,27 @@ export enum KnownEncryptionAlgorithm {
  * **RSAES_PKCS1_v_1_5**
  */
 export type EncryptionAlgorithm = string;
+
+/** Known values of {@link ClusterWitnessType} that the service accepts. */
+export enum KnownClusterWitnessType {
+  /** None */
+  None = "None",
+  /** Cloud */
+  Cloud = "Cloud",
+  /** FileShare */
+  FileShare = "FileShare",
+}
+
+/**
+ * Defines values for ClusterWitnessType. \
+ * {@link KnownClusterWitnessType} can be used interchangeably with ClusterWitnessType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **None** \
+ * **Cloud** \
+ * **FileShare**
+ */
+export type ClusterWitnessType = string;
 
 /** Known values of {@link JobStatus} that the service accepts. */
 export enum KnownJobStatus {
@@ -3021,7 +3110,7 @@ export enum KnownJobStatus {
   /** Paused */
   Paused = "Paused",
   /** Scheduled */
-  Scheduled = "Scheduled"
+  Scheduled = "Scheduled",
 }
 
 /**
@@ -3058,7 +3147,7 @@ export enum KnownJobType {
   /** Restore */
   Restore = "Restore",
   /** TriggerSupportPackage */
-  TriggerSupportPackage = "TriggerSupportPackage"
+  TriggerSupportPackage = "TriggerSupportPackage",
 }
 
 /**
@@ -3113,7 +3202,7 @@ export enum KnownUpdateOperationStage {
   /** RescanComplete */
   RescanComplete = "RescanComplete",
   /** RescanFailed */
-  RescanFailed = "RescanFailed"
+  RescanFailed = "RescanFailed",
 }
 
 /**
@@ -3150,7 +3239,7 @@ export enum KnownDownloadPhase {
   /** Downloading */
   Downloading = "Downloading",
   /** Verifying */
-  Verifying = "Verifying"
+  Verifying = "Verifying",
 }
 
 /**
@@ -3172,7 +3261,7 @@ export enum KnownNetworkGroup {
   /** NonRdma */
   NonRdma = "NonRDMA",
   /** Rdma */
-  Rdma = "RDMA"
+  Rdma = "RDMA",
 }
 
 /**
@@ -3191,7 +3280,7 @@ export enum KnownNetworkAdapterStatus {
   /** Inactive */
   Inactive = "Inactive",
   /** Active */
-  Active = "Active"
+  Active = "Active",
 }
 
 /**
@@ -3209,7 +3298,7 @@ export enum KnownNetworkAdapterRdmaStatus {
   /** Incapable */
   Incapable = "Incapable",
   /** Capable */
-  Capable = "Capable"
+  Capable = "Capable",
 }
 
 /**
@@ -3227,7 +3316,7 @@ export enum KnownNetworkAdapterDhcpStatus {
   /** Disabled */
   Disabled = "Disabled",
   /** Enabled */
-  Enabled = "Enabled"
+  Enabled = "Enabled",
 }
 
 /**
@@ -3251,7 +3340,7 @@ export enum KnownNodeStatus {
   /** Rebooting */
   Rebooting = "Rebooting",
   /** ShuttingDown */
-  ShuttingDown = "ShuttingDown"
+  ShuttingDown = "ShuttingDown",
 }
 
 /**
@@ -3302,7 +3391,7 @@ export enum KnownOrderState {
   /** PickupCompleted */
   PickupCompleted = "PickupCompleted",
   /** AwaitingDrop */
-  AwaitingDrop = "AwaitingDrop"
+  AwaitingDrop = "AwaitingDrop",
 }
 
 /**
@@ -3330,12 +3419,33 @@ export enum KnownOrderState {
  */
 export type OrderState = string;
 
+/** Known values of {@link ShipmentType} that the service accepts. */
+export enum KnownShipmentType {
+  /** NotApplicable */
+  NotApplicable = "NotApplicable",
+  /** ShippedToCustomer */
+  ShippedToCustomer = "ShippedToCustomer",
+  /** SelfPickup */
+  SelfPickup = "SelfPickup",
+}
+
+/**
+ * Defines values for ShipmentType. \
+ * {@link KnownShipmentType} can be used interchangeably with ShipmentType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **NotApplicable** \
+ * **ShippedToCustomer** \
+ * **SelfPickup**
+ */
+export type ShipmentType = string;
+
 /** Known values of {@link AddonType} that the service accepts. */
 export enum KnownAddonType {
   /** IotEdge */
   IotEdge = "IotEdge",
   /** ArcForKubernetes */
-  ArcForKubernetes = "ArcForKubernetes"
+  ArcForKubernetes = "ArcForKubernetes",
 }
 
 /**
@@ -3359,7 +3469,7 @@ export enum KnownShareStatus {
   /** Updating */
   Updating = "Updating",
   /** NeedsAttention */
-  NeedsAttention = "NeedsAttention"
+  NeedsAttention = "NeedsAttention",
 }
 
 /**
@@ -3380,7 +3490,7 @@ export enum KnownMonitoringStatus {
   /** Enabled */
   Enabled = "Enabled",
   /** Disabled */
-  Disabled = "Disabled"
+  Disabled = "Disabled",
 }
 
 /**
@@ -3400,7 +3510,7 @@ export enum KnownAzureContainerDataFormat {
   /** PageBlob */
   PageBlob = "PageBlob",
   /** AzureFile */
-  AzureFile = "AzureFile"
+  AzureFile = "AzureFile",
 }
 
 /**
@@ -3419,7 +3529,7 @@ export enum KnownShareAccessProtocol {
   /** SMB */
   SMB = "SMB",
   /** NFS */
-  NFS = "NFS"
+  NFS = "NFS",
 }
 
 /**
@@ -3439,7 +3549,7 @@ export enum KnownShareAccessType {
   /** Read */
   Read = "Read",
   /** Custom */
-  Custom = "Custom"
+  Custom = "Custom",
 }
 
 /**
@@ -3460,7 +3570,7 @@ export enum KnownClientPermissionType {
   /** ReadOnly */
   ReadOnly = "ReadOnly",
   /** ReadWrite */
-  ReadWrite = "ReadWrite"
+  ReadWrite = "ReadWrite",
 }
 
 /**
@@ -3479,7 +3589,7 @@ export enum KnownMountType {
   /** Volume */
   Volume = "Volume",
   /** HostPath */
-  HostPath = "HostPath"
+  HostPath = "HostPath",
 }
 
 /**
@@ -3497,7 +3607,7 @@ export enum KnownDataPolicy {
   /** Cloud */
   Cloud = "Cloud",
   /** Local */
-  Local = "Local"
+  Local = "Local",
 }
 
 /**
@@ -3515,7 +3625,7 @@ export enum KnownSSLStatus {
   /** Enabled */
   Enabled = "Enabled",
   /** Disabled */
-  Disabled = "Disabled"
+  Disabled = "Disabled",
 }
 
 /**
@@ -3533,7 +3643,7 @@ export enum KnownAccountType {
   /** GeneralPurposeStorage */
   GeneralPurposeStorage = "GeneralPurposeStorage",
   /** BlobStorage */
-  BlobStorage = "BlobStorage"
+  BlobStorage = "BlobStorage",
 }
 
 /**
@@ -3557,7 +3667,7 @@ export enum KnownStorageAccountStatus {
   /** Updating */
   Updating = "Updating",
   /** NeedsAttention */
-  NeedsAttention = "NeedsAttention"
+  NeedsAttention = "NeedsAttention",
 }
 
 /**
@@ -3584,7 +3694,7 @@ export enum KnownContainerStatus {
   /** Updating */
   Updating = "Updating",
   /** NeedsAttention */
-  NeedsAttention = "NeedsAttention"
+  NeedsAttention = "NeedsAttention",
 }
 
 /**
@@ -3605,7 +3715,7 @@ export enum KnownTriggerEventType {
   /** FileEvent */
   FileEvent = "FileEvent",
   /** PeriodicTimerEvent */
-  PeriodicTimerEvent = "PeriodicTimerEvent"
+  PeriodicTimerEvent = "PeriodicTimerEvent",
 }
 
 /**
@@ -3625,7 +3735,7 @@ export enum KnownInstallRebootBehavior {
   /** RequiresReboot */
   RequiresReboot = "RequiresReboot",
   /** RequestReboot */
-  RequestReboot = "RequestReboot"
+  RequestReboot = "RequestReboot",
 }
 
 /**
@@ -3648,7 +3758,7 @@ export enum KnownUpdateOperation {
   /** Download */
   Download = "Download",
   /** Install */
-  Install = "Install"
+  Install = "Install",
 }
 
 /**
@@ -3670,7 +3780,7 @@ export enum KnownUpdateType {
   /** Kubernetes */
   Kubernetes = "Kubernetes",
   /** Firmware */
-  Firmware = "Firmware"
+  Firmware = "Firmware",
 }
 
 /**
@@ -3691,7 +3801,7 @@ export enum KnownInstallationImpact {
   /** DeviceRebooted */
   DeviceRebooted = "DeviceRebooted",
   /** KubernetesWorkloadsDown */
-  KubernetesWorkloadsDown = "KubernetesWorkloadsDown"
+  KubernetesWorkloadsDown = "KubernetesWorkloadsDown",
 }
 
 /**
@@ -3716,7 +3826,7 @@ export enum KnownUpdateStatus {
   /** InstallStarted */
   InstallStarted = "InstallStarted",
   /** InstallCompleted */
-  InstallCompleted = "InstallCompleted"
+  InstallCompleted = "InstallCompleted",
 }
 
 /**
@@ -3737,7 +3847,7 @@ export enum KnownAuthenticationType {
   /** Invalid */
   Invalid = "Invalid",
   /** AzureActiveDirectory */
-  AzureActiveDirectory = "AzureActiveDirectory"
+  AzureActiveDirectory = "AzureActiveDirectory",
 }
 
 /**
@@ -3757,7 +3867,7 @@ export enum KnownUserType {
   /** LocalManagement */
   LocalManagement = "LocalManagement",
   /** ARM */
-  ARM = "ARM"
+  ARM = "ARM",
 }
 
 /**
@@ -3776,7 +3886,7 @@ export enum KnownPlatformType {
   /** Windows */
   Windows = "Windows",
   /** Linux */
-  Linux = "Linux"
+  Linux = "Linux",
 }
 
 /**
@@ -3794,7 +3904,7 @@ export enum KnownHostPlatformType {
   /** KubernetesCluster */
   KubernetesCluster = "KubernetesCluster",
   /** LinuxVM */
-  LinuxVM = "LinuxVM"
+  LinuxVM = "LinuxVM",
 }
 
 /**
@@ -3822,7 +3932,7 @@ export enum KnownAddonState {
   /** Failed */
   Failed = "Failed",
   /** Deleting */
-  Deleting = "Deleting"
+  Deleting = "Deleting",
 }
 
 /**
@@ -3845,7 +3955,7 @@ export enum KnownRoleStatus {
   /** Enabled */
   Enabled = "Enabled",
   /** Disabled */
-  Disabled = "Disabled"
+  Disabled = "Disabled",
 }
 
 /**
@@ -3858,6 +3968,60 @@ export enum KnownRoleStatus {
  */
 export type RoleStatus = string;
 
+/** Known values of {@link SkuSignupOption} that the service accepts. */
+export enum KnownSkuSignupOption {
+  /** None */
+  None = "None",
+  /** Available */
+  Available = "Available",
+}
+
+/**
+ * Defines values for SkuSignupOption. \
+ * {@link KnownSkuSignupOption} can be used interchangeably with SkuSignupOption,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **None** \
+ * **Available**
+ */
+export type SkuSignupOption = string;
+
+/** Known values of {@link SkuVersion} that the service accepts. */
+export enum KnownSkuVersion {
+  /** Stable */
+  Stable = "Stable",
+  /** Preview */
+  Preview = "Preview",
+}
+
+/**
+ * Defines values for SkuVersion. \
+ * {@link KnownSkuVersion} can be used interchangeably with SkuVersion,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Stable** \
+ * **Preview**
+ */
+export type SkuVersion = string;
+
+/** Known values of {@link SkuAvailability} that the service accepts. */
+export enum KnownSkuAvailability {
+  /** Available */
+  Available = "Available",
+  /** Unavailable */
+  Unavailable = "Unavailable",
+}
+
+/**
+ * Defines values for SkuAvailability. \
+ * {@link KnownSkuAvailability} can be used interchangeably with SkuAvailability,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Available** \
+ * **Unavailable**
+ */
+export type SkuAvailability = string;
+
 /** Known values of {@link KubernetesNodeType} that the service accepts. */
 export enum KnownKubernetesNodeType {
   /** Invalid */
@@ -3865,7 +4029,7 @@ export enum KnownKubernetesNodeType {
   /** Master */
   Master = "Master",
   /** Worker */
-  Worker = "Worker"
+  Worker = "Worker",
 }
 
 /**
@@ -3894,7 +4058,7 @@ export enum KnownKubernetesState {
   /** Failed */
   Failed = "Failed",
   /** Deleting */
-  Deleting = "Deleting"
+  Deleting = "Deleting",
 }
 
 /**
@@ -3919,7 +4083,7 @@ export enum KnownPosixComplianceStatus {
   /** Enabled */
   Enabled = "Enabled",
   /** Disabled */
-  Disabled = "Disabled"
+  Disabled = "Disabled",
 }
 
 /**
@@ -3946,20 +4110,6 @@ export interface OperationsListNextOptionalParams
 
 /** Contains response data for the listNext operation. */
 export type OperationsListNextResponse = OperationsList;
-
-/** Optional parameters. */
-export interface AvailableSkusListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type AvailableSkusListResponse = DataBoxEdgeSkuList;
-
-/** Optional parameters. */
-export interface AvailableSkusListNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listNext operation. */
-export type AvailableSkusListNextResponse = DataBoxEdgeSkuList;
 
 /** Optional parameters. */
 export interface DevicesListBySubscriptionOptionalParams
@@ -4031,7 +4181,8 @@ export interface DevicesGetExtendedInformationOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the getExtendedInformation operation. */
-export type DevicesGetExtendedInformationResponse = DataBoxEdgeDeviceExtendedInfo;
+export type DevicesGetExtendedInformationResponse =
+  DataBoxEdgeDeviceExtendedInfo;
 
 /** Optional parameters. */
 export interface DevicesInstallUpdatesOptionalParams
@@ -4072,7 +4223,8 @@ export interface DevicesUpdateExtendedInformationOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the updateExtendedInformation operation. */
-export type DevicesUpdateExtendedInformationResponse = DataBoxEdgeDeviceExtendedInfo;
+export type DevicesUpdateExtendedInformationResponse =
+  DataBoxEdgeDeviceExtendedInfo;
 
 /** Optional parameters. */
 export interface DevicesGetUpdateSummaryOptionalParams
@@ -4090,20 +4242,14 @@ export type DevicesUploadCertificateResponse = UploadCertificateResponse;
 
 /** Optional parameters. */
 export interface DevicesListBySubscriptionNextOptionalParams
-  extends coreClient.OperationOptions {
-  /** Specify $expand=details to populate additional fields related to the resource or Specify $skipToken=<token> to populate the next page in the list. */
-  expand?: string;
-}
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listBySubscriptionNext operation. */
 export type DevicesListBySubscriptionNextResponse = DataBoxEdgeDeviceList;
 
 /** Optional parameters. */
 export interface DevicesListByResourceGroupNextOptionalParams
-  extends coreClient.OperationOptions {
-  /** Specify $expand=details to populate additional fields related to the resource or Specify $skipToken=<token> to populate the next page in the list. */
-  expand?: string;
-}
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroupNext operation. */
 export type DevicesListByResourceGroupNextResponse = DataBoxEdgeDeviceList;
@@ -4133,7 +4279,8 @@ export interface BandwidthSchedulesListByDataBoxEdgeDeviceOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByDataBoxEdgeDevice operation. */
-export type BandwidthSchedulesListByDataBoxEdgeDeviceResponse = BandwidthSchedulesList;
+export type BandwidthSchedulesListByDataBoxEdgeDeviceResponse =
+  BandwidthSchedulesList;
 
 /** Optional parameters. */
 export interface BandwidthSchedulesGetOptionalParams
@@ -4168,14 +4315,35 @@ export interface BandwidthSchedulesListByDataBoxEdgeDeviceNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByDataBoxEdgeDeviceNext operation. */
-export type BandwidthSchedulesListByDataBoxEdgeDeviceNextResponse = BandwidthSchedulesList;
+export type BandwidthSchedulesListByDataBoxEdgeDeviceNextResponse =
+  BandwidthSchedulesList;
+
+/** Optional parameters. */
+export interface DeviceCapacityCheckCheckResourceCreationFeasibilityOptionalParams
+  extends coreClient.OperationOptions {
+  /** The capacity name. */
+  capacityName?: string;
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Optional parameters. */
+export interface DeviceCapacityInfoGetDeviceCapacityInfoOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getDeviceCapacityInfo operation. */
+export type DeviceCapacityInfoGetDeviceCapacityInfoResponse =
+  DeviceCapacityInfo;
 
 /** Optional parameters. */
 export interface DiagnosticSettingsGetDiagnosticProactiveLogCollectionSettingsOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the getDiagnosticProactiveLogCollectionSettings operation. */
-export type DiagnosticSettingsGetDiagnosticProactiveLogCollectionSettingsResponse = DiagnosticProactiveLogCollectionSettings;
+export type DiagnosticSettingsGetDiagnosticProactiveLogCollectionSettingsResponse =
+  DiagnosticProactiveLogCollectionSettings;
 
 /** Optional parameters. */
 export interface DiagnosticSettingsUpdateDiagnosticProactiveLogCollectionSettingsOptionalParams
@@ -4187,14 +4355,16 @@ export interface DiagnosticSettingsUpdateDiagnosticProactiveLogCollectionSetting
 }
 
 /** Contains response data for the updateDiagnosticProactiveLogCollectionSettings operation. */
-export type DiagnosticSettingsUpdateDiagnosticProactiveLogCollectionSettingsResponse = DiagnosticProactiveLogCollectionSettings;
+export type DiagnosticSettingsUpdateDiagnosticProactiveLogCollectionSettingsResponse =
+  DiagnosticProactiveLogCollectionSettings;
 
 /** Optional parameters. */
 export interface DiagnosticSettingsGetDiagnosticRemoteSupportSettingsOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the getDiagnosticRemoteSupportSettings operation. */
-export type DiagnosticSettingsGetDiagnosticRemoteSupportSettingsResponse = DiagnosticRemoteSupportSettings;
+export type DiagnosticSettingsGetDiagnosticRemoteSupportSettingsResponse =
+  DiagnosticRemoteSupportSettings;
 
 /** Optional parameters. */
 export interface DiagnosticSettingsUpdateDiagnosticRemoteSupportSettingsOptionalParams
@@ -4206,7 +4376,8 @@ export interface DiagnosticSettingsUpdateDiagnosticRemoteSupportSettingsOptional
 }
 
 /** Contains response data for the updateDiagnosticRemoteSupportSettings operation. */
-export type DiagnosticSettingsUpdateDiagnosticRemoteSupportSettingsResponse = DiagnosticRemoteSupportSettings;
+export type DiagnosticSettingsUpdateDiagnosticRemoteSupportSettingsResponse =
+  DiagnosticRemoteSupportSettings;
 
 /** Optional parameters. */
 export interface JobsGetOptionalParams extends coreClient.OperationOptions {}
@@ -4388,7 +4559,8 @@ export interface MonitoringConfigCreateOrUpdateOptionalParams
 }
 
 /** Contains response data for the createOrUpdate operation. */
-export type MonitoringConfigCreateOrUpdateResponse = MonitoringMetricConfiguration;
+export type MonitoringConfigCreateOrUpdateResponse =
+  MonitoringMetricConfiguration;
 
 /** Optional parameters. */
 export interface MonitoringConfigDeleteOptionalParams
@@ -4404,7 +4576,8 @@ export interface MonitoringConfigListNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
-export type MonitoringConfigListNextResponse = MonitoringMetricConfigurationList;
+export type MonitoringConfigListNextResponse =
+  MonitoringMetricConfigurationList;
 
 /** Optional parameters. */
 export interface SharesListByDataBoxEdgeDeviceOptionalParams
@@ -4461,7 +4634,8 @@ export interface StorageAccountCredentialsListByDataBoxEdgeDeviceOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByDataBoxEdgeDevice operation. */
-export type StorageAccountCredentialsListByDataBoxEdgeDeviceResponse = StorageAccountCredentialList;
+export type StorageAccountCredentialsListByDataBoxEdgeDeviceResponse =
+  StorageAccountCredentialList;
 
 /** Optional parameters. */
 export interface StorageAccountCredentialsGetOptionalParams
@@ -4480,7 +4654,8 @@ export interface StorageAccountCredentialsCreateOrUpdateOptionalParams
 }
 
 /** Contains response data for the createOrUpdate operation. */
-export type StorageAccountCredentialsCreateOrUpdateResponse = StorageAccountCredential;
+export type StorageAccountCredentialsCreateOrUpdateResponse =
+  StorageAccountCredential;
 
 /** Optional parameters. */
 export interface StorageAccountCredentialsDeleteOptionalParams
@@ -4496,7 +4671,8 @@ export interface StorageAccountCredentialsListByDataBoxEdgeDeviceNextOptionalPar
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByDataBoxEdgeDeviceNext operation. */
-export type StorageAccountCredentialsListByDataBoxEdgeDeviceNextResponse = StorageAccountCredentialList;
+export type StorageAccountCredentialsListByDataBoxEdgeDeviceNextResponse =
+  StorageAccountCredentialList;
 
 /** Optional parameters. */
 export interface StorageAccountsListByDataBoxEdgeDeviceOptionalParams
@@ -4538,7 +4714,8 @@ export interface StorageAccountsListByDataBoxEdgeDeviceNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByDataBoxEdgeDeviceNext operation. */
-export type StorageAccountsListByDataBoxEdgeDeviceNextResponse = StorageAccountList;
+export type StorageAccountsListByDataBoxEdgeDeviceNextResponse =
+  StorageAccountList;
 
 /** Optional parameters. */
 export interface ContainersListByStorageAccountOptionalParams
@@ -4631,10 +4808,7 @@ export interface TriggersDeleteOptionalParams
 
 /** Optional parameters. */
 export interface TriggersListByDataBoxEdgeDeviceNextOptionalParams
-  extends coreClient.OperationOptions {
-  /** Specify $filter='CustomContextTag eq <tag>' to filter on custom context tag property */
-  filter?: string;
-}
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByDataBoxEdgeDeviceNext operation. */
 export type TriggersListByDataBoxEdgeDeviceNextResponse = TriggerList;
@@ -4686,10 +4860,7 @@ export interface UsersDeleteOptionalParams extends coreClient.OperationOptions {
 
 /** Optional parameters. */
 export interface UsersListByDataBoxEdgeDeviceNextOptionalParams
-  extends coreClient.OperationOptions {
-  /** Specify $filter='Type eq <type>' to filter on user type property */
-  filter?: string;
-}
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByDataBoxEdgeDeviceNext operation. */
 export type UsersListByDataBoxEdgeDeviceNextResponse = UserList;

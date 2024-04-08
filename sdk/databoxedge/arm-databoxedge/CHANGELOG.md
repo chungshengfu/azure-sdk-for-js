@@ -1,5 +1,51 @@
 # Release History
+    
+## 3.0.0 (2024-04-08)
+    
+**Features**
 
+  - Added operation group DeviceCapacityCheck
+  - Added operation group DeviceCapacityInfoOperations
+  - Added Interface ClusterCapacityViewData
+  - Added Interface ClusterGpuCapacity
+  - Added Interface ClusterMemoryCapacity
+  - Added Interface ClusterStorageViewData
+  - Added Interface DeviceCapacityCheckCheckResourceCreationFeasibilityOptionalParams
+  - Added Interface DeviceCapacityInfo
+  - Added Interface DeviceCapacityInfoGetDeviceCapacityInfoOptionalParams
+  - Added Interface DeviceCapacityRequestInfo
+  - Added Interface HostCapacity
+  - Added Interface NumaNodeData
+  - Added Interface VmMemory
+  - Added Interface VmPlacementRequestResult
+  - Added Type Alias ClusterWitnessType
+  - Added Type Alias DeviceCapacityInfoGetDeviceCapacityInfoResponse
+  - Interface DataBoxEdgeDevice has a new optional parameter kubernetesWorkloadProfile
+  - Interface DataBoxEdgeDeviceExtendedInfo has a new optional parameter cloudWitnessContainerName
+  - Interface DataBoxEdgeDeviceExtendedInfo has a new optional parameter cloudWitnessStorageAccountName
+  - Interface DataBoxEdgeDeviceExtendedInfo has a new optional parameter cloudWitnessStorageEndpoint
+  - Interface DataBoxEdgeDeviceExtendedInfo has a new optional parameter clusterWitnessType
+  - Interface DataBoxEdgeDeviceExtendedInfo has a new optional parameter fileShareWitnessLocation
+  - Interface DataBoxEdgeDeviceExtendedInfo has a new optional parameter fileShareWitnessUsername
+  - Interface DataBoxEdgeDeviceExtendedInfo has a new optional parameter systemData
+  - Interface LoadBalancerConfig has a new optional parameter ipRange
+  - Interface Order has a new optional parameter kind
+  - Interface Order has a new optional parameter orderId
+  - Added Enum KnownClusterWitnessType
+  - Enum KnownSkuName has a new value EdgeMRTCP
+  - Enum KnownSkuName has a new value EP2128GPU1Mx1W
+  - Enum KnownSkuName has a new value EP2256GPU2Mx1
+  - Enum KnownSkuName has a new value EP264Mx1W
+
+**Breaking Changes**
+
+  - Removed operation group AvailableSkus
+  - Interface DevicesListByResourceGroupNextOptionalParams no longer has parameter expand
+  - Interface DevicesListBySubscriptionNextOptionalParams no longer has parameter expand
+  - Interface TriggersListByDataBoxEdgeDeviceNextOptionalParams no longer has parameter filter
+  - Interface UsersListByDataBoxEdgeDeviceNextOptionalParams no longer has parameter filter
+  - Class DataBoxEdgeManagementClient no longer has parameter availableSkus
+    
 ## 2.1.1 (Unreleased)
 
 ### Features Added

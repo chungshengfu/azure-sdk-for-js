@@ -11,15 +11,16 @@ import * as coreRestPipeline from "@azure/core-rest-pipeline";
 import {
   PipelineRequest,
   PipelineResponse,
-  SendRequest
+  SendRequest,
 } from "@azure/core-rest-pipeline";
 import * as coreAuth from "@azure/core-auth";
 import {
   OperationsImpl,
-  AvailableSkusImpl,
   DevicesImpl,
   AlertsImpl,
   BandwidthSchedulesImpl,
+  DeviceCapacityCheckImpl,
+  DeviceCapacityInfoOperationsImpl,
   DiagnosticSettingsImpl,
   JobsImpl,
   NodesImpl,
@@ -34,14 +35,15 @@ import {
   ContainersImpl,
   TriggersImpl,
   SupportPackagesImpl,
-  UsersImpl
+  UsersImpl,
 } from "./operations";
 import {
   Operations,
-  AvailableSkus,
   Devices,
   Alerts,
   BandwidthSchedules,
+  DeviceCapacityCheck,
+  DeviceCapacityInfoOperations,
   DiagnosticSettings,
   Jobs,
   Nodes,
@@ -56,7 +58,7 @@ import {
   Containers,
   Triggers,
   SupportPackages,
-  Users
+  Users,
 } from "./operationsInterfaces";
 import { DataBoxEdgeManagementClientOptionalParams } from "./models";
 
@@ -74,7 +76,7 @@ export class DataBoxEdgeManagementClient extends coreClient.ServiceClient {
   constructor(
     credentials: coreAuth.TokenCredential,
     subscriptionId: string,
-    options?: DataBoxEdgeManagementClientOptionalParams
+    options?: DataBoxEdgeManagementClientOptionalParams,
   ) {
     if (credentials === undefined) {
       throw new Error("'credentials' cannot be null");
@@ -89,10 +91,10 @@ export class DataBoxEdgeManagementClient extends coreClient.ServiceClient {
     }
     const defaults: DataBoxEdgeManagementClientOptionalParams = {
       requestContentType: "application/json; charset=utf-8",
-      credential: credentials
+      credential: credentials,
     };
 
-    const packageDetails = `azsdk-js-arm-databoxedge/2.1.1`;
+    const packageDetails = `azsdk-js-arm-databoxedge/3.0.0`;
     const userAgentPrefix =
       options.userAgentOptions && options.userAgentOptions.userAgentPrefix
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
@@ -102,20 +104,21 @@ export class DataBoxEdgeManagementClient extends coreClient.ServiceClient {
       ...defaults,
       ...options,
       userAgentOptions: {
-        userAgentPrefix
+        userAgentPrefix,
       },
       endpoint:
-        options.endpoint ?? options.baseUri ?? "https://management.azure.com"
+        options.endpoint ?? options.baseUri ?? "https://management.azure.com",
     };
     super(optionsWithDefaults);
 
     let bearerTokenAuthenticationPolicyFound: boolean = false;
     if (options?.pipeline && options.pipeline.getOrderedPolicies().length > 0) {
-      const pipelinePolicies: coreRestPipeline.PipelinePolicy[] = options.pipeline.getOrderedPolicies();
+      const pipelinePolicies: coreRestPipeline.PipelinePolicy[] =
+        options.pipeline.getOrderedPolicies();
       bearerTokenAuthenticationPolicyFound = pipelinePolicies.some(
         (pipelinePolicy) =>
           pipelinePolicy.name ===
-          coreRestPipeline.bearerTokenAuthenticationPolicyName
+          coreRestPipeline.bearerTokenAuthenticationPolicyName,
       );
     }
     if (
@@ -125,7 +128,7 @@ export class DataBoxEdgeManagementClient extends coreClient.ServiceClient {
       !bearerTokenAuthenticationPolicyFound
     ) {
       this.pipeline.removePolicy({
-        name: coreRestPipeline.bearerTokenAuthenticationPolicyName
+        name: coreRestPipeline.bearerTokenAuthenticationPolicyName,
       });
       this.pipeline.addPolicy(
         coreRestPipeline.bearerTokenAuthenticationPolicy({
@@ -135,9 +138,9 @@ export class DataBoxEdgeManagementClient extends coreClient.ServiceClient {
             `${optionsWithDefaults.endpoint}/.default`,
           challengeCallbacks: {
             authorizeRequestOnChallenge:
-              coreClient.authorizeRequestOnClaimChallenge
-          }
-        })
+              coreClient.authorizeRequestOnClaimChallenge,
+          },
+        }),
       );
     }
     // Parameter assignments
@@ -145,12 +148,15 @@ export class DataBoxEdgeManagementClient extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
-    this.apiVersion = options.apiVersion || "2021-06-01";
+    this.apiVersion = options.apiVersion || "2023-12-01";
     this.operations = new OperationsImpl(this);
-    this.availableSkus = new AvailableSkusImpl(this);
     this.devices = new DevicesImpl(this);
     this.alerts = new AlertsImpl(this);
     this.bandwidthSchedules = new BandwidthSchedulesImpl(this);
+    this.deviceCapacityCheck = new DeviceCapacityCheckImpl(this);
+    this.deviceCapacityInfoOperations = new DeviceCapacityInfoOperationsImpl(
+      this,
+    );
     this.diagnosticSettings = new DiagnosticSettingsImpl(this);
     this.jobs = new JobsImpl(this);
     this.nodes = new NodesImpl(this);
@@ -178,7 +184,7 @@ export class DataBoxEdgeManagementClient extends coreClient.ServiceClient {
       name: "CustomApiVersionPolicy",
       async sendRequest(
         request: PipelineRequest,
-        next: SendRequest
+        next: SendRequest,
       ): Promise<PipelineResponse> {
         const param = request.url.split("?");
         if (param.length > 1) {
@@ -192,16 +198,17 @@ export class DataBoxEdgeManagementClient extends coreClient.ServiceClient {
           request.url = param[0] + "?" + newParams.join("&");
         }
         return next(request);
-      }
+      },
     };
     this.pipeline.addPolicy(apiVersionPolicy);
   }
 
   operations: Operations;
-  availableSkus: AvailableSkus;
   devices: Devices;
   alerts: Alerts;
   bandwidthSchedules: BandwidthSchedules;
+  deviceCapacityCheck: DeviceCapacityCheck;
+  deviceCapacityInfoOperations: DeviceCapacityInfoOperations;
   diagnosticSettings: DiagnosticSettings;
   jobs: Jobs;
   nodes: Nodes;
