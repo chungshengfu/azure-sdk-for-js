@@ -672,6 +672,127 @@ export interface MsixPackageList {
   readonly nextLink?: string;
 }
 
+/** Information to import app attach package */
+export interface ImportPackageInfoRequest {
+  /** URI to Image */
+  path?: string;
+  /** Possible device architectures that an app attach package can be configured for */
+  packageArchitecture?: AppAttachPackageArchitectures;
+}
+
+/** List of App Attach Package definitions. */
+export interface AppAttachPackageList {
+  /** List of App Attach Package definitions. */
+  value?: AppAttachPackage[];
+  /**
+   * Link to the next page of results.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly nextLink?: string;
+}
+
+/** Schema for App Attach Package properties. */
+export interface AppAttachPackageProperties {
+  /**
+   * The provisioning state of the App Attach Package.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ProvisioningState;
+  /** Detailed properties for App Attach Package */
+  image?: AppAttachPackageInfoProperties;
+  /** List of Hostpool resource Ids. */
+  hostPoolReferences?: string[];
+  /** URL of keyvault location to store certificate */
+  keyVaultURL?: string;
+  /** Parameter indicating how the health check should behave if this package fails staging */
+  failHealthCheckOnStagingFailure?: FailHealthCheckOnStagingFailure;
+}
+
+/** Schema for Import Package Information properties. */
+export interface AppAttachPackageInfoProperties {
+  /** Alias of App Attach Package. Assigned at import time */
+  packageAlias?: string;
+  /** VHD/CIM image path on Network Share. */
+  imagePath?: string;
+  /** Package Name from appxmanifest.xml. */
+  packageName?: string;
+  /** Package Family Name from appxmanifest.xml. Contains Package Name and Publisher name. */
+  packageFamilyName?: string;
+  /** Package Full Name from appxmanifest.xml. */
+  packageFullName?: string;
+  /** User friendly Name to be displayed in the portal. */
+  displayName?: string;
+  /** Relative Path to the package inside the image. */
+  packageRelativePath?: string;
+  /** Specifies how to register Package in feed. */
+  isRegularRegistration?: boolean;
+  /** Make this version of the package the active one across the hostpool. */
+  isActive?: boolean;
+  /** List of package dependencies. */
+  packageDependencies?: MsixPackageDependencies[];
+  /** Package Version found in the appxmanifest.xml. */
+  version?: string;
+  /** Date Package was last updated, found in the appxmanifest.xml. */
+  lastUpdated?: Date;
+  /** List of package applications. */
+  packageApplications?: MsixPackageApplications[];
+  /** Certificate name found in the appxmanifest.xml. */
+  certificateName?: string;
+  /** Date certificate expires, found in the appxmanifest.xml. */
+  certificateExpiry?: Date;
+  /** Is package timestamped so it can ignore the certificate expiry date */
+  isPackageTimestamped?: PackageTimestamped;
+}
+
+/** Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.). */
+export interface ErrorResponse {
+  /** The error object. */
+  error?: ErrorDetail;
+}
+
+/** The error detail. */
+export interface ErrorDetail {
+  /**
+   * The error code.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly code?: string;
+  /**
+   * The error message.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly message?: string;
+  /**
+   * The error target.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly target?: string;
+  /**
+   * The error details.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly details?: ErrorDetail[];
+  /**
+   * The error additional info.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly additionalInfo?: ErrorAdditionalInfo[];
+}
+
+/** The resource management error additional info. */
+export interface ErrorAdditionalInfo {
+  /**
+   * The additional info type.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly type?: string;
+  /**
+   * The additional info.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly info?: Record<string, unknown>;
+}
+
 /** Represents URI referring to MSIX Image */
 export interface MsixImageURI {
   /** URI to Image */
@@ -687,6 +808,18 @@ export interface ExpandMsixImageList {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly nextLink?: string;
+}
+
+/** Schema for patchable fields on an App Attach Package. */
+export interface AppAttachPackagePatchProperties {
+  /** Detailed properties for App Attach Package */
+  image?: AppAttachPackageInfoProperties;
+  /** List of Hostpool resource Ids. */
+  hostPoolReferences?: string[];
+  /** URL of keyvault location to store certificate */
+  keyVaultURL?: string;
+  /** Parameter indicating how the health check should behave if this package fails staging */
+  failHealthCheckOnStagingFailure?: FailHealthCheckOnStagingFailure;
 }
 
 /** Represents message sent to a UserSession. */
@@ -1116,6 +1249,18 @@ export interface ExpandMsixImage extends Resource {
   lastUpdated?: Date;
   /** List of package applications. */
   packageApplications?: MsixPackageApplications[];
+  /** Certificate name found in the appxmanifest.xml. */
+  certificateName?: string;
+  /** Date certificate expires, found in the appxmanifest.xml. */
+  certificateExpiry?: Date;
+}
+
+/** Schema for patchable App Attach Package properties. */
+export interface AppAttachPackagePatch extends Resource {
+  /** tags to be updated */
+  tags?: { [propertyName: string]: string };
+  /** Detailed properties for App Attach Package */
+  properties?: AppAttachPackagePatchProperties;
 }
 
 /** Represents a Workspace definition. */
@@ -1251,6 +1396,11 @@ export interface HostPool extends ResourceModelWithAllowedPropertySet {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly applicationGroupReferences?: string[];
+  /**
+   * List of App Attach Package links.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly appAttachPackageReferences?: string[];
   /** URL to customer ADFS server for signing WVD SSO certificates. */
   ssoadfsAuthority?: string;
   /** ClientId for the registered Relying Party used to issue WVD SSO certificates. */
@@ -1277,6 +1427,17 @@ export interface HostPool extends ResourceModelWithAllowedPropertySet {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly privateEndpointConnections?: PrivateEndpointConnection[];
+}
+
+/** Schema for App Attach Package properties. */
+export interface AppAttachPackage extends ResourceModelWithAllowedPropertySet {
+  /**
+   * Metadata pertaining to creation and last modification of the resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly systemData?: SystemData;
+  /** Detailed properties for App Attach Package */
+  properties: AppAttachPackageProperties;
 }
 
 export interface ResourceModelWithAllowedPropertySetIdentity extends Identity {}
@@ -1365,7 +1526,7 @@ export enum KnownCreatedByType {
   /** ManagedIdentity */
   ManagedIdentity = "ManagedIdentity",
   /** Key */
-  Key = "Key"
+  Key = "Key",
 }
 
 /**
@@ -1385,7 +1546,7 @@ export enum KnownPublicNetworkAccess {
   /** Enabled */
   Enabled = "Enabled",
   /** Disabled */
-  Disabled = "Disabled"
+  Disabled = "Disabled",
 }
 
 /**
@@ -1405,7 +1566,7 @@ export enum KnownPrivateEndpointServiceConnectionStatus {
   /** Approved */
   Approved = "Approved",
   /** Rejected */
-  Rejected = "Rejected"
+  Rejected = "Rejected",
 }
 
 /**
@@ -1428,7 +1589,7 @@ export enum KnownPrivateEndpointConnectionProvisioningState {
   /** Deleting */
   Deleting = "Deleting",
   /** Failed */
-  Failed = "Failed"
+  Failed = "Failed",
 }
 
 /**
@@ -1446,7 +1607,7 @@ export type PrivateEndpointConnectionProvisioningState = string;
 /** Known values of {@link ScalingHostPoolType} that the service accepts. */
 export enum KnownScalingHostPoolType {
   /** Users get a new (random) SessionHost every time it connects to the HostPool. */
-  Pooled = "Pooled"
+  Pooled = "Pooled",
 }
 
 /**
@@ -1473,7 +1634,7 @@ export enum KnownScalingScheduleDaysOfWeekItem {
   /** Friday */
   Friday = "Friday",
   /** Saturday */
-  Saturday = "Saturday"
+  Saturday = "Saturday",
 }
 
 /**
@@ -1496,7 +1657,7 @@ export enum KnownSessionHostLoadBalancingAlgorithm {
   /** BreadthFirst */
   BreadthFirst = "BreadthFirst",
   /** DepthFirst */
-  DepthFirst = "DepthFirst"
+  DepthFirst = "DepthFirst",
 }
 
 /**
@@ -1514,7 +1675,7 @@ export enum KnownStopHostsWhen {
   /** ZeroSessions */
   ZeroSessions = "ZeroSessions",
   /** ZeroActiveSessions */
-  ZeroActiveSessions = "ZeroActiveSessions"
+  ZeroActiveSessions = "ZeroActiveSessions",
 }
 
 /**
@@ -1534,7 +1695,7 @@ export enum KnownStartupBehavior {
   /** Session hosts with an assigned user will be started during Ramp Up */
   WithAssignedUser = "WithAssignedUser",
   /** All personal session hosts in the hostpool will be started during ramp up. */
-  All = "All"
+  All = "All",
 }
 
 /**
@@ -1553,7 +1714,7 @@ export enum KnownSetStartVMOnConnect {
   /** Enable */
   Enable = "Enable",
   /** Disable */
-  Disable = "Disable"
+  Disable = "Disable",
 }
 
 /**
@@ -1573,7 +1734,7 @@ export enum KnownSessionHandlingOperation {
   /** Deallocate */
   Deallocate = "Deallocate",
   /** Hibernate */
-  Hibernate = "Hibernate"
+  Hibernate = "Hibernate",
 }
 
 /**
@@ -1592,7 +1753,7 @@ export enum KnownApplicationGroupType {
   /** RemoteApp */
   RemoteApp = "RemoteApp",
   /** Desktop */
-  Desktop = "Desktop"
+  Desktop = "Desktop",
 }
 
 /**
@@ -1610,7 +1771,7 @@ export enum KnownRemoteApplicationType {
   /** InBuilt */
   InBuilt = "InBuilt",
   /** MsixApplication */
-  MsixApplication = "MsixApplication"
+  MsixApplication = "MsixApplication",
 }
 
 /**
@@ -1630,7 +1791,7 @@ export enum KnownCommandLineSetting {
   /** Allow */
   Allow = "Allow",
   /** Require */
-  Require = "Require"
+  Require = "Require",
 }
 
 /**
@@ -1651,7 +1812,7 @@ export enum KnownHostPoolType {
   /** Users get a new (random) SessionHost every time it connects to the HostPool. */
   Pooled = "Pooled",
   /** Users assign their own machines, load balancing logic remains the same as Personal. PersonalDesktopAssignmentType must be Direct. */
-  BYODesktop = "BYODesktop"
+  BYODesktop = "BYODesktop",
 }
 
 /**
@@ -1670,7 +1831,7 @@ export enum KnownPersonalDesktopAssignmentType {
   /** Automatic */
   Automatic = "Automatic",
   /** Direct */
-  Direct = "Direct"
+  Direct = "Direct",
 }
 
 /**
@@ -1690,7 +1851,7 @@ export enum KnownLoadBalancerType {
   /** DepthFirst */
   DepthFirst = "DepthFirst",
   /** Persistent */
-  Persistent = "Persistent"
+  Persistent = "Persistent",
 }
 
 /**
@@ -1711,7 +1872,7 @@ export enum KnownRegistrationTokenOperation {
   /** None */
   None = "None",
   /** Update */
-  Update = "Update"
+  Update = "Update",
 }
 
 /**
@@ -1734,7 +1895,7 @@ export enum KnownSSOSecretType {
   /** SharedKeyInKeyVault */
   SharedKeyInKeyVault = "SharedKeyInKeyVault",
   /** CertificateInKeyVault */
-  CertificateInKeyVault = "CertificateInKeyVault"
+  CertificateInKeyVault = "CertificateInKeyVault",
 }
 
 /**
@@ -1756,7 +1917,7 @@ export enum KnownPreferredAppGroupType {
   /** Desktop */
   Desktop = "Desktop",
   /** RailApplications */
-  RailApplications = "RailApplications"
+  RailApplications = "RailApplications",
 }
 
 /**
@@ -1779,7 +1940,7 @@ export enum KnownHostpoolPublicNetworkAccess {
   /** EnabledForSessionHostsOnly */
   EnabledForSessionHostsOnly = "EnabledForSessionHostsOnly",
   /** EnabledForClientsOnly */
-  EnabledForClientsOnly = "EnabledForClientsOnly"
+  EnabledForClientsOnly = "EnabledForClientsOnly",
 }
 
 /**
@@ -1799,7 +1960,7 @@ export enum KnownSessionHostComponentUpdateType {
   /** Agent and other agent side components are delivery schedule is controlled by WVD Infra. */
   Default = "Default",
   /** TenantAdmin have opted in for Scheduled Component Update feature. */
-  Scheduled = "Scheduled"
+  Scheduled = "Scheduled",
 }
 
 /**
@@ -1817,7 +1978,7 @@ export enum KnownApplicationType {
   /** RemoteApp */
   RemoteApp = "RemoteApp",
   /** Desktop */
-  Desktop = "Desktop"
+  Desktop = "Desktop",
 }
 
 /**
@@ -1843,7 +2004,7 @@ export enum KnownSessionState {
   /** LogOff */
   LogOff = "LogOff",
   /** UserProfileDiskMounted */
-  UserProfileDiskMounted = "UserProfileDiskMounted"
+  UserProfileDiskMounted = "UserProfileDiskMounted",
 }
 
 /**
@@ -1885,7 +2046,7 @@ export enum KnownStatus {
   /** FSLogix is in an unhealthy state on the session host. */
   FSLogixNotHealthy = "FSLogixNotHealthy",
   /** New status to inform admins that the health on their endpoint needs to be fixed. The connections might not fail, as these issues are not fatal. */
-  NeedsAssistance = "NeedsAssistance"
+  NeedsAssistance = "NeedsAssistance",
 }
 
 /**
@@ -1919,7 +2080,7 @@ export enum KnownUpdateState {
   /** Succeeded */
   Succeeded = "Succeeded",
   /** Failed */
-  Failed = "Failed"
+  Failed = "Failed",
 }
 
 /**
@@ -1958,7 +2119,7 @@ export enum KnownHealthCheckName {
   /** Verifies the metadata service is accessible and return compute properties. (Currently Enabled) */
   MetaDataServiceCheck = "MetaDataServiceCheck",
   /** Verifies that the AppAttachService is healthy (there were no issues during package staging). The AppAttachService is used to enable the staging\/registration (and eventual deregistration\/destaging) of MSIX apps that have been set up by the tenant admin. This checks whether the component had any failures during package staging. Failures in staging will prevent some MSIX apps from working properly for the end user. If this check fails, it is non fatal and the machine still can service connections, main issue may be certain apps will not work for end-users. (Currently Enabled) */
-  AppAttachHealthCheck = "AppAttachHealthCheck"
+  AppAttachHealthCheck = "AppAttachHealthCheck",
 }
 
 /**
@@ -1989,7 +2150,7 @@ export enum KnownHealthCheckResult {
   /** Health check failed. */
   HealthCheckFailed = "HealthCheckFailed",
   /** We received a Shutdown notification. */
-  SessionHostShutdown = "SessionHostShutdown"
+  SessionHostShutdown = "SessionHostShutdown",
 }
 
 /**
@@ -2003,6 +2164,102 @@ export enum KnownHealthCheckResult {
  * **SessionHostShutdown**: We received a Shutdown notification.
  */
 export type HealthCheckResult = string;
+
+/** Known values of {@link AppAttachPackageArchitectures} that the service accepts. */
+export enum KnownAppAttachPackageArchitectures {
+  /** ARM */
+  ARM = "ARM",
+  /** ARM64 */
+  ARM64 = "ARM64",
+  /** X86 */
+  X86 = "x86",
+  /** X64 */
+  X64 = "x64",
+  /** Neutral */
+  Neutral = "Neutral",
+  /** X86A64 */
+  X86A64 = "x86a64",
+  /** ALL */
+  ALL = "ALL",
+}
+
+/**
+ * Defines values for AppAttachPackageArchitectures. \
+ * {@link KnownAppAttachPackageArchitectures} can be used interchangeably with AppAttachPackageArchitectures,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **ARM** \
+ * **ARM64** \
+ * **x86** \
+ * **x64** \
+ * **Neutral** \
+ * **x86a64** \
+ * **ALL**
+ */
+export type AppAttachPackageArchitectures = string;
+
+/** Known values of {@link ProvisioningState} that the service accepts. */
+export enum KnownProvisioningState {
+  /** Succeeded */
+  Succeeded = "Succeeded",
+  /** Provisioning */
+  Provisioning = "Provisioning",
+  /** Failed */
+  Failed = "Failed",
+  /** Canceled */
+  Canceled = "Canceled",
+}
+
+/**
+ * Defines values for ProvisioningState. \
+ * {@link KnownProvisioningState} can be used interchangeably with ProvisioningState,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Succeeded** \
+ * **Provisioning** \
+ * **Failed** \
+ * **Canceled**
+ */
+export type ProvisioningState = string;
+
+/** Known values of {@link PackageTimestamped} that the service accepts. */
+export enum KnownPackageTimestamped {
+  /** Timestamped */
+  Timestamped = "Timestamped",
+  /** NotTimestamped */
+  NotTimestamped = "NotTimestamped",
+}
+
+/**
+ * Defines values for PackageTimestamped. \
+ * {@link KnownPackageTimestamped} can be used interchangeably with PackageTimestamped,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Timestamped** \
+ * **NotTimestamped**
+ */
+export type PackageTimestamped = string;
+
+/** Known values of {@link FailHealthCheckOnStagingFailure} that the service accepts. */
+export enum KnownFailHealthCheckOnStagingFailure {
+  /** Unhealthy */
+  Unhealthy = "Unhealthy",
+  /** NeedsAssistance */
+  NeedsAssistance = "NeedsAssistance",
+  /** DoNotFail */
+  DoNotFail = "DoNotFail",
+}
+
+/**
+ * Defines values for FailHealthCheckOnStagingFailure. \
+ * {@link KnownFailHealthCheckOnStagingFailure} can be used interchangeably with FailHealthCheckOnStagingFailure,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Unhealthy** \
+ * **NeedsAssistance** \
+ * **DoNotFail**
+ */
+export type FailHealthCheckOnStagingFailure = string;
 /** Defines values for SkuTier. */
 export type SkuTier = "Free" | "Basic" | "Standard" | "Premium";
 /** Defines values for DayOfWeek. */
@@ -2097,14 +2354,16 @@ export interface PrivateEndpointConnectionsListByWorkspaceOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByWorkspace operation. */
-export type PrivateEndpointConnectionsListByWorkspaceResponse = PrivateEndpointConnectionListResultWithSystemData;
+export type PrivateEndpointConnectionsListByWorkspaceResponse =
+  PrivateEndpointConnectionListResultWithSystemData;
 
 /** Optional parameters. */
 export interface PrivateEndpointConnectionsGetByWorkspaceOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the getByWorkspace operation. */
-export type PrivateEndpointConnectionsGetByWorkspaceResponse = PrivateEndpointConnectionWithSystemData;
+export type PrivateEndpointConnectionsGetByWorkspaceResponse =
+  PrivateEndpointConnectionWithSystemData;
 
 /** Optional parameters. */
 export interface PrivateEndpointConnectionsDeleteByWorkspaceOptionalParams
@@ -2115,7 +2374,8 @@ export interface PrivateEndpointConnectionsUpdateByWorkspaceOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the updateByWorkspace operation. */
-export type PrivateEndpointConnectionsUpdateByWorkspaceResponse = PrivateEndpointConnectionWithSystemData;
+export type PrivateEndpointConnectionsUpdateByWorkspaceResponse =
+  PrivateEndpointConnectionWithSystemData;
 
 /** Optional parameters. */
 export interface PrivateEndpointConnectionsListByHostPoolOptionalParams
@@ -2129,14 +2389,16 @@ export interface PrivateEndpointConnectionsListByHostPoolOptionalParams
 }
 
 /** Contains response data for the listByHostPool operation. */
-export type PrivateEndpointConnectionsListByHostPoolResponse = PrivateEndpointConnectionListResultWithSystemData;
+export type PrivateEndpointConnectionsListByHostPoolResponse =
+  PrivateEndpointConnectionListResultWithSystemData;
 
 /** Optional parameters. */
 export interface PrivateEndpointConnectionsGetByHostPoolOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the getByHostPool operation. */
-export type PrivateEndpointConnectionsGetByHostPoolResponse = PrivateEndpointConnectionWithSystemData;
+export type PrivateEndpointConnectionsGetByHostPoolResponse =
+  PrivateEndpointConnectionWithSystemData;
 
 /** Optional parameters. */
 export interface PrivateEndpointConnectionsDeleteByHostPoolOptionalParams
@@ -2147,21 +2409,24 @@ export interface PrivateEndpointConnectionsUpdateByHostPoolOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the updateByHostPool operation. */
-export type PrivateEndpointConnectionsUpdateByHostPoolResponse = PrivateEndpointConnectionWithSystemData;
+export type PrivateEndpointConnectionsUpdateByHostPoolResponse =
+  PrivateEndpointConnectionWithSystemData;
 
 /** Optional parameters. */
 export interface PrivateEndpointConnectionsListByWorkspaceNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByWorkspaceNext operation. */
-export type PrivateEndpointConnectionsListByWorkspaceNextResponse = PrivateEndpointConnectionListResultWithSystemData;
+export type PrivateEndpointConnectionsListByWorkspaceNextResponse =
+  PrivateEndpointConnectionListResultWithSystemData;
 
 /** Optional parameters. */
 export interface PrivateEndpointConnectionsListByHostPoolNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByHostPoolNext operation. */
-export type PrivateEndpointConnectionsListByHostPoolNextResponse = PrivateEndpointConnectionListResultWithSystemData;
+export type PrivateEndpointConnectionsListByHostPoolNextResponse =
+  PrivateEndpointConnectionListResultWithSystemData;
 
 /** Optional parameters. */
 export interface PrivateLinkResourcesListByWorkspaceOptionalParams
@@ -2175,7 +2440,8 @@ export interface PrivateLinkResourcesListByWorkspaceOptionalParams
 }
 
 /** Contains response data for the listByWorkspace operation. */
-export type PrivateLinkResourcesListByWorkspaceResponse = PrivateLinkResourceListResult;
+export type PrivateLinkResourcesListByWorkspaceResponse =
+  PrivateLinkResourceListResult;
 
 /** Optional parameters. */
 export interface PrivateLinkResourcesListByHostPoolOptionalParams
@@ -2189,21 +2455,24 @@ export interface PrivateLinkResourcesListByHostPoolOptionalParams
 }
 
 /** Contains response data for the listByHostPool operation. */
-export type PrivateLinkResourcesListByHostPoolResponse = PrivateLinkResourceListResult;
+export type PrivateLinkResourcesListByHostPoolResponse =
+  PrivateLinkResourceListResult;
 
 /** Optional parameters. */
 export interface PrivateLinkResourcesListByWorkspaceNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByWorkspaceNext operation. */
-export type PrivateLinkResourcesListByWorkspaceNextResponse = PrivateLinkResourceListResult;
+export type PrivateLinkResourcesListByWorkspaceNextResponse =
+  PrivateLinkResourceListResult;
 
 /** Optional parameters. */
 export interface PrivateLinkResourcesListByHostPoolNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByHostPoolNext operation. */
-export type PrivateLinkResourcesListByHostPoolNextResponse = PrivateLinkResourceListResult;
+export type PrivateLinkResourcesListByHostPoolNextResponse =
+  PrivateLinkResourceListResult;
 
 /** Optional parameters. */
 export interface ScalingPlansGetOptionalParams
@@ -2308,7 +2577,8 @@ export interface ScalingPlanPooledSchedulesCreateOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the create operation. */
-export type ScalingPlanPooledSchedulesCreateResponse = ScalingPlanPooledSchedule;
+export type ScalingPlanPooledSchedulesCreateResponse =
+  ScalingPlanPooledSchedule;
 
 /** Optional parameters. */
 export interface ScalingPlanPooledSchedulesDeleteOptionalParams
@@ -2322,7 +2592,8 @@ export interface ScalingPlanPooledSchedulesUpdateOptionalParams
 }
 
 /** Contains response data for the update operation. */
-export type ScalingPlanPooledSchedulesUpdateResponse = ScalingPlanPooledSchedule;
+export type ScalingPlanPooledSchedulesUpdateResponse =
+  ScalingPlanPooledSchedule;
 
 /** Optional parameters. */
 export interface ScalingPlanPooledSchedulesListOptionalParams
@@ -2336,28 +2607,32 @@ export interface ScalingPlanPooledSchedulesListOptionalParams
 }
 
 /** Contains response data for the list operation. */
-export type ScalingPlanPooledSchedulesListResponse = ScalingPlanPooledScheduleList;
+export type ScalingPlanPooledSchedulesListResponse =
+  ScalingPlanPooledScheduleList;
 
 /** Optional parameters. */
 export interface ScalingPlanPooledSchedulesListNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
-export type ScalingPlanPooledSchedulesListNextResponse = ScalingPlanPooledScheduleList;
+export type ScalingPlanPooledSchedulesListNextResponse =
+  ScalingPlanPooledScheduleList;
 
 /** Optional parameters. */
 export interface ScalingPlanPersonalSchedulesGetOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
-export type ScalingPlanPersonalSchedulesGetResponse = ScalingPlanPersonalSchedule;
+export type ScalingPlanPersonalSchedulesGetResponse =
+  ScalingPlanPersonalSchedule;
 
 /** Optional parameters. */
 export interface ScalingPlanPersonalSchedulesCreateOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the create operation. */
-export type ScalingPlanPersonalSchedulesCreateResponse = ScalingPlanPersonalSchedule;
+export type ScalingPlanPersonalSchedulesCreateResponse =
+  ScalingPlanPersonalSchedule;
 
 /** Optional parameters. */
 export interface ScalingPlanPersonalSchedulesDeleteOptionalParams
@@ -2371,7 +2646,8 @@ export interface ScalingPlanPersonalSchedulesUpdateOptionalParams
 }
 
 /** Contains response data for the update operation. */
-export type ScalingPlanPersonalSchedulesUpdateResponse = ScalingPlanPersonalSchedule;
+export type ScalingPlanPersonalSchedulesUpdateResponse =
+  ScalingPlanPersonalSchedule;
 
 /** Optional parameters. */
 export interface ScalingPlanPersonalSchedulesListOptionalParams
@@ -2385,14 +2661,16 @@ export interface ScalingPlanPersonalSchedulesListOptionalParams
 }
 
 /** Contains response data for the list operation. */
-export type ScalingPlanPersonalSchedulesListResponse = ScalingPlanPersonalScheduleList;
+export type ScalingPlanPersonalSchedulesListResponse =
+  ScalingPlanPersonalScheduleList;
 
 /** Optional parameters. */
 export interface ScalingPlanPersonalSchedulesListNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
-export type ScalingPlanPersonalSchedulesListNextResponse = ScalingPlanPersonalScheduleList;
+export type ScalingPlanPersonalSchedulesListNextResponse =
+  ScalingPlanPersonalScheduleList;
 
 /** Optional parameters. */
 export interface ApplicationGroupsGetOptionalParams
@@ -2453,14 +2731,16 @@ export interface ApplicationGroupsListByResourceGroupNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroupNext operation. */
-export type ApplicationGroupsListByResourceGroupNextResponse = ApplicationGroupList;
+export type ApplicationGroupsListByResourceGroupNextResponse =
+  ApplicationGroupList;
 
 /** Optional parameters. */
 export interface ApplicationGroupsListBySubscriptionNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listBySubscriptionNext operation. */
-export type ApplicationGroupsListBySubscriptionNextResponse = ApplicationGroupList;
+export type ApplicationGroupsListBySubscriptionNextResponse =
+  ApplicationGroupList;
 
 /** Optional parameters. */
 export interface StartMenuItemsListOptionalParams
@@ -2816,6 +3096,20 @@ export interface MsixPackagesListNextOptionalParams
 export type MsixPackagesListNextResponse = MsixPackageList;
 
 /** Optional parameters. */
+export interface AppAttachPackageInfoImportOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the import operation. */
+export type AppAttachPackageInfoImportResponse = AppAttachPackageList;
+
+/** Optional parameters. */
+export interface AppAttachPackageInfoImportNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the importNext operation. */
+export type AppAttachPackageInfoImportNextResponse = AppAttachPackageList;
+
+/** Optional parameters. */
 export interface MsixImagesExpandOptionalParams
   extends coreClient.OperationOptions {}
 
@@ -2828,6 +3122,73 @@ export interface MsixImagesExpandNextOptionalParams
 
 /** Contains response data for the expandNext operation. */
 export type MsixImagesExpandNextResponse = ExpandMsixImageList;
+
+/** Optional parameters. */
+export interface AppAttachPackageGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type AppAttachPackageGetResponse = AppAttachPackage;
+
+/** Optional parameters. */
+export interface AppAttachPackageCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the createOrUpdate operation. */
+export type AppAttachPackageCreateOrUpdateResponse = AppAttachPackage;
+
+/** Optional parameters. */
+export interface AppAttachPackageDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Force flag to delete App Attach package. */
+  force?: boolean;
+}
+
+/** Optional parameters. */
+export interface AppAttachPackageUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Object containing App Attach Package definition. */
+  appAttachPackagePatch?: AppAttachPackagePatch;
+}
+
+/** Contains response data for the update operation. */
+export type AppAttachPackageUpdateResponse = AppAttachPackage;
+
+/** Optional parameters. */
+export interface AppAttachPackageListByResourceGroupOptionalParams
+  extends coreClient.OperationOptions {
+  /** OData filter expression. Valid properties for filtering are package name and host pool. */
+  filter?: string;
+}
+
+/** Contains response data for the listByResourceGroup operation. */
+export type AppAttachPackageListByResourceGroupResponse = AppAttachPackageList;
+
+/** Optional parameters. */
+export interface AppAttachPackageListBySubscriptionOptionalParams
+  extends coreClient.OperationOptions {
+  /** OData filter expression. Valid properties for filtering are package name, host pool, and resource group. */
+  filter?: string;
+}
+
+/** Contains response data for the listBySubscription operation. */
+export type AppAttachPackageListBySubscriptionResponse = AppAttachPackageList;
+
+/** Optional parameters. */
+export interface AppAttachPackageListByResourceGroupNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroupNext operation. */
+export type AppAttachPackageListByResourceGroupNextResponse =
+  AppAttachPackageList;
+
+/** Optional parameters. */
+export interface AppAttachPackageListBySubscriptionNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listBySubscriptionNext operation. */
+export type AppAttachPackageListBySubscriptionNextResponse =
+  AppAttachPackageList;
 
 /** Optional parameters. */
 export interface DesktopVirtualizationAPIClientOptionalParams
