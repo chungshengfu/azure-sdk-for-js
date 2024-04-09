@@ -1,5 +1,114 @@
 # Release History
+    
+## 2.0.0 (2024-04-08)
+    
+**Features**
 
+  - Added operation group CheckScopedNameAvailability
+  - Added operation group ProjectCatalogEnvironmentDefinitions
+  - Added operation group ProjectCatalogs
+  - Added operation EnvironmentDefinitions.getByProjectCatalog
+  - Added operation EnvironmentDefinitions.listByProjectCatalog
+  - Added Interface AttachedNetworksDeleteHeaders
+  - Added Interface CatalogsConnectHeaders
+  - Added Interface CatalogsDeleteHeaders
+  - Added Interface CatalogsSyncHeaders
+  - Added Interface CatalogsUpdateHeaders
+  - Added Interface CheckScopedNameAvailabilityExecuteOptionalParams
+  - Added Interface CheckScopedNameAvailabilityRequest
+  - Added Interface DevBoxDefinitionsDeleteHeaders
+  - Added Interface DevBoxDefinitionsUpdateHeaders
+  - Added Interface DevCenterProjectCatalogSettings
+  - Added Interface DevCentersDeleteHeaders
+  - Added Interface DevCentersUpdateHeaders
+  - Added Interface EnvironmentDefinitionsGetByProjectCatalogOptionalParams
+  - Added Interface EnvironmentDefinitionsListByProjectCatalogNextOptionalParams
+  - Added Interface EnvironmentDefinitionsListByProjectCatalogOptionalParams
+  - Added Interface GalleriesDeleteHeaders
+  - Added Interface NetworkConnectionsDeleteHeaders
+  - Added Interface NetworkConnectionsRunHealthChecksHeaders
+  - Added Interface NetworkConnectionsUpdateHeaders
+  - Added Interface OperationStatusesGetHeaders
+  - Added Interface PoolsDeleteHeaders
+  - Added Interface PoolsRunHealthChecksHeaders
+  - Added Interface PoolsUpdateHeaders
+  - Added Interface ProjectCatalogEnvironmentDefinitionsGetErrorDetailsOptionalParams
+  - Added Interface ProjectCatalogsConnectHeaders
+  - Added Interface ProjectCatalogsConnectOptionalParams
+  - Added Interface ProjectCatalogsCreateOrUpdateOptionalParams
+  - Added Interface ProjectCatalogsDeleteHeaders
+  - Added Interface ProjectCatalogsDeleteOptionalParams
+  - Added Interface ProjectCatalogSettings
+  - Added Interface ProjectCatalogsGetOptionalParams
+  - Added Interface ProjectCatalogsGetSyncErrorDetailsOptionalParams
+  - Added Interface ProjectCatalogsListNextOptionalParams
+  - Added Interface ProjectCatalogsListOptionalParams
+  - Added Interface ProjectCatalogsPatchHeaders
+  - Added Interface ProjectCatalogsPatchOptionalParams
+  - Added Interface ProjectCatalogsSyncHeaders
+  - Added Interface ProjectCatalogsSyncOptionalParams
+  - Added Interface ProjectsDeleteHeaders
+  - Added Interface ProjectsUpdateHeaders
+  - Added Interface SchedulesDeleteHeaders
+  - Added Interface SchedulesUpdateHeaders
+  - Added Type Alias AttachedNetworksDeleteResponse
+  - Added Type Alias CatalogItemSyncEnableStatus
+  - Added Type Alias CatalogItemType
+  - Added Type Alias CatalogsConnectResponse
+  - Added Type Alias CatalogsDeleteResponse
+  - Added Type Alias CatalogsSyncResponse
+  - Added Type Alias CheckScopedNameAvailabilityExecuteResponse
+  - Added Type Alias DevBoxDefinitionsDeleteResponse
+  - Added Type Alias DevCentersDeleteResponse
+  - Added Type Alias EnvironmentDefinitionsGetByProjectCatalogResponse
+  - Added Type Alias EnvironmentDefinitionsListByProjectCatalogNextResponse
+  - Added Type Alias EnvironmentDefinitionsListByProjectCatalogResponse
+  - Added Type Alias GalleriesDeleteResponse
+  - Added Type Alias NetworkConnectionsDeleteResponse
+  - Added Type Alias NetworkConnectionsRunHealthChecksResponse
+  - Added Type Alias PoolsDeleteResponse
+  - Added Type Alias PoolsRunHealthChecksResponse
+  - Added Type Alias ProjectCatalogEnvironmentDefinitionsGetErrorDetailsResponse
+  - Added Type Alias ProjectCatalogsConnectResponse
+  - Added Type Alias ProjectCatalogsCreateOrUpdateResponse
+  - Added Type Alias ProjectCatalogsDeleteResponse
+  - Added Type Alias ProjectCatalogsGetResponse
+  - Added Type Alias ProjectCatalogsGetSyncErrorDetailsResponse
+  - Added Type Alias ProjectCatalogsListNextResponse
+  - Added Type Alias ProjectCatalogsListResponse
+  - Added Type Alias ProjectCatalogsPatchResponse
+  - Added Type Alias ProjectCatalogsSyncResponse
+  - Added Type Alias ProjectsDeleteResponse
+  - Added Type Alias SchedulesDeleteResponse
+  - Interface Catalog has a new optional parameter tags
+  - Interface CatalogUpdateProperties has a new optional parameter tags
+  - Interface DevCenter has a new optional parameter projectCatalogSettings
+  - Interface DevCenterUpdate has a new optional parameter projectCatalogSettings
+  - Interface DevCenterUpdateProperties has a new optional parameter projectCatalogSettings
+  - Interface OperationStatusResult has a new optional parameter resourceId
+  - Interface Project has a new optional parameter catalogSettings
+  - Interface Project has a new optional parameter identity
+  - Interface ProjectEnvironmentTypeUpdate has a new optional parameter displayName
+  - Interface ProjectEnvironmentTypeUpdateProperties has a new optional parameter displayName
+  - Interface ProjectUpdate has a new optional parameter catalogSettings
+  - Interface ProjectUpdate has a new optional parameter identity
+  - Interface ProjectUpdateProperties has a new optional parameter catalogSettings
+  - Interface Schedule has a new optional parameter location
+  - Interface Schedule has a new optional parameter tags
+  - Interface ScheduleUpdate has a new optional parameter location
+  - Interface ScheduleUpdate has a new optional parameter tags
+  - Interface SyncStats has a new optional parameter syncedCatalogItemTypes
+  - Added Enum KnownCatalogItemSyncEnableStatus
+  - Added Enum KnownCatalogItemType
+
+**Breaking Changes**
+
+  - Removed operation group CatalogDevBoxDefinitions
+  - Removed operation group CustomizationTasks
+  - Class DevCenterClient no longer has parameter catalogDevBoxDefinitions
+  - Class DevCenterClient no longer has parameter customizationTasks
+  - Removed Enum KnownCustomizationTaskInputType
+    
 ## 1.1.0-beta.2 (Unreleased)
 
 ### Features Added
