@@ -16,23 +16,26 @@ import { SourceControlConfigurationClient } from "../sourceControlConfigurationC
 import {
   SimplePollerLike,
   OperationState,
-  createHttpPoller
+  createHttpPoller,
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
   FluxConfiguration,
-  FluxConfigurationsListNextOptionalParams,
-  FluxConfigurationsListOptionalParams,
-  FluxConfigurationsListResponse,
+  FluxConfigurationsListByResourceGroupNextOptionalParams,
+  FluxConfigurationsListByResourceGroupOptionalParams,
+  FluxConfigurationsListByResourceGroupResponse,
   FluxConfigurationsGetOptionalParams,
   FluxConfigurationsGetResponse,
-  FluxConfigurationsCreateOrUpdateOptionalParams,
-  FluxConfigurationsCreateOrUpdateResponse,
-  FluxConfigurationPatch,
+  FluxConfigurationsCreateOptionalParams,
+  FluxConfigurationsCreateResponse,
+  FluxConfigurationUpdate,
   FluxConfigurationsUpdateOptionalParams,
   FluxConfigurationsUpdateResponse,
   FluxConfigurationsDeleteOptionalParams,
-  FluxConfigurationsListNextResponse
+  FluxConfigurationsDeleteResponse,
+  FluxConfigurationsOperationStatusOptionalParams,
+  FluxConfigurationsOperationStatusResponse,
+  FluxConfigurationsListByResourceGroupNextResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -51,26 +54,24 @@ export class FluxConfigurationsImpl implements FluxConfigurations {
   /**
    * List all Flux Configurations.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param options The options parameters.
    */
-  public list(
+  public listByResourceGroup(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
-    options?: FluxConfigurationsListOptionalParams
+    options?: FluxConfigurationsListByResourceGroupOptionalParams,
   ): PagedAsyncIterableIterator<FluxConfiguration> {
-    const iter = this.listPagingAll(
+    const iter = this.listByResourceGroupPagingAll(
       resourceGroupName,
       clusterRp,
       clusterResourceName,
       clusterName,
-      options
+      options,
     );
     return {
       next() {
@@ -83,35 +84,35 @@ export class FluxConfigurationsImpl implements FluxConfigurations {
         if (settings?.maxPageSize) {
           throw new Error("maxPageSize is not supported by this operation.");
         }
-        return this.listPagingPage(
+        return this.listByResourceGroupPagingPage(
           resourceGroupName,
           clusterRp,
           clusterResourceName,
           clusterName,
           options,
-          settings
+          settings,
         );
-      }
+      },
     };
   }
 
-  private async *listPagingPage(
+  private async *listByResourceGroupPagingPage(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
-    options?: FluxConfigurationsListOptionalParams,
-    settings?: PageSettings
+    options?: FluxConfigurationsListByResourceGroupOptionalParams,
+    settings?: PageSettings,
   ): AsyncIterableIterator<FluxConfiguration[]> {
-    let result: FluxConfigurationsListResponse;
+    let result: FluxConfigurationsListByResourceGroupResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._list(
+      result = await this._listByResourceGroup(
         resourceGroupName,
         clusterRp,
         clusterResourceName,
         clusterName,
-        options
+        options,
       );
       let page = result.value || [];
       continuationToken = result.nextLink;
@@ -119,13 +120,13 @@ export class FluxConfigurationsImpl implements FluxConfigurations {
       yield page;
     }
     while (continuationToken) {
-      result = await this._listNext(
+      result = await this._listByResourceGroupNext(
         resourceGroupName,
         clusterRp,
         clusterResourceName,
         clusterName,
         continuationToken,
-        options
+        options,
       );
       continuationToken = result.nextLink;
       let page = result.value || [];
@@ -134,32 +135,57 @@ export class FluxConfigurationsImpl implements FluxConfigurations {
     }
   }
 
-  private async *listPagingAll(
+  private async *listByResourceGroupPagingAll(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
-    options?: FluxConfigurationsListOptionalParams
+    options?: FluxConfigurationsListByResourceGroupOptionalParams,
   ): AsyncIterableIterator<FluxConfiguration> {
-    for await (const page of this.listPagingPage(
+    for await (const page of this.listByResourceGroupPagingPage(
       resourceGroupName,
       clusterRp,
       clusterResourceName,
       clusterName,
-      options
+      options,
     )) {
       yield* page;
     }
   }
 
   /**
+   * List all Flux Configurations.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
+   * @param options The options parameters.
+   */
+  private _listByResourceGroup(
+    resourceGroupName: string,
+    clusterRp: string,
+    clusterResourceName: string,
+    clusterName: string,
+    options?: FluxConfigurationsListByResourceGroupOptionalParams,
+  ): Promise<FluxConfigurationsListByResourceGroupResponse> {
+    return this.client.sendOperationRequest(
+      {
+        resourceGroupName,
+        clusterRp,
+        clusterResourceName,
+        clusterName,
+        options,
+      },
+      listByResourceGroupOperationSpec,
+    );
+  }
+
+  /**
    * Gets details of the Flux Configuration.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param fluxConfigurationName Name of the Flux Configuration.
    * @param options The options parameters.
    */
@@ -169,7 +195,7 @@ export class FluxConfigurationsImpl implements FluxConfigurations {
     clusterResourceName: string,
     clusterName: string,
     fluxConfigurationName: string,
-    options?: FluxConfigurationsGetOptionalParams
+    options?: FluxConfigurationsGetOptionalParams,
   ): Promise<FluxConfigurationsGetResponse> {
     return this.client.sendOperationRequest(
       {
@@ -178,55 +204,52 @@ export class FluxConfigurationsImpl implements FluxConfigurations {
         clusterResourceName,
         clusterName,
         fluxConfigurationName,
-        options
+        options,
       },
-      getOperationSpec
+      getOperationSpec,
     );
   }
 
   /**
    * Create a new Kubernetes Flux Configuration.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param fluxConfigurationName Name of the Flux Configuration.
-   * @param fluxConfiguration Properties necessary to Create a FluxConfiguration.
+   * @param resource Properties necessary to Create a FluxConfiguration.
    * @param options The options parameters.
    */
-  async beginCreateOrUpdate(
+  async beginCreate(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
     fluxConfigurationName: string,
-    fluxConfiguration: FluxConfiguration,
-    options?: FluxConfigurationsCreateOrUpdateOptionalParams
+    resource: FluxConfiguration,
+    options?: FluxConfigurationsCreateOptionalParams,
   ): Promise<
     SimplePollerLike<
-      OperationState<FluxConfigurationsCreateOrUpdateResponse>,
-      FluxConfigurationsCreateOrUpdateResponse
+      OperationState<FluxConfigurationsCreateResponse>,
+      FluxConfigurationsCreateResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ): Promise<FluxConfigurationsCreateOrUpdateResponse> => {
+      spec: coreClient.OperationSpec,
+    ): Promise<FluxConfigurationsCreateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
       const providedCallback = args.options?.onResponse;
       const callback: coreClient.RawResponseCallback = (
         rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
+        flatResponse: unknown,
       ) => {
         currentRawResponse = rawResponse;
         providedCallback?.(rawResponse, flatResponse);
@@ -235,8 +258,8 @@ export class FluxConfigurationsImpl implements FluxConfigurations {
         ...args,
         options: {
           ...args.options,
-          onResponse: callback
-        }
+          onResponse: callback,
+        },
       };
       const flatResponse = await directSendOperation(updatedArgs, spec);
       return {
@@ -244,8 +267,8 @@ export class FluxConfigurationsImpl implements FluxConfigurations {
         rawResponse: {
           statusCode: currentRawResponse!.status,
           body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
+          headers: currentRawResponse!.headers.toJSON(),
+        },
       };
     };
 
@@ -257,18 +280,18 @@ export class FluxConfigurationsImpl implements FluxConfigurations {
         clusterResourceName,
         clusterName,
         fluxConfigurationName,
-        fluxConfiguration,
-        options
+        resource,
+        options,
       },
-      spec: createOrUpdateOperationSpec
+      spec: createOperationSpec,
     });
     const poller = await createHttpPoller<
-      FluxConfigurationsCreateOrUpdateResponse,
-      OperationState<FluxConfigurationsCreateOrUpdateResponse>
+      FluxConfigurationsCreateResponse,
+      OperationState<FluxConfigurationsCreateResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "azure-async-operation",
     });
     await poller.poll();
     return poller;
@@ -277,32 +300,30 @@ export class FluxConfigurationsImpl implements FluxConfigurations {
   /**
    * Create a new Kubernetes Flux Configuration.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param fluxConfigurationName Name of the Flux Configuration.
-   * @param fluxConfiguration Properties necessary to Create a FluxConfiguration.
+   * @param resource Properties necessary to Create a FluxConfiguration.
    * @param options The options parameters.
    */
-  async beginCreateOrUpdateAndWait(
+  async beginCreateAndWait(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
     fluxConfigurationName: string,
-    fluxConfiguration: FluxConfiguration,
-    options?: FluxConfigurationsCreateOrUpdateOptionalParams
-  ): Promise<FluxConfigurationsCreateOrUpdateResponse> {
-    const poller = await this.beginCreateOrUpdate(
+    resource: FluxConfiguration,
+    options?: FluxConfigurationsCreateOptionalParams,
+  ): Promise<FluxConfigurationsCreateResponse> {
+    const poller = await this.beginCreate(
       resourceGroupName,
       clusterRp,
       clusterResourceName,
       clusterName,
       fluxConfigurationName,
-      fluxConfiguration,
-      options
+      resource,
+      options,
     );
     return poller.pollUntilDone();
   }
@@ -310,135 +331,43 @@ export class FluxConfigurationsImpl implements FluxConfigurations {
   /**
    * Update an existing Kubernetes Flux Configuration.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param fluxConfigurationName Name of the Flux Configuration.
-   * @param fluxConfigurationPatch Properties to Patch in an existing Flux Configuration.
+   * @param properties Properties to Patch in an existing Flux Configuration.
    * @param options The options parameters.
    */
-  async beginUpdate(
+  update(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
     fluxConfigurationName: string,
-    fluxConfigurationPatch: FluxConfigurationPatch,
-    options?: FluxConfigurationsUpdateOptionalParams
-  ): Promise<
-    SimplePollerLike<
-      OperationState<FluxConfigurationsUpdateResponse>,
-      FluxConfigurationsUpdateResponse
-    >
-  > {
-    const directSendOperation = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ): Promise<FluxConfigurationsUpdateResponse> => {
-      return this.client.sendOperationRequest(args, spec);
-    };
-    const sendOperationFn = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
-      const providedCallback = args.options?.onResponse;
-      const callback: coreClient.RawResponseCallback = (
-        rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
-      ) => {
-        currentRawResponse = rawResponse;
-        providedCallback?.(rawResponse, flatResponse);
-      };
-      const updatedArgs = {
-        ...args,
-        options: {
-          ...args.options,
-          onResponse: callback
-        }
-      };
-      const flatResponse = await directSendOperation(updatedArgs, spec);
-      return {
-        flatResponse,
-        rawResponse: {
-          statusCode: currentRawResponse!.status,
-          body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
-      };
-    };
-
-    const lro = createLroSpec({
-      sendOperationFn,
-      args: {
-        resourceGroupName,
-        clusterRp,
-        clusterResourceName,
-        clusterName,
-        fluxConfigurationName,
-        fluxConfigurationPatch,
-        options
-      },
-      spec: updateOperationSpec
-    });
-    const poller = await createHttpPoller<
-      FluxConfigurationsUpdateResponse,
-      OperationState<FluxConfigurationsUpdateResponse>
-    >(lro, {
-      restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
-    });
-    await poller.poll();
-    return poller;
-  }
-
-  /**
-   * Update an existing Kubernetes Flux Configuration.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
-   * @param fluxConfigurationName Name of the Flux Configuration.
-   * @param fluxConfigurationPatch Properties to Patch in an existing Flux Configuration.
-   * @param options The options parameters.
-   */
-  async beginUpdateAndWait(
-    resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
-    fluxConfigurationName: string,
-    fluxConfigurationPatch: FluxConfigurationPatch,
-    options?: FluxConfigurationsUpdateOptionalParams
+    properties: FluxConfigurationUpdate,
+    options?: FluxConfigurationsUpdateOptionalParams,
   ): Promise<FluxConfigurationsUpdateResponse> {
-    const poller = await this.beginUpdate(
-      resourceGroupName,
-      clusterRp,
-      clusterResourceName,
-      clusterName,
-      fluxConfigurationName,
-      fluxConfigurationPatch,
-      options
+    return this.client.sendOperationRequest(
+      {
+        resourceGroupName,
+        clusterRp,
+        clusterResourceName,
+        clusterName,
+        fluxConfigurationName,
+        properties,
+        options,
+      },
+      updateOperationSpec,
     );
-    return poller.pollUntilDone();
   }
 
   /**
    * This will delete the YAML file used to set up the Flux Configuration, thus stopping future sync from
    * the source repo.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param fluxConfigurationName Name of the Flux Configuration.
    * @param options The options parameters.
    */
@@ -448,25 +377,29 @@ export class FluxConfigurationsImpl implements FluxConfigurations {
     clusterResourceName: string,
     clusterName: string,
     fluxConfigurationName: string,
-    options?: FluxConfigurationsDeleteOptionalParams
-  ): Promise<SimplePollerLike<OperationState<void>, void>> {
+    options?: FluxConfigurationsDeleteOptionalParams,
+  ): Promise<
+    SimplePollerLike<
+      OperationState<FluxConfigurationsDeleteResponse>,
+      FluxConfigurationsDeleteResponse
+    >
+  > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ): Promise<void> => {
+      spec: coreClient.OperationSpec,
+    ): Promise<FluxConfigurationsDeleteResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
       const providedCallback = args.options?.onResponse;
       const callback: coreClient.RawResponseCallback = (
         rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
+        flatResponse: unknown,
       ) => {
         currentRawResponse = rawResponse;
         providedCallback?.(rawResponse, flatResponse);
@@ -475,8 +408,8 @@ export class FluxConfigurationsImpl implements FluxConfigurations {
         ...args,
         options: {
           ...args.options,
-          onResponse: callback
-        }
+          onResponse: callback,
+        },
       };
       const flatResponse = await directSendOperation(updatedArgs, spec);
       return {
@@ -484,8 +417,8 @@ export class FluxConfigurationsImpl implements FluxConfigurations {
         rawResponse: {
           statusCode: currentRawResponse!.status,
           body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
+          headers: currentRawResponse!.headers.toJSON(),
+        },
       };
     };
 
@@ -497,14 +430,17 @@ export class FluxConfigurationsImpl implements FluxConfigurations {
         clusterResourceName,
         clusterName,
         fluxConfigurationName,
-        options
+        options,
       },
-      spec: deleteOperationSpec
+      spec: deleteOperationSpec,
     });
-    const poller = await createHttpPoller<void, OperationState<void>>(lro, {
+    const poller = await createHttpPoller<
+      FluxConfigurationsDeleteResponse,
+      OperationState<FluxConfigurationsDeleteResponse>
+    >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "location",
     });
     await poller.poll();
     return poller;
@@ -514,11 +450,9 @@ export class FluxConfigurationsImpl implements FluxConfigurations {
    * This will delete the YAML file used to set up the Flux Configuration, thus stopping future sync from
    * the source repo.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param fluxConfigurationName Name of the Flux Configuration.
    * @param options The options parameters.
    */
@@ -528,67 +462,72 @@ export class FluxConfigurationsImpl implements FluxConfigurations {
     clusterResourceName: string,
     clusterName: string,
     fluxConfigurationName: string,
-    options?: FluxConfigurationsDeleteOptionalParams
-  ): Promise<void> {
+    options?: FluxConfigurationsDeleteOptionalParams,
+  ): Promise<FluxConfigurationsDeleteResponse> {
     const poller = await this.beginDelete(
       resourceGroupName,
       clusterRp,
       clusterResourceName,
       clusterName,
       fluxConfigurationName,
-      options
+      options,
     );
     return poller.pollUntilDone();
   }
 
   /**
-   * List all Flux Configurations.
+   * Get Async Operation status
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
+   * @param fluxConfigurationName Name of the Flux Configuration.
+   * @param operationId operationId value
+   * @param body Any object
    * @param options The options parameters.
    */
-  private _list(
+  operationStatus(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
-    options?: FluxConfigurationsListOptionalParams
-  ): Promise<FluxConfigurationsListResponse> {
+    fluxConfigurationName: string,
+    operationId: string,
+    body: Record<string, unknown>,
+    options?: FluxConfigurationsOperationStatusOptionalParams,
+  ): Promise<FluxConfigurationsOperationStatusResponse> {
     return this.client.sendOperationRequest(
       {
         resourceGroupName,
         clusterRp,
         clusterResourceName,
         clusterName,
-        options
+        fluxConfigurationName,
+        operationId,
+        body,
+        options,
       },
-      listOperationSpec
+      operationStatusOperationSpec,
     );
   }
 
   /**
-   * ListNext
+   * ListByResourceGroupNext
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
-   * @param nextLink The nextLink from the previous successful call to the List method.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
+   * @param nextLink The nextLink from the previous successful call to the ListByResourceGroup method.
    * @param options The options parameters.
    */
-  private _listNext(
+  private _listByResourceGroupNext(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
     nextLink: string,
-    options?: FluxConfigurationsListNextOptionalParams
-  ): Promise<FluxConfigurationsListNextResponse> {
+    options?: FluxConfigurationsListByResourceGroupNextOptionalParams,
+  ): Promise<FluxConfigurationsListByResourceGroupNextResponse> {
     return this.client.sendOperationRequest(
       {
         resourceGroupName,
@@ -596,26 +535,25 @@ export class FluxConfigurationsImpl implements FluxConfigurations {
         clusterResourceName,
         clusterName,
         nextLink,
-        options
+        options,
       },
-      listNextOperationSpec
+      listByResourceGroupNextOperationSpec,
     );
   }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const getOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/fluxConfigurations/{fluxConfigurationName}",
+const listByResourceGroupOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/provider/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/fluxConfigurations",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.FluxConfiguration
+      bodyMapper: Mappers.FluxConfigurationListResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
@@ -625,33 +563,55 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.clusterRp,
     Parameters.clusterResourceName,
     Parameters.clusterName,
-    Parameters.fluxConfigurationName
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
-const createOrUpdateOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/fluxConfigurations/{fluxConfigurationName}",
+const getOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/provider/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/fluxConfigurations/{fluxConfigurationName}",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.FluxConfiguration,
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse,
+    },
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.clusterRp,
+    Parameters.clusterResourceName,
+    Parameters.clusterName,
+    Parameters.fluxConfigurationName,
+  ],
+  headerParameters: [Parameters.accept],
+  serializer,
+};
+const createOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/provider/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/fluxConfigurations/{fluxConfigurationName}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.FluxConfiguration
+      bodyMapper: Mappers.FluxConfiguration,
     },
     201: {
-      bodyMapper: Mappers.FluxConfiguration
+      bodyMapper: Mappers.FluxConfiguration,
     },
     202: {
-      bodyMapper: Mappers.FluxConfiguration
+      bodyMapper: Mappers.FluxConfiguration,
     },
     204: {
-      bodyMapper: Mappers.FluxConfiguration
+      bodyMapper: Mappers.FluxConfiguration,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
-  requestBody: Parameters.fluxConfiguration,
+  requestBody: Parameters.resource1,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -660,34 +620,24 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
     Parameters.clusterRp,
     Parameters.clusterResourceName,
     Parameters.clusterName,
-    Parameters.fluxConfigurationName
+    Parameters.fluxConfigurationName,
   ],
-  headerParameters: [Parameters.contentType, Parameters.accept],
+  headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
+  serializer,
 };
 const updateOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/fluxConfigurations/{fluxConfigurationName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/provider/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/fluxConfigurations/{fluxConfigurationName}",
   httpMethod: "PATCH",
   responses: {
     200: {
-      bodyMapper: Mappers.FluxConfiguration
-    },
-    201: {
-      bodyMapper: Mappers.FluxConfiguration
-    },
-    202: {
-      bodyMapper: Mappers.FluxConfiguration
-    },
-    204: {
-      bodyMapper: Mappers.FluxConfiguration
+      bodyMapper: Mappers.FluxConfiguration,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
-  requestBody: Parameters.fluxConfigurationPatch,
+  requestBody: Parameters.properties1,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -696,24 +646,31 @@ const updateOperationSpec: coreClient.OperationSpec = {
     Parameters.clusterRp,
     Parameters.clusterResourceName,
     Parameters.clusterName,
-    Parameters.fluxConfigurationName
+    Parameters.fluxConfigurationName,
   ],
-  headerParameters: [Parameters.contentType, Parameters.accept],
+  headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
+  serializer,
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/fluxConfigurations/{fluxConfigurationName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/provider/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/fluxConfigurations/{fluxConfigurationName}",
   httpMethod: "DELETE",
   responses: {
-    200: {},
-    201: {},
-    202: {},
-    204: {},
+    200: {
+      headersMapper: Mappers.FluxConfigurationsDeleteHeaders,
+    },
+    201: {
+      headersMapper: Mappers.FluxConfigurationsDeleteHeaders,
+    },
+    202: {
+      headersMapper: Mappers.FluxConfigurationsDeleteHeaders,
+    },
+    204: {
+      headersMapper: Mappers.FluxConfigurationsDeleteHeaders,
+    },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion, Parameters.forceDelete],
   urlParameters: [
@@ -723,22 +680,22 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.clusterRp,
     Parameters.clusterResourceName,
     Parameters.clusterName,
-    Parameters.fluxConfigurationName
+    Parameters.fluxConfigurationName,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
-const listOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/fluxConfigurations",
+const operationStatusOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/provider/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/fluxConfigurations/{fluxConfigurationName}/operations/{operationId}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.FluxConfigurationsList
+      bodyMapper:
+        Mappers.PathsT3WamfSubscriptionsSubscriptionidResourcegroupsResourcegroupnameProviderClusterrpClusterresourcenameClusternameProvidersMicrosoftKubernetesconfigurationFluxconfigurationsFluxconfigurationnameOperationsOperationidGetResponses200ContentApplicationJsonSchema,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
@@ -747,31 +704,34 @@ const listOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceGroupName,
     Parameters.clusterRp,
     Parameters.clusterResourceName,
-    Parameters.clusterName
+    Parameters.clusterName,
+    Parameters.operationId,
+    Parameters.fluxConfigurationName,
   ],
-  headerParameters: [Parameters.accept],
-  serializer
+  headerParameters: [Parameters.accept, Parameters.contentType],
+  mediaType: "json",
+  serializer,
 };
-const listNextOperationSpec: coreClient.OperationSpec = {
+const listByResourceGroupNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.FluxConfigurationsList
+      bodyMapper: Mappers.FluxConfigurationListResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   urlParameters: [
     Parameters.$host,
+    Parameters.nextLink,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.clusterRp,
     Parameters.clusterResourceName,
     Parameters.clusterName,
-    Parameters.nextLink
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };

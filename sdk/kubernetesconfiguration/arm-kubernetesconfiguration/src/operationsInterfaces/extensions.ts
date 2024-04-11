@@ -10,15 +10,18 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   Extension,
-  ExtensionsListOptionalParams,
-  ExtensionsCreateOptionalParams,
-  ExtensionsCreateResponse,
+  ExtensionsListByResourceGroupOptionalParams,
   ExtensionsGetOptionalParams,
   ExtensionsGetResponse,
-  ExtensionsDeleteOptionalParams,
-  PatchExtension,
+  ExtensionsCreateOptionalParams,
+  ExtensionsCreateResponse,
+  ExtensionUpdate,
   ExtensionsUpdateOptionalParams,
-  ExtensionsUpdateResponse
+  ExtensionsUpdateResponse,
+  ExtensionsDeleteOptionalParams,
+  ExtensionsDeleteResponse,
+  ExtensionsOperationStatusOptionalParams,
+  ExtensionsOperationStatusResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -27,75 +30,24 @@ export interface Extensions {
   /**
    * List all Extensions in the cluster.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param options The options parameters.
    */
-  list(
+  listByResourceGroup(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
-    options?: ExtensionsListOptionalParams
+    options?: ExtensionsListByResourceGroupOptionalParams,
   ): PagedAsyncIterableIterator<Extension>;
-  /**
-   * Create a new Kubernetes Cluster Extension.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
-   * @param extensionName Name of the Extension.
-   * @param extension Properties necessary to Create an Extension.
-   * @param options The options parameters.
-   */
-  beginCreate(
-    resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
-    extensionName: string,
-    extension: Extension,
-    options?: ExtensionsCreateOptionalParams
-  ): Promise<
-    SimplePollerLike<
-      OperationState<ExtensionsCreateResponse>,
-      ExtensionsCreateResponse
-    >
-  >;
-  /**
-   * Create a new Kubernetes Cluster Extension.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
-   * @param extensionName Name of the Extension.
-   * @param extension Properties necessary to Create an Extension.
-   * @param options The options parameters.
-   */
-  beginCreateAndWait(
-    resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
-    extensionName: string,
-    extension: Extension,
-    options?: ExtensionsCreateOptionalParams
-  ): Promise<ExtensionsCreateResponse>;
   /**
    * Gets Kubernetes Cluster Extension.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param extensionName Name of the Extension.
    * @param options The options parameters.
    */
@@ -105,17 +57,77 @@ export interface Extensions {
     clusterResourceName: string,
     clusterName: string,
     extensionName: string,
-    options?: ExtensionsGetOptionalParams
+    options?: ExtensionsGetOptionalParams,
   ): Promise<ExtensionsGetResponse>;
+  /**
+   * Create a new Kubernetes Cluster Extension.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
+   * @param extensionName Name of the Extension.
+   * @param resource Properties necessary to Create an Extension.
+   * @param options The options parameters.
+   */
+  beginCreate(
+    resourceGroupName: string,
+    clusterRp: string,
+    clusterResourceName: string,
+    clusterName: string,
+    extensionName: string,
+    resource: Extension,
+    options?: ExtensionsCreateOptionalParams,
+  ): Promise<
+    SimplePollerLike<
+      OperationState<ExtensionsCreateResponse>,
+      ExtensionsCreateResponse
+    >
+  >;
+  /**
+   * Create a new Kubernetes Cluster Extension.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
+   * @param extensionName Name of the Extension.
+   * @param resource Properties necessary to Create an Extension.
+   * @param options The options parameters.
+   */
+  beginCreateAndWait(
+    resourceGroupName: string,
+    clusterRp: string,
+    clusterResourceName: string,
+    clusterName: string,
+    extensionName: string,
+    resource: Extension,
+    options?: ExtensionsCreateOptionalParams,
+  ): Promise<ExtensionsCreateResponse>;
+  /**
+   * Patch an existing Kubernetes Cluster Extension.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
+   * @param extensionName Name of the Extension.
+   * @param properties Properties to Patch in an existing Extension.
+   * @param options The options parameters.
+   */
+  update(
+    resourceGroupName: string,
+    clusterRp: string,
+    clusterResourceName: string,
+    clusterName: string,
+    extensionName: string,
+    properties: ExtensionUpdate,
+    options?: ExtensionsUpdateOptionalParams,
+  ): Promise<ExtensionsUpdateResponse>;
   /**
    * Delete a Kubernetes Cluster Extension. This will cause the Agent to Uninstall the extension from the
    * cluster.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param extensionName Name of the Extension.
    * @param options The options parameters.
    */
@@ -125,17 +137,20 @@ export interface Extensions {
     clusterResourceName: string,
     clusterName: string,
     extensionName: string,
-    options?: ExtensionsDeleteOptionalParams
-  ): Promise<SimplePollerLike<OperationState<void>, void>>;
+    options?: ExtensionsDeleteOptionalParams,
+  ): Promise<
+    SimplePollerLike<
+      OperationState<ExtensionsDeleteResponse>,
+      ExtensionsDeleteResponse
+    >
+  >;
   /**
    * Delete a Kubernetes Cluster Extension. This will cause the Agent to Uninstall the extension from the
    * cluster.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param extensionName Name of the Extension.
    * @param options The options parameters.
    */
@@ -145,53 +160,27 @@ export interface Extensions {
     clusterResourceName: string,
     clusterName: string,
     extensionName: string,
-    options?: ExtensionsDeleteOptionalParams
-  ): Promise<void>;
+    options?: ExtensionsDeleteOptionalParams,
+  ): Promise<ExtensionsDeleteResponse>;
   /**
-   * Patch an existing Kubernetes Cluster Extension.
+   * Get Async Operation status
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param extensionName Name of the Extension.
-   * @param patchExtension Properties to Patch in an existing Extension.
+   * @param operationId operationId value
+   * @param body Any object
    * @param options The options parameters.
    */
-  beginUpdate(
+  operationStatus(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
     extensionName: string,
-    patchExtension: PatchExtension,
-    options?: ExtensionsUpdateOptionalParams
-  ): Promise<
-    SimplePollerLike<
-      OperationState<ExtensionsUpdateResponse>,
-      ExtensionsUpdateResponse
-    >
-  >;
-  /**
-   * Patch an existing Kubernetes Cluster Extension.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
-   * @param extensionName Name of the Extension.
-   * @param patchExtension Properties to Patch in an existing Extension.
-   * @param options The options parameters.
-   */
-  beginUpdateAndWait(
-    resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
-    extensionName: string,
-    patchExtension: PatchExtension,
-    options?: ExtensionsUpdateOptionalParams
-  ): Promise<ExtensionsUpdateResponse>;
+    operationId: string,
+    body: Record<string, unknown>,
+    options?: ExtensionsOperationStatusOptionalParams,
+  ): Promise<ExtensionsOperationStatusResponse>;
 }

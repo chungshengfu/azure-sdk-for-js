@@ -16,23 +16,26 @@ import { SourceControlConfigurationClient } from "../sourceControlConfigurationC
 import {
   SimplePollerLike,
   OperationState,
-  createHttpPoller
+  createHttpPoller,
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
   Extension,
-  ExtensionsListNextOptionalParams,
-  ExtensionsListOptionalParams,
-  ExtensionsListResponse,
-  ExtensionsCreateOptionalParams,
-  ExtensionsCreateResponse,
+  ExtensionsListByResourceGroupNextOptionalParams,
+  ExtensionsListByResourceGroupOptionalParams,
+  ExtensionsListByResourceGroupResponse,
   ExtensionsGetOptionalParams,
   ExtensionsGetResponse,
-  ExtensionsDeleteOptionalParams,
-  PatchExtension,
+  ExtensionsCreateOptionalParams,
+  ExtensionsCreateResponse,
+  ExtensionUpdate,
   ExtensionsUpdateOptionalParams,
   ExtensionsUpdateResponse,
-  ExtensionsListNextResponse
+  ExtensionsDeleteOptionalParams,
+  ExtensionsDeleteResponse,
+  ExtensionsOperationStatusOptionalParams,
+  ExtensionsOperationStatusResponse,
+  ExtensionsListByResourceGroupNextResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -51,26 +54,24 @@ export class ExtensionsImpl implements Extensions {
   /**
    * List all Extensions in the cluster.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param options The options parameters.
    */
-  public list(
+  public listByResourceGroup(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
-    options?: ExtensionsListOptionalParams
+    options?: ExtensionsListByResourceGroupOptionalParams,
   ): PagedAsyncIterableIterator<Extension> {
-    const iter = this.listPagingAll(
+    const iter = this.listByResourceGroupPagingAll(
       resourceGroupName,
       clusterRp,
       clusterResourceName,
       clusterName,
-      options
+      options,
     );
     return {
       next() {
@@ -83,35 +84,35 @@ export class ExtensionsImpl implements Extensions {
         if (settings?.maxPageSize) {
           throw new Error("maxPageSize is not supported by this operation.");
         }
-        return this.listPagingPage(
+        return this.listByResourceGroupPagingPage(
           resourceGroupName,
           clusterRp,
           clusterResourceName,
           clusterName,
           options,
-          settings
+          settings,
         );
-      }
+      },
     };
   }
 
-  private async *listPagingPage(
+  private async *listByResourceGroupPagingPage(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
-    options?: ExtensionsListOptionalParams,
-    settings?: PageSettings
+    options?: ExtensionsListByResourceGroupOptionalParams,
+    settings?: PageSettings,
   ): AsyncIterableIterator<Extension[]> {
-    let result: ExtensionsListResponse;
+    let result: ExtensionsListByResourceGroupResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._list(
+      result = await this._listByResourceGroup(
         resourceGroupName,
         clusterRp,
         clusterResourceName,
         clusterName,
-        options
+        options,
       );
       let page = result.value || [];
       continuationToken = result.nextLink;
@@ -119,13 +120,13 @@ export class ExtensionsImpl implements Extensions {
       yield page;
     }
     while (continuationToken) {
-      result = await this._listNext(
+      result = await this._listByResourceGroupNext(
         resourceGroupName,
         clusterRp,
         clusterResourceName,
         clusterName,
         continuationToken,
-        options
+        options,
       );
       continuationToken = result.nextLink;
       let page = result.value || [];
@@ -134,155 +135,57 @@ export class ExtensionsImpl implements Extensions {
     }
   }
 
-  private async *listPagingAll(
+  private async *listByResourceGroupPagingAll(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
-    options?: ExtensionsListOptionalParams
+    options?: ExtensionsListByResourceGroupOptionalParams,
   ): AsyncIterableIterator<Extension> {
-    for await (const page of this.listPagingPage(
+    for await (const page of this.listByResourceGroupPagingPage(
       resourceGroupName,
       clusterRp,
       clusterResourceName,
       clusterName,
-      options
+      options,
     )) {
       yield* page;
     }
   }
 
   /**
-   * Create a new Kubernetes Cluster Extension.
+   * List all Extensions in the cluster.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
-   * @param extensionName Name of the Extension.
-   * @param extension Properties necessary to Create an Extension.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param options The options parameters.
    */
-  async beginCreate(
+  private _listByResourceGroup(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
-    extensionName: string,
-    extension: Extension,
-    options?: ExtensionsCreateOptionalParams
-  ): Promise<
-    SimplePollerLike<
-      OperationState<ExtensionsCreateResponse>,
-      ExtensionsCreateResponse
-    >
-  > {
-    const directSendOperation = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ): Promise<ExtensionsCreateResponse> => {
-      return this.client.sendOperationRequest(args, spec);
-    };
-    const sendOperationFn = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
-      const providedCallback = args.options?.onResponse;
-      const callback: coreClient.RawResponseCallback = (
-        rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
-      ) => {
-        currentRawResponse = rawResponse;
-        providedCallback?.(rawResponse, flatResponse);
-      };
-      const updatedArgs = {
-        ...args,
-        options: {
-          ...args.options,
-          onResponse: callback
-        }
-      };
-      const flatResponse = await directSendOperation(updatedArgs, spec);
-      return {
-        flatResponse,
-        rawResponse: {
-          statusCode: currentRawResponse!.status,
-          body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
-      };
-    };
-
-    const lro = createLroSpec({
-      sendOperationFn,
-      args: {
+    options?: ExtensionsListByResourceGroupOptionalParams,
+  ): Promise<ExtensionsListByResourceGroupResponse> {
+    return this.client.sendOperationRequest(
+      {
         resourceGroupName,
         clusterRp,
         clusterResourceName,
         clusterName,
-        extensionName,
-        extension,
-        options
+        options,
       },
-      spec: createOperationSpec
-    });
-    const poller = await createHttpPoller<
-      ExtensionsCreateResponse,
-      OperationState<ExtensionsCreateResponse>
-    >(lro, {
-      restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
-    });
-    await poller.poll();
-    return poller;
-  }
-
-  /**
-   * Create a new Kubernetes Cluster Extension.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
-   * @param extensionName Name of the Extension.
-   * @param extension Properties necessary to Create an Extension.
-   * @param options The options parameters.
-   */
-  async beginCreateAndWait(
-    resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
-    extensionName: string,
-    extension: Extension,
-    options?: ExtensionsCreateOptionalParams
-  ): Promise<ExtensionsCreateResponse> {
-    const poller = await this.beginCreate(
-      resourceGroupName,
-      clusterRp,
-      clusterResourceName,
-      clusterName,
-      extensionName,
-      extension,
-      options
+      listByResourceGroupOperationSpec,
     );
-    return poller.pollUntilDone();
   }
 
   /**
    * Gets Kubernetes Cluster Extension.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param extensionName Name of the Extension.
    * @param options The options parameters.
    */
@@ -292,7 +195,7 @@ export class ExtensionsImpl implements Extensions {
     clusterResourceName: string,
     clusterName: string,
     extensionName: string,
-    options?: ExtensionsGetOptionalParams
+    options?: ExtensionsGetOptionalParams,
   ): Promise<ExtensionsGetResponse> {
     return this.client.sendOperationRequest(
       {
@@ -301,9 +204,160 @@ export class ExtensionsImpl implements Extensions {
         clusterResourceName,
         clusterName,
         extensionName,
-        options
+        options,
       },
-      getOperationSpec
+      getOperationSpec,
+    );
+  }
+
+  /**
+   * Create a new Kubernetes Cluster Extension.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
+   * @param extensionName Name of the Extension.
+   * @param resource Properties necessary to Create an Extension.
+   * @param options The options parameters.
+   */
+  async beginCreate(
+    resourceGroupName: string,
+    clusterRp: string,
+    clusterResourceName: string,
+    clusterName: string,
+    extensionName: string,
+    resource: Extension,
+    options?: ExtensionsCreateOptionalParams,
+  ): Promise<
+    SimplePollerLike<
+      OperationState<ExtensionsCreateResponse>,
+      ExtensionsCreateResponse
+    >
+  > {
+    const directSendOperation = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec,
+    ): Promise<ExtensionsCreateResponse> => {
+      return this.client.sendOperationRequest(args, spec);
+    };
+    const sendOperationFn = async (
+      args: coreClient.OperationArguments,
+      spec: coreClient.OperationSpec,
+    ) => {
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
+      const providedCallback = args.options?.onResponse;
+      const callback: coreClient.RawResponseCallback = (
+        rawResponse: coreClient.FullOperationResponse,
+        flatResponse: unknown,
+      ) => {
+        currentRawResponse = rawResponse;
+        providedCallback?.(rawResponse, flatResponse);
+      };
+      const updatedArgs = {
+        ...args,
+        options: {
+          ...args.options,
+          onResponse: callback,
+        },
+      };
+      const flatResponse = await directSendOperation(updatedArgs, spec);
+      return {
+        flatResponse,
+        rawResponse: {
+          statusCode: currentRawResponse!.status,
+          body: currentRawResponse!.parsedBody,
+          headers: currentRawResponse!.headers.toJSON(),
+        },
+      };
+    };
+
+    const lro = createLroSpec({
+      sendOperationFn,
+      args: {
+        resourceGroupName,
+        clusterRp,
+        clusterResourceName,
+        clusterName,
+        extensionName,
+        resource,
+        options,
+      },
+      spec: createOperationSpec,
+    });
+    const poller = await createHttpPoller<
+      ExtensionsCreateResponse,
+      OperationState<ExtensionsCreateResponse>
+    >(lro, {
+      restoreFrom: options?.resumeFrom,
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "azure-async-operation",
+    });
+    await poller.poll();
+    return poller;
+  }
+
+  /**
+   * Create a new Kubernetes Cluster Extension.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
+   * @param extensionName Name of the Extension.
+   * @param resource Properties necessary to Create an Extension.
+   * @param options The options parameters.
+   */
+  async beginCreateAndWait(
+    resourceGroupName: string,
+    clusterRp: string,
+    clusterResourceName: string,
+    clusterName: string,
+    extensionName: string,
+    resource: Extension,
+    options?: ExtensionsCreateOptionalParams,
+  ): Promise<ExtensionsCreateResponse> {
+    const poller = await this.beginCreate(
+      resourceGroupName,
+      clusterRp,
+      clusterResourceName,
+      clusterName,
+      extensionName,
+      resource,
+      options,
+    );
+    return poller.pollUntilDone();
+  }
+
+  /**
+   * Patch an existing Kubernetes Cluster Extension.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
+   * @param extensionName Name of the Extension.
+   * @param properties Properties to Patch in an existing Extension.
+   * @param options The options parameters.
+   */
+  update(
+    resourceGroupName: string,
+    clusterRp: string,
+    clusterResourceName: string,
+    clusterName: string,
+    extensionName: string,
+    properties: ExtensionUpdate,
+    options?: ExtensionsUpdateOptionalParams,
+  ): Promise<ExtensionsUpdateResponse> {
+    return this.client.sendOperationRequest(
+      {
+        resourceGroupName,
+        clusterRp,
+        clusterResourceName,
+        clusterName,
+        extensionName,
+        properties,
+        options,
+      },
+      updateOperationSpec,
     );
   }
 
@@ -311,11 +365,9 @@ export class ExtensionsImpl implements Extensions {
    * Delete a Kubernetes Cluster Extension. This will cause the Agent to Uninstall the extension from the
    * cluster.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param extensionName Name of the Extension.
    * @param options The options parameters.
    */
@@ -325,25 +377,29 @@ export class ExtensionsImpl implements Extensions {
     clusterResourceName: string,
     clusterName: string,
     extensionName: string,
-    options?: ExtensionsDeleteOptionalParams
-  ): Promise<SimplePollerLike<OperationState<void>, void>> {
+    options?: ExtensionsDeleteOptionalParams,
+  ): Promise<
+    SimplePollerLike<
+      OperationState<ExtensionsDeleteResponse>,
+      ExtensionsDeleteResponse
+    >
+  > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ): Promise<void> => {
+      spec: coreClient.OperationSpec,
+    ): Promise<ExtensionsDeleteResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
       const providedCallback = args.options?.onResponse;
       const callback: coreClient.RawResponseCallback = (
         rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
+        flatResponse: unknown,
       ) => {
         currentRawResponse = rawResponse;
         providedCallback?.(rawResponse, flatResponse);
@@ -352,8 +408,8 @@ export class ExtensionsImpl implements Extensions {
         ...args,
         options: {
           ...args.options,
-          onResponse: callback
-        }
+          onResponse: callback,
+        },
       };
       const flatResponse = await directSendOperation(updatedArgs, spec);
       return {
@@ -361,8 +417,8 @@ export class ExtensionsImpl implements Extensions {
         rawResponse: {
           statusCode: currentRawResponse!.status,
           body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
+          headers: currentRawResponse!.headers.toJSON(),
+        },
       };
     };
 
@@ -374,14 +430,17 @@ export class ExtensionsImpl implements Extensions {
         clusterResourceName,
         clusterName,
         extensionName,
-        options
+        options,
       },
-      spec: deleteOperationSpec
+      spec: deleteOperationSpec,
     });
-    const poller = await createHttpPoller<void, OperationState<void>>(lro, {
+    const poller = await createHttpPoller<
+      ExtensionsDeleteResponse,
+      OperationState<ExtensionsDeleteResponse>
+    >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
+      resourceLocationConfig: "location",
     });
     await poller.poll();
     return poller;
@@ -391,11 +450,9 @@ export class ExtensionsImpl implements Extensions {
    * Delete a Kubernetes Cluster Extension. This will cause the Agent to Uninstall the extension from the
    * cluster.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param extensionName Name of the Extension.
    * @param options The options parameters.
    */
@@ -405,190 +462,72 @@ export class ExtensionsImpl implements Extensions {
     clusterResourceName: string,
     clusterName: string,
     extensionName: string,
-    options?: ExtensionsDeleteOptionalParams
-  ): Promise<void> {
+    options?: ExtensionsDeleteOptionalParams,
+  ): Promise<ExtensionsDeleteResponse> {
     const poller = await this.beginDelete(
       resourceGroupName,
       clusterRp,
       clusterResourceName,
       clusterName,
       extensionName,
-      options
+      options,
     );
     return poller.pollUntilDone();
   }
 
   /**
-   * Patch an existing Kubernetes Cluster Extension.
+   * Get Async Operation status
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param extensionName Name of the Extension.
-   * @param patchExtension Properties to Patch in an existing Extension.
+   * @param operationId operationId value
+   * @param body Any object
    * @param options The options parameters.
    */
-  async beginUpdate(
+  operationStatus(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
     extensionName: string,
-    patchExtension: PatchExtension,
-    options?: ExtensionsUpdateOptionalParams
-  ): Promise<
-    SimplePollerLike<
-      OperationState<ExtensionsUpdateResponse>,
-      ExtensionsUpdateResponse
-    >
-  > {
-    const directSendOperation = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ): Promise<ExtensionsUpdateResponse> => {
-      return this.client.sendOperationRequest(args, spec);
-    };
-    const sendOperationFn = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
-      const providedCallback = args.options?.onResponse;
-      const callback: coreClient.RawResponseCallback = (
-        rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
-      ) => {
-        currentRawResponse = rawResponse;
-        providedCallback?.(rawResponse, flatResponse);
-      };
-      const updatedArgs = {
-        ...args,
-        options: {
-          ...args.options,
-          onResponse: callback
-        }
-      };
-      const flatResponse = await directSendOperation(updatedArgs, spec);
-      return {
-        flatResponse,
-        rawResponse: {
-          statusCode: currentRawResponse!.status,
-          body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
-      };
-    };
-
-    const lro = createLroSpec({
-      sendOperationFn,
-      args: {
-        resourceGroupName,
-        clusterRp,
-        clusterResourceName,
-        clusterName,
-        extensionName,
-        patchExtension,
-        options
-      },
-      spec: updateOperationSpec
-    });
-    const poller = await createHttpPoller<
-      ExtensionsUpdateResponse,
-      OperationState<ExtensionsUpdateResponse>
-    >(lro, {
-      restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "azure-async-operation"
-    });
-    await poller.poll();
-    return poller;
-  }
-
-  /**
-   * Patch an existing Kubernetes Cluster Extension.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
-   * @param extensionName Name of the Extension.
-   * @param patchExtension Properties to Patch in an existing Extension.
-   * @param options The options parameters.
-   */
-  async beginUpdateAndWait(
-    resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
-    extensionName: string,
-    patchExtension: PatchExtension,
-    options?: ExtensionsUpdateOptionalParams
-  ): Promise<ExtensionsUpdateResponse> {
-    const poller = await this.beginUpdate(
-      resourceGroupName,
-      clusterRp,
-      clusterResourceName,
-      clusterName,
-      extensionName,
-      patchExtension,
-      options
-    );
-    return poller.pollUntilDone();
-  }
-
-  /**
-   * List all Extensions in the cluster.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
-   * @param options The options parameters.
-   */
-  private _list(
-    resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
-    options?: ExtensionsListOptionalParams
-  ): Promise<ExtensionsListResponse> {
+    operationId: string,
+    body: Record<string, unknown>,
+    options?: ExtensionsOperationStatusOptionalParams,
+  ): Promise<ExtensionsOperationStatusResponse> {
     return this.client.sendOperationRequest(
       {
         resourceGroupName,
         clusterRp,
         clusterResourceName,
         clusterName,
-        options
+        extensionName,
+        operationId,
+        body,
+        options,
       },
-      listOperationSpec
+      operationStatusOperationSpec,
     );
   }
 
   /**
-   * ListNext
+   * ListByResourceGroupNext
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
-   * @param nextLink The nextLink from the previous successful call to the List method.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
+   * @param nextLink The nextLink from the previous successful call to the ListByResourceGroup method.
    * @param options The options parameters.
    */
-  private _listNext(
+  private _listByResourceGroupNext(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
     nextLink: string,
-    options?: ExtensionsListNextOptionalParams
-  ): Promise<ExtensionsListNextResponse> {
+    options?: ExtensionsListByResourceGroupNextOptionalParams,
+  ): Promise<ExtensionsListByResourceGroupNextResponse> {
     return this.client.sendOperationRequest(
       {
         resourceGroupName,
@@ -596,62 +535,25 @@ export class ExtensionsImpl implements Extensions {
         clusterResourceName,
         clusterName,
         nextLink,
-        options
+        options,
       },
-      listNextOperationSpec
+      listByResourceGroupNextOperationSpec,
     );
   }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const createOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/extensions/{extensionName}",
-  httpMethod: "PUT",
-  responses: {
-    200: {
-      bodyMapper: Mappers.Extension
-    },
-    201: {
-      bodyMapper: Mappers.Extension
-    },
-    202: {
-      bodyMapper: Mappers.Extension
-    },
-    204: {
-      bodyMapper: Mappers.Extension
-    },
-    default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
-  },
-  requestBody: Parameters.extension,
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.clusterRp,
-    Parameters.clusterResourceName,
-    Parameters.clusterName,
-    Parameters.extensionName
-  ],
-  headerParameters: [Parameters.contentType, Parameters.accept],
-  mediaType: "json",
-  serializer
-};
-const getOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/extensions/{extensionName}",
+const listByResourceGroupOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/provider/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/extensions",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.Extension
+      bodyMapper: Mappers.ExtensionListResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
@@ -661,23 +563,114 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.clusterRp,
     Parameters.clusterResourceName,
     Parameters.clusterName,
-    Parameters.extensionName
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
+};
+const getOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/provider/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/extensions/{extensionName}",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.Extension,
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse,
+    },
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.clusterRp,
+    Parameters.clusterResourceName,
+    Parameters.clusterName,
+    Parameters.extensionName,
+  ],
+  headerParameters: [Parameters.accept],
+  serializer,
+};
+const createOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/provider/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/extensions/{extensionName}",
+  httpMethod: "PUT",
+  responses: {
+    200: {
+      bodyMapper: Mappers.Extension,
+    },
+    201: {
+      bodyMapper: Mappers.Extension,
+    },
+    202: {
+      bodyMapper: Mappers.Extension,
+    },
+    204: {
+      bodyMapper: Mappers.Extension,
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse,
+    },
+  },
+  requestBody: Parameters.resource,
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.clusterRp,
+    Parameters.clusterResourceName,
+    Parameters.clusterName,
+    Parameters.extensionName,
+  ],
+  headerParameters: [Parameters.accept, Parameters.contentType],
+  mediaType: "json",
+  serializer,
+};
+const updateOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/provider/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/extensions/{extensionName}",
+  httpMethod: "PATCH",
+  responses: {
+    200: {
+      bodyMapper: Mappers.Extension,
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse,
+    },
+  },
+  requestBody: Parameters.properties,
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.clusterRp,
+    Parameters.clusterResourceName,
+    Parameters.clusterName,
+    Parameters.extensionName,
+  ],
+  headerParameters: [Parameters.accept, Parameters.contentType],
+  mediaType: "json",
+  serializer,
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/extensions/{extensionName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/provider/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/extensions/{extensionName}",
   httpMethod: "DELETE",
   responses: {
-    200: {},
-    201: {},
-    202: {},
-    204: {},
+    200: {
+      headersMapper: Mappers.ExtensionsDeleteHeaders,
+    },
+    201: {
+      headersMapper: Mappers.ExtensionsDeleteHeaders,
+    },
+    202: {
+      headersMapper: Mappers.ExtensionsDeleteHeaders,
+    },
+    204: {
+      headersMapper: Mappers.ExtensionsDeleteHeaders,
+    },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion, Parameters.forceDelete],
   urlParameters: [
@@ -687,33 +680,23 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.clusterRp,
     Parameters.clusterResourceName,
     Parameters.clusterName,
-    Parameters.extensionName
+    Parameters.extensionName,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
-const updateOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/extensions/{extensionName}",
-  httpMethod: "PATCH",
+const operationStatusOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/provider/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/extensions/{extensionName}/operations/{operationId}",
+  httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.Extension
-    },
-    201: {
-      bodyMapper: Mappers.Extension
-    },
-    202: {
-      bodyMapper: Mappers.Extension
-    },
-    204: {
-      bodyMapper: Mappers.Extension
+      bodyMapper:
+        Mappers.Paths1B0Hq6PSubscriptionsSubscriptionidResourcegroupsResourcegroupnameProviderClusterrpClusterresourcenameClusternameProvidersMicrosoftKubernetesconfigurationExtensionsExtensionnameOperationsOperationidGetResponses200ContentApplicationJsonSchema,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
-  requestBody: Parameters.patchExtension,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -722,56 +705,33 @@ const updateOperationSpec: coreClient.OperationSpec = {
     Parameters.clusterRp,
     Parameters.clusterResourceName,
     Parameters.clusterName,
-    Parameters.extensionName
+    Parameters.extensionName,
+    Parameters.operationId,
   ],
-  headerParameters: [Parameters.contentType, Parameters.accept],
+  headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
+  serializer,
 };
-const listOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/extensions",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: Mappers.ExtensionsList
-    },
-    default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
-  },
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.clusterRp,
-    Parameters.clusterResourceName,
-    Parameters.clusterName
-  ],
-  headerParameters: [Parameters.accept],
-  serializer
-};
-const listNextOperationSpec: coreClient.OperationSpec = {
+const listByResourceGroupNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ExtensionsList
+      bodyMapper: Mappers.ExtensionListResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   urlParameters: [
     Parameters.$host,
+    Parameters.nextLink,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.clusterRp,
     Parameters.clusterResourceName,
     Parameters.clusterName,
-    Parameters.nextLink
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };

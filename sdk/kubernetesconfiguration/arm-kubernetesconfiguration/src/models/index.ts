@@ -8,38 +8,74 @@
 
 import * as coreClient from "@azure/core-client";
 
-/** Scope of the extension. It can be either Cluster or Namespace; but not both. */
-export interface Scope {
-  /** Specifies that the scope of the extension is Cluster */
-  cluster?: ScopeCluster;
-  /** Specifies that the scope of the extension is Namespace */
-  namespace?: ScopeNamespace;
+/** A list of REST API operations supported by an Azure Resource Provider. It contains an URL link to get the next set of results. */
+export interface OperationListResult {
+  /**
+   * List of operations supported by the resource provider
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly value?: Operation[];
+  /**
+   * URL to get the next set of operation list results (if there are any).
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly nextLink?: string;
 }
 
-/** Specifies that the scope of the extension is Cluster */
-export interface ScopeCluster {
-  /** Namespace where the extension Release must be placed, for a Cluster scoped extension.  If this namespace does not exist, it will be created */
-  releaseNamespace?: string;
+/** Details of a REST API operation, returned from the Resource Provider Operations API */
+export interface Operation {
+  /**
+   * The name of the operation, as per Resource-Based Access Control (RBAC). Examples: "Microsoft.Compute/virtualMachines/write", "Microsoft.Compute/virtualMachines/capture/action"
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /**
+   * Whether the operation applies to data-plane. This is "true" for data-plane operations and "false" for ARM/control-plane operations.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly isDataAction?: boolean;
+  /** Localized display information for this particular operation. */
+  display?: OperationDisplay;
+  /**
+   * The intended executor of the operation; as in Resource Based Access Control (RBAC) and audit logs UX. Default value is "user,system"
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly origin?: Origin;
+  /**
+   * Enum. Indicates the action type. "Internal" refers to actions that are for internal only APIs.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly actionType?: ActionType;
 }
 
-/** Specifies that the scope of the extension is Namespace */
-export interface ScopeNamespace {
-  /** Namespace where the extension will be created for an Namespace scoped extension.  If this namespace does not exist, it will be created */
-  targetNamespace?: string;
+/** Localized display information for this particular operation. */
+export interface OperationDisplay {
+  /**
+   * The localized friendly form of the resource provider name, e.g. "Microsoft Monitoring Insights" or "Microsoft Compute".
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provider?: string;
+  /**
+   * The localized friendly name of the resource type related to this operation. E.g. "Virtual Machines" or "Job Schedule Collections".
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly resource?: string;
+  /**
+   * The concise, localized friendly name for the operation; suitable for dropdowns. E.g. "Create or Update Virtual Machine", "Restart Virtual Machine".
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly operation?: string;
+  /**
+   * The short, localized friendly description of the operation; suitable for tool tips and detailed views.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly description?: string;
 }
 
-/** Status from the extension. */
-export interface ExtensionStatus {
-  /** Status code provided by the Extension */
-  code?: string;
-  /** Short description of status of the extension. */
-  displayStatus?: string;
-  /** Level of the status. */
-  level?: LevelType;
-  /** Detailed message of the status from the Extension. */
-  message?: string;
-  /** DateLiteral (per ISO8601) noting the time of installation status. */
-  time?: string;
+/** Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.). */
+export interface ErrorResponse {
+  /** The error object. */
+  error?: ErrorDetail;
 }
 
 /** The error detail. */
@@ -85,6 +121,48 @@ export interface ErrorAdditionalInfo {
   readonly info?: Record<string, unknown>;
 }
 
+/** The response of a Extension list operation. */
+export interface ExtensionListResult {
+  /** The Extension items on this page */
+  value: Extension[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** Scope of the extension. It can be either Cluster or Namespace; but not both. */
+export interface Scope {
+  /** Specifies that the scope of the extension is Cluster */
+  cluster?: ScopeCluster;
+  /** Specifies that the scope of the extension is Namespace */
+  namespace?: ScopeNamespace;
+}
+
+/** Specifies that the scope of the extension is Cluster */
+export interface ScopeCluster {
+  /** Namespace where the extension Release must be placed, for a Cluster scoped extension.  If this namespace does not exist, it will be created */
+  releaseNamespace?: string;
+}
+
+/** Specifies that the scope of the extension is Namespace */
+export interface ScopeNamespace {
+  /** Namespace where the extension will be created for an Namespace scoped extension.  If this namespace does not exist, it will be created */
+  targetNamespace?: string;
+}
+
+/** Status from the extension. */
+export interface ExtensionStatus {
+  /** Status code provided by the Extension */
+  code?: string;
+  /** Short description of status of the extension. */
+  displayStatus?: string;
+  /** Level of the status. */
+  level?: LevelType;
+  /** Detailed message of the status from the Extension. */
+  message?: string;
+  /** DateLiteral (per ISO8601) noting the time of installation status. */
+  time?: string;
+}
+
 /** Identity of the Extension resource in an AKS cluster */
 export interface ExtensionPropertiesAksAssignedIdentity {
   /**
@@ -101,36 +179,38 @@ export interface ExtensionPropertiesAksAssignedIdentity {
   type?: AKSIdentityType;
 }
 
-/** Identity for the resource. */
-export interface Identity {
+/** Managed service identity (system assigned and/or user assigned identities) */
+export interface ManagedServiceIdentity {
   /**
-   * The principal ID of resource identity.
+   * The service principal ID of the system assigned identity. This property will only be provided for a system assigned identity.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly principalId?: string;
   /**
-   * The tenant ID of resource.
+   * The tenant ID of the system assigned identity. This property will only be provided for a system assigned identity.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly tenantId?: string;
-  /** The identity type. */
-  type?: "SystemAssigned";
+  /** Type of managed service identity (where both SystemAssigned and UserAssigned types are allowed). */
+  type: ManagedServiceIdentityType;
+  /** The set of user assigned identities associated with the resource. The userAssignedIdentities dictionary keys will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}. The dictionary values can be empty objects ({}) in requests. */
+  userAssignedIdentities?: {
+    [propertyName: string]: UserAssignedIdentity | null;
+  };
 }
 
-/** Metadata pertaining to creation and last modification of the resource. */
-export interface SystemData {
-  /** The identity that created the resource. */
-  createdBy?: string;
-  /** The type of identity that created the resource. */
-  createdByType?: CreatedByType;
-  /** The timestamp of resource creation (UTC). */
-  createdAt?: Date;
-  /** The identity that last modified the resource. */
-  lastModifiedBy?: string;
-  /** The type of identity that last modified the resource. */
-  lastModifiedByType?: CreatedByType;
-  /** The timestamp of resource last modification (UTC) */
-  lastModifiedAt?: Date;
+/** User assigned identity properties */
+export interface UserAssignedIdentity {
+  /**
+   * The principal ID of the assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly principalId?: string;
+  /**
+   * The client ID of the assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly clientId?: string;
 }
 
 /** Plan for the resource. */
@@ -150,7 +230,7 @@ export interface Plan {
 /** Common fields that are returned in the response for all Azure Resource Manager resources */
 export interface Resource {
   /**
-   * Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+   * Fully qualified resource ID for the resource. E.g. "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}"
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly id?: string;
@@ -164,57 +244,96 @@ export interface Resource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly type?: string;
+  /**
+   * Azure Resource Manager metadata containing createdBy and modifiedBy information.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly systemData?: SystemData;
 }
 
-/** Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.). */
-export interface ErrorResponse {
-  /** The error object. */
-  error?: ErrorDetail;
+/** Metadata pertaining to creation and last modification of the resource. */
+export interface SystemData {
+  /** The identity that created the resource. */
+  createdBy?: string;
+  /** The type of identity that created the resource. */
+  createdByType?: CreatedByType;
+  /** The timestamp of resource creation (UTC). */
+  createdAt?: Date;
+  /** The identity that last modified the resource. */
+  lastModifiedBy?: string;
+  /** The type of identity that last modified the resource. */
+  lastModifiedByType?: CreatedByType;
+  /** The timestamp of resource last modification (UTC) */
+  lastModifiedAt?: Date;
 }
 
-/** The Extension Patch Request object. */
-export interface PatchExtension {
+/** The type used for update operations of the Extension. */
+export interface ExtensionUpdate {
+  /** The managed service identities assigned to this resource. */
+  identity?: ManagedServiceIdentity;
+  /** Details of the resource plan. */
+  plan?: Plan;
+  /** Type of the Extension, of which this resource is an instance of.  It must be one of the Extension Types registered with Microsoft.KubernetesConfiguration by the Extension publisher. */
+  extensionType?: string;
   /** Flag to note if this extension participates in auto upgrade of minor version, or not. */
   autoUpgradeMinorVersion?: boolean;
   /** ReleaseTrain this extension participates in for auto-upgrade (e.g. Stable, Preview, etc.) - only if autoUpgradeMinorVersion is 'true'. */
   releaseTrain?: string;
-  /** Version of the extension for this extension, if it is 'pinned' to a specific version. autoUpgradeMinorVersion must be 'false'. */
+  /** User-specified version of the extension for this extension to 'pin'. To use 'version', autoUpgradeMinorVersion must be 'false'. */
   version?: string;
+  /** Scope at which the extension is installed. */
+  scope?: Scope;
   /** Configuration settings, as name-value pairs for configuring this extension. */
   configurationSettings?: { [propertyName: string]: string };
   /** Configuration settings that are sensitive, as name-value pairs for configuring this extension. */
   configurationProtectedSettings?: { [propertyName: string]: string };
+  /** Status from this extension. */
+  statuses?: ExtensionStatus[];
+  /** Identity of the Extension resource in an AKS cluster */
+  aksAssignedIdentity?: ExtensionPropertiesAksAssignedIdentity;
+  /** autoUpgrade value for autoUpgradeV2 */
+  autoUpgradeChannel?: string;
 }
 
-/** Result of the request to list Extensions.  It contains a list of Extension objects and a URL link to get the next set of results. */
-export interface ExtensionsList {
+/** Standard Azure Resource Manager operation status response */
+export interface Paths1B0Hq6PSubscriptionsSubscriptionidResourcegroupsResourcegroupnameProviderClusterrpClusterresourcenameClusternameProvidersMicrosoftKubernetesconfigurationExtensionsExtensionnameOperationsOperationidGetResponses200ContentApplicationJsonSchema {
+  /** The operation status */
+  status: ResourceProvisioningState;
+  /** The unique identifier for the operationStatus resource */
+  id: string;
   /**
-   * List of Extensions within a Kubernetes cluster.
+   * The name of the  operationStatus resource
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly value?: Extension[];
+  readonly name?: string;
   /**
-   * URL to get the next set of extension objects, if any.
+   * Operation start time
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly nextLink?: string;
-}
-
-/** The current status of an async operation. */
-export interface OperationStatusResult {
-  /** Fully qualified ID for the async operation. */
-  id?: string;
-  /** Name of the async operation. */
-  name?: string;
-  /** Operation status. */
-  status: string;
-  /** Additional information, if available. */
-  properties?: { [propertyName: string]: string };
+  readonly startTime?: Date;
   /**
-   * If present, details of the operation error.
+   * Operation complete time
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly endTime?: Date;
+  /**
+   * The progress made toward completing the operation
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly percentComplete?: number;
+  /**
+   * Errors that occurred if the operation ended with Canceled or Failed status
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly error?: ErrorDetail;
+}
+
+/** The response of a FluxConfiguration list operation. */
+export interface FluxConfigurationListResult {
+  /** The FluxConfiguration items on this page */
+  value: FluxConfiguration[];
+  /** The link to the next page of items */
+  nextLink?: string;
 }
 
 /** Parameters to reconcile to the GitRepository source kind type. */
@@ -295,11 +414,20 @@ export interface ServicePrincipalDefinition {
   clientId?: string;
   /** The tenant Id for authenticating a Service Principal */
   tenantId?: string;
-  /** The client secret for authenticating a Service Principal */
+  /**
+   * The client secret for authenticating a Service Principal
+   * This value contains a credential. Consider obscuring before showing to users
+   */
   clientSecret?: string;
-  /** Base64-encoded certificate used to authenticate a Service Principal */
+  /**
+   * Base64-encoded certificate used to authenticate a Service Principal
+   * This value contains a credential. Consider obscuring before showing to users
+   */
   clientCertificate?: string;
-  /** The password for the certificate used to authenticate a Service Principal */
+  /**
+   * The password for the certificate used to authenticate a Service Principal
+   * This value contains a credential. Consider obscuring before showing to users
+   */
   clientCertificatePassword?: string;
   /** Specifies whether to include x5c header in client claims when acquiring a token to enable subject name / issuer based authentication for the Client Certificate */
   clientCertificateSendChain?: boolean;
@@ -343,7 +471,7 @@ export interface PostBuildDefinition {
   /** Key/value pairs holding the variables to be substituted in this Kustomization. */
   substitute?: { [propertyName: string]: string };
   /** Array of ConfigMaps/Secrets from which the variables are substituted for this Kustomization. */
-  substituteFrom?: (SubstituteFromDefinition | null)[];
+  substituteFrom?: SubstituteFromDefinition[];
 }
 
 /** Array of ConfigMaps/Secrets from which the variables are substituted for this Kustomization. */
@@ -410,8 +538,14 @@ export interface HelmReleasePropertiesDefinition {
   upgradeFailureCount?: number;
 }
 
-/** The Flux Configuration Patch Request object. */
-export interface FluxConfigurationPatch {
+/** The type used for update operations of the FluxConfiguration. */
+export interface FluxConfigurationUpdate {
+  /** Updatable properties of an Flux Configuration Patch Request */
+  properties?: FluxConfigurationPatchProperties;
+}
+
+/** Updatable properties of an Flux Configuration Patch Request */
+export interface FluxConfigurationPatchProperties {
   /** Source Kind to pull the configuration data from. */
   sourceKind?: SourceKindType;
   /** Whether this configuration should suspend its reconciliation of its kustomizations and sources. */
@@ -423,9 +557,7 @@ export interface FluxConfigurationPatch {
   /** Parameters to reconcile to the AzureBlob source kind type. */
   azureBlob?: AzureBlobPatchDefinition;
   /** Array of kustomizations used to reconcile the artifact pulled by the source type on the cluster. */
-  kustomizations?: {
-    [propertyName: string]: KustomizationPatchDefinition | null;
-  };
+  kustomizations?: { [propertyName: string]: KustomizationPatchDefinition };
   /** Key-value pairs of protected configuration settings for the configuration */
   configurationProtectedSettings?: { [propertyName: string]: string };
 }
@@ -496,11 +628,20 @@ export interface ServicePrincipalPatchDefinition {
   clientId?: string;
   /** The tenant Id for authenticating a Service Principal */
   tenantId?: string;
-  /** The client secret for authenticating a Service Principal */
+  /**
+   * The client secret for authenticating a Service Principal
+   * This value contains a credential. Consider obscuring before showing to users
+   */
   clientSecret?: string;
-  /** Base64-encoded certificate used to authenticate a Service Principal */
+  /**
+   * Base64-encoded certificate used to authenticate a Service Principal
+   * This value contains a credential. Consider obscuring before showing to users
+   */
   clientCertificate?: string;
-  /** The password for the certificate used to authenticate a Service Principal */
+  /**
+   * The password for the certificate used to authenticate a Service Principal
+   * This value contains a credential. Consider obscuring before showing to users
+   */
   clientCertificatePassword?: string;
   /** Specifies whether to include x5c header in client claims when acquiring a token to enable subject name / issuer based authentication for the Client Certificate */
   clientCertificateSendChain?: boolean;
@@ -534,18 +675,53 @@ export interface KustomizationPatchDefinition {
   postBuild?: PostBuildDefinition;
 }
 
-/** Result of the request to list Flux Configurations.  It contains a list of FluxConfiguration objects and a URL link to get the next set of results. */
-export interface FluxConfigurationsList {
+/** Standard Azure Resource Manager operation status response */
+export interface PathsT3WamfSubscriptionsSubscriptionidResourcegroupsResourcegroupnameProviderClusterrpClusterresourcenameClusternameProvidersMicrosoftKubernetesconfigurationFluxconfigurationsFluxconfigurationnameOperationsOperationidGetResponses200ContentApplicationJsonSchema {
+  /** The operation status */
+  status: ResourceProvisioningState;
+  /** The unique identifier for the operationStatus resource */
+  id: string;
   /**
-   * List of Flux Configurations within a Kubernetes cluster.
+   * The name of the  operationStatus resource
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly value?: FluxConfiguration[];
+  readonly name?: string;
   /**
-   * URL to get the next set of configuration objects, if any.
+   * Operation start time
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly nextLink?: string;
+  readonly startTime?: Date;
+  /**
+   * Operation complete time
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly endTime?: Date;
+  /**
+   * The progress made toward completing the operation
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly percentComplete?: number;
+  /**
+   * Errors that occurred if the operation ended with Canceled or Failed status
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly error?: ErrorDetail;
+}
+
+/** The response of a OperationModel list operation. */
+export interface OperationModelListResult {
+  /** The OperationModel items on this page */
+  value: OperationModel[];
+  /** The link to the next page of items */
+  nextLink?: string;
+}
+
+/** The response of a SourceControlConfiguration list operation. */
+export interface SourceControlConfigurationListResult {
+  /** The SourceControlConfiguration items on this page */
+  value: SourceControlConfiguration[];
+  /** The link to the next page of items */
+  nextLink?: string;
 }
 
 /** Properties for Helm operator. */
@@ -571,73 +747,46 @@ export interface ComplianceStatus {
   messageLevel?: MessageLevelType;
 }
 
-/** Result of the request to list Source Control Configurations.  It contains a list of SourceControlConfiguration objects and a URL link to get the next set of results. */
-export interface SourceControlConfigurationList {
-  /**
-   * List of Source Control Configurations within a Kubernetes cluster.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: SourceControlConfiguration[];
-  /**
-   * URL to get the next set of configuration objects, if any.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
+/** The Flux Configuration Patch Request object. */
+export interface FluxConfigurationPatch {
+  /** Updatable properties of an Flux Configuration Patch Request */
+  properties?: FluxConfigurationPatchProperties;
 }
 
-/** The async operations in progress, in the cluster. */
-export interface OperationStatusList {
+/** Identity for the resource. */
+export interface Identity {
   /**
-   * List of async operations in progress, in the cluster.
+   * The principal ID of resource identity.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly value?: OperationStatusResult[];
+  readonly principalId?: string;
   /**
-   * URL to get the next set of Operation Result objects, if any.
+   * The tenant ID of resource.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly nextLink?: string;
+  readonly tenantId?: string;
+  /** The identity type. */
+  type?: "SystemAssigned";
 }
 
-/** Result of the request to list operations. */
-export interface ResourceProviderOperationList {
-  /** List of operations supported by this resource provider. */
-  value?: ResourceProviderOperation[];
-  /**
-   * URL to the next set of results, if any.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
+/** The Extension Patch Request object. */
+export interface PatchExtension {
+  /** Updatable properties of an Extension Patch Request */
+  properties?: PatchExtensionProperties;
 }
 
-/** Supported operation of this resource provider. */
-export interface ResourceProviderOperation {
-  /** Operation name, in format of {provider}/{resource}/{operation} */
-  name?: string;
-  /** Display metadata associated with the operation. */
-  display?: ResourceProviderOperationDisplay;
-  /**
-   * The flag that indicates whether the operation applies to data plane.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly isDataAction?: boolean;
-  /**
-   * Origin of the operation
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly origin?: string;
-}
-
-/** Display metadata associated with the operation. */
-export interface ResourceProviderOperationDisplay {
-  /** Resource provider: Microsoft KubernetesConfiguration. */
-  provider?: string;
-  /** Resource on which the operation is performed. */
-  resource?: string;
-  /** Type of operation: get, read, delete, etc. */
-  operation?: string;
-  /** Description of this operation. */
-  description?: string;
+/** Updatable properties of an Extension Patch Request */
+export interface PatchExtensionProperties {
+  /** Flag to note if this extension participates in auto upgrade of minor version, or not. */
+  autoUpgradeMinorVersion?: boolean;
+  /** ReleaseTrain this extension participates in for auto-upgrade (e.g. Stable, Preview, etc.) - only if autoUpgradeMinorVersion is 'true'. */
+  releaseTrain?: string;
+  /** Version of the extension for this extension, if it is 'pinned' to a specific version. autoUpgradeMinorVersion must be 'false'. */
+  version?: string;
+  /** Configuration settings, as name-value pairs for configuring this extension. */
+  configurationSettings?: { [propertyName: string]: string };
+  /** Configuration settings that are sensitive, as name-value pairs for configuring this extension. */
+  configurationProtectedSettings?: { [propertyName: string]: string };
 }
 
 /** The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location */
@@ -645,14 +794,9 @@ export interface ProxyResource extends Resource {}
 
 /** The Extension object. */
 export interface Extension extends ProxyResource {
-  /** Identity of the Extension resource */
-  identity?: Identity;
-  /**
-   * Top level metadata https://github.com/Azure/azure-resource-manager-rpc/blob/master/v1.0/common-api-contracts.md#system-metadata-for-all-azure-resources
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly systemData?: SystemData;
-  /** The plan information. */
+  /** The managed service identities assigned to this resource. */
+  identity?: ManagedServiceIdentity;
+  /** Details of the resource plan. */
   plan?: Plan;
   /** Type of the Extension, of which this resource is an instance of.  It must be one of the Extension Types registered with Microsoft.KubernetesConfiguration by the Extension publisher. */
   extensionType?: string;
@@ -702,15 +846,12 @@ export interface Extension extends ProxyResource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly isSystemExtension?: boolean;
+  /** autoUpgrade value for autoUpgradeV2 */
+  autoUpgradeChannel?: string;
 }
 
 /** The Flux Configuration object returned in Get & Put response. */
 export interface FluxConfiguration extends ProxyResource {
-  /**
-   * Top level metadata https://github.com/Azure/azure-resource-manager-rpc/blob/master/v1.0/common-api-contracts.md#system-metadata-for-all-azure-resources
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly systemData?: SystemData;
   /** Scope at which the operator will be installed. */
   scope?: ScopeType;
   /** The namespace to which this configuration is installed to. Maximum of 253 lower case alphanumeric characters, hyphen and period only. */
@@ -726,14 +867,14 @@ export interface FluxConfiguration extends ProxyResource {
   /** Parameters to reconcile to the AzureBlob source kind type. */
   azureBlob?: AzureBlobDefinition;
   /** Array of kustomizations used to reconcile the artifact pulled by the source type on the cluster. */
-  kustomizations?: { [propertyName: string]: KustomizationDefinition | null };
+  kustomizations?: { [propertyName: string]: KustomizationDefinition };
   /** Key-value pairs of protected configuration settings for the configuration */
   configurationProtectedSettings?: { [propertyName: string]: string };
   /**
    * Statuses of the Flux Kubernetes resources created by the fluxConfiguration or created by the managed objects provisioned by the fluxConfiguration.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly statuses?: (ObjectStatusDefinition | null)[];
+  readonly statuses?: ObjectStatusDefinition[];
   /**
    * Public Key associated with this fluxConfiguration (either generated within the cluster or provided by the user).
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -757,7 +898,7 @@ export interface FluxConfiguration extends ProxyResource {
   /** Whether flux configuration deployment should wait for cluster to reconcile the kustomizations. */
   waitForReconciliation?: boolean;
   /** Maximum duration to wait for flux configuration reconciliation. E.g PT1H, PT5M, P1D */
-  reconciliationWaitDuration?: string;
+  reconciliationWait?: string;
   /**
    * Combined status of the Flux Kubernetes resources created by the fluxConfiguration or created by the managed objects.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -775,13 +916,19 @@ export interface FluxConfiguration extends ProxyResource {
   readonly errorMessage?: string;
 }
 
-/** The SourceControl Configuration object returned in Get & Put response. */
-export interface SourceControlConfiguration extends ProxyResource {
+/** Concrete proxy resource types can be created by aliasing this type using a specific property type. */
+export interface OperationModel extends ProxyResource {
+  /** operationId value */
+  operationId?: string;
   /**
-   * Top level metadata https://github.com/Azure/azure-resource-manager-rpc/blob/master/v1.0/common-api-contracts.md#system-metadata-for-all-azure-resources
+   * Status of installation of this extension.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly systemData?: SystemData;
+  readonly provisioningState?: ProvisioningState;
+}
+
+/** The SourceControl Configuration object returned in Get & Put response. */
+export interface SourceControlConfiguration extends ProxyResource {
   /** Url of the SourceControl Repository. */
   repositoryUrl?: string;
   /** The namespace to which this operator is installed to. Maximum of 253 lower case alphanumeric characters, hyphen and period only. */
@@ -819,6 +966,78 @@ export interface SourceControlConfiguration extends ProxyResource {
   readonly complianceStatus?: ComplianceStatus;
 }
 
+/** Defines headers for Extensions_create operation. */
+export interface ExtensionsCreateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for Extensions_delete operation. */
+export interface ExtensionsDeleteHeaders {
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for FluxConfigurations_create operation. */
+export interface FluxConfigurationsCreateHeaders {
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for FluxConfigurations_delete operation. */
+export interface FluxConfigurationsDeleteHeaders {
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Defines headers for SourceControlConfigurations_delete operation. */
+export interface SourceControlConfigurationsDeleteHeaders {
+  /** The Location header contains the URL where the status of the long running operation can be checked. */
+  location?: string;
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
+}
+
+/** Known values of {@link Origin} that the service accepts. */
+export enum KnownOrigin {
+  /** User */
+  User = "user",
+  /** System */
+  System = "system",
+  /** UserSystem */
+  UserSystem = "user,system",
+}
+
+/**
+ * Defines values for Origin. \
+ * {@link KnownOrigin} can be used interchangeably with Origin,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **user** \
+ * **system** \
+ * **user,system**
+ */
+export type Origin = string;
+
+/** Known values of {@link ActionType} that the service accepts. */
+export enum KnownActionType {
+  /** Internal */
+  Internal = "Internal",
+}
+
+/**
+ * Defines values for ActionType. \
+ * {@link KnownActionType} can be used interchangeably with ActionType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Internal**
+ */
+export type ActionType = string;
+
 /** Known values of {@link ProvisioningState} that the service accepts. */
 export enum KnownProvisioningState {
   /** Succeeded */
@@ -832,7 +1051,7 @@ export enum KnownProvisioningState {
   /** Updating */
   Updating = "Updating",
   /** Deleting */
-  Deleting = "Deleting"
+  Deleting = "Deleting",
 }
 
 /**
@@ -840,12 +1059,12 @@ export enum KnownProvisioningState {
  * {@link KnownProvisioningState} can be used interchangeably with ProvisioningState,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Succeeded** \
- * **Failed** \
- * **Canceled** \
- * **Creating** \
- * **Updating** \
- * **Deleting**
+ * **Succeeded**: Succeeded \
+ * **Failed**: Failed \
+ * **Canceled**: Canceled \
+ * **Creating**: Creating \
+ * **Updating**: Updating \
+ * **Deleting**: Deleting
  */
 export type ProvisioningState = string;
 
@@ -856,7 +1075,7 @@ export enum KnownLevelType {
   /** Warning */
   Warning = "Warning",
   /** Information */
-  Information = "Information"
+  Information = "Information",
 }
 
 /**
@@ -864,11 +1083,53 @@ export enum KnownLevelType {
  * {@link KnownLevelType} can be used interchangeably with LevelType,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Error** \
- * **Warning** \
- * **Information**
+ * **Error**: Error \
+ * **Warning**: Warning \
+ * **Information**: Information
  */
 export type LevelType = string;
+
+/** Known values of {@link AKSIdentityType} that the service accepts. */
+export enum KnownAKSIdentityType {
+  /** System Assigned Identity */
+  SystemAssigned = "SystemAssigned",
+  /** User Assigned Identity */
+  UserAssigned = "UserAssigned",
+}
+
+/**
+ * Defines values for AKSIdentityType. \
+ * {@link KnownAKSIdentityType} can be used interchangeably with AKSIdentityType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **SystemAssigned**: System Assigned Identity \
+ * **UserAssigned**: User Assigned Identity
+ */
+export type AKSIdentityType = string;
+
+/** Known values of {@link ManagedServiceIdentityType} that the service accepts. */
+export enum KnownManagedServiceIdentityType {
+  /** None */
+  None = "None",
+  /** SystemAssigned */
+  SystemAssigned = "SystemAssigned",
+  /** UserAssigned */
+  UserAssigned = "UserAssigned",
+  /** SystemAssignedUserAssigned */
+  SystemAssignedUserAssigned = "SystemAssigned,UserAssigned",
+}
+
+/**
+ * Defines values for ManagedServiceIdentityType. \
+ * {@link KnownManagedServiceIdentityType} can be used interchangeably with ManagedServiceIdentityType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **None** \
+ * **SystemAssigned** \
+ * **UserAssigned** \
+ * **SystemAssigned,UserAssigned**
+ */
+export type ManagedServiceIdentityType = string;
 
 /** Known values of {@link CreatedByType} that the service accepts. */
 export enum KnownCreatedByType {
@@ -879,7 +1140,7 @@ export enum KnownCreatedByType {
   /** ManagedIdentity */
   ManagedIdentity = "ManagedIdentity",
   /** Key */
-  Key = "Key"
+  Key = "Key",
 }
 
 /**
@@ -894,12 +1155,33 @@ export enum KnownCreatedByType {
  */
 export type CreatedByType = string;
 
+/** Known values of {@link ResourceProvisioningState} that the service accepts. */
+export enum KnownResourceProvisioningState {
+  /** Resource has been created. */
+  Succeeded = "Succeeded",
+  /** Resource creation failed. */
+  Failed = "Failed",
+  /** Resource creation was canceled. */
+  Canceled = "Canceled",
+}
+
+/**
+ * Defines values for ResourceProvisioningState. \
+ * {@link KnownResourceProvisioningState} can be used interchangeably with ResourceProvisioningState,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Succeeded**: Resource has been created. \
+ * **Failed**: Resource creation failed. \
+ * **Canceled**: Resource creation was canceled.
+ */
+export type ResourceProvisioningState = string;
+
 /** Known values of {@link ScopeType} that the service accepts. */
 export enum KnownScopeType {
-  /** Cluster */
+  /** cluster */
   Cluster = "cluster",
-  /** Namespace */
-  Namespace = "namespace"
+  /** namespace */
+  NameSpace = "namespace",
 }
 
 /**
@@ -907,8 +1189,8 @@ export enum KnownScopeType {
  * {@link KnownScopeType} can be used interchangeably with ScopeType,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **cluster** \
- * **namespace**
+ * **cluster**: cluster \
+ * **namespace**: namespace
  */
 export type ScopeType = string;
 
@@ -919,7 +1201,7 @@ export enum KnownSourceKindType {
   /** Bucket */
   Bucket = "Bucket",
   /** AzureBlob */
-  AzureBlob = "AzureBlob"
+  AzureBlob = "AzureBlob",
 }
 
 /**
@@ -927,9 +1209,9 @@ export enum KnownSourceKindType {
  * {@link KnownSourceKindType} can be used interchangeably with SourceKindType,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **GitRepository** \
- * **Bucket** \
- * **AzureBlob**
+ * **GitRepository**: GitRepository \
+ * **Bucket**: Bucket \
+ * **AzureBlob**: AzureBlob
  */
 export type SourceKindType = string;
 
@@ -937,14 +1219,14 @@ export type SourceKindType = string;
 export enum KnownFluxComplianceState {
   /** Compliant */
   Compliant = "Compliant",
-  /** NonCompliant */
+  /** Non-Compliant */
   NonCompliant = "Non-Compliant",
   /** Pending */
   Pending = "Pending",
   /** Suspended */
   Suspended = "Suspended",
   /** Unknown */
-  Unknown = "Unknown"
+  Unknown = "Unknown",
 }
 
 /**
@@ -952,18 +1234,18 @@ export enum KnownFluxComplianceState {
  * {@link KnownFluxComplianceState} can be used interchangeably with FluxComplianceState,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Compliant** \
- * **Non-Compliant** \
- * **Pending** \
- * **Suspended** \
- * **Unknown**
+ * **Compliant**: Compliant \
+ * **Non-Compliant**: Non-Compliant \
+ * **Pending**: Pending \
+ * **Suspended**: Suspended \
+ * **Unknown**: Unknown
  */
 export type FluxComplianceState = string;
 
 /** Known values of {@link OperatorType} that the service accepts. */
 export enum KnownOperatorType {
   /** Flux */
-  Flux = "Flux"
+  Flux = "Flux",
 }
 
 /**
@@ -979,8 +1261,8 @@ export type OperatorType = string;
 export enum KnownOperatorScopeType {
   /** Cluster */
   Cluster = "cluster",
-  /** Namespace */
-  Namespace = "namespace"
+  /** NameSpace */
+  NameSpace = "namespace",
 }
 
 /**
@@ -1004,7 +1286,9 @@ export enum KnownProvisioningStateType {
   /** Succeeded */
   Succeeded = "Succeeded",
   /** Failed */
-  Failed = "Failed"
+  Failed = "Failed",
+  /** Canceled */
+  Canceled = "Canceled",
 }
 
 /**
@@ -1016,7 +1300,8 @@ export enum KnownProvisioningStateType {
  * **Deleting** \
  * **Running** \
  * **Succeeded** \
- * **Failed**
+ * **Failed** \
+ * **Canceled**
  */
 export type ProvisioningStateType = string;
 
@@ -1031,7 +1316,7 @@ export enum KnownComplianceStateType {
   /** Installed */
   Installed = "Installed",
   /** Failed */
-  Failed = "Failed"
+  Failed = "Failed",
 }
 
 /**
@@ -1049,12 +1334,12 @@ export type ComplianceStateType = string;
 
 /** Known values of {@link MessageLevelType} that the service accepts. */
 export enum KnownMessageLevelType {
-  /** Error */
+  /** Message level : Error */
   Error = "Error",
-  /** Warning */
+  /** Message level : Warning */
   Warning = "Warning",
-  /** Information */
-  Information = "Information"
+  /** Message level : Information */
+  Information = "Information",
 }
 
 /**
@@ -1062,20 +1347,20 @@ export enum KnownMessageLevelType {
  * {@link KnownMessageLevelType} can be used interchangeably with MessageLevelType,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Error** \
- * **Warning** \
- * **Information**
+ * **Error**: Message level : Error \
+ * **Warning**: Message level : Warning \
+ * **Information**: Message level : Information
  */
 export type MessageLevelType = string;
 
 /** Known values of {@link KustomizationValidationType} that the service accepts. */
 export enum KnownKustomizationValidationType {
-  /** None */
+  /** No validation */
   None = "none",
-  /** Client */
+  /** client side validation */
   Client = "client",
-  /** Server */
-  Server = "server"
+  /** server side validation */
+  Server = "server",
 }
 
 /**
@@ -1083,13 +1368,54 @@ export enum KnownKustomizationValidationType {
  * {@link KnownKustomizationValidationType} can be used interchangeably with KustomizationValidationType,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **none** \
- * **client** \
- * **server**
+ * **none**: No validation \
+ * **client**: client side validation \
+ * **server**: server side validation
  */
 export type KustomizationValidationType = string;
-/** Defines values for AKSIdentityType. */
-export type AKSIdentityType = "SystemAssigned" | "UserAssigned";
+
+/** Known values of {@link Versions} that the service accepts. */
+export enum KnownVersions {
+  /** The 2024-06-01 API version. */
+  V20240601Preview = "2024-06-01-preview",
+}
+
+/**
+ * Defines values for Versions. \
+ * {@link KnownVersions} can be used interchangeably with Versions,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **2024-06-01-preview**: The 2024-06-01 API version.
+ */
+export type Versions = string;
+
+/** Optional parameters. */
+export interface OperationsListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type OperationsListResponse = OperationListResult;
+
+/** Optional parameters. */
+export interface OperationsListNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listNext operation. */
+export type OperationsListNextResponse = OperationListResult;
+
+/** Optional parameters. */
+export interface ExtensionsListByResourceGroupOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroup operation. */
+export type ExtensionsListByResourceGroupResponse = ExtensionListResult;
+
+/** Optional parameters. */
+export interface ExtensionsGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type ExtensionsGetResponse = Extension;
 
 /** Optional parameters. */
 export interface ExtensionsCreateOptionalParams
@@ -1104,11 +1430,11 @@ export interface ExtensionsCreateOptionalParams
 export type ExtensionsCreateResponse = Extension;
 
 /** Optional parameters. */
-export interface ExtensionsGetOptionalParams
+export interface ExtensionsUpdateOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the get operation. */
-export type ExtensionsGetResponse = Extension;
+/** Contains response data for the update operation. */
+export type ExtensionsUpdateResponse = Extension;
 
 /** Optional parameters. */
 export interface ExtensionsDeleteOptionalParams
@@ -1121,52 +1447,31 @@ export interface ExtensionsDeleteOptionalParams
   resumeFrom?: string;
 }
 
-/** Optional parameters. */
-export interface ExtensionsUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the update operation. */
-export type ExtensionsUpdateResponse = Extension;
+/** Contains response data for the delete operation. */
+export type ExtensionsDeleteResponse = ExtensionsDeleteHeaders;
 
 /** Optional parameters. */
-export interface ExtensionsListOptionalParams
+export interface ExtensionsOperationStatusOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the list operation. */
-export type ExtensionsListResponse = ExtensionsList;
+/** Contains response data for the operationStatus operation. */
+export type ExtensionsOperationStatusResponse =
+  Paths1B0Hq6PSubscriptionsSubscriptionidResourcegroupsResourcegroupnameProviderClusterrpClusterresourcenameClusternameProvidersMicrosoftKubernetesconfigurationExtensionsExtensionnameOperationsOperationidGetResponses200ContentApplicationJsonSchema;
 
 /** Optional parameters. */
-export interface ExtensionsListNextOptionalParams
+export interface ExtensionsListByResourceGroupNextOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the listNext operation. */
-export type ExtensionsListNextResponse = ExtensionsList;
+/** Contains response data for the listByResourceGroupNext operation. */
+export type ExtensionsListByResourceGroupNextResponse = ExtensionListResult;
 
 /** Optional parameters. */
-export interface OperationStatusGetOptionalParams
+export interface FluxConfigurationsListByResourceGroupOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the get operation. */
-export type OperationStatusGetResponse = OperationStatusResult;
-
-/** Optional parameters. */
-export interface OperationStatusListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type OperationStatusListResponse = OperationStatusList;
-
-/** Optional parameters. */
-export interface OperationStatusListNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listNext operation. */
-export type OperationStatusListNextResponse = OperationStatusList;
+/** Contains response data for the listByResourceGroup operation. */
+export type FluxConfigurationsListByResourceGroupResponse =
+  FluxConfigurationListResult;
 
 /** Optional parameters. */
 export interface FluxConfigurationsGetOptionalParams
@@ -1176,7 +1481,7 @@ export interface FluxConfigurationsGetOptionalParams
 export type FluxConfigurationsGetResponse = FluxConfiguration;
 
 /** Optional parameters. */
-export interface FluxConfigurationsCreateOrUpdateOptionalParams
+export interface FluxConfigurationsCreateOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
@@ -1184,17 +1489,12 @@ export interface FluxConfigurationsCreateOrUpdateOptionalParams
   resumeFrom?: string;
 }
 
-/** Contains response data for the createOrUpdate operation. */
-export type FluxConfigurationsCreateOrUpdateResponse = FluxConfiguration;
+/** Contains response data for the create operation. */
+export type FluxConfigurationsCreateResponse = FluxConfiguration;
 
 /** Optional parameters. */
 export interface FluxConfigurationsUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the update operation. */
 export type FluxConfigurationsUpdateResponse = FluxConfiguration;
@@ -1210,26 +1510,48 @@ export interface FluxConfigurationsDeleteOptionalParams
   resumeFrom?: string;
 }
 
-/** Optional parameters. */
-export interface FluxConfigurationsListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type FluxConfigurationsListResponse = FluxConfigurationsList;
+/** Contains response data for the delete operation. */
+export type FluxConfigurationsDeleteResponse = FluxConfigurationsDeleteHeaders;
 
 /** Optional parameters. */
-export interface FluxConfigurationsListNextOptionalParams
+export interface FluxConfigurationsOperationStatusOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the listNext operation. */
-export type FluxConfigurationsListNextResponse = FluxConfigurationsList;
+/** Contains response data for the operationStatus operation. */
+export type FluxConfigurationsOperationStatusResponse =
+  PathsT3WamfSubscriptionsSubscriptionidResourcegroupsResourcegroupnameProviderClusterrpClusterresourcenameClusternameProvidersMicrosoftKubernetesconfigurationFluxconfigurationsFluxconfigurationnameOperationsOperationidGetResponses200ContentApplicationJsonSchema;
 
 /** Optional parameters. */
-export interface FluxConfigOperationStatusGetOptionalParams
+export interface FluxConfigurationsListByResourceGroupNextOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the get operation. */
-export type FluxConfigOperationStatusGetResponse = OperationStatusResult;
+/** Contains response data for the listByResourceGroupNext operation. */
+export type FluxConfigurationsListByResourceGroupNextResponse =
+  FluxConfigurationListResult;
+
+/** Optional parameters. */
+export interface OperationStatusListByResourceGroupOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroup operation. */
+export type OperationStatusListByResourceGroupResponse =
+  OperationModelListResult;
+
+/** Optional parameters. */
+export interface OperationStatusListByResourceGroupNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroupNext operation. */
+export type OperationStatusListByResourceGroupNextResponse =
+  OperationModelListResult;
+
+/** Optional parameters. */
+export interface SourceControlConfigurationsListByResourceGroupOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroup operation. */
+export type SourceControlConfigurationsListByResourceGroupResponse =
+  SourceControlConfigurationListResult;
 
 /** Optional parameters. */
 export interface SourceControlConfigurationsGetOptionalParams
@@ -1243,7 +1565,8 @@ export interface SourceControlConfigurationsCreateOrUpdateOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the createOrUpdate operation. */
-export type SourceControlConfigurationsCreateOrUpdateResponse = SourceControlConfiguration;
+export type SourceControlConfigurationsCreateOrUpdateResponse =
+  SourceControlConfiguration;
 
 /** Optional parameters. */
 export interface SourceControlConfigurationsDeleteOptionalParams
@@ -1254,33 +1577,17 @@ export interface SourceControlConfigurationsDeleteOptionalParams
   resumeFrom?: string;
 }
 
-/** Optional parameters. */
-export interface SourceControlConfigurationsListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type SourceControlConfigurationsListResponse = SourceControlConfigurationList;
+/** Contains response data for the delete operation. */
+export type SourceControlConfigurationsDeleteResponse =
+  SourceControlConfigurationsDeleteHeaders;
 
 /** Optional parameters. */
-export interface SourceControlConfigurationsListNextOptionalParams
+export interface SourceControlConfigurationsListByResourceGroupNextOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the listNext operation. */
-export type SourceControlConfigurationsListNextResponse = SourceControlConfigurationList;
-
-/** Optional parameters. */
-export interface OperationsListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type OperationsListResponse = ResourceProviderOperationList;
-
-/** Optional parameters. */
-export interface OperationsListNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listNext operation. */
-export type OperationsListNextResponse = ResourceProviderOperationList;
+/** Contains response data for the listByResourceGroupNext operation. */
+export type SourceControlConfigurationsListByResourceGroupNextResponse =
+  SourceControlConfigurationListResult;
 
 /** Optional parameters. */
 export interface SourceControlConfigurationClientOptionalParams

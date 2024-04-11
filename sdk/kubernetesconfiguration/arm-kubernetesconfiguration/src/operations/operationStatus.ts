@@ -14,13 +14,11 @@ import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { SourceControlConfigurationClient } from "../sourceControlConfigurationClient";
 import {
-  OperationStatusResult,
-  OperationStatusListNextOptionalParams,
-  OperationStatusListOptionalParams,
-  OperationStatusListResponse,
-  OperationStatusGetOptionalParams,
-  OperationStatusGetResponse,
-  OperationStatusListNextResponse
+  OperationModel,
+  OperationStatusListByResourceGroupNextOptionalParams,
+  OperationStatusListByResourceGroupOptionalParams,
+  OperationStatusListByResourceGroupResponse,
+  OperationStatusListByResourceGroupNextResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -37,28 +35,26 @@ export class OperationStatusImpl implements OperationStatus {
   }
 
   /**
-   * List Async Operations, currently in progress, in a cluster
+   * List all operations in the cluster.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param options The options parameters.
    */
-  public list(
+  public listByResourceGroup(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
-    options?: OperationStatusListOptionalParams
-  ): PagedAsyncIterableIterator<OperationStatusResult> {
-    const iter = this.listPagingAll(
+    options?: OperationStatusListByResourceGroupOptionalParams,
+  ): PagedAsyncIterableIterator<OperationModel> {
+    const iter = this.listByResourceGroupPagingAll(
       resourceGroupName,
       clusterRp,
       clusterResourceName,
       clusterName,
-      options
+      options,
     );
     return {
       next() {
@@ -71,35 +67,35 @@ export class OperationStatusImpl implements OperationStatus {
         if (settings?.maxPageSize) {
           throw new Error("maxPageSize is not supported by this operation.");
         }
-        return this.listPagingPage(
+        return this.listByResourceGroupPagingPage(
           resourceGroupName,
           clusterRp,
           clusterResourceName,
           clusterName,
           options,
-          settings
+          settings,
         );
-      }
+      },
     };
   }
 
-  private async *listPagingPage(
+  private async *listByResourceGroupPagingPage(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
-    options?: OperationStatusListOptionalParams,
-    settings?: PageSettings
-  ): AsyncIterableIterator<OperationStatusResult[]> {
-    let result: OperationStatusListResponse;
+    options?: OperationStatusListByResourceGroupOptionalParams,
+    settings?: PageSettings,
+  ): AsyncIterableIterator<OperationModel[]> {
+    let result: OperationStatusListByResourceGroupResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._list(
+      result = await this._listByResourceGroup(
         resourceGroupName,
         clusterRp,
         clusterResourceName,
         clusterName,
-        options
+        options,
       );
       let page = result.value || [];
       continuationToken = result.nextLink;
@@ -107,13 +103,13 @@ export class OperationStatusImpl implements OperationStatus {
       yield page;
     }
     while (continuationToken) {
-      result = await this._listNext(
+      result = await this._listByResourceGroupNext(
         resourceGroupName,
         clusterRp,
         clusterResourceName,
         clusterName,
         continuationToken,
-        options
+        options,
       );
       continuationToken = result.nextLink;
       let page = result.value || [];
@@ -122,107 +118,68 @@ export class OperationStatusImpl implements OperationStatus {
     }
   }
 
-  private async *listPagingAll(
+  private async *listByResourceGroupPagingAll(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
-    options?: OperationStatusListOptionalParams
-  ): AsyncIterableIterator<OperationStatusResult> {
-    for await (const page of this.listPagingPage(
+    options?: OperationStatusListByResourceGroupOptionalParams,
+  ): AsyncIterableIterator<OperationModel> {
+    for await (const page of this.listByResourceGroupPagingPage(
       resourceGroupName,
       clusterRp,
       clusterResourceName,
       clusterName,
-      options
+      options,
     )) {
       yield* page;
     }
   }
 
   /**
-   * Get Async Operation status
+   * List all operations in the cluster.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
-   * @param extensionName Name of the Extension.
-   * @param operationId operation Id
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param options The options parameters.
    */
-  get(
+  private _listByResourceGroup(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
-    extensionName: string,
-    operationId: string,
-    options?: OperationStatusGetOptionalParams
-  ): Promise<OperationStatusGetResponse> {
+    options?: OperationStatusListByResourceGroupOptionalParams,
+  ): Promise<OperationStatusListByResourceGroupResponse> {
     return this.client.sendOperationRequest(
       {
         resourceGroupName,
         clusterRp,
         clusterResourceName,
         clusterName,
-        extensionName,
-        operationId,
-        options
+        options,
       },
-      getOperationSpec
+      listByResourceGroupOperationSpec,
     );
   }
 
   /**
-   * List Async Operations, currently in progress, in a cluster
+   * ListByResourceGroupNext
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
+   * @param nextLink The nextLink from the previous successful call to the ListByResourceGroup method.
    * @param options The options parameters.
    */
-  private _list(
-    resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
-    options?: OperationStatusListOptionalParams
-  ): Promise<OperationStatusListResponse> {
-    return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        clusterRp,
-        clusterResourceName,
-        clusterName,
-        options
-      },
-      listOperationSpec
-    );
-  }
-
-  /**
-   * ListNext
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
-   * @param nextLink The nextLink from the previous successful call to the List method.
-   * @param options The options parameters.
-   */
-  private _listNext(
+  private _listByResourceGroupNext(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
     nextLink: string,
-    options?: OperationStatusListNextOptionalParams
-  ): Promise<OperationStatusListNextResponse> {
+    options?: OperationStatusListByResourceGroupNextOptionalParams,
+  ): Promise<OperationStatusListByResourceGroupNextResponse> {
     return this.client.sendOperationRequest(
       {
         resourceGroupName,
@@ -230,26 +187,25 @@ export class OperationStatusImpl implements OperationStatus {
         clusterResourceName,
         clusterName,
         nextLink,
-        options
+        options,
       },
-      listNextOperationSpec
+      listByResourceGroupNextOperationSpec,
     );
   }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const getOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/extensions/{extensionName}/operations/{operationId}",
+const listByResourceGroupOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/provider/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/operations",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.OperationStatusResult
+      bodyMapper: Mappers.OperationModelListResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
@@ -259,56 +215,30 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.clusterRp,
     Parameters.clusterResourceName,
     Parameters.clusterName,
-    Parameters.extensionName,
-    Parameters.operationId
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
-const listOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/operations",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: Mappers.OperationStatusList
-    },
-    default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
-  },
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.clusterRp,
-    Parameters.clusterResourceName,
-    Parameters.clusterName
-  ],
-  headerParameters: [Parameters.accept],
-  serializer
-};
-const listNextOperationSpec: coreClient.OperationSpec = {
+const listByResourceGroupNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.OperationStatusList
+      bodyMapper: Mappers.OperationModelListResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   urlParameters: [
     Parameters.$host,
+    Parameters.nextLink,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.clusterRp,
     Parameters.clusterResourceName,
     Parameters.clusterName,
-    Parameters.nextLink
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };

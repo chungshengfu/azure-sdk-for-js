@@ -10,15 +10,18 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   FluxConfiguration,
-  FluxConfigurationsListOptionalParams,
+  FluxConfigurationsListByResourceGroupOptionalParams,
   FluxConfigurationsGetOptionalParams,
   FluxConfigurationsGetResponse,
-  FluxConfigurationsCreateOrUpdateOptionalParams,
-  FluxConfigurationsCreateOrUpdateResponse,
-  FluxConfigurationPatch,
+  FluxConfigurationsCreateOptionalParams,
+  FluxConfigurationsCreateResponse,
+  FluxConfigurationUpdate,
   FluxConfigurationsUpdateOptionalParams,
   FluxConfigurationsUpdateResponse,
-  FluxConfigurationsDeleteOptionalParams
+  FluxConfigurationsDeleteOptionalParams,
+  FluxConfigurationsDeleteResponse,
+  FluxConfigurationsOperationStatusOptionalParams,
+  FluxConfigurationsOperationStatusResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -27,28 +30,24 @@ export interface FluxConfigurations {
   /**
    * List all Flux Configurations.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param options The options parameters.
    */
-  list(
+  listByResourceGroup(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
-    options?: FluxConfigurationsListOptionalParams
+    options?: FluxConfigurationsListByResourceGroupOptionalParams,
   ): PagedAsyncIterableIterator<FluxConfiguration>;
   /**
    * Gets details of the Flux Configuration.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param fluxConfigurationName Name of the Flux Configuration.
    * @param options The options parameters.
    */
@@ -58,111 +57,77 @@ export interface FluxConfigurations {
     clusterResourceName: string,
     clusterName: string,
     fluxConfigurationName: string,
-    options?: FluxConfigurationsGetOptionalParams
+    options?: FluxConfigurationsGetOptionalParams,
   ): Promise<FluxConfigurationsGetResponse>;
   /**
    * Create a new Kubernetes Flux Configuration.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param fluxConfigurationName Name of the Flux Configuration.
-   * @param fluxConfiguration Properties necessary to Create a FluxConfiguration.
+   * @param resource Properties necessary to Create a FluxConfiguration.
    * @param options The options parameters.
    */
-  beginCreateOrUpdate(
+  beginCreate(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
     fluxConfigurationName: string,
-    fluxConfiguration: FluxConfiguration,
-    options?: FluxConfigurationsCreateOrUpdateOptionalParams
+    resource: FluxConfiguration,
+    options?: FluxConfigurationsCreateOptionalParams,
   ): Promise<
     SimplePollerLike<
-      OperationState<FluxConfigurationsCreateOrUpdateResponse>,
-      FluxConfigurationsCreateOrUpdateResponse
+      OperationState<FluxConfigurationsCreateResponse>,
+      FluxConfigurationsCreateResponse
     >
   >;
   /**
    * Create a new Kubernetes Flux Configuration.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param fluxConfigurationName Name of the Flux Configuration.
-   * @param fluxConfiguration Properties necessary to Create a FluxConfiguration.
+   * @param resource Properties necessary to Create a FluxConfiguration.
    * @param options The options parameters.
    */
-  beginCreateOrUpdateAndWait(
+  beginCreateAndWait(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
     fluxConfigurationName: string,
-    fluxConfiguration: FluxConfiguration,
-    options?: FluxConfigurationsCreateOrUpdateOptionalParams
-  ): Promise<FluxConfigurationsCreateOrUpdateResponse>;
+    resource: FluxConfiguration,
+    options?: FluxConfigurationsCreateOptionalParams,
+  ): Promise<FluxConfigurationsCreateResponse>;
   /**
    * Update an existing Kubernetes Flux Configuration.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param fluxConfigurationName Name of the Flux Configuration.
-   * @param fluxConfigurationPatch Properties to Patch in an existing Flux Configuration.
+   * @param properties Properties to Patch in an existing Flux Configuration.
    * @param options The options parameters.
    */
-  beginUpdate(
+  update(
     resourceGroupName: string,
     clusterRp: string,
     clusterResourceName: string,
     clusterName: string,
     fluxConfigurationName: string,
-    fluxConfigurationPatch: FluxConfigurationPatch,
-    options?: FluxConfigurationsUpdateOptionalParams
-  ): Promise<
-    SimplePollerLike<
-      OperationState<FluxConfigurationsUpdateResponse>,
-      FluxConfigurationsUpdateResponse
-    >
-  >;
-  /**
-   * Update an existing Kubernetes Flux Configuration.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
-   * @param fluxConfigurationName Name of the Flux Configuration.
-   * @param fluxConfigurationPatch Properties to Patch in an existing Flux Configuration.
-   * @param options The options parameters.
-   */
-  beginUpdateAndWait(
-    resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
-    fluxConfigurationName: string,
-    fluxConfigurationPatch: FluxConfigurationPatch,
-    options?: FluxConfigurationsUpdateOptionalParams
+    properties: FluxConfigurationUpdate,
+    options?: FluxConfigurationsUpdateOptionalParams,
   ): Promise<FluxConfigurationsUpdateResponse>;
   /**
    * This will delete the YAML file used to set up the Flux Configuration, thus stopping future sync from
    * the source repo.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param fluxConfigurationName Name of the Flux Configuration.
    * @param options The options parameters.
    */
@@ -172,17 +137,20 @@ export interface FluxConfigurations {
     clusterResourceName: string,
     clusterName: string,
     fluxConfigurationName: string,
-    options?: FluxConfigurationsDeleteOptionalParams
-  ): Promise<SimplePollerLike<OperationState<void>, void>>;
+    options?: FluxConfigurationsDeleteOptionalParams,
+  ): Promise<
+    SimplePollerLike<
+      OperationState<FluxConfigurationsDeleteResponse>,
+      FluxConfigurationsDeleteResponse
+    >
+  >;
   /**
    * This will delete the YAML file used to set up the Flux Configuration, thus stopping future sync from
    * the source repo.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
    * @param fluxConfigurationName Name of the Flux Configuration.
    * @param options The options parameters.
    */
@@ -192,6 +160,27 @@ export interface FluxConfigurations {
     clusterResourceName: string,
     clusterName: string,
     fluxConfigurationName: string,
-    options?: FluxConfigurationsDeleteOptionalParams
-  ): Promise<void>;
+    options?: FluxConfigurationsDeleteOptionalParams,
+  ): Promise<FluxConfigurationsDeleteResponse>;
+  /**
+   * Get Async Operation status
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param clusterRp Cluster Resource Provider Name
+   * @param clusterResourceName cluster Resource Name
+   * @param clusterName cluster Name
+   * @param fluxConfigurationName Name of the Flux Configuration.
+   * @param operationId operationId value
+   * @param body Any object
+   * @param options The options parameters.
+   */
+  operationStatus(
+    resourceGroupName: string,
+    clusterRp: string,
+    clusterResourceName: string,
+    clusterName: string,
+    fluxConfigurationName: string,
+    operationId: string,
+    body: Record<string, unknown>,
+    options?: FluxConfigurationsOperationStatusOptionalParams,
+  ): Promise<FluxConfigurationsOperationStatusResponse>;
 }

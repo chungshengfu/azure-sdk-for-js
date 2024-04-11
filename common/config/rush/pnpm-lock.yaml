@@ -11462,7 +11462,7 @@ packages:
     dev: false
 
   file:projects/api-management-custom-widgets-tools.tgz:
-    resolution: {integrity: sha512-ZKNSl/mbap8OVZ8phTvKjU50GInYjlUiQ5dzY7tb2Z/AhzPpdgLzdWP8YpEA/73JK4EQLEjYl26HDWinHhhEDA==, tarball: file:projects/api-management-custom-widgets-tools.tgz}
+    resolution: {integrity: sha512-CC3L9mA8xaofdQ8vF1rY9+FJ2YcpbSPSkmMIItWCNWulWrvwp2M6WfR/4bnDeoZvZGqnHseQJ4AgR3XgwElnCg==, tarball: file:projects/api-management-custom-widgets-tools.tgz}
     name: '@rush-temp/api-management-custom-widgets-tools'
     version: 0.0.0
     dependencies:
@@ -14601,7 +14601,7 @@ packages:
     dev: false
 
   file:projects/arm-kubernetesconfiguration.tgz:
-    resolution: {integrity: sha512-m2NRCA12VmXgxqf/BUcNwfShzjy3gvauKqvfwdHfgxyGlx1GXYJiJlAwPDAuMSq6JwxRkHCAS6VgQPJH4glX4w==, tarball: file:projects/arm-kubernetesconfiguration.tgz}
+    resolution: {integrity: sha512-YtBMopY7rYYjpdXnC4O5TTBCNNkHa6nIxdpDBqQn3GDbkYZRQwKjfRoQjB2beK/zpT+/GxK7JcZd2ByQ44jlow==, tarball: file:projects/arm-kubernetesconfiguration.tgz}
     name: '@rush-temp/arm-kubernetesconfiguration'
     version: 0.0.0
     dependencies:
@@ -14615,6 +14615,7 @@ packages:
       chai: 4.3.10
       cross-env: 7.0.3
       dotenv: 16.4.5
+      esm: 3.2.25
       mkdirp: 2.1.6
       mocha: 10.4.0
       rimraf: 5.0.5

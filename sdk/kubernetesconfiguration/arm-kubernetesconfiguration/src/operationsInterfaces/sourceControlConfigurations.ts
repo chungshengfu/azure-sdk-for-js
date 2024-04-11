@@ -10,12 +10,13 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   SourceControlConfiguration,
-  SourceControlConfigurationsListOptionalParams,
+  SourceControlConfigurationsListByResourceGroupOptionalParams,
   SourceControlConfigurationsGetOptionalParams,
   SourceControlConfigurationsGetResponse,
   SourceControlConfigurationsCreateOrUpdateOptionalParams,
   SourceControlConfigurationsCreateOrUpdateResponse,
-  SourceControlConfigurationsDeleteOptionalParams
+  SourceControlConfigurationsDeleteOptionalParams,
+  SourceControlConfigurationsDeleteResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -24,98 +25,63 @@ export interface SourceControlConfigurations {
   /**
    * List all Source Control Configurations.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
    * @param options The options parameters.
    */
-  list(
+  listByResourceGroup(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
-    options?: SourceControlConfigurationsListOptionalParams
+    options?: SourceControlConfigurationsListByResourceGroupOptionalParams,
   ): PagedAsyncIterableIterator<SourceControlConfiguration>;
   /**
    * Gets details of the Source Control Configuration.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
    * @param sourceControlConfigurationName Name of the Source Control Configuration.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
     sourceControlConfigurationName: string,
-    options?: SourceControlConfigurationsGetOptionalParams
+    options?: SourceControlConfigurationsGetOptionalParams,
   ): Promise<SourceControlConfigurationsGetResponse>;
   /**
    * Create a new Kubernetes Source Control Configuration.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
    * @param sourceControlConfigurationName Name of the Source Control Configuration.
-   * @param sourceControlConfiguration Properties necessary to Create KubernetesConfiguration.
+   * @param resource Properties necessary to Create KubernetesConfiguration.
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
     sourceControlConfigurationName: string,
-    sourceControlConfiguration: SourceControlConfiguration,
-    options?: SourceControlConfigurationsCreateOrUpdateOptionalParams
+    resource: SourceControlConfiguration,
+    options?: SourceControlConfigurationsCreateOrUpdateOptionalParams,
   ): Promise<SourceControlConfigurationsCreateOrUpdateResponse>;
   /**
    * This will delete the YAML file used to set up the Source control configuration, thus stopping future
    * sync from the source repo.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
    * @param sourceControlConfigurationName Name of the Source Control Configuration.
    * @param options The options parameters.
    */
   beginDelete(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
     sourceControlConfigurationName: string,
-    options?: SourceControlConfigurationsDeleteOptionalParams
-  ): Promise<SimplePollerLike<OperationState<void>, void>>;
+    options?: SourceControlConfigurationsDeleteOptionalParams,
+  ): Promise<
+    SimplePollerLike<
+      OperationState<SourceControlConfigurationsDeleteResponse>,
+      SourceControlConfigurationsDeleteResponse
+    >
+  >;
   /**
    * This will delete the YAML file used to set up the Source control configuration, thus stopping future
    * sync from the source repo.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
    * @param sourceControlConfigurationName Name of the Source Control Configuration.
    * @param options The options parameters.
    */
   beginDeleteAndWait(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
     sourceControlConfigurationName: string,
-    options?: SourceControlConfigurationsDeleteOptionalParams
-  ): Promise<void>;
+    options?: SourceControlConfigurationsDeleteOptionalParams,
+  ): Promise<SourceControlConfigurationsDeleteResponse>;
 }

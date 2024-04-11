@@ -16,26 +16,28 @@ import { SourceControlConfigurationClient } from "../sourceControlConfigurationC
 import {
   SimplePollerLike,
   OperationState,
-  createHttpPoller
+  createHttpPoller,
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
   SourceControlConfiguration,
-  SourceControlConfigurationsListNextOptionalParams,
-  SourceControlConfigurationsListOptionalParams,
-  SourceControlConfigurationsListResponse,
+  SourceControlConfigurationsListByResourceGroupNextOptionalParams,
+  SourceControlConfigurationsListByResourceGroupOptionalParams,
+  SourceControlConfigurationsListByResourceGroupResponse,
   SourceControlConfigurationsGetOptionalParams,
   SourceControlConfigurationsGetResponse,
   SourceControlConfigurationsCreateOrUpdateOptionalParams,
   SourceControlConfigurationsCreateOrUpdateResponse,
   SourceControlConfigurationsDeleteOptionalParams,
-  SourceControlConfigurationsListNextResponse
+  SourceControlConfigurationsDeleteResponse,
+  SourceControlConfigurationsListByResourceGroupNextResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
 /** Class containing SourceControlConfigurations operations. */
 export class SourceControlConfigurationsImpl
-  implements SourceControlConfigurations {
+  implements SourceControlConfigurations
+{
   private readonly client: SourceControlConfigurationClient;
 
   /**
@@ -49,27 +51,13 @@ export class SourceControlConfigurationsImpl
   /**
    * List all Source Control Configurations.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
    * @param options The options parameters.
    */
-  public list(
+  public listByResourceGroup(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
-    options?: SourceControlConfigurationsListOptionalParams
+    options?: SourceControlConfigurationsListByResourceGroupOptionalParams,
   ): PagedAsyncIterableIterator<SourceControlConfiguration> {
-    const iter = this.listPagingAll(
-      resourceGroupName,
-      clusterRp,
-      clusterResourceName,
-      clusterName,
-      options
-    );
+    const iter = this.listByResourceGroupPagingAll(resourceGroupName, options);
     return {
       next() {
         return iter.next();
@@ -81,49 +69,34 @@ export class SourceControlConfigurationsImpl
         if (settings?.maxPageSize) {
           throw new Error("maxPageSize is not supported by this operation.");
         }
-        return this.listPagingPage(
+        return this.listByResourceGroupPagingPage(
           resourceGroupName,
-          clusterRp,
-          clusterResourceName,
-          clusterName,
           options,
-          settings
+          settings,
         );
-      }
+      },
     };
   }
 
-  private async *listPagingPage(
+  private async *listByResourceGroupPagingPage(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
-    options?: SourceControlConfigurationsListOptionalParams,
-    settings?: PageSettings
+    options?: SourceControlConfigurationsListByResourceGroupOptionalParams,
+    settings?: PageSettings,
   ): AsyncIterableIterator<SourceControlConfiguration[]> {
-    let result: SourceControlConfigurationsListResponse;
+    let result: SourceControlConfigurationsListByResourceGroupResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._list(
-        resourceGroupName,
-        clusterRp,
-        clusterResourceName,
-        clusterName,
-        options
-      );
+      result = await this._listByResourceGroup(resourceGroupName, options);
       let page = result.value || [];
       continuationToken = result.nextLink;
       setContinuationToken(page, continuationToken);
       yield page;
     }
     while (continuationToken) {
-      result = await this._listNext(
+      result = await this._listByResourceGroupNext(
         resourceGroupName,
-        clusterRp,
-        clusterResourceName,
-        clusterName,
         continuationToken,
-        options
+        options,
       );
       continuationToken = result.nextLink;
       let page = result.value || [];
@@ -132,88 +105,66 @@ export class SourceControlConfigurationsImpl
     }
   }
 
-  private async *listPagingAll(
+  private async *listByResourceGroupPagingAll(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
-    options?: SourceControlConfigurationsListOptionalParams
+    options?: SourceControlConfigurationsListByResourceGroupOptionalParams,
   ): AsyncIterableIterator<SourceControlConfiguration> {
-    for await (const page of this.listPagingPage(
+    for await (const page of this.listByResourceGroupPagingPage(
       resourceGroupName,
-      clusterRp,
-      clusterResourceName,
-      clusterName,
-      options
+      options,
     )) {
       yield* page;
     }
   }
 
   /**
+   * List all Source Control Configurations.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param options The options parameters.
+   */
+  private _listByResourceGroup(
+    resourceGroupName: string,
+    options?: SourceControlConfigurationsListByResourceGroupOptionalParams,
+  ): Promise<SourceControlConfigurationsListByResourceGroupResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, options },
+      listByResourceGroupOperationSpec,
+    );
+  }
+
+  /**
    * Gets details of the Source Control Configuration.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
    * @param sourceControlConfigurationName Name of the Source Control Configuration.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
     sourceControlConfigurationName: string,
-    options?: SourceControlConfigurationsGetOptionalParams
+    options?: SourceControlConfigurationsGetOptionalParams,
   ): Promise<SourceControlConfigurationsGetResponse> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        clusterRp,
-        clusterResourceName,
-        clusterName,
-        sourceControlConfigurationName,
-        options
-      },
-      getOperationSpec
+      { resourceGroupName, sourceControlConfigurationName, options },
+      getOperationSpec,
     );
   }
 
   /**
    * Create a new Kubernetes Source Control Configuration.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
    * @param sourceControlConfigurationName Name of the Source Control Configuration.
-   * @param sourceControlConfiguration Properties necessary to Create KubernetesConfiguration.
+   * @param resource Properties necessary to Create KubernetesConfiguration.
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
     sourceControlConfigurationName: string,
-    sourceControlConfiguration: SourceControlConfiguration,
-    options?: SourceControlConfigurationsCreateOrUpdateOptionalParams
+    resource: SourceControlConfiguration,
+    options?: SourceControlConfigurationsCreateOrUpdateOptionalParams,
   ): Promise<SourceControlConfigurationsCreateOrUpdateResponse> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        clusterRp,
-        clusterResourceName,
-        clusterName,
-        sourceControlConfigurationName,
-        sourceControlConfiguration,
-        options
-      },
-      createOrUpdateOperationSpec
+      { resourceGroupName, sourceControlConfigurationName, resource, options },
+      createOrUpdateOperationSpec,
     );
   }
 
@@ -221,39 +172,35 @@ export class SourceControlConfigurationsImpl
    * This will delete the YAML file used to set up the Source control configuration, thus stopping future
    * sync from the source repo.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
    * @param sourceControlConfigurationName Name of the Source Control Configuration.
    * @param options The options parameters.
    */
   async beginDelete(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
     sourceControlConfigurationName: string,
-    options?: SourceControlConfigurationsDeleteOptionalParams
-  ): Promise<SimplePollerLike<OperationState<void>, void>> {
+    options?: SourceControlConfigurationsDeleteOptionalParams,
+  ): Promise<
+    SimplePollerLike<
+      OperationState<SourceControlConfigurationsDeleteResponse>,
+      SourceControlConfigurationsDeleteResponse
+    >
+  > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
-    ): Promise<void> => {
+      spec: coreClient.OperationSpec,
+    ): Promise<SourceControlConfigurationsDeleteResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
       const providedCallback = args.options?.onResponse;
       const callback: coreClient.RawResponseCallback = (
         rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
+        flatResponse: unknown,
       ) => {
         currentRawResponse = rawResponse;
         providedCallback?.(rawResponse, flatResponse);
@@ -262,8 +209,8 @@ export class SourceControlConfigurationsImpl
         ...args,
         options: {
           ...args.options,
-          onResponse: callback
-        }
+          onResponse: callback,
+        },
       };
       const flatResponse = await directSendOperation(updatedArgs, spec);
       return {
@@ -271,26 +218,23 @@ export class SourceControlConfigurationsImpl
         rawResponse: {
           statusCode: currentRawResponse!.status,
           body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
+          headers: currentRawResponse!.headers.toJSON(),
+        },
       };
     };
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: {
-        resourceGroupName,
-        clusterRp,
-        clusterResourceName,
-        clusterName,
-        sourceControlConfigurationName,
-        options
-      },
-      spec: deleteOperationSpec
+      args: { resourceGroupName, sourceControlConfigurationName, options },
+      spec: deleteOperationSpec,
     });
-    const poller = await createHttpPoller<void, OperationState<void>>(lro, {
+    const poller = await createHttpPoller<
+      SourceControlConfigurationsDeleteResponse,
+      OperationState<SourceControlConfigurationsDeleteResponse>
+    >(lro, {
       restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs
+      intervalInMs: options?.updateIntervalInMs,
+      resourceLocationConfig: "location",
     });
     await poller.poll();
     return poller;
@@ -300,222 +244,156 @@ export class SourceControlConfigurationsImpl
    * This will delete the YAML file used to set up the Source control configuration, thus stopping future
    * sync from the source repo.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
    * @param sourceControlConfigurationName Name of the Source Control Configuration.
    * @param options The options parameters.
    */
   async beginDeleteAndWait(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
     sourceControlConfigurationName: string,
-    options?: SourceControlConfigurationsDeleteOptionalParams
-  ): Promise<void> {
+    options?: SourceControlConfigurationsDeleteOptionalParams,
+  ): Promise<SourceControlConfigurationsDeleteResponse> {
     const poller = await this.beginDelete(
       resourceGroupName,
-      clusterRp,
-      clusterResourceName,
-      clusterName,
       sourceControlConfigurationName,
-      options
+      options,
     );
     return poller.pollUntilDone();
   }
 
   /**
-   * List all Source Control Configurations.
+   * ListByResourceGroupNext
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
+   * @param nextLink The nextLink from the previous successful call to the ListByResourceGroup method.
    * @param options The options parameters.
    */
-  private _list(
+  private _listByResourceGroupNext(
     resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
-    options?: SourceControlConfigurationsListOptionalParams
-  ): Promise<SourceControlConfigurationsListResponse> {
-    return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        clusterRp,
-        clusterResourceName,
-        clusterName,
-        options
-      },
-      listOperationSpec
-    );
-  }
-
-  /**
-   * ListNext
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param clusterRp The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes,
-   *                  Microsoft.HybridContainerService.
-   * @param clusterResourceName The Kubernetes cluster resource name - i.e. managedClusters,
-   *                            connectedClusters, provisionedClusters.
-   * @param clusterName The name of the kubernetes cluster.
-   * @param nextLink The nextLink from the previous successful call to the List method.
-   * @param options The options parameters.
-   */
-  private _listNext(
-    resourceGroupName: string,
-    clusterRp: string,
-    clusterResourceName: string,
-    clusterName: string,
     nextLink: string,
-    options?: SourceControlConfigurationsListNextOptionalParams
-  ): Promise<SourceControlConfigurationsListNextResponse> {
+    options?: SourceControlConfigurationsListByResourceGroupNextOptionalParams,
+  ): Promise<SourceControlConfigurationsListByResourceGroupNextResponse> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        clusterRp,
-        clusterResourceName,
-        clusterName,
-        nextLink,
-        options
-      },
-      listNextOperationSpec
+      { resourceGroupName, nextLink, options },
+      listByResourceGroupNextOperationSpec,
     );
   }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const getOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/sourceControlConfigurations/{sourceControlConfigurationName}",
+const listByResourceGroupOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.KubernetesConfiguration/sourceControlConfigurations",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.SourceControlConfiguration
+      bodyMapper: Mappers.SourceControlConfigurationListResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.clusterRp,
-    Parameters.clusterResourceName,
-    Parameters.clusterName,
-    Parameters.sourceControlConfigurationName
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
+};
+const getOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.KubernetesConfiguration/sourceControlConfigurations/{sourceControlConfigurationName}",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.SourceControlConfiguration,
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse,
+    },
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.sourceControlConfigurationName,
+  ],
+  headerParameters: [Parameters.accept],
+  serializer,
 };
 const createOrUpdateOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/sourceControlConfigurations/{sourceControlConfigurationName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.KubernetesConfiguration/sourceControlConfigurations/{sourceControlConfigurationName}",
   httpMethod: "PUT",
   responses: {
     200: {
-      bodyMapper: Mappers.SourceControlConfiguration
+      bodyMapper: Mappers.SourceControlConfiguration,
     },
     201: {
-      bodyMapper: Mappers.SourceControlConfiguration
+      bodyMapper: Mappers.SourceControlConfiguration,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
-  requestBody: Parameters.sourceControlConfiguration,
+  requestBody: Parameters.resource2,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.clusterRp,
-    Parameters.clusterResourceName,
-    Parameters.clusterName,
-    Parameters.sourceControlConfigurationName
+    Parameters.sourceControlConfigurationName,
   ],
-  headerParameters: [Parameters.contentType, Parameters.accept],
+  headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
+  serializer,
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/sourceControlConfigurations/{sourceControlConfigurationName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.KubernetesConfiguration/sourceControlConfigurations/{sourceControlConfigurationName}",
   httpMethod: "DELETE",
   responses: {
-    200: {},
-    201: {},
-    202: {},
-    204: {},
-    default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
-  },
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.clusterRp,
-    Parameters.clusterResourceName,
-    Parameters.clusterName,
-    Parameters.sourceControlConfigurationName
-  ],
-  headerParameters: [Parameters.accept],
-  serializer
-};
-const listOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/sourceControlConfigurations",
-  httpMethod: "GET",
-  responses: {
     200: {
-      bodyMapper: Mappers.SourceControlConfigurationList
+      headersMapper: Mappers.SourceControlConfigurationsDeleteHeaders,
+    },
+    201: {
+      headersMapper: Mappers.SourceControlConfigurationsDeleteHeaders,
+    },
+    202: {
+      headersMapper: Mappers.SourceControlConfigurationsDeleteHeaders,
+    },
+    204: {
+      headersMapper: Mappers.SourceControlConfigurationsDeleteHeaders,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.clusterRp,
-    Parameters.clusterResourceName,
-    Parameters.clusterName
+    Parameters.sourceControlConfigurationName,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
-const listNextOperationSpec: coreClient.OperationSpec = {
+const listByResourceGroupNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.SourceControlConfigurationList
+      bodyMapper: Mappers.SourceControlConfigurationListResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   urlParameters: [
     Parameters.$host,
+    Parameters.nextLink,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.clusterRp,
-    Parameters.clusterResourceName,
-    Parameters.clusterName,
-    Parameters.nextLink
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };

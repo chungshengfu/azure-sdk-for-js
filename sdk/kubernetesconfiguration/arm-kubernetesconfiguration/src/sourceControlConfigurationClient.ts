@@ -11,42 +11,40 @@ import * as coreRestPipeline from "@azure/core-rest-pipeline";
 import {
   PipelineRequest,
   PipelineResponse,
-  SendRequest
+  SendRequest,
 } from "@azure/core-rest-pipeline";
 import * as coreAuth from "@azure/core-auth";
 import {
+  OperationsImpl,
   ExtensionsImpl,
-  OperationStatusImpl,
   FluxConfigurationsImpl,
-  FluxConfigOperationStatusImpl,
+  OperationStatusImpl,
   SourceControlConfigurationsImpl,
-  OperationsImpl
 } from "./operations";
 import {
+  Operations,
   Extensions,
-  OperationStatus,
   FluxConfigurations,
-  FluxConfigOperationStatus,
+  OperationStatus,
   SourceControlConfigurations,
-  Operations
 } from "./operationsInterfaces";
 import { SourceControlConfigurationClientOptionalParams } from "./models";
 
 export class SourceControlConfigurationClient extends coreClient.ServiceClient {
   $host: string;
-  subscriptionId: string;
   apiVersion: string;
+  subscriptionId: string;
 
   /**
    * Initializes a new instance of the SourceControlConfigurationClient class.
    * @param credentials Subscription credentials which uniquely identify client subscription.
-   * @param subscriptionId The ID of the target subscription.
+   * @param subscriptionId The ID of the target subscription. The value must be an UUID.
    * @param options The parameter options
    */
   constructor(
     credentials: coreAuth.TokenCredential,
     subscriptionId: string,
-    options?: SourceControlConfigurationClientOptionalParams
+    options?: SourceControlConfigurationClientOptionalParams,
   ) {
     if (credentials === undefined) {
       throw new Error("'credentials' cannot be null");
@@ -61,10 +59,10 @@ export class SourceControlConfigurationClient extends coreClient.ServiceClient {
     }
     const defaults: SourceControlConfigurationClientOptionalParams = {
       requestContentType: "application/json; charset=utf-8",
-      credential: credentials
+      credential: credentials,
     };
 
-    const packageDetails = `azsdk-js-arm-kubernetesconfiguration/6.1.1`;
+    const packageDetails = `azsdk-js-arm-kubernetesconfiguration/7.0.0-beta.1`;
     const userAgentPrefix =
       options.userAgentOptions && options.userAgentOptions.userAgentPrefix
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
@@ -74,20 +72,21 @@ export class SourceControlConfigurationClient extends coreClient.ServiceClient {
       ...defaults,
       ...options,
       userAgentOptions: {
-        userAgentPrefix
+        userAgentPrefix,
       },
       endpoint:
-        options.endpoint ?? options.baseUri ?? "https://management.azure.com"
+        options.endpoint ?? options.baseUri ?? "https://management.azure.com",
     };
     super(optionsWithDefaults);
 
     let bearerTokenAuthenticationPolicyFound: boolean = false;
     if (options?.pipeline && options.pipeline.getOrderedPolicies().length > 0) {
-      const pipelinePolicies: coreRestPipeline.PipelinePolicy[] = options.pipeline.getOrderedPolicies();
+      const pipelinePolicies: coreRestPipeline.PipelinePolicy[] =
+        options.pipeline.getOrderedPolicies();
       bearerTokenAuthenticationPolicyFound = pipelinePolicies.some(
         (pipelinePolicy) =>
           pipelinePolicy.name ===
-          coreRestPipeline.bearerTokenAuthenticationPolicyName
+          coreRestPipeline.bearerTokenAuthenticationPolicyName,
       );
     }
     if (
@@ -97,7 +96,7 @@ export class SourceControlConfigurationClient extends coreClient.ServiceClient {
       !bearerTokenAuthenticationPolicyFound
     ) {
       this.pipeline.removePolicy({
-        name: coreRestPipeline.bearerTokenAuthenticationPolicyName
+        name: coreRestPipeline.bearerTokenAuthenticationPolicyName,
       });
       this.pipeline.addPolicy(
         coreRestPipeline.bearerTokenAuthenticationPolicy({
@@ -107,9 +106,9 @@ export class SourceControlConfigurationClient extends coreClient.ServiceClient {
             `${optionsWithDefaults.endpoint}/.default`,
           challengeCallbacks: {
             authorizeRequestOnChallenge:
-              coreClient.authorizeRequestOnClaimChallenge
-          }
-        })
+              coreClient.authorizeRequestOnClaimChallenge,
+          },
+        }),
       );
     }
     // Parameter assignments
@@ -117,15 +116,14 @@ export class SourceControlConfigurationClient extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
-    this.apiVersion = options.apiVersion || "2023-05-01";
-    this.extensions = new ExtensionsImpl(this);
-    this.operationStatus = new OperationStatusImpl(this);
-    this.fluxConfigurations = new FluxConfigurationsImpl(this);
-    this.fluxConfigOperationStatus = new FluxConfigOperationStatusImpl(this);
-    this.sourceControlConfigurations = new SourceControlConfigurationsImpl(
-      this
-    );
+    this.apiVersion = options.apiVersion || "2024-06-01-preview";
     this.operations = new OperationsImpl(this);
+    this.extensions = new ExtensionsImpl(this);
+    this.fluxConfigurations = new FluxConfigurationsImpl(this);
+    this.operationStatus = new OperationStatusImpl(this);
+    this.sourceControlConfigurations = new SourceControlConfigurationsImpl(
+      this,
+    );
     this.addCustomApiVersionPolicy(options.apiVersion);
   }
 
@@ -138,7 +136,7 @@ export class SourceControlConfigurationClient extends coreClient.ServiceClient {
       name: "CustomApiVersionPolicy",
       async sendRequest(
         request: PipelineRequest,
-        next: SendRequest
+        next: SendRequest,
       ): Promise<PipelineResponse> {
         const param = request.url.split("?");
         if (param.length > 1) {
@@ -152,15 +150,14 @@ export class SourceControlConfigurationClient extends coreClient.ServiceClient {
           request.url = param[0] + "?" + newParams.join("&");
         }
         return next(request);
-      }
+      },
     };
     this.pipeline.addPolicy(apiVersionPolicy);
   }
 
-  extensions: Extensions;
-  operationStatus: OperationStatus;
-  fluxConfigurations: FluxConfigurations;
-  fluxConfigOperationStatus: FluxConfigOperationStatus;
-  sourceControlConfigurations: SourceControlConfigurations;
   operations: Operations;
+  extensions: Extensions;
+  fluxConfigurations: FluxConfigurations;
+  operationStatus: OperationStatus;
+  sourceControlConfigurations: SourceControlConfigurations;
 }
