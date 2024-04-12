@@ -4,11 +4,17 @@
 import { RequestParameters } from "@azure-rest/core-client";
 import {
   AnalyzeTextOptions,
+  AnalyzeTextJailbreakOptions,
+  AnalyzeTextProtectedMaterialOptions,
+  AnalyzeTextPromptInjectionOptions,
+  AnalyzeTextCustomCategoryOption,
   AnalyzeImageOptions,
   TextBlocklist,
   AddOrUpdateTextBlocklistItemsOptions,
   RemoveTextBlocklistItemsOptions,
-} from "./models";
+  AnalyzeTextGroundednessOptions,
+  TextCustomCategoryVersion,
+} from "./models.js";
 
 export interface AnalyzeTextBodyParam {
   /** The text analysis request. */
@@ -16,6 +22,38 @@ export interface AnalyzeTextBodyParam {
 }
 
 export type AnalyzeTextParameters = AnalyzeTextBodyParam & RequestParameters;
+
+export interface DetectTextJailbreakBodyParam {
+  /** The text jailbreak analysis request. */
+  body: AnalyzeTextJailbreakOptions;
+}
+
+export type DetectTextJailbreakParameters = DetectTextJailbreakBodyParam &
+  RequestParameters;
+
+export interface DetectTextProtectedMaterialBodyParam {
+  /** The text protected material analysis request. */
+  body: AnalyzeTextProtectedMaterialOptions;
+}
+
+export type DetectTextProtectedMaterialParameters =
+  DetectTextProtectedMaterialBodyParam & RequestParameters;
+
+export interface DetectTextPromptInjectionOptionsBodyParam {
+  /** The text prompt injection attacks analysis request. */
+  body: AnalyzeTextPromptInjectionOptions;
+}
+
+export type DetectTextPromptInjectionOptionsParameters =
+  DetectTextPromptInjectionOptionsBodyParam & RequestParameters;
+
+export interface AnalyzeTextCustomCategoryBodyParam {
+  /** The text analysis request. */
+  body: AnalyzeTextCustomCategoryOption;
+}
+
+export type AnalyzeTextCustomCategoryParameters =
+  AnalyzeTextCustomCategoryBodyParam & RequestParameters;
 
 export interface AnalyzeImageBodyParam {
   /** The image analysis request. */
@@ -37,9 +75,10 @@ export interface CreateOrUpdateTextBlocklistMediaTypesParam {
   contentType: "application/merge-patch+json";
 }
 
-export type CreateOrUpdateTextBlocklistParameters = CreateOrUpdateTextBlocklistMediaTypesParam &
-  CreateOrUpdateTextBlocklistBodyParam &
-  RequestParameters;
+export type CreateOrUpdateTextBlocklistParameters =
+  CreateOrUpdateTextBlocklistMediaTypesParam &
+    CreateOrUpdateTextBlocklistBodyParam &
+    RequestParameters;
 export type DeleteTextBlocklistParameters = RequestParameters;
 export type ListTextBlocklistsParameters = RequestParameters;
 
@@ -48,15 +87,16 @@ export interface AddOrUpdateBlocklistItemsBodyParam {
   body: AddOrUpdateTextBlocklistItemsOptions;
 }
 
-export type AddOrUpdateBlocklistItemsParameters = AddOrUpdateBlocklistItemsBodyParam &
-  RequestParameters;
+export type AddOrUpdateBlocklistItemsParameters =
+  AddOrUpdateBlocklistItemsBodyParam & RequestParameters;
 
 export interface RemoveBlocklistItemsBodyParam {
   /** Options for removing blocklist items. */
   body: RemoveTextBlocklistItemsOptions;
 }
 
-export type RemoveBlocklistItemsParameters = RemoveBlocklistItemsBodyParam & RequestParameters;
+export type RemoveBlocklistItemsParameters = RemoveBlocklistItemsBodyParam &
+  RequestParameters;
 export type GetTextBlocklistItemParameters = RequestParameters;
 
 export interface ListTextBlocklistItemsQueryParamProperties {
@@ -72,4 +112,62 @@ export interface ListTextBlocklistItemsQueryParam {
   queryParameters?: ListTextBlocklistItemsQueryParamProperties;
 }
 
-export type ListTextBlocklistItemsParameters = ListTextBlocklistItemsQueryParam & RequestParameters;
+export type ListTextBlocklistItemsParameters =
+  ListTextBlocklistItemsQueryParam & RequestParameters;
+
+export interface DetectGroundednessOptionsBodyParam {
+  /** The text groundedness detection request. */
+  body: AnalyzeTextGroundednessOptions;
+}
+
+export type DetectGroundednessOptionsParameters =
+  DetectGroundednessOptionsBodyParam & RequestParameters;
+
+export interface CreateTextCustomCategoryVersionBodyParam {
+  /** The resource instance. */
+  body: TextCustomCategoryVersion;
+}
+
+export type CreateTextCustomCategoryVersionParameters =
+  CreateTextCustomCategoryVersionBodyParam & RequestParameters;
+
+export interface GetCustomizedCategoryQueryParamProperties {
+  /** If not provided, it will return the latest version. */
+  version?: number;
+}
+
+export interface GetCustomizedCategoryQueryParam {
+  queryParameters?: GetCustomizedCategoryQueryParamProperties;
+}
+
+export type GetCustomizedCategoryParameters = GetCustomizedCategoryQueryParam &
+  RequestParameters;
+
+export interface ListCustomizedCategoryQueryParamProperties {
+  /** The number of result items to return. */
+  top?: number;
+  /** The number of result items to skip. */
+  skip?: number;
+  /** The maximum number of result items per page. */
+  maxpagesize?: number;
+}
+
+export interface ListCustomizedCategoryQueryParam {
+  queryParameters?: ListCustomizedCategoryQueryParamProperties;
+}
+
+export type ListCustomizedCategoryParameters =
+  ListCustomizedCategoryQueryParam & RequestParameters;
+export type DeleteCustomizedCategoryParameters = RequestParameters;
+
+export interface BuildQueryParamProperties {
+  /** The build will target on the specicied category version */
+  version: number;
+}
+
+export interface BuildQueryParam {
+  queryParameters: BuildQueryParamProperties;
+}
+
+export type BuildParameters = BuildQueryParam & RequestParameters;
+export type GetCustomCategoryOperationParameters = RequestParameters;

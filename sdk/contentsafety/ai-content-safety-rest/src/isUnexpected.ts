@@ -4,6 +4,14 @@
 import {
   AnalyzeText200Response,
   AnalyzeTextDefaultResponse,
+  DetectTextJailbreak200Response,
+  DetectTextJailbreakDefaultResponse,
+  DetectTextProtectedMaterial200Response,
+  DetectTextProtectedMaterialDefaultResponse,
+  DetectTextPromptInjectionOptions200Response,
+  DetectTextPromptInjectionOptionsDefaultResponse,
+  AnalyzeTextCustomCategory200Response,
+  AnalyzeTextCustomCategoryDefaultResponse,
   AnalyzeImage200Response,
   AnalyzeImageDefaultResponse,
   GetTextBlocklist200Response,
@@ -23,10 +31,30 @@ import {
   GetTextBlocklistItemDefaultResponse,
   ListTextBlocklistItems200Response,
   ListTextBlocklistItemsDefaultResponse,
-} from "./responses";
+  DetectGroundednessOptions200Response,
+  DetectGroundednessOptionsDefaultResponse,
+  CreateTextCustomCategoryVersion200Response,
+  CreateTextCustomCategoryVersion201Response,
+  CreateTextCustomCategoryVersionDefaultResponse,
+  GetCustomizedCategory200Response,
+  GetCustomizedCategoryDefaultResponse,
+  DeleteCustomizedCategory204Response,
+  DeleteCustomizedCategoryDefaultResponse,
+  ListCustomizedCategory200Response,
+  ListCustomizedCategoryDefaultResponse,
+  Build202Response,
+  BuildLogicalResponse,
+  BuildDefaultResponse,
+  GetCustomCategoryOperation200Response,
+  GetCustomCategoryOperationDefaultResponse,
+} from "./responses.js";
 
 const responseMap: Record<string, string[]> = {
   "POST /text:analyze": ["200"],
+  "POST /text:detectJailbreak": ["200"],
+  "POST /text:detectProtectedMaterial": ["200"],
+  "POST /text:shieldPrompt": ["200"],
+  "POST /text:analyzeCustomCategory": ["200"],
   "POST /image:analyze": ["200"],
   "GET /text/blocklists/{blocklistName}": ["200"],
   "PATCH /text/blocklists/{blocklistName}": ["200", "201"],
@@ -34,13 +62,41 @@ const responseMap: Record<string, string[]> = {
   "GET /text/blocklists": ["200"],
   "POST /text/blocklists/{blocklistName}:addOrUpdateBlocklistItems": ["200"],
   "POST /text/blocklists/{blocklistName}:removeBlocklistItems": ["204"],
-  "GET /text/blocklists/{blocklistName}/blocklistItems/{blocklistItemId}": ["200"],
+  "GET /text/blocklists/{blocklistName}/blocklistItems/{blocklistItemId}": [
+    "200",
+  ],
   "GET /text/blocklists/{blocklistName}/blocklistItems": ["200"],
+  "POST /text:detectGroundedness": ["200"],
+  "PUT /text/categories/{categoryName}": ["200", "201"],
+  "GET /text/categories/{categoryName}": ["200"],
+  "DELETE /text/categories/{categoryName}": ["204"],
+  "GET /text/categories": ["200"],
+  "POST /text/categories/{categoryName}:build": ["202"],
+  "GET /text/categories/{categoryName}:build": ["200", "202"],
+  "GET /text/categories/operations/{operationId}": ["200"],
 };
 
 export function isUnexpected(
   response: AnalyzeText200Response | AnalyzeTextDefaultResponse,
 ): response is AnalyzeTextDefaultResponse;
+export function isUnexpected(
+  response: DetectTextJailbreak200Response | DetectTextJailbreakDefaultResponse,
+): response is DetectTextJailbreakDefaultResponse;
+export function isUnexpected(
+  response:
+    | DetectTextProtectedMaterial200Response
+    | DetectTextProtectedMaterialDefaultResponse,
+): response is DetectTextProtectedMaterialDefaultResponse;
+export function isUnexpected(
+  response:
+    | DetectTextPromptInjectionOptions200Response
+    | DetectTextPromptInjectionOptionsDefaultResponse,
+): response is DetectTextPromptInjectionOptionsDefaultResponse;
+export function isUnexpected(
+  response:
+    | AnalyzeTextCustomCategory200Response
+    | AnalyzeTextCustomCategoryDefaultResponse,
+): response is AnalyzeTextCustomCategoryDefaultResponse;
 export function isUnexpected(
   response: AnalyzeImage200Response | AnalyzeImageDefaultResponse,
 ): response is AnalyzeImageDefaultResponse;
@@ -60,21 +116,71 @@ export function isUnexpected(
   response: ListTextBlocklists200Response | ListTextBlocklistsDefaultResponse,
 ): response is ListTextBlocklistsDefaultResponse;
 export function isUnexpected(
-  response: AddOrUpdateBlocklistItems200Response | AddOrUpdateBlocklistItemsDefaultResponse,
+  response:
+    | AddOrUpdateBlocklistItems200Response
+    | AddOrUpdateBlocklistItemsDefaultResponse,
 ): response is AddOrUpdateBlocklistItemsDefaultResponse;
 export function isUnexpected(
-  response: RemoveBlocklistItems204Response | RemoveBlocklistItemsDefaultResponse,
+  response:
+    | RemoveBlocklistItems204Response
+    | RemoveBlocklistItemsDefaultResponse,
 ): response is RemoveBlocklistItemsDefaultResponse;
 export function isUnexpected(
-  response: GetTextBlocklistItem200Response | GetTextBlocklistItemDefaultResponse,
+  response:
+    | GetTextBlocklistItem200Response
+    | GetTextBlocklistItemDefaultResponse,
 ): response is GetTextBlocklistItemDefaultResponse;
 export function isUnexpected(
-  response: ListTextBlocklistItems200Response | ListTextBlocklistItemsDefaultResponse,
+  response:
+    | ListTextBlocklistItems200Response
+    | ListTextBlocklistItemsDefaultResponse,
 ): response is ListTextBlocklistItemsDefaultResponse;
+export function isUnexpected(
+  response:
+    | DetectGroundednessOptions200Response
+    | DetectGroundednessOptionsDefaultResponse,
+): response is DetectGroundednessOptionsDefaultResponse;
+export function isUnexpected(
+  response:
+    | CreateTextCustomCategoryVersion200Response
+    | CreateTextCustomCategoryVersion201Response
+    | CreateTextCustomCategoryVersionDefaultResponse,
+): response is CreateTextCustomCategoryVersionDefaultResponse;
+export function isUnexpected(
+  response:
+    | GetCustomizedCategory200Response
+    | GetCustomizedCategoryDefaultResponse,
+): response is GetCustomizedCategoryDefaultResponse;
+export function isUnexpected(
+  response:
+    | DeleteCustomizedCategory204Response
+    | DeleteCustomizedCategoryDefaultResponse,
+): response is DeleteCustomizedCategoryDefaultResponse;
+export function isUnexpected(
+  response:
+    | ListCustomizedCategory200Response
+    | ListCustomizedCategoryDefaultResponse,
+): response is ListCustomizedCategoryDefaultResponse;
+export function isUnexpected(
+  response: Build202Response | BuildLogicalResponse | BuildDefaultResponse,
+): response is BuildDefaultResponse;
+export function isUnexpected(
+  response:
+    | GetCustomCategoryOperation200Response
+    | GetCustomCategoryOperationDefaultResponse,
+): response is GetCustomCategoryOperationDefaultResponse;
 export function isUnexpected(
   response:
     | AnalyzeText200Response
     | AnalyzeTextDefaultResponse
+    | DetectTextJailbreak200Response
+    | DetectTextJailbreakDefaultResponse
+    | DetectTextProtectedMaterial200Response
+    | DetectTextProtectedMaterialDefaultResponse
+    | DetectTextPromptInjectionOptions200Response
+    | DetectTextPromptInjectionOptionsDefaultResponse
+    | AnalyzeTextCustomCategory200Response
+    | AnalyzeTextCustomCategoryDefaultResponse
     | AnalyzeImage200Response
     | AnalyzeImageDefaultResponse
     | GetTextBlocklist200Response
@@ -93,9 +199,29 @@ export function isUnexpected(
     | GetTextBlocklistItem200Response
     | GetTextBlocklistItemDefaultResponse
     | ListTextBlocklistItems200Response
-    | ListTextBlocklistItemsDefaultResponse,
+    | ListTextBlocklistItemsDefaultResponse
+    | DetectGroundednessOptions200Response
+    | DetectGroundednessOptionsDefaultResponse
+    | CreateTextCustomCategoryVersion200Response
+    | CreateTextCustomCategoryVersion201Response
+    | CreateTextCustomCategoryVersionDefaultResponse
+    | GetCustomizedCategory200Response
+    | GetCustomizedCategoryDefaultResponse
+    | DeleteCustomizedCategory204Response
+    | DeleteCustomizedCategoryDefaultResponse
+    | ListCustomizedCategory200Response
+    | ListCustomizedCategoryDefaultResponse
+    | Build202Response
+    | BuildLogicalResponse
+    | BuildDefaultResponse
+    | GetCustomCategoryOperation200Response
+    | GetCustomCategoryOperationDefaultResponse,
 ): response is
   | AnalyzeTextDefaultResponse
+  | DetectTextJailbreakDefaultResponse
+  | DetectTextProtectedMaterialDefaultResponse
+  | DetectTextPromptInjectionOptionsDefaultResponse
+  | AnalyzeTextCustomCategoryDefaultResponse
   | AnalyzeImageDefaultResponse
   | GetTextBlocklistDefaultResponse
   | CreateOrUpdateTextBlocklistDefaultResponse
@@ -104,7 +230,14 @@ export function isUnexpected(
   | AddOrUpdateBlocklistItemsDefaultResponse
   | RemoveBlocklistItemsDefaultResponse
   | GetTextBlocklistItemDefaultResponse
-  | ListTextBlocklistItemsDefaultResponse {
+  | ListTextBlocklistItemsDefaultResponse
+  | DetectGroundednessOptionsDefaultResponse
+  | CreateTextCustomCategoryVersionDefaultResponse
+  | GetCustomizedCategoryDefaultResponse
+  | DeleteCustomizedCategoryDefaultResponse
+  | ListCustomizedCategoryDefaultResponse
+  | BuildDefaultResponse
+  | GetCustomCategoryOperationDefaultResponse {
   const lroOriginal = response.headers["x-ms-original-url"];
   const url = new URL(lroOriginal ?? response.request.url);
   const method = response.request.method;
@@ -137,17 +270,24 @@ function getParametrizedPathSuccess(method: string, path: string): string[] {
 
     // track if we have found a match to return the values found.
     let found = true;
-    for (let i = candidateParts.length - 1, j = pathParts.length - 1; i >= 1 && j >= 1; i--, j--) {
-      if (candidateParts[i]?.startsWith("{") && candidateParts[i]?.indexOf("}") !== -1) {
+    for (
+      let i = candidateParts.length - 1, j = pathParts.length - 1;
+      i >= 1 && j >= 1;
+      i--, j--
+    ) {
+      if (
+        candidateParts[i]?.startsWith("{") &&
+        candidateParts[i]?.indexOf("}") !== -1
+      ) {
         const start = candidateParts[i]!.indexOf("}") + 1,
           end = candidateParts[i]?.length;
         // If the current part of the candidate is a "template" part
         // Try to use the suffix of pattern to match the path
         // {guid} ==> $
         // {guid}:export ==> :export$
-        const isMatched = new RegExp(`${candidateParts[i]?.slice(start, end)}`).test(
-          pathParts[j] || "",
-        );
+        const isMatched = new RegExp(
+          `${candidateParts[i]?.slice(start, end)}`,
+        ).test(pathParts[j] || "");
 
         if (!isMatched) {
           found = false;

@@ -5,13 +5,23 @@ import { RawHttpHeaders } from "@azure/core-rest-pipeline";
 import { HttpResponse, ErrorResponse } from "@azure-rest/core-client";
 import {
   AnalyzeTextResultOutput,
+  AnalyzeTextJailbreakResultOutput,
+  AnalyzeTextProtectedMaterialResultOutput,
+  AnalyzeTextPromptInjectionResultOutput,
+  AnalyzeTextCustomCategoryResultOutput,
   AnalyzeImageResultOutput,
   TextBlocklistOutput,
   PagedTextBlocklistOutput,
   AddOrUpdateTextBlocklistItemsResultOutput,
   TextBlocklistItemOutput,
   PagedTextBlocklistItemOutput,
-} from "./outputModels";
+  AnalyzeTextGroundednessResultOutput,
+  TextCustomCategoryVersionOutput,
+  TextCustomCategoryVersionListOutput,
+  PagedTextCustomCategoryVersionOutput,
+  ResourceOperationStatusOutput,
+  CustomCategoryOperationDetailOutput,
+} from "./outputModels.js";
 
 /** The request has succeeded. */
 export interface AnalyzeText200Response extends HttpResponse {
@@ -28,6 +38,77 @@ export interface AnalyzeTextDefaultResponse extends HttpResponse {
   status: string;
   body: ErrorResponse;
   headers: RawHttpHeaders & AnalyzeTextDefaultHeaders;
+}
+
+/** The request has succeeded. */
+export interface DetectTextJailbreak200Response extends HttpResponse {
+  status: "200";
+  body: AnalyzeTextJailbreakResultOutput;
+}
+
+export interface DetectTextJailbreakDefaultHeaders {
+  /** String error code indicating what went wrong. */
+  "x-ms-error-code"?: string;
+}
+
+export interface DetectTextJailbreakDefaultResponse extends HttpResponse {
+  status: string;
+  body: ErrorResponse;
+  headers: RawHttpHeaders & DetectTextJailbreakDefaultHeaders;
+}
+
+/** The request has succeeded. */
+export interface DetectTextProtectedMaterial200Response extends HttpResponse {
+  status: "200";
+  body: AnalyzeTextProtectedMaterialResultOutput;
+}
+
+export interface DetectTextProtectedMaterialDefaultHeaders {
+  /** String error code indicating what went wrong. */
+  "x-ms-error-code"?: string;
+}
+
+export interface DetectTextProtectedMaterialDefaultResponse
+  extends HttpResponse {
+  status: string;
+  body: ErrorResponse;
+  headers: RawHttpHeaders & DetectTextProtectedMaterialDefaultHeaders;
+}
+
+/** The request has succeeded. */
+export interface DetectTextPromptInjectionOptions200Response
+  extends HttpResponse {
+  status: "200";
+  body: AnalyzeTextPromptInjectionResultOutput;
+}
+
+export interface DetectTextPromptInjectionOptionsDefaultHeaders {
+  /** String error code indicating what went wrong. */
+  "x-ms-error-code"?: string;
+}
+
+export interface DetectTextPromptInjectionOptionsDefaultResponse
+  extends HttpResponse {
+  status: string;
+  body: ErrorResponse;
+  headers: RawHttpHeaders & DetectTextPromptInjectionOptionsDefaultHeaders;
+}
+
+/** The request has succeeded. */
+export interface AnalyzeTextCustomCategory200Response extends HttpResponse {
+  status: "200";
+  body: AnalyzeTextCustomCategoryResultOutput;
+}
+
+export interface AnalyzeTextCustomCategoryDefaultHeaders {
+  /** String error code indicating what went wrong. */
+  "x-ms-error-code"?: string;
+}
+
+export interface AnalyzeTextCustomCategoryDefaultResponse extends HttpResponse {
+  status: string;
+  body: ErrorResponse;
+  headers: RawHttpHeaders & AnalyzeTextCustomCategoryDefaultHeaders;
 }
 
 /** The request has succeeded. */
@@ -81,7 +162,8 @@ export interface CreateOrUpdateTextBlocklistDefaultHeaders {
   "x-ms-error-code"?: string;
 }
 
-export interface CreateOrUpdateTextBlocklistDefaultResponse extends HttpResponse {
+export interface CreateOrUpdateTextBlocklistDefaultResponse
+  extends HttpResponse {
   status: string;
   body: ErrorResponse;
   headers: RawHttpHeaders & CreateOrUpdateTextBlocklistDefaultHeaders;
@@ -185,4 +267,144 @@ export interface ListTextBlocklistItemsDefaultResponse extends HttpResponse {
   status: string;
   body: ErrorResponse;
   headers: RawHttpHeaders & ListTextBlocklistItemsDefaultHeaders;
+}
+
+/** The request has succeeded. */
+export interface DetectGroundednessOptions200Response extends HttpResponse {
+  status: "200";
+  body: AnalyzeTextGroundednessResultOutput;
+}
+
+export interface DetectGroundednessOptionsDefaultHeaders {
+  /** String error code indicating what went wrong. */
+  "x-ms-error-code"?: string;
+}
+
+export interface DetectGroundednessOptionsDefaultResponse extends HttpResponse {
+  status: string;
+  body: ErrorResponse;
+  headers: RawHttpHeaders & DetectGroundednessOptionsDefaultHeaders;
+}
+
+/** The request has succeeded. */
+export interface CreateTextCustomCategoryVersion200Response
+  extends HttpResponse {
+  status: "200";
+  body: TextCustomCategoryVersionOutput;
+}
+
+/** The request has succeeded and a new resource has been created as a result. */
+export interface CreateTextCustomCategoryVersion201Response
+  extends HttpResponse {
+  status: "201";
+  body: TextCustomCategoryVersionOutput;
+}
+
+export interface CreateTextCustomCategoryVersionDefaultHeaders {
+  /** String error code indicating what went wrong. */
+  "x-ms-error-code"?: string;
+}
+
+export interface CreateTextCustomCategoryVersionDefaultResponse
+  extends HttpResponse {
+  status: string;
+  body: ErrorResponse;
+  headers: RawHttpHeaders & CreateTextCustomCategoryVersionDefaultHeaders;
+}
+
+/** The request has succeeded. */
+export interface GetCustomizedCategory200Response extends HttpResponse {
+  status: "200";
+  body: TextCustomCategoryVersionListOutput;
+}
+
+export interface GetCustomizedCategoryDefaultHeaders {
+  /** String error code indicating what went wrong. */
+  "x-ms-error-code"?: string;
+}
+
+export interface GetCustomizedCategoryDefaultResponse extends HttpResponse {
+  status: string;
+  body: ErrorResponse;
+  headers: RawHttpHeaders & GetCustomizedCategoryDefaultHeaders;
+}
+
+/** The request has succeeded. */
+export interface ListCustomizedCategory200Response extends HttpResponse {
+  status: "200";
+  body: PagedTextCustomCategoryVersionOutput;
+}
+
+export interface ListCustomizedCategoryDefaultHeaders {
+  /** String error code indicating what went wrong. */
+  "x-ms-error-code"?: string;
+}
+
+export interface ListCustomizedCategoryDefaultResponse extends HttpResponse {
+  status: string;
+  body: ErrorResponse;
+  headers: RawHttpHeaders & ListCustomizedCategoryDefaultHeaders;
+}
+
+/** There is no content to send for this request, but the headers may be useful. */
+export interface DeleteCustomizedCategory204Response extends HttpResponse {
+  status: "204";
+}
+
+export interface DeleteCustomizedCategoryDefaultHeaders {
+  /** String error code indicating what went wrong. */
+  "x-ms-error-code"?: string;
+}
+
+export interface DeleteCustomizedCategoryDefaultResponse extends HttpResponse {
+  status: string;
+  body: ErrorResponse;
+  headers: RawHttpHeaders & DeleteCustomizedCategoryDefaultHeaders;
+}
+
+export interface Build202Headers {
+  /** The location for monitoring the operation state. */
+  "operation-location": string;
+}
+
+/** The request has been accepted for processing, but processing has not yet completed. */
+export interface Build202Response extends HttpResponse {
+  status: "202";
+  body: ResourceOperationStatusOutput;
+  headers: RawHttpHeaders & Build202Headers;
+}
+
+export interface BuildDefaultHeaders {
+  /** String error code indicating what went wrong. */
+  "x-ms-error-code"?: string;
+}
+
+export interface BuildDefaultResponse extends HttpResponse {
+  status: string;
+  body: ErrorResponse;
+  headers: RawHttpHeaders & BuildDefaultHeaders;
+}
+
+/** The final response for long-running build operation */
+export interface BuildLogicalResponse extends HttpResponse {
+  status: "200";
+  body: ResourceOperationStatusOutput;
+}
+
+/** The request has succeeded. */
+export interface GetCustomCategoryOperation200Response extends HttpResponse {
+  status: "200";
+  body: CustomCategoryOperationDetailOutput;
+}
+
+export interface GetCustomCategoryOperationDefaultHeaders {
+  /** String error code indicating what went wrong. */
+  "x-ms-error-code"?: string;
+}
+
+export interface GetCustomCategoryOperationDefaultResponse
+  extends HttpResponse {
+  status: string;
+  body: ErrorResponse;
+  headers: RawHttpHeaders & GetCustomCategoryOperationDefaultHeaders;
 }
