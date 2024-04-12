@@ -12071,7 +12071,7 @@ packages:
     dev: false
 
   file:projects/arm-avs.tgz:
-    resolution: {integrity: sha512-3T8tLlf89FKmho6iL61h8nq5bM0KHK3D37v/QWMnUXzp4S/z6Qngen706ZW3Rtty4WnN0exaIMq45Dj2KqCQwQ==, tarball: file:projects/arm-avs.tgz}
+    resolution: {integrity: sha512-nHRDaCV8rObiFJ49SMxnASfJjiKfgStDw7d6GZX6yEBGKBiexcS6qsm3/Erxf+Np+yrIIQRiZ6sc4XG30/YB/A==, tarball: file:projects/arm-avs.tgz}
     name: '@rush-temp/arm-avs'
     version: 0.0.0
     dependencies:
@@ -12085,12 +12085,13 @@ packages:
       chai: 4.3.10
       cross-env: 7.0.3
       dotenv: 16.4.5
+      esm: 3.2.25
       mkdirp: 2.1.6
       mocha: 10.4.0
       rimraf: 5.0.5
-      ts-node: 10.9.2(@types/node@18.19.31)(typescript@5.4.5)
+      ts-node: 10.9.2(@types/node@18.19.31)(typescript@5.3.3)
       tslib: 2.6.2
-      typescript: 5.4.5
+      typescript: 5.3.3
       uglify-js: 3.17.4
     transitivePeerDependencies:
       - '@swc/core'
