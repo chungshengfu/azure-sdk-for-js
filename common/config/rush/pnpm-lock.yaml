@@ -17039,7 +17039,7 @@ packages:
     dev: false
 
   file:projects/arm-servicelinker.tgz:
-    resolution: {integrity: sha512-aa1NfzxGxYhoLo80ygJDDrbi1iTscIrW6v8HubpWGL8xcX9Dhar6H9zWisGDwaeVN+R35aLfTJw17o/4yvljjA==, tarball: file:projects/arm-servicelinker.tgz}
+    resolution: {integrity: sha512-82q+Ei68VK8ydtFsNr52vordUTnLoT18H04CoRKkYcWf/4OtM9cs5gQFkgt7bfUgWmVo2VXpvexPGRMu4qfcKA==, tarball: file:projects/arm-servicelinker.tgz}
     name: '@rush-temp/arm-servicelinker'
     version: 0.0.0
     dependencies:
@@ -17053,12 +17053,13 @@ packages:
       chai: 4.3.10
       cross-env: 7.0.3
       dotenv: 16.4.5
-      mkdirp: 1.0.4
+      esm: 3.2.25
+      mkdirp: 2.1.6
       mocha: 10.4.0
       rimraf: 5.0.5
-      ts-node: 10.9.2(@types/node@18.19.31)(typescript@5.4.5)
+      ts-node: 10.9.2(@types/node@18.19.31)(typescript@5.3.3)
       tslib: 2.6.2
-      typescript: 5.4.5
+      typescript: 5.3.3
       uglify-js: 3.17.4
     transitivePeerDependencies:
       - '@swc/core'
