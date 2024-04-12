@@ -21,9 +21,6 @@ import {
 import { createLroSpec } from "../lroImpl";
 import {
   AzureMonitorWorkspaceResource,
-  AzureMonitorWorkspacesListByResourceGroupNextOptionalParams,
-  AzureMonitorWorkspacesListByResourceGroupOptionalParams,
-  AzureMonitorWorkspacesListByResourceGroupResponse,
   AzureMonitorWorkspacesListBySubscriptionNextOptionalParams,
   AzureMonitorWorkspacesListBySubscriptionOptionalParams,
   AzureMonitorWorkspacesListBySubscriptionResponse,
@@ -35,7 +32,6 @@ import {
   AzureMonitorWorkspacesUpdateResponse,
   AzureMonitorWorkspacesDeleteOptionalParams,
   AzureMonitorWorkspacesDeleteResponse,
-  AzureMonitorWorkspacesListByResourceGroupNextResponse,
   AzureMonitorWorkspacesListBySubscriptionNextResponse,
 } from "../models";
 
@@ -50,75 +46,6 @@ export class AzureMonitorWorkspacesImpl implements AzureMonitorWorkspaces {
    */
   constructor(client: MonitorClient) {
     this.client = client;
-  }
-
-  /**
-   * Lists all Azure Monitor Workspaces in the specified resource group
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param options The options parameters.
-   */
-  public listByResourceGroup(
-    resourceGroupName: string,
-    options?: AzureMonitorWorkspacesListByResourceGroupOptionalParams,
-  ): PagedAsyncIterableIterator<AzureMonitorWorkspaceResource> {
-    const iter = this.listByResourceGroupPagingAll(resourceGroupName, options);
-    return {
-      next() {
-        return iter.next();
-      },
-      [Symbol.asyncIterator]() {
-        return this;
-      },
-      byPage: (settings?: PageSettings) => {
-        if (settings?.maxPageSize) {
-          throw new Error("maxPageSize is not supported by this operation.");
-        }
-        return this.listByResourceGroupPagingPage(
-          resourceGroupName,
-          options,
-          settings,
-        );
-      },
-    };
-  }
-
-  private async *listByResourceGroupPagingPage(
-    resourceGroupName: string,
-    options?: AzureMonitorWorkspacesListByResourceGroupOptionalParams,
-    settings?: PageSettings,
-  ): AsyncIterableIterator<AzureMonitorWorkspaceResource[]> {
-    let result: AzureMonitorWorkspacesListByResourceGroupResponse;
-    let continuationToken = settings?.continuationToken;
-    if (!continuationToken) {
-      result = await this._listByResourceGroup(resourceGroupName, options);
-      let page = result.value || [];
-      continuationToken = result.nextLink;
-      setContinuationToken(page, continuationToken);
-      yield page;
-    }
-    while (continuationToken) {
-      result = await this._listByResourceGroupNext(
-        resourceGroupName,
-        continuationToken,
-        options,
-      );
-      continuationToken = result.nextLink;
-      let page = result.value || [];
-      setContinuationToken(page, continuationToken);
-      yield page;
-    }
-  }
-
-  private async *listByResourceGroupPagingAll(
-    resourceGroupName: string,
-    options?: AzureMonitorWorkspacesListByResourceGroupOptionalParams,
-  ): AsyncIterableIterator<AzureMonitorWorkspaceResource> {
-    for await (const page of this.listByResourceGroupPagingPage(
-      resourceGroupName,
-      options,
-    )) {
-      yield* page;
-    }
   }
 
   /**
@@ -173,21 +100,6 @@ export class AzureMonitorWorkspacesImpl implements AzureMonitorWorkspaces {
     for await (const page of this.listBySubscriptionPagingPage(options)) {
       yield* page;
     }
-  }
-
-  /**
-   * Lists all Azure Monitor Workspaces in the specified resource group
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param options The options parameters.
-   */
-  private _listByResourceGroup(
-    resourceGroupName: string,
-    options?: AzureMonitorWorkspacesListByResourceGroupOptionalParams,
-  ): Promise<AzureMonitorWorkspacesListByResourceGroupResponse> {
-    return this.client.sendOperationRequest(
-      { resourceGroupName, options },
-      listByResourceGroupOperationSpec,
-    );
   }
 
   /**
@@ -358,23 +270,6 @@ export class AzureMonitorWorkspacesImpl implements AzureMonitorWorkspaces {
   }
 
   /**
-   * ListByResourceGroupNext
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param nextLink The nextLink from the previous successful call to the ListByResourceGroup method.
-   * @param options The options parameters.
-   */
-  private _listByResourceGroupNext(
-    resourceGroupName: string,
-    nextLink: string,
-    options?: AzureMonitorWorkspacesListByResourceGroupNextOptionalParams,
-  ): Promise<AzureMonitorWorkspacesListByResourceGroupNextResponse> {
-    return this.client.sendOperationRequest(
-      { resourceGroupName, nextLink, options },
-      listByResourceGroupNextOperationSpec,
-    );
-  }
-
-  /**
    * ListBySubscriptionNext
    * @param nextLink The nextLink from the previous successful call to the ListBySubscription method.
    * @param options The options parameters.
@@ -392,26 +287,6 @@ export class AzureMonitorWorkspacesImpl implements AzureMonitorWorkspaces {
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const listByResourceGroupOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Monitor/accounts",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: Mappers.AzureMonitorWorkspaceResourceListResult,
-    },
-    default: {
-      bodyMapper: Mappers.ErrorResponseAutoGenerated2,
-    },
-  },
-  queryParameters: [Parameters.apiVersion1],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-  ],
-  headerParameters: [Parameters.accept],
-  serializer,
-};
 const listBySubscriptionOperationSpec: coreClient.OperationSpec = {
   path: "/subscriptions/{subscriptionId}/providers/Microsoft.Monitor/accounts",
   httpMethod: "GET",
@@ -524,26 +399,6 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.azureMonitorWorkspaceName,
-  ],
-  headerParameters: [Parameters.accept],
-  serializer,
-};
-const listByResourceGroupNextOperationSpec: coreClient.OperationSpec = {
-  path: "{nextLink}",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: Mappers.AzureMonitorWorkspaceResourceListResult,
-    },
-    default: {
-      bodyMapper: Mappers.ErrorResponseAutoGenerated2,
-    },
-  },
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.nextLink,
   ],
   headerParameters: [Parameters.accept],
   serializer,

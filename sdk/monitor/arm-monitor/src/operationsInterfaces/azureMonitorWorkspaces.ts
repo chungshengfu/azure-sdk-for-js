@@ -10,7 +10,6 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   AzureMonitorWorkspaceResource,
-  AzureMonitorWorkspacesListByResourceGroupOptionalParams,
   AzureMonitorWorkspacesListBySubscriptionOptionalParams,
   AzureMonitorWorkspacesGetOptionalParams,
   AzureMonitorWorkspacesGetResponse,
@@ -25,15 +24,6 @@ import {
 /// <reference lib="esnext.asynciterable" />
 /** Interface representing a AzureMonitorWorkspaces. */
 export interface AzureMonitorWorkspaces {
-  /**
-   * Lists all Azure Monitor Workspaces in the specified resource group
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param options The options parameters.
-   */
-  listByResourceGroup(
-    resourceGroupName: string,
-    options?: AzureMonitorWorkspacesListByResourceGroupOptionalParams,
-  ): PagedAsyncIterableIterator<AzureMonitorWorkspaceResource>;
   /**
    * Lists all Azure Monitor Workspaces in the specified subscription
    * @param options The options parameters.

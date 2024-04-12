@@ -8892,6 +8892,7 @@ packages:
 
   /queue-tick@1.0.1:
     resolution: {integrity: sha512-kJt5qhMxoszgU/62PLP1CJytzd2NKetjSRnyuj31fDd3Rlcz3fzlFdFLD1SItunPwyqEOkca6GbV612BWfaBag==}
+    requiresBuild: true
     dev: false
 
   /randombytes@2.1.0:
@@ -15300,7 +15301,7 @@ packages:
     dev: false
 
   file:projects/arm-monitor.tgz:
-    resolution: {integrity: sha512-NFCWQlPAAHql2K5+vgiJL/PrW/ruucVPPxom8SwpicJjJ+8jxUoTz0W/coxMzSOI/fJB/0uPvuD61hlWDGcKIw==, tarball: file:projects/arm-monitor.tgz}
+    resolution: {integrity: sha512-vCPhPkm4nmYGFospk2PmKhJ5iQPPZzXZhzlfWZiYVRPtuC3uZAwHy3QERExMWNer1k1BSHrFK7TRsl8qebGh/Q==, tarball: file:projects/arm-monitor.tgz}
     name: '@rush-temp/arm-monitor'
     version: 0.0.0
     dependencies:
@@ -15318,9 +15319,9 @@ packages:
       mkdirp: 2.1.6
       mocha: 10.4.0
       rimraf: 5.0.5
-      ts-node: 10.9.2(@types/node@18.19.31)(typescript@5.4.5)
+      ts-node: 10.9.2(@types/node@18.19.31)(typescript@5.3.3)
       tslib: 2.6.2
-      typescript: 5.4.5
+      typescript: 5.3.3
       uglify-js: 3.17.4
     transitivePeerDependencies:
       - '@swc/core'

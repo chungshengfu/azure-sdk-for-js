@@ -276,6 +276,18 @@ export const resultType1: OperationQueryParameter = {
   },
 };
 
+export const apiVersion1: OperationQueryParameter = {
+  parameterPath: "apiVersion",
+  mapper: {
+    defaultValue: "2023-04-03",
+    isConstant: true,
+    serializedName: "api-version",
+    type: {
+      name: "String",
+    },
+  },
+};
+
 export const resourceGroupName: OperationURLParameter = {
   parameterPath: "resourceGroupName",
   mapper: {
@@ -285,18 +297,6 @@ export const resourceGroupName: OperationURLParameter = {
     },
     serializedName: "resourceGroupName",
     required: true,
-    type: {
-      name: "String",
-    },
-  },
-};
-
-export const apiVersion1: OperationQueryParameter = {
-  parameterPath: "apiVersion",
-  mapper: {
-    defaultValue: "2023-04-03",
-    isConstant: true,
-    serializedName: "api-version",
     type: {
       name: "String",
     },
@@ -883,7 +883,7 @@ export const activityLogAlertRulePatch: OperationParameter = {
 export const apiVersion14: OperationQueryParameter = {
   parameterPath: "apiVersion",
   mapper: {
-    defaultValue: "2022-06-01",
+    defaultValue: "2023-03-11",
     isConstant: true,
     serializedName: "api-version",
     type: {
@@ -958,4 +958,15 @@ export const body3: OperationParameter = {
 export const body4: OperationParameter = {
   parameterPath: ["options", "body"],
   mapper: DataCollectionRuleResourceMapper,
+};
+
+export const deleteAssociations: OperationQueryParameter = {
+  parameterPath: ["options", "deleteAssociations"],
+  mapper: {
+    defaultValue: false,
+    serializedName: "deleteAssociations",
+    type: {
+      name: "Boolean",
+    },
+  },
 };

@@ -284,6 +284,25 @@ export interface ActivityLogsListOptionalParams extends coreClient.OperationOpti
 export type ActivityLogsListResponse = EventDataCollection;
 
 // @public
+export interface AdxDestination {
+    databaseName?: string;
+    readonly ingestionUri?: string;
+    name?: string;
+    resourceId?: string;
+}
+
+// @public
+export interface AgentSetting {
+    name?: KnownAgentSettingName;
+    value?: string;
+}
+
+// @public
+export interface AgentSettingsSpec {
+    logs?: AgentSetting[];
+}
+
+// @public
 export type AggregationType = "None" | "Average" | "Count" | "Minimum" | "Maximum" | "Total";
 
 // @public
@@ -658,7 +677,6 @@ export interface AzureMonitorWorkspaces {
     beginDeleteAndWait(resourceGroupName: string, azureMonitorWorkspaceName: string, options?: AzureMonitorWorkspacesDeleteOptionalParams): Promise<AzureMonitorWorkspacesDeleteResponse>;
     create(resourceGroupName: string, azureMonitorWorkspaceName: string, azureMonitorWorkspaceProperties: AzureMonitorWorkspaceResource, options?: AzureMonitorWorkspacesCreateOptionalParams): Promise<AzureMonitorWorkspacesCreateResponse>;
     get(resourceGroupName: string, azureMonitorWorkspaceName: string, options?: AzureMonitorWorkspacesGetOptionalParams): Promise<AzureMonitorWorkspacesGetResponse>;
-    listByResourceGroup(resourceGroupName: string, options?: AzureMonitorWorkspacesListByResourceGroupOptionalParams): PagedAsyncIterableIterator<AzureMonitorWorkspaceResource>;
     listBySubscription(options?: AzureMonitorWorkspacesListBySubscriptionOptionalParams): PagedAsyncIterableIterator<AzureMonitorWorkspaceResource>;
     update(resourceGroupName: string, azureMonitorWorkspaceName: string, options?: AzureMonitorWorkspacesUpdateOptionalParams): Promise<AzureMonitorWorkspacesUpdateResponse>;
 }
@@ -693,20 +711,6 @@ export interface AzureMonitorWorkspacesGetOptionalParams extends coreClient.Oper
 
 // @public
 export type AzureMonitorWorkspacesGetResponse = AzureMonitorWorkspaceResource;
-
-// @public
-export interface AzureMonitorWorkspacesListByResourceGroupNextOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type AzureMonitorWorkspacesListByResourceGroupNextResponse = AzureMonitorWorkspaceResourceListResult;
-
-// @public
-export interface AzureMonitorWorkspacesListByResourceGroupOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type AzureMonitorWorkspacesListByResourceGroupResponse = AzureMonitorWorkspaceResourceListResult;
 
 // @public
 export interface AzureMonitorWorkspacesListBySubscriptionNextOptionalParams extends coreClient.OperationOptions {
@@ -989,17 +993,24 @@ export type DataCollectionEndpointsUpdateResponse = DataCollectionEndpointResour
 
 // @public
 export interface DataCollectionRule {
+    agentSettings?: DataCollectionRuleAgentSettings;
     dataCollectionEndpointId?: string;
     dataFlows?: DataFlow[];
     dataSources?: DataCollectionRuleDataSources;
     description?: string;
     destinations?: DataCollectionRuleDestinations;
+    readonly endpoints?: DataCollectionRuleEndpoints;
     readonly immutableId?: string;
     readonly metadata?: DataCollectionRuleMetadata;
     readonly provisioningState?: KnownDataCollectionRuleProvisioningState;
+    references?: DataCollectionRuleReferences;
     streamDeclarations?: {
         [propertyName: string]: StreamDeclaration;
     };
+}
+
+// @public
+export interface DataCollectionRuleAgentSettings extends AgentSettingsSpec {
 }
 
 // @public
@@ -1123,16 +1134,26 @@ export interface DataCollectionRuleDestinations extends DestinationsSpec {
 }
 
 // @public
+export interface DataCollectionRuleEndpoints extends EndpointsSpec {
+}
+
+// @public
 export interface DataCollectionRuleMetadata extends Metadata {
 }
 
 // @public
+export interface DataCollectionRuleReferences extends ReferencesSpec {
+}
+
+// @public
 export interface DataCollectionRuleResource {
+    agentSettings?: DataCollectionRuleAgentSettings;
     dataCollectionEndpointId?: string;
     dataFlows?: DataFlow[];
     dataSources?: DataCollectionRuleDataSources;
     description?: string;
     destinations?: DataCollectionRuleDestinations;
+    readonly endpoints?: DataCollectionRuleEndpoints;
     readonly etag?: string;
     readonly id?: string;
     identity?: DataCollectionRuleResourceIdentity;
@@ -1142,6 +1163,7 @@ export interface DataCollectionRuleResource {
     readonly metadata?: DataCollectionRuleMetadata;
     readonly name?: string;
     readonly provisioningState?: KnownDataCollectionRuleProvisioningState;
+    references?: DataCollectionRuleReferences;
     streamDeclarations?: {
         [propertyName: string]: StreamDeclaration;
     };
@@ -1190,6 +1212,7 @@ export type DataCollectionRulesCreateResponse = DataCollectionRuleResource;
 
 // @public
 export interface DataCollectionRulesDeleteOptionalParams extends coreClient.OperationOptions {
+    deleteAssociations?: boolean;
 }
 
 // @public
@@ -1243,6 +1266,7 @@ export interface DataContainer {
 // @public
 export interface DataFlow {
     builtInTransform?: string;
+    captureOverflow?: boolean;
     destinations?: string[];
     outputStream?: string;
     streams?: KnownDataFlowStreams[];
@@ -1286,10 +1310,12 @@ export interface DefaultErrorResponse {
 
 // @public
 export interface DestinationsSpec {
+    azureDataExplorer?: AdxDestination[];
     azureMonitorMetrics?: DestinationsSpecAzureMonitorMetrics;
     eventHubs?: EventHubDestination[];
     eventHubsDirect?: EventHubDirectDestination[];
     logAnalytics?: LogAnalyticsDestination[];
+    microsoftFabric?: MicrosoftFabricDestination[];
     monitoringAccounts?: MonitoringAccountDestination[];
     storageAccounts?: StorageBlobDestination[];
     storageBlobsDirect?: StorageBlobDestination[];
@@ -1441,6 +1467,17 @@ export interface EmailReceiverAutoGenerated {
 // @public
 export interface EnableRequest {
     receiverName: string;
+}
+
+// @public
+export interface EndpointsSpec {
+    readonly logsIngestion?: string;
+    readonly metricsIngestion?: string;
+}
+
+// @public
+export interface EnrichmentData {
+    storageBlobs?: StorageBlob[];
 }
 
 // @public
@@ -1652,6 +1689,7 @@ export interface IisLogsDataSource {
     logDirectories?: string[];
     name?: string;
     streams: string[];
+    transformKql?: string;
 }
 
 // @public
@@ -1696,6 +1734,9 @@ export enum KnownAccessMode {
 export enum KnownActionType {
     Internal = "Internal"
 }
+
+// @public
+export type KnownAgentSettingName = string;
 
 // @public
 export enum KnownAggregationTypeEnum {
@@ -1799,6 +1840,12 @@ export enum KnownKind {
 }
 
 // @public
+export enum KnownKnownAgentSettingName {
+    MaxDiskQuotaInMB = "MaxDiskQuotaInMB",
+    UseTimeReceivedForForwardedEvents = "UseTimeReceivedForForwardedEvents"
+}
+
+// @public
 export enum KnownKnownColumnDefinitionType {
     Boolean = "boolean",
     Datetime = "datetime",
@@ -1881,6 +1928,7 @@ export enum KnownKnownLocationSpecProvisioningStatus {
 
 // @public
 export enum KnownKnownLogFilesDataSourceFormat {
+    Json = "json",
     Text = "text"
 }
 
@@ -1913,6 +1961,12 @@ export enum KnownKnownPublicNetworkAccessOptions {
     Disabled = "Disabled",
     Enabled = "Enabled",
     SecuredByPerimeter = "SecuredByPerimeter"
+}
+
+// @public
+export enum KnownKnownStorageBlobLookupType {
+    Cidr = "Cidr",
+    String = "String"
 }
 
 // @public
@@ -1968,6 +2022,13 @@ export enum KnownKnownSyslogDataSourceStreams {
 export enum KnownKnownWindowsEventLogDataSourceStreams {
     MicrosoftEvent = "Microsoft-Event",
     MicrosoftWindowsEvent = "Microsoft-WindowsEvent"
+}
+
+// @public
+export enum KnownKnownWindowsFirewallLogsDataSourceProfileFilter {
+    Domain = "Domain",
+    Private = "Private",
+    Public = "Public"
 }
 
 // @public
@@ -2112,6 +2173,9 @@ export enum KnownScaleRuleMetricDimensionOperationType {
 }
 
 // @public
+export type KnownStorageBlobLookupType = string;
+
+// @public
 export type KnownSyslogDataSourceFacilityNames = string;
 
 // @public
@@ -2131,6 +2195,9 @@ export enum KnownTimeAggregation {
 
 // @public
 export type KnownWindowsEventLogDataSourceStreams = string;
+
+// @public
+export type KnownWindowsFirewallLogsDataSourceProfileFilter = string;
 
 // @public
 export interface LocalizableString {
@@ -2171,6 +2238,7 @@ export interface LogFilesDataSource {
     name?: string;
     settings?: LogFilesDataSourceSettings;
     streams: string[];
+    transformKql?: string;
 }
 
 // @public
@@ -2308,6 +2376,7 @@ export interface ManagementEventRuleCondition extends RuleCondition {
 // @public
 export interface Metadata {
     readonly provisionedBy?: string;
+    readonly provisionedByImmutableId?: string;
     readonly provisionedByResourceId?: string;
 }
 
@@ -2723,6 +2792,15 @@ export interface MetricValue {
     total?: number;
 }
 
+// @public
+export interface MicrosoftFabricDestination {
+    artifactId?: string;
+    databaseName?: string;
+    ingestionUri?: string;
+    name?: string;
+    tenantId?: string;
+}
+
 // @public (undocumented)
 export class MonitorClient extends coreClient.ServiceClient {
     // (undocumented)
@@ -2958,6 +3036,7 @@ export interface PerfCounterDataSource {
     name?: string;
     samplingFrequencyInSeconds?: number;
     streams?: KnownPerfCounterDataSourceStreams[];
+    transformKql?: string;
 }
 
 // @public
@@ -3290,6 +3369,15 @@ export interface RecurrentSchedule {
     hours: number[];
     minutes: number[];
     timeZone: string;
+}
+
+// @public
+export interface ReferencesSpec {
+    enrichmentData?: ReferencesSpecEnrichmentData;
+}
+
+// @public
+export interface ReferencesSpecEnrichmentData extends EnrichmentData {
 }
 
 // @public
@@ -3700,6 +3788,14 @@ export interface SmsReceiverAutoGenerated {
 }
 
 // @public (undocumented)
+export interface StorageBlob {
+    blobUrl?: string;
+    lookupType?: KnownStorageBlobLookupType;
+    name?: string;
+    resourceId?: string;
+}
+
+// @public (undocumented)
 export interface StorageBlobDestination {
     containerName?: string;
     name?: string;
@@ -3762,6 +3858,7 @@ export interface SyslogDataSource {
     logLevels?: KnownSyslogDataSourceLogLevels[];
     name?: string;
     streams?: KnownSyslogDataSourceStreams[];
+    transformKql?: string;
 }
 
 // @public
@@ -4032,12 +4129,14 @@ export interface WebtestLocationAvailabilityCriteria extends MetricAlertCriteria
 export interface WindowsEventLogDataSource {
     name?: string;
     streams?: KnownWindowsEventLogDataSourceStreams[];
+    transformKql?: string;
     xPathQueries?: string[];
 }
 
 // @public
 export interface WindowsFirewallLogsDataSource {
     name?: string;
+    profileFilter?: KnownWindowsFirewallLogsDataSourceProfileFilter[];
     streams: string[];
 }
 
