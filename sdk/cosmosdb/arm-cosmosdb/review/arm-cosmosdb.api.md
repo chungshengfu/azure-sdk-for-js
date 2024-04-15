@@ -168,6 +168,22 @@ export interface Capacity {
 }
 
 // @public
+export type CapacityMode = string;
+
+// @public
+export interface CapacityModeChangeTransitionState {
+    readonly capacityModeLastSuccessfulTransitionEndTimestamp?: Date;
+    readonly capacityModeTransitionBeginTimestamp?: Date;
+    readonly capacityModeTransitionEndTimestamp?: Date;
+    capacityModeTransitionStatus?: CapacityModeTransitionStatus;
+    currentCapacityMode?: CapacityMode;
+    previousCapacityMode?: CapacityMode;
+}
+
+// @public
+export type CapacityModeTransitionStatus = string;
+
+// @public
 export interface CassandraClusterPublicStatus {
     connectionErrors?: ConnectionError[];
     dataCenters?: CassandraClusterPublicStatusDataCentersItem[];
@@ -832,22 +848,6 @@ export interface Certificate {
     pem?: string;
 }
 
-// @public
-export type CheckNameAvailabilityReason = string;
-
-// @public
-export interface CheckNameAvailabilityRequest {
-    name?: string;
-    type?: string;
-}
-
-// @public
-export interface CheckNameAvailabilityResponse {
-    message?: string;
-    nameAvailable?: boolean;
-    reason?: CheckNameAvailabilityReason;
-}
-
 // @public (undocumented)
 export interface ClientEncryptionIncludedPath {
     clientEncryptionKeyId: string;
@@ -1118,12 +1118,6 @@ export interface ConnectionError {
 export type ConnectionState = string;
 
 // @public
-export interface ConnectionString {
-    readonly connectionString?: string;
-    readonly description?: string;
-}
-
-// @public
 export type ConnectorOffer = string;
 
 // @public
@@ -1218,8 +1212,6 @@ export class CosmosDBManagementClient extends coreClient.ServiceClient {
     gremlinResources: GremlinResources;
     // (undocumented)
     locations: Locations;
-    // (undocumented)
-    mongoClusters: MongoClusters;
     // (undocumented)
     mongoDBResources: MongoDBResources;
     // (undocumented)
@@ -1346,6 +1338,7 @@ export interface DatabaseAccountCreateUpdateParameters extends ARMResourceProper
     backupPolicy?: BackupPolicyUnion;
     capabilities?: Capability[];
     capacity?: Capacity;
+    capacityMode?: CapacityMode;
     connectorOffer?: ConnectorOffer;
     consistencyPolicy?: ConsistencyPolicy;
     cors?: CorsPolicy[];
@@ -1388,6 +1381,8 @@ export interface DatabaseAccountGetResults extends ARMResourceProperties {
     backupPolicy?: BackupPolicyUnion;
     capabilities?: Capability[];
     capacity?: Capacity;
+    capacityMode?: CapacityMode;
+    capacityModeChangeTransitionState?: CapacityModeChangeTransitionState;
     connectorOffer?: ConnectorOffer;
     consistencyPolicy?: ConsistencyPolicy;
     cors?: CorsPolicy[];
@@ -1681,6 +1676,7 @@ export interface DatabaseAccountUpdateParameters {
     backupPolicy?: BackupPolicyUnion;
     capabilities?: Capability[];
     capacity?: Capacity;
+    capacityMode?: CapacityMode;
     connectorOffer?: ConnectorOffer;
     consistencyPolicy?: ConsistencyPolicy;
     cors?: CorsPolicy[];
@@ -1967,19 +1963,6 @@ export interface FailoverPolicy {
     failoverPriority?: number;
     readonly id?: string;
     locationName?: string;
-}
-
-// @public
-export interface FirewallRule extends ProxyResource {
-    endIpAddress: string;
-    readonly provisioningState?: ProvisioningState;
-    startIpAddress: string;
-}
-
-// @public
-export interface FirewallRuleListResult {
-    readonly nextLink?: string;
-    value?: FirewallRule[];
 }
 
 // @public
@@ -2512,8 +2495,18 @@ export enum KnownBackupStorageRedundancy {
 }
 
 // @public
-export enum KnownCheckNameAvailabilityReason {
-    AlreadyExists = "AlreadyExists",
+export enum KnownCapacityMode {
+    None = "None",
+    Provisioned = "Provisioned",
+    Serverless = "Serverless"
+}
+
+// @public
+export enum KnownCapacityModeTransitionStatus {
+    Completed = "Completed",
+    Failed = "Failed",
+    Initialized = "Initialized",
+    InProgress = "InProgress",
     Invalid = "Invalid"
 }
 
@@ -2577,7 +2570,6 @@ export enum KnownCreatedByType {
 // @public
 export enum KnownCreateMode {
     Default = "Default",
-    PointInTimeRestore = "PointInTimeRestore",
     Restore = "Restore"
 }
 
@@ -2672,22 +2664,6 @@ export enum KnownMinimalTlsVersion {
 }
 
 // @public
-export enum KnownMongoClusterStatus {
-    Dropping = "Dropping",
-    Provisioning = "Provisioning",
-    Ready = "Ready",
-    Starting = "Starting",
-    Stopped = "Stopped",
-    Stopping = "Stopping",
-    Updating = "Updating"
-}
-
-// @public
-export enum KnownNodeKind {
-    Shard = "Shard"
-}
-
-// @public
 export enum KnownNodeState {
     Joining = "Joining",
     Leaving = "Leaving",
@@ -2734,16 +2710,6 @@ export enum KnownPrimaryAggregationType {
 }
 
 // @public
-export enum KnownProvisioningState {
-    Canceled = "Canceled",
-    Dropping = "Dropping",
-    Failed = "Failed",
-    InProgress = "InProgress",
-    Succeeded = "Succeeded",
-    Updating = "Updating"
-}
-
-// @public
 export enum KnownPublicNetworkAccess {
     Disabled = "Disabled",
     Enabled = "Enabled",
@@ -2764,8 +2730,10 @@ export enum KnownScheduledEventStrategy {
 
 // @public
 export enum KnownServerVersion {
+    Five0 = "5.0",
     Four0 = "4.0",
     Four2 = "4.2",
+    Six0 = "6.0",
     Three2 = "3.2",
     Three6 = "3.6"
 }
@@ -2875,11 +2843,6 @@ export interface ListClusters {
 // @public
 export interface ListCommands {
     readonly value?: CommandPublicResource[];
-}
-
-// @public
-export interface ListConnectionStringsResult {
-    readonly connectionStrings?: ConnectionString[];
 }
 
 // @public
@@ -3065,206 +3028,6 @@ export interface MetricValue {
 
 // @public
 export type MinimalTlsVersion = string;
-
-// @public
-export interface MongoCluster extends TrackedResource {
-    administratorLogin?: string;
-    administratorLoginPassword?: string;
-    readonly clusterStatus?: MongoClusterStatus;
-    readonly connectionString?: string;
-    createMode?: CreateMode;
-    readonly earliestRestoreTime?: string;
-    nodeGroupSpecs?: NodeGroupSpec[];
-    readonly provisioningState?: ProvisioningState;
-    restoreParameters?: MongoClusterRestoreParameters;
-    serverVersion?: string;
-}
-
-// @public
-export interface MongoClusterListResult {
-    readonly nextLink?: string;
-    value?: MongoCluster[];
-}
-
-// @public
-export interface MongoClusterRestoreParameters {
-    pointInTimeUTC?: Date;
-    sourceResourceId?: string;
-}
-
-// @public
-export interface MongoClusters {
-    beginCreateOrUpdate(resourceGroupName: string, mongoClusterName: string, parameters: MongoCluster, options?: MongoClustersCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<MongoClustersCreateOrUpdateResponse>, MongoClustersCreateOrUpdateResponse>>;
-    beginCreateOrUpdateAndWait(resourceGroupName: string, mongoClusterName: string, parameters: MongoCluster, options?: MongoClustersCreateOrUpdateOptionalParams): Promise<MongoClustersCreateOrUpdateResponse>;
-    beginCreateOrUpdateFirewallRule(resourceGroupName: string, mongoClusterName: string, firewallRuleName: string, parameters: FirewallRule, options?: MongoClustersCreateOrUpdateFirewallRuleOptionalParams): Promise<SimplePollerLike<OperationState<MongoClustersCreateOrUpdateFirewallRuleResponse>, MongoClustersCreateOrUpdateFirewallRuleResponse>>;
-    beginCreateOrUpdateFirewallRuleAndWait(resourceGroupName: string, mongoClusterName: string, firewallRuleName: string, parameters: FirewallRule, options?: MongoClustersCreateOrUpdateFirewallRuleOptionalParams): Promise<MongoClustersCreateOrUpdateFirewallRuleResponse>;
-    beginDelete(resourceGroupName: string, mongoClusterName: string, options?: MongoClustersDeleteOptionalParams): Promise<SimplePollerLike<OperationState<MongoClustersDeleteResponse>, MongoClustersDeleteResponse>>;
-    beginDeleteAndWait(resourceGroupName: string, mongoClusterName: string, options?: MongoClustersDeleteOptionalParams): Promise<MongoClustersDeleteResponse>;
-    beginDeleteFirewallRule(resourceGroupName: string, mongoClusterName: string, firewallRuleName: string, options?: MongoClustersDeleteFirewallRuleOptionalParams): Promise<SimplePollerLike<OperationState<MongoClustersDeleteFirewallRuleResponse>, MongoClustersDeleteFirewallRuleResponse>>;
-    beginDeleteFirewallRuleAndWait(resourceGroupName: string, mongoClusterName: string, firewallRuleName: string, options?: MongoClustersDeleteFirewallRuleOptionalParams): Promise<MongoClustersDeleteFirewallRuleResponse>;
-    beginUpdate(resourceGroupName: string, mongoClusterName: string, parameters: MongoClusterUpdate, options?: MongoClustersUpdateOptionalParams): Promise<SimplePollerLike<OperationState<MongoClustersUpdateResponse>, MongoClustersUpdateResponse>>;
-    beginUpdateAndWait(resourceGroupName: string, mongoClusterName: string, parameters: MongoClusterUpdate, options?: MongoClustersUpdateOptionalParams): Promise<MongoClustersUpdateResponse>;
-    checkNameAvailability(location: string, parameters: CheckNameAvailabilityRequest, options?: MongoClustersCheckNameAvailabilityOptionalParams): Promise<MongoClustersCheckNameAvailabilityResponse>;
-    get(resourceGroupName: string, mongoClusterName: string, options?: MongoClustersGetOptionalParams): Promise<MongoClustersGetResponse>;
-    getFirewallRule(resourceGroupName: string, mongoClusterName: string, firewallRuleName: string, options?: MongoClustersGetFirewallRuleOptionalParams): Promise<MongoClustersGetFirewallRuleResponse>;
-    list(options?: MongoClustersListOptionalParams): PagedAsyncIterableIterator<MongoCluster>;
-    listByResourceGroup(resourceGroupName: string, options?: MongoClustersListByResourceGroupOptionalParams): PagedAsyncIterableIterator<MongoCluster>;
-    listConnectionStrings(resourceGroupName: string, mongoClusterName: string, options?: MongoClustersListConnectionStringsOptionalParams): Promise<MongoClustersListConnectionStringsResponse>;
-    listFirewallRules(resourceGroupName: string, mongoClusterName: string, options?: MongoClustersListFirewallRulesOptionalParams): PagedAsyncIterableIterator<FirewallRule>;
-}
-
-// @public
-export interface MongoClustersCheckNameAvailabilityOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type MongoClustersCheckNameAvailabilityResponse = CheckNameAvailabilityResponse;
-
-// @public
-export interface MongoClustersCreateOrUpdateFirewallRuleOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type MongoClustersCreateOrUpdateFirewallRuleResponse = FirewallRule;
-
-// @public
-export interface MongoClustersCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type MongoClustersCreateOrUpdateResponse = MongoCluster;
-
-// @public
-export interface MongoClustersDeleteFirewallRuleHeaders {
-    // (undocumented)
-    location?: string;
-}
-
-// @public
-export interface MongoClustersDeleteFirewallRuleOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type MongoClustersDeleteFirewallRuleResponse = MongoClustersDeleteFirewallRuleHeaders;
-
-// @public
-export interface MongoClustersDeleteHeaders {
-    // (undocumented)
-    location?: string;
-}
-
-// @public
-export interface MongoClustersDeleteOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type MongoClustersDeleteResponse = MongoClustersDeleteHeaders;
-
-// @public
-export interface MongoClustersGetFirewallRuleOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type MongoClustersGetFirewallRuleResponse = FirewallRule;
-
-// @public
-export interface MongoClustersGetOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type MongoClustersGetResponse = MongoCluster;
-
-// @public
-export interface MongoClustersListByResourceGroupNextOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type MongoClustersListByResourceGroupNextResponse = MongoClusterListResult;
-
-// @public
-export interface MongoClustersListByResourceGroupOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type MongoClustersListByResourceGroupResponse = MongoClusterListResult;
-
-// @public
-export interface MongoClustersListConnectionStringsOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type MongoClustersListConnectionStringsResponse = ListConnectionStringsResult;
-
-// @public
-export interface MongoClustersListFirewallRulesNextOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type MongoClustersListFirewallRulesNextResponse = FirewallRuleListResult;
-
-// @public
-export interface MongoClustersListFirewallRulesOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type MongoClustersListFirewallRulesResponse = FirewallRuleListResult;
-
-// @public
-export interface MongoClustersListNextOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type MongoClustersListNextResponse = MongoClusterListResult;
-
-// @public
-export interface MongoClustersListOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type MongoClustersListResponse = MongoClusterListResult;
-
-// @public
-export type MongoClusterStatus = string;
-
-// @public
-export interface MongoClustersUpdateHeaders {
-    // (undocumented)
-    location?: string;
-}
-
-// @public
-export interface MongoClustersUpdateOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type MongoClustersUpdateResponse = MongoCluster;
-
-// @public
-export interface MongoClusterUpdate {
-    administratorLogin?: string;
-    administratorLoginPassword?: string;
-    readonly clusterStatus?: MongoClusterStatus;
-    readonly connectionString?: string;
-    createMode?: CreateMode;
-    readonly earliestRestoreTime?: string;
-    nodeGroupSpecs?: NodeGroupSpec[];
-    readonly provisioningState?: ProvisioningState;
-    restoreParameters?: MongoClusterRestoreParameters;
-    serverVersion?: string;
-    tags?: {
-        [propertyName: string]: string;
-    };
-}
 
 // @public
 export interface MongoDBCollectionCreateUpdateParameters extends ARMResourceProperties {
@@ -3816,22 +3579,6 @@ export interface MongoUserDefinitionListResult {
 export type NetworkAclBypass = "None" | "AzureServices";
 
 // @public
-export interface NodeGroupProperties {
-    diskSizeGB?: number;
-    enableHa?: boolean;
-    sku?: string;
-}
-
-// @public
-export interface NodeGroupSpec extends NodeGroupProperties {
-    kind?: NodeKind;
-    nodeCount?: number;
-}
-
-// @public
-export type NodeKind = string;
-
-// @public
 export type NodeState = string;
 
 // @public
@@ -4248,9 +3995,6 @@ export interface PrivilegeResource {
     collection?: string;
     db?: string;
 }
-
-// @public
-export type ProvisioningState = string;
 
 // @public
 export interface ProxyResource extends Resource {
