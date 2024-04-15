@@ -13,7 +13,7 @@ import {
   CustomizationTasksGetOptionalParams,
   CustomizationTasksGetResponse,
   CustomizationTasksGetErrorDetailsOptionalParams,
-  CustomizationTasksGetErrorDetailsResponse
+  CustomizationTasksGetErrorDetailsResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -30,7 +30,7 @@ export interface CustomizationTasks {
     resourceGroupName: string,
     devCenterName: string,
     catalogName: string,
-    options?: CustomizationTasksListByCatalogOptionalParams
+    options?: CustomizationTasksListByCatalogOptionalParams,
   ): PagedAsyncIterableIterator<CustomizationTask>;
   /**
    * Gets a Task from the catalog
@@ -45,7 +45,7 @@ export interface CustomizationTasks {
     devCenterName: string,
     catalogName: string,
     taskName: string,
-    options?: CustomizationTasksGetOptionalParams
+    options?: CustomizationTasksGetOptionalParams,
   ): Promise<CustomizationTasksGetResponse>;
   /**
    * Gets Customization Task error details
@@ -60,6 +60,6 @@ export interface CustomizationTasks {
     devCenterName: string,
     catalogName: string,
     taskName: string,
-    options?: CustomizationTasksGetErrorDetailsOptionalParams
+    options?: CustomizationTasksGetErrorDetailsOptionalParams,
   ): Promise<CustomizationTasksGetErrorDetailsResponse>;
 }

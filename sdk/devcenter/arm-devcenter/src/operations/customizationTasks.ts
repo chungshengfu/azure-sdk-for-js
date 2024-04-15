@@ -22,7 +22,7 @@ import {
   CustomizationTasksGetResponse,
   CustomizationTasksGetErrorDetailsOptionalParams,
   CustomizationTasksGetErrorDetailsResponse,
-  CustomizationTasksListByCatalogNextResponse
+  CustomizationTasksListByCatalogNextResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -49,13 +49,13 @@ export class CustomizationTasksImpl implements CustomizationTasks {
     resourceGroupName: string,
     devCenterName: string,
     catalogName: string,
-    options?: CustomizationTasksListByCatalogOptionalParams
+    options?: CustomizationTasksListByCatalogOptionalParams,
   ): PagedAsyncIterableIterator<CustomizationTask> {
     const iter = this.listByCatalogPagingAll(
       resourceGroupName,
       devCenterName,
       catalogName,
-      options
+      options,
     );
     return {
       next() {
@@ -73,9 +73,9 @@ export class CustomizationTasksImpl implements CustomizationTasks {
           devCenterName,
           catalogName,
           options,
-          settings
+          settings,
         );
-      }
+      },
     };
   }
 
@@ -84,7 +84,7 @@ export class CustomizationTasksImpl implements CustomizationTasks {
     devCenterName: string,
     catalogName: string,
     options?: CustomizationTasksListByCatalogOptionalParams,
-    settings?: PageSettings
+    settings?: PageSettings,
   ): AsyncIterableIterator<CustomizationTask[]> {
     let result: CustomizationTasksListByCatalogResponse;
     let continuationToken = settings?.continuationToken;
@@ -93,7 +93,7 @@ export class CustomizationTasksImpl implements CustomizationTasks {
         resourceGroupName,
         devCenterName,
         catalogName,
-        options
+        options,
       );
       let page = result.value || [];
       continuationToken = result.nextLink;
@@ -106,7 +106,7 @@ export class CustomizationTasksImpl implements CustomizationTasks {
         devCenterName,
         catalogName,
         continuationToken,
-        options
+        options,
       );
       continuationToken = result.nextLink;
       let page = result.value || [];
@@ -119,13 +119,13 @@ export class CustomizationTasksImpl implements CustomizationTasks {
     resourceGroupName: string,
     devCenterName: string,
     catalogName: string,
-    options?: CustomizationTasksListByCatalogOptionalParams
+    options?: CustomizationTasksListByCatalogOptionalParams,
   ): AsyncIterableIterator<CustomizationTask> {
     for await (const page of this.listByCatalogPagingPage(
       resourceGroupName,
       devCenterName,
       catalogName,
-      options
+      options,
     )) {
       yield* page;
     }
@@ -142,11 +142,11 @@ export class CustomizationTasksImpl implements CustomizationTasks {
     resourceGroupName: string,
     devCenterName: string,
     catalogName: string,
-    options?: CustomizationTasksListByCatalogOptionalParams
+    options?: CustomizationTasksListByCatalogOptionalParams,
   ): Promise<CustomizationTasksListByCatalogResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, devCenterName, catalogName, options },
-      listByCatalogOperationSpec
+      listByCatalogOperationSpec,
     );
   }
 
@@ -163,11 +163,11 @@ export class CustomizationTasksImpl implements CustomizationTasks {
     devCenterName: string,
     catalogName: string,
     taskName: string,
-    options?: CustomizationTasksGetOptionalParams
+    options?: CustomizationTasksGetOptionalParams,
   ): Promise<CustomizationTasksGetResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, devCenterName, catalogName, taskName, options },
-      getOperationSpec
+      getOperationSpec,
     );
   }
 
@@ -184,11 +184,11 @@ export class CustomizationTasksImpl implements CustomizationTasks {
     devCenterName: string,
     catalogName: string,
     taskName: string,
-    options?: CustomizationTasksGetErrorDetailsOptionalParams
+    options?: CustomizationTasksGetErrorDetailsOptionalParams,
   ): Promise<CustomizationTasksGetErrorDetailsResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, devCenterName, catalogName, taskName, options },
-      getErrorDetailsOperationSpec
+      getErrorDetailsOperationSpec,
     );
   }
 
@@ -205,11 +205,11 @@ export class CustomizationTasksImpl implements CustomizationTasks {
     devCenterName: string,
     catalogName: string,
     nextLink: string,
-    options?: CustomizationTasksListByCatalogNextOptionalParams
+    options?: CustomizationTasksListByCatalogNextOptionalParams,
   ): Promise<CustomizationTasksListByCatalogNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, devCenterName, catalogName, nextLink, options },
-      listByCatalogNextOperationSpec
+      listByCatalogNextOperationSpec,
     );
   }
 }
@@ -217,16 +217,15 @@ export class CustomizationTasksImpl implements CustomizationTasks {
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listByCatalogOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/devcenters/{devCenterName}/catalogs/{catalogName}/tasks",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/devcenters/{devCenterName}/catalogs/{catalogName}/tasks",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CustomizationTaskListResult
+      bodyMapper: Mappers.CustomizationTaskListResult,
     },
     default: {
-      bodyMapper: Mappers.CloudError
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion, Parameters.top],
   urlParameters: [
@@ -234,22 +233,21 @@ const listByCatalogOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.devCenterName,
-    Parameters.catalogName
+    Parameters.catalogName,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const getOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/devcenters/{devCenterName}/catalogs/{catalogName}/tasks/{taskName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/devcenters/{devCenterName}/catalogs/{catalogName}/tasks/{taskName}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CustomizationTask
+      bodyMapper: Mappers.CustomizationTask,
     },
     default: {
-      bodyMapper: Mappers.CloudError
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
@@ -258,22 +256,21 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceGroupName,
     Parameters.devCenterName,
     Parameters.catalogName,
-    Parameters.taskName
+    Parameters.taskName,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const getErrorDetailsOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/devcenters/{devCenterName}/catalogs/{catalogName}/tasks/{taskName}/getErrorDetails",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/devcenters/{devCenterName}/catalogs/{catalogName}/tasks/{taskName}/getErrorDetails",
   httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.CatalogResourceValidationErrorDetails
+      bodyMapper: Mappers.CatalogResourceValidationErrorDetails,
     },
     default: {
-      bodyMapper: Mappers.CloudError
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
@@ -282,30 +279,30 @@ const getErrorDetailsOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceGroupName,
     Parameters.devCenterName,
     Parameters.catalogName,
-    Parameters.taskName
+    Parameters.taskName,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const listByCatalogNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CustomizationTaskListResult
+      bodyMapper: Mappers.CustomizationTaskListResult,
     },
     default: {
-      bodyMapper: Mappers.CloudError
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   urlParameters: [
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.devCenterName,
     Parameters.nextLink,
-    Parameters.catalogName
+    Parameters.devCenterName,
+    Parameters.catalogName,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };

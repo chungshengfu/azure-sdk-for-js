@@ -8,13 +8,13 @@
 
 import * as coreClient from "@azure/core-client";
 
-/** Result of the list devcenters operation */
-export interface DevCenterListResult {
+/** Result of the list devcenter plans operation */
+export interface PlanListResult {
   /**
    * Current page of results.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly value?: DevCenter[];
+  readonly value?: DevCenterPlan[];
   /**
    * URL to get the next set of results if there are any.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -22,73 +22,24 @@ export interface DevCenterListResult {
   readonly nextLink?: string;
 }
 
-/** Properties of the devcenter. These properties can be updated after the resource has been created. */
-export interface DevCenterUpdateProperties {
-  /** Encryption settings to be used for server-side encryption for proprietary content (such as catalogs, logs, customizations). */
-  encryption?: Encryption;
-  /** The display name of the devcenter. */
-  displayName?: string;
-}
-
-export interface Encryption {
-  /** All Customer-managed key encryption properties for the resource. */
-  customerManagedKeyEncryption?: CustomerManagedKeyEncryption;
-}
-
-/** All Customer-managed key encryption properties for the resource. */
-export interface CustomerManagedKeyEncryption {
-  /** All identity configuration for Customer-managed key settings defining which identity should be used to auth to Key Vault. */
-  keyEncryptionKeyIdentity?: CustomerManagedKeyEncryptionKeyIdentity;
-  /** key encryption key Url, versioned or non-versioned. Ex: https://contosovault.vault.azure.net/keys/contosokek/562a4bb76b524a1493a6afe8e536ee78 or https://contosovault.vault.azure.net/keys/contosokek. */
-  keyEncryptionKeyUrl?: string;
-}
-
-/** All identity configuration for Customer-managed key settings defining which identity should be used to auth to Key Vault. */
-export interface CustomerManagedKeyEncryptionKeyIdentity {
-  /** Values can be systemAssignedIdentity or userAssignedIdentity */
-  identityType?: IdentityType;
-  /** user assigned identity to use for accessing key encryption key Url. Ex: /subscriptions/fa5fc227-a624-475e-b696-cdd604c735bc/resourceGroups/<resource group>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myId. Mutually exclusive with identityType systemAssignedIdentity and delegatedResourceIdentity. */
-  userAssignedIdentityResourceId?: string;
-  /** delegated identity to use for accessing key encryption key Url. Ex: /subscriptions/fa5fc227-a624-475e-b696-cdd604c735bc/resourceGroups/<resource group>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myId. Mutually exclusive with identityType systemAssignedIdentity and userAssignedIdentity - internal use only. */
-  delegatedIdentityClientId?: string;
-}
-
-/** Managed service identity (system assigned and/or user assigned identities) */
-export interface ManagedServiceIdentity {
-  /**
-   * The service principal ID of the system assigned identity. This property will only be provided for a system assigned identity.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly principalId?: string;
-  /**
-   * The tenant ID of the system assigned identity. This property will only be provided for a system assigned identity.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly tenantId?: string;
-  /** Type of managed service identity (where both SystemAssigned and UserAssigned types are allowed). */
-  type: ManagedServiceIdentityType;
-  /** The set of user assigned identities associated with the resource. The userAssignedIdentities dictionary keys will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}. The dictionary values can be empty objects ({}) in requests. */
-  userAssignedIdentities?: { [propertyName: string]: UserAssignedIdentity };
-}
-
-/** User assigned identity properties */
-export interface UserAssignedIdentity {
-  /**
-   * The principal ID of the assigned identity.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly principalId?: string;
-  /**
-   * The client ID of the assigned identity.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly clientId?: string;
+/** The resource model definition representing SKU */
+export interface Sku {
+  /** The name of the SKU. E.g. P3. It is typically a letter+number code */
+  name: string;
+  /** This field is required to be implemented by the Resource Provider if the service has more than one tier, but is not required on a PUT. */
+  tier?: SkuTier;
+  /** The SKU size. When the name field is the combination of tier and some other value, this would be the standalone code. */
+  size?: string;
+  /** If the service has different generations of hardware, for the same SKU, then that can be captured here. */
+  family?: string;
+  /** If the SKU supports scale out/in then the capacity integer should be included. If scale out/in is not possible for the resource this may be omitted. */
+  capacity?: number;
 }
 
 /** Common fields that are returned in the response for all Azure Resource Manager resources */
 export interface Resource {
   /**
-   * Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+   * Fully qualified resource ID for the resource. E.g. "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}"
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly id?: string;
@@ -125,22 +76,53 @@ export interface SystemData {
   lastModifiedAt?: Date;
 }
 
-/** An error response from the DevCenter service. */
-export interface CloudError {
-  /** Error body */
-  error: CloudErrorBody;
+/** Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.). */
+export interface ErrorResponse {
+  /** The error object. */
+  error?: ErrorDetail;
 }
 
-/** An error response from the DevCenter service. */
-export interface CloudErrorBody {
-  /** An identifier for the error. Codes are invariant and are intended to be consumed programmatically. */
-  code: string;
-  /** A message describing the error, intended to be suitable for display in a user interface. */
-  message: string;
-  /** The target of the particular error. For example, the name of the property in error. */
-  target?: string;
-  /** A list of additional details about the error. */
-  details?: CloudErrorBody[];
+/** The error detail. */
+export interface ErrorDetail {
+  /**
+   * The error code.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly code?: string;
+  /**
+   * The error message.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly message?: string;
+  /**
+   * The error target.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly target?: string;
+  /**
+   * The error details.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly details?: ErrorDetail[];
+  /**
+   * The error additional info.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly additionalInfo?: ErrorAdditionalInfo[];
+}
+
+/** The resource management error additional info. */
+export interface ErrorAdditionalInfo {
+  /**
+   * The additional info type.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly type?: string;
+  /**
+   * The additional info.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly info?: Record<string, unknown>;
 }
 
 /** Base tracked resource type for PATCH updates */
@@ -149,6 +131,151 @@ export interface TrackedResourceUpdate {
   tags?: { [propertyName: string]: string };
   /** The geo-location where the resource lives */
   location?: string;
+}
+
+/** Result of the list devcenter plan members operation */
+export interface PlanMembersListResult {
+  /**
+   * Current page of results.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly value?: DevCenterPlanMember[];
+  /**
+   * URL to get the next set of results if there are any.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly nextLink?: string;
+}
+
+/** The devcenter plan member resource for partial updates. Properties not provided in the update request will not be changed. */
+export interface PlanMemberUpdate {
+  /** Resource tags. */
+  tags?: { [propertyName: string]: string };
+}
+
+/** Result of the list devcenters operation */
+export interface DevCenterListResult {
+  /**
+   * Current page of results.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly value?: DevCenter[];
+  /**
+   * URL to get the next set of results if there are any.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly nextLink?: string;
+}
+
+/** Properties of the devcenter. These properties can be updated after the resource has been created. */
+export interface DevCenterUpdateProperties {
+  /** Resource Id of an associated Plan */
+  planId?: string;
+  /** Encryption settings to be used for server-side encryption for proprietary content (such as catalogs, logs, customizations). */
+  encryption?: Encryption;
+  /** The display name of the devcenter. */
+  displayName?: string;
+  /** Dev Center settings to be used when associating a project with a catalog. */
+  projectCatalogSettings?: DevCenterProjectCatalogSettings;
+  /** Network settings that will be enforced on network resources associated with the Dev Center. */
+  networkSettings?: DevCenterNetworkSettings;
+  /** Settings to be used in the provisioning of all Dev Boxes that belong to this dev center. */
+  devBoxProvisioningSettings?: DevBoxProvisioningSettings;
+}
+
+export interface Encryption {
+  /** All Customer-managed key encryption properties for the resource. */
+  customerManagedKeyEncryption?: CustomerManagedKeyEncryption;
+}
+
+/** All Customer-managed key encryption properties for the resource. */
+export interface CustomerManagedKeyEncryption {
+  /** All identity configuration for Customer-managed key settings defining which identity should be used to auth to Key Vault. */
+  keyEncryptionKeyIdentity?: CustomerManagedKeyEncryptionKeyIdentity;
+  /** key encryption key Url, versioned or non-versioned. Ex: https://contosovault.vault.azure.net/keys/contosokek/562a4bb76b524a1493a6afe8e536ee78 or https://contosovault.vault.azure.net/keys/contosokek. */
+  keyEncryptionKeyUrl?: string;
+}
+
+/** All identity configuration for Customer-managed key settings defining which identity should be used to auth to Key Vault. */
+export interface CustomerManagedKeyEncryptionKeyIdentity {
+  /** Values can be systemAssignedIdentity or userAssignedIdentity */
+  identityType?: IdentityType;
+  /** user assigned identity to use for accessing key encryption key Url. Ex: /subscriptions/fa5fc227-a624-475e-b696-cdd604c735bc/resourceGroups/<resource group>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myId. Mutually exclusive with identityType systemAssignedIdentity and delegatedResourceIdentity. */
+  userAssignedIdentityResourceId?: string;
+  /** delegated identity to use for accessing key encryption key Url. Ex: /subscriptions/fa5fc227-a624-475e-b696-cdd604c735bc/resourceGroups/<resource group>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myId. Mutually exclusive with identityType systemAssignedIdentity and userAssignedIdentity - internal use only. */
+  delegatedIdentityClientId?: string;
+}
+
+/** Project catalog settings for project catalogs under a project associated to this dev center. */
+export interface DevCenterProjectCatalogSettings {
+  /** Whether project catalogs associated with projects in this dev center can be configured to sync catalog items. */
+  catalogItemSyncEnableStatus?: CatalogItemSyncEnableStatus;
+}
+
+/** Network settings for the Dev Center. */
+export interface DevCenterNetworkSettings {
+  /** Indicates whether pools in this Dev Center can use Microsoft Hosted Networks. Defaults to Enabled if not set. */
+  microsoftHostedNetworkEnableStatus?: MicrosoftHostedNetworkEnableStatus;
+}
+
+/** Provisioning settings that apply to all Dev Boxes created in this dev center */
+export interface DevBoxProvisioningSettings {
+  /** Whether project catalogs associated with projects in this dev center can be configured to sync catalog items. */
+  installAzureMonitorAgentEnableStatus?: InstallAzureMonitorAgentEnableStatus;
+}
+
+/** Managed service identity (system assigned and/or user assigned identities) */
+export interface ManagedServiceIdentity {
+  /**
+   * The service principal ID of the system assigned identity. This property will only be provided for a system assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly principalId?: string;
+  /**
+   * The tenant ID of the system assigned identity. This property will only be provided for a system assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly tenantId?: string;
+  /** Type of managed service identity (where both SystemAssigned and UserAssigned types are allowed). */
+  type: ManagedServiceIdentityType;
+  /** The set of user assigned identities associated with the resource. The userAssignedIdentities dictionary keys will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}. The dictionary values can be empty objects ({}) in requests. */
+  userAssignedIdentities?: { [propertyName: string]: UserAssignedIdentity };
+}
+
+/** User assigned identity properties */
+export interface UserAssignedIdentity {
+  /**
+   * The principal ID of the assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly principalId?: string;
+  /**
+   * The client ID of the assigned identity.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly clientId?: string;
+}
+
+/** Result of the list devcenter encryption set operation */
+export interface EncryptionSetListResult {
+  /**
+   * Current page of results.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly value?: DevCenterEncryptionSet[];
+  /**
+   * URL to get the next set of results if there are any.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly nextLink?: string;
+}
+
+/** Properties of the devcenter encryption set. These properties can be updated after the resource has been created. */
+export interface DevCenterEncryptionSetUpdateProperties {
+  /** Devbox disk encryption enable or disable status. Indicates if Devbox disks encryption using DevCenter CMK is enabled or not. */
+  devboxDisksEncryptionEnableStatus?: DevboxDisksEncryptionEnableStatus;
+  /** Key encryption key Url, versioned or non-versioned. Ex: https://contosovault.vault.azure.net/keys/contosokek/562a4bb76b524a1493a6afe8e536ee78 or https://contosovault.vault.azure.net/keys/contosokek. */
+  keyEncryptionKeyUrl?: string;
 }
 
 /** Results of the project list operation. */
@@ -175,6 +302,37 @@ export interface ProjectUpdateProperties {
   maxDevBoxesPerUser?: number;
   /** The display name of the project. */
   displayName?: string;
+  /** Settings to be used when associating a project with a catalog. */
+  catalogSettings?: ProjectCatalogSettings;
+}
+
+/** Settings to be used when associating a project with a catalog. */
+export interface ProjectCatalogSettings {
+  /** Indicates catalog item types that can be synced. */
+  catalogItemSyncTypes?: CatalogItemType[];
+}
+
+/** Applicable inherited settings for a project. */
+export interface InheritedSettingsForProject {
+  /**
+   * Dev Center settings to be used when associating a project with a catalog.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly projectCatalogSettings?: DevCenterProjectCatalogSettings;
+  /**
+   * Network settings that will be enforced on this project.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly networkSettings?: ProjectNetworkSettings;
+}
+
+/** Network settings for the project. */
+export interface ProjectNetworkSettings {
+  /**
+   * Indicates whether pools in this Dev Center can use Microsoft Hosted Networks. Defaults to Enabled if not set.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly microsoftHostedNetworkEnableStatus?: MicrosoftHostedNetworkEnableStatus;
 }
 
 /** Results of the Attached Networks list operation. */
@@ -189,6 +347,204 @@ export interface AttachedNetworkListResult {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly nextLink?: string;
+}
+
+/** Results of the catalog list operation. */
+export interface CatalogListResult {
+  /**
+   * Current page of results.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly value?: Catalog[];
+  /**
+   * URL to get the next set of results if there are any.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly nextLink?: string;
+}
+
+/** Stats of the synchronization. */
+export interface SyncStats {
+  /**
+   * Count of catalog items added during synchronization.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly added?: number;
+  /**
+   * Count of catalog items updated during synchronization.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly updated?: number;
+  /**
+   * Count of catalog items that were unchanged during synchronization.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly unchanged?: number;
+  /**
+   * Count of catalog items removed during synchronization.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly removed?: number;
+  /**
+   * Count of catalog items that had validation errors during synchronization.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly validationErrors?: number;
+  /**
+   * Count of synchronization errors that occured during synchronization.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly synchronizationErrors?: number;
+  /** Indicates catalog item types that were synced. */
+  syncedCatalogItemTypes?: CatalogItemType[];
+}
+
+/** Properties of a catalog. These properties can be updated after the resource has been created. */
+export interface CatalogUpdateProperties {
+  /** Properties for a GitHub catalog type. */
+  gitHub?: GitCatalog;
+  /** Properties for an Azure DevOps catalog type. */
+  adoGit?: GitCatalog;
+  /** Indicates the type of sync that is configured for the catalog. */
+  syncType?: CatalogSyncType;
+  /** Resource tags. */
+  tags?: { [propertyName: string]: string };
+}
+
+/** Properties for a Git repository catalog. */
+export interface GitCatalog {
+  /** Git URI. */
+  uri?: string;
+  /** Git branch. */
+  branch?: string;
+  /** A reference to the Key Vault secret containing a security token to authenticate to a Git repository. */
+  secretIdentifier?: string;
+  /** The folder where the catalog items can be found inside the repository. */
+  path?: string;
+}
+
+/** The catalog's properties for partial update. Properties not provided in the update request will not be changed. */
+export interface CatalogUpdate {
+  /** Properties for a GitHub catalog type. */
+  gitHub?: GitCatalog;
+  /** Properties for an Azure DevOps catalog type. */
+  adoGit?: GitCatalog;
+  /** Indicates the type of sync that is configured for the catalog. */
+  syncType?: CatalogSyncType;
+  /** Resource tags. */
+  tags?: { [propertyName: string]: string };
+}
+
+/** Results of the environment definition list operation. */
+export interface EnvironmentDefinitionListResult {
+  /**
+   * Current page of results.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly value?: EnvironmentDefinition[];
+  /**
+   * URL to get the next set of results if there are any.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly nextLink?: string;
+}
+
+/** Properties of an Environment Definition parameter */
+export interface EnvironmentDefinitionParameter {
+  /**
+   * Unique ID of the parameter
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly id?: string;
+  /**
+   * Display name of the parameter
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /**
+   * Description of the parameter
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly description?: string;
+  /**
+   * A string of one of the basic JSON types (number, integer, array, object, boolean, string)
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly type?: ParameterType;
+  /**
+   * Whether or not this parameter is read-only.  If true, default should have a value.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly readOnly?: boolean;
+  /**
+   * Whether or not this parameter is required
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly required?: boolean;
+}
+
+/** List of validator error details. Populated when changes are made to the resource or its dependent resources that impact the validity of the Catalog resource. */
+export interface CatalogResourceValidationErrorDetails {
+  /**
+   * Errors associated with resources synchronized from the catalog.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly errors?: CatalogErrorDetails[];
+}
+
+/** Catalog error details */
+export interface CatalogErrorDetails {
+  /** An identifier for the error. */
+  code?: string;
+  /** A message describing the error. */
+  message?: string;
+}
+
+/** Synchronization error details. */
+export interface SyncErrorDetails {
+  /**
+   * Error information for the overall synchronization operation.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly operationError?: CatalogErrorDetails;
+  /**
+   * Catalog items that have conflicting names.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly conflicts?: CatalogConflictError[];
+  /**
+   * Errors that occured during synchronization.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly errors?: CatalogSyncError[];
+}
+
+/** An individual conflict error. */
+export interface CatalogConflictError {
+  /**
+   * The path of the file that has a conflicting name.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly path?: string;
+  /**
+   * Name of the conflicting catalog item.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+}
+
+/** An individual synchronization error. */
+export interface CatalogSyncError {
+  /**
+   * The path of the file the error is associated with.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly path?: string;
+  /**
+   * Errors associated with the file.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly errorDetails?: CatalogErrorDetails[];
 }
 
 /** Results of the gallery list operation. */
@@ -261,143 +617,6 @@ export interface ImageVersionListResult {
   readonly nextLink?: string;
 }
 
-/** Results of the catalog list operation. */
-export interface CatalogListResult {
-  /**
-   * Current page of results.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: Catalog[];
-  /**
-   * URL to get the next set of results if there are any.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** Stats of the synchronization. */
-export interface SyncStats {
-  /**
-   * Count of catalog items added during synchronization.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly added?: number;
-  /**
-   * Count of catalog items updated during synchronization.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly updated?: number;
-  /**
-   * Count of catalog items that were unchanged during synchronization.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly unchanged?: number;
-  /**
-   * Count of catalog items removed during synchronization.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly removed?: number;
-  /**
-   * Count of catalog items that had validation errors during synchronization.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly validationErrors?: number;
-  /**
-   * Count of synchronization errors that occured during synchronization.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly synchronizationErrors?: number;
-}
-
-/** Properties of a catalog. These properties can be updated after the resource has been created. */
-export interface CatalogUpdateProperties {
-  /** Properties for a GitHub catalog type. */
-  gitHub?: GitCatalog;
-  /** Properties for an Azure DevOps catalog type. */
-  adoGit?: GitCatalog;
-  /** Indicates the type of sync that is configured for the catalog. */
-  syncType?: CatalogSyncType;
-}
-
-/** Properties for a Git repository catalog. */
-export interface GitCatalog {
-  /** Git URI. */
-  uri?: string;
-  /** Git branch. */
-  branch?: string;
-  /** A reference to the Key Vault secret containing a security token to authenticate to a Git repository. */
-  secretIdentifier?: string;
-  /** The folder where the catalog items can be found inside the repository. */
-  path?: string;
-}
-
-/** The catalog's properties for partial update. Properties not provided in the update request will not be changed. */
-export interface CatalogUpdate {
-  /** Resource tags. */
-  tags?: { [propertyName: string]: string };
-  /** Properties for a GitHub catalog type. */
-  gitHub?: GitCatalog;
-  /** Properties for an Azure DevOps catalog type. */
-  adoGit?: GitCatalog;
-  /** Indicates the type of sync that is configured for the catalog. */
-  syncType?: CatalogSyncType;
-}
-
-/** Synchronization error details. */
-export interface SyncErrorDetails {
-  /**
-   * Error information for the overall synchronization operation.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly operationError?: CatalogErrorDetails;
-  /**
-   * Catalog items that have conflicting names.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly conflicts?: CatalogConflictError[];
-  /**
-   * Errors that occured during synchronization.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly errors?: CatalogSyncError[];
-}
-
-/** Catalog error details */
-export interface CatalogErrorDetails {
-  /** An identifier for the error. */
-  code?: string;
-  /** A message describing the error. */
-  message?: string;
-}
-
-/** An individual conflict error. */
-export interface CatalogConflictError {
-  /**
-   * The path of the file that has a conflicting name.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly path?: string;
-  /**
-   * Name of the conflicting catalog item.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly name?: string;
-}
-
-/** An individual synchronization error. */
-export interface CatalogSyncError {
-  /**
-   * The path of the file the error is associated with.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly path?: string;
-  /**
-   * Errors associated with the file.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly errorDetails?: CatalogErrorDetails[];
-}
-
 /** Result of the environment type list operation. */
 export interface EnvironmentTypeListResult {
   /**
@@ -458,6 +677,8 @@ export interface ProjectEnvironmentTypeListResult {
 export interface ProjectEnvironmentTypeUpdateProperties {
   /** Id of a subscription that the environment type will be mapped to. The environment's resources will be deployed into this subscription. */
   deploymentTargetId?: string;
+  /** The display name of the project environment type. */
+  displayName?: string;
   /** Defines whether this Environment Type can be used in this Project. */
   status?: EnvironmentTypeEnableStatus;
   /** The role definition assigned to the environment creator on backing resources. */
@@ -500,6 +721,8 @@ export interface ProjectEnvironmentTypeUpdate {
   identity?: ManagedServiceIdentity;
   /** Id of a subscription that the environment type will be mapped to. The environment's resources will be deployed into this subscription. */
   deploymentTargetId?: string;
+  /** The display name of the project environment type. */
+  displayName?: string;
   /** Defines whether this Environment Type can be used in this Project. */
   status?: EnvironmentTypeEnableStatus;
   /** The role definition assigned to the environment creator on backing resources. */
@@ -551,20 +774,6 @@ export interface DevBoxDefinitionUpdateProperties {
   osStorageType?: string;
   /** Indicates whether Dev Boxes created with this definition are capable of hibernation. Not all images are capable of supporting hibernation. To find out more see https://aka.ms/devbox/hibernate */
   hibernateSupport?: HibernateSupport;
-}
-
-/** The resource model definition representing SKU */
-export interface Sku {
-  /** The name of the SKU. Ex - P3. It is typically a letter+number code */
-  name: string;
-  /** This field is required to be implemented by the Resource Provider if the service has more than one tier, but is not required on a PUT. */
-  tier?: SkuTier;
-  /** The SKU size. When the name field is the combination of tier and some other value, this would be the standalone code. */
-  size?: string;
-  /** If the service has different generations of hardware, for the same SKU, then that can be captured here. */
-  family?: string;
-  /** If the SKU supports scale out/in then the capacity integer should be included. If scale out/in is not possible for the resource this may be omitted. */
-  capacity?: number;
 }
 
 /** A list of REST API operations supported by an Azure Resource Provider. It contains an URL link to get the next set of results. */
@@ -635,6 +844,11 @@ export interface OperationDisplay {
 export interface OperationStatusResult {
   /** Fully qualified ID for the async operation. */
   id?: string;
+  /**
+   * Fully qualified ID of the resource against which the original async operation was started.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly resourceId?: string;
   /** Name of the async operation. */
   name?: string;
   /** Operation status. */
@@ -649,49 +863,6 @@ export interface OperationStatusResult {
   operations?: OperationStatusResult[];
   /** If present, details of the operation error. */
   error?: ErrorDetail;
-}
-
-/** The error detail. */
-export interface ErrorDetail {
-  /**
-   * The error code.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly code?: string;
-  /**
-   * The error message.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly message?: string;
-  /**
-   * The error target.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly target?: string;
-  /**
-   * The error details.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly details?: ErrorDetail[];
-  /**
-   * The error additional info.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly additionalInfo?: ErrorAdditionalInfo[];
-}
-
-/** The resource management error additional info. */
-export interface ErrorAdditionalInfo {
-  /**
-   * The additional info type.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly type?: string;
-  /**
-   * The additional info.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly info?: Record<string, unknown>;
 }
 
 /** List of Core Usages. */
@@ -748,19 +919,14 @@ export interface CheckNameAvailabilityResponse {
   message?: string;
 }
 
-/** Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.). */
-export interface ErrorResponse {
-  /** The error object. */
-  error?: ErrorDetail;
-}
-
-/** List of validator error details. Populated when changes are made to the resource or its dependent resources that impact the validity of the Catalog resource. */
-export interface CatalogResourceValidationErrorDetails {
-  /**
-   * Errors associated with resources synchronized from the catalog.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly errors?: CatalogErrorDetails[];
+/** The scoped name check availability request body. */
+export interface CheckScopedNameAvailabilityRequest {
+  /** The name of the resource for which availability needs to be checked. */
+  name?: string;
+  /** The resource type. */
+  type?: string;
+  /** The resource id to scope the name check. */
+  scope?: string;
 }
 
 /** Results of the Task list operation. */
@@ -791,54 +957,6 @@ export interface CustomizationTaskInput {
   readonly type?: CustomizationTaskInputType;
   /**
    * Whether or not the input is required.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly required?: boolean;
-}
-
-/** Results of the environment definition list operation. */
-export interface EnvironmentDefinitionListResult {
-  /**
-   * Current page of results.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly value?: EnvironmentDefinition[];
-  /**
-   * URL to get the next set of results if there are any.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** Properties of an Environment Definition parameter */
-export interface EnvironmentDefinitionParameter {
-  /**
-   * Unique ID of the parameter
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly id?: string;
-  /**
-   * Display name of the parameter
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly name?: string;
-  /**
-   * Description of the parameter
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly description?: string;
-  /**
-   * A string of one of the basic JSON types (number, integer, array, object, boolean, string)
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly type?: ParameterType;
-  /**
-   * Whether or not this parameter is read-only.  If true, default should have a value.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly readOnly?: boolean;
-  /**
-   * Whether or not this parameter is required
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly required?: boolean;
@@ -944,8 +1062,12 @@ export interface ScheduleListResult {
   readonly nextLink?: string;
 }
 
-/** Updatable properties of a Schedule. */
-export interface ScheduleUpdateProperties {
+/** The schedule properties for partial update. Properties not provided in the update request will not be changed. */
+export interface ScheduleUpdate {
+  /** Resource tags. */
+  tags?: { [propertyName: string]: string };
+  /** The geo-location where the resource lives */
+  location?: string;
   /** Supported type this scheduled task represents. */
   type?: ScheduledType;
   /** The frequency of this scheduled task. */
@@ -1092,18 +1214,23 @@ export interface EndpointDetail {
   readonly port?: number;
 }
 
-/** Properties of the devcenter. */
-export interface DevCenterProperties extends DevCenterUpdateProperties {
+/** The resource model definition representing SKU for DevCenter resources */
+export interface DevCenterSku extends Sku {
   /**
-   * The provisioning state of the resource.
+   * The name of the resource type
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly provisioningState?: ProvisioningState;
+  readonly resourceType?: string;
   /**
-   * The URI of the Dev Center.
+   * SKU supported locations.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly devCenterUri?: string;
+  readonly locations?: string[];
+  /**
+   * Collection of name/value pairs to describe the SKU capabilities.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly capabilities?: Capability[];
 }
 
 /** The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location' */
@@ -1112,6 +1239,23 @@ export interface TrackedResource extends Resource {
   tags?: { [propertyName: string]: string };
   /** The geo-location where the resource lives */
   location: string;
+}
+
+/** Represents a devcenter plan member resource. */
+export interface DevCenterPlanMember extends Resource {
+  /** Resource tags. */
+  tags?: { [propertyName: string]: string };
+  /** The unique id of the member. */
+  memberId?: string;
+  /** The type of the member (user, group) */
+  memberType?: PlanMemberType;
+  /** Resource tags. */
+  tagsPropertiesTags?: { [propertyName: string]: string };
+  /**
+   * The provisioning state of the resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ProvisioningState;
 }
 
 /** Represents an attached NetworkConnection. */
@@ -1140,20 +1284,6 @@ export interface AttachedNetworkConnection extends Resource {
   readonly domainJoinType?: DomainJoinType;
 }
 
-/** Represents a gallery. */
-export interface Gallery extends Resource {
-  /**
-   * The provisioning state of the resource.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: ProvisioningState;
-  /** The resource ID of the backing Azure Compute Gallery. */
-  galleryResourceId?: string;
-}
-
-/** The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location */
-export interface ProxyResource extends Resource {}
-
 /** Represents a catalog. */
 export interface Catalog extends Resource {
   /** Properties for a GitHub catalog type. */
@@ -1162,6 +1292,8 @@ export interface Catalog extends Resource {
   adoGit?: GitCatalog;
   /** Indicates the type of sync that is configured for the catalog. */
   syncType?: CatalogSyncType;
+  /** Resource tags. */
+  tags?: { [propertyName: string]: string };
   /**
    * The provisioning state of the resource.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -1192,6 +1324,20 @@ export interface Catalog extends Resource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly lastSyncTime?: Date;
+}
+
+/** The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location */
+export interface ProxyResource extends Resource {}
+
+/** Represents a gallery. */
+export interface Gallery extends Resource {
+  /**
+   * The provisioning state of the resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ProvisioningState;
+  /** The resource ID of the backing Azure Compute Gallery. */
+  galleryResourceId?: string;
 }
 
 /** Represents an environment type. */
@@ -1231,6 +1377,8 @@ export interface ProjectEnvironmentType extends Resource {
   location?: string;
   /** Id of a subscription that the environment type will be mapped to. The environment's resources will be deployed into this subscription. */
   deploymentTargetId?: string;
+  /** The display name of the project environment type. */
+  displayName?: string;
   /** Defines whether this Environment Type can be used in this Project. */
   status?: EnvironmentTypeEnableStatus;
   /** The role definition assigned to the environment creator on backing resources. */
@@ -1242,8 +1390,6 @@ export interface ProjectEnvironmentType extends Resource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly provisioningState?: ProvisioningState;
-  /** The display name of the project environment type. */
-  displayName?: string;
   /**
    * The number of environments of this type.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -1253,6 +1399,10 @@ export interface ProjectEnvironmentType extends Resource {
 
 /** Represents a Schedule to execute a task. */
 export interface Schedule extends Resource {
+  /** Resource tags. */
+  tags?: { [propertyName: string]: string };
+  /** The geo-location where the resource lives */
+  location?: string;
   /** Supported type this scheduled task represents. */
   typePropertiesType?: ScheduledType;
   /** The frequency of this scheduled task. */
@@ -1289,18 +1439,44 @@ export interface HealthCheckStatusDetails extends Resource {
   readonly healthChecks?: HealthCheck[];
 }
 
+/** The devcenter plan resource for partial updates. Properties not provided in the update request will not be changed. */
+export interface PlanUpdate extends TrackedResourceUpdate {
+  /** The SKU for DevCenters created using this definition. */
+  sku?: Sku;
+}
+
 /** The devcenter resource for partial updates. Properties not provided in the update request will not be changed. */
 export interface DevCenterUpdate extends TrackedResourceUpdate {
   /** Managed identity properties */
   identity?: ManagedServiceIdentity;
+  /** Resource Id of an associated Plan */
+  planId?: string;
   /** Encryption settings to be used for server-side encryption for proprietary content (such as catalogs, logs, customizations). */
   encryption?: Encryption;
   /** The display name of the devcenter. */
   displayName?: string;
+  /** Dev Center settings to be used when associating a project with a catalog. */
+  projectCatalogSettings?: DevCenterProjectCatalogSettings;
+  /** Network settings that will be enforced on network resources associated with the Dev Center. */
+  networkSettings?: DevCenterNetworkSettings;
+  /** Settings to be used in the provisioning of all Dev Boxes that belong to this dev center. */
+  devBoxProvisioningSettings?: DevBoxProvisioningSettings;
+}
+
+/** The devcenter encryption set resource for partial updates. Properties not provided in the update request will not be changed. */
+export interface EncryptionSetUpdate extends TrackedResourceUpdate {
+  /** Managed identity properties */
+  identity?: ManagedServiceIdentity;
+  /** Devbox disk encryption enable or disable status. Indicates if Devbox disks encryption using DevCenter CMK is enabled or not. */
+  devboxDisksEncryptionEnableStatus?: DevboxDisksEncryptionEnableStatus;
+  /** Key encryption key Url, versioned or non-versioned. Ex: https://contosovault.vault.azure.net/keys/contosokek/562a4bb76b524a1493a6afe8e536ee78 or https://contosovault.vault.azure.net/keys/contosokek. */
+  keyEncryptionKeyUrl?: string;
 }
 
 /** The project properties for partial update. Properties not provided in the update request will not be changed. */
 export interface ProjectUpdate extends TrackedResourceUpdate {
+  /** Managed identity properties */
+  identity?: ManagedServiceIdentity;
   /** Resource Id of an associated DevCenter */
   devCenterId?: string;
   /** Description of the project. */
@@ -1309,6 +1485,8 @@ export interface ProjectUpdate extends TrackedResourceUpdate {
   maxDevBoxesPerUser?: number;
   /** The display name of the project. */
   displayName?: string;
+  /** Settings to be used when associating a project with a catalog. */
+  catalogSettings?: ProjectCatalogSettings;
 }
 
 /** Partial update of a Dev Box definition resource. */
@@ -1345,8 +1523,8 @@ export interface PoolUpdate extends TrackedResourceUpdate {
   managedVirtualNetworkRegions?: string[];
 }
 
-/** The schedule properties for partial update. Properties not provided in the update request will not be changed. */
-export interface ScheduleUpdate extends TrackedResourceUpdate {
+/** Updatable properties of a Schedule. */
+export interface ScheduleUpdateProperties extends TrackedResourceUpdate {
   /** Supported type this scheduled task represents. */
   type?: ScheduledType;
   /** The frequency of this scheduled task. */
@@ -1371,6 +1549,30 @@ export interface NetworkConnectionUpdate extends TrackedResourceUpdate {
   domainUsername?: string;
   /** The password for the account used to join domain */
   domainPassword?: string;
+}
+
+/** Properties of the devcenter. */
+export interface DevCenterProperties extends DevCenterUpdateProperties {
+  /**
+   * The provisioning state of the resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ProvisioningState;
+  /**
+   * The URI of the Dev Center.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly devCenterUri?: string;
+}
+
+/** Properties of the devcenter encryption set. */
+export interface DevCenterEncryptionSetProperties
+  extends DevCenterEncryptionSetUpdateProperties {
+  /**
+   * The provisioning state of the resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ProvisioningState;
 }
 
 /** Properties of a project. */
@@ -1439,8 +1641,6 @@ export interface ProjectEnvironmentTypeProperties
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly provisioningState?: ProvisioningState;
-  /** The display name of the project environment type. */
-  displayName?: string;
   /**
    * The number of environments of this type.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -1478,32 +1678,8 @@ export interface DevBoxDefinitionProperties
   readonly activeImageReference?: ImageReference;
 }
 
-/** The resource model definition representing SKU for DevCenter resources */
-export interface DevCenterSku extends Sku {
-  /**
-   * The name of the resource type
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly resourceType?: string;
-  /**
-   * SKU supported locations.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly locations?: string[];
-  /**
-   * Collection of name/value pairs to describe the SKU capabilities.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly capabilities?: Capability[];
-}
-
 /** The current status of an async operation */
 export interface OperationStatus extends OperationStatusResult {
-  /**
-   * The id of the resource.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly resourceId?: string;
   /**
    * Custom operation properties, populated only for a successful operation.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -1535,15 +1711,6 @@ export interface PoolProperties extends PoolUpdateProperties {
   readonly provisioningState?: ProvisioningState;
 }
 
-/** The Schedule properties defining when and what to execute. */
-export interface ScheduleProperties extends ScheduleUpdateProperties {
-  /**
-   * The provisioning state of the resource.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: ProvisioningState;
-}
-
 /** Network properties */
 export interface NetworkProperties extends NetworkConnectionUpdateProperties {
   /**
@@ -1562,14 +1729,33 @@ export interface NetworkProperties extends NetworkConnectionUpdateProperties {
   domainJoinType: DomainJoinType;
 }
 
+/** Represents a devcenter plan resource. */
+export interface DevCenterPlan extends TrackedResource {
+  /** The SKU for DevCenters created using this definition. */
+  sku?: Sku;
+  /**
+   * The provisioning state of the resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ProvisioningState;
+}
+
 /** Represents a devcenter resource. */
 export interface DevCenter extends TrackedResource {
   /** Managed identity properties */
   identity?: ManagedServiceIdentity;
+  /** Resource Id of an associated Plan */
+  planId?: string;
   /** Encryption settings to be used for server-side encryption for proprietary content (such as catalogs, logs, customizations). */
   encryption?: Encryption;
   /** The display name of the devcenter. */
   displayName?: string;
+  /** Dev Center settings to be used when associating a project with a catalog. */
+  projectCatalogSettings?: DevCenterProjectCatalogSettings;
+  /** Network settings that will be enforced on network resources associated with the Dev Center. */
+  networkSettings?: DevCenterNetworkSettings;
+  /** Settings to be used in the provisioning of all Dev Boxes that belong to this dev center. */
+  devBoxProvisioningSettings?: DevBoxProvisioningSettings;
   /**
    * The provisioning state of the resource.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -1582,8 +1768,25 @@ export interface DevCenter extends TrackedResource {
   readonly devCenterUri?: string;
 }
 
+/** Represents a devcenter encryption set resource. */
+export interface DevCenterEncryptionSet extends TrackedResource {
+  /** Managed identity properties */
+  identity?: ManagedServiceIdentity;
+  /** Devbox disk encryption enable or disable status. Indicates if Devbox disks encryption using DevCenter CMK is enabled or not. */
+  devboxDisksEncryptionEnableStatus?: DevboxDisksEncryptionEnableStatus;
+  /** Key encryption key Url, versioned or non-versioned. Ex: https://contosovault.vault.azure.net/keys/contosokek/562a4bb76b524a1493a6afe8e536ee78 or https://contosovault.vault.azure.net/keys/contosokek. */
+  keyEncryptionKeyUrl?: string;
+  /**
+   * The provisioning state of the resource.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: ProvisioningState;
+}
+
 /** Represents a project resource. */
 export interface Project extends TrackedResource {
+  /** Managed identity properties */
+  identity?: ManagedServiceIdentity;
   /** Resource Id of an associated DevCenter */
   devCenterId?: string;
   /** Description of the project. */
@@ -1592,6 +1795,8 @@ export interface Project extends TrackedResource {
   maxDevBoxesPerUser?: number;
   /** The display name of the project. */
   displayName?: string;
+  /** Settings to be used when associating a project with a catalog. */
+  catalogSettings?: ProjectCatalogSettings;
   /**
    * The provisioning state of the resource.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -1711,6 +1916,30 @@ export interface NetworkConnection extends TrackedResource {
   domainJoinType?: DomainJoinType;
 }
 
+/** Represents an environment definition catalog item. */
+export interface EnvironmentDefinition extends ProxyResource {
+  /**
+   * A short description of the environment definition.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly description?: string;
+  /**
+   * Input parameters passed to an environment.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly parameters?: EnvironmentDefinitionParameter[];
+  /**
+   * Path to the Environment Definition entrypoint file.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly templatePath?: string;
+  /**
+   * Validation status for the environment definition.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly validationStatus?: CatalogResourceValidationStatus;
+}
+
 /** Represents an image. */
 export interface Image extends ProxyResource {
   /**
@@ -1798,28 +2027,168 @@ export interface CustomizationTask extends ProxyResource {
   readonly validationStatus?: CatalogResourceValidationStatus;
 }
 
-/** Represents an environment definition catalog item. */
-export interface EnvironmentDefinition extends ProxyResource {
+/** The Schedule properties defining when and what to execute. */
+export interface ScheduleProperties extends ScheduleUpdateProperties {
   /**
-   * A short description of the environment definition.
+   * The provisioning state of the resource.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly description?: string;
-  /**
-   * Input parameters passed to an environment.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly parameters?: EnvironmentDefinitionParameter[];
-  /**
-   * Path to the Environment Definition entrypoint file.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly templatePath?: string;
-  /**
-   * Validation status for the environment definition.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly validationStatus?: CatalogResourceValidationStatus;
+  readonly provisioningState?: ProvisioningState;
+}
+
+/** Defines headers for Plans_update operation. */
+export interface PlansUpdateHeaders {
+  location?: string;
+}
+
+/** Defines headers for Plans_delete operation. */
+export interface PlansDeleteHeaders {
+  location?: string;
+}
+
+/** Defines headers for PlanMembers_update operation. */
+export interface PlanMembersUpdateHeaders {
+  location?: string;
+}
+
+/** Defines headers for PlanMembers_delete operation. */
+export interface PlanMembersDeleteHeaders {
+  location?: string;
+}
+
+/** Defines headers for DevCenters_update operation. */
+export interface DevCentersUpdateHeaders {
+  location?: string;
+}
+
+/** Defines headers for DevCenters_delete operation. */
+export interface DevCentersDeleteHeaders {
+  location?: string;
+}
+
+/** Defines headers for EncryptionSets_update operation. */
+export interface EncryptionSetsUpdateHeaders {
+  location?: string;
+}
+
+/** Defines headers for EncryptionSets_delete operation. */
+export interface EncryptionSetsDeleteHeaders {
+  location?: string;
+}
+
+/** Defines headers for Projects_update operation. */
+export interface ProjectsUpdateHeaders {
+  location?: string;
+}
+
+/** Defines headers for Projects_delete operation. */
+export interface ProjectsDeleteHeaders {
+  location?: string;
+}
+
+/** Defines headers for AttachedNetworks_delete operation. */
+export interface AttachedNetworksDeleteHeaders {
+  location?: string;
+}
+
+/** Defines headers for ProjectCatalogs_patch operation. */
+export interface ProjectCatalogsPatchHeaders {
+  location?: string;
+}
+
+/** Defines headers for ProjectCatalogs_delete operation. */
+export interface ProjectCatalogsDeleteHeaders {
+  location?: string;
+}
+
+/** Defines headers for ProjectCatalogs_sync operation. */
+export interface ProjectCatalogsSyncHeaders {
+  location?: string;
+}
+
+/** Defines headers for ProjectCatalogs_connect operation. */
+export interface ProjectCatalogsConnectHeaders {
+  location?: string;
+}
+
+/** Defines headers for Galleries_delete operation. */
+export interface GalleriesDeleteHeaders {
+  location?: string;
+}
+
+/** Defines headers for Catalogs_update operation. */
+export interface CatalogsUpdateHeaders {
+  location?: string;
+}
+
+/** Defines headers for Catalogs_delete operation. */
+export interface CatalogsDeleteHeaders {
+  location?: string;
+}
+
+/** Defines headers for Catalogs_sync operation. */
+export interface CatalogsSyncHeaders {
+  location?: string;
+}
+
+/** Defines headers for Catalogs_connect operation. */
+export interface CatalogsConnectHeaders {
+  location?: string;
+}
+
+/** Defines headers for DevBoxDefinitions_update operation. */
+export interface DevBoxDefinitionsUpdateHeaders {
+  location?: string;
+}
+
+/** Defines headers for DevBoxDefinitions_delete operation. */
+export interface DevBoxDefinitionsDeleteHeaders {
+  location?: string;
+}
+
+/** Defines headers for OperationStatuses_get operation. */
+export interface OperationStatusesGetHeaders {
+  location?: string;
+}
+
+/** Defines headers for Pools_update operation. */
+export interface PoolsUpdateHeaders {
+  location?: string;
+}
+
+/** Defines headers for Pools_delete operation. */
+export interface PoolsDeleteHeaders {
+  location?: string;
+}
+
+/** Defines headers for Pools_runHealthChecks operation. */
+export interface PoolsRunHealthChecksHeaders {
+  location?: string;
+}
+
+/** Defines headers for Schedules_update operation. */
+export interface SchedulesUpdateHeaders {
+  location?: string;
+}
+
+/** Defines headers for Schedules_delete operation. */
+export interface SchedulesDeleteHeaders {
+  location?: string;
+}
+
+/** Defines headers for NetworkConnections_update operation. */
+export interface NetworkConnectionsUpdateHeaders {
+  location?: string;
+}
+
+/** Defines headers for NetworkConnections_delete operation. */
+export interface NetworkConnectionsDeleteHeaders {
+  location?: string;
+}
+
+/** Defines headers for NetworkConnections_runHealthChecks operation. */
+export interface NetworkConnectionsRunHealthChecksHeaders {
+  location?: string;
 }
 
 /** Known values of {@link ProvisioningState} that the service accepts. */
@@ -1855,7 +2224,7 @@ export enum KnownProvisioningState {
   /** RolloutInProgress */
   RolloutInProgress = "RolloutInProgress",
   /** StorageProvisioningFailed */
-  StorageProvisioningFailed = "StorageProvisioningFailed"
+  StorageProvisioningFailed = "StorageProvisioningFailed",
 }
 
 /**
@@ -1882,51 +2251,6 @@ export enum KnownProvisioningState {
  */
 export type ProvisioningState = string;
 
-/** Known values of {@link IdentityType} that the service accepts. */
-export enum KnownIdentityType {
-  /** SystemAssignedIdentity */
-  SystemAssignedIdentity = "systemAssignedIdentity",
-  /** UserAssignedIdentity */
-  UserAssignedIdentity = "userAssignedIdentity",
-  /** DelegatedResourceIdentity */
-  DelegatedResourceIdentity = "delegatedResourceIdentity"
-}
-
-/**
- * Defines values for IdentityType. \
- * {@link KnownIdentityType} can be used interchangeably with IdentityType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **systemAssignedIdentity** \
- * **userAssignedIdentity** \
- * **delegatedResourceIdentity**
- */
-export type IdentityType = string;
-
-/** Known values of {@link ManagedServiceIdentityType} that the service accepts. */
-export enum KnownManagedServiceIdentityType {
-  /** None */
-  None = "None",
-  /** SystemAssigned */
-  SystemAssigned = "SystemAssigned",
-  /** UserAssigned */
-  UserAssigned = "UserAssigned",
-  /** SystemAssignedUserAssigned */
-  SystemAssignedUserAssigned = "SystemAssigned, UserAssigned"
-}
-
-/**
- * Defines values for ManagedServiceIdentityType. \
- * {@link KnownManagedServiceIdentityType} can be used interchangeably with ManagedServiceIdentityType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **None** \
- * **SystemAssigned** \
- * **UserAssigned** \
- * **SystemAssigned, UserAssigned**
- */
-export type ManagedServiceIdentityType = string;
-
 /** Known values of {@link CreatedByType} that the service accepts. */
 export enum KnownCreatedByType {
   /** User */
@@ -1936,7 +2260,7 @@ export enum KnownCreatedByType {
   /** ManagedIdentity */
   ManagedIdentity = "ManagedIdentity",
   /** Key */
-  Key = "Key"
+  Key = "Key",
 }
 
 /**
@@ -1951,6 +2275,156 @@ export enum KnownCreatedByType {
  */
 export type CreatedByType = string;
 
+/** Known values of {@link PlanMemberType} that the service accepts. */
+export enum KnownPlanMemberType {
+  /** User */
+  User = "User",
+  /** Group */
+  Group = "Group",
+}
+
+/**
+ * Defines values for PlanMemberType. \
+ * {@link KnownPlanMemberType} can be used interchangeably with PlanMemberType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **User** \
+ * **Group**
+ */
+export type PlanMemberType = string;
+
+/** Known values of {@link IdentityType} that the service accepts. */
+export enum KnownIdentityType {
+  /** SystemAssignedIdentity */
+  SystemAssignedIdentity = "systemAssignedIdentity",
+  /** UserAssignedIdentity */
+  UserAssignedIdentity = "userAssignedIdentity",
+  /** DelegatedResourceIdentity */
+  DelegatedResourceIdentity = "delegatedResourceIdentity",
+}
+
+/**
+ * Defines values for IdentityType. \
+ * {@link KnownIdentityType} can be used interchangeably with IdentityType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **systemAssignedIdentity** \
+ * **userAssignedIdentity** \
+ * **delegatedResourceIdentity**
+ */
+export type IdentityType = string;
+
+/** Known values of {@link CatalogItemSyncEnableStatus} that the service accepts. */
+export enum KnownCatalogItemSyncEnableStatus {
+  /** Enabled */
+  Enabled = "Enabled",
+  /** Disabled */
+  Disabled = "Disabled",
+}
+
+/**
+ * Defines values for CatalogItemSyncEnableStatus. \
+ * {@link KnownCatalogItemSyncEnableStatus} can be used interchangeably with CatalogItemSyncEnableStatus,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Enabled** \
+ * **Disabled**
+ */
+export type CatalogItemSyncEnableStatus = string;
+
+/** Known values of {@link MicrosoftHostedNetworkEnableStatus} that the service accepts. */
+export enum KnownMicrosoftHostedNetworkEnableStatus {
+  /** Enabled */
+  Enabled = "Enabled",
+  /** Disabled */
+  Disabled = "Disabled",
+}
+
+/**
+ * Defines values for MicrosoftHostedNetworkEnableStatus. \
+ * {@link KnownMicrosoftHostedNetworkEnableStatus} can be used interchangeably with MicrosoftHostedNetworkEnableStatus,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Enabled** \
+ * **Disabled**
+ */
+export type MicrosoftHostedNetworkEnableStatus = string;
+
+/** Known values of {@link InstallAzureMonitorAgentEnableStatus} that the service accepts. */
+export enum KnownInstallAzureMonitorAgentEnableStatus {
+  /** Enabled */
+  Enabled = "Enabled",
+  /** Disabled */
+  Disabled = "Disabled",
+}
+
+/**
+ * Defines values for InstallAzureMonitorAgentEnableStatus. \
+ * {@link KnownInstallAzureMonitorAgentEnableStatus} can be used interchangeably with InstallAzureMonitorAgentEnableStatus,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Enabled** \
+ * **Disabled**
+ */
+export type InstallAzureMonitorAgentEnableStatus = string;
+
+/** Known values of {@link ManagedServiceIdentityType} that the service accepts. */
+export enum KnownManagedServiceIdentityType {
+  /** None */
+  None = "None",
+  /** SystemAssigned */
+  SystemAssigned = "SystemAssigned",
+  /** UserAssigned */
+  UserAssigned = "UserAssigned",
+  /** SystemAssignedUserAssigned */
+  SystemAssignedUserAssigned = "SystemAssigned, UserAssigned",
+}
+
+/**
+ * Defines values for ManagedServiceIdentityType. \
+ * {@link KnownManagedServiceIdentityType} can be used interchangeably with ManagedServiceIdentityType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **None** \
+ * **SystemAssigned** \
+ * **UserAssigned** \
+ * **SystemAssigned, UserAssigned**
+ */
+export type ManagedServiceIdentityType = string;
+
+/** Known values of {@link DevboxDisksEncryptionEnableStatus} that the service accepts. */
+export enum KnownDevboxDisksEncryptionEnableStatus {
+  /** Enabled */
+  Enabled = "Enabled",
+  /** Disabled */
+  Disabled = "Disabled",
+}
+
+/**
+ * Defines values for DevboxDisksEncryptionEnableStatus. \
+ * {@link KnownDevboxDisksEncryptionEnableStatus} can be used interchangeably with DevboxDisksEncryptionEnableStatus,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Enabled** \
+ * **Disabled**
+ */
+export type DevboxDisksEncryptionEnableStatus = string;
+
+/** Known values of {@link CatalogItemType} that the service accepts. */
+export enum KnownCatalogItemType {
+  /** EnvironmentDefinition */
+  EnvironmentDefinition = "EnvironmentDefinition",
+}
+
+/**
+ * Defines values for CatalogItemType. \
+ * {@link KnownCatalogItemType} can be used interchangeably with CatalogItemType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **EnvironmentDefinition**
+ */
+export type CatalogItemType = string;
+
 /** Known values of {@link HealthCheckStatus} that the service accepts. */
 export enum KnownHealthCheckStatus {
   /** Unknown */
@@ -1964,7 +2438,7 @@ export enum KnownHealthCheckStatus {
   /** Warning */
   Warning = "Warning",
   /** Failed */
-  Failed = "Failed"
+  Failed = "Failed",
 }
 
 /**
@@ -1986,7 +2460,9 @@ export enum KnownDomainJoinType {
   /** HybridAzureADJoin */
   HybridAzureADJoin = "HybridAzureADJoin",
   /** AzureADJoin */
-  AzureADJoin = "AzureADJoin"
+  AzureADJoin = "AzureADJoin",
+  /** None */
+  None = "None",
 }
 
 /**
@@ -1995,27 +2471,10 @@ export enum KnownDomainJoinType {
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
  * **HybridAzureADJoin** \
- * **AzureADJoin**
+ * **AzureADJoin** \
+ * **None**
  */
 export type DomainJoinType = string;
-
-/** Known values of {@link HibernateSupport} that the service accepts. */
-export enum KnownHibernateSupport {
-  /** Disabled */
-  Disabled = "Disabled",
-  /** Enabled */
-  Enabled = "Enabled"
-}
-
-/**
- * Defines values for HibernateSupport. \
- * {@link KnownHibernateSupport} can be used interchangeably with HibernateSupport,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Disabled** \
- * **Enabled**
- */
-export type HibernateSupport = string;
 
 /** Known values of {@link CatalogSyncState} that the service accepts. */
 export enum KnownCatalogSyncState {
@@ -2026,7 +2485,7 @@ export enum KnownCatalogSyncState {
   /** Failed */
   Failed = "Failed",
   /** Canceled */
-  Canceled = "Canceled"
+  Canceled = "Canceled",
 }
 
 /**
@@ -2046,7 +2505,7 @@ export enum KnownCatalogConnectionState {
   /** Connected */
   Connected = "Connected",
   /** Disconnected */
-  Disconnected = "Disconnected"
+  Disconnected = "Disconnected",
 }
 
 /**
@@ -2064,7 +2523,7 @@ export enum KnownCatalogSyncType {
   /** Manual */
   Manual = "Manual",
   /** Scheduled */
-  Scheduled = "Scheduled"
+  Scheduled = "Scheduled",
 }
 
 /**
@@ -2077,12 +2536,84 @@ export enum KnownCatalogSyncType {
  */
 export type CatalogSyncType = string;
 
+/** Known values of {@link ParameterType} that the service accepts. */
+export enum KnownParameterType {
+  /** The parameter accepts an array of values. */
+  Array = "array",
+  /** The parameter accepts a boolean value. */
+  Boolean = "boolean",
+  /** The parameter accepts an integer value. */
+  Integer = "integer",
+  /** The parameter accepts a number value. */
+  Number = "number",
+  /** The parameter accepts an object value. */
+  Object = "object",
+  /** The parameter accepts a string value. */
+  String = "string",
+}
+
+/**
+ * Defines values for ParameterType. \
+ * {@link KnownParameterType} can be used interchangeably with ParameterType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **array**: The parameter accepts an array of values. \
+ * **boolean**: The parameter accepts a boolean value. \
+ * **integer**: The parameter accepts an integer value. \
+ * **number**: The parameter accepts a number value. \
+ * **object**: The parameter accepts an object value. \
+ * **string**: The parameter accepts a string value.
+ */
+export type ParameterType = string;
+
+/** Known values of {@link CatalogResourceValidationStatus} that the service accepts. */
+export enum KnownCatalogResourceValidationStatus {
+  /** Unknown */
+  Unknown = "Unknown",
+  /** Pending */
+  Pending = "Pending",
+  /** Succeeded */
+  Succeeded = "Succeeded",
+  /** Failed */
+  Failed = "Failed",
+}
+
+/**
+ * Defines values for CatalogResourceValidationStatus. \
+ * {@link KnownCatalogResourceValidationStatus} can be used interchangeably with CatalogResourceValidationStatus,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Unknown** \
+ * **Pending** \
+ * **Succeeded** \
+ * **Failed**
+ */
+export type CatalogResourceValidationStatus = string;
+
+/** Known values of {@link HibernateSupport} that the service accepts. */
+export enum KnownHibernateSupport {
+  /** Disabled */
+  Disabled = "Disabled",
+  /** Enabled */
+  Enabled = "Enabled",
+}
+
+/**
+ * Defines values for HibernateSupport. \
+ * {@link KnownHibernateSupport} can be used interchangeably with HibernateSupport,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Disabled** \
+ * **Enabled**
+ */
+export type HibernateSupport = string;
+
 /** Known values of {@link EnvironmentTypeEnableStatus} that the service accepts. */
 export enum KnownEnvironmentTypeEnableStatus {
   /** Enabled */
   Enabled = "Enabled",
   /** Disabled */
-  Disabled = "Disabled"
+  Disabled = "Disabled",
 }
 
 /**
@@ -2106,7 +2637,7 @@ export enum KnownImageValidationStatus {
   /** Failed */
   Failed = "Failed",
   /** TimedOut */
-  TimedOut = "TimedOut"
+  TimedOut = "TimedOut",
 }
 
 /**
@@ -2122,30 +2653,6 @@ export enum KnownImageValidationStatus {
  */
 export type ImageValidationStatus = string;
 
-/** Known values of {@link CatalogResourceValidationStatus} that the service accepts. */
-export enum KnownCatalogResourceValidationStatus {
-  /** Unknown */
-  Unknown = "Unknown",
-  /** Pending */
-  Pending = "Pending",
-  /** Succeeded */
-  Succeeded = "Succeeded",
-  /** Failed */
-  Failed = "Failed"
-}
-
-/**
- * Defines values for CatalogResourceValidationStatus. \
- * {@link KnownCatalogResourceValidationStatus} can be used interchangeably with CatalogResourceValidationStatus,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Unknown** \
- * **Pending** \
- * **Succeeded** \
- * **Failed**
- */
-export type CatalogResourceValidationStatus = string;
-
 /** Known values of {@link Origin} that the service accepts. */
 export enum KnownOrigin {
   /** User */
@@ -2153,7 +2660,7 @@ export enum KnownOrigin {
   /** System */
   System = "system",
   /** UserSystem */
-  UserSystem = "user,system"
+  UserSystem = "user,system",
 }
 
 /**
@@ -2170,7 +2677,7 @@ export type Origin = string;
 /** Known values of {@link ActionType} that the service accepts. */
 export enum KnownActionType {
   /** Internal */
-  Internal = "Internal"
+  Internal = "Internal",
 }
 
 /**
@@ -2185,7 +2692,7 @@ export type ActionType = string;
 /** Known values of {@link UsageUnit} that the service accepts. */
 export enum KnownUsageUnit {
   /** Count */
-  Count = "Count"
+  Count = "Count",
 }
 
 /**
@@ -2202,7 +2709,7 @@ export enum KnownCheckNameAvailabilityReason {
   /** Invalid */
   Invalid = "Invalid",
   /** AlreadyExists */
-  AlreadyExists = "AlreadyExists"
+  AlreadyExists = "AlreadyExists",
 }
 
 /**
@@ -2222,7 +2729,7 @@ export enum KnownCustomizationTaskInputType {
   /** Number */
   Number = "number",
   /** Boolean */
-  Boolean = "boolean"
+  Boolean = "boolean",
 }
 
 /**
@@ -2236,36 +2743,6 @@ export enum KnownCustomizationTaskInputType {
  */
 export type CustomizationTaskInputType = string;
 
-/** Known values of {@link ParameterType} that the service accepts. */
-export enum KnownParameterType {
-  /** The parameter accepts an array of values. */
-  Array = "array",
-  /** The parameter accepts a boolean value. */
-  Boolean = "boolean",
-  /** The parameter accepts an integer value. */
-  Integer = "integer",
-  /** The parameter accepts a number value. */
-  Number = "number",
-  /** The parameter accepts an object value. */
-  Object = "object",
-  /** The parameter accepts a string value. */
-  String = "string"
-}
-
-/**
- * Defines values for ParameterType. \
- * {@link KnownParameterType} can be used interchangeably with ParameterType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **array**: The parameter accepts an array of values. \
- * **boolean**: The parameter accepts a boolean value. \
- * **integer**: The parameter accepts an integer value. \
- * **number**: The parameter accepts a number value. \
- * **object**: The parameter accepts an object value. \
- * **string**: The parameter accepts a string value.
- */
-export type ParameterType = string;
-
 /** Known values of {@link HealthStatus} that the service accepts. */
 export enum KnownHealthStatus {
   /** Unknown */
@@ -2277,7 +2754,7 @@ export enum KnownHealthStatus {
   /** Warning */
   Warning = "Warning",
   /** Unhealthy */
-  Unhealthy = "Unhealthy"
+  Unhealthy = "Unhealthy",
 }
 
 /**
@@ -2296,7 +2773,7 @@ export type HealthStatus = string;
 /** Known values of {@link LicenseType} that the service accepts. */
 export enum KnownLicenseType {
   /** WindowsClient */
-  WindowsClient = "Windows_Client"
+  WindowsClient = "Windows_Client",
 }
 
 /**
@@ -2313,7 +2790,7 @@ export enum KnownLocalAdminStatus {
   /** Disabled */
   Disabled = "Disabled",
   /** Enabled */
-  Enabled = "Enabled"
+  Enabled = "Enabled",
 }
 
 /**
@@ -2331,7 +2808,7 @@ export enum KnownStopOnDisconnectEnableStatus {
   /** Enabled */
   Enabled = "Enabled",
   /** Disabled */
-  Disabled = "Disabled"
+  Disabled = "Disabled",
 }
 
 /**
@@ -2349,7 +2826,7 @@ export enum KnownSingleSignOnStatus {
   /** Disabled */
   Disabled = "Disabled",
   /** Enabled */
-  Enabled = "Enabled"
+  Enabled = "Enabled",
 }
 
 /**
@@ -2367,7 +2844,7 @@ export enum KnownVirtualNetworkType {
   /** Managed */
   Managed = "Managed",
   /** Unmanaged */
-  Unmanaged = "Unmanaged"
+  Unmanaged = "Unmanaged",
 }
 
 /**
@@ -2383,7 +2860,7 @@ export type VirtualNetworkType = string;
 /** Known values of {@link ScheduledType} that the service accepts. */
 export enum KnownScheduledType {
   /** StopDevBox */
-  StopDevBox = "StopDevBox"
+  StopDevBox = "StopDevBox",
 }
 
 /**
@@ -2398,7 +2875,7 @@ export type ScheduledType = string;
 /** Known values of {@link ScheduledFrequency} that the service accepts. */
 export enum KnownScheduledFrequency {
   /** Daily */
-  Daily = "Daily"
+  Daily = "Daily",
 }
 
 /**
@@ -2415,7 +2892,7 @@ export enum KnownScheduleEnableStatus {
   /** Enabled */
   Enabled = "Enabled",
   /** Disabled */
-  Disabled = "Disabled"
+  Disabled = "Disabled",
 }
 
 /**
@@ -2429,6 +2906,140 @@ export enum KnownScheduleEnableStatus {
 export type ScheduleEnableStatus = string;
 /** Defines values for SkuTier. */
 export type SkuTier = "Free" | "Basic" | "Standard" | "Premium";
+
+/** Optional parameters. */
+export interface PlansListBySubscriptionOptionalParams
+  extends coreClient.OperationOptions {
+  /** The maximum number of resources to return from the operation. Example: '$top=10'. */
+  top?: number;
+}
+
+/** Contains response data for the listBySubscription operation. */
+export type PlansListBySubscriptionResponse = PlanListResult;
+
+/** Optional parameters. */
+export interface PlansListByResourceGroupOptionalParams
+  extends coreClient.OperationOptions {
+  /** The maximum number of resources to return from the operation. Example: '$top=10'. */
+  top?: number;
+}
+
+/** Contains response data for the listByResourceGroup operation. */
+export type PlansListByResourceGroupResponse = PlanListResult;
+
+/** Optional parameters. */
+export interface PlansGetOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type PlansGetResponse = DevCenterPlan;
+
+/** Optional parameters. */
+export interface PlansCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createOrUpdate operation. */
+export type PlansCreateOrUpdateResponse = DevCenterPlan;
+
+/** Optional parameters. */
+export interface PlansUpdateOptionalParams extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the update operation. */
+export type PlansUpdateResponse = DevCenterPlan;
+
+/** Optional parameters. */
+export interface PlansDeleteOptionalParams extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the delete operation. */
+export type PlansDeleteResponse = PlansDeleteHeaders;
+
+/** Optional parameters. */
+export interface PlansListBySubscriptionNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listBySubscriptionNext operation. */
+export type PlansListBySubscriptionNextResponse = PlanListResult;
+
+/** Optional parameters. */
+export interface PlansListByResourceGroupNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByResourceGroupNext operation. */
+export type PlansListByResourceGroupNextResponse = PlanListResult;
+
+/** Optional parameters. */
+export interface PlanMembersListOptionalParams
+  extends coreClient.OperationOptions {
+  /** The maximum number of resources to return from the operation. Example: '$top=10'. */
+  top?: number;
+}
+
+/** Contains response data for the list operation. */
+export type PlanMembersListResponse = PlanMembersListResult;
+
+/** Optional parameters. */
+export interface PlanMembersGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type PlanMembersGetResponse = DevCenterPlanMember;
+
+/** Optional parameters. */
+export interface PlanMembersCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createOrUpdate operation. */
+export type PlanMembersCreateOrUpdateResponse = DevCenterPlanMember;
+
+/** Optional parameters. */
+export interface PlanMembersUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the update operation. */
+export type PlanMembersUpdateResponse = DevCenterPlanMember;
+
+/** Optional parameters. */
+export interface PlanMembersDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the delete operation. */
+export type PlanMembersDeleteResponse = PlanMembersDeleteHeaders;
+
+/** Optional parameters. */
+export interface PlanMembersListNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listNext operation. */
+export type PlanMembersListNextResponse = PlanMembersListResult;
 
 /** Optional parameters. */
 export interface DevCentersListBySubscriptionOptionalParams
@@ -2490,6 +3101,9 @@ export interface DevCentersDeleteOptionalParams
   resumeFrom?: string;
 }
 
+/** Contains response data for the delete operation. */
+export type DevCentersDeleteResponse = DevCentersDeleteHeaders;
+
 /** Optional parameters. */
 export interface DevCentersListBySubscriptionNextOptionalParams
   extends coreClient.OperationOptions {}
@@ -2503,6 +3117,66 @@ export interface DevCentersListByResourceGroupNextOptionalParams
 
 /** Contains response data for the listByResourceGroupNext operation. */
 export type DevCentersListByResourceGroupNextResponse = DevCenterListResult;
+
+/** Optional parameters. */
+export interface EncryptionSetsListOptionalParams
+  extends coreClient.OperationOptions {
+  /** The maximum number of resources to return from the operation. Example: '$top=10'. */
+  top?: number;
+}
+
+/** Contains response data for the list operation. */
+export type EncryptionSetsListResponse = EncryptionSetListResult;
+
+/** Optional parameters. */
+export interface EncryptionSetsGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type EncryptionSetsGetResponse = DevCenterEncryptionSet;
+
+/** Optional parameters. */
+export interface EncryptionSetsCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createOrUpdate operation. */
+export type EncryptionSetsCreateOrUpdateResponse = DevCenterEncryptionSet;
+
+/** Optional parameters. */
+export interface EncryptionSetsUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the update operation. */
+export type EncryptionSetsUpdateResponse = DevCenterEncryptionSet;
+
+/** Optional parameters. */
+export interface EncryptionSetsDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the delete operation. */
+export type EncryptionSetsDeleteResponse = EncryptionSetsDeleteHeaders;
+
+/** Optional parameters. */
+export interface EncryptionSetsListNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listNext operation. */
+export type EncryptionSetsListNextResponse = EncryptionSetListResult;
 
 /** Optional parameters. */
 export interface ProjectsListBySubscriptionOptionalParams
@@ -2563,6 +3237,16 @@ export interface ProjectsDeleteOptionalParams
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
   resumeFrom?: string;
 }
+
+/** Contains response data for the delete operation. */
+export type ProjectsDeleteResponse = ProjectsDeleteHeaders;
+
+/** Optional parameters. */
+export interface ProjectsGetInheritedSettingsOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getInheritedSettings operation. */
+export type ProjectsGetInheritedSettingsResponse = InheritedSettingsForProject;
 
 /** Optional parameters. */
 export interface ProjectsListBySubscriptionNextOptionalParams
@@ -2633,19 +3317,181 @@ export interface AttachedNetworksDeleteOptionalParams
   resumeFrom?: string;
 }
 
+/** Contains response data for the delete operation. */
+export type AttachedNetworksDeleteResponse = AttachedNetworksDeleteHeaders;
+
 /** Optional parameters. */
 export interface AttachedNetworksListByProjectNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByProjectNext operation. */
-export type AttachedNetworksListByProjectNextResponse = AttachedNetworkListResult;
+export type AttachedNetworksListByProjectNextResponse =
+  AttachedNetworkListResult;
 
 /** Optional parameters. */
 export interface AttachedNetworksListByDevCenterNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByDevCenterNext operation. */
-export type AttachedNetworksListByDevCenterNextResponse = AttachedNetworkListResult;
+export type AttachedNetworksListByDevCenterNextResponse =
+  AttachedNetworkListResult;
+
+/** Optional parameters. */
+export interface ProjectCatalogsListOptionalParams
+  extends coreClient.OperationOptions {
+  /** The maximum number of resources to return from the operation. Example: '$top=10'. */
+  top?: number;
+}
+
+/** Contains response data for the list operation. */
+export type ProjectCatalogsListResponse = CatalogListResult;
+
+/** Optional parameters. */
+export interface ProjectCatalogsGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type ProjectCatalogsGetResponse = Catalog;
+
+/** Optional parameters. */
+export interface ProjectCatalogsCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the createOrUpdate operation. */
+export type ProjectCatalogsCreateOrUpdateResponse = Catalog;
+
+/** Optional parameters. */
+export interface ProjectCatalogsPatchOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the patch operation. */
+export type ProjectCatalogsPatchResponse = Catalog;
+
+/** Optional parameters. */
+export interface ProjectCatalogsDeleteOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the delete operation. */
+export type ProjectCatalogsDeleteResponse = ProjectCatalogsDeleteHeaders;
+
+/** Optional parameters. */
+export interface ProjectCatalogsGetSyncErrorDetailsOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getSyncErrorDetails operation. */
+export type ProjectCatalogsGetSyncErrorDetailsResponse = SyncErrorDetails;
+
+/** Optional parameters. */
+export interface ProjectCatalogsSyncOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the sync operation. */
+export type ProjectCatalogsSyncResponse = ProjectCatalogsSyncHeaders;
+
+/** Optional parameters. */
+export interface ProjectCatalogsConnectOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the connect operation. */
+export type ProjectCatalogsConnectResponse = ProjectCatalogsConnectHeaders;
+
+/** Optional parameters. */
+export interface ProjectCatalogsListNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listNext operation. */
+export type ProjectCatalogsListNextResponse = CatalogListResult;
+
+/** Optional parameters. */
+export interface EnvironmentDefinitionsListByProjectCatalogOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByProjectCatalog operation. */
+export type EnvironmentDefinitionsListByProjectCatalogResponse =
+  EnvironmentDefinitionListResult;
+
+/** Optional parameters. */
+export interface EnvironmentDefinitionsGetByProjectCatalogOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getByProjectCatalog operation. */
+export type EnvironmentDefinitionsGetByProjectCatalogResponse =
+  EnvironmentDefinition;
+
+/** Optional parameters. */
+export interface EnvironmentDefinitionsListByCatalogOptionalParams
+  extends coreClient.OperationOptions {
+  /** The maximum number of resources to return from the operation. Example: '$top=10'. */
+  top?: number;
+}
+
+/** Contains response data for the listByCatalog operation. */
+export type EnvironmentDefinitionsListByCatalogResponse =
+  EnvironmentDefinitionListResult;
+
+/** Optional parameters. */
+export interface EnvironmentDefinitionsGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type EnvironmentDefinitionsGetResponse = EnvironmentDefinition;
+
+/** Optional parameters. */
+export interface EnvironmentDefinitionsGetErrorDetailsOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getErrorDetails operation. */
+export type EnvironmentDefinitionsGetErrorDetailsResponse =
+  CatalogResourceValidationErrorDetails;
+
+/** Optional parameters. */
+export interface EnvironmentDefinitionsListByProjectCatalogNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByProjectCatalogNext operation. */
+export type EnvironmentDefinitionsListByProjectCatalogNextResponse =
+  EnvironmentDefinitionListResult;
+
+/** Optional parameters. */
+export interface EnvironmentDefinitionsListByCatalogNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByCatalogNext operation. */
+export type EnvironmentDefinitionsListByCatalogNextResponse =
+  EnvironmentDefinitionListResult;
+
+/** Optional parameters. */
+export interface ProjectCatalogEnvironmentDefinitionsGetErrorDetailsOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getErrorDetails operation. */
+export type ProjectCatalogEnvironmentDefinitionsGetErrorDetailsResponse =
+  CatalogResourceValidationErrorDetails;
 
 /** Optional parameters. */
 export interface GalleriesListByDevCenterOptionalParams
@@ -2684,6 +3530,9 @@ export interface GalleriesDeleteOptionalParams
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
   resumeFrom?: string;
 }
+
+/** Contains response data for the delete operation. */
+export type GalleriesDeleteResponse = GalleriesDeleteHeaders;
 
 /** Optional parameters. */
 export interface GalleriesListByDevCenterNextOptionalParams
@@ -2803,6 +3652,9 @@ export interface CatalogsDeleteOptionalParams
   resumeFrom?: string;
 }
 
+/** Contains response data for the delete operation. */
+export type CatalogsDeleteResponse = CatalogsDeleteHeaders;
+
 /** Optional parameters. */
 export interface CatalogsGetSyncErrorDetailsOptionalParams
   extends coreClient.OperationOptions {}
@@ -2819,6 +3671,9 @@ export interface CatalogsSyncOptionalParams
   resumeFrom?: string;
 }
 
+/** Contains response data for the sync operation. */
+export type CatalogsSyncResponse = CatalogsSyncHeaders;
+
 /** Optional parameters. */
 export interface CatalogsConnectOptionalParams
   extends coreClient.OperationOptions {
@@ -2827,6 +3682,9 @@ export interface CatalogsConnectOptionalParams
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
   resumeFrom?: string;
 }
+
+/** Contains response data for the connect operation. */
+export type CatalogsConnectResponse = CatalogsConnectHeaders;
 
 /** Optional parameters. */
 export interface CatalogsListByDevCenterNextOptionalParams
@@ -2875,7 +3733,8 @@ export interface EnvironmentTypesListByDevCenterNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByDevCenterNext operation. */
-export type EnvironmentTypesListByDevCenterNextResponse = EnvironmentTypeListResult;
+export type EnvironmentTypesListByDevCenterNextResponse =
+  EnvironmentTypeListResult;
 
 /** Optional parameters. */
 export interface ProjectAllowedEnvironmentTypesListOptionalParams
@@ -2885,7 +3744,8 @@ export interface ProjectAllowedEnvironmentTypesListOptionalParams
 }
 
 /** Contains response data for the list operation. */
-export type ProjectAllowedEnvironmentTypesListResponse = AllowedEnvironmentTypeListResult;
+export type ProjectAllowedEnvironmentTypesListResponse =
+  AllowedEnvironmentTypeListResult;
 
 /** Optional parameters. */
 export interface ProjectAllowedEnvironmentTypesGetOptionalParams
@@ -2899,7 +3759,8 @@ export interface ProjectAllowedEnvironmentTypesListNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
-export type ProjectAllowedEnvironmentTypesListNextResponse = AllowedEnvironmentTypeListResult;
+export type ProjectAllowedEnvironmentTypesListNextResponse =
+  AllowedEnvironmentTypeListResult;
 
 /** Optional parameters. */
 export interface ProjectEnvironmentTypesListOptionalParams
@@ -2909,7 +3770,8 @@ export interface ProjectEnvironmentTypesListOptionalParams
 }
 
 /** Contains response data for the list operation. */
-export type ProjectEnvironmentTypesListResponse = ProjectEnvironmentTypeListResult;
+export type ProjectEnvironmentTypesListResponse =
+  ProjectEnvironmentTypeListResult;
 
 /** Optional parameters. */
 export interface ProjectEnvironmentTypesGetOptionalParams
@@ -2923,7 +3785,8 @@ export interface ProjectEnvironmentTypesCreateOrUpdateOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the createOrUpdate operation. */
-export type ProjectEnvironmentTypesCreateOrUpdateResponse = ProjectEnvironmentType;
+export type ProjectEnvironmentTypesCreateOrUpdateResponse =
+  ProjectEnvironmentType;
 
 /** Optional parameters. */
 export interface ProjectEnvironmentTypesUpdateOptionalParams
@@ -2941,7 +3804,8 @@ export interface ProjectEnvironmentTypesListNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
-export type ProjectEnvironmentTypesListNextResponse = ProjectEnvironmentTypeListResult;
+export type ProjectEnvironmentTypesListNextResponse =
+  ProjectEnvironmentTypeListResult;
 
 /** Optional parameters. */
 export interface DevBoxDefinitionsListByDevCenterOptionalParams
@@ -2951,7 +3815,8 @@ export interface DevBoxDefinitionsListByDevCenterOptionalParams
 }
 
 /** Contains response data for the listByDevCenter operation. */
-export type DevBoxDefinitionsListByDevCenterResponse = DevBoxDefinitionListResult;
+export type DevBoxDefinitionsListByDevCenterResponse =
+  DevBoxDefinitionListResult;
 
 /** Optional parameters. */
 export interface DevBoxDefinitionsGetOptionalParams
@@ -2993,6 +3858,9 @@ export interface DevBoxDefinitionsDeleteOptionalParams
   resumeFrom?: string;
 }
 
+/** Contains response data for the delete operation. */
+export type DevBoxDefinitionsDeleteResponse = DevBoxDefinitionsDeleteHeaders;
+
 /** Optional parameters. */
 export interface DevBoxDefinitionsListByProjectOptionalParams
   extends coreClient.OperationOptions {
@@ -3015,14 +3883,16 @@ export interface DevBoxDefinitionsListByDevCenterNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByDevCenterNext operation. */
-export type DevBoxDefinitionsListByDevCenterNextResponse = DevBoxDefinitionListResult;
+export type DevBoxDefinitionsListByDevCenterNextResponse =
+  DevBoxDefinitionListResult;
 
 /** Optional parameters. */
 export interface DevBoxDefinitionsListByProjectNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByProjectNext operation. */
-export type DevBoxDefinitionsListByProjectNextResponse = DevBoxDefinitionListResult;
+export type DevBoxDefinitionsListByProjectNextResponse =
+  DevBoxDefinitionListResult;
 
 /** Optional parameters. */
 export interface OperationsListOptionalParams
@@ -3064,38 +3934,16 @@ export interface CheckNameAvailabilityExecuteOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the execute operation. */
-export type CheckNameAvailabilityExecuteResponse = CheckNameAvailabilityResponse;
+export type CheckNameAvailabilityExecuteResponse =
+  CheckNameAvailabilityResponse;
 
 /** Optional parameters. */
-export interface CatalogDevBoxDefinitionsListByCatalogOptionalParams
-  extends coreClient.OperationOptions {
-  /** The maximum number of resources to return from the operation. Example: '$top=10'. */
-  top?: number;
-}
-
-/** Contains response data for the listByCatalog operation. */
-export type CatalogDevBoxDefinitionsListByCatalogResponse = DevBoxDefinitionListResult;
-
-/** Optional parameters. */
-export interface CatalogDevBoxDefinitionsGetOptionalParams
+export interface CheckScopedNameAvailabilityExecuteOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the get operation. */
-export type CatalogDevBoxDefinitionsGetResponse = DevBoxDefinition;
-
-/** Optional parameters. */
-export interface CatalogDevBoxDefinitionsGetErrorDetailsOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getErrorDetails operation. */
-export type CatalogDevBoxDefinitionsGetErrorDetailsResponse = CatalogResourceValidationErrorDetails;
-
-/** Optional parameters. */
-export interface CatalogDevBoxDefinitionsListByCatalogNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByCatalogNext operation. */
-export type CatalogDevBoxDefinitionsListByCatalogNextResponse = DevBoxDefinitionListResult;
+/** Contains response data for the execute operation. */
+export type CheckScopedNameAvailabilityExecuteResponse =
+  CheckNameAvailabilityResponse;
 
 /** Optional parameters. */
 export interface CustomizationTasksListByCatalogOptionalParams
@@ -3105,7 +3953,8 @@ export interface CustomizationTasksListByCatalogOptionalParams
 }
 
 /** Contains response data for the listByCatalog operation. */
-export type CustomizationTasksListByCatalogResponse = CustomizationTaskListResult;
+export type CustomizationTasksListByCatalogResponse =
+  CustomizationTaskListResult;
 
 /** Optional parameters. */
 export interface CustomizationTasksGetOptionalParams
@@ -3119,45 +3968,16 @@ export interface CustomizationTasksGetErrorDetailsOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the getErrorDetails operation. */
-export type CustomizationTasksGetErrorDetailsResponse = CatalogResourceValidationErrorDetails;
+export type CustomizationTasksGetErrorDetailsResponse =
+  CatalogResourceValidationErrorDetails;
 
 /** Optional parameters. */
 export interface CustomizationTasksListByCatalogNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByCatalogNext operation. */
-export type CustomizationTasksListByCatalogNextResponse = CustomizationTaskListResult;
-
-/** Optional parameters. */
-export interface EnvironmentDefinitionsListByCatalogOptionalParams
-  extends coreClient.OperationOptions {
-  /** The maximum number of resources to return from the operation. Example: '$top=10'. */
-  top?: number;
-}
-
-/** Contains response data for the listByCatalog operation. */
-export type EnvironmentDefinitionsListByCatalogResponse = EnvironmentDefinitionListResult;
-
-/** Optional parameters. */
-export interface EnvironmentDefinitionsGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type EnvironmentDefinitionsGetResponse = EnvironmentDefinition;
-
-/** Optional parameters. */
-export interface EnvironmentDefinitionsGetErrorDetailsOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getErrorDetails operation. */
-export type EnvironmentDefinitionsGetErrorDetailsResponse = CatalogResourceValidationErrorDetails;
-
-/** Optional parameters. */
-export interface EnvironmentDefinitionsListByCatalogNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listByCatalogNext operation. */
-export type EnvironmentDefinitionsListByCatalogNextResponse = EnvironmentDefinitionListResult;
+export type CustomizationTasksListByCatalogNextResponse =
+  CustomizationTaskListResult;
 
 /** Optional parameters. */
 export interface SkusListBySubscriptionOptionalParams
@@ -3223,6 +4043,9 @@ export interface PoolsDeleteOptionalParams extends coreClient.OperationOptions {
   resumeFrom?: string;
 }
 
+/** Contains response data for the delete operation. */
+export type PoolsDeleteResponse = PoolsDeleteHeaders;
+
 /** Optional parameters. */
 export interface PoolsRunHealthChecksOptionalParams
   extends coreClient.OperationOptions {
@@ -3231,6 +4054,9 @@ export interface PoolsRunHealthChecksOptionalParams
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
   resumeFrom?: string;
 }
+
+/** Contains response data for the runHealthChecks operation. */
+export type PoolsRunHealthChecksResponse = PoolsRunHealthChecksHeaders;
 
 /** Optional parameters. */
 export interface PoolsListByProjectNextOptionalParams
@@ -3298,6 +4124,9 @@ export interface SchedulesDeleteOptionalParams
   resumeFrom?: string;
 }
 
+/** Contains response data for the delete operation. */
+export type SchedulesDeleteResponse = SchedulesDeleteHeaders;
+
 /** Optional parameters. */
 export interface SchedulesListByPoolNextOptionalParams
   extends coreClient.OperationOptions {}
@@ -3313,7 +4142,8 @@ export interface NetworkConnectionsListBySubscriptionOptionalParams
 }
 
 /** Contains response data for the listBySubscription operation. */
-export type NetworkConnectionsListBySubscriptionResponse = NetworkConnectionListResult;
+export type NetworkConnectionsListBySubscriptionResponse =
+  NetworkConnectionListResult;
 
 /** Optional parameters. */
 export interface NetworkConnectionsListByResourceGroupOptionalParams
@@ -3323,7 +4153,8 @@ export interface NetworkConnectionsListByResourceGroupOptionalParams
 }
 
 /** Contains response data for the listByResourceGroup operation. */
-export type NetworkConnectionsListByResourceGroupResponse = NetworkConnectionListResult;
+export type NetworkConnectionsListByResourceGroupResponse =
+  NetworkConnectionListResult;
 
 /** Optional parameters. */
 export interface NetworkConnectionsGetOptionalParams
@@ -3365,6 +4196,9 @@ export interface NetworkConnectionsDeleteOptionalParams
   resumeFrom?: string;
 }
 
+/** Contains response data for the delete operation. */
+export type NetworkConnectionsDeleteResponse = NetworkConnectionsDeleteHeaders;
+
 /** Optional parameters. */
 export interface NetworkConnectionsListHealthDetailsOptionalParams
   extends coreClient.OperationOptions {
@@ -3373,14 +4207,16 @@ export interface NetworkConnectionsListHealthDetailsOptionalParams
 }
 
 /** Contains response data for the listHealthDetails operation. */
-export type NetworkConnectionsListHealthDetailsResponse = HealthCheckStatusDetailsListResult;
+export type NetworkConnectionsListHealthDetailsResponse =
+  HealthCheckStatusDetailsListResult;
 
 /** Optional parameters. */
 export interface NetworkConnectionsGetHealthDetailsOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the getHealthDetails operation. */
-export type NetworkConnectionsGetHealthDetailsResponse = HealthCheckStatusDetails;
+export type NetworkConnectionsGetHealthDetailsResponse =
+  HealthCheckStatusDetails;
 
 /** Optional parameters. */
 export interface NetworkConnectionsRunHealthChecksOptionalParams
@@ -3391,6 +4227,10 @@ export interface NetworkConnectionsRunHealthChecksOptionalParams
   resumeFrom?: string;
 }
 
+/** Contains response data for the runHealthChecks operation. */
+export type NetworkConnectionsRunHealthChecksResponse =
+  NetworkConnectionsRunHealthChecksHeaders;
+
 /** Optional parameters. */
 export interface NetworkConnectionsListOutboundNetworkDependenciesEndpointsOptionalParams
   extends coreClient.OperationOptions {
@@ -3399,35 +4239,32 @@ export interface NetworkConnectionsListOutboundNetworkDependenciesEndpointsOptio
 }
 
 /** Contains response data for the listOutboundNetworkDependenciesEndpoints operation. */
-export type NetworkConnectionsListOutboundNetworkDependenciesEndpointsResponse = OutboundEnvironmentEndpointCollection;
+export type NetworkConnectionsListOutboundNetworkDependenciesEndpointsResponse =
+  OutboundEnvironmentEndpointCollection;
 
 /** Optional parameters. */
 export interface NetworkConnectionsListBySubscriptionNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listBySubscriptionNext operation. */
-export type NetworkConnectionsListBySubscriptionNextResponse = NetworkConnectionListResult;
+export type NetworkConnectionsListBySubscriptionNextResponse =
+  NetworkConnectionListResult;
 
 /** Optional parameters. */
 export interface NetworkConnectionsListByResourceGroupNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroupNext operation. */
-export type NetworkConnectionsListByResourceGroupNextResponse = NetworkConnectionListResult;
-
-/** Optional parameters. */
-export interface NetworkConnectionsListHealthDetailsNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listHealthDetailsNext operation. */
-export type NetworkConnectionsListHealthDetailsNextResponse = HealthCheckStatusDetailsListResult;
+export type NetworkConnectionsListByResourceGroupNextResponse =
+  NetworkConnectionListResult;
 
 /** Optional parameters. */
 export interface NetworkConnectionsListOutboundNetworkDependenciesEndpointsNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listOutboundNetworkDependenciesEndpointsNext operation. */
-export type NetworkConnectionsListOutboundNetworkDependenciesEndpointsNextResponse = OutboundEnvironmentEndpointCollection;
+export type NetworkConnectionsListOutboundNetworkDependenciesEndpointsNextResponse =
+  OutboundEnvironmentEndpointCollection;
 
 /** Optional parameters. */
 export interface DevCenterClientOptionalParams

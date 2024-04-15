@@ -8,7 +8,7 @@
 
 import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
 import { setContinuationToken } from "../pagingHelper";
-import { Catalogs } from "../operationsInterfaces";
+import { ProjectCatalogs } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
@@ -21,34 +21,34 @@ import {
 import { createLroSpec } from "../lroImpl";
 import {
   Catalog,
-  CatalogsListByDevCenterNextOptionalParams,
-  CatalogsListByDevCenterOptionalParams,
-  CatalogsListByDevCenterResponse,
-  CatalogsGetOptionalParams,
-  CatalogsGetResponse,
-  CatalogsCreateOrUpdateOptionalParams,
-  CatalogsCreateOrUpdateResponse,
+  ProjectCatalogsListNextOptionalParams,
+  ProjectCatalogsListOptionalParams,
+  ProjectCatalogsListResponse,
+  ProjectCatalogsGetOptionalParams,
+  ProjectCatalogsGetResponse,
+  ProjectCatalogsCreateOrUpdateOptionalParams,
+  ProjectCatalogsCreateOrUpdateResponse,
   CatalogUpdate,
-  CatalogsUpdateOptionalParams,
-  CatalogsUpdateResponse,
-  CatalogsDeleteOptionalParams,
-  CatalogsDeleteResponse,
-  CatalogsGetSyncErrorDetailsOptionalParams,
-  CatalogsGetSyncErrorDetailsResponse,
-  CatalogsSyncOptionalParams,
-  CatalogsSyncResponse,
-  CatalogsConnectOptionalParams,
-  CatalogsConnectResponse,
-  CatalogsListByDevCenterNextResponse,
+  ProjectCatalogsPatchOptionalParams,
+  ProjectCatalogsPatchResponse,
+  ProjectCatalogsDeleteOptionalParams,
+  ProjectCatalogsDeleteResponse,
+  ProjectCatalogsGetSyncErrorDetailsOptionalParams,
+  ProjectCatalogsGetSyncErrorDetailsResponse,
+  ProjectCatalogsSyncOptionalParams,
+  ProjectCatalogsSyncResponse,
+  ProjectCatalogsConnectOptionalParams,
+  ProjectCatalogsConnectResponse,
+  ProjectCatalogsListNextResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing Catalogs operations. */
-export class CatalogsImpl implements Catalogs {
+/** Class containing ProjectCatalogs operations. */
+export class ProjectCatalogsImpl implements ProjectCatalogs {
   private readonly client: DevCenterClient;
 
   /**
-   * Initialize a new instance of the class Catalogs class.
+   * Initialize a new instance of the class ProjectCatalogs class.
    * @param client Reference to the service client
    */
   constructor(client: DevCenterClient) {
@@ -56,21 +56,17 @@ export class CatalogsImpl implements Catalogs {
   }
 
   /**
-   * Lists catalogs for a devcenter.
+   * Lists the catalogs associated with a project.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param devCenterName The name of the devcenter.
+   * @param projectName The name of the project.
    * @param options The options parameters.
    */
-  public listByDevCenter(
+  public list(
     resourceGroupName: string,
-    devCenterName: string,
-    options?: CatalogsListByDevCenterOptionalParams,
+    projectName: string,
+    options?: ProjectCatalogsListOptionalParams,
   ): PagedAsyncIterableIterator<Catalog> {
-    const iter = this.listByDevCenterPagingAll(
-      resourceGroupName,
-      devCenterName,
-      options,
-    );
+    const iter = this.listPagingAll(resourceGroupName, projectName, options);
     return {
       next() {
         return iter.next();
@@ -82,9 +78,9 @@ export class CatalogsImpl implements Catalogs {
         if (settings?.maxPageSize) {
           throw new Error("maxPageSize is not supported by this operation.");
         }
-        return this.listByDevCenterPagingPage(
+        return this.listPagingPage(
           resourceGroupName,
-          devCenterName,
+          projectName,
           options,
           settings,
         );
@@ -92,29 +88,25 @@ export class CatalogsImpl implements Catalogs {
     };
   }
 
-  private async *listByDevCenterPagingPage(
+  private async *listPagingPage(
     resourceGroupName: string,
-    devCenterName: string,
-    options?: CatalogsListByDevCenterOptionalParams,
+    projectName: string,
+    options?: ProjectCatalogsListOptionalParams,
     settings?: PageSettings,
   ): AsyncIterableIterator<Catalog[]> {
-    let result: CatalogsListByDevCenterResponse;
+    let result: ProjectCatalogsListResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._listByDevCenter(
-        resourceGroupName,
-        devCenterName,
-        options,
-      );
+      result = await this._list(resourceGroupName, projectName, options);
       let page = result.value || [];
       continuationToken = result.nextLink;
       setContinuationToken(page, continuationToken);
       yield page;
     }
     while (continuationToken) {
-      result = await this._listByDevCenterNext(
+      result = await this._listNext(
         resourceGroupName,
-        devCenterName,
+        projectName,
         continuationToken,
         options,
       );
@@ -125,14 +117,14 @@ export class CatalogsImpl implements Catalogs {
     }
   }
 
-  private async *listByDevCenterPagingAll(
+  private async *listPagingAll(
     resourceGroupName: string,
-    devCenterName: string,
-    options?: CatalogsListByDevCenterOptionalParams,
+    projectName: string,
+    options?: ProjectCatalogsListOptionalParams,
   ): AsyncIterableIterator<Catalog> {
-    for await (const page of this.listByDevCenterPagingPage(
+    for await (const page of this.listPagingPage(
       resourceGroupName,
-      devCenterName,
+      projectName,
       options,
     )) {
       yield* page;
@@ -140,65 +132,65 @@ export class CatalogsImpl implements Catalogs {
   }
 
   /**
-   * Lists catalogs for a devcenter.
+   * Lists the catalogs associated with a project.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param devCenterName The name of the devcenter.
+   * @param projectName The name of the project.
    * @param options The options parameters.
    */
-  private _listByDevCenter(
+  private _list(
     resourceGroupName: string,
-    devCenterName: string,
-    options?: CatalogsListByDevCenterOptionalParams,
-  ): Promise<CatalogsListByDevCenterResponse> {
+    projectName: string,
+    options?: ProjectCatalogsListOptionalParams,
+  ): Promise<ProjectCatalogsListResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, devCenterName, options },
-      listByDevCenterOperationSpec,
+      { resourceGroupName, projectName, options },
+      listOperationSpec,
     );
   }
 
   /**
-   * Gets a catalog
+   * Gets an associated project catalog.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param devCenterName The name of the devcenter.
+   * @param projectName The name of the project.
    * @param catalogName The name of the Catalog.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
-    devCenterName: string,
+    projectName: string,
     catalogName: string,
-    options?: CatalogsGetOptionalParams,
-  ): Promise<CatalogsGetResponse> {
+    options?: ProjectCatalogsGetOptionalParams,
+  ): Promise<ProjectCatalogsGetResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, devCenterName, catalogName, options },
+      { resourceGroupName, projectName, catalogName, options },
       getOperationSpec,
     );
   }
 
   /**
-   * Creates or updates a catalog.
+   * Creates or updates a project catalog.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param devCenterName The name of the devcenter.
+   * @param projectName The name of the project.
    * @param catalogName The name of the Catalog.
    * @param body Represents a catalog.
    * @param options The options parameters.
    */
   async beginCreateOrUpdate(
     resourceGroupName: string,
-    devCenterName: string,
+    projectName: string,
     catalogName: string,
     body: Catalog,
-    options?: CatalogsCreateOrUpdateOptionalParams,
+    options?: ProjectCatalogsCreateOrUpdateOptionalParams,
   ): Promise<
     SimplePollerLike<
-      OperationState<CatalogsCreateOrUpdateResponse>,
-      CatalogsCreateOrUpdateResponse
+      OperationState<ProjectCatalogsCreateOrUpdateResponse>,
+      ProjectCatalogsCreateOrUpdateResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec,
-    ): Promise<CatalogsCreateOrUpdateResponse> => {
+    ): Promise<ProjectCatalogsCreateOrUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -235,12 +227,12 @@ export class CatalogsImpl implements Catalogs {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, devCenterName, catalogName, body, options },
+      args: { resourceGroupName, projectName, catalogName, body, options },
       spec: createOrUpdateOperationSpec,
     });
     const poller = await createHttpPoller<
-      CatalogsCreateOrUpdateResponse,
-      OperationState<CatalogsCreateOrUpdateResponse>
+      ProjectCatalogsCreateOrUpdateResponse,
+      OperationState<ProjectCatalogsCreateOrUpdateResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
@@ -251,23 +243,23 @@ export class CatalogsImpl implements Catalogs {
   }
 
   /**
-   * Creates or updates a catalog.
+   * Creates or updates a project catalog.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param devCenterName The name of the devcenter.
+   * @param projectName The name of the project.
    * @param catalogName The name of the Catalog.
    * @param body Represents a catalog.
    * @param options The options parameters.
    */
   async beginCreateOrUpdateAndWait(
     resourceGroupName: string,
-    devCenterName: string,
+    projectName: string,
     catalogName: string,
     body: Catalog,
-    options?: CatalogsCreateOrUpdateOptionalParams,
-  ): Promise<CatalogsCreateOrUpdateResponse> {
+    options?: ProjectCatalogsCreateOrUpdateOptionalParams,
+  ): Promise<ProjectCatalogsCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
-      devCenterName,
+      projectName,
       catalogName,
       body,
       options,
@@ -276,29 +268,29 @@ export class CatalogsImpl implements Catalogs {
   }
 
   /**
-   * Partially updates a catalog.
+   * Partially updates a project catalog.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param devCenterName The name of the devcenter.
+   * @param projectName The name of the project.
    * @param catalogName The name of the Catalog.
-   * @param body Updatable catalog properties.
+   * @param body Updatable project catalog properties.
    * @param options The options parameters.
    */
-  async beginUpdate(
+  async beginPatch(
     resourceGroupName: string,
-    devCenterName: string,
+    projectName: string,
     catalogName: string,
     body: CatalogUpdate,
-    options?: CatalogsUpdateOptionalParams,
+    options?: ProjectCatalogsPatchOptionalParams,
   ): Promise<
     SimplePollerLike<
-      OperationState<CatalogsUpdateResponse>,
-      CatalogsUpdateResponse
+      OperationState<ProjectCatalogsPatchResponse>,
+      ProjectCatalogsPatchResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec,
-    ): Promise<CatalogsUpdateResponse> => {
+    ): Promise<ProjectCatalogsPatchResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -335,12 +327,12 @@ export class CatalogsImpl implements Catalogs {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, devCenterName, catalogName, body, options },
-      spec: updateOperationSpec,
+      args: { resourceGroupName, projectName, catalogName, body, options },
+      spec: patchOperationSpec,
     });
     const poller = await createHttpPoller<
-      CatalogsUpdateResponse,
-      OperationState<CatalogsUpdateResponse>
+      ProjectCatalogsPatchResponse,
+      OperationState<ProjectCatalogsPatchResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
@@ -351,23 +343,23 @@ export class CatalogsImpl implements Catalogs {
   }
 
   /**
-   * Partially updates a catalog.
+   * Partially updates a project catalog.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param devCenterName The name of the devcenter.
+   * @param projectName The name of the project.
    * @param catalogName The name of the Catalog.
-   * @param body Updatable catalog properties.
+   * @param body Updatable project catalog properties.
    * @param options The options parameters.
    */
-  async beginUpdateAndWait(
+  async beginPatchAndWait(
     resourceGroupName: string,
-    devCenterName: string,
+    projectName: string,
     catalogName: string,
     body: CatalogUpdate,
-    options?: CatalogsUpdateOptionalParams,
-  ): Promise<CatalogsUpdateResponse> {
-    const poller = await this.beginUpdate(
+    options?: ProjectCatalogsPatchOptionalParams,
+  ): Promise<ProjectCatalogsPatchResponse> {
+    const poller = await this.beginPatch(
       resourceGroupName,
-      devCenterName,
+      projectName,
       catalogName,
       body,
       options,
@@ -376,27 +368,27 @@ export class CatalogsImpl implements Catalogs {
   }
 
   /**
-   * Deletes a catalog resource.
+   * Deletes a project catalog resource.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param devCenterName The name of the devcenter.
+   * @param projectName The name of the project.
    * @param catalogName The name of the Catalog.
    * @param options The options parameters.
    */
   async beginDelete(
     resourceGroupName: string,
-    devCenterName: string,
+    projectName: string,
     catalogName: string,
-    options?: CatalogsDeleteOptionalParams,
+    options?: ProjectCatalogsDeleteOptionalParams,
   ): Promise<
     SimplePollerLike<
-      OperationState<CatalogsDeleteResponse>,
-      CatalogsDeleteResponse
+      OperationState<ProjectCatalogsDeleteResponse>,
+      ProjectCatalogsDeleteResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec,
-    ): Promise<CatalogsDeleteResponse> => {
+    ): Promise<ProjectCatalogsDeleteResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -433,12 +425,12 @@ export class CatalogsImpl implements Catalogs {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, devCenterName, catalogName, options },
+      args: { resourceGroupName, projectName, catalogName, options },
       spec: deleteOperationSpec,
     });
     const poller = await createHttpPoller<
-      CatalogsDeleteResponse,
-      OperationState<CatalogsDeleteResponse>
+      ProjectCatalogsDeleteResponse,
+      OperationState<ProjectCatalogsDeleteResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
@@ -449,21 +441,21 @@ export class CatalogsImpl implements Catalogs {
   }
 
   /**
-   * Deletes a catalog resource.
+   * Deletes a project catalog resource.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param devCenterName The name of the devcenter.
+   * @param projectName The name of the project.
    * @param catalogName The name of the Catalog.
    * @param options The options parameters.
    */
   async beginDeleteAndWait(
     resourceGroupName: string,
-    devCenterName: string,
+    projectName: string,
     catalogName: string,
-    options?: CatalogsDeleteOptionalParams,
-  ): Promise<CatalogsDeleteResponse> {
+    options?: ProjectCatalogsDeleteOptionalParams,
+  ): Promise<ProjectCatalogsDeleteResponse> {
     const poller = await this.beginDelete(
       resourceGroupName,
-      devCenterName,
+      projectName,
       catalogName,
       options,
     );
@@ -471,20 +463,20 @@ export class CatalogsImpl implements Catalogs {
   }
 
   /**
-   * Gets catalog synchronization error details
+   * Gets project catalog synchronization error details
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param devCenterName The name of the devcenter.
+   * @param projectName The name of the project.
    * @param catalogName The name of the Catalog.
    * @param options The options parameters.
    */
   getSyncErrorDetails(
     resourceGroupName: string,
-    devCenterName: string,
+    projectName: string,
     catalogName: string,
-    options?: CatalogsGetSyncErrorDetailsOptionalParams,
-  ): Promise<CatalogsGetSyncErrorDetailsResponse> {
+    options?: ProjectCatalogsGetSyncErrorDetailsOptionalParams,
+  ): Promise<ProjectCatalogsGetSyncErrorDetailsResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, devCenterName, catalogName, options },
+      { resourceGroupName, projectName, catalogName, options },
       getSyncErrorDetailsOperationSpec,
     );
   }
@@ -492,22 +484,25 @@ export class CatalogsImpl implements Catalogs {
   /**
    * Syncs templates for a template source.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param devCenterName The name of the devcenter.
+   * @param projectName The name of the project.
    * @param catalogName The name of the Catalog.
    * @param options The options parameters.
    */
   async beginSync(
     resourceGroupName: string,
-    devCenterName: string,
+    projectName: string,
     catalogName: string,
-    options?: CatalogsSyncOptionalParams,
+    options?: ProjectCatalogsSyncOptionalParams,
   ): Promise<
-    SimplePollerLike<OperationState<CatalogsSyncResponse>, CatalogsSyncResponse>
+    SimplePollerLike<
+      OperationState<ProjectCatalogsSyncResponse>,
+      ProjectCatalogsSyncResponse
+    >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec,
-    ): Promise<CatalogsSyncResponse> => {
+    ): Promise<ProjectCatalogsSyncResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -544,12 +539,12 @@ export class CatalogsImpl implements Catalogs {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, devCenterName, catalogName, options },
+      args: { resourceGroupName, projectName, catalogName, options },
       spec: syncOperationSpec,
     });
     const poller = await createHttpPoller<
-      CatalogsSyncResponse,
-      OperationState<CatalogsSyncResponse>
+      ProjectCatalogsSyncResponse,
+      OperationState<ProjectCatalogsSyncResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
@@ -562,19 +557,19 @@ export class CatalogsImpl implements Catalogs {
   /**
    * Syncs templates for a template source.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param devCenterName The name of the devcenter.
+   * @param projectName The name of the project.
    * @param catalogName The name of the Catalog.
    * @param options The options parameters.
    */
   async beginSyncAndWait(
     resourceGroupName: string,
-    devCenterName: string,
+    projectName: string,
     catalogName: string,
-    options?: CatalogsSyncOptionalParams,
-  ): Promise<CatalogsSyncResponse> {
+    options?: ProjectCatalogsSyncOptionalParams,
+  ): Promise<ProjectCatalogsSyncResponse> {
     const poller = await this.beginSync(
       resourceGroupName,
-      devCenterName,
+      projectName,
       catalogName,
       options,
     );
@@ -582,27 +577,27 @@ export class CatalogsImpl implements Catalogs {
   }
 
   /**
-   * Connects a catalog to enable syncing.
+   * Connects a project catalog to enable syncing.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param devCenterName The name of the devcenter.
+   * @param projectName The name of the project.
    * @param catalogName The name of the Catalog.
    * @param options The options parameters.
    */
   async beginConnect(
     resourceGroupName: string,
-    devCenterName: string,
+    projectName: string,
     catalogName: string,
-    options?: CatalogsConnectOptionalParams,
+    options?: ProjectCatalogsConnectOptionalParams,
   ): Promise<
     SimplePollerLike<
-      OperationState<CatalogsConnectResponse>,
-      CatalogsConnectResponse
+      OperationState<ProjectCatalogsConnectResponse>,
+      ProjectCatalogsConnectResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec,
-    ): Promise<CatalogsConnectResponse> => {
+    ): Promise<ProjectCatalogsConnectResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -639,12 +634,12 @@ export class CatalogsImpl implements Catalogs {
 
     const lro = createLroSpec({
       sendOperationFn,
-      args: { resourceGroupName, devCenterName, catalogName, options },
+      args: { resourceGroupName, projectName, catalogName, options },
       spec: connectOperationSpec,
     });
     const poller = await createHttpPoller<
-      CatalogsConnectResponse,
-      OperationState<CatalogsConnectResponse>
+      ProjectCatalogsConnectResponse,
+      OperationState<ProjectCatalogsConnectResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
@@ -655,21 +650,21 @@ export class CatalogsImpl implements Catalogs {
   }
 
   /**
-   * Connects a catalog to enable syncing.
+   * Connects a project catalog to enable syncing.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param devCenterName The name of the devcenter.
+   * @param projectName The name of the project.
    * @param catalogName The name of the Catalog.
    * @param options The options parameters.
    */
   async beginConnectAndWait(
     resourceGroupName: string,
-    devCenterName: string,
+    projectName: string,
     catalogName: string,
-    options?: CatalogsConnectOptionalParams,
-  ): Promise<CatalogsConnectResponse> {
+    options?: ProjectCatalogsConnectOptionalParams,
+  ): Promise<ProjectCatalogsConnectResponse> {
     const poller = await this.beginConnect(
       resourceGroupName,
-      devCenterName,
+      projectName,
       catalogName,
       options,
     );
@@ -677,29 +672,29 @@ export class CatalogsImpl implements Catalogs {
   }
 
   /**
-   * ListByDevCenterNext
+   * ListNext
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param devCenterName The name of the devcenter.
-   * @param nextLink The nextLink from the previous successful call to the ListByDevCenter method.
+   * @param projectName The name of the project.
+   * @param nextLink The nextLink from the previous successful call to the List method.
    * @param options The options parameters.
    */
-  private _listByDevCenterNext(
+  private _listNext(
     resourceGroupName: string,
-    devCenterName: string,
+    projectName: string,
     nextLink: string,
-    options?: CatalogsListByDevCenterNextOptionalParams,
-  ): Promise<CatalogsListByDevCenterNextResponse> {
+    options?: ProjectCatalogsListNextOptionalParams,
+  ): Promise<ProjectCatalogsListNextResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, devCenterName, nextLink, options },
-      listByDevCenterNextOperationSpec,
+      { resourceGroupName, projectName, nextLink, options },
+      listNextOperationSpec,
     );
   }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const listByDevCenterOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/devcenters/{devCenterName}/catalogs",
+const listOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/catalogs",
   httpMethod: "GET",
   responses: {
     200: {
@@ -714,13 +709,13 @@ const listByDevCenterOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.devCenterName,
+    Parameters.projectName,
   ],
   headerParameters: [Parameters.accept],
   serializer,
 };
 const getOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/devcenters/{devCenterName}/catalogs/{catalogName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/catalogs/{catalogName}",
   httpMethod: "GET",
   responses: {
     200: {
@@ -735,14 +730,14 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.devCenterName,
+    Parameters.projectName,
     Parameters.catalogName,
   ],
   headerParameters: [Parameters.accept],
   serializer,
 };
 const createOrUpdateOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/devcenters/{devCenterName}/catalogs/{catalogName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/catalogs/{catalogName}",
   httpMethod: "PUT",
   responses: {
     200: {
@@ -767,15 +762,15 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.devCenterName,
+    Parameters.projectName,
     Parameters.catalogName,
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
   serializer,
 };
-const updateOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/devcenters/{devCenterName}/catalogs/{catalogName}",
+const patchOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/catalogs/{catalogName}",
   httpMethod: "PATCH",
   responses: {
     200: {
@@ -800,7 +795,7 @@ const updateOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.devCenterName,
+    Parameters.projectName,
     Parameters.catalogName,
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
@@ -808,20 +803,20 @@ const updateOperationSpec: coreClient.OperationSpec = {
   serializer,
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/devcenters/{devCenterName}/catalogs/{catalogName}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/catalogs/{catalogName}",
   httpMethod: "DELETE",
   responses: {
     200: {
-      headersMapper: Mappers.CatalogsDeleteHeaders,
+      headersMapper: Mappers.ProjectCatalogsDeleteHeaders,
     },
     201: {
-      headersMapper: Mappers.CatalogsDeleteHeaders,
+      headersMapper: Mappers.ProjectCatalogsDeleteHeaders,
     },
     202: {
-      headersMapper: Mappers.CatalogsDeleteHeaders,
+      headersMapper: Mappers.ProjectCatalogsDeleteHeaders,
     },
     204: {
-      headersMapper: Mappers.CatalogsDeleteHeaders,
+      headersMapper: Mappers.ProjectCatalogsDeleteHeaders,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,
@@ -832,14 +827,14 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.devCenterName,
+    Parameters.projectName,
     Parameters.catalogName,
   ],
   headerParameters: [Parameters.accept],
   serializer,
 };
 const getSyncErrorDetailsOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/devcenters/{devCenterName}/catalogs/{catalogName}/getSyncErrorDetails",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/catalogs/{catalogName}/getSyncErrorDetails",
   httpMethod: "POST",
   responses: {
     200: {
@@ -854,27 +849,27 @@ const getSyncErrorDetailsOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.devCenterName,
+    Parameters.projectName,
     Parameters.catalogName,
   ],
   headerParameters: [Parameters.accept],
   serializer,
 };
 const syncOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/devcenters/{devCenterName}/catalogs/{catalogName}/sync",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/catalogs/{catalogName}/sync",
   httpMethod: "POST",
   responses: {
     200: {
-      headersMapper: Mappers.CatalogsSyncHeaders,
+      headersMapper: Mappers.ProjectCatalogsSyncHeaders,
     },
     201: {
-      headersMapper: Mappers.CatalogsSyncHeaders,
+      headersMapper: Mappers.ProjectCatalogsSyncHeaders,
     },
     202: {
-      headersMapper: Mappers.CatalogsSyncHeaders,
+      headersMapper: Mappers.ProjectCatalogsSyncHeaders,
     },
     204: {
-      headersMapper: Mappers.CatalogsSyncHeaders,
+      headersMapper: Mappers.ProjectCatalogsSyncHeaders,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,
@@ -885,27 +880,27 @@ const syncOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.devCenterName,
+    Parameters.projectName,
     Parameters.catalogName,
   ],
   headerParameters: [Parameters.accept],
   serializer,
 };
 const connectOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/devcenters/{devCenterName}/catalogs/{catalogName}/connect",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/catalogs/{catalogName}/connect",
   httpMethod: "POST",
   responses: {
     200: {
-      headersMapper: Mappers.CatalogsConnectHeaders,
+      headersMapper: Mappers.ProjectCatalogsConnectHeaders,
     },
     201: {
-      headersMapper: Mappers.CatalogsConnectHeaders,
+      headersMapper: Mappers.ProjectCatalogsConnectHeaders,
     },
     202: {
-      headersMapper: Mappers.CatalogsConnectHeaders,
+      headersMapper: Mappers.ProjectCatalogsConnectHeaders,
     },
     204: {
-      headersMapper: Mappers.CatalogsConnectHeaders,
+      headersMapper: Mappers.ProjectCatalogsConnectHeaders,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,
@@ -916,13 +911,13 @@ const connectOperationSpec: coreClient.OperationSpec = {
     Parameters.$host,
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
-    Parameters.devCenterName,
+    Parameters.projectName,
     Parameters.catalogName,
   ],
   headerParameters: [Parameters.accept],
   serializer,
 };
-const listByDevCenterNextOperationSpec: coreClient.OperationSpec = {
+const listNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
@@ -938,7 +933,7 @@ const listByDevCenterNextOperationSpec: coreClient.OperationSpec = {
     Parameters.subscriptionId,
     Parameters.resourceGroupName,
     Parameters.nextLink,
-    Parameters.devCenterName,
+    Parameters.projectName,
   ],
   headerParameters: [Parameters.accept],
   serializer,

@@ -19,7 +19,10 @@ import {
   ProjectUpdate,
   ProjectsUpdateOptionalParams,
   ProjectsUpdateResponse,
-  ProjectsDeleteOptionalParams
+  ProjectsDeleteOptionalParams,
+  ProjectsDeleteResponse,
+  ProjectsGetInheritedSettingsOptionalParams,
+  ProjectsGetInheritedSettingsResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -30,7 +33,7 @@ export interface Projects {
    * @param options The options parameters.
    */
   listBySubscription(
-    options?: ProjectsListBySubscriptionOptionalParams
+    options?: ProjectsListBySubscriptionOptionalParams,
   ): PagedAsyncIterableIterator<Project>;
   /**
    * Lists all projects in the resource group.
@@ -39,7 +42,7 @@ export interface Projects {
    */
   listByResourceGroup(
     resourceGroupName: string,
-    options?: ProjectsListByResourceGroupOptionalParams
+    options?: ProjectsListByResourceGroupOptionalParams,
   ): PagedAsyncIterableIterator<Project>;
   /**
    * Gets a specific project.
@@ -50,7 +53,7 @@ export interface Projects {
   get(
     resourceGroupName: string,
     projectName: string,
-    options?: ProjectsGetOptionalParams
+    options?: ProjectsGetOptionalParams,
   ): Promise<ProjectsGetResponse>;
   /**
    * Creates or updates a project.
@@ -63,7 +66,7 @@ export interface Projects {
     resourceGroupName: string,
     projectName: string,
     body: Project,
-    options?: ProjectsCreateOrUpdateOptionalParams
+    options?: ProjectsCreateOrUpdateOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<ProjectsCreateOrUpdateResponse>,
@@ -81,7 +84,7 @@ export interface Projects {
     resourceGroupName: string,
     projectName: string,
     body: Project,
-    options?: ProjectsCreateOrUpdateOptionalParams
+    options?: ProjectsCreateOrUpdateOptionalParams,
   ): Promise<ProjectsCreateOrUpdateResponse>;
   /**
    * Partially updates a project.
@@ -94,7 +97,7 @@ export interface Projects {
     resourceGroupName: string,
     projectName: string,
     body: ProjectUpdate,
-    options?: ProjectsUpdateOptionalParams
+    options?: ProjectsUpdateOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<ProjectsUpdateResponse>,
@@ -112,7 +115,7 @@ export interface Projects {
     resourceGroupName: string,
     projectName: string,
     body: ProjectUpdate,
-    options?: ProjectsUpdateOptionalParams
+    options?: ProjectsUpdateOptionalParams,
   ): Promise<ProjectsUpdateResponse>;
   /**
    * Deletes a project resource.
@@ -123,8 +126,13 @@ export interface Projects {
   beginDelete(
     resourceGroupName: string,
     projectName: string,
-    options?: ProjectsDeleteOptionalParams
-  ): Promise<SimplePollerLike<OperationState<void>, void>>;
+    options?: ProjectsDeleteOptionalParams,
+  ): Promise<
+    SimplePollerLike<
+      OperationState<ProjectsDeleteResponse>,
+      ProjectsDeleteResponse
+    >
+  >;
   /**
    * Deletes a project resource.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
@@ -134,6 +142,17 @@ export interface Projects {
   beginDeleteAndWait(
     resourceGroupName: string,
     projectName: string,
-    options?: ProjectsDeleteOptionalParams
-  ): Promise<void>;
+    options?: ProjectsDeleteOptionalParams,
+  ): Promise<ProjectsDeleteResponse>;
+  /**
+   * Gets applicable inherited settings for this project.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param projectName The name of the project.
+   * @param options The options parameters.
+   */
+  getInheritedSettings(
+    resourceGroupName: string,
+    projectName: string,
+    options?: ProjectsGetInheritedSettingsOptionalParams,
+  ): Promise<ProjectsGetInheritedSettingsResponse>;
 }
