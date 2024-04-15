@@ -380,7 +380,7 @@ export enum KnownOrigin {
   /** System */
   System = "system",
   /** UserSystem */
-  UserSystem = "user,system"
+  UserSystem = "user,system",
 }
 
 /**
@@ -397,7 +397,7 @@ export type Origin = string;
 /** Known values of {@link ActionType} that the service accepts. */
 export enum KnownActionType {
   /** Internal */
-  Internal = "Internal"
+  Internal = "Internal",
 }
 
 /**
@@ -418,7 +418,7 @@ export enum KnownCreatedByType {
   /** ManagedIdentity */
   ManagedIdentity = "ManagedIdentity",
   /** Key */
-  Key = "Key"
+  Key = "Key",
 }
 
 /**
@@ -438,7 +438,7 @@ export enum KnownManifestType {
   /** Repositories using helm */
   Helm = "helm",
   /** Repositories using kubernetes manifests */
-  Kube = "kube"
+  Kube = "kube",
 }
 
 /**
@@ -460,7 +460,7 @@ export enum KnownPullRequestStatus {
   /** Pull Request merged into repository. */
   Merged = "merged",
   /** Workflow no longer found within repository. */
-  Removed = "removed"
+  Removed = "removed",
 }
 
 /**
@@ -482,7 +482,7 @@ export enum KnownWorkflowRunStatus {
   /** Workflow run is inprogress */
   Inprogress = "inprogress",
   /** Workflow run is completed */
-  Completed = "completed"
+  Completed = "completed",
 }
 
 /**
@@ -503,7 +503,7 @@ export enum KnownAuthorizationStatus {
   /** Requests returned NotFound response */
   NotFound = "NotFound",
   /** Requests returned other error response */
-  Error = "Error"
+  Error = "Error",
 }
 
 /**
@@ -544,7 +544,7 @@ export enum KnownGenerationLanguage {
   /** rust language */
   Rust = "rust",
   /** swift language */
-  Swift = "swift"
+  Swift = "swift",
 }
 
 /**
@@ -573,7 +573,7 @@ export enum KnownDockerfileGenerationMode {
   /** Dockerfiles will be generated */
   Enabled = "enabled",
   /** Dockerfiles will not be generated */
-  Disabled = "disabled"
+  Disabled = "disabled",
 }
 
 /**
@@ -591,7 +591,7 @@ export enum KnownManifestGenerationMode {
   /** Manifests will be generated */
   Enabled = "enabled",
   /** Manifests will not be generated */
-  Disabled = "disabled"
+  Disabled = "disabled",
 }
 
 /**
@@ -609,7 +609,7 @@ export enum KnownGenerationManifestType {
   /** Helm manifests */
   Helm = "helm",
   /** Kubernetes manifests */
-  Kube = "kube"
+  Kube = "kube",
 }
 
 /**
