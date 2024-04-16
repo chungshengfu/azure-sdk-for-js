@@ -24,6 +24,8 @@ export interface AudioTranscriptionOutput {
   duration?: number;
   /** A collection of information about the timing, probabilities, and other detail of each processed audio segment. */
   segments?: Array<AudioTranscriptionSegmentOutput>;
+  /** A collection of information about the timing of each processed word. */
+  words?: Array<AudioTranscriptionWordOutput>;
 }
 
 /**
@@ -58,6 +60,16 @@ export interface AudioTranscriptionSegmentOutput {
    * segment's associated seek position.
    */
   seek: number;
+}
+
+/** Extended information about a single transcribed word, as provided on responses when the 'word' timestamp granularity is provided. */
+export interface AudioTranscriptionWordOutput {
+  /** The textual content of the word. */
+  word: string;
+  /** The start time of the word relative to the beginning of the audio, expressed in seconds. */
+  start: number;
+  /** The end time of the word relative to the beginning of the audio, expressed in seconds. */
+  end: number;
 }
 
 /** Result information for an operation that translated spoken audio into written text. */
@@ -177,7 +189,7 @@ export interface ContentFilterResultDetailsForPromptOutput {
   /** Describes whether profanity was detected. */
   profanity?: ContentFilterDetectionResultOutput;
   /** Describes detection results against configured custom blocklists. */
-  custom_blocklists?: Array<ContentFilterBlocklistIdResultOutput>;
+  custom_blocklists?: ContentFilterDetailedResultsOutput;
   /**
    * Describes an error returned if the content filtering system is
    * down or otherwise unable to complete the operation in time.
@@ -185,14 +197,16 @@ export interface ContentFilterResultDetailsForPromptOutput {
   error?: ErrorModel;
   /** Whether a jailbreak attempt was detected in the prompt. */
   jailbreak?: ContentFilterDetectionResultOutput;
+  /** Whether an indirect attack was detected in the prompt. */
+  indirect_attack?: ContentFilterDetectionResultOutput;
 }
 
 /** Information about filtered content severity level and if it has been filtered or not. */
 export interface ContentFilterResultOutput {
-  /** Ratings for the intensity and risk level of filtered content. */
-  severity: ContentFilterSeverityOutput;
   /** A value indicating whether or not the content has been filtered. */
   filtered: boolean;
+  /** Ratings for the intensity and risk level of filtered content. */
+  severity: ContentFilterSeverityOutput;
 }
 
 /** Represents the outcome of a detection operation performed by content filtering. */
@@ -203,12 +217,20 @@ export interface ContentFilterDetectionResultOutput {
   detected: boolean;
 }
 
-/** Represents the outcome of an evaluation against a custom blocklist as performed by content filtering. */
-export interface ContentFilterBlocklistIdResultOutput {
-  /** The ID of the custom blocklist evaluated. */
-  id: string;
+/** Represents a structured collection of result details for content filtering. */
+export interface ContentFilterDetailedResultsOutput {
   /** A value indicating whether or not the content has been filtered. */
   filtered: boolean;
+  /** The collection of detailed blocklist result information. */
+  details: Array<ContentFilterBlocklistIdResultOutput>;
+}
+
+/** Represents the outcome of an evaluation against a custom blocklist as performed by content filtering. */
+export interface ContentFilterBlocklistIdResultOutput {
+  /** A value indicating whether or not the content has been filtered. */
+  filtered: boolean;
+  /** The ID of the custom blocklist evaluated. */
+  id: string;
 }
 
 /**
@@ -263,7 +285,7 @@ export interface ContentFilterResultsForChoiceOutput {
   /** Describes whether profanity was detected. */
   profanity?: ContentFilterDetectionResultOutput;
   /** Describes detection results against configured custom blocklists. */
-  custom_blocklists?: Array<ContentFilterBlocklistIdResultOutput>;
+  custom_blocklists?: ContentFilterDetailedResultsOutput;
   /**
    * Describes an error returned if the content filtering system is
    * down or otherwise unable to complete the operation in time.
@@ -327,7 +349,8 @@ export interface ChatCompletionsToolCallOutputParent {
  * A tool call to a function tool, issued by the model in evaluation of a configured function tool, that represents
  * a function invocation needed for a subsequent chat completions request to resolve.
  */
-export interface ChatCompletionsFunctionToolCallOutput extends ChatCompletionsToolCallOutputParent {
+export interface ChatCompletionsFunctionToolCallOutput
+  extends ChatCompletionsToolCallOutputParent {
   /** The type of tool call, in this case always 'function'. */
   type: "function";
   /** The details of the function invocation requested by the tool call. */
@@ -355,8 +378,6 @@ export interface FunctionCallOutput {
 export interface ChatCompletionsOutput {
   /** A unique identifier associated with this chat completions response. */
   id: string;
-  /** The current model used for the chat completions request. */
-  model: string;
   /**
    * The first timestamp associated with generation activity for this completions response,
    * represented as seconds since the beginning of the Unix epoch of 00:00 on 1 Jan 1970.
@@ -368,6 +389,8 @@ export interface ChatCompletionsOutput {
    * Token limits and other settings may limit the number of choices generated.
    */
   choices: Array<ChatChoiceOutput>;
+  /** The model name used for this completions request. */
+  model?: string;
   /**
    * Content filtering results for zero or more prompts in the request. In a streaming request,
    * results for different prompts may arrive at different times or in different orders.
@@ -520,7 +543,8 @@ export interface StopFinishDetailsOutput extends ChatFinishDetailsOutputParent {
  * A structured representation of a stop reason that signifies a token limit was reached before the model could naturally
  * complete.
  */
-export interface MaxTokensFinishDetailsOutput extends ChatFinishDetailsOutputParent {
+export interface MaxTokensFinishDetailsOutput
+  extends ChatFinishDetailsOutputParent {
   /** The object type, which is always 'max_tokens' for this object. */
   type: "max_tokens";
 }
@@ -739,6 +763,22 @@ export interface EmbeddingsUsageOutput {
   total_tokens: number;
 }
 
+/** A polling status update or final response payload for an image operation. */
+export interface BatchImageGenerationOperationResponseOutput {
+  /** The ID of the operation. */
+  id: string;
+  /** A timestamp when this job or item was created (in unix epochs). */
+  created: number;
+  /** A timestamp when this operation and its associated images expire and will be deleted (in unix epochs). */
+  expires?: number;
+  /** The result of the operation if the operation succeeded. */
+  result?: ImageGenerationsOutput;
+  /** The status of the operation */
+  status: AzureOpenAIOperationStateOutput;
+  /** The error if the operation failed. */
+  error?: ErrorModel;
+}
+
 /**
  * An abstract representation of a tool call that must be resolved in a subsequent request to perform the requested
  * chat completion.
@@ -754,7 +794,12 @@ export type ChatFinishDetailsOutput =
 /** Alias for AudioTaskLabelOutput */
 export type AudioTaskLabelOutput = string | "transcribe" | "translate";
 /** Alias for ContentFilterSeverityOutput */
-export type ContentFilterSeverityOutput = string | "safe" | "low" | "medium" | "high";
+export type ContentFilterSeverityOutput =
+  | string
+  | "safe"
+  | "low"
+  | "medium"
+  | "high";
 /** Alias for CompletionsFinishReasonOutput */
 export type CompletionsFinishReasonOutput =
   | string
@@ -764,7 +809,13 @@ export type CompletionsFinishReasonOutput =
   | "function_call"
   | "tool_calls";
 /** Alias for ChatRoleOutput */
-export type ChatRoleOutput = string | "system" | "assistant" | "user" | "function" | "tool";
+export type ChatRoleOutput =
+  | string
+  | "system"
+  | "assistant"
+  | "user"
+  | "function"
+  | "tool";
 /** Alias for ImageSizeOutput */
 export type ImageSizeOutput =
   | string
