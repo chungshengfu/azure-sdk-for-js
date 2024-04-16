@@ -84,13 +84,10 @@ export const $host: OperationURLParameter = {
 export const subscriptionId: OperationURLParameter = {
   parameterPath: "subscriptionId",
   mapper: {
-    constraints: {
-      MinLength: 1,
-    },
     serializedName: "subscriptionId",
     required: true,
     type: {
-      name: "String",
+      name: "Uuid",
     },
   },
 };
@@ -104,6 +101,18 @@ export const resourceGroupName: OperationURLParameter = {
     },
     serializedName: "resourceGroupName",
     required: true,
+    type: {
+      name: "String",
+    },
+  },
+};
+
+export const apiVersion: OperationQueryParameter = {
+  parameterPath: "apiVersion",
+  mapper: {
+    defaultValue: "2024-05-15-preview",
+    isConstant: true,
+    serializedName: "api-version",
     type: {
       name: "String",
     },
@@ -126,16 +135,31 @@ export const accountName: OperationURLParameter = {
   },
 };
 
-export const apiVersion: OperationQueryParameter = {
-  parameterPath: "apiVersion",
+export const networkSecurityPerimeterConfigurationName: OperationURLParameter =
+  {
+    parameterPath: "networkSecurityPerimeterConfigurationName",
+    mapper: {
+      constraints: {
+        Pattern: new RegExp("^.*$"),
+      },
+      serializedName: "networkSecurityPerimeterConfigurationName",
+      required: true,
+      type: {
+        name: "String",
+      },
+    },
+  };
+
+export const nextLink: OperationURLParameter = {
+  parameterPath: "nextLink",
   mapper: {
-    defaultValue: "2024-02-15-preview",
-    isConstant: true,
-    serializedName: "api-version",
+    serializedName: "nextLink",
+    required: true,
     type: {
       name: "String",
     },
   },
+  skipEncoding: true,
 };
 
 export const contentType: OperationParameter = {
@@ -199,18 +223,6 @@ export const filter1: OperationQueryParameter = {
       name: "String",
     },
   },
-};
-
-export const nextLink: OperationURLParameter = {
-  parameterPath: "nextLink",
-  mapper: {
-    serializedName: "nextLink",
-    required: true,
-    type: {
-      name: "String",
-    },
-  },
-  skipEncoding: true,
 };
 
 export const databaseRid: OperationURLParameter = {
