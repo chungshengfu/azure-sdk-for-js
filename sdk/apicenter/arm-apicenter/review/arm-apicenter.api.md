@@ -6,34 +6,44 @@
 
 import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
-import { OperationState } from '@azure/core-lro';
 import { PagedAsyncIterableIterator } from '@azure/core-paging';
-import { SimplePollerLike } from '@azure/core-lro';
 
 // @public
 export type ActionType = string;
 
 // @public
-export interface Api extends ProxyResource {
-    properties?: ApiProperties;
+export interface Api extends Resource {
+    // (undocumented)
+    contacts?: Contact[];
+    customProperties?: Record<string, unknown>;
+    description?: string;
+    // (undocumented)
+    externalDocumentation?: ExternalDocumentation[];
+    kind?: ApiKind;
+    license?: License;
+    readonly lifecycleStage?: LifecycleStage;
+    summary?: string;
+    termsOfService?: TermsOfService;
+    title?: string;
 }
 
 // @public
-export interface ApiDefinition extends ProxyResource {
-    properties?: ApiDefinitionProperties;
-}
-
-// @public
-export interface ApiDefinitionListResult {
+export interface ApiCollection {
     readonly nextLink?: string;
-    readonly value: ApiDefinition[];
+    readonly value?: Api[];
 }
 
 // @public
-export interface ApiDefinitionProperties {
+export interface ApiDefinition extends Resource {
     description?: string;
     readonly specification?: ApiDefinitionPropertiesSpecification;
-    title: string;
+    title?: string;
+}
+
+// @public
+export interface ApiDefinitionCollection {
+    readonly nextLink?: string;
+    readonly value?: ApiDefinition[];
 }
 
 // @public
@@ -44,15 +54,13 @@ export interface ApiDefinitionPropertiesSpecification {
 
 // @public
 export interface ApiDefinitions {
-    beginExportSpecification(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, versionName: string, definitionName: string, options?: ApiDefinitionsExportSpecificationOptionalParams): Promise<SimplePollerLike<OperationState<ApiDefinitionsExportSpecificationResponse>, ApiDefinitionsExportSpecificationResponse>>;
-    beginExportSpecificationAndWait(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, versionName: string, definitionName: string, options?: ApiDefinitionsExportSpecificationOptionalParams): Promise<ApiDefinitionsExportSpecificationResponse>;
-    beginImportSpecification(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, versionName: string, definitionName: string, body: ApiSpecImportRequest, options?: ApiDefinitionsImportSpecificationOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
-    beginImportSpecificationAndWait(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, versionName: string, definitionName: string, body: ApiSpecImportRequest, options?: ApiDefinitionsImportSpecificationOptionalParams): Promise<void>;
-    createOrUpdate(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, versionName: string, definitionName: string, resource: ApiDefinition, options?: ApiDefinitionsCreateOrUpdateOptionalParams): Promise<ApiDefinitionsCreateOrUpdateResponse>;
-    delete(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, versionName: string, definitionName: string, options?: ApiDefinitionsDeleteOptionalParams): Promise<void>;
-    get(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, versionName: string, definitionName: string, options?: ApiDefinitionsGetOptionalParams): Promise<ApiDefinitionsGetResponse>;
-    head(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, versionName: string, definitionName: string, options?: ApiDefinitionsHeadOptionalParams): Promise<ApiDefinitionsHeadResponse>;
-    list(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, versionName: string, options?: ApiDefinitionsListOptionalParams): PagedAsyncIterableIterator<ApiDefinition>;
+    createOrUpdate(resourceGroupName: string, serviceName: string, payload: ApiDefinition, options?: ApiDefinitionsCreateOrUpdateOptionalParams): Promise<ApiDefinitionsCreateOrUpdateResponse>;
+    delete(resourceGroupName: string, serviceName: string, options?: ApiDefinitionsDeleteOptionalParams): Promise<void>;
+    exportSpecification(resourceGroupName: string, serviceName: string, options?: ApiDefinitionsExportSpecificationOptionalParams): Promise<ApiDefinitionsExportSpecificationResponse>;
+    get(resourceGroupName: string, serviceName: string, options?: ApiDefinitionsGetOptionalParams): Promise<ApiDefinitionsGetResponse>;
+    head(resourceGroupName: string, serviceName: string, options?: ApiDefinitionsHeadOptionalParams): Promise<ApiDefinitionsHeadResponse>;
+    importSpecification(resourceGroupName: string, serviceName: string, payload: ApiSpecImportRequest, options?: ApiDefinitionsImportSpecificationOptionalParams): Promise<void>;
+    list(resourceGroupName: string, serviceName: string, options?: ApiDefinitionsListOptionalParams): PagedAsyncIterableIterator<ApiDefinition>;
 }
 
 // @public
@@ -72,15 +80,7 @@ export interface ApiDefinitionsDeleteOptionalParams extends coreClient.Operation
 }
 
 // @public
-export interface ApiDefinitionsExportSpecificationHeaders {
-    location?: string;
-    retryAfter?: number;
-}
-
-// @public
 export interface ApiDefinitionsExportSpecificationOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
 }
 
 // @public
@@ -108,15 +108,7 @@ export type ApiDefinitionsHeadResponse = {
 };
 
 // @public
-export interface ApiDefinitionsImportSpecificationHeaders {
-    location?: string;
-    retryAfter?: number;
-}
-
-// @public
 export interface ApiDefinitionsImportSpecificationOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
 }
 
 // @public
@@ -124,46 +116,25 @@ export interface ApiDefinitionsListNextOptionalParams extends coreClient.Operati
 }
 
 // @public
-export type ApiDefinitionsListNextResponse = ApiDefinitionListResult;
+export type ApiDefinitionsListNextResponse = ApiDefinitionCollection;
 
 // @public
 export interface ApiDefinitionsListOptionalParams extends coreClient.OperationOptions {
-    filter?: string;
 }
 
 // @public
-export type ApiDefinitionsListResponse = ApiDefinitionListResult;
+export type ApiDefinitionsListResponse = ApiDefinitionCollection;
 
 // @public
 export type ApiKind = string;
 
 // @public
-export interface ApiListResult {
-    readonly nextLink?: string;
-    readonly value: Api[];
-}
-
-// @public
-export interface ApiProperties {
-    contacts?: Contact[];
-    customProperties?: Record<string, unknown>;
-    description?: string;
-    externalDocumentation?: ExternalDocumentation[];
-    kind: ApiKind;
-    license?: License;
-    readonly lifecycleStage?: LifecycleStage;
-    summary?: string;
-    termsOfService?: TermsOfService;
-    title: string;
-}
-
-// @public
 export interface Apis {
-    createOrUpdate(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, resource: Api, options?: ApisCreateOrUpdateOptionalParams): Promise<ApisCreateOrUpdateResponse>;
-    delete(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, options?: ApisDeleteOptionalParams): Promise<void>;
-    get(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, options?: ApisGetOptionalParams): Promise<ApisGetResponse>;
-    head(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, options?: ApisHeadOptionalParams): Promise<ApisHeadResponse>;
-    list(resourceGroupName: string, serviceName: string, workspaceName: string, options?: ApisListOptionalParams): PagedAsyncIterableIterator<Api>;
+    createOrUpdate(resourceGroupName: string, serviceName: string, payload: Api, options?: ApisCreateOrUpdateOptionalParams): Promise<ApisCreateOrUpdateResponse>;
+    delete(resourceGroupName: string, serviceName: string, options?: ApisDeleteOptionalParams): Promise<void>;
+    get(resourceGroupName: string, serviceName: string, options?: ApisGetOptionalParams): Promise<ApisGetResponse>;
+    head(resourceGroupName: string, serviceName: string, options?: ApisHeadOptionalParams): Promise<ApisHeadResponse>;
+    list(resourceGroupName: string, serviceName: string, options?: ApisListOptionalParams): PagedAsyncIterableIterator<Api>;
 }
 
 // @public
@@ -208,18 +179,18 @@ export interface ApisListNextOptionalParams extends coreClient.OperationOptions 
 }
 
 // @public
-export type ApisListNextResponse = ApiListResult;
+export type ApisListNextResponse = ApiCollection;
 
 // @public
 export interface ApisListOptionalParams extends coreClient.OperationOptions {
-    filter?: string;
 }
 
 // @public
-export type ApisListResponse = ApiListResult;
+export type ApisListResponse = ApiCollection;
 
 // @public
 export interface ApiSpecExportResult {
+    // (undocumented)
     format?: ApiSpecExportResultFormat;
     value?: string;
 }
@@ -244,29 +215,24 @@ export interface ApiSpecImportRequestSpecification {
 export type ApiSpecImportSourceFormat = string;
 
 // @public
-export interface ApiVersion extends ProxyResource {
-    properties?: ApiVersionProperties;
+export interface ApiVersion extends Resource {
+    lifecycleStage?: LifecycleStage;
+    title?: string;
 }
 
 // @public
-export interface ApiVersionListResult {
+export interface ApiVersionCollection {
     readonly nextLink?: string;
-    readonly value: ApiVersion[];
-}
-
-// @public
-export interface ApiVersionProperties {
-    lifecycleStage: LifecycleStage;
-    title: string;
+    readonly value?: ApiVersion[];
 }
 
 // @public
 export interface ApiVersions {
-    createOrUpdate(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, versionName: string, resource: ApiVersion, options?: ApiVersionsCreateOrUpdateOptionalParams): Promise<ApiVersionsCreateOrUpdateResponse>;
-    delete(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, versionName: string, options?: ApiVersionsDeleteOptionalParams): Promise<void>;
-    get(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, versionName: string, options?: ApiVersionsGetOptionalParams): Promise<ApiVersionsGetResponse>;
-    head(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, versionName: string, options?: ApiVersionsHeadOptionalParams): Promise<ApiVersionsHeadResponse>;
-    list(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, options?: ApiVersionsListOptionalParams): PagedAsyncIterableIterator<ApiVersion>;
+    createOrUpdate(resourceGroupName: string, serviceName: string, payload: ApiVersion, options?: ApiVersionsCreateOrUpdateOptionalParams): Promise<ApiVersionsCreateOrUpdateResponse>;
+    delete(resourceGroupName: string, serviceName: string, options?: ApiVersionsDeleteOptionalParams): Promise<void>;
+    get(resourceGroupName: string, serviceName: string, options?: ApiVersionsGetOptionalParams): Promise<ApiVersionsGetResponse>;
+    head(resourceGroupName: string, serviceName: string, options?: ApiVersionsHeadOptionalParams): Promise<ApiVersionsHeadResponse>;
+    list(resourceGroupName: string, serviceName: string, options?: ApiVersionsListOptionalParams): PagedAsyncIterableIterator<ApiVersion>;
 }
 
 // @public
@@ -311,23 +277,24 @@ export interface ApiVersionsListNextOptionalParams extends coreClient.OperationO
 }
 
 // @public
-export type ApiVersionsListNextResponse = ApiVersionListResult;
+export type ApiVersionsListNextResponse = ApiVersionCollection;
 
 // @public
 export interface ApiVersionsListOptionalParams extends coreClient.OperationOptions {
-    filter?: string;
 }
 
 // @public
-export type ApiVersionsListResponse = ApiVersionListResult;
+export type ApiVersionsListResponse = ApiVersionCollection;
 
 // @public (undocumented)
 export class AzureAPICenter extends coreClient.ServiceClient {
     // (undocumented)
     $host: string;
-    constructor(credentials: coreAuth.TokenCredential, subscriptionId: string, options?: AzureAPICenterOptionalParams);
+    constructor(credentials: coreAuth.TokenCredential, subscriptionId: string, metadataSchemaName: string, workspaceName: string, apiName: string, versionName: string, definitionName: string, deploymentName: string, environmentName: string, options?: AzureAPICenterOptionalParams);
     // (undocumented)
     apiDefinitions: ApiDefinitions;
+    // (undocumented)
+    apiName: string;
     // (undocumented)
     apis: Apis;
     // (undocumented)
@@ -335,9 +302,19 @@ export class AzureAPICenter extends coreClient.ServiceClient {
     // (undocumented)
     apiVersions: ApiVersions;
     // (undocumented)
+    definitionName: string;
+    // (undocumented)
+    deploymentName: string;
+    // (undocumented)
     deployments: Deployments;
     // (undocumented)
+    environmentName: string;
+    // (undocumented)
     environments: Environments;
+    // (undocumented)
+    filter?: string;
+    // (undocumented)
+    metadataSchemaName: string;
     // (undocumented)
     metadataSchemas: MetadataSchemas;
     // (undocumented)
@@ -347,6 +324,10 @@ export class AzureAPICenter extends coreClient.ServiceClient {
     // (undocumented)
     subscriptionId: string;
     // (undocumented)
+    versionName: string;
+    // (undocumented)
+    workspaceName: string;
+    // (undocumented)
     workspaces: Workspaces;
 }
 
@@ -355,9 +336,10 @@ export interface AzureAPICenterOptionalParams extends coreClient.ServiceClientOp
     $host?: string;
     apiVersion?: string;
     endpoint?: string;
+    filter?: string;
 }
 
-// @public
+// @public (undocumented)
 export interface Contact {
     email?: string;
     name?: string;
@@ -368,18 +350,7 @@ export interface Contact {
 export type CreatedByType = string;
 
 // @public
-export interface Deployment extends ProxyResource {
-    properties?: DeploymentProperties;
-}
-
-// @public
-export interface DeploymentListResult {
-    readonly nextLink?: string;
-    readonly value: Deployment[];
-}
-
-// @public
-export interface DeploymentProperties {
+export interface Deployment extends Resource {
     customProperties?: Record<string, unknown>;
     definitionId?: string;
     description?: string;
@@ -390,12 +361,18 @@ export interface DeploymentProperties {
 }
 
 // @public
+export interface DeploymentCollection {
+    readonly nextLink?: string;
+    readonly value?: Deployment[];
+}
+
+// @public
 export interface Deployments {
-    createOrUpdate(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, deploymentName: string, resource: Deployment, options?: DeploymentsCreateOrUpdateOptionalParams): Promise<DeploymentsCreateOrUpdateResponse>;
-    delete(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, deploymentName: string, options?: DeploymentsDeleteOptionalParams): Promise<void>;
-    get(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, deploymentName: string, options?: DeploymentsGetOptionalParams): Promise<DeploymentsGetResponse>;
-    head(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, deploymentName: string, options?: DeploymentsHeadOptionalParams): Promise<DeploymentsHeadResponse>;
-    list(resourceGroupName: string, serviceName: string, workspaceName: string, apiName: string, options?: DeploymentsListOptionalParams): PagedAsyncIterableIterator<Deployment>;
+    createOrUpdate(resourceGroupName: string, serviceName: string, payload: Deployment, options?: DeploymentsCreateOrUpdateOptionalParams): Promise<DeploymentsCreateOrUpdateResponse>;
+    delete(resourceGroupName: string, serviceName: string, options?: DeploymentsDeleteOptionalParams): Promise<void>;
+    get(resourceGroupName: string, serviceName: string, options?: DeploymentsGetOptionalParams): Promise<DeploymentsGetResponse>;
+    head(resourceGroupName: string, serviceName: string, options?: DeploymentsHeadOptionalParams): Promise<DeploymentsHeadResponse>;
+    list(resourceGroupName: string, serviceName: string, options?: DeploymentsListOptionalParams): PagedAsyncIterableIterator<Deployment>;
 }
 
 // @public
@@ -445,50 +422,45 @@ export interface DeploymentsListNextOptionalParams extends coreClient.OperationO
 }
 
 // @public
-export type DeploymentsListNextResponse = DeploymentListResult;
+export type DeploymentsListNextResponse = DeploymentCollection;
 
 // @public
 export interface DeploymentsListOptionalParams extends coreClient.OperationOptions {
-    filter?: string;
 }
 
 // @public
-export type DeploymentsListResponse = DeploymentListResult;
+export type DeploymentsListResponse = DeploymentCollection;
 
 // @public
 export type DeploymentState = string;
 
 // @public
-export interface Environment extends ProxyResource {
-    properties?: EnvironmentProperties;
+export interface Environment extends Resource {
+    customProperties?: Record<string, unknown>;
+    description?: string;
+    kind?: EnvironmentKind;
+    // (undocumented)
+    onboarding?: Onboarding;
+    server?: EnvironmentServer;
+    title?: string;
+}
+
+// @public
+export interface EnvironmentCollection {
+    readonly nextLink?: string;
+    readonly value?: Environment[];
 }
 
 // @public
 export type EnvironmentKind = string;
 
 // @public
-export interface EnvironmentListResult {
-    readonly nextLink?: string;
-    readonly value: Environment[];
-}
-
-// @public
-export interface EnvironmentProperties {
-    customProperties?: Record<string, unknown>;
-    description?: string;
-    kind: EnvironmentKind;
-    onboarding?: Onboarding;
-    server?: EnvironmentServer;
-    title: string;
-}
-
-// @public
 export interface Environments {
-    createOrUpdate(resourceGroupName: string, serviceName: string, workspaceName: string, environmentName: string, resource: Environment, options?: EnvironmentsCreateOrUpdateOptionalParams): Promise<EnvironmentsCreateOrUpdateResponse>;
-    delete(resourceGroupName: string, serviceName: string, workspaceName: string, environmentName: string, options?: EnvironmentsDeleteOptionalParams): Promise<void>;
-    get(resourceGroupName: string, serviceName: string, workspaceName: string, environmentName: string, options?: EnvironmentsGetOptionalParams): Promise<EnvironmentsGetResponse>;
-    head(resourceGroupName: string, serviceName: string, workspaceName: string, environmentName: string, options?: EnvironmentsHeadOptionalParams): Promise<EnvironmentsHeadResponse>;
-    list(resourceGroupName: string, serviceName: string, workspaceName: string, options?: EnvironmentsListOptionalParams): PagedAsyncIterableIterator<Environment>;
+    createOrUpdate(resourceGroupName: string, serviceName: string, payload: Environment, options?: EnvironmentsCreateOrUpdateOptionalParams): Promise<EnvironmentsCreateOrUpdateResponse>;
+    delete(resourceGroupName: string, serviceName: string, options?: EnvironmentsDeleteOptionalParams): Promise<void>;
+    get(resourceGroupName: string, serviceName: string, options?: EnvironmentsGetOptionalParams): Promise<EnvironmentsGetResponse>;
+    head(resourceGroupName: string, serviceName: string, options?: EnvironmentsHeadOptionalParams): Promise<EnvironmentsHeadResponse>;
+    list(resourceGroupName: string, serviceName: string, options?: EnvironmentsListOptionalParams): PagedAsyncIterableIterator<Environment>;
 }
 
 // @public
@@ -509,6 +481,7 @@ export interface EnvironmentsDeleteOptionalParams extends coreClient.OperationOp
 
 // @public
 export interface EnvironmentServer {
+    // (undocumented)
     managementPortalUri?: string[];
     type?: EnvironmentServerType;
 }
@@ -542,15 +515,14 @@ export interface EnvironmentsListNextOptionalParams extends coreClient.Operation
 }
 
 // @public
-export type EnvironmentsListNextResponse = EnvironmentListResult;
+export type EnvironmentsListNextResponse = EnvironmentCollection;
 
 // @public
 export interface EnvironmentsListOptionalParams extends coreClient.OperationOptions {
-    filter?: string;
 }
 
 // @public
-export type EnvironmentsListResponse = EnvironmentListResult;
+export type EnvironmentsListResponse = EnvironmentCollection;
 
 // @public
 export interface ErrorAdditionalInfo {
@@ -689,11 +661,6 @@ export enum KnownProvisioningState {
 }
 
 // @public
-export enum KnownVersions {
-    V20240301 = "2024-03-01"
-}
-
-// @public
 export interface License {
     identifier?: string;
     name?: string;
@@ -716,10 +683,12 @@ export interface ManagedServiceIdentity {
 // @public
 export type ManagedServiceIdentityType = string;
 
-// @public
+// @public (undocumented)
 export interface MetadataAssignment {
+    // (undocumented)
     deprecated?: boolean;
     entity?: MetadataAssignmentEntity;
+    // (undocumented)
     required?: boolean;
 }
 
@@ -727,8 +696,16 @@ export interface MetadataAssignment {
 export type MetadataAssignmentEntity = string;
 
 // @public
-export interface MetadataSchema extends ProxyResource {
-    properties?: MetadataSchemaProperties;
+export interface MetadataSchema extends Resource {
+    // (undocumented)
+    assignedTo?: MetadataAssignment[];
+    schema?: string;
+}
+
+// @public
+export interface MetadataSchemaCollection {
+    readonly nextLink?: string;
+    readonly value?: MetadataSchema[];
 }
 
 // @public
@@ -741,28 +718,17 @@ export interface MetadataSchemaExportRequest {
 
 // @public
 export interface MetadataSchemaExportResult {
+    // (undocumented)
     format?: MetadataSchemaExportFormat;
     value?: string;
 }
 
 // @public
-export interface MetadataSchemaListResult {
-    readonly nextLink?: string;
-    readonly value: MetadataSchema[];
-}
-
-// @public
-export interface MetadataSchemaProperties {
-    assignedTo?: MetadataAssignment[];
-    schema: string;
-}
-
-// @public
 export interface MetadataSchemas {
-    createOrUpdate(resourceGroupName: string, serviceName: string, metadataSchemaName: string, resource: MetadataSchema, options?: MetadataSchemasCreateOrUpdateOptionalParams): Promise<MetadataSchemasCreateOrUpdateResponse>;
-    delete(resourceGroupName: string, serviceName: string, metadataSchemaName: string, options?: MetadataSchemasDeleteOptionalParams): Promise<void>;
-    get(resourceGroupName: string, serviceName: string, metadataSchemaName: string, options?: MetadataSchemasGetOptionalParams): Promise<MetadataSchemasGetResponse>;
-    head(resourceGroupName: string, serviceName: string, metadataSchemaName: string, options?: MetadataSchemasHeadOptionalParams): Promise<MetadataSchemasHeadResponse>;
+    createOrUpdate(resourceGroupName: string, serviceName: string, payload: MetadataSchema, options?: MetadataSchemasCreateOrUpdateOptionalParams): Promise<MetadataSchemasCreateOrUpdateResponse>;
+    delete(resourceGroupName: string, serviceName: string, options?: MetadataSchemasDeleteOptionalParams): Promise<void>;
+    get(resourceGroupName: string, serviceName: string, options?: MetadataSchemasGetOptionalParams): Promise<MetadataSchemasGetResponse>;
+    head(resourceGroupName: string, serviceName: string, options?: MetadataSchemasHeadOptionalParams): Promise<MetadataSchemasHeadResponse>;
     list(resourceGroupName: string, serviceName: string, options?: MetadataSchemasListOptionalParams): PagedAsyncIterableIterator<MetadataSchema>;
 }
 
@@ -808,18 +774,18 @@ export interface MetadataSchemasListNextOptionalParams extends coreClient.Operat
 }
 
 // @public
-export type MetadataSchemasListNextResponse = MetadataSchemaListResult;
+export type MetadataSchemasListNextResponse = MetadataSchemaCollection;
 
 // @public
 export interface MetadataSchemasListOptionalParams extends coreClient.OperationOptions {
-    filter?: string;
 }
 
 // @public
-export type MetadataSchemasListResponse = MetadataSchemaListResult;
+export type MetadataSchemasListResponse = MetadataSchemaCollection;
 
-// @public
+// @public (undocumented)
 export interface Onboarding {
+    // (undocumented)
     developerPortalUri?: string[];
     instructions?: string;
 }
@@ -873,10 +839,6 @@ export type Origin = string;
 export type ProvisioningState = string;
 
 // @public
-export interface ProxyResource extends Resource {
-}
-
-// @public
 export interface Resource {
     readonly id?: string;
     readonly name?: string;
@@ -887,34 +849,29 @@ export interface Resource {
 // @public
 export interface Service extends TrackedResource {
     identity?: ManagedServiceIdentity;
-    properties?: ServiceProperties;
-}
-
-// @public
-export interface ServiceListResult {
-    readonly nextLink?: string;
-    readonly value: Service[];
-}
-
-// @public
-export interface ServiceProperties {
     readonly provisioningState?: ProvisioningState;
 }
 
 // @public
+export interface ServiceCollection {
+    nextLink?: string;
+    value: Service[];
+}
+
+// @public
 export interface Services {
-    beginExportMetadataSchema(resourceGroupName: string, serviceName: string, body: MetadataSchemaExportRequest, options?: ServicesExportMetadataSchemaOptionalParams): Promise<SimplePollerLike<OperationState<ServicesExportMetadataSchemaResponse>, ServicesExportMetadataSchemaResponse>>;
-    beginExportMetadataSchemaAndWait(resourceGroupName: string, serviceName: string, body: MetadataSchemaExportRequest, options?: ServicesExportMetadataSchemaOptionalParams): Promise<ServicesExportMetadataSchemaResponse>;
-    createOrUpdate(resourceGroupName: string, serviceName: string, resource: Service, options?: ServicesCreateOrUpdateOptionalParams): Promise<ServicesCreateOrUpdateResponse>;
+    createOrUpdate(resourceGroupName: string, serviceName: string, options?: ServicesCreateOrUpdateOptionalParams): Promise<ServicesCreateOrUpdateResponse>;
     delete(resourceGroupName: string, serviceName: string, options?: ServicesDeleteOptionalParams): Promise<void>;
+    exportMetadataSchema(resourceGroupName: string, serviceName: string, payload: MetadataSchemaExportRequest, options?: ServicesExportMetadataSchemaOptionalParams): Promise<ServicesExportMetadataSchemaResponse>;
     get(resourceGroupName: string, serviceName: string, options?: ServicesGetOptionalParams): Promise<ServicesGetResponse>;
     listByResourceGroup(resourceGroupName: string, options?: ServicesListByResourceGroupOptionalParams): PagedAsyncIterableIterator<Service>;
     listBySubscription(options?: ServicesListBySubscriptionOptionalParams): PagedAsyncIterableIterator<Service>;
-    update(resourceGroupName: string, serviceName: string, properties: ServiceUpdate, options?: ServicesUpdateOptionalParams): Promise<ServicesUpdateResponse>;
+    update(resourceGroupName: string, serviceName: string, options?: ServicesUpdateOptionalParams): Promise<ServicesUpdateResponse>;
 }
 
 // @public
 export interface ServicesCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
+    payload?: Service;
 }
 
 // @public
@@ -925,15 +882,7 @@ export interface ServicesDeleteOptionalParams extends coreClient.OperationOption
 }
 
 // @public
-export interface ServicesExportMetadataSchemaHeaders {
-    location?: string;
-    retryAfter?: number;
-}
-
-// @public
 export interface ServicesExportMetadataSchemaOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
 }
 
 // @public
@@ -951,31 +900,32 @@ export interface ServicesListByResourceGroupNextOptionalParams extends coreClien
 }
 
 // @public
-export type ServicesListByResourceGroupNextResponse = ServiceListResult;
+export type ServicesListByResourceGroupNextResponse = ServiceCollection;
 
 // @public
 export interface ServicesListByResourceGroupOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type ServicesListByResourceGroupResponse = ServiceListResult;
+export type ServicesListByResourceGroupResponse = ServiceCollection;
 
 // @public
 export interface ServicesListBySubscriptionNextOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type ServicesListBySubscriptionNextResponse = ServiceListResult;
+export type ServicesListBySubscriptionNextResponse = ServiceCollection;
 
 // @public
 export interface ServicesListBySubscriptionOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type ServicesListBySubscriptionResponse = ServiceListResult;
+export type ServicesListBySubscriptionResponse = ServiceCollection;
 
 // @public
 export interface ServicesUpdateOptionalParams extends coreClient.OperationOptions {
+    payload?: ServiceUpdate;
 }
 
 // @public
@@ -983,10 +933,7 @@ export type ServicesUpdateResponse = Service;
 
 // @public
 export interface ServiceUpdate {
-    identity?: ManagedServiceIdentity;
-    tags?: {
-        [propertyName: string]: string;
-    };
+    readonly provisioningState?: ProvisioningState;
 }
 
 // @public
@@ -1019,31 +966,23 @@ export interface UserAssignedIdentity {
 }
 
 // @public
-export type Versions = string;
-
-// @public
-export interface Workspace extends ProxyResource {
-    properties?: WorkspaceProperties;
-}
-
-// @public
-export interface WorkspaceListResult {
-    readonly nextLink?: string;
-    readonly value: Workspace[];
-}
-
-// @public
-export interface WorkspaceProperties {
+export interface Workspace extends Resource {
     description?: string;
-    title: string;
+    title?: string;
+}
+
+// @public
+export interface WorkspaceCollection {
+    readonly nextLink?: string;
+    readonly value?: Workspace[];
 }
 
 // @public
 export interface Workspaces {
-    createOrUpdate(resourceGroupName: string, serviceName: string, workspaceName: string, resource: Workspace, options?: WorkspacesCreateOrUpdateOptionalParams): Promise<WorkspacesCreateOrUpdateResponse>;
-    delete(resourceGroupName: string, serviceName: string, workspaceName: string, options?: WorkspacesDeleteOptionalParams): Promise<void>;
-    get(resourceGroupName: string, serviceName: string, workspaceName: string, options?: WorkspacesGetOptionalParams): Promise<WorkspacesGetResponse>;
-    head(resourceGroupName: string, serviceName: string, workspaceName: string, options?: WorkspacesHeadOptionalParams): Promise<WorkspacesHeadResponse>;
+    createOrUpdate(resourceGroupName: string, serviceName: string, payload: Workspace, options?: WorkspacesCreateOrUpdateOptionalParams): Promise<WorkspacesCreateOrUpdateResponse>;
+    delete(resourceGroupName: string, serviceName: string, options?: WorkspacesDeleteOptionalParams): Promise<void>;
+    get(resourceGroupName: string, serviceName: string, options?: WorkspacesGetOptionalParams): Promise<WorkspacesGetResponse>;
+    head(resourceGroupName: string, serviceName: string, options?: WorkspacesHeadOptionalParams): Promise<WorkspacesHeadResponse>;
     list(resourceGroupName: string, serviceName: string, options?: WorkspacesListOptionalParams): PagedAsyncIterableIterator<Workspace>;
 }
 
@@ -1089,15 +1028,14 @@ export interface WorkspacesListNextOptionalParams extends coreClient.OperationOp
 }
 
 // @public
-export type WorkspacesListNextResponse = WorkspaceListResult;
+export type WorkspacesListNextResponse = WorkspaceCollection;
 
 // @public
 export interface WorkspacesListOptionalParams extends coreClient.OperationOptions {
-    filter?: string;
 }
 
 // @public
-export type WorkspacesListResponse = WorkspaceListResult;
+export type WorkspacesListResponse = WorkspaceCollection;
 
 // (No @packageDocumentation comment for this package)
 

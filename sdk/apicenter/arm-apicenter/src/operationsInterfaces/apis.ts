@@ -26,75 +26,57 @@ export interface Apis {
    * Returns a collection of APIs.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
    * @param options The options parameters.
    */
   list(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
     options?: ApisListOptionalParams,
   ): PagedAsyncIterableIterator<Api>;
   /**
    * Returns details of the API.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
     options?: ApisGetOptionalParams,
   ): Promise<ApisGetResponse>;
   /**
    * Creates new or updates existing API.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
-   * @param resource Resource create parameters.
+   * @param payload API entity.
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
-    resource: Api,
+    payload: Api,
     options?: ApisCreateOrUpdateOptionalParams,
   ): Promise<ApisCreateOrUpdateResponse>;
   /**
    * Deletes specified API.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
    * @param options The options parameters.
    */
   delete(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
     options?: ApisDeleteOptionalParams,
   ): Promise<void>;
   /**
    * Checks if specified API exists.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
    * @param options The options parameters.
    */
   head(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
     options?: ApisHeadOptionalParams,
   ): Promise<ApisHeadResponse>;
 }

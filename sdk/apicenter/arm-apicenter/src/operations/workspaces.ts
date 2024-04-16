@@ -138,17 +138,15 @@ export class WorkspacesImpl implements Workspaces {
    * Returns details of the workspace.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
     options?: WorkspacesGetOptionalParams,
   ): Promise<WorkspacesGetResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, workspaceName, options },
+      { resourceGroupName, serviceName, options },
       getOperationSpec,
     );
   }
@@ -157,19 +155,17 @@ export class WorkspacesImpl implements Workspaces {
    * Creates new or updates existing workspace.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param resource Resource create parameters.
+   * @param payload Workspace entity.
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    resource: Workspace,
+    payload: Workspace,
     options?: WorkspacesCreateOrUpdateOptionalParams,
   ): Promise<WorkspacesCreateOrUpdateResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, workspaceName, resource, options },
+      { resourceGroupName, serviceName, payload, options },
       createOrUpdateOperationSpec,
     );
   }
@@ -178,17 +174,15 @@ export class WorkspacesImpl implements Workspaces {
    * Deletes specified workspace.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
    * @param options The options parameters.
    */
   delete(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
     options?: WorkspacesDeleteOptionalParams,
   ): Promise<void> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, workspaceName, options },
+      { resourceGroupName, serviceName, options },
       deleteOperationSpec,
     );
   }
@@ -197,17 +191,15 @@ export class WorkspacesImpl implements Workspaces {
    * Checks if specified workspace exists.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
    * @param options The options parameters.
    */
   head(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
     options?: WorkspacesHeadOptionalParams,
   ): Promise<WorkspacesHeadResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, workspaceName, options },
+      { resourceGroupName, serviceName, options },
       headOperationSpec,
     );
   }
@@ -239,7 +231,7 @@ const listOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.WorkspaceListResult,
+      bodyMapper: Mappers.WorkspaceCollection,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,
@@ -294,7 +286,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse,
     },
   },
-  requestBody: Parameters.resource2,
+  requestBody: Parameters.payload4,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -353,7 +345,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.WorkspaceListResult,
+      bodyMapper: Mappers.WorkspaceCollection,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,

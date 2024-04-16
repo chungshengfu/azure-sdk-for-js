@@ -14,12 +14,6 @@ import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { AzureAPICenter } from "../azureAPICenter";
 import {
-  SimplePollerLike,
-  OperationState,
-  createHttpPoller,
-} from "@azure/core-lro";
-import { createLroSpec } from "../lroImpl";
-import {
   Service,
   ServicesListBySubscriptionNextOptionalParams,
   ServicesListBySubscriptionOptionalParams,
@@ -31,7 +25,6 @@ import {
   ServicesGetResponse,
   ServicesCreateOrUpdateOptionalParams,
   ServicesCreateOrUpdateResponse,
-  ServiceUpdate,
   ServicesUpdateOptionalParams,
   ServicesUpdateResponse,
   ServicesDeleteOptionalParams,
@@ -227,17 +220,15 @@ export class ServicesImpl implements Services {
    * Creates new or updates existing API.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
     serviceName: string,
-    resource: Service,
     options?: ServicesCreateOrUpdateOptionalParams,
   ): Promise<ServicesCreateOrUpdateResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, resource, options },
+      { resourceGroupName, serviceName, options },
       createOrUpdateOperationSpec,
     );
   }
@@ -246,17 +237,15 @@ export class ServicesImpl implements Services {
    * Updates existing service.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param properties The resource properties to be updated.
    * @param options The options parameters.
    */
   update(
     resourceGroupName: string,
     serviceName: string,
-    properties: ServiceUpdate,
     options?: ServicesUpdateOptionalParams,
   ): Promise<ServicesUpdateResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, properties, options },
+      { resourceGroupName, serviceName, options },
       updateOperationSpec,
     );
   }
@@ -282,95 +271,19 @@ export class ServicesImpl implements Services {
    * Exports the effective metadata schema.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param body The content of the action request
+   * @param payload The metadata schema request details.
    * @param options The options parameters.
    */
-  async beginExportMetadataSchema(
+  exportMetadataSchema(
     resourceGroupName: string,
     serviceName: string,
-    body: MetadataSchemaExportRequest,
-    options?: ServicesExportMetadataSchemaOptionalParams,
-  ): Promise<
-    SimplePollerLike<
-      OperationState<ServicesExportMetadataSchemaResponse>,
-      ServicesExportMetadataSchemaResponse
-    >
-  > {
-    const directSendOperation = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec,
-    ): Promise<ServicesExportMetadataSchemaResponse> => {
-      return this.client.sendOperationRequest(args, spec);
-    };
-    const sendOperationFn = async (
-      args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec,
-    ) => {
-      let currentRawResponse: coreClient.FullOperationResponse | undefined =
-        undefined;
-      const providedCallback = args.options?.onResponse;
-      const callback: coreClient.RawResponseCallback = (
-        rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown,
-      ) => {
-        currentRawResponse = rawResponse;
-        providedCallback?.(rawResponse, flatResponse);
-      };
-      const updatedArgs = {
-        ...args,
-        options: {
-          ...args.options,
-          onResponse: callback,
-        },
-      };
-      const flatResponse = await directSendOperation(updatedArgs, spec);
-      return {
-        flatResponse,
-        rawResponse: {
-          statusCode: currentRawResponse!.status,
-          body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON(),
-        },
-      };
-    };
-
-    const lro = createLroSpec({
-      sendOperationFn,
-      args: { resourceGroupName, serviceName, body, options },
-      spec: exportMetadataSchemaOperationSpec,
-    });
-    const poller = await createHttpPoller<
-      ServicesExportMetadataSchemaResponse,
-      OperationState<ServicesExportMetadataSchemaResponse>
-    >(lro, {
-      restoreFrom: options?.resumeFrom,
-      intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "location",
-    });
-    await poller.poll();
-    return poller;
-  }
-
-  /**
-   * Exports the effective metadata schema.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param serviceName The name of Azure API Center service.
-   * @param body The content of the action request
-   * @param options The options parameters.
-   */
-  async beginExportMetadataSchemaAndWait(
-    resourceGroupName: string,
-    serviceName: string,
-    body: MetadataSchemaExportRequest,
+    payload: MetadataSchemaExportRequest,
     options?: ServicesExportMetadataSchemaOptionalParams,
   ): Promise<ServicesExportMetadataSchemaResponse> {
-    const poller = await this.beginExportMetadataSchema(
-      resourceGroupName,
-      serviceName,
-      body,
-      options,
+    return this.client.sendOperationRequest(
+      { resourceGroupName, serviceName, payload, options },
+      exportMetadataSchemaOperationSpec,
     );
-    return poller.pollUntilDone();
   }
 
   /**
@@ -413,7 +326,7 @@ const listBySubscriptionOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ServiceListResult,
+      bodyMapper: Mappers.ServiceCollection,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,
@@ -429,7 +342,7 @@ const listByResourceGroupOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ServiceListResult,
+      bodyMapper: Mappers.ServiceCollection,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,
@@ -479,7 +392,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse,
     },
   },
-  requestBody: Parameters.resource,
+  requestBody: Parameters.payload,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -502,7 +415,7 @@ const updateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse,
     },
   },
-  requestBody: Parameters.properties,
+  requestBody: Parameters.payload1,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -541,20 +454,12 @@ const exportMetadataSchemaOperationSpec: coreClient.OperationSpec = {
     200: {
       bodyMapper: Mappers.MetadataSchemaExportResult,
     },
-    201: {
-      bodyMapper: Mappers.MetadataSchemaExportResult,
-    },
-    202: {
-      bodyMapper: Mappers.MetadataSchemaExportResult,
-    },
-    204: {
-      bodyMapper: Mappers.MetadataSchemaExportResult,
-    },
+    202: {},
     default: {
       bodyMapper: Mappers.ErrorResponse,
     },
   },
-  requestBody: Parameters.body,
+  requestBody: Parameters.payload2,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -571,7 +476,7 @@ const listBySubscriptionNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ServiceListResult,
+      bodyMapper: Mappers.ServiceCollection,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,
@@ -590,7 +495,7 @@ const listByResourceGroupNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ServiceListResult,
+      bodyMapper: Mappers.ServiceCollection,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,

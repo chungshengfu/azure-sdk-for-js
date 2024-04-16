@@ -26,85 +26,57 @@ export interface ApiVersions {
    * Returns a collection of API versions.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
    * @param options The options parameters.
    */
   list(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
     options?: ApiVersionsListOptionalParams,
   ): PagedAsyncIterableIterator<ApiVersion>;
   /**
    * Returns details of the API version.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
-   * @param versionName The name of the API version.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
-    versionName: string,
     options?: ApiVersionsGetOptionalParams,
   ): Promise<ApiVersionsGetResponse>;
   /**
    * Creates new or updates existing API version.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
-   * @param versionName The name of the API version.
-   * @param resource Resource create parameters.
+   * @param payload API version entity.
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
-    versionName: string,
-    resource: ApiVersion,
+    payload: ApiVersion,
     options?: ApiVersionsCreateOrUpdateOptionalParams,
   ): Promise<ApiVersionsCreateOrUpdateResponse>;
   /**
    * Deletes specified API version
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
-   * @param versionName The name of the API version.
    * @param options The options parameters.
    */
   delete(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
-    versionName: string,
     options?: ApiVersionsDeleteOptionalParams,
   ): Promise<void>;
   /**
    * Checks if specified API version exists.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
-   * @param versionName The name of the API version.
    * @param options The options parameters.
    */
   head(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
-    versionName: string,
     options?: ApiVersionsHeadOptionalParams,
   ): Promise<ApiVersionsHeadResponse>;
 }

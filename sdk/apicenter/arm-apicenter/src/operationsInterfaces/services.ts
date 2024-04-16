@@ -7,7 +7,6 @@
  */
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
   Service,
   ServicesListBySubscriptionOptionalParams,
@@ -16,7 +15,6 @@ import {
   ServicesGetResponse,
   ServicesCreateOrUpdateOptionalParams,
   ServicesCreateOrUpdateResponse,
-  ServiceUpdate,
   ServicesUpdateOptionalParams,
   ServicesUpdateResponse,
   ServicesDeleteOptionalParams,
@@ -59,26 +57,22 @@ export interface Services {
    * Creates new or updates existing API.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param resource Resource create parameters.
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
     serviceName: string,
-    resource: Service,
     options?: ServicesCreateOrUpdateOptionalParams,
   ): Promise<ServicesCreateOrUpdateResponse>;
   /**
    * Updates existing service.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param properties The resource properties to be updated.
    * @param options The options parameters.
    */
   update(
     resourceGroupName: string,
     serviceName: string,
-    properties: ServiceUpdate,
     options?: ServicesUpdateOptionalParams,
   ): Promise<ServicesUpdateResponse>;
   /**
@@ -96,31 +90,13 @@ export interface Services {
    * Exports the effective metadata schema.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param body The content of the action request
+   * @param payload The metadata schema request details.
    * @param options The options parameters.
    */
-  beginExportMetadataSchema(
+  exportMetadataSchema(
     resourceGroupName: string,
     serviceName: string,
-    body: MetadataSchemaExportRequest,
-    options?: ServicesExportMetadataSchemaOptionalParams,
-  ): Promise<
-    SimplePollerLike<
-      OperationState<ServicesExportMetadataSchemaResponse>,
-      ServicesExportMetadataSchemaResponse
-    >
-  >;
-  /**
-   * Exports the effective metadata schema.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param serviceName The name of Azure API Center service.
-   * @param body The content of the action request
-   * @param options The options parameters.
-   */
-  beginExportMetadataSchemaAndWait(
-    resourceGroupName: string,
-    serviceName: string,
-    body: MetadataSchemaExportRequest,
+    payload: MetadataSchemaExportRequest,
     options?: ServicesExportMetadataSchemaOptionalParams,
   ): Promise<ServicesExportMetadataSchemaResponse>;
 }

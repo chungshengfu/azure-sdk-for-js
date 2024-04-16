@@ -138,17 +138,15 @@ export class MetadataSchemasImpl implements MetadataSchemas {
    * Returns details of the metadata schema.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param metadataSchemaName The name of the metadata schema.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     serviceName: string,
-    metadataSchemaName: string,
     options?: MetadataSchemasGetOptionalParams,
   ): Promise<MetadataSchemasGetResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, metadataSchemaName, options },
+      { resourceGroupName, serviceName, options },
       getOperationSpec,
     );
   }
@@ -157,19 +155,17 @@ export class MetadataSchemasImpl implements MetadataSchemas {
    * Creates new or updates existing metadata schema.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param metadataSchemaName The name of the metadata schema.
-   * @param resource Resource create parameters.
+   * @param payload Metadata schema entity.
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
     serviceName: string,
-    metadataSchemaName: string,
-    resource: MetadataSchema,
+    payload: MetadataSchema,
     options?: MetadataSchemasCreateOrUpdateOptionalParams,
   ): Promise<MetadataSchemasCreateOrUpdateResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, metadataSchemaName, resource, options },
+      { resourceGroupName, serviceName, payload, options },
       createOrUpdateOperationSpec,
     );
   }
@@ -178,17 +174,15 @@ export class MetadataSchemasImpl implements MetadataSchemas {
    * Deletes specified metadata schema.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param metadataSchemaName The name of the metadata schema.
    * @param options The options parameters.
    */
   delete(
     resourceGroupName: string,
     serviceName: string,
-    metadataSchemaName: string,
     options?: MetadataSchemasDeleteOptionalParams,
   ): Promise<void> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, metadataSchemaName, options },
+      { resourceGroupName, serviceName, options },
       deleteOperationSpec,
     );
   }
@@ -197,17 +191,15 @@ export class MetadataSchemasImpl implements MetadataSchemas {
    * Checks if specified metadata schema exists.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param metadataSchemaName The name of the metadata schema.
    * @param options The options parameters.
    */
   head(
     resourceGroupName: string,
     serviceName: string,
-    metadataSchemaName: string,
     options?: MetadataSchemasHeadOptionalParams,
   ): Promise<MetadataSchemasHeadResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, metadataSchemaName, options },
+      { resourceGroupName, serviceName, options },
       headOperationSpec,
     );
   }
@@ -239,7 +231,7 @@ const listOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.MetadataSchemaListResult,
+      bodyMapper: Mappers.MetadataSchemaCollection,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,
@@ -294,7 +286,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse,
     },
   },
-  requestBody: Parameters.resource1,
+  requestBody: Parameters.payload3,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -353,7 +345,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.MetadataSchemaListResult,
+      bodyMapper: Mappers.MetadataSchemaCollection,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,

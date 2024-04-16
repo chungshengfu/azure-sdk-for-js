@@ -45,24 +45,14 @@ export class ApiVersionsImpl implements ApiVersions {
    * Returns a collection of API versions.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
    * @param options The options parameters.
    */
   public list(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
     options?: ApiVersionsListOptionalParams,
   ): PagedAsyncIterableIterator<ApiVersion> {
-    const iter = this.listPagingAll(
-      resourceGroupName,
-      serviceName,
-      workspaceName,
-      apiName,
-      options,
-    );
+    const iter = this.listPagingAll(resourceGroupName, serviceName, options);
     return {
       next() {
         return iter.next();
@@ -77,8 +67,6 @@ export class ApiVersionsImpl implements ApiVersions {
         return this.listPagingPage(
           resourceGroupName,
           serviceName,
-          workspaceName,
-          apiName,
           options,
           settings,
         );
@@ -89,21 +77,13 @@ export class ApiVersionsImpl implements ApiVersions {
   private async *listPagingPage(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
     options?: ApiVersionsListOptionalParams,
     settings?: PageSettings,
   ): AsyncIterableIterator<ApiVersion[]> {
     let result: ApiVersionsListResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._list(
-        resourceGroupName,
-        serviceName,
-        workspaceName,
-        apiName,
-        options,
-      );
+      result = await this._list(resourceGroupName, serviceName, options);
       let page = result.value || [];
       continuationToken = result.nextLink;
       setContinuationToken(page, continuationToken);
@@ -113,8 +93,6 @@ export class ApiVersionsImpl implements ApiVersions {
       result = await this._listNext(
         resourceGroupName,
         serviceName,
-        workspaceName,
-        apiName,
         continuationToken,
         options,
       );
@@ -128,15 +106,11 @@ export class ApiVersionsImpl implements ApiVersions {
   private async *listPagingAll(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
     options?: ApiVersionsListOptionalParams,
   ): AsyncIterableIterator<ApiVersion> {
     for await (const page of this.listPagingPage(
       resourceGroupName,
       serviceName,
-      workspaceName,
-      apiName,
       options,
     )) {
       yield* page;
@@ -147,19 +121,15 @@ export class ApiVersionsImpl implements ApiVersions {
    * Returns a collection of API versions.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
    * @param options The options parameters.
    */
   private _list(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
     options?: ApiVersionsListOptionalParams,
   ): Promise<ApiVersionsListResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, workspaceName, apiName, options },
+      { resourceGroupName, serviceName, options },
       listOperationSpec,
     );
   }
@@ -168,28 +138,15 @@ export class ApiVersionsImpl implements ApiVersions {
    * Returns details of the API version.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
-   * @param versionName The name of the API version.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
-    versionName: string,
     options?: ApiVersionsGetOptionalParams,
   ): Promise<ApiVersionsGetResponse> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        serviceName,
-        workspaceName,
-        apiName,
-        versionName,
-        options,
-      },
+      { resourceGroupName, serviceName, options },
       getOperationSpec,
     );
   }
@@ -198,31 +155,17 @@ export class ApiVersionsImpl implements ApiVersions {
    * Creates new or updates existing API version.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
-   * @param versionName The name of the API version.
-   * @param resource Resource create parameters.
+   * @param payload API version entity.
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
-    versionName: string,
-    resource: ApiVersion,
+    payload: ApiVersion,
     options?: ApiVersionsCreateOrUpdateOptionalParams,
   ): Promise<ApiVersionsCreateOrUpdateResponse> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        serviceName,
-        workspaceName,
-        apiName,
-        versionName,
-        resource,
-        options,
-      },
+      { resourceGroupName, serviceName, payload, options },
       createOrUpdateOperationSpec,
     );
   }
@@ -231,28 +174,15 @@ export class ApiVersionsImpl implements ApiVersions {
    * Deletes specified API version
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
-   * @param versionName The name of the API version.
    * @param options The options parameters.
    */
   delete(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
-    versionName: string,
     options?: ApiVersionsDeleteOptionalParams,
   ): Promise<void> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        serviceName,
-        workspaceName,
-        apiName,
-        versionName,
-        options,
-      },
+      { resourceGroupName, serviceName, options },
       deleteOperationSpec,
     );
   }
@@ -261,28 +191,15 @@ export class ApiVersionsImpl implements ApiVersions {
    * Checks if specified API version exists.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
-   * @param versionName The name of the API version.
    * @param options The options parameters.
    */
   head(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
-    versionName: string,
     options?: ApiVersionsHeadOptionalParams,
   ): Promise<ApiVersionsHeadResponse> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        serviceName,
-        workspaceName,
-        apiName,
-        versionName,
-        options,
-      },
+      { resourceGroupName, serviceName, options },
       headOperationSpec,
     );
   }
@@ -291,28 +208,17 @@ export class ApiVersionsImpl implements ApiVersions {
    * ListNext
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
    * @param nextLink The nextLink from the previous successful call to the List method.
    * @param options The options parameters.
    */
   private _listNext(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
     nextLink: string,
     options?: ApiVersionsListNextOptionalParams,
   ): Promise<ApiVersionsListNextResponse> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        serviceName,
-        workspaceName,
-        apiName,
-        nextLink,
-        options,
-      },
+      { resourceGroupName, serviceName, nextLink, options },
       listNextOperationSpec,
     );
   }
@@ -325,7 +231,7 @@ const listOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ApiVersionListResult,
+      bodyMapper: Mappers.ApiVersionCollection,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,
@@ -384,7 +290,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse,
     },
   },
-  requestBody: Parameters.resource5,
+  requestBody: Parameters.payload6,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -449,7 +355,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ApiVersionListResult,
+      bodyMapper: Mappers.ApiVersionCollection,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,

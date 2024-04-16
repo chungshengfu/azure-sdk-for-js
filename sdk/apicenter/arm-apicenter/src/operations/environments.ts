@@ -18,13 +18,13 @@ import {
   EnvironmentsListNextOptionalParams,
   EnvironmentsListOptionalParams,
   EnvironmentsListResponse,
-  EnvironmentsGetOptionalParams,
-  EnvironmentsGetResponse,
   EnvironmentsCreateOrUpdateOptionalParams,
   EnvironmentsCreateOrUpdateResponse,
   EnvironmentsDeleteOptionalParams,
   EnvironmentsHeadOptionalParams,
   EnvironmentsHeadResponse,
+  EnvironmentsGetOptionalParams,
+  EnvironmentsGetResponse,
   EnvironmentsListNextResponse,
 } from "../models";
 
@@ -45,21 +45,14 @@ export class EnvironmentsImpl implements Environments {
    * Returns a collection of environments.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
    * @param options The options parameters.
    */
   public list(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
     options?: EnvironmentsListOptionalParams,
   ): PagedAsyncIterableIterator<Environment> {
-    const iter = this.listPagingAll(
-      resourceGroupName,
-      serviceName,
-      workspaceName,
-      options,
-    );
+    const iter = this.listPagingAll(resourceGroupName, serviceName, options);
     return {
       next() {
         return iter.next();
@@ -74,7 +67,6 @@ export class EnvironmentsImpl implements Environments {
         return this.listPagingPage(
           resourceGroupName,
           serviceName,
-          workspaceName,
           options,
           settings,
         );
@@ -85,19 +77,13 @@ export class EnvironmentsImpl implements Environments {
   private async *listPagingPage(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
     options?: EnvironmentsListOptionalParams,
     settings?: PageSettings,
   ): AsyncIterableIterator<Environment[]> {
     let result: EnvironmentsListResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._list(
-        resourceGroupName,
-        serviceName,
-        workspaceName,
-        options,
-      );
+      result = await this._list(resourceGroupName, serviceName, options);
       let page = result.value || [];
       continuationToken = result.nextLink;
       setContinuationToken(page, continuationToken);
@@ -107,7 +93,6 @@ export class EnvironmentsImpl implements Environments {
       result = await this._listNext(
         resourceGroupName,
         serviceName,
-        workspaceName,
         continuationToken,
         options,
       );
@@ -121,13 +106,11 @@ export class EnvironmentsImpl implements Environments {
   private async *listPagingAll(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
     options?: EnvironmentsListOptionalParams,
   ): AsyncIterableIterator<Environment> {
     for await (const page of this.listPagingPage(
       resourceGroupName,
       serviceName,
-      workspaceName,
       options,
     )) {
       yield* page;
@@ -138,45 +121,16 @@ export class EnvironmentsImpl implements Environments {
    * Returns a collection of environments.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
    * @param options The options parameters.
    */
   private _list(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
     options?: EnvironmentsListOptionalParams,
   ): Promise<EnvironmentsListResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, workspaceName, options },
+      { resourceGroupName, serviceName, options },
       listOperationSpec,
-    );
-  }
-
-  /**
-   * Returns details of the environment.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param environmentName The name of the environment.
-   * @param options The options parameters.
-   */
-  get(
-    resourceGroupName: string,
-    serviceName: string,
-    workspaceName: string,
-    environmentName: string,
-    options?: EnvironmentsGetOptionalParams,
-  ): Promise<EnvironmentsGetResponse> {
-    return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        serviceName,
-        workspaceName,
-        environmentName,
-        options,
-      },
-      getOperationSpec,
     );
   }
 
@@ -184,28 +138,17 @@ export class EnvironmentsImpl implements Environments {
    * Creates new or updates existing environment.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param environmentName The name of the environment.
-   * @param resource Resource create parameters.
+   * @param payload Environment entity.
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    environmentName: string,
-    resource: Environment,
+    payload: Environment,
     options?: EnvironmentsCreateOrUpdateOptionalParams,
   ): Promise<EnvironmentsCreateOrUpdateResponse> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        serviceName,
-        workspaceName,
-        environmentName,
-        resource,
-        options,
-      },
+      { resourceGroupName, serviceName, payload, options },
       createOrUpdateOperationSpec,
     );
   }
@@ -214,25 +157,15 @@ export class EnvironmentsImpl implements Environments {
    * Deletes the environment.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param environmentName The name of the environment.
    * @param options The options parameters.
    */
   delete(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    environmentName: string,
     options?: EnvironmentsDeleteOptionalParams,
   ): Promise<void> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        serviceName,
-        workspaceName,
-        environmentName,
-        options,
-      },
+      { resourceGroupName, serviceName, options },
       deleteOperationSpec,
     );
   }
@@ -241,26 +174,33 @@ export class EnvironmentsImpl implements Environments {
    * Checks if specified environment exists.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param environmentName The name of the environment.
    * @param options The options parameters.
    */
   head(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    environmentName: string,
     options?: EnvironmentsHeadOptionalParams,
   ): Promise<EnvironmentsHeadResponse> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        serviceName,
-        workspaceName,
-        environmentName,
-        options,
-      },
+      { resourceGroupName, serviceName, options },
       headOperationSpec,
+    );
+  }
+
+  /**
+   * Returns details of the environment.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param serviceName The name of Azure API Center service.
+   * @param options The options parameters.
+   */
+  get(
+    resourceGroupName: string,
+    serviceName: string,
+    options?: EnvironmentsGetOptionalParams,
+  ): Promise<EnvironmentsGetResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, serviceName, options },
+      getOperationSpec,
     );
   }
 
@@ -268,19 +208,17 @@ export class EnvironmentsImpl implements Environments {
    * ListNext
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
    * @param nextLink The nextLink from the previous successful call to the List method.
    * @param options The options parameters.
    */
   private _listNext(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
     nextLink: string,
     options?: EnvironmentsListNextOptionalParams,
   ): Promise<EnvironmentsListNextResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, workspaceName, nextLink, options },
+      { resourceGroupName, serviceName, nextLink, options },
       listNextOperationSpec,
     );
   }
@@ -293,7 +231,7 @@ const listOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.EnvironmentListResult,
+      bodyMapper: Mappers.EnvironmentCollection,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,
@@ -306,30 +244,6 @@ const listOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceGroupName,
     Parameters.serviceName,
     Parameters.workspaceName,
-  ],
-  headerParameters: [Parameters.accept],
-  serializer,
-};
-const getOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiCenter/services/{serviceName}/workspaces/{workspaceName}/environments/{environmentName}",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: Mappers.Environment,
-      headersMapper: Mappers.EnvironmentsGetHeaders,
-    },
-    default: {
-      bodyMapper: Mappers.ErrorResponse,
-    },
-  },
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.serviceName,
-    Parameters.workspaceName,
-    Parameters.environmentName,
   ],
   headerParameters: [Parameters.accept],
   serializer,
@@ -350,7 +264,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse,
     },
   },
-  requestBody: Parameters.resource7,
+  requestBody: Parameters.payload10,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -407,12 +321,36 @@ const headOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept],
   serializer,
 };
+const getOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiCenter/services/{serviceName}/workspaces/{workspaceName}/environments/{environmentName}",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.Environment,
+      headersMapper: Mappers.EnvironmentsGetHeaders,
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse,
+    },
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.serviceName,
+    Parameters.workspaceName,
+    Parameters.environmentName,
+  ],
+  headerParameters: [Parameters.accept],
+  serializer,
+};
 const listNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.EnvironmentListResult,
+      bodyMapper: Mappers.EnvironmentCollection,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,

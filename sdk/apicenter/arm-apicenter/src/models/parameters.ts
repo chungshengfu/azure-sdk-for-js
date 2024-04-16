@@ -18,10 +18,10 @@ import {
   MetadataSchema as MetadataSchemaMapper,
   Workspace as WorkspaceMapper,
   Api as ApiMapper,
-  Deployment as DeploymentMapper,
   ApiVersion as ApiVersionMapper,
   ApiDefinition as ApiDefinitionMapper,
   ApiSpecImportRequest as ApiSpecImportRequestMapper,
+  Deployment as DeploymentMapper,
   Environment as EnvironmentMapper,
 } from "../models/mappers";
 
@@ -103,7 +103,6 @@ export const serviceName: OperationURLParameter = {
   parameterPath: "serviceName",
   mapper: {
     constraints: {
-      Pattern: new RegExp("^[a-zA-Z0-9-]{3,90}$"),
       MaxLength: 90,
       MinLength: 1,
     },
@@ -127,23 +126,23 @@ export const contentType: OperationParameter = {
   },
 };
 
-export const resource: OperationParameter = {
-  parameterPath: "resource",
+export const payload: OperationParameter = {
+  parameterPath: ["options", "payload"],
   mapper: ServiceMapper,
 };
 
-export const properties: OperationParameter = {
-  parameterPath: "properties",
+export const payload1: OperationParameter = {
+  parameterPath: ["options", "payload"],
   mapper: ServiceUpdateMapper,
 };
 
-export const body: OperationParameter = {
-  parameterPath: "body",
+export const payload2: OperationParameter = {
+  parameterPath: "payload",
   mapper: MetadataSchemaExportRequestMapper,
 };
 
 export const filter: OperationQueryParameter = {
-  parameterPath: ["options", "filter"],
+  parameterPath: "filter",
   mapper: {
     serializedName: "$filter",
     type: {
@@ -156,7 +155,6 @@ export const metadataSchemaName: OperationURLParameter = {
   parameterPath: "metadataSchemaName",
   mapper: {
     constraints: {
-      Pattern: new RegExp("^[a-zA-Z0-9-]{3,90}$"),
       MaxLength: 90,
       MinLength: 1,
     },
@@ -168,8 +166,8 @@ export const metadataSchemaName: OperationURLParameter = {
   },
 };
 
-export const resource1: OperationParameter = {
-  parameterPath: "resource",
+export const payload3: OperationParameter = {
+  parameterPath: "payload",
   mapper: MetadataSchemaMapper,
 };
 
@@ -177,7 +175,6 @@ export const workspaceName: OperationURLParameter = {
   parameterPath: "workspaceName",
   mapper: {
     constraints: {
-      Pattern: new RegExp("^[a-zA-Z0-9-]{3,90}$"),
       MaxLength: 90,
       MinLength: 1,
     },
@@ -189,8 +186,8 @@ export const workspaceName: OperationURLParameter = {
   },
 };
 
-export const resource2: OperationParameter = {
-  parameterPath: "resource",
+export const payload4: OperationParameter = {
+  parameterPath: "payload",
   mapper: WorkspaceMapper,
 };
 
@@ -198,7 +195,6 @@ export const apiName: OperationURLParameter = {
   parameterPath: "apiName",
   mapper: {
     constraints: {
-      Pattern: new RegExp("^[a-zA-Z0-9-]{3,90}$"),
       MaxLength: 90,
       MinLength: 1,
     },
@@ -210,37 +206,15 @@ export const apiName: OperationURLParameter = {
   },
 };
 
-export const resource3: OperationParameter = {
-  parameterPath: "resource",
+export const payload5: OperationParameter = {
+  parameterPath: "payload",
   mapper: ApiMapper,
-};
-
-export const deploymentName: OperationURLParameter = {
-  parameterPath: "deploymentName",
-  mapper: {
-    constraints: {
-      Pattern: new RegExp("^[a-zA-Z0-9-]{3,90}$"),
-      MaxLength: 90,
-      MinLength: 1,
-    },
-    serializedName: "deploymentName",
-    required: true,
-    type: {
-      name: "String",
-    },
-  },
-};
-
-export const resource4: OperationParameter = {
-  parameterPath: "resource",
-  mapper: DeploymentMapper,
 };
 
 export const versionName: OperationURLParameter = {
   parameterPath: "versionName",
   mapper: {
     constraints: {
-      Pattern: new RegExp("^[a-zA-Z0-9-]{3,90}$"),
       MaxLength: 90,
       MinLength: 1,
     },
@@ -252,8 +226,8 @@ export const versionName: OperationURLParameter = {
   },
 };
 
-export const resource5: OperationParameter = {
-  parameterPath: "resource",
+export const payload6: OperationParameter = {
+  parameterPath: "payload",
   mapper: ApiVersionMapper,
 };
 
@@ -261,7 +235,6 @@ export const definitionName: OperationURLParameter = {
   parameterPath: "definitionName",
   mapper: {
     constraints: {
-      Pattern: new RegExp("^[a-zA-Z0-9-]{3,90}$"),
       MaxLength: 90,
       MinLength: 1,
     },
@@ -273,21 +246,45 @@ export const definitionName: OperationURLParameter = {
   },
 };
 
-export const resource6: OperationParameter = {
-  parameterPath: "resource",
+export const payload7: OperationParameter = {
+  parameterPath: "payload",
   mapper: ApiDefinitionMapper,
 };
 
-export const body1: OperationParameter = {
-  parameterPath: "body",
+export const payload8: OperationParameter = {
+  parameterPath: "payload",
   mapper: ApiSpecImportRequestMapper,
+};
+
+export const deploymentName: OperationURLParameter = {
+  parameterPath: "deploymentName",
+  mapper: {
+    constraints: {
+      MaxLength: 90,
+      MinLength: 1,
+    },
+    serializedName: "deploymentName",
+    required: true,
+    type: {
+      name: "String",
+    },
+  },
+};
+
+export const payload9: OperationParameter = {
+  parameterPath: "payload",
+  mapper: DeploymentMapper,
+};
+
+export const payload10: OperationParameter = {
+  parameterPath: "payload",
+  mapper: EnvironmentMapper,
 };
 
 export const environmentName: OperationURLParameter = {
   parameterPath: "environmentName",
   mapper: {
     constraints: {
-      Pattern: new RegExp("^[a-zA-Z0-9-]{3,90}$"),
       MaxLength: 90,
       MinLength: 1,
     },
@@ -297,9 +294,4 @@ export const environmentName: OperationURLParameter = {
       name: "String",
     },
   },
-};
-
-export const resource7: OperationParameter = {
-  parameterPath: "resource",
-  mapper: EnvironmentMapper,
 };

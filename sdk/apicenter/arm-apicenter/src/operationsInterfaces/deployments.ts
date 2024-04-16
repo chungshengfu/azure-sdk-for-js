@@ -10,11 +10,11 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
   Deployment,
   DeploymentsListOptionalParams,
+  DeploymentsDeleteOptionalParams,
   DeploymentsGetOptionalParams,
   DeploymentsGetResponse,
   DeploymentsCreateOrUpdateOptionalParams,
   DeploymentsCreateOrUpdateResponse,
-  DeploymentsDeleteOptionalParams,
   DeploymentsHeadOptionalParams,
   DeploymentsHeadResponse,
 } from "../models";
@@ -26,85 +26,57 @@ export interface Deployments {
    * Returns a collection of API deployments.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
    * @param options The options parameters.
    */
   list(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
     options?: DeploymentsListOptionalParams,
   ): PagedAsyncIterableIterator<Deployment>;
+  /**
+   * Deletes API deployment.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param serviceName The name of Azure API Center service.
+   * @param options The options parameters.
+   */
+  delete(
+    resourceGroupName: string,
+    serviceName: string,
+    options?: DeploymentsDeleteOptionalParams,
+  ): Promise<void>;
   /**
    * Returns details of the API deployment.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
-   * @param deploymentName The name of the API deployment.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
-    deploymentName: string,
     options?: DeploymentsGetOptionalParams,
   ): Promise<DeploymentsGetResponse>;
   /**
    * Creates new or updates existing API deployment.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
-   * @param deploymentName The name of the API deployment.
-   * @param resource Resource create parameters.
+   * @param payload API deployment entity.
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
-    deploymentName: string,
-    resource: Deployment,
+    payload: Deployment,
     options?: DeploymentsCreateOrUpdateOptionalParams,
   ): Promise<DeploymentsCreateOrUpdateResponse>;
-  /**
-   * Deletes API deployment.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
-   * @param deploymentName The name of the API deployment.
-   * @param options The options parameters.
-   */
-  delete(
-    resourceGroupName: string,
-    serviceName: string,
-    workspaceName: string,
-    apiName: string,
-    deploymentName: string,
-    options?: DeploymentsDeleteOptionalParams,
-  ): Promise<void>;
   /**
    * Checks if specified API deployment exists.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
-   * @param deploymentName The name of the API deployment.
    * @param options The options parameters.
    */
   head(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
-    deploymentName: string,
     options?: DeploymentsHeadOptionalParams,
   ): Promise<DeploymentsHeadResponse>;
 }

@@ -18,11 +18,11 @@ import {
   DeploymentsListNextOptionalParams,
   DeploymentsListOptionalParams,
   DeploymentsListResponse,
+  DeploymentsDeleteOptionalParams,
   DeploymentsGetOptionalParams,
   DeploymentsGetResponse,
   DeploymentsCreateOrUpdateOptionalParams,
   DeploymentsCreateOrUpdateResponse,
-  DeploymentsDeleteOptionalParams,
   DeploymentsHeadOptionalParams,
   DeploymentsHeadResponse,
   DeploymentsListNextResponse,
@@ -45,24 +45,14 @@ export class DeploymentsImpl implements Deployments {
    * Returns a collection of API deployments.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
    * @param options The options parameters.
    */
   public list(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
     options?: DeploymentsListOptionalParams,
   ): PagedAsyncIterableIterator<Deployment> {
-    const iter = this.listPagingAll(
-      resourceGroupName,
-      serviceName,
-      workspaceName,
-      apiName,
-      options,
-    );
+    const iter = this.listPagingAll(resourceGroupName, serviceName, options);
     return {
       next() {
         return iter.next();
@@ -77,8 +67,6 @@ export class DeploymentsImpl implements Deployments {
         return this.listPagingPage(
           resourceGroupName,
           serviceName,
-          workspaceName,
-          apiName,
           options,
           settings,
         );
@@ -89,21 +77,13 @@ export class DeploymentsImpl implements Deployments {
   private async *listPagingPage(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
     options?: DeploymentsListOptionalParams,
     settings?: PageSettings,
   ): AsyncIterableIterator<Deployment[]> {
     let result: DeploymentsListResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._list(
-        resourceGroupName,
-        serviceName,
-        workspaceName,
-        apiName,
-        options,
-      );
+      result = await this._list(resourceGroupName, serviceName, options);
       let page = result.value || [];
       continuationToken = result.nextLink;
       setContinuationToken(page, continuationToken);
@@ -113,8 +93,6 @@ export class DeploymentsImpl implements Deployments {
       result = await this._listNext(
         resourceGroupName,
         serviceName,
-        workspaceName,
-        apiName,
         continuationToken,
         options,
       );
@@ -128,15 +106,11 @@ export class DeploymentsImpl implements Deployments {
   private async *listPagingAll(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
     options?: DeploymentsListOptionalParams,
   ): AsyncIterableIterator<Deployment> {
     for await (const page of this.listPagingPage(
       resourceGroupName,
       serviceName,
-      workspaceName,
-      apiName,
       options,
     )) {
       yield* page;
@@ -147,20 +121,33 @@ export class DeploymentsImpl implements Deployments {
    * Returns a collection of API deployments.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
    * @param options The options parameters.
    */
   private _list(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
     options?: DeploymentsListOptionalParams,
   ): Promise<DeploymentsListResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, workspaceName, apiName, options },
+      { resourceGroupName, serviceName, options },
       listOperationSpec,
+    );
+  }
+
+  /**
+   * Deletes API deployment.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param serviceName The name of Azure API Center service.
+   * @param options The options parameters.
+   */
+  delete(
+    resourceGroupName: string,
+    serviceName: string,
+    options?: DeploymentsDeleteOptionalParams,
+  ): Promise<void> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, serviceName, options },
+      deleteOperationSpec,
     );
   }
 
@@ -168,28 +155,15 @@ export class DeploymentsImpl implements Deployments {
    * Returns details of the API deployment.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
-   * @param deploymentName The name of the API deployment.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
-    deploymentName: string,
     options?: DeploymentsGetOptionalParams,
   ): Promise<DeploymentsGetResponse> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        serviceName,
-        workspaceName,
-        apiName,
-        deploymentName,
-        options,
-      },
+      { resourceGroupName, serviceName, options },
       getOperationSpec,
     );
   }
@@ -198,62 +172,18 @@ export class DeploymentsImpl implements Deployments {
    * Creates new or updates existing API deployment.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
-   * @param deploymentName The name of the API deployment.
-   * @param resource Resource create parameters.
+   * @param payload API deployment entity.
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
-    deploymentName: string,
-    resource: Deployment,
+    payload: Deployment,
     options?: DeploymentsCreateOrUpdateOptionalParams,
   ): Promise<DeploymentsCreateOrUpdateResponse> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        serviceName,
-        workspaceName,
-        apiName,
-        deploymentName,
-        resource,
-        options,
-      },
+      { resourceGroupName, serviceName, payload, options },
       createOrUpdateOperationSpec,
-    );
-  }
-
-  /**
-   * Deletes API deployment.
-   * @param resourceGroupName The name of the resource group. The name is case insensitive.
-   * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
-   * @param deploymentName The name of the API deployment.
-   * @param options The options parameters.
-   */
-  delete(
-    resourceGroupName: string,
-    serviceName: string,
-    workspaceName: string,
-    apiName: string,
-    deploymentName: string,
-    options?: DeploymentsDeleteOptionalParams,
-  ): Promise<void> {
-    return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        serviceName,
-        workspaceName,
-        apiName,
-        deploymentName,
-        options,
-      },
-      deleteOperationSpec,
     );
   }
 
@@ -261,28 +191,15 @@ export class DeploymentsImpl implements Deployments {
    * Checks if specified API deployment exists.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
-   * @param deploymentName The name of the API deployment.
    * @param options The options parameters.
    */
   head(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
-    deploymentName: string,
     options?: DeploymentsHeadOptionalParams,
   ): Promise<DeploymentsHeadResponse> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        serviceName,
-        workspaceName,
-        apiName,
-        deploymentName,
-        options,
-      },
+      { resourceGroupName, serviceName, options },
       headOperationSpec,
     );
   }
@@ -291,28 +208,17 @@ export class DeploymentsImpl implements Deployments {
    * ListNext
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
    * @param nextLink The nextLink from the previous successful call to the List method.
    * @param options The options parameters.
    */
   private _listNext(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
     nextLink: string,
     options?: DeploymentsListNextOptionalParams,
   ): Promise<DeploymentsListNextResponse> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        serviceName,
-        workspaceName,
-        apiName,
-        nextLink,
-        options,
-      },
+      { resourceGroupName, serviceName, nextLink, options },
       listNextOperationSpec,
     );
   }
@@ -325,7 +231,7 @@ const listOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.DeploymentListResult,
+      bodyMapper: Mappers.DeploymentCollection,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,
@@ -339,6 +245,29 @@ const listOperationSpec: coreClient.OperationSpec = {
     Parameters.serviceName,
     Parameters.workspaceName,
     Parameters.apiName,
+  ],
+  headerParameters: [Parameters.accept],
+  serializer,
+};
+const deleteOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiCenter/services/{serviceName}/workspaces/{workspaceName}/apis/{apiName}/deployments/{deploymentName}",
+  httpMethod: "DELETE",
+  responses: {
+    200: {},
+    204: {},
+    default: {
+      bodyMapper: Mappers.ErrorResponse,
+    },
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.serviceName,
+    Parameters.workspaceName,
+    Parameters.apiName,
+    Parameters.deploymentName,
   ],
   headerParameters: [Parameters.accept],
   serializer,
@@ -384,7 +313,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse,
     },
   },
-  requestBody: Parameters.resource4,
+  requestBody: Parameters.payload9,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -397,29 +326,6 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer,
-};
-const deleteOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiCenter/services/{serviceName}/workspaces/{workspaceName}/apis/{apiName}/deployments/{deploymentName}",
-  httpMethod: "DELETE",
-  responses: {
-    200: {},
-    204: {},
-    default: {
-      bodyMapper: Mappers.ErrorResponse,
-    },
-  },
-  queryParameters: [Parameters.apiVersion],
-  urlParameters: [
-    Parameters.$host,
-    Parameters.subscriptionId,
-    Parameters.resourceGroupName,
-    Parameters.serviceName,
-    Parameters.workspaceName,
-    Parameters.apiName,
-    Parameters.deploymentName,
-  ],
-  headerParameters: [Parameters.accept],
   serializer,
 };
 const headOperationSpec: coreClient.OperationSpec = {
@@ -449,7 +355,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.DeploymentListResult,
+      bodyMapper: Mappers.DeploymentCollection,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,

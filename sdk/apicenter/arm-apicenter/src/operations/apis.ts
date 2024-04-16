@@ -45,21 +45,14 @@ export class ApisImpl implements Apis {
    * Returns a collection of APIs.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
    * @param options The options parameters.
    */
   public list(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
     options?: ApisListOptionalParams,
   ): PagedAsyncIterableIterator<Api> {
-    const iter = this.listPagingAll(
-      resourceGroupName,
-      serviceName,
-      workspaceName,
-      options,
-    );
+    const iter = this.listPagingAll(resourceGroupName, serviceName, options);
     return {
       next() {
         return iter.next();
@@ -74,7 +67,6 @@ export class ApisImpl implements Apis {
         return this.listPagingPage(
           resourceGroupName,
           serviceName,
-          workspaceName,
           options,
           settings,
         );
@@ -85,19 +77,13 @@ export class ApisImpl implements Apis {
   private async *listPagingPage(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
     options?: ApisListOptionalParams,
     settings?: PageSettings,
   ): AsyncIterableIterator<Api[]> {
     let result: ApisListResponse;
     let continuationToken = settings?.continuationToken;
     if (!continuationToken) {
-      result = await this._list(
-        resourceGroupName,
-        serviceName,
-        workspaceName,
-        options,
-      );
+      result = await this._list(resourceGroupName, serviceName, options);
       let page = result.value || [];
       continuationToken = result.nextLink;
       setContinuationToken(page, continuationToken);
@@ -107,7 +93,6 @@ export class ApisImpl implements Apis {
       result = await this._listNext(
         resourceGroupName,
         serviceName,
-        workspaceName,
         continuationToken,
         options,
       );
@@ -121,13 +106,11 @@ export class ApisImpl implements Apis {
   private async *listPagingAll(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
     options?: ApisListOptionalParams,
   ): AsyncIterableIterator<Api> {
     for await (const page of this.listPagingPage(
       resourceGroupName,
       serviceName,
-      workspaceName,
       options,
     )) {
       yield* page;
@@ -138,17 +121,15 @@ export class ApisImpl implements Apis {
    * Returns a collection of APIs.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
    * @param options The options parameters.
    */
   private _list(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
     options?: ApisListOptionalParams,
   ): Promise<ApisListResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, workspaceName, options },
+      { resourceGroupName, serviceName, options },
       listOperationSpec,
     );
   }
@@ -157,19 +138,15 @@ export class ApisImpl implements Apis {
    * Returns details of the API.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
     options?: ApisGetOptionalParams,
   ): Promise<ApisGetResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, workspaceName, apiName, options },
+      { resourceGroupName, serviceName, options },
       getOperationSpec,
     );
   }
@@ -178,28 +155,17 @@ export class ApisImpl implements Apis {
    * Creates new or updates existing API.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
-   * @param resource Resource create parameters.
+   * @param payload API entity.
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
-    resource: Api,
+    payload: Api,
     options?: ApisCreateOrUpdateOptionalParams,
   ): Promise<ApisCreateOrUpdateResponse> {
     return this.client.sendOperationRequest(
-      {
-        resourceGroupName,
-        serviceName,
-        workspaceName,
-        apiName,
-        resource,
-        options,
-      },
+      { resourceGroupName, serviceName, payload, options },
       createOrUpdateOperationSpec,
     );
   }
@@ -208,19 +174,15 @@ export class ApisImpl implements Apis {
    * Deletes specified API.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
    * @param options The options parameters.
    */
   delete(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
     options?: ApisDeleteOptionalParams,
   ): Promise<void> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, workspaceName, apiName, options },
+      { resourceGroupName, serviceName, options },
       deleteOperationSpec,
     );
   }
@@ -229,19 +191,15 @@ export class ApisImpl implements Apis {
    * Checks if specified API exists.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param apiName The name of the API.
    * @param options The options parameters.
    */
   head(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    apiName: string,
     options?: ApisHeadOptionalParams,
   ): Promise<ApisHeadResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, workspaceName, apiName, options },
+      { resourceGroupName, serviceName, options },
       headOperationSpec,
     );
   }
@@ -250,19 +208,17 @@ export class ApisImpl implements Apis {
    * ListNext
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
    * @param nextLink The nextLink from the previous successful call to the List method.
    * @param options The options parameters.
    */
   private _listNext(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
     nextLink: string,
     options?: ApisListNextOptionalParams,
   ): Promise<ApisListNextResponse> {
     return this.client.sendOperationRequest(
-      { resourceGroupName, serviceName, workspaceName, nextLink, options },
+      { resourceGroupName, serviceName, nextLink, options },
       listNextOperationSpec,
     );
   }
@@ -275,7 +231,7 @@ const listOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ApiListResult,
+      bodyMapper: Mappers.ApiCollection,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,
@@ -332,7 +288,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse,
     },
   },
-  requestBody: Parameters.resource3,
+  requestBody: Parameters.payload5,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
@@ -394,7 +350,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ApiListResult,
+      bodyMapper: Mappers.ApiCollection,
     },
     default: {
       bodyMapper: Mappers.ErrorResponse,

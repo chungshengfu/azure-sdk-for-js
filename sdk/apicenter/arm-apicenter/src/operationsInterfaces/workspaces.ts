@@ -37,54 +37,46 @@ export interface Workspaces {
    * Returns details of the workspace.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
    * @param options The options parameters.
    */
   get(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
     options?: WorkspacesGetOptionalParams,
   ): Promise<WorkspacesGetResponse>;
   /**
    * Creates new or updates existing workspace.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
-   * @param resource Resource create parameters.
+   * @param payload Workspace entity.
    * @param options The options parameters.
    */
   createOrUpdate(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
-    resource: Workspace,
+    payload: Workspace,
     options?: WorkspacesCreateOrUpdateOptionalParams,
   ): Promise<WorkspacesCreateOrUpdateResponse>;
   /**
    * Deletes specified workspace.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
    * @param options The options parameters.
    */
   delete(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
     options?: WorkspacesDeleteOptionalParams,
   ): Promise<void>;
   /**
    * Checks if specified workspace exists.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param serviceName The name of Azure API Center service.
-   * @param workspaceName The name of the workspace.
    * @param options The options parameters.
    */
   head(
     resourceGroupName: string,
     serviceName: string,
-    workspaceName: string,
     options?: WorkspacesHeadOptionalParams,
   ): Promise<WorkspacesHeadResponse>;
 }
