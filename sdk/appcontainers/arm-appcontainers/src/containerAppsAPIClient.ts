@@ -30,11 +30,16 @@ import {
   ContainerAppsImpl,
   ContainerAppsRevisionsImpl,
   ContainerAppsRevisionReplicasImpl,
+  ContainerAppsBuildsByContainerAppImpl,
+  ContainerAppsBuildsImpl,
+  ContainerAppsPatchesImpl,
   ContainerAppsDiagnosticsImpl,
   ManagedEnvironmentDiagnosticsImpl,
   ManagedEnvironmentsDiagnosticsImpl,
   JobsImpl,
+  DotNetComponentsImpl,
   OperationsImpl,
+  JavaComponentsImpl,
   JobsExecutionsImpl,
   ManagedEnvironmentsImpl,
   CertificatesImpl,
@@ -47,8 +52,9 @@ import {
   ContainerAppsSourceControlsImpl,
   UsagesImpl,
   ManagedEnvironmentUsagesImpl,
-  JavaComponentsImpl,
-  DotNetComponentsImpl,
+  FunctionsExtensionImpl,
+  ContainerAppsSessionPoolsImpl,
+  ContainerAppsSessionPoolSessionsImpl,
 } from "./operations";
 import {
   AppResiliencyOperations,
@@ -66,11 +72,16 @@ import {
   ContainerApps,
   ContainerAppsRevisions,
   ContainerAppsRevisionReplicas,
+  ContainerAppsBuildsByContainerApp,
+  ContainerAppsBuilds,
+  ContainerAppsPatches,
   ContainerAppsDiagnostics,
   ManagedEnvironmentDiagnostics,
   ManagedEnvironmentsDiagnostics,
   Jobs,
+  DotNetComponents,
   Operations,
+  JavaComponents,
   JobsExecutions,
   ManagedEnvironments,
   Certificates,
@@ -83,8 +94,9 @@ import {
   ContainerAppsSourceControls,
   Usages,
   ManagedEnvironmentUsages,
-  JavaComponents,
-  DotNetComponents,
+  FunctionsExtension,
+  ContainerAppsSessionPools,
+  ContainerAppsSessionPoolSessions,
 } from "./operationsInterfaces";
 import * as Parameters from "./models/parameters";
 import * as Mappers from "./models/mappers";
@@ -182,7 +194,7 @@ export class ContainerAppsAPIClient extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
-    this.apiVersion = options.apiVersion || "2023-11-02-preview";
+    this.apiVersion = options.apiVersion || "2024-02-02-preview";
     this.appResiliencyOperations = new AppResiliencyOperationsImpl(this);
     this.containerAppsAuthConfigs = new ContainerAppsAuthConfigsImpl(this);
     this.availableWorkloadProfiles = new AvailableWorkloadProfilesImpl(this);
@@ -204,6 +216,10 @@ export class ContainerAppsAPIClient extends coreClient.ServiceClient {
     this.containerAppsRevisionReplicas = new ContainerAppsRevisionReplicasImpl(
       this,
     );
+    this.containerAppsBuildsByContainerApp =
+      new ContainerAppsBuildsByContainerAppImpl(this);
+    this.containerAppsBuilds = new ContainerAppsBuildsImpl(this);
+    this.containerAppsPatches = new ContainerAppsPatchesImpl(this);
     this.containerAppsDiagnostics = new ContainerAppsDiagnosticsImpl(this);
     this.managedEnvironmentDiagnostics = new ManagedEnvironmentDiagnosticsImpl(
       this,
@@ -211,7 +227,9 @@ export class ContainerAppsAPIClient extends coreClient.ServiceClient {
     this.managedEnvironmentsDiagnostics =
       new ManagedEnvironmentsDiagnosticsImpl(this);
     this.jobs = new JobsImpl(this);
+    this.dotNetComponents = new DotNetComponentsImpl(this);
     this.operations = new OperationsImpl(this);
+    this.javaComponents = new JavaComponentsImpl(this);
     this.jobsExecutions = new JobsExecutionsImpl(this);
     this.managedEnvironments = new ManagedEnvironmentsImpl(this);
     this.certificates = new CertificatesImpl(this);
@@ -229,8 +247,10 @@ export class ContainerAppsAPIClient extends coreClient.ServiceClient {
     );
     this.usages = new UsagesImpl(this);
     this.managedEnvironmentUsages = new ManagedEnvironmentUsagesImpl(this);
-    this.javaComponents = new JavaComponentsImpl(this);
-    this.dotNetComponents = new DotNetComponentsImpl(this);
+    this.functionsExtension = new FunctionsExtensionImpl(this);
+    this.containerAppsSessionPools = new ContainerAppsSessionPoolsImpl(this);
+    this.containerAppsSessionPoolSessions =
+      new ContainerAppsSessionPoolSessionsImpl(this);
     this.addCustomApiVersionPolicy(options.apiVersion);
   }
 
@@ -309,11 +329,16 @@ export class ContainerAppsAPIClient extends coreClient.ServiceClient {
   containerApps: ContainerApps;
   containerAppsRevisions: ContainerAppsRevisions;
   containerAppsRevisionReplicas: ContainerAppsRevisionReplicas;
+  containerAppsBuildsByContainerApp: ContainerAppsBuildsByContainerApp;
+  containerAppsBuilds: ContainerAppsBuilds;
+  containerAppsPatches: ContainerAppsPatches;
   containerAppsDiagnostics: ContainerAppsDiagnostics;
   managedEnvironmentDiagnostics: ManagedEnvironmentDiagnostics;
   managedEnvironmentsDiagnostics: ManagedEnvironmentsDiagnostics;
   jobs: Jobs;
+  dotNetComponents: DotNetComponents;
   operations: Operations;
+  javaComponents: JavaComponents;
   jobsExecutions: JobsExecutions;
   managedEnvironments: ManagedEnvironments;
   certificates: Certificates;
@@ -326,8 +351,9 @@ export class ContainerAppsAPIClient extends coreClient.ServiceClient {
   containerAppsSourceControls: ContainerAppsSourceControls;
   usages: Usages;
   managedEnvironmentUsages: ManagedEnvironmentUsages;
-  javaComponents: JavaComponents;
-  dotNetComponents: DotNetComponents;
+  functionsExtension: FunctionsExtension;
+  containerAppsSessionPools: ContainerAppsSessionPools;
+  containerAppsSessionPoolSessions: ContainerAppsSessionPoolSessions;
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
