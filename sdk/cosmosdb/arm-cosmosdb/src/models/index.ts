@@ -28,6 +28,199 @@ export type BaseCosmosDataTransferDataSourceSinkUnion =
   | CosmosMongoDataTransferDataSourceSink
   | CosmosSqlDataTransferDataSourceSink;
 
+/** Result of the List Network Security Perimeter configuration operation. */
+export interface NetworkSecurityPerimeterConfigurationList {
+  /**
+   * A collection of Network Security Perimeter configurations
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly value?: NetworkSecurityPerimeterConfiguration[];
+  /**
+   * The link used to get the next page of results.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly nextLink?: string;
+}
+
+/** Describes provisioning issue for given NetworkSecurityPerimeterConfiguration */
+export interface ProvisioningIssue {
+  /** Name of the issue */
+  name?: string;
+  /**
+   * Properties of provisioning issue
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly properties?: ProvisioningIssueProperties;
+}
+
+/** Properties of provisioning issue */
+export interface ProvisioningIssueProperties {
+  /** Type of issue */
+  issueType?: IssueType;
+  /** Severity of the issue. */
+  severity?: Severity;
+  /** Description of the issue */
+  description?: string;
+}
+
+/** NetworkSecurityPerimeter related information */
+export interface NetworkSecurityPerimeter {
+  /** The ARM identifier of the resource */
+  id?: string;
+  /** Guid of the resource */
+  perimeterGuid?: string;
+  /** Location of the resource */
+  location?: string;
+}
+
+/** Information about resource association */
+export interface NetworkSecurityPerimeterConfigurationPropertiesResourceAssociation {
+  /** Name of the resource association */
+  name?: string;
+  /** Access Mode of the resource association */
+  accessMode?: ResourceAssociationAccessMode;
+}
+
+/** Network Security Perimeter profile */
+export interface NetworkSecurityPerimeterConfigurationPropertiesProfile {
+  /** Name of the resource */
+  name?: string;
+  /** Current access rules version */
+  accessRulesVersion?: number;
+  /** List of Access Rules */
+  accessRules?: NspAccessRule[];
+  /** Diagnostic settings version */
+  diagnosticSettingsVersion?: number;
+  /** Enabled logging categories */
+  enabledLogCategories?: string[];
+}
+
+/** Information of Access Rule in Network Security Perimeter profile */
+export interface NspAccessRule {
+  /** Name of the resource */
+  name?: string;
+  /**
+   * Properties of Access Rule
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly properties?: NspAccessRuleProperties;
+}
+
+/** Properties of Access Rule */
+export interface NspAccessRuleProperties {
+  /** Direction of Access Rule */
+  direction?: NspAccessRuleDirection;
+  /** Address prefixes in the CIDR format for inbound rules */
+  addressPrefixes?: string[];
+  /** Subscriptions for inbound rules */
+  subscriptions?: NspAccessRulePropertiesSubscriptionsItem[];
+  /**
+   * NetworkSecurityPerimeters for inbound rules
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly networkSecurityPerimeters?: NetworkSecurityPerimeter[];
+  /**
+   * FQDN for outbound rules
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly fullyQualifiedDomainNames?: string[];
+}
+
+/** Subscription for inbound rule */
+export interface NspAccessRulePropertiesSubscriptionsItem {
+  /** The ARM identifier of subscription */
+  id?: string;
+}
+
+/** Common fields that are returned in the response for all Azure Resource Manager resources */
+export interface Resource {
+  /**
+   * Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly id?: string;
+  /**
+   * The name of the resource
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly name?: string;
+  /**
+   * The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly type?: string;
+  /**
+   * Azure Resource Manager metadata containing createdBy and modifiedBy information.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly systemData?: SystemData;
+}
+
+/** Metadata pertaining to creation and last modification of the resource. */
+export interface SystemData {
+  /** The identity that created the resource. */
+  createdBy?: string;
+  /** The type of identity that created the resource. */
+  createdByType?: CreatedByType;
+  /** The timestamp of resource creation (UTC). */
+  createdAt?: Date;
+  /** The identity that last modified the resource. */
+  lastModifiedBy?: string;
+  /** The type of identity that last modified the resource. */
+  lastModifiedByType?: CreatedByType;
+  /** The timestamp of resource last modification (UTC) */
+  lastModifiedAt?: Date;
+}
+
+/** Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.). */
+export interface ErrorResponse {
+  /** The error object. */
+  error?: ErrorDetail;
+}
+
+/** The error detail. */
+export interface ErrorDetail {
+  /**
+   * The error code.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly code?: string;
+  /**
+   * The error message.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly message?: string;
+  /**
+   * The error target.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly target?: string;
+  /**
+   * The error details.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly details?: ErrorDetail[];
+  /**
+   * The error additional info.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly additionalInfo?: ErrorAdditionalInfo[];
+}
+
+/** The resource management error additional info. */
+export interface ErrorAdditionalInfo {
+  /**
+   * The additional info type.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly type?: string;
+  /**
+   * The additional info.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly info?: Record<string, unknown>;
+}
+
 /** IpAddressOrRange object */
 export interface IpAddressOrRange {
   /** A single IPv4 address or a single IPv4 address range in CIDR format. Provided IPs must be well-formatted and cannot be contained in one of the following ranges: 10.0.0.0/8, 100.64.0.0/10, 172.16.0.0/12, 192.168.0.0/16, since these are not enforceable by the IP address filter. Example of valid inputs: “23.40.210.245” or “23.40.210.0/8”. */
@@ -116,7 +309,7 @@ export interface PrivateLinkServiceConnectionStateProperty {
 }
 
 /** Common fields that are returned in the response for all Azure Resource Manager resources */
-export interface Resource {
+export interface ResourceAutoGenerated {
   /**
    * Fully qualified resource ID for the resource. E.g. "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}"
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -137,22 +330,6 @@ export interface Resource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly systemData?: SystemData;
-}
-
-/** Metadata pertaining to creation and last modification of the resource. */
-export interface SystemData {
-  /** The identity that created the resource. */
-  createdBy?: string;
-  /** The type of identity that created the resource. */
-  createdByType?: CreatedByType;
-  /** The timestamp of resource creation (UTC). */
-  createdAt?: Date;
-  /** The identity that last modified the resource. */
-  lastModifiedBy?: string;
-  /** The type of identity that last modified the resource. */
-  lastModifiedByType?: CreatedByType;
-  /** The timestamp of resource last modification (UTC) */
-  lastModifiedAt?: Date;
 }
 
 export interface ApiProperties {
@@ -234,6 +411,31 @@ export interface DiagnosticLogSettings {
 export interface Capacity {
   /** The total throughput limit imposed on the account. A totalThroughputLimit of 2000 imposes a strict limit of max throughput that can be provisioned on that account to be 2000. A totalThroughputLimit of -1 indicates no limits on provisioning of throughput. */
   totalThroughputLimit?: number;
+}
+
+/** The transition state information related capacity mode change with update request. */
+export interface CapacityModeChangeTransitionState {
+  /** The transition status of capacity mode. */
+  capacityModeTransitionStatus?: CapacityModeTransitionStatus;
+  /** Indicates the current capacity mode of the account. */
+  currentCapacityMode?: CapacityMode;
+  /** Indicates the previous capacity mode of the account before successful transition. */
+  previousCapacityMode?: CapacityMode;
+  /**
+   * Begin time in UTC of the capacity mode change.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly capacityModeTransitionBeginTimestamp?: Date;
+  /**
+   * End time in UTC of the capacity mode change.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly capacityModeTransitionEndTimestamp?: Date;
+  /**
+   * End time in UTC of the last successful capacity mode change.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly capacityModeLastSuccessfulTransitionEndTimestamp?: Date;
 }
 
 /** The metadata related to each access key for the given Cosmos DB database account. */
@@ -387,6 +589,8 @@ export interface DatabaseAccountUpdateParameters {
   disableLocalAuth?: boolean;
   /** The object that represents all properties related to capacity enforcement on an account. */
   capacity?: Capacity;
+  /** Indicates the capacityMode of the Cosmos DB account. */
+  capacityMode?: CapacityMode;
   /** Flag to indicate whether to enable MaterializedViews on the Cosmos DB account */
   enableMaterializedViews?: boolean;
   /**
@@ -476,7 +680,7 @@ export interface RegionForOnlineOffline {
 }
 
 /** Error Response. */
-export interface ErrorResponse {
+export interface ErrorResponseAutoGenerated {
   /** Error code. */
   code?: string;
   /** Error message indicating why the operation failed. */
@@ -891,7 +1095,7 @@ export interface ThroughputPolicyResource {
 /** An error response from the service. */
 export interface CloudError {
   /** Error Response. */
-  error?: ErrorResponse;
+  error?: ErrorResponseAutoGenerated;
 }
 
 /** The List operation response, that contains the client encryption keys and their properties. */
@@ -1540,7 +1744,7 @@ export interface DataTransferJobProperties {
    * Error response for Faulted job
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly error?: ErrorResponse;
+  readonly error?: ErrorResponseAutoGenerated;
   /**
    * Total Duration of Job
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -1793,6 +1997,26 @@ export interface BackupResource {
   backupExpiryTimestamp?: Date;
 }
 
+export interface CassandraClusterRestoreResult {
+  /** The exit code returned by the command. */
+  exitCode?: number;
+  /** The output from the command. */
+  commandOutput?: string;
+  /** The error generated from the command. */
+  commandErrorOutput?: string;
+  /** Backup Id to restore. */
+  backupId?: string;
+  /** Starting time of restore. */
+  startTimestamp?: string;
+}
+
+export interface CassandraClusterRestoreInfo {
+  /** Backup Id of restore. */
+  backupId?: string;
+  /** Time that the restore started. */
+  startTimestamp?: string;
+}
+
 /** List of managed Cassandra data centers and their properties. */
 export interface ListDataCenters {
   /**
@@ -1965,55 +2189,6 @@ export interface NodeGroupProperties {
   diskSizeGB?: number;
   /** Whether high availability is enabled on the node group. */
   enableHa?: boolean;
-}
-
-/** Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.). */
-export interface ErrorResponseAutoGenerated {
-  /** The error object. */
-  error?: ErrorDetail;
-}
-
-/** The error detail. */
-export interface ErrorDetail {
-  /**
-   * The error code.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly code?: string;
-  /**
-   * The error message.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly message?: string;
-  /**
-   * The error target.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly target?: string;
-  /**
-   * The error details.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly details?: ErrorDetail[];
-  /**
-   * The error additional info.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly additionalInfo?: ErrorAdditionalInfo[];
-}
-
-/** The resource management error additional info. */
-export interface ErrorAdditionalInfo {
-  /**
-   * The additional info type.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly type?: string;
-  /**
-   * The additional info.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly info?: Record<string, unknown>;
 }
 
 /** Represents a mongo cluster resource for updates. */
@@ -3118,8 +3293,11 @@ export interface ThroughputPoolAccountCreateParameters {
 /** The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location */
 export interface ProxyResource extends Resource {}
 
+/** The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location */
+export interface ProxyResourceAutoGenerated extends ResourceAutoGenerated {}
+
 /** The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location' */
-export interface TrackedResource extends Resource {
+export interface TrackedResource extends ResourceAutoGenerated {
   /** Resource tags. */
   tags?: { [propertyName: string]: string };
   /** The geo-location where the resource lives */
@@ -3265,6 +3443,10 @@ export interface DatabaseAccountGetResults extends ARMResourceProperties {
   disableLocalAuth?: boolean;
   /** The object that represents all properties related to capacity enforcement on an account. */
   capacity?: Capacity;
+  /** Indicates the capacityMode of the Cosmos DB account. */
+  capacityMode?: CapacityMode;
+  /** The object that represents the migration state for the CapacityMode of the Cosmos DB account. */
+  capacityModeChangeTransitionState?: CapacityModeChangeTransitionState;
   /** Flag to indicate whether to enable MaterializedViews on the Cosmos DB account */
   enableMaterializedViews?: boolean;
   /**
@@ -3349,6 +3531,8 @@ export interface DatabaseAccountCreateUpdateParameters
   restoreParameters?: RestoreParameters;
   /** The object that represents all properties related to capacity enforcement on an account. */
   capacity?: Capacity;
+  /** Indicates the capacityMode of the Cosmos DB account. */
+  capacityMode?: CapacityMode;
   /** Flag to indicate whether to enable MaterializedViews on the Cosmos DB account */
   enableMaterializedViews?: boolean;
   /**
@@ -3870,7 +4054,7 @@ export interface DataTransferJobGetResults extends ARMProxyResource {
    * Error response for Faulted job
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly error?: ErrorResponse;
+  readonly error?: ErrorResponseAutoGenerated;
   /**
    * Total Duration of Job
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -4100,8 +4284,37 @@ export interface GraphAPIComputeRegionalServiceResource
 export interface MaterializedViewsBuilderRegionalServiceResource
   extends RegionalServiceResource {}
 
+/** The Network Security Perimeter configuration resource. */
+export interface NetworkSecurityPerimeterConfiguration extends ProxyResource {
+  /**
+   * Provisioning state of Network Security Perimeter configuration propagation
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningState?: NetworkSecurityPerimeterConfigurationProvisioningState;
+  /**
+   * List of Provisioning Issues if any
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly provisioningIssues?: ProvisioningIssue[];
+  /**
+   * NetworkSecurityPerimeter related information
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly networkSecurityPerimeter?: NetworkSecurityPerimeter;
+  /**
+   * Information about resource association
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly resourceAssociation?: NetworkSecurityPerimeterConfigurationPropertiesResourceAssociation;
+  /**
+   * Network Security Perimeter profile
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly profile?: NetworkSecurityPerimeterConfigurationPropertiesProfile;
+}
+
 /** A private endpoint connection */
-export interface PrivateEndpointConnection extends ProxyResource {
+export interface PrivateEndpointConnection extends ProxyResourceAutoGenerated {
   /** Private endpoint which the connection belongs to. */
   privateEndpoint?: PrivateEndpointProperty;
   /** Connection State of the Private Endpoint Connection. */
@@ -4113,7 +4326,7 @@ export interface PrivateEndpointConnection extends ProxyResource {
 }
 
 /** Represents a mongo cluster firewall rule. */
-export interface FirewallRule extends ProxyResource {
+export interface FirewallRule extends ProxyResourceAutoGenerated {
   /**
    * The provisioning state of the firewall rule.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -4126,7 +4339,8 @@ export interface FirewallRule extends ProxyResource {
 }
 
 /** An Azure Cosmos DB Throughputpool Account */
-export interface ThroughputPoolAccountResource extends ProxyResource {
+export interface ThroughputPoolAccountResource
+  extends ProxyResourceAutoGenerated {
   /** A provisioning state of the ThroughputPool Account. */
   provisioningState?: Status;
   /** The resource identifier of global database account in the throughputPool. */
@@ -4212,6 +4426,11 @@ export interface CosmosSqlDataTransferDataSourceSink
   component: "CosmosDBSql";
   databaseName: string;
   containerName: string;
+}
+
+/** Defines headers for NetworkSecurityPerimeterConfigurations_reconcile operation. */
+export interface NetworkSecurityPerimeterConfigurationsReconcileHeaders {
+  location?: string;
 }
 
 /** Defines headers for DatabaseAccounts_delete operation. */
@@ -4822,8 +5041,8 @@ export interface GremlinResourcesMigrateGremlinGraphToManualThroughputHeaders {
   location?: string;
 }
 
-/** Defines headers for CassandraClusters_invokeCommandAsync operation. */
-export interface CassandraClustersInvokeCommandAsyncHeaders {
+/** Defines headers for CassandraClusters_invokeAsyncCommand operation. */
+export interface CassandraClustersInvokeAsyncCommandHeaders {
   /** URI to poll for completion status. */
   azureAsyncOperation?: string;
   /** URI to poll for completion status. */
@@ -4877,26 +5096,107 @@ export interface ThroughputPoolAccountDeleteHeaders {
   location?: string;
 }
 
-/** Known values of {@link DatabaseAccountKind} that the service accepts. */
-export enum KnownDatabaseAccountKind {
-  /** GlobalDocumentDB */
-  GlobalDocumentDB = "GlobalDocumentDB",
-  /** MongoDB */
-  MongoDB = "MongoDB",
-  /** Parse */
-  Parse = "Parse",
+/** Known values of {@link NetworkSecurityPerimeterConfigurationProvisioningState} that the service accepts. */
+export enum KnownNetworkSecurityPerimeterConfigurationProvisioningState {
+  /** Accepted */
+  Accepted = "Accepted",
+  /** Succeeded */
+  Succeeded = "Succeeded",
+  /** Failed */
+  Failed = "Failed",
+  /** Deleting */
+  Deleting = "Deleting",
+  /** Canceled */
+  Canceled = "Canceled",
 }
 
 /**
- * Defines values for DatabaseAccountKind. \
- * {@link KnownDatabaseAccountKind} can be used interchangeably with DatabaseAccountKind,
+ * Defines values for NetworkSecurityPerimeterConfigurationProvisioningState. \
+ * {@link KnownNetworkSecurityPerimeterConfigurationProvisioningState} can be used interchangeably with NetworkSecurityPerimeterConfigurationProvisioningState,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **GlobalDocumentDB** \
- * **MongoDB** \
- * **Parse**
+ * **Accepted** \
+ * **Succeeded** \
+ * **Failed** \
+ * **Deleting** \
+ * **Canceled**
  */
-export type DatabaseAccountKind = string;
+export type NetworkSecurityPerimeterConfigurationProvisioningState = string;
+
+/** Known values of {@link IssueType} that the service accepts. */
+export enum KnownIssueType {
+  /** Unknown */
+  Unknown = "Unknown",
+  /** ConfigurationPropagationFailure */
+  ConfigurationPropagationFailure = "ConfigurationPropagationFailure",
+}
+
+/**
+ * Defines values for IssueType. \
+ * {@link KnownIssueType} can be used interchangeably with IssueType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Unknown** \
+ * **ConfigurationPropagationFailure**
+ */
+export type IssueType = string;
+
+/** Known values of {@link Severity} that the service accepts. */
+export enum KnownSeverity {
+  /** Warning */
+  Warning = "Warning",
+  /** Error */
+  Error = "Error",
+}
+
+/**
+ * Defines values for Severity. \
+ * {@link KnownSeverity} can be used interchangeably with Severity,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Warning** \
+ * **Error**
+ */
+export type Severity = string;
+
+/** Known values of {@link ResourceAssociationAccessMode} that the service accepts. */
+export enum KnownResourceAssociationAccessMode {
+  /** Enforced */
+  Enforced = "Enforced",
+  /** Learning */
+  Learning = "Learning",
+  /** Audit */
+  Audit = "Audit",
+}
+
+/**
+ * Defines values for ResourceAssociationAccessMode. \
+ * {@link KnownResourceAssociationAccessMode} can be used interchangeably with ResourceAssociationAccessMode,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Enforced** \
+ * **Learning** \
+ * **Audit**
+ */
+export type ResourceAssociationAccessMode = string;
+
+/** Known values of {@link NspAccessRuleDirection} that the service accepts. */
+export enum KnownNspAccessRuleDirection {
+  /** Inbound */
+  Inbound = "Inbound",
+  /** Outbound */
+  Outbound = "Outbound",
+}
+
+/**
+ * Defines values for NspAccessRuleDirection. \
+ * {@link KnownNspAccessRuleDirection} can be used interchangeably with NspAccessRuleDirection,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Inbound** \
+ * **Outbound**
+ */
+export type NspAccessRuleDirection = string;
 
 /** Known values of {@link CreatedByType} that the service accepts. */
 export enum KnownCreatedByType {
@@ -4921,6 +5221,27 @@ export enum KnownCreatedByType {
  * **Key**
  */
 export type CreatedByType = string;
+
+/** Known values of {@link DatabaseAccountKind} that the service accepts. */
+export enum KnownDatabaseAccountKind {
+  /** GlobalDocumentDB */
+  GlobalDocumentDB = "GlobalDocumentDB",
+  /** MongoDB */
+  MongoDB = "MongoDB",
+  /** Parse */
+  Parse = "Parse",
+}
+
+/**
+ * Defines values for DatabaseAccountKind. \
+ * {@link KnownDatabaseAccountKind} can be used interchangeably with DatabaseAccountKind,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **GlobalDocumentDB** \
+ * **MongoDB** \
+ * **Parse**
+ */
+export type DatabaseAccountKind = string;
 
 /** Known values of {@link ConnectorOffer} that the service accepts. */
 export enum KnownConnectorOffer {
@@ -4968,6 +5289,10 @@ export enum KnownServerVersion {
   Four0 = "4.0",
   /** Four2 */
   Four2 = "4.2",
+  /** Five0 */
+  Five0 = "5.0",
+  /** Six0 */
+  Six0 = "6.0",
 }
 
 /**
@@ -4978,7 +5303,9 @@ export enum KnownServerVersion {
  * **3.2** \
  * **3.6** \
  * **4.0** \
- * **4.2**
+ * **4.2** \
+ * **5.0** \
+ * **6.0**
  */
 export type ServerVersion = string;
 
@@ -5077,6 +5404,54 @@ export enum KnownBackupPolicyMigrationStatus {
  * **Failed**
  */
 export type BackupPolicyMigrationStatus = string;
+
+/** Known values of {@link CapacityMode} that the service accepts. */
+export enum KnownCapacityMode {
+  /** None */
+  None = "None",
+  /** Provisioned */
+  Provisioned = "Provisioned",
+  /** Serverless */
+  Serverless = "Serverless",
+}
+
+/**
+ * Defines values for CapacityMode. \
+ * {@link KnownCapacityMode} can be used interchangeably with CapacityMode,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **None** \
+ * **Provisioned** \
+ * **Serverless**
+ */
+export type CapacityMode = string;
+
+/** Known values of {@link CapacityModeTransitionStatus} that the service accepts. */
+export enum KnownCapacityModeTransitionStatus {
+  /** Invalid */
+  Invalid = "Invalid",
+  /** Initialized */
+  Initialized = "Initialized",
+  /** InProgress */
+  InProgress = "InProgress",
+  /** Completed */
+  Completed = "Completed",
+  /** Failed */
+  Failed = "Failed",
+}
+
+/**
+ * Defines values for CapacityModeTransitionStatus. \
+ * {@link KnownCapacityModeTransitionStatus} can be used interchangeably with CapacityModeTransitionStatus,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **Invalid** \
+ * **Initialized** \
+ * **InProgress** \
+ * **Completed** \
+ * **Failed**
+ */
+export type CapacityModeTransitionStatus = string;
 
 /** Known values of {@link MinimalTlsVersion} that the service accepts. */
 export enum KnownMinimalTlsVersion {
@@ -6145,6 +6520,43 @@ export type ResourceIdentityType =
 export type MongoRoleDefinitionType = "BuiltInRole" | "CustomRole";
 /** Defines values for RoleDefinitionType. */
 export type RoleDefinitionType = "BuiltInRole" | "CustomRole";
+
+/** Optional parameters. */
+export interface NetworkSecurityPerimeterConfigurationsListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type NetworkSecurityPerimeterConfigurationsListResponse =
+  NetworkSecurityPerimeterConfigurationList;
+
+/** Optional parameters. */
+export interface NetworkSecurityPerimeterConfigurationsGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type NetworkSecurityPerimeterConfigurationsGetResponse =
+  NetworkSecurityPerimeterConfiguration;
+
+/** Optional parameters. */
+export interface NetworkSecurityPerimeterConfigurationsReconcileOptionalParams
+  extends coreClient.OperationOptions {
+  /** Delay to wait until next poll, in milliseconds. */
+  updateIntervalInMs?: number;
+  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
+  resumeFrom?: string;
+}
+
+/** Contains response data for the reconcile operation. */
+export type NetworkSecurityPerimeterConfigurationsReconcileResponse =
+  NetworkSecurityPerimeterConfigurationsReconcileHeaders;
+
+/** Optional parameters. */
+export interface NetworkSecurityPerimeterConfigurationsListNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listNext operation. */
+export type NetworkSecurityPerimeterConfigurationsListNextResponse =
+  NetworkSecurityPerimeterConfigurationList;
 
 /** Optional parameters. */
 export interface DatabaseAccountsGetOptionalParams
@@ -8010,7 +8422,7 @@ export interface CassandraClustersInvokeCommandOptionalParams
 export type CassandraClustersInvokeCommandResponse = CommandOutput;
 
 /** Optional parameters. */
-export interface CassandraClustersInvokeCommandAsyncOptionalParams
+export interface CassandraClustersInvokeAsyncCommandOptionalParams
   extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
@@ -8018,8 +8430,8 @@ export interface CassandraClustersInvokeCommandAsyncOptionalParams
   resumeFrom?: string;
 }
 
-/** Contains response data for the invokeCommandAsync operation. */
-export type CassandraClustersInvokeCommandAsyncResponse = CommandPublicResource;
+/** Contains response data for the invokeAsyncCommand operation. */
+export type CassandraClustersInvokeAsyncCommandResponse = CommandPublicResource;
 
 /** Optional parameters. */
 export interface CassandraClustersListCommandOptionalParams
@@ -8029,11 +8441,11 @@ export interface CassandraClustersListCommandOptionalParams
 export type CassandraClustersListCommandResponse = ListCommands;
 
 /** Optional parameters. */
-export interface CassandraClustersGetCommandAsyncOptionalParams
+export interface CassandraClustersGetAsyncCommandOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the getCommandAsync operation. */
-export type CassandraClustersGetCommandAsyncResponse = ListCommands;
+/** Contains response data for the getAsyncCommand operation. */
+export type CassandraClustersGetAsyncCommandResponse = ListCommands;
 
 /** Optional parameters. */
 export interface CassandraClustersListBackupsOptionalParams
@@ -8048,6 +8460,21 @@ export interface CassandraClustersGetBackupOptionalParams
 
 /** Contains response data for the getBackup operation. */
 export type CassandraClustersGetBackupResponse = BackupResource;
+
+/** Optional parameters. */
+export interface CassandraClustersRestoreBackupOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the restoreBackup operation. */
+export type CassandraClustersRestoreBackupResponse =
+  CassandraClusterRestoreResult;
+
+/** Optional parameters. */
+export interface CassandraClustersGetRestoreOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getRestore operation. */
+export type CassandraClustersGetRestoreResponse = CassandraClusterRestoreInfo;
 
 /** Optional parameters. */
 export interface CassandraClustersDeallocateOptionalParams

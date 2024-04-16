@@ -26,12 +26,16 @@ import {
   CommandPostBody,
   CassandraClustersInvokeCommandOptionalParams,
   CassandraClustersInvokeCommandResponse,
-  CassandraClustersInvokeCommandAsyncOptionalParams,
-  CassandraClustersInvokeCommandAsyncResponse,
-  CassandraClustersGetCommandAsyncOptionalParams,
-  CassandraClustersGetCommandAsyncResponse,
+  CassandraClustersInvokeAsyncCommandOptionalParams,
+  CassandraClustersInvokeAsyncCommandResponse,
+  CassandraClustersGetAsyncCommandOptionalParams,
+  CassandraClustersGetAsyncCommandResponse,
   CassandraClustersGetBackupOptionalParams,
   CassandraClustersGetBackupResponse,
+  CassandraClustersRestoreBackupOptionalParams,
+  CassandraClustersRestoreBackupResponse,
+  CassandraClustersGetRestoreOptionalParams,
+  CassandraClustersGetRestoreResponse,
   CassandraClustersDeallocateOptionalParams,
   CassandraClustersStartOptionalParams,
   CassandraClustersStatusOptionalParams,
@@ -214,15 +218,15 @@ export interface CassandraClusters {
    * @param body Specification which command to run where
    * @param options The options parameters.
    */
-  beginInvokeCommandAsync(
+  beginInvokeAsyncCommand(
     resourceGroupName: string,
     clusterName: string,
     body: CommandPostBody,
-    options?: CassandraClustersInvokeCommandAsyncOptionalParams,
+    options?: CassandraClustersInvokeAsyncCommandOptionalParams,
   ): Promise<
     SimplePollerLike<
-      OperationState<CassandraClustersInvokeCommandAsyncResponse>,
-      CassandraClustersInvokeCommandAsyncResponse
+      OperationState<CassandraClustersInvokeAsyncCommandResponse>,
+      CassandraClustersInvokeAsyncCommandResponse
     >
   >;
   /**
@@ -232,25 +236,25 @@ export interface CassandraClusters {
    * @param body Specification which command to run where
    * @param options The options parameters.
    */
-  beginInvokeCommandAsyncAndWait(
+  beginInvokeAsyncCommandAndWait(
     resourceGroupName: string,
     clusterName: string,
     body: CommandPostBody,
-    options?: CassandraClustersInvokeCommandAsyncOptionalParams,
-  ): Promise<CassandraClustersInvokeCommandAsyncResponse>;
+    options?: CassandraClustersInvokeAsyncCommandOptionalParams,
+  ): Promise<CassandraClustersInvokeAsyncCommandResponse>;
   /**
    * Get details about a specified command that was run asynchronously.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName Managed Cassandra cluster name.
-   * @param commandId Managed Cassandra cluster command id.
+   * @param commandId The command id (GUID identifier) for Managed Cassandra cluster command.
    * @param options The options parameters.
    */
-  getCommandAsync(
+  getAsyncCommand(
     resourceGroupName: string,
     clusterName: string,
     commandId: string,
-    options?: CassandraClustersGetCommandAsyncOptionalParams,
-  ): Promise<CassandraClustersGetCommandAsyncResponse>;
+    options?: CassandraClustersGetAsyncCommandOptionalParams,
+  ): Promise<CassandraClustersGetAsyncCommandResponse>;
   /**
    * Get the properties of an individual backup of this cluster that is available to restore.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
@@ -264,6 +268,32 @@ export interface CassandraClusters {
     backupId: string,
     options?: CassandraClustersGetBackupOptionalParams,
   ): Promise<CassandraClustersGetBackupResponse>;
+  /**
+   * Trigger restore of the specified back-up id on the cluster
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param clusterName Managed Cassandra cluster name.
+   * @param backupId Id of a restorable backup of a Cassandra cluster.
+   * @param options The options parameters.
+   */
+  restoreBackup(
+    resourceGroupName: string,
+    clusterName: string,
+    backupId: string,
+    options?: CassandraClustersRestoreBackupOptionalParams,
+  ): Promise<CassandraClustersRestoreBackupResponse>;
+  /**
+   * Get information about a restore that has been triggered.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param clusterName Managed Cassandra cluster name.
+   * @param backupId Id of a restorable backup of a Cassandra cluster.
+   * @param options The options parameters.
+   */
+  getRestore(
+    resourceGroupName: string,
+    clusterName: string,
+    backupId: string,
+    options?: CassandraClustersGetRestoreOptionalParams,
+  ): Promise<CassandraClustersGetRestoreResponse>;
   /**
    * Deallocate the Managed Cassandra Cluster and Associated Data Centers. Deallocation will deallocate
    * the host virtual machine of this cluster, and reserved the data disk. This won't do anything on an

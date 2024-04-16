@@ -40,12 +40,16 @@ import {
   CommandPostBody,
   CassandraClustersInvokeCommandOptionalParams,
   CassandraClustersInvokeCommandResponse,
-  CassandraClustersInvokeCommandAsyncOptionalParams,
-  CassandraClustersInvokeCommandAsyncResponse,
-  CassandraClustersGetCommandAsyncOptionalParams,
-  CassandraClustersGetCommandAsyncResponse,
+  CassandraClustersInvokeAsyncCommandOptionalParams,
+  CassandraClustersInvokeAsyncCommandResponse,
+  CassandraClustersGetAsyncCommandOptionalParams,
+  CassandraClustersGetAsyncCommandResponse,
   CassandraClustersGetBackupOptionalParams,
   CassandraClustersGetBackupResponse,
+  CassandraClustersRestoreBackupOptionalParams,
+  CassandraClustersRestoreBackupResponse,
+  CassandraClustersGetRestoreOptionalParams,
+  CassandraClustersGetRestoreResponse,
   CassandraClustersDeallocateOptionalParams,
   CassandraClustersStartOptionalParams,
   CassandraClustersStatusOptionalParams,
@@ -699,21 +703,21 @@ export class CassandraClustersImpl implements CassandraClusters {
    * @param body Specification which command to run where
    * @param options The options parameters.
    */
-  async beginInvokeCommandAsync(
+  async beginInvokeAsyncCommand(
     resourceGroupName: string,
     clusterName: string,
     body: CommandPostBody,
-    options?: CassandraClustersInvokeCommandAsyncOptionalParams,
+    options?: CassandraClustersInvokeAsyncCommandOptionalParams,
   ): Promise<
     SimplePollerLike<
-      OperationState<CassandraClustersInvokeCommandAsyncResponse>,
-      CassandraClustersInvokeCommandAsyncResponse
+      OperationState<CassandraClustersInvokeAsyncCommandResponse>,
+      CassandraClustersInvokeAsyncCommandResponse
     >
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec,
-    ): Promise<CassandraClustersInvokeCommandAsyncResponse> => {
+    ): Promise<CassandraClustersInvokeAsyncCommandResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
@@ -751,11 +755,11 @@ export class CassandraClustersImpl implements CassandraClusters {
     const lro = createLroSpec({
       sendOperationFn,
       args: { resourceGroupName, clusterName, body, options },
-      spec: invokeCommandAsyncOperationSpec,
+      spec: invokeAsyncCommandOperationSpec,
     });
     const poller = await createHttpPoller<
-      CassandraClustersInvokeCommandAsyncResponse,
-      OperationState<CassandraClustersInvokeCommandAsyncResponse>
+      CassandraClustersInvokeAsyncCommandResponse,
+      OperationState<CassandraClustersInvokeAsyncCommandResponse>
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
@@ -771,13 +775,13 @@ export class CassandraClustersImpl implements CassandraClusters {
    * @param body Specification which command to run where
    * @param options The options parameters.
    */
-  async beginInvokeCommandAsyncAndWait(
+  async beginInvokeAsyncCommandAndWait(
     resourceGroupName: string,
     clusterName: string,
     body: CommandPostBody,
-    options?: CassandraClustersInvokeCommandAsyncOptionalParams,
-  ): Promise<CassandraClustersInvokeCommandAsyncResponse> {
-    const poller = await this.beginInvokeCommandAsync(
+    options?: CassandraClustersInvokeAsyncCommandOptionalParams,
+  ): Promise<CassandraClustersInvokeAsyncCommandResponse> {
+    const poller = await this.beginInvokeAsyncCommand(
       resourceGroupName,
       clusterName,
       body,
@@ -807,18 +811,18 @@ export class CassandraClustersImpl implements CassandraClusters {
    * Get details about a specified command that was run asynchronously.
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
    * @param clusterName Managed Cassandra cluster name.
-   * @param commandId Managed Cassandra cluster command id.
+   * @param commandId The command id (GUID identifier) for Managed Cassandra cluster command.
    * @param options The options parameters.
    */
-  getCommandAsync(
+  getAsyncCommand(
     resourceGroupName: string,
     clusterName: string,
     commandId: string,
-    options?: CassandraClustersGetCommandAsyncOptionalParams,
-  ): Promise<CassandraClustersGetCommandAsyncResponse> {
+    options?: CassandraClustersGetAsyncCommandOptionalParams,
+  ): Promise<CassandraClustersGetAsyncCommandResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, clusterName, commandId, options },
-      getCommandAsyncOperationSpec,
+      getAsyncCommandOperationSpec,
     );
   }
 
@@ -855,6 +859,44 @@ export class CassandraClustersImpl implements CassandraClusters {
     return this.client.sendOperationRequest(
       { resourceGroupName, clusterName, backupId, options },
       getBackupOperationSpec,
+    );
+  }
+
+  /**
+   * Trigger restore of the specified back-up id on the cluster
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param clusterName Managed Cassandra cluster name.
+   * @param backupId Id of a restorable backup of a Cassandra cluster.
+   * @param options The options parameters.
+   */
+  restoreBackup(
+    resourceGroupName: string,
+    clusterName: string,
+    backupId: string,
+    options?: CassandraClustersRestoreBackupOptionalParams,
+  ): Promise<CassandraClustersRestoreBackupResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, clusterName, backupId, options },
+      restoreBackupOperationSpec,
+    );
+  }
+
+  /**
+   * Get information about a restore that has been triggered.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param clusterName Managed Cassandra cluster name.
+   * @param backupId Id of a restorable backup of a Cassandra cluster.
+   * @param options The options parameters.
+   */
+  getRestore(
+    resourceGroupName: string,
+    clusterName: string,
+    backupId: string,
+    options?: CassandraClustersGetRestoreOptionalParams,
+  ): Promise<CassandraClustersGetRestoreResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, clusterName, backupId, options },
+      getRestoreOperationSpec,
     );
   }
 
@@ -1223,8 +1265,8 @@ const invokeCommandOperationSpec: coreClient.OperationSpec = {
   mediaType: "json",
   serializer,
 };
-const invokeCommandAsyncOperationSpec: coreClient.OperationSpec = {
-  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/cassandraClusters/{clusterName}/invokeCommandAsync",
+const invokeAsyncCommandOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/cassandraClusters/{clusterName}/invokeAsyncCommand",
   httpMethod: "POST",
   responses: {
     200: {
@@ -1276,7 +1318,7 @@ const listCommandOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept],
   serializer,
 };
-const getCommandAsyncOperationSpec: coreClient.OperationSpec = {
+const getAsyncCommandOperationSpec: coreClient.OperationSpec = {
   path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/cassandraClusters/{clusterName}/commands/{commandId}",
   httpMethod: "GET",
   responses: {
@@ -1325,6 +1367,50 @@ const getBackupOperationSpec: coreClient.OperationSpec = {
   responses: {
     200: {
       bodyMapper: Mappers.BackupResource,
+    },
+    default: {
+      bodyMapper: Mappers.CloudError,
+    },
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.clusterName,
+    Parameters.backupId,
+  ],
+  headerParameters: [Parameters.accept],
+  serializer,
+};
+const restoreBackupOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/cassandraClusters/{clusterName}/backupRestores/{backupId}",
+  httpMethod: "POST",
+  responses: {
+    200: {
+      bodyMapper: Mappers.CassandraClusterRestoreResult,
+    },
+    default: {
+      bodyMapper: Mappers.CloudError,
+    },
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.clusterName,
+    Parameters.backupId,
+  ],
+  headerParameters: [Parameters.accept],
+  serializer,
+};
+const getRestoreOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/cassandraClusters/{clusterName}/backupRestores/{backupId}",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.CassandraClusterRestoreInfo,
     },
     default: {
       bodyMapper: Mappers.CloudError,

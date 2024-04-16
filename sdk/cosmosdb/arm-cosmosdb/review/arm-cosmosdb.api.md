@@ -168,6 +168,22 @@ export interface Capacity {
 }
 
 // @public
+export type CapacityMode = string;
+
+// @public
+export interface CapacityModeChangeTransitionState {
+    readonly capacityModeLastSuccessfulTransitionEndTimestamp?: Date;
+    readonly capacityModeTransitionBeginTimestamp?: Date;
+    readonly capacityModeTransitionEndTimestamp?: Date;
+    capacityModeTransitionStatus?: CapacityModeTransitionStatus;
+    currentCapacityMode?: CapacityMode;
+    previousCapacityMode?: CapacityMode;
+}
+
+// @public
+export type CapacityModeTransitionStatus = string;
+
+// @public
 export interface CassandraClusterPublicStatus {
     connectionErrors?: ConnectionError[];
     dataCenters?: CassandraClusterPublicStatusDataCentersItem[];
@@ -186,6 +202,21 @@ export interface CassandraClusterPublicStatusDataCentersItem {
     seedNodes?: string[];
 }
 
+// @public (undocumented)
+export interface CassandraClusterRestoreInfo {
+    backupId?: string;
+    startTimestamp?: string;
+}
+
+// @public (undocumented)
+export interface CassandraClusterRestoreResult {
+    backupId?: string;
+    commandErrorOutput?: string;
+    commandOutput?: string;
+    exitCode?: number;
+    startTimestamp?: string;
+}
+
 // @public
 export interface CassandraClusters {
     beginCreateUpdate(resourceGroupName: string, clusterName: string, body: ClusterResource, options?: CassandraClustersCreateUpdateOptionalParams): Promise<SimplePollerLike<OperationState<CassandraClustersCreateUpdateResponse>, CassandraClustersCreateUpdateResponse>>;
@@ -194,21 +225,23 @@ export interface CassandraClusters {
     beginDeallocateAndWait(resourceGroupName: string, clusterName: string, options?: CassandraClustersDeallocateOptionalParams): Promise<void>;
     beginDelete(resourceGroupName: string, clusterName: string, options?: CassandraClustersDeleteOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginDeleteAndWait(resourceGroupName: string, clusterName: string, options?: CassandraClustersDeleteOptionalParams): Promise<void>;
+    beginInvokeAsyncCommand(resourceGroupName: string, clusterName: string, body: CommandPostBody, options?: CassandraClustersInvokeAsyncCommandOptionalParams): Promise<SimplePollerLike<OperationState<CassandraClustersInvokeAsyncCommandResponse>, CassandraClustersInvokeAsyncCommandResponse>>;
+    beginInvokeAsyncCommandAndWait(resourceGroupName: string, clusterName: string, body: CommandPostBody, options?: CassandraClustersInvokeAsyncCommandOptionalParams): Promise<CassandraClustersInvokeAsyncCommandResponse>;
     beginInvokeCommand(resourceGroupName: string, clusterName: string, body: CommandPostBody, options?: CassandraClustersInvokeCommandOptionalParams): Promise<SimplePollerLike<OperationState<CassandraClustersInvokeCommandResponse>, CassandraClustersInvokeCommandResponse>>;
     beginInvokeCommandAndWait(resourceGroupName: string, clusterName: string, body: CommandPostBody, options?: CassandraClustersInvokeCommandOptionalParams): Promise<CassandraClustersInvokeCommandResponse>;
-    beginInvokeCommandAsync(resourceGroupName: string, clusterName: string, body: CommandPostBody, options?: CassandraClustersInvokeCommandAsyncOptionalParams): Promise<SimplePollerLike<OperationState<CassandraClustersInvokeCommandAsyncResponse>, CassandraClustersInvokeCommandAsyncResponse>>;
-    beginInvokeCommandAsyncAndWait(resourceGroupName: string, clusterName: string, body: CommandPostBody, options?: CassandraClustersInvokeCommandAsyncOptionalParams): Promise<CassandraClustersInvokeCommandAsyncResponse>;
     beginStart(resourceGroupName: string, clusterName: string, options?: CassandraClustersStartOptionalParams): Promise<SimplePollerLike<OperationState<void>, void>>;
     beginStartAndWait(resourceGroupName: string, clusterName: string, options?: CassandraClustersStartOptionalParams): Promise<void>;
     beginUpdate(resourceGroupName: string, clusterName: string, body: ClusterResource, options?: CassandraClustersUpdateOptionalParams): Promise<SimplePollerLike<OperationState<CassandraClustersUpdateResponse>, CassandraClustersUpdateResponse>>;
     beginUpdateAndWait(resourceGroupName: string, clusterName: string, body: ClusterResource, options?: CassandraClustersUpdateOptionalParams): Promise<CassandraClustersUpdateResponse>;
     get(resourceGroupName: string, clusterName: string, options?: CassandraClustersGetOptionalParams): Promise<CassandraClustersGetResponse>;
+    getAsyncCommand(resourceGroupName: string, clusterName: string, commandId: string, options?: CassandraClustersGetAsyncCommandOptionalParams): Promise<CassandraClustersGetAsyncCommandResponse>;
     getBackup(resourceGroupName: string, clusterName: string, backupId: string, options?: CassandraClustersGetBackupOptionalParams): Promise<CassandraClustersGetBackupResponse>;
-    getCommandAsync(resourceGroupName: string, clusterName: string, commandId: string, options?: CassandraClustersGetCommandAsyncOptionalParams): Promise<CassandraClustersGetCommandAsyncResponse>;
+    getRestore(resourceGroupName: string, clusterName: string, backupId: string, options?: CassandraClustersGetRestoreOptionalParams): Promise<CassandraClustersGetRestoreResponse>;
     listBackups(resourceGroupName: string, clusterName: string, options?: CassandraClustersListBackupsOptionalParams): PagedAsyncIterableIterator<BackupResource>;
     listByResourceGroup(resourceGroupName: string, options?: CassandraClustersListByResourceGroupOptionalParams): PagedAsyncIterableIterator<ClusterResource>;
     listBySubscription(options?: CassandraClustersListBySubscriptionOptionalParams): PagedAsyncIterableIterator<ClusterResource>;
     listCommand(resourceGroupName: string, clusterName: string, options?: CassandraClustersListCommandOptionalParams): PagedAsyncIterableIterator<CommandPublicResource>;
+    restoreBackup(resourceGroupName: string, clusterName: string, backupId: string, options?: CassandraClustersRestoreBackupOptionalParams): Promise<CassandraClustersRestoreBackupResponse>;
     status(resourceGroupName: string, clusterName: string, options?: CassandraClustersStatusOptionalParams): Promise<CassandraClustersStatusResponse>;
 }
 
@@ -235,18 +268,18 @@ export interface CassandraClustersDeleteOptionalParams extends coreClient.Operat
 }
 
 // @public
+export interface CassandraClustersGetAsyncCommandOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type CassandraClustersGetAsyncCommandResponse = ListCommands;
+
+// @public
 export interface CassandraClustersGetBackupOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
 export type CassandraClustersGetBackupResponse = BackupResource;
-
-// @public
-export interface CassandraClustersGetCommandAsyncOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type CassandraClustersGetCommandAsyncResponse = ListCommands;
 
 // @public
 export interface CassandraClustersGetOptionalParams extends coreClient.OperationOptions {
@@ -256,19 +289,26 @@ export interface CassandraClustersGetOptionalParams extends coreClient.Operation
 export type CassandraClustersGetResponse = ClusterResource;
 
 // @public
-export interface CassandraClustersInvokeCommandAsyncHeaders {
+export interface CassandraClustersGetRestoreOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type CassandraClustersGetRestoreResponse = CassandraClusterRestoreInfo;
+
+// @public
+export interface CassandraClustersInvokeAsyncCommandHeaders {
     azureAsyncOperation?: string;
     location?: string;
 }
 
 // @public
-export interface CassandraClustersInvokeCommandAsyncOptionalParams extends coreClient.OperationOptions {
+export interface CassandraClustersInvokeAsyncCommandOptionalParams extends coreClient.OperationOptions {
     resumeFrom?: string;
     updateIntervalInMs?: number;
 }
 
 // @public
-export type CassandraClustersInvokeCommandAsyncResponse = CommandPublicResource;
+export type CassandraClustersInvokeAsyncCommandResponse = CommandPublicResource;
 
 // @public
 export interface CassandraClustersInvokeCommandOptionalParams extends coreClient.OperationOptions {
@@ -306,6 +346,13 @@ export interface CassandraClustersListCommandOptionalParams extends coreClient.O
 
 // @public
 export type CassandraClustersListCommandResponse = ListCommands;
+
+// @public
+export interface CassandraClustersRestoreBackupOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type CassandraClustersRestoreBackupResponse = CassandraClusterRestoreResult;
 
 // @public
 export interface CassandraClustersStartOptionalParams extends coreClient.OperationOptions {
@@ -892,7 +939,7 @@ export interface ClientEncryptionPolicy {
 
 // @public
 export interface CloudError {
-    error?: ErrorResponse;
+    error?: ErrorResponseAutoGenerated;
 }
 
 // @public
@@ -1223,6 +1270,8 @@ export class CosmosDBManagementClient extends coreClient.ServiceClient {
     // (undocumented)
     mongoDBResources: MongoDBResources;
     // (undocumented)
+    networkSecurityPerimeterConfigurations: NetworkSecurityPerimeterConfigurations;
+    // (undocumented)
     notebookWorkspaces: NotebookWorkspaces;
     // (undocumented)
     operations: Operations;
@@ -1346,6 +1395,7 @@ export interface DatabaseAccountCreateUpdateParameters extends ARMResourceProper
     backupPolicy?: BackupPolicyUnion;
     capabilities?: Capability[];
     capacity?: Capacity;
+    capacityMode?: CapacityMode;
     connectorOffer?: ConnectorOffer;
     consistencyPolicy?: ConsistencyPolicy;
     cors?: CorsPolicy[];
@@ -1388,6 +1438,8 @@ export interface DatabaseAccountGetResults extends ARMResourceProperties {
     backupPolicy?: BackupPolicyUnion;
     capabilities?: Capability[];
     capacity?: Capacity;
+    capacityMode?: CapacityMode;
+    capacityModeChangeTransitionState?: CapacityModeChangeTransitionState;
     connectorOffer?: ConnectorOffer;
     consistencyPolicy?: ConsistencyPolicy;
     cors?: CorsPolicy[];
@@ -1681,6 +1733,7 @@ export interface DatabaseAccountUpdateParameters {
     backupPolicy?: BackupPolicyUnion;
     capabilities?: Capability[];
     capacity?: Capacity;
+    capacityMode?: CapacityMode;
     connectorOffer?: ConnectorOffer;
     consistencyPolicy?: ConsistencyPolicy;
     cors?: CorsPolicy[];
@@ -1791,7 +1844,7 @@ export interface DataTransferJobFeedResults {
 export interface DataTransferJobGetResults extends ARMProxyResource {
     destination?: DataTransferDataSourceSinkUnion;
     readonly duration?: string;
-    readonly error?: ErrorResponse;
+    readonly error?: ErrorResponseAutoGenerated;
     readonly jobName?: string;
     readonly lastUpdatedUtcTime?: Date;
     mode?: DataTransferJobMode;
@@ -1809,7 +1862,7 @@ export type DataTransferJobMode = string;
 export interface DataTransferJobProperties {
     destination: DataTransferDataSourceSinkUnion;
     readonly duration?: string;
-    readonly error?: ErrorResponse;
+    readonly error?: ErrorResponseAutoGenerated;
     readonly jobName?: string;
     readonly lastUpdatedUtcTime?: Date;
     mode?: DataTransferJobMode;
@@ -1936,13 +1989,13 @@ export interface ErrorDetail {
 
 // @public
 export interface ErrorResponse {
-    code?: string;
-    message?: string;
+    error?: ErrorDetail;
 }
 
 // @public
 export interface ErrorResponseAutoGenerated {
-    error?: ErrorDetail;
+    code?: string;
+    message?: string;
 }
 
 // @public (undocumented)
@@ -1970,7 +2023,7 @@ export interface FailoverPolicy {
 }
 
 // @public
-export interface FirewallRule extends ProxyResource {
+export interface FirewallRule extends ProxyResourceAutoGenerated {
     endIpAddress: string;
     readonly provisioningState?: ProvisioningState;
     startIpAddress: string;
@@ -2433,6 +2486,9 @@ export interface IpAddressOrRange {
 }
 
 // @public
+export type IssueType = string;
+
+// @public
 export type KeyKind = string;
 
 // @public
@@ -2509,6 +2565,22 @@ export enum KnownBackupStorageRedundancy {
     Geo = "Geo",
     Local = "Local",
     Zone = "Zone"
+}
+
+// @public
+export enum KnownCapacityMode {
+    None = "None",
+    Provisioned = "Provisioned",
+    Serverless = "Serverless"
+}
+
+// @public
+export enum KnownCapacityModeTransitionStatus {
+    Completed = "Completed",
+    Failed = "Failed",
+    Initialized = "Initialized",
+    InProgress = "InProgress",
+    Invalid = "Invalid"
 }
 
 // @public
@@ -2633,6 +2705,12 @@ export enum KnownIndexKind {
 }
 
 // @public
+export enum KnownIssueType {
+    ConfigurationPropagationFailure = "ConfigurationPropagationFailure",
+    Unknown = "Unknown"
+}
+
+// @public
 export enum KnownKeyKind {
     Primary = "primary",
     PrimaryReadonly = "primaryReadonly",
@@ -2683,6 +2761,15 @@ export enum KnownMongoClusterStatus {
 }
 
 // @public
+export enum KnownNetworkSecurityPerimeterConfigurationProvisioningState {
+    Accepted = "Accepted",
+    Canceled = "Canceled",
+    Deleting = "Deleting",
+    Failed = "Failed",
+    Succeeded = "Succeeded"
+}
+
+// @public
 export enum KnownNodeKind {
     Shard = "Shard"
 }
@@ -2705,6 +2792,12 @@ export enum KnownNodeStatus {
 // @public
 export enum KnownNotebookWorkspaceName {
     Default = "default"
+}
+
+// @public
+export enum KnownNspAccessRuleDirection {
+    Inbound = "Inbound",
+    Outbound = "Outbound"
 }
 
 // @public
@@ -2751,6 +2844,13 @@ export enum KnownPublicNetworkAccess {
 }
 
 // @public
+export enum KnownResourceAssociationAccessMode {
+    Audit = "Audit",
+    Enforced = "Enforced",
+    Learning = "Learning"
+}
+
+// @public
 export enum KnownRestoreMode {
     PointInTime = "PointInTime"
 }
@@ -2764,8 +2864,10 @@ export enum KnownScheduledEventStrategy {
 
 // @public
 export enum KnownServerVersion {
+    Five0 = "5.0",
     Four0 = "4.0",
     Four2 = "4.2",
+    Six0 = "6.0",
     Three2 = "3.2",
     Three6 = "3.6"
 }
@@ -2793,6 +2895,12 @@ export enum KnownServiceType {
     GraphAPICompute = "GraphAPICompute",
     MaterializedViewsBuilder = "MaterializedViewsBuilder",
     SqlDedicatedGateway = "SqlDedicatedGateway"
+}
+
+// @public
+export enum KnownSeverity {
+    Error = "Error",
+    Warning = "Warning"
 }
 
 // @public
@@ -3816,6 +3924,90 @@ export interface MongoUserDefinitionListResult {
 export type NetworkAclBypass = "None" | "AzureServices";
 
 // @public
+export interface NetworkSecurityPerimeter {
+    id?: string;
+    location?: string;
+    perimeterGuid?: string;
+}
+
+// @public
+export interface NetworkSecurityPerimeterConfiguration extends ProxyResource {
+    readonly networkSecurityPerimeter?: NetworkSecurityPerimeter;
+    readonly profile?: NetworkSecurityPerimeterConfigurationPropertiesProfile;
+    readonly provisioningIssues?: ProvisioningIssue[];
+    readonly provisioningState?: NetworkSecurityPerimeterConfigurationProvisioningState;
+    readonly resourceAssociation?: NetworkSecurityPerimeterConfigurationPropertiesResourceAssociation;
+}
+
+// @public
+export interface NetworkSecurityPerimeterConfigurationList {
+    readonly nextLink?: string;
+    readonly value?: NetworkSecurityPerimeterConfiguration[];
+}
+
+// @public
+export interface NetworkSecurityPerimeterConfigurationPropertiesProfile {
+    accessRules?: NspAccessRule[];
+    accessRulesVersion?: number;
+    diagnosticSettingsVersion?: number;
+    enabledLogCategories?: string[];
+    name?: string;
+}
+
+// @public
+export interface NetworkSecurityPerimeterConfigurationPropertiesResourceAssociation {
+    accessMode?: ResourceAssociationAccessMode;
+    name?: string;
+}
+
+// @public
+export type NetworkSecurityPerimeterConfigurationProvisioningState = string;
+
+// @public
+export interface NetworkSecurityPerimeterConfigurations {
+    beginReconcile(resourceGroupName: string, accountName: string, networkSecurityPerimeterConfigurationName: string, options?: NetworkSecurityPerimeterConfigurationsReconcileOptionalParams): Promise<SimplePollerLike<OperationState<NetworkSecurityPerimeterConfigurationsReconcileResponse>, NetworkSecurityPerimeterConfigurationsReconcileResponse>>;
+    beginReconcileAndWait(resourceGroupName: string, accountName: string, networkSecurityPerimeterConfigurationName: string, options?: NetworkSecurityPerimeterConfigurationsReconcileOptionalParams): Promise<NetworkSecurityPerimeterConfigurationsReconcileResponse>;
+    get(resourceGroupName: string, accountName: string, networkSecurityPerimeterConfigurationName: string, options?: NetworkSecurityPerimeterConfigurationsGetOptionalParams): Promise<NetworkSecurityPerimeterConfigurationsGetResponse>;
+    list(resourceGroupName: string, accountName: string, options?: NetworkSecurityPerimeterConfigurationsListOptionalParams): PagedAsyncIterableIterator<NetworkSecurityPerimeterConfiguration>;
+}
+
+// @public
+export interface NetworkSecurityPerimeterConfigurationsGetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type NetworkSecurityPerimeterConfigurationsGetResponse = NetworkSecurityPerimeterConfiguration;
+
+// @public
+export interface NetworkSecurityPerimeterConfigurationsListNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type NetworkSecurityPerimeterConfigurationsListNextResponse = NetworkSecurityPerimeterConfigurationList;
+
+// @public
+export interface NetworkSecurityPerimeterConfigurationsListOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type NetworkSecurityPerimeterConfigurationsListResponse = NetworkSecurityPerimeterConfigurationList;
+
+// @public
+export interface NetworkSecurityPerimeterConfigurationsReconcileHeaders {
+    // (undocumented)
+    location?: string;
+}
+
+// @public
+export interface NetworkSecurityPerimeterConfigurationsReconcileOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type NetworkSecurityPerimeterConfigurationsReconcileResponse = NetworkSecurityPerimeterConfigurationsReconcileHeaders;
+
+// @public
 export interface NodeGroupProperties {
     diskSizeGB?: number;
     enableHa?: boolean;
@@ -3922,6 +4114,29 @@ export interface NotebookWorkspacesRegenerateAuthTokenOptionalParams extends cor
 export interface NotebookWorkspacesStartOptionalParams extends coreClient.OperationOptions {
     resumeFrom?: string;
     updateIntervalInMs?: number;
+}
+
+// @public
+export interface NspAccessRule {
+    name?: string;
+    readonly properties?: NspAccessRuleProperties;
+}
+
+// @public
+export type NspAccessRuleDirection = string;
+
+// @public
+export interface NspAccessRuleProperties {
+    addressPrefixes?: string[];
+    direction?: NspAccessRuleDirection;
+    readonly fullyQualifiedDomainNames?: string[];
+    readonly networkSecurityPerimeters?: NetworkSecurityPerimeter[];
+    subscriptions?: NspAccessRulePropertiesSubscriptionsItem[];
+}
+
+// @public
+export interface NspAccessRulePropertiesSubscriptionsItem {
+    id?: string;
 }
 
 // @public
@@ -4142,7 +4357,7 @@ export interface PhysicalPartitionThroughputInfoResultPropertiesResource extends
 export type PrimaryAggregationType = string;
 
 // @public
-export interface PrivateEndpointConnection extends ProxyResource {
+export interface PrivateEndpointConnection extends ProxyResourceAutoGenerated {
     groupId?: string;
     privateEndpoint?: PrivateEndpointProperty;
     privateLinkServiceConnectionState?: PrivateLinkServiceConnectionStateProperty;
@@ -4250,10 +4465,27 @@ export interface PrivilegeResource {
 }
 
 // @public
+export interface ProvisioningIssue {
+    name?: string;
+    readonly properties?: ProvisioningIssueProperties;
+}
+
+// @public
+export interface ProvisioningIssueProperties {
+    description?: string;
+    issueType?: IssueType;
+    severity?: Severity;
+}
+
+// @public
 export type ProvisioningState = string;
 
 // @public
 export interface ProxyResource extends Resource {
+}
+
+// @public
+export interface ProxyResourceAutoGenerated extends ResourceAutoGenerated {
 }
 
 // @public
@@ -4285,6 +4517,17 @@ export interface RegionForOnlineOffline {
 
 // @public
 export interface Resource {
+    readonly id?: string;
+    readonly name?: string;
+    readonly systemData?: SystemData;
+    readonly type?: string;
+}
+
+// @public
+export type ResourceAssociationAccessMode = string;
+
+// @public
+export interface ResourceAutoGenerated {
     readonly id?: string;
     readonly name?: string;
     readonly systemData?: SystemData;
@@ -4872,6 +5115,9 @@ export type ServiceStatus = string;
 
 // @public
 export type ServiceType = string;
+
+// @public
+export type Severity = string;
 
 // @public (undocumented)
 export interface SpatialSpec {
@@ -5930,7 +6176,7 @@ export interface ThroughputPoolAccountGetOptionalParams extends coreClient.Opera
 export type ThroughputPoolAccountGetResponse = ThroughputPoolAccountResource;
 
 // @public
-export interface ThroughputPoolAccountResource extends ProxyResource {
+export interface ThroughputPoolAccountResource extends ProxyResourceAutoGenerated {
     readonly accountInstanceId?: string;
     accountLocation?: string;
     accountResourceIdentifier?: string;
@@ -6087,7 +6333,7 @@ export interface ThroughputSettingsUpdateParameters extends ARMResourcePropertie
 }
 
 // @public
-export interface TrackedResource extends Resource {
+export interface TrackedResource extends ResourceAutoGenerated {
     location: string;
     tags?: {
         [propertyName: string]: string;
