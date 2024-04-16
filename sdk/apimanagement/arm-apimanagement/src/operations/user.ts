@@ -34,7 +34,7 @@ import {
   UserTokenParameters,
   UserGetSharedAccessTokenOptionalParams,
   UserGetSharedAccessTokenResponse,
-  UserListByServiceNextResponse
+  UserListByServiceNextResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -59,12 +59,12 @@ export class UserImpl implements User {
   public listByService(
     resourceGroupName: string,
     serviceName: string,
-    options?: UserListByServiceOptionalParams
+    options?: UserListByServiceOptionalParams,
   ): PagedAsyncIterableIterator<UserContract> {
     const iter = this.listByServicePagingAll(
       resourceGroupName,
       serviceName,
-      options
+      options,
     );
     return {
       next() {
@@ -81,9 +81,9 @@ export class UserImpl implements User {
           resourceGroupName,
           serviceName,
           options,
-          settings
+          settings,
         );
-      }
+      },
     };
   }
 
@@ -91,7 +91,7 @@ export class UserImpl implements User {
     resourceGroupName: string,
     serviceName: string,
     options?: UserListByServiceOptionalParams,
-    settings?: PageSettings
+    settings?: PageSettings,
   ): AsyncIterableIterator<UserContract[]> {
     let result: UserListByServiceResponse;
     let continuationToken = settings?.continuationToken;
@@ -99,7 +99,7 @@ export class UserImpl implements User {
       result = await this._listByService(
         resourceGroupName,
         serviceName,
-        options
+        options,
       );
       let page = result.value || [];
       continuationToken = result.nextLink;
@@ -111,7 +111,7 @@ export class UserImpl implements User {
         resourceGroupName,
         serviceName,
         continuationToken,
-        options
+        options,
       );
       continuationToken = result.nextLink;
       let page = result.value || [];
@@ -123,12 +123,12 @@ export class UserImpl implements User {
   private async *listByServicePagingAll(
     resourceGroupName: string,
     serviceName: string,
-    options?: UserListByServiceOptionalParams
+    options?: UserListByServiceOptionalParams,
   ): AsyncIterableIterator<UserContract> {
     for await (const page of this.listByServicePagingPage(
       resourceGroupName,
       serviceName,
-      options
+      options,
     )) {
       yield* page;
     }
@@ -143,11 +143,11 @@ export class UserImpl implements User {
   private _listByService(
     resourceGroupName: string,
     serviceName: string,
-    options?: UserListByServiceOptionalParams
+    options?: UserListByServiceOptionalParams,
   ): Promise<UserListByServiceResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, serviceName, options },
-      listByServiceOperationSpec
+      listByServiceOperationSpec,
     );
   }
 
@@ -162,11 +162,11 @@ export class UserImpl implements User {
     resourceGroupName: string,
     serviceName: string,
     userId: string,
-    options?: UserGetEntityTagOptionalParams
+    options?: UserGetEntityTagOptionalParams,
   ): Promise<UserGetEntityTagResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, serviceName, userId, options },
-      getEntityTagOperationSpec
+      getEntityTagOperationSpec,
     );
   }
 
@@ -181,11 +181,11 @@ export class UserImpl implements User {
     resourceGroupName: string,
     serviceName: string,
     userId: string,
-    options?: UserGetOptionalParams
+    options?: UserGetOptionalParams,
   ): Promise<UserGetResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, serviceName, userId, options },
-      getOperationSpec
+      getOperationSpec,
     );
   }
 
@@ -202,11 +202,11 @@ export class UserImpl implements User {
     serviceName: string,
     userId: string,
     parameters: UserCreateParameters,
-    options?: UserCreateOrUpdateOptionalParams
+    options?: UserCreateOrUpdateOptionalParams,
   ): Promise<UserCreateOrUpdateResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, serviceName, userId, parameters, options },
-      createOrUpdateOperationSpec
+      createOrUpdateOperationSpec,
     );
   }
 
@@ -226,11 +226,11 @@ export class UserImpl implements User {
     userId: string,
     ifMatch: string,
     parameters: UserUpdateParameters,
-    options?: UserUpdateOptionalParams
+    options?: UserUpdateOptionalParams,
   ): Promise<UserUpdateResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, serviceName, userId, ifMatch, parameters, options },
-      updateOperationSpec
+      updateOperationSpec,
     );
   }
 
@@ -248,11 +248,11 @@ export class UserImpl implements User {
     serviceName: string,
     userId: string,
     ifMatch: string,
-    options?: UserDeleteOptionalParams
+    options?: UserDeleteOptionalParams,
   ): Promise<void> {
     return this.client.sendOperationRequest(
       { resourceGroupName, serviceName, userId, ifMatch, options },
-      deleteOperationSpec
+      deleteOperationSpec,
     );
   }
 
@@ -268,11 +268,11 @@ export class UserImpl implements User {
     resourceGroupName: string,
     serviceName: string,
     userId: string,
-    options?: UserGenerateSsoUrlOptionalParams
+    options?: UserGenerateSsoUrlOptionalParams,
   ): Promise<UserGenerateSsoUrlResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, serviceName, userId, options },
-      generateSsoUrlOperationSpec
+      generateSsoUrlOperationSpec,
     );
   }
 
@@ -289,11 +289,11 @@ export class UserImpl implements User {
     serviceName: string,
     userId: string,
     parameters: UserTokenParameters,
-    options?: UserGetSharedAccessTokenOptionalParams
+    options?: UserGetSharedAccessTokenOptionalParams,
   ): Promise<UserGetSharedAccessTokenResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, serviceName, userId, parameters, options },
-      getSharedAccessTokenOperationSpec
+      getSharedAccessTokenOperationSpec,
     );
   }
 
@@ -308,11 +308,11 @@ export class UserImpl implements User {
     resourceGroupName: string,
     serviceName: string,
     nextLink: string,
-    options?: UserListByServiceNextOptionalParams
+    options?: UserListByServiceNextOptionalParams,
   ): Promise<UserListByServiceNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, serviceName, nextLink, options },
-      listByServiceNextOperationSpec
+      listByServiceNextOperationSpec,
     );
   }
 }
@@ -320,44 +320,42 @@ export class UserImpl implements User {
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listByServiceOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/users",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/users",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.UserCollection
+      bodyMapper: Mappers.UserCollection,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [
     Parameters.filter,
     Parameters.top,
     Parameters.skip,
     Parameters.apiVersion,
-    Parameters.expandGroups
+    Parameters.expandGroups,
   ],
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
     Parameters.serviceName,
-    Parameters.subscriptionId
+    Parameters.subscriptionId,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const getEntityTagOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/users/{userId}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/users/{userId}",
   httpMethod: "HEAD",
   responses: {
     200: {
-      headersMapper: Mappers.UserGetEntityTagHeaders
+      headersMapper: Mappers.UserGetEntityTagHeaders,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
@@ -365,23 +363,22 @@ const getEntityTagOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceGroupName,
     Parameters.serviceName,
     Parameters.subscriptionId,
-    Parameters.userId
+    Parameters.userId,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const getOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/users/{userId}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/users/{userId}",
   httpMethod: "GET",
   responses: {
     200: {
       bodyMapper: Mappers.UserContract,
-      headersMapper: Mappers.UserGetHeaders
+      headersMapper: Mappers.UserGetHeaders,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
@@ -389,113 +386,109 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceGroupName,
     Parameters.serviceName,
     Parameters.subscriptionId,
-    Parameters.userId
+    Parameters.userId,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const createOrUpdateOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/users/{userId}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/users/{userId}",
   httpMethod: "PUT",
   responses: {
     200: {
       bodyMapper: Mappers.UserContract,
-      headersMapper: Mappers.UserCreateOrUpdateHeaders
+      headersMapper: Mappers.UserCreateOrUpdateHeaders,
     },
     201: {
       bodyMapper: Mappers.UserContract,
-      headersMapper: Mappers.UserCreateOrUpdateHeaders
+      headersMapper: Mappers.UserCreateOrUpdateHeaders,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
-  requestBody: Parameters.parameters73,
+  requestBody: Parameters.parameters83,
   queryParameters: [Parameters.apiVersion, Parameters.notify],
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
     Parameters.serviceName,
     Parameters.subscriptionId,
-    Parameters.userId
+    Parameters.userId,
   ],
   headerParameters: [
     Parameters.accept,
     Parameters.contentType,
-    Parameters.ifMatch
+    Parameters.ifMatch,
   ],
   mediaType: "json",
-  serializer
+  serializer,
 };
 const updateOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/users/{userId}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/users/{userId}",
   httpMethod: "PATCH",
   responses: {
     200: {
       bodyMapper: Mappers.UserContract,
-      headersMapper: Mappers.UserUpdateHeaders
+      headersMapper: Mappers.UserUpdateHeaders,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
-  requestBody: Parameters.parameters74,
+  requestBody: Parameters.parameters84,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
     Parameters.serviceName,
     Parameters.subscriptionId,
-    Parameters.userId
+    Parameters.userId,
   ],
   headerParameters: [
     Parameters.accept,
     Parameters.contentType,
-    Parameters.ifMatch1
+    Parameters.ifMatch1,
   ],
   mediaType: "json",
-  serializer
+  serializer,
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/users/{userId}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/users/{userId}",
   httpMethod: "DELETE",
   responses: {
     200: {},
     204: {},
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [
     Parameters.apiVersion,
     Parameters.deleteSubscriptions,
     Parameters.notify,
-    Parameters.appType
+    Parameters.appType,
   ],
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
     Parameters.serviceName,
     Parameters.subscriptionId,
-    Parameters.userId
+    Parameters.userId,
   ],
   headerParameters: [Parameters.accept, Parameters.ifMatch1],
-  serializer
+  serializer,
 };
 const generateSsoUrlOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/users/{userId}/generateSsoUrl",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/users/{userId}/generateSsoUrl",
   httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.GenerateSsoUrlResult
+      bodyMapper: Mappers.GenerateSsoUrlResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
@@ -503,54 +496,53 @@ const generateSsoUrlOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceGroupName,
     Parameters.serviceName,
     Parameters.subscriptionId,
-    Parameters.userId
+    Parameters.userId,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const getSharedAccessTokenOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/users/{userId}/token",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/users/{userId}/token",
   httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.UserTokenResult
+      bodyMapper: Mappers.UserTokenResult,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
-  requestBody: Parameters.parameters75,
+  requestBody: Parameters.parameters85,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
     Parameters.serviceName,
     Parameters.subscriptionId,
-    Parameters.userId
+    Parameters.userId,
   ],
   headerParameters: [Parameters.accept, Parameters.contentType],
   mediaType: "json",
-  serializer
+  serializer,
 };
 const listByServiceNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.UserCollection
+      bodyMapper: Mappers.UserCollection,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
     Parameters.serviceName,
     Parameters.subscriptionId,
-    Parameters.nextLink
+    Parameters.nextLink,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };

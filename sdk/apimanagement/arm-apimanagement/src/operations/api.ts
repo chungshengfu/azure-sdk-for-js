@@ -16,7 +16,7 @@ import { ApiManagementClient } from "../apiManagementClient";
 import {
   SimplePollerLike,
   OperationState,
-  createHttpPoller
+  createHttpPoller,
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
@@ -40,7 +40,7 @@ import {
   ApiUpdateResponse,
   ApiDeleteOptionalParams,
   ApiListByServiceNextResponse,
-  ApiListByTagsNextResponse
+  ApiListByTagsNextResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -65,12 +65,12 @@ export class ApiImpl implements Api {
   public listByService(
     resourceGroupName: string,
     serviceName: string,
-    options?: ApiListByServiceOptionalParams
+    options?: ApiListByServiceOptionalParams,
   ): PagedAsyncIterableIterator<ApiContract> {
     const iter = this.listByServicePagingAll(
       resourceGroupName,
       serviceName,
-      options
+      options,
     );
     return {
       next() {
@@ -87,9 +87,9 @@ export class ApiImpl implements Api {
           resourceGroupName,
           serviceName,
           options,
-          settings
+          settings,
         );
-      }
+      },
     };
   }
 
@@ -97,7 +97,7 @@ export class ApiImpl implements Api {
     resourceGroupName: string,
     serviceName: string,
     options?: ApiListByServiceOptionalParams,
-    settings?: PageSettings
+    settings?: PageSettings,
   ): AsyncIterableIterator<ApiContract[]> {
     let result: ApiListByServiceResponse;
     let continuationToken = settings?.continuationToken;
@@ -105,7 +105,7 @@ export class ApiImpl implements Api {
       result = await this._listByService(
         resourceGroupName,
         serviceName,
-        options
+        options,
       );
       let page = result.value || [];
       continuationToken = result.nextLink;
@@ -117,7 +117,7 @@ export class ApiImpl implements Api {
         resourceGroupName,
         serviceName,
         continuationToken,
-        options
+        options,
       );
       continuationToken = result.nextLink;
       let page = result.value || [];
@@ -129,12 +129,12 @@ export class ApiImpl implements Api {
   private async *listByServicePagingAll(
     resourceGroupName: string,
     serviceName: string,
-    options?: ApiListByServiceOptionalParams
+    options?: ApiListByServiceOptionalParams,
   ): AsyncIterableIterator<ApiContract> {
     for await (const page of this.listByServicePagingPage(
       resourceGroupName,
       serviceName,
-      options
+      options,
     )) {
       yield* page;
     }
@@ -149,12 +149,12 @@ export class ApiImpl implements Api {
   public listByTags(
     resourceGroupName: string,
     serviceName: string,
-    options?: ApiListByTagsOptionalParams
+    options?: ApiListByTagsOptionalParams,
   ): PagedAsyncIterableIterator<TagResourceContract> {
     const iter = this.listByTagsPagingAll(
       resourceGroupName,
       serviceName,
-      options
+      options,
     );
     return {
       next() {
@@ -171,9 +171,9 @@ export class ApiImpl implements Api {
           resourceGroupName,
           serviceName,
           options,
-          settings
+          settings,
         );
-      }
+      },
     };
   }
 
@@ -181,7 +181,7 @@ export class ApiImpl implements Api {
     resourceGroupName: string,
     serviceName: string,
     options?: ApiListByTagsOptionalParams,
-    settings?: PageSettings
+    settings?: PageSettings,
   ): AsyncIterableIterator<TagResourceContract[]> {
     let result: ApiListByTagsResponse;
     let continuationToken = settings?.continuationToken;
@@ -197,7 +197,7 @@ export class ApiImpl implements Api {
         resourceGroupName,
         serviceName,
         continuationToken,
-        options
+        options,
       );
       continuationToken = result.nextLink;
       let page = result.value || [];
@@ -209,12 +209,12 @@ export class ApiImpl implements Api {
   private async *listByTagsPagingAll(
     resourceGroupName: string,
     serviceName: string,
-    options?: ApiListByTagsOptionalParams
+    options?: ApiListByTagsOptionalParams,
   ): AsyncIterableIterator<TagResourceContract> {
     for await (const page of this.listByTagsPagingPage(
       resourceGroupName,
       serviceName,
-      options
+      options,
     )) {
       yield* page;
     }
@@ -229,11 +229,11 @@ export class ApiImpl implements Api {
   private _listByService(
     resourceGroupName: string,
     serviceName: string,
-    options?: ApiListByServiceOptionalParams
+    options?: ApiListByServiceOptionalParams,
   ): Promise<ApiListByServiceResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, serviceName, options },
-      listByServiceOperationSpec
+      listByServiceOperationSpec,
     );
   }
 
@@ -249,11 +249,11 @@ export class ApiImpl implements Api {
     resourceGroupName: string,
     serviceName: string,
     apiId: string,
-    options?: ApiGetEntityTagOptionalParams
+    options?: ApiGetEntityTagOptionalParams,
   ): Promise<ApiGetEntityTagResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, serviceName, apiId, options },
-      getEntityTagOperationSpec
+      getEntityTagOperationSpec,
     );
   }
 
@@ -269,11 +269,11 @@ export class ApiImpl implements Api {
     resourceGroupName: string,
     serviceName: string,
     apiId: string,
-    options?: ApiGetOptionalParams
+    options?: ApiGetOptionalParams,
   ): Promise<ApiGetResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, serviceName, apiId, options },
-      getOperationSpec
+      getOperationSpec,
     );
   }
 
@@ -291,7 +291,7 @@ export class ApiImpl implements Api {
     serviceName: string,
     apiId: string,
     parameters: ApiCreateOrUpdateParameter,
-    options?: ApiCreateOrUpdateOptionalParams
+    options?: ApiCreateOrUpdateOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<ApiCreateOrUpdateResponse>,
@@ -300,21 +300,20 @@ export class ApiImpl implements Api {
   > {
     const directSendOperation = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ): Promise<ApiCreateOrUpdateResponse> => {
       return this.client.sendOperationRequest(args, spec);
     };
     const sendOperationFn = async (
       args: coreClient.OperationArguments,
-      spec: coreClient.OperationSpec
+      spec: coreClient.OperationSpec,
     ) => {
-      let currentRawResponse:
-        | coreClient.FullOperationResponse
-        | undefined = undefined;
+      let currentRawResponse: coreClient.FullOperationResponse | undefined =
+        undefined;
       const providedCallback = args.options?.onResponse;
       const callback: coreClient.RawResponseCallback = (
         rawResponse: coreClient.FullOperationResponse,
-        flatResponse: unknown
+        flatResponse: unknown,
       ) => {
         currentRawResponse = rawResponse;
         providedCallback?.(rawResponse, flatResponse);
@@ -323,8 +322,8 @@ export class ApiImpl implements Api {
         ...args,
         options: {
           ...args.options,
-          onResponse: callback
-        }
+          onResponse: callback,
+        },
       };
       const flatResponse = await directSendOperation(updatedArgs, spec);
       return {
@@ -332,15 +331,15 @@ export class ApiImpl implements Api {
         rawResponse: {
           statusCode: currentRawResponse!.status,
           body: currentRawResponse!.parsedBody,
-          headers: currentRawResponse!.headers.toJSON()
-        }
+          headers: currentRawResponse!.headers.toJSON(),
+        },
       };
     };
 
     const lro = createLroSpec({
       sendOperationFn,
       args: { resourceGroupName, serviceName, apiId, parameters, options },
-      spec: createOrUpdateOperationSpec
+      spec: createOrUpdateOperationSpec,
     });
     const poller = await createHttpPoller<
       ApiCreateOrUpdateResponse,
@@ -348,7 +347,7 @@ export class ApiImpl implements Api {
     >(lro, {
       restoreFrom: options?.resumeFrom,
       intervalInMs: options?.updateIntervalInMs,
-      resourceLocationConfig: "location"
+      resourceLocationConfig: "location",
     });
     await poller.poll();
     return poller;
@@ -368,14 +367,14 @@ export class ApiImpl implements Api {
     serviceName: string,
     apiId: string,
     parameters: ApiCreateOrUpdateParameter,
-    options?: ApiCreateOrUpdateOptionalParams
+    options?: ApiCreateOrUpdateOptionalParams,
   ): Promise<ApiCreateOrUpdateResponse> {
     const poller = await this.beginCreateOrUpdate(
       resourceGroupName,
       serviceName,
       apiId,
       parameters,
-      options
+      options,
     );
     return poller.pollUntilDone();
   }
@@ -397,11 +396,11 @@ export class ApiImpl implements Api {
     apiId: string,
     ifMatch: string,
     parameters: ApiUpdateContract,
-    options?: ApiUpdateOptionalParams
+    options?: ApiUpdateOptionalParams,
   ): Promise<ApiUpdateResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, serviceName, apiId, ifMatch, parameters, options },
-      updateOperationSpec
+      updateOperationSpec,
     );
   }
 
@@ -420,11 +419,11 @@ export class ApiImpl implements Api {
     serviceName: string,
     apiId: string,
     ifMatch: string,
-    options?: ApiDeleteOptionalParams
+    options?: ApiDeleteOptionalParams,
   ): Promise<void> {
     return this.client.sendOperationRequest(
       { resourceGroupName, serviceName, apiId, ifMatch, options },
-      deleteOperationSpec
+      deleteOperationSpec,
     );
   }
 
@@ -437,11 +436,11 @@ export class ApiImpl implements Api {
   private _listByTags(
     resourceGroupName: string,
     serviceName: string,
-    options?: ApiListByTagsOptionalParams
+    options?: ApiListByTagsOptionalParams,
   ): Promise<ApiListByTagsResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, serviceName, options },
-      listByTagsOperationSpec
+      listByTagsOperationSpec,
     );
   }
 
@@ -456,11 +455,11 @@ export class ApiImpl implements Api {
     resourceGroupName: string,
     serviceName: string,
     nextLink: string,
-    options?: ApiListByServiceNextOptionalParams
+    options?: ApiListByServiceNextOptionalParams,
   ): Promise<ApiListByServiceNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, serviceName, nextLink, options },
-      listByServiceNextOperationSpec
+      listByServiceNextOperationSpec,
     );
   }
 
@@ -475,11 +474,11 @@ export class ApiImpl implements Api {
     resourceGroupName: string,
     serviceName: string,
     nextLink: string,
-    options?: ApiListByTagsNextOptionalParams
+    options?: ApiListByTagsNextOptionalParams,
   ): Promise<ApiListByTagsNextResponse> {
     return this.client.sendOperationRequest(
       { resourceGroupName, serviceName, nextLink, options },
-      listByTagsNextOperationSpec
+      listByTagsNextOperationSpec,
     );
   }
 }
@@ -487,16 +486,15 @@ export class ApiImpl implements Api {
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
 const listByServiceOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/apis",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/apis",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ApiCollection
+      bodyMapper: Mappers.ApiCollection,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [
     Parameters.filter,
@@ -504,28 +502,27 @@ const listByServiceOperationSpec: coreClient.OperationSpec = {
     Parameters.skip,
     Parameters.tags,
     Parameters.expandApiVersionSet,
-    Parameters.apiVersion
+    Parameters.apiVersion,
   ],
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
     Parameters.serviceName,
-    Parameters.subscriptionId
+    Parameters.subscriptionId,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const getEntityTagOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/apis/{apiId}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/apis/{apiId}",
   httpMethod: "HEAD",
   responses: {
     200: {
-      headersMapper: Mappers.ApiGetEntityTagHeaders
+      headersMapper: Mappers.ApiGetEntityTagHeaders,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
@@ -533,23 +530,22 @@ const getEntityTagOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceGroupName,
     Parameters.serviceName,
     Parameters.subscriptionId,
-    Parameters.apiId
+    Parameters.apiId,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const getOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/apis/{apiId}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/apis/{apiId}",
   httpMethod: "GET",
   responses: {
     200: {
       bodyMapper: Mappers.ApiContract,
-      headersMapper: Mappers.ApiGetHeaders
+      headersMapper: Mappers.ApiGetHeaders,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
@@ -557,35 +553,34 @@ const getOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceGroupName,
     Parameters.serviceName,
     Parameters.subscriptionId,
-    Parameters.apiId
+    Parameters.apiId,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const createOrUpdateOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/apis/{apiId}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/apis/{apiId}",
   httpMethod: "PUT",
   responses: {
     200: {
       bodyMapper: Mappers.ApiContract,
-      headersMapper: Mappers.ApiCreateOrUpdateHeaders
+      headersMapper: Mappers.ApiCreateOrUpdateHeaders,
     },
     201: {
       bodyMapper: Mappers.ApiContract,
-      headersMapper: Mappers.ApiCreateOrUpdateHeaders
+      headersMapper: Mappers.ApiCreateOrUpdateHeaders,
     },
     202: {
       bodyMapper: Mappers.ApiContract,
-      headersMapper: Mappers.ApiCreateOrUpdateHeaders
+      headersMapper: Mappers.ApiCreateOrUpdateHeaders,
     },
     204: {
       bodyMapper: Mappers.ApiContract,
-      headersMapper: Mappers.ApiCreateOrUpdateHeaders
+      headersMapper: Mappers.ApiCreateOrUpdateHeaders,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   requestBody: Parameters.parameters,
   queryParameters: [Parameters.apiVersion],
@@ -594,28 +589,27 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceGroupName,
     Parameters.serviceName,
     Parameters.subscriptionId,
-    Parameters.apiId
+    Parameters.apiId,
   ],
   headerParameters: [
     Parameters.accept,
     Parameters.contentType,
-    Parameters.ifMatch
+    Parameters.ifMatch,
   ],
   mediaType: "json",
-  serializer
+  serializer,
 };
 const updateOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/apis/{apiId}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/apis/{apiId}",
   httpMethod: "PATCH",
   responses: {
     200: {
       bodyMapper: Mappers.ApiContract,
-      headersMapper: Mappers.ApiUpdateHeaders
+      headersMapper: Mappers.ApiUpdateHeaders,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   requestBody: Parameters.parameters1,
   queryParameters: [Parameters.apiVersion],
@@ -624,26 +618,25 @@ const updateOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceGroupName,
     Parameters.serviceName,
     Parameters.subscriptionId,
-    Parameters.apiId
+    Parameters.apiId,
   ],
   headerParameters: [
     Parameters.accept,
     Parameters.contentType,
-    Parameters.ifMatch1
+    Parameters.ifMatch1,
   ],
   mediaType: "json",
-  serializer
+  serializer,
 };
 const deleteOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/apis/{apiId}",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/apis/{apiId}",
   httpMethod: "DELETE",
   responses: {
     200: {},
     204: {},
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [Parameters.apiVersion, Parameters.deleteRevisions],
   urlParameters: [
@@ -651,78 +644,77 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceGroupName,
     Parameters.serviceName,
     Parameters.subscriptionId,
-    Parameters.apiId
+    Parameters.apiId,
   ],
   headerParameters: [Parameters.accept, Parameters.ifMatch1],
-  serializer
+  serializer,
 };
 const listByTagsOperationSpec: coreClient.OperationSpec = {
-  path:
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/apisByTags",
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/apisByTags",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.TagResourceCollection
+      bodyMapper: Mappers.TagResourceCollection,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   queryParameters: [
     Parameters.filter,
     Parameters.top,
     Parameters.skip,
     Parameters.apiVersion,
-    Parameters.includeNotTaggedApis
+    Parameters.includeNotTaggedApis,
   ],
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
     Parameters.serviceName,
-    Parameters.subscriptionId
+    Parameters.subscriptionId,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const listByServiceNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ApiCollection
+      bodyMapper: Mappers.ApiCollection,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
     Parameters.serviceName,
     Parameters.subscriptionId,
-    Parameters.nextLink
+    Parameters.nextLink,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };
 const listByTagsNextOperationSpec: coreClient.OperationSpec = {
   path: "{nextLink}",
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.TagResourceCollection
+      bodyMapper: Mappers.TagResourceCollection,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
+      bodyMapper: Mappers.ErrorResponse,
+    },
   },
   urlParameters: [
     Parameters.$host,
     Parameters.resourceGroupName,
     Parameters.serviceName,
     Parameters.subscriptionId,
-    Parameters.nextLink
+    Parameters.nextLink,
   ],
   headerParameters: [Parameters.accept],
-  serializer
+  serializer,
 };

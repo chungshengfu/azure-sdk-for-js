@@ -25,7 +25,7 @@ import {
   UserGenerateSsoUrlResponse,
   UserTokenParameters,
   UserGetSharedAccessTokenOptionalParams,
-  UserGetSharedAccessTokenResponse
+  UserGetSharedAccessTokenResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -40,7 +40,7 @@ export interface User {
   listByService(
     resourceGroupName: string,
     serviceName: string,
-    options?: UserListByServiceOptionalParams
+    options?: UserListByServiceOptionalParams,
   ): PagedAsyncIterableIterator<UserContract>;
   /**
    * Gets the entity state (Etag) version of the user specified by its identifier.
@@ -53,7 +53,7 @@ export interface User {
     resourceGroupName: string,
     serviceName: string,
     userId: string,
-    options?: UserGetEntityTagOptionalParams
+    options?: UserGetEntityTagOptionalParams,
   ): Promise<UserGetEntityTagResponse>;
   /**
    * Gets the details of the user specified by its identifier.
@@ -66,7 +66,7 @@ export interface User {
     resourceGroupName: string,
     serviceName: string,
     userId: string,
-    options?: UserGetOptionalParams
+    options?: UserGetOptionalParams,
   ): Promise<UserGetResponse>;
   /**
    * Creates or Updates a user.
@@ -81,7 +81,7 @@ export interface User {
     serviceName: string,
     userId: string,
     parameters: UserCreateParameters,
-    options?: UserCreateOrUpdateOptionalParams
+    options?: UserCreateOrUpdateOptionalParams,
   ): Promise<UserCreateOrUpdateResponse>;
   /**
    * Updates the details of the user specified by its identifier.
@@ -99,7 +99,7 @@ export interface User {
     userId: string,
     ifMatch: string,
     parameters: UserUpdateParameters,
-    options?: UserUpdateOptionalParams
+    options?: UserUpdateOptionalParams,
   ): Promise<UserUpdateResponse>;
   /**
    * Deletes specific user.
@@ -115,7 +115,7 @@ export interface User {
     serviceName: string,
     userId: string,
     ifMatch: string,
-    options?: UserDeleteOptionalParams
+    options?: UserDeleteOptionalParams,
   ): Promise<void>;
   /**
    * Retrieves a redirection URL containing an authentication token for signing a given user into the
@@ -129,7 +129,7 @@ export interface User {
     resourceGroupName: string,
     serviceName: string,
     userId: string,
-    options?: UserGenerateSsoUrlOptionalParams
+    options?: UserGenerateSsoUrlOptionalParams,
   ): Promise<UserGenerateSsoUrlResponse>;
   /**
    * Gets the Shared Access Authorization Token for the User.
@@ -144,6 +144,6 @@ export interface User {
     serviceName: string,
     userId: string,
     parameters: UserTokenParameters,
-    options?: UserGetSharedAccessTokenOptionalParams
+    options?: UserGetSharedAccessTokenOptionalParams,
   ): Promise<UserGetSharedAccessTokenResponse>;
 }
