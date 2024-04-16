@@ -209,3 +209,13 @@ export interface ImageUrlOutput {
   /** Publicly reachable URL of an image to analyze. */
   url: string;
 }
+
+/** The visual features supported by the Image Analysis service */
+export type VisualFeaturesOutput =
+  | "tags"
+  | "caption"
+  | "denseCaptions"
+  | "objects"
+  | "read"
+  | "smartCrops"
+  | "people";

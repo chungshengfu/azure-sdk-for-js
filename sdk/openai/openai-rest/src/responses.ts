@@ -11,7 +11,7 @@ import {
   ImageGenerationsOutput,
   EmbeddingsOutput,
   BatchImageGenerationOperationResponseOutput,
-} from "./outputModels";
+} from "./outputModels.js";
 
 /** The request has succeeded. */
 export interface GetAudioTranscriptionAsPlainText200Response

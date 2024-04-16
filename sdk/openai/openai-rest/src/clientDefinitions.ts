@@ -13,7 +13,7 @@ import {
   GetEmbeddingsParameters,
   GetAzureBatchImageGenerationOperationStatusParameters,
   BeginAzureBatchImageGenerationParameters,
-} from "./parameters";
+} from "./parameters.js";
 import {
   GetAudioTranscriptionAsPlainText200Response,
   GetAudioTranscriptionAsPlainTextDefaultResponse,
@@ -37,7 +37,7 @@ import {
   GetAzureBatchImageGenerationOperationStatusDefaultResponse,
   BeginAzureBatchImageGeneration202Response,
   BeginAzureBatchImageGenerationDefaultResponse,
-} from "./responses";
+} from "./responses.js";
 import { Client, StreamableMethod } from "@azure-rest/core-client";
 
 export interface GetAudioTranscriptionAsPlainText {

@@ -10,7 +10,7 @@ import {
   ImageGenerationOptions,
   AudioSpeechOptions,
   EmbeddingsOptions,
-} from "./models";
+} from "./models.js";
 
 export interface GetAudioTranscriptionAsPlainTextBodyParam {
   body?: AudioTranscriptionOptions;

@@ -32,13 +32,9 @@ export interface MessageTemplateItemOutputParent {
   readonly name: string;
   /** The template's language, in the ISO 639 format, consist of a two-letter language code followed by an optional two-letter country code, e.g., 'en' or 'en_US'. */
   language: string;
-  /**
-   * The aggregated template status.
-   *
-   * Possible values: "approved", "rejected", "pending", "paused"
-   */
-  status: string;
-  kind: string;
+  /** The aggregated template status. */
+  status: MessageTemplateStatusOutput;
+  kind: CommunicationMessagesChannelOutput;
 }
 
 /** The WhatsApp-specific template response contract */
@@ -56,5 +52,13 @@ export type MessageTemplateItemOutput =
   | WhatsAppMessageTemplateItemOutput;
 /** Alias for RepeatabilityResultOutput */
 export type RepeatabilityResultOutput = "accepted" | "rejected";
+/** The aggregated template status. */
+export type MessageTemplateStatusOutput =
+  | "approved"
+  | "rejected"
+  | "pending"
+  | "paused";
+/** The type of the communication messages channel. */
+export type CommunicationMessagesChannelOutput = "whatsApp";
 /** Paged collection of MessageTemplateItem items */
 export type PagedMessageTemplateItemOutput = Paged<MessageTemplateItemOutput>;
