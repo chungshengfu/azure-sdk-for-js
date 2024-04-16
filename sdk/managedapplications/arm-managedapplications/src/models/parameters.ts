@@ -9,7 +9,7 @@
 import {
   OperationParameter,
   OperationURLParameter,
-  OperationQueryParameter
+  OperationQueryParameter,
 } from "@azure/core-client";
 import {
   Application as ApplicationMapper,
@@ -19,7 +19,7 @@ import {
   ApplicationDefinition as ApplicationDefinitionMapper,
   ApplicationDefinitionPatchable as ApplicationDefinitionPatchableMapper,
   JitRequestDefinition as JitRequestDefinitionMapper,
-  JitRequestPatchable as JitRequestPatchableMapper
+  JitRequestPatchable as JitRequestPatchableMapper,
 } from "../models/mappers";
 
 export const accept: OperationParameter = {
@@ -29,9 +29,9 @@ export const accept: OperationParameter = {
     isConstant: true,
     serializedName: "Accept",
     type: {
-      name: "String"
-    }
-  }
+      name: "String",
+    },
+  },
 };
 
 export const $host: OperationURLParameter = {
@@ -40,10 +40,10 @@ export const $host: OperationURLParameter = {
     serializedName: "$host",
     required: true,
     type: {
-      name: "String"
-    }
+      name: "String",
+    },
   },
-  skipEncoding: true
+  skipEncoding: true,
 };
 
 export const apiVersion: OperationQueryParameter = {
@@ -53,9 +53,9 @@ export const apiVersion: OperationQueryParameter = {
     isConstant: true,
     serializedName: "api-version",
     type: {
-      name: "String"
-    }
-  }
+      name: "String",
+    },
+  },
 };
 
 export const nextLink: OperationURLParameter = {
@@ -64,24 +64,24 @@ export const nextLink: OperationURLParameter = {
     serializedName: "nextLink",
     required: true,
     type: {
-      name: "String"
-    }
+      name: "String",
+    },
   },
-  skipEncoding: true
+  skipEncoding: true,
 };
 
 export const subscriptionId: OperationURLParameter = {
   parameterPath: "subscriptionId",
   mapper: {
     constraints: {
-      MinLength: 1
+      MinLength: 1,
     },
     serializedName: "subscriptionId",
     required: true,
     type: {
-      name: "String"
-    }
-  }
+      name: "String",
+    },
+  },
 };
 
 export const resourceGroupName: OperationURLParameter = {
@@ -89,14 +89,14 @@ export const resourceGroupName: OperationURLParameter = {
   mapper: {
     constraints: {
       MaxLength: 90,
-      MinLength: 1
+      MinLength: 1,
     },
     serializedName: "resourceGroupName",
     required: true,
     type: {
-      name: "String"
-    }
-  }
+      name: "String",
+    },
+  },
 };
 
 export const applicationName: OperationURLParameter = {
@@ -104,14 +104,14 @@ export const applicationName: OperationURLParameter = {
   mapper: {
     constraints: {
       MaxLength: 64,
-      MinLength: 3
+      MinLength: 3,
     },
     serializedName: "applicationName",
     required: true,
     type: {
-      name: "String"
-    }
-  }
+      name: "String",
+    },
+  },
 };
 
 export const contentType: OperationParameter = {
@@ -121,19 +121,19 @@ export const contentType: OperationParameter = {
     isConstant: true,
     serializedName: "Content-Type",
     type: {
-      name: "String"
-    }
-  }
+      name: "String",
+    },
+  },
 };
 
 export const parameters: OperationParameter = {
   parameterPath: "parameters",
-  mapper: ApplicationMapper
+  mapper: ApplicationMapper,
 };
 
 export const parameters1: OperationParameter = {
   parameterPath: ["options", "parameters"],
-  mapper: ApplicationPatchableMapper
+  mapper: ApplicationPatchableMapper,
 };
 
 export const applicationId: OperationURLParameter = {
@@ -142,20 +142,20 @@ export const applicationId: OperationURLParameter = {
     serializedName: "applicationId",
     required: true,
     type: {
-      name: "String"
-    }
+      name: "String",
+    },
   },
-  skipEncoding: true
+  skipEncoding: true,
 };
 
 export const parameters2: OperationParameter = {
   parameterPath: "parameters",
-  mapper: UpdateAccessDefinitionMapper
+  mapper: UpdateAccessDefinitionMapper,
 };
 
 export const parameters3: OperationParameter = {
   parameterPath: "parameters",
-  mapper: ListTokenRequestMapper
+  mapper: ListTokenRequestMapper,
 };
 
 export const applicationDefinitionName: OperationURLParameter = {
@@ -163,24 +163,24 @@ export const applicationDefinitionName: OperationURLParameter = {
   mapper: {
     constraints: {
       MaxLength: 64,
-      MinLength: 3
+      MinLength: 3,
     },
     serializedName: "applicationDefinitionName",
     required: true,
     type: {
-      name: "String"
-    }
-  }
+      name: "String",
+    },
+  },
 };
 
 export const parameters4: OperationParameter = {
   parameterPath: "parameters",
-  mapper: ApplicationDefinitionMapper
+  mapper: ApplicationDefinitionMapper,
 };
 
 export const parameters5: OperationParameter = {
   parameterPath: "parameters",
-  mapper: ApplicationDefinitionPatchableMapper
+  mapper: ApplicationDefinitionPatchableMapper,
 };
 
 export const resourceGroupName1: OperationURLParameter = {
@@ -189,14 +189,14 @@ export const resourceGroupName1: OperationURLParameter = {
     constraints: {
       Pattern: new RegExp("^[-\\w\\._\\(\\)]+$"),
       MaxLength: 90,
-      MinLength: 1
+      MinLength: 1,
     },
     serializedName: "resourceGroupName",
     required: true,
     type: {
-      name: "String"
-    }
-  }
+      name: "String",
+    },
+  },
 };
 
 export const jitRequestName: OperationURLParameter = {
@@ -205,17 +205,17 @@ export const jitRequestName: OperationURLParameter = {
     serializedName: "jitRequestName",
     required: true,
     type: {
-      name: "String"
-    }
-  }
+      name: "String",
+    },
+  },
 };
 
 export const parameters6: OperationParameter = {
   parameterPath: "parameters",
-  mapper: JitRequestDefinitionMapper
+  mapper: JitRequestDefinitionMapper,
 };
 
 export const parameters7: OperationParameter = {
   parameterPath: "parameters",
-  mapper: JitRequestPatchableMapper
+  mapper: JitRequestPatchableMapper,
 };

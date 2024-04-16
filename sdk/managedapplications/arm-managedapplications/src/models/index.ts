@@ -715,7 +715,7 @@ export enum KnownOrigin {
   /** System */
   System = "system",
   /** UserSystem */
-  UserSystem = "user,system"
+  UserSystem = "user,system",
 }
 
 /**
@@ -732,7 +732,7 @@ export type Origin = string;
 /** Known values of {@link ActionType} that the service accepts. */
 export enum KnownActionType {
   /** Internal */
-  Internal = "Internal"
+  Internal = "Internal",
 }
 
 /**
@@ -763,7 +763,7 @@ export enum KnownProvisioningState {
   /** Succeeded */
   Succeeded = "Succeeded",
   /** Updating */
-  Updating = "Updating"
+  Updating = "Updating",
 }
 
 /**
@@ -790,7 +790,7 @@ export enum KnownJitApprovalMode {
   /** AutoApprove */
   AutoApprove = "AutoApprove",
   /** ManualApprove */
-  ManualApprove = "ManualApprove"
+  ManualApprove = "ManualApprove",
 }
 
 /**
@@ -809,7 +809,7 @@ export enum KnownJitApproverType {
   /** User */
   User = "user",
   /** Group */
-  Group = "group"
+  Group = "group",
 }
 
 /**
@@ -829,7 +829,7 @@ export enum KnownApplicationManagementMode {
   /** Unmanaged */
   Unmanaged = "Unmanaged",
   /** Managed */
-  Managed = "Managed"
+  Managed = "Managed",
 }
 
 /**
@@ -852,7 +852,7 @@ export enum KnownApplicationArtifactName {
   /** Authorizations */
   Authorizations = "Authorizations",
   /** CustomRoleDefinition */
-  CustomRoleDefinition = "CustomRoleDefinition"
+  CustomRoleDefinition = "CustomRoleDefinition",
 }
 
 /**
@@ -876,7 +876,7 @@ export enum KnownCreatedByType {
   /** ManagedIdentity */
   ManagedIdentity = "ManagedIdentity",
   /** Key */
-  Key = "Key"
+  Key = "Key",
 }
 
 /**
@@ -900,7 +900,7 @@ export enum KnownApplicationDefinitionArtifactName {
   /** CreateUiDefinition */
   CreateUiDefinition = "CreateUiDefinition",
   /** MainTemplateParameters */
-  MainTemplateParameters = "MainTemplateParameters"
+  MainTemplateParameters = "MainTemplateParameters",
 }
 
 /**
@@ -922,7 +922,7 @@ export enum KnownDeploymentMode {
   /** Incremental */
   Incremental = "Incremental",
   /** Complete */
-  Complete = "Complete"
+  Complete = "Complete",
 }
 
 /**
@@ -943,7 +943,7 @@ export enum KnownJitSchedulingType {
   /** Once */
   Once = "Once",
   /** Recurring */
-  Recurring = "Recurring"
+  Recurring = "Recurring",
 }
 
 /**
@@ -974,7 +974,7 @@ export enum KnownJitRequestState {
   /** Expired */
   Expired = "Expired",
   /** Timeout */
-  Timeout = "Timeout"
+  Timeout = "Timeout",
 }
 
 /**
@@ -1000,7 +1000,7 @@ export enum KnownStatus {
   /** Elevate */
   Elevate = "Elevate",
   /** Remove */
-  Remove = "Remove"
+  Remove = "Remove",
 }
 
 /**
@@ -1027,7 +1027,7 @@ export enum KnownSubstatus {
   /** Expired */
   Expired = "Expired",
   /** Timeout */
-  Timeout = "Timeout"
+  Timeout = "Timeout",
 }
 
 /**
@@ -1180,7 +1180,8 @@ export interface ApplicationsListAllowedUpgradePlansOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listAllowedUpgradePlans operation. */
-export type ApplicationsListAllowedUpgradePlansResponse = AllowedUpgradePlansResult;
+export type ApplicationsListAllowedUpgradePlansResponse =
+  AllowedUpgradePlansResult;
 
 /** Optional parameters. */
 export interface ApplicationsUpdateAccessOptionalParams
@@ -1228,7 +1229,8 @@ export interface ApplicationDefinitionsCreateOrUpdateOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the createOrUpdate operation. */
-export type ApplicationDefinitionsCreateOrUpdateResponse = ApplicationDefinition;
+export type ApplicationDefinitionsCreateOrUpdateResponse =
+  ApplicationDefinition;
 
 /** Optional parameters. */
 export interface ApplicationDefinitionsUpdateOptionalParams
@@ -1242,14 +1244,16 @@ export interface ApplicationDefinitionsListByResourceGroupOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroup operation. */
-export type ApplicationDefinitionsListByResourceGroupResponse = ApplicationDefinitionListResult;
+export type ApplicationDefinitionsListByResourceGroupResponse =
+  ApplicationDefinitionListResult;
 
 /** Optional parameters. */
 export interface ApplicationDefinitionsListBySubscriptionOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listBySubscription operation. */
-export type ApplicationDefinitionsListBySubscriptionResponse = ApplicationDefinitionListResult;
+export type ApplicationDefinitionsListBySubscriptionResponse =
+  ApplicationDefinitionListResult;
 
 /** Optional parameters. */
 export interface ApplicationDefinitionsGetByIdOptionalParams
@@ -1267,7 +1271,8 @@ export interface ApplicationDefinitionsCreateOrUpdateByIdOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the createOrUpdateById operation. */
-export type ApplicationDefinitionsCreateOrUpdateByIdResponse = ApplicationDefinition;
+export type ApplicationDefinitionsCreateOrUpdateByIdResponse =
+  ApplicationDefinition;
 
 /** Optional parameters. */
 export interface ApplicationDefinitionsUpdateByIdOptionalParams
@@ -1281,14 +1286,16 @@ export interface ApplicationDefinitionsListByResourceGroupNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroupNext operation. */
-export type ApplicationDefinitionsListByResourceGroupNextResponse = ApplicationDefinitionListResult;
+export type ApplicationDefinitionsListByResourceGroupNextResponse =
+  ApplicationDefinitionListResult;
 
 /** Optional parameters. */
 export interface ApplicationDefinitionsListBySubscriptionNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listBySubscriptionNext operation. */
-export type ApplicationDefinitionsListBySubscriptionNextResponse = ApplicationDefinitionListResult;
+export type ApplicationDefinitionsListBySubscriptionNextResponse =
+  ApplicationDefinitionListResult;
 
 /** Optional parameters. */
 export interface JitRequestsGetOptionalParams
@@ -1325,14 +1332,16 @@ export interface JitRequestsListBySubscriptionOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listBySubscription operation. */
-export type JitRequestsListBySubscriptionResponse = JitRequestDefinitionListResult;
+export type JitRequestsListBySubscriptionResponse =
+  JitRequestDefinitionListResult;
 
 /** Optional parameters. */
 export interface JitRequestsListByResourceGroupOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByResourceGroup operation. */
-export type JitRequestsListByResourceGroupResponse = JitRequestDefinitionListResult;
+export type JitRequestsListByResourceGroupResponse =
+  JitRequestDefinitionListResult;
 
 /** Optional parameters. */
 export interface ApplicationClientOptionalParams

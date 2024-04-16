@@ -20,7 +20,7 @@ import {
   JitRequestsListBySubscriptionOptionalParams,
   JitRequestsListBySubscriptionResponse,
   JitRequestsListByResourceGroupOptionalParams,
-  JitRequestsListByResourceGroupResponse
+  JitRequestsListByResourceGroupResponse,
 } from "../models";
 
 /** Interface representing a JitRequests. */
@@ -34,7 +34,7 @@ export interface JitRequests {
   get(
     resourceGroupName: string,
     jitRequestName: string,
-    options?: JitRequestsGetOptionalParams
+    options?: JitRequestsGetOptionalParams,
   ): Promise<JitRequestsGetResponse>;
   /**
    * Creates or updates the JIT request.
@@ -47,7 +47,7 @@ export interface JitRequests {
     resourceGroupName: string,
     jitRequestName: string,
     parameters: JitRequestDefinition,
-    options?: JitRequestsCreateOrUpdateOptionalParams
+    options?: JitRequestsCreateOrUpdateOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<JitRequestsCreateOrUpdateResponse>,
@@ -65,7 +65,7 @@ export interface JitRequests {
     resourceGroupName: string,
     jitRequestName: string,
     parameters: JitRequestDefinition,
-    options?: JitRequestsCreateOrUpdateOptionalParams
+    options?: JitRequestsCreateOrUpdateOptionalParams,
   ): Promise<JitRequestsCreateOrUpdateResponse>;
   /**
    * Updates the JIT request.
@@ -78,7 +78,7 @@ export interface JitRequests {
     resourceGroupName: string,
     jitRequestName: string,
     parameters: JitRequestPatchable,
-    options?: JitRequestsUpdateOptionalParams
+    options?: JitRequestsUpdateOptionalParams,
   ): Promise<JitRequestsUpdateResponse>;
   /**
    * Deletes the JIT request.
@@ -89,14 +89,14 @@ export interface JitRequests {
   delete(
     resourceGroupName: string,
     jitRequestName: string,
-    options?: JitRequestsDeleteOptionalParams
+    options?: JitRequestsDeleteOptionalParams,
   ): Promise<void>;
   /**
    * Lists all JIT requests within the subscription.
    * @param options The options parameters.
    */
   listBySubscription(
-    options?: JitRequestsListBySubscriptionOptionalParams
+    options?: JitRequestsListBySubscriptionOptionalParams,
   ): Promise<JitRequestsListBySubscriptionResponse>;
   /**
    * Lists all JIT requests within the resource group.
@@ -105,6 +105,6 @@ export interface JitRequests {
    */
   listByResourceGroup(
     resourceGroupName: string,
-    options?: JitRequestsListByResourceGroupOptionalParams
+    options?: JitRequestsListByResourceGroupOptionalParams,
   ): Promise<JitRequestsListByResourceGroupResponse>;
 }

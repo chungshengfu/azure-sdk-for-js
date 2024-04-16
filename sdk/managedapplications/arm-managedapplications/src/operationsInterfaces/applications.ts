@@ -33,7 +33,7 @@ import {
   ApplicationsUpdateAccessOptionalParams,
   ListTokenRequest,
   ApplicationsListTokensOptionalParams,
-  ApplicationsListTokensResponse
+  ApplicationsListTokensResponse,
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
@@ -46,14 +46,14 @@ export interface Applications {
    */
   listByResourceGroup(
     resourceGroupName: string,
-    options?: ApplicationsListByResourceGroupOptionalParams
+    options?: ApplicationsListByResourceGroupOptionalParams,
   ): PagedAsyncIterableIterator<Application>;
   /**
    * Lists all the applications within a subscription.
    * @param options The options parameters.
    */
   listBySubscription(
-    options?: ApplicationsListBySubscriptionOptionalParams
+    options?: ApplicationsListBySubscriptionOptionalParams,
   ): PagedAsyncIterableIterator<Application>;
   /**
    * Gets the managed application.
@@ -64,7 +64,7 @@ export interface Applications {
   get(
     resourceGroupName: string,
     applicationName: string,
-    options?: ApplicationsGetOptionalParams
+    options?: ApplicationsGetOptionalParams,
   ): Promise<ApplicationsGetResponse>;
   /**
    * Deletes the managed application.
@@ -75,7 +75,7 @@ export interface Applications {
   beginDelete(
     resourceGroupName: string,
     applicationName: string,
-    options?: ApplicationsDeleteOptionalParams
+    options?: ApplicationsDeleteOptionalParams,
   ): Promise<SimplePollerLike<OperationState<void>, void>>;
   /**
    * Deletes the managed application.
@@ -86,7 +86,7 @@ export interface Applications {
   beginDeleteAndWait(
     resourceGroupName: string,
     applicationName: string,
-    options?: ApplicationsDeleteOptionalParams
+    options?: ApplicationsDeleteOptionalParams,
   ): Promise<void>;
   /**
    * Creates or updates a managed application.
@@ -99,7 +99,7 @@ export interface Applications {
     resourceGroupName: string,
     applicationName: string,
     parameters: Application,
-    options?: ApplicationsCreateOrUpdateOptionalParams
+    options?: ApplicationsCreateOrUpdateOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<ApplicationsCreateOrUpdateResponse>,
@@ -117,7 +117,7 @@ export interface Applications {
     resourceGroupName: string,
     applicationName: string,
     parameters: Application,
-    options?: ApplicationsCreateOrUpdateOptionalParams
+    options?: ApplicationsCreateOrUpdateOptionalParams,
   ): Promise<ApplicationsCreateOrUpdateResponse>;
   /**
    * Updates an existing managed application.
@@ -128,7 +128,7 @@ export interface Applications {
   beginUpdate(
     resourceGroupName: string,
     applicationName: string,
-    options?: ApplicationsUpdateOptionalParams
+    options?: ApplicationsUpdateOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<ApplicationsUpdateResponse>,
@@ -144,7 +144,7 @@ export interface Applications {
   beginUpdateAndWait(
     resourceGroupName: string,
     applicationName: string,
-    options?: ApplicationsUpdateOptionalParams
+    options?: ApplicationsUpdateOptionalParams,
   ): Promise<ApplicationsUpdateResponse>;
   /**
    * Gets the managed application.
@@ -155,7 +155,7 @@ export interface Applications {
    */
   getById(
     applicationId: string,
-    options?: ApplicationsGetByIdOptionalParams
+    options?: ApplicationsGetByIdOptionalParams,
   ): Promise<ApplicationsGetByIdResponse>;
   /**
    * Deletes the managed application.
@@ -166,7 +166,7 @@ export interface Applications {
    */
   beginDeleteById(
     applicationId: string,
-    options?: ApplicationsDeleteByIdOptionalParams
+    options?: ApplicationsDeleteByIdOptionalParams,
   ): Promise<SimplePollerLike<OperationState<void>, void>>;
   /**
    * Deletes the managed application.
@@ -177,7 +177,7 @@ export interface Applications {
    */
   beginDeleteByIdAndWait(
     applicationId: string,
-    options?: ApplicationsDeleteByIdOptionalParams
+    options?: ApplicationsDeleteByIdOptionalParams,
   ): Promise<void>;
   /**
    * Creates or updates a managed application.
@@ -190,7 +190,7 @@ export interface Applications {
   beginCreateOrUpdateById(
     applicationId: string,
     parameters: Application,
-    options?: ApplicationsCreateOrUpdateByIdOptionalParams
+    options?: ApplicationsCreateOrUpdateByIdOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<ApplicationsCreateOrUpdateByIdResponse>,
@@ -208,7 +208,7 @@ export interface Applications {
   beginCreateOrUpdateByIdAndWait(
     applicationId: string,
     parameters: Application,
-    options?: ApplicationsCreateOrUpdateByIdOptionalParams
+    options?: ApplicationsCreateOrUpdateByIdOptionalParams,
   ): Promise<ApplicationsCreateOrUpdateByIdResponse>;
   /**
    * Updates an existing managed application.
@@ -219,7 +219,7 @@ export interface Applications {
    */
   beginUpdateById(
     applicationId: string,
-    options?: ApplicationsUpdateByIdOptionalParams
+    options?: ApplicationsUpdateByIdOptionalParams,
   ): Promise<
     SimplePollerLike<
       OperationState<ApplicationsUpdateByIdResponse>,
@@ -235,7 +235,7 @@ export interface Applications {
    */
   beginUpdateByIdAndWait(
     applicationId: string,
-    options?: ApplicationsUpdateByIdOptionalParams
+    options?: ApplicationsUpdateByIdOptionalParams,
   ): Promise<ApplicationsUpdateByIdResponse>;
   /**
    * Refresh Permissions for application.
@@ -246,7 +246,7 @@ export interface Applications {
   beginRefreshPermissions(
     resourceGroupName: string,
     applicationName: string,
-    options?: ApplicationsRefreshPermissionsOptionalParams
+    options?: ApplicationsRefreshPermissionsOptionalParams,
   ): Promise<SimplePollerLike<OperationState<void>, void>>;
   /**
    * Refresh Permissions for application.
@@ -257,7 +257,7 @@ export interface Applications {
   beginRefreshPermissionsAndWait(
     resourceGroupName: string,
     applicationName: string,
-    options?: ApplicationsRefreshPermissionsOptionalParams
+    options?: ApplicationsRefreshPermissionsOptionalParams,
   ): Promise<void>;
   /**
    * List allowed upgrade plans for application.
@@ -268,7 +268,7 @@ export interface Applications {
   listAllowedUpgradePlans(
     resourceGroupName: string,
     applicationName: string,
-    options?: ApplicationsListAllowedUpgradePlansOptionalParams
+    options?: ApplicationsListAllowedUpgradePlansOptionalParams,
   ): Promise<ApplicationsListAllowedUpgradePlansResponse>;
   /**
    * Update access for application.
@@ -281,7 +281,7 @@ export interface Applications {
     resourceGroupName: string,
     applicationName: string,
     parameters: UpdateAccessDefinition,
-    options?: ApplicationsUpdateAccessOptionalParams
+    options?: ApplicationsUpdateAccessOptionalParams,
   ): Promise<SimplePollerLike<OperationState<void>, void>>;
   /**
    * Update access for application.
@@ -294,7 +294,7 @@ export interface Applications {
     resourceGroupName: string,
     applicationName: string,
     parameters: UpdateAccessDefinition,
-    options?: ApplicationsUpdateAccessOptionalParams
+    options?: ApplicationsUpdateAccessOptionalParams,
   ): Promise<void>;
   /**
    * List tokens for application.
@@ -307,6 +307,6 @@ export interface Applications {
     resourceGroupName: string,
     applicationName: string,
     parameters: ListTokenRequest,
-    options?: ApplicationsListTokensOptionalParams
+    options?: ApplicationsListTokensOptionalParams,
   ): Promise<ApplicationsListTokensResponse>;
 }
