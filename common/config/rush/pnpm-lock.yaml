@@ -8000,6 +8000,12 @@ packages:
     hasBin: true
     dev: false
 
+  /mkdirp@2.1.6:
+    resolution: {integrity: sha512-+hEnITedc8LAtIP9u3HJDFIdcLV2vXP33sqLLIzkv1Db1zO/1OxbvYf0Y1OC/S/Qo5dxHXepofhmxL02PsKe+A==}
+    engines: {node: '>=10'}
+    hasBin: true
+    dev: false
+
   /mkdirp@3.0.1:
     resolution: {integrity: sha512-+NsyUUAZDmo6YVHzL/stxSu3t9YS1iljliy3BSDrXJ/dkn1KYdmtZODGGjLcc9XLgVVpH4KshHB8XmZgMhaBXg==}
     engines: {node: '>=10'}
@@ -12405,7 +12411,7 @@ packages:
     dev: false
 
   file:projects/arm-chaos.tgz:
-    resolution: {integrity: sha512-kDwaCpo/Ax1gskBL4wAOdGlT8xq1uyp8jkfaXgSdyycoxnSI0iMQpoMlh/Oz7CC5Xzozyf2Lv0X14/G6lUUXVw==, tarball: file:projects/arm-chaos.tgz}
+    resolution: {integrity: sha512-2uL7rbmVKsgBkYRPN95gobGk4FpvCdcpVKzW6p4bAdC53lak4DXTkNBPXmLJi/pm5YHt+Hxue513uAseSeCTwA==, tarball: file:projects/arm-chaos.tgz}
     name: '@rush-temp/arm-chaos'
     version: 0.0.0
     dependencies:
@@ -12421,12 +12427,12 @@ packages:
       cross-env: 7.0.3
       dotenv: 16.4.5
       esm: 3.2.25
-      mkdirp: 3.0.1
+      mkdirp: 2.1.6
       mocha: 10.4.0
       rimraf: 5.0.5
-      ts-node: 10.9.2(@types/node@18.19.31)(typescript@5.4.5)
+      ts-node: 10.9.2(@types/node@18.19.31)(typescript@5.3.3)
       tslib: 2.6.2
-      typescript: 5.4.5
+      typescript: 5.3.3
       uglify-js: 3.17.4
     transitivePeerDependencies:
       - '@swc/core'
@@ -19051,7 +19057,7 @@ packages:
     dev: false
 
   file:projects/core-rest-pipeline.tgz:
-    resolution: {integrity: sha512-x1BGAnFJ7U+Sql8tAruxzEo0Z1ZK3vJVkW0YAxMIrtS2D2EcVvthAUgciwDA2lRM0gwGQgMCT2LaiaAsp0AwJg==, tarball: file:projects/core-rest-pipeline.tgz}
+    resolution: {integrity: sha512-ClNrE1AVjNg9sJ+vXsV0x7t7q2SfzT/+4LayM8IF/0d5xUS0cbQkLx6H/+apMU6XNZcyKEofncf9QK31cGXXDA==, tarball: file:projects/core-rest-pipeline.tgz}
     name: '@rush-temp/core-rest-pipeline'
     version: 0.0.0
     dependencies:
