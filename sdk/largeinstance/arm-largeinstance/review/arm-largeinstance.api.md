@@ -175,6 +175,9 @@ export interface AzureLargeStorageInstanceGetOptionalParams extends coreClient.O
 export type AzureLargeStorageInstanceGetResponse = AzureLargeStorageInstance;
 
 // @public
+export type AzureLargeStorageInstanceIdentityTypesEnum = string;
+
+// @public
 export interface AzureLargeStorageInstanceListByResourceGroupNextOptionalParams extends coreClient.OperationOptions {
 }
 
@@ -375,6 +378,12 @@ export enum KnownAzureLargeInstanceSizeNamesEnum {
 }
 
 // @public
+export enum KnownAzureLargeStorageInstanceIdentityTypesEnum {
+    None = "None",
+    SystemAssigned = "SystemAssigned"
+}
+
+// @public
 export enum KnownCreatedByType {
     Application = "Application",
     Key = "Key",
@@ -403,7 +412,8 @@ export enum KnownProvisioningState {
 
 // @public
 export enum KnownVersions {
-    V20230720Preview = "2023-07-20-preview"
+    V20230720Preview = "2023-07-20-preview",
+    V20240320Preview = "2024-03-20-preview"
 }
 
 // @public (undocumented)

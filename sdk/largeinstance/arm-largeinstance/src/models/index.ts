@@ -414,26 +414,26 @@ export interface AzureLargeStorageInstance extends TrackedResource {
 
 /** Defines headers for AzureLargeInstance_restart operation. */
 export interface AzureLargeInstanceRestartHeaders {
-  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
-  retryAfter?: number;
   /** The Location header contains the URL where the status of the long running operation can be checked. */
   location?: string;
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
 }
 
 /** Defines headers for AzureLargeInstance_shutdown operation. */
 export interface AzureLargeInstanceShutdownHeaders {
-  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
-  retryAfter?: number;
   /** The Location header contains the URL where the status of the long running operation can be checked. */
   location?: string;
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
 }
 
 /** Defines headers for AzureLargeInstance_start operation. */
 export interface AzureLargeInstanceStartHeaders {
-  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
-  retryAfter?: number;
   /** The Location header contains the URL where the status of the long running operation can be checked. */
   location?: string;
+  /** The Retry-After header can indicate how long the client should wait before polling the operation status. */
+  retryAfter?: number;
 }
 
 /** Known values of {@link Origin} that the service accepts. */
@@ -784,10 +784,30 @@ export enum KnownAzureLargeInstanceForcePowerState {
  */
 export type AzureLargeInstanceForcePowerState = string;
 
+/** Known values of {@link AzureLargeStorageInstanceIdentityTypesEnum} that the service accepts. */
+export enum KnownAzureLargeStorageInstanceIdentityTypesEnum {
+  /** Refers to an implicitly created identity */
+  SystemAssigned = "SystemAssigned",
+  /** Any identities from the Azure Large Storage Instance will be removed */
+  None = "None",
+}
+
+/**
+ * Defines values for AzureLargeStorageInstanceIdentityTypesEnum. \
+ * {@link KnownAzureLargeStorageInstanceIdentityTypesEnum} can be used interchangeably with AzureLargeStorageInstanceIdentityTypesEnum,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **SystemAssigned**: Refers to an implicitly created identity \
+ * **None**: Any identities from the Azure Large Storage Instance will be removed
+ */
+export type AzureLargeStorageInstanceIdentityTypesEnum = string;
+
 /** Known values of {@link Versions} that the service accepts. */
 export enum KnownVersions {
   /** Azure Large Instance api version 2023-07-20-preview. */
   V20230720Preview = "2023-07-20-preview",
+  /** Azure Large Instance api version 2024-03-20-preview. */
+  V20240320Preview = "2024-03-20-preview",
 }
 
 /**
@@ -795,7 +815,8 @@ export enum KnownVersions {
  * {@link KnownVersions} can be used interchangeably with Versions,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **2023-07-20-preview**: Azure Large Instance api version 2023-07-20-preview.
+ * **2023-07-20-preview**: Azure Large Instance api version 2023-07-20-preview. \
+ * **2024-03-20-preview**: Azure Large Instance api version 2024-03-20-preview.
  */
 export type Versions = string;
 
