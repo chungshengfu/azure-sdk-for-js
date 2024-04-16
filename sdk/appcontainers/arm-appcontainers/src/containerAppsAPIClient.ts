@@ -20,9 +20,7 @@ import {
   AvailableWorkloadProfilesImpl,
   BillingMetersImpl,
   BuildersImpl,
-  BuildsByBuilderResourceImpl,
   BuildsImpl,
-  BuildAuthTokenImpl,
   ConnectedEnvironmentsImpl,
   ConnectedEnvironmentsCertificatesImpl,
   ConnectedEnvironmentsDaprComponentsImpl,
@@ -40,15 +38,13 @@ import {
   CertificatesImpl,
   ManagedCertificatesImpl,
   NamespacesImpl,
-  DaprComponentResiliencyPoliciesImpl,
   DaprComponentsImpl,
+  DaprComponentResiliencyPoliciesImpl,
   DaprSubscriptionsImpl,
   ManagedEnvironmentsStoragesImpl,
   ContainerAppsSourceControlsImpl,
   UsagesImpl,
   ManagedEnvironmentUsagesImpl,
-  JavaComponentsImpl,
-  DotNetComponentsImpl,
 } from "./operations";
 import {
   AppResiliencyOperations,
@@ -56,9 +52,7 @@ import {
   AvailableWorkloadProfiles,
   BillingMeters,
   Builders,
-  BuildsByBuilderResource,
   Builds,
-  BuildAuthToken,
   ConnectedEnvironments,
   ConnectedEnvironmentsCertificates,
   ConnectedEnvironmentsDaprComponents,
@@ -76,15 +70,13 @@ import {
   Certificates,
   ManagedCertificates,
   Namespaces,
-  DaprComponentResiliencyPolicies,
   DaprComponents,
+  DaprComponentResiliencyPolicies,
   DaprSubscriptions,
   ManagedEnvironmentsStorages,
   ContainerAppsSourceControls,
   Usages,
   ManagedEnvironmentUsages,
-  JavaComponents,
-  DotNetComponents,
 } from "./operationsInterfaces";
 import * as Parameters from "./models/parameters";
 import * as Mappers from "./models/mappers";
@@ -182,15 +174,13 @@ export class ContainerAppsAPIClient extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://management.azure.com";
-    this.apiVersion = options.apiVersion || "2023-11-02-preview";
+    this.apiVersion = options.apiVersion || "2023-08-01-preview";
     this.appResiliencyOperations = new AppResiliencyOperationsImpl(this);
     this.containerAppsAuthConfigs = new ContainerAppsAuthConfigsImpl(this);
     this.availableWorkloadProfiles = new AvailableWorkloadProfilesImpl(this);
     this.billingMeters = new BillingMetersImpl(this);
     this.builders = new BuildersImpl(this);
-    this.buildsByBuilderResource = new BuildsByBuilderResourceImpl(this);
     this.builds = new BuildsImpl(this);
-    this.buildAuthToken = new BuildAuthTokenImpl(this);
     this.connectedEnvironments = new ConnectedEnvironmentsImpl(this);
     this.connectedEnvironmentsCertificates =
       new ConnectedEnvironmentsCertificatesImpl(this);
@@ -217,9 +207,9 @@ export class ContainerAppsAPIClient extends coreClient.ServiceClient {
     this.certificates = new CertificatesImpl(this);
     this.managedCertificates = new ManagedCertificatesImpl(this);
     this.namespaces = new NamespacesImpl(this);
+    this.daprComponents = new DaprComponentsImpl(this);
     this.daprComponentResiliencyPolicies =
       new DaprComponentResiliencyPoliciesImpl(this);
-    this.daprComponents = new DaprComponentsImpl(this);
     this.daprSubscriptions = new DaprSubscriptionsImpl(this);
     this.managedEnvironmentsStorages = new ManagedEnvironmentsStoragesImpl(
       this,
@@ -229,8 +219,6 @@ export class ContainerAppsAPIClient extends coreClient.ServiceClient {
     );
     this.usages = new UsagesImpl(this);
     this.managedEnvironmentUsages = new ManagedEnvironmentUsagesImpl(this);
-    this.javaComponents = new JavaComponentsImpl(this);
-    this.dotNetComponents = new DotNetComponentsImpl(this);
     this.addCustomApiVersionPolicy(options.apiVersion);
   }
 
@@ -299,9 +287,7 @@ export class ContainerAppsAPIClient extends coreClient.ServiceClient {
   availableWorkloadProfiles: AvailableWorkloadProfiles;
   billingMeters: BillingMeters;
   builders: Builders;
-  buildsByBuilderResource: BuildsByBuilderResource;
   builds: Builds;
-  buildAuthToken: BuildAuthToken;
   connectedEnvironments: ConnectedEnvironments;
   connectedEnvironmentsCertificates: ConnectedEnvironmentsCertificates;
   connectedEnvironmentsDaprComponents: ConnectedEnvironmentsDaprComponents;
@@ -319,15 +305,13 @@ export class ContainerAppsAPIClient extends coreClient.ServiceClient {
   certificates: Certificates;
   managedCertificates: ManagedCertificates;
   namespaces: Namespaces;
-  daprComponentResiliencyPolicies: DaprComponentResiliencyPolicies;
   daprComponents: DaprComponents;
+  daprComponentResiliencyPolicies: DaprComponentResiliencyPolicies;
   daprSubscriptions: DaprSubscriptions;
   managedEnvironmentsStorages: ManagedEnvironmentsStorages;
   containerAppsSourceControls: ContainerAppsSourceControls;
   usages: Usages;
   managedEnvironmentUsages: ManagedEnvironmentUsages;
-  javaComponents: JavaComponents;
-  dotNetComponents: DotNetComponents;
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);

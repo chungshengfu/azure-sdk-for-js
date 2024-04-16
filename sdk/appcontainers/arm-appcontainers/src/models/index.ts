@@ -779,7 +779,7 @@ export interface BuildConfiguration {
   platform?: string;
   /** Platform version to be used to build and run the app. */
   platformVersion?: string;
-  /** List of environment variables to be passed to the build, secrets should not be used in environment variable. */
+  /** List of environment variables to be passed to the build. */
   environmentVariables?: EnvironmentVariable[];
   /** List of steps to perform before the build. */
   preBuildSteps?: PreBuildStep[];
@@ -855,8 +855,6 @@ export interface CustomDomainConfiguration {
   readonly customDomainVerificationId?: string;
   /** Dns suffix for the environment domain */
   dnsSuffix?: string;
-  /** Certificate stored in Azure Key Vault. */
-  certificateKeyVaultProperties?: CertificateKeyVaultProperties;
   /** PFX or PEM blob */
   certificateValue?: Uint8Array;
   /** Certificate password */
@@ -876,14 +874,6 @@ export interface CustomDomainConfiguration {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly subjectName?: string;
-}
-
-/** Properties for a certificate stored in a Key Vault. */
-export interface CertificateKeyVaultProperties {
-  /** Resource ID of a managed identity to authenticate with Azure Key Vault, or System to use a system-assigned identity. */
-  identity?: string;
-  /** URL pointing to the Azure Key Vault secret that holds the certificate. */
-  keyVaultUrl?: string;
 }
 
 /** The check availability request body. */
@@ -922,8 +912,6 @@ export interface CertificateProperties {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly provisioningState?: CertificateProvisioningState;
-  /** Properties for a certificate stored in a Key Vault. */
-  certificateKeyVaultProperties?: CertificateKeyVaultProperties;
   /** Certificate password. */
   password?: string;
   /**
@@ -1136,8 +1124,6 @@ export interface Ingress {
   corsPolicy?: CorsPolicy;
   /** Settings to expose additional ports on container app */
   additionalPortMappings?: IngressPortMapping[];
-  /** Whether an http app listens on http or https */
-  targetPortHttpScheme?: IngressTargetPortHttpScheme;
 }
 
 /** Traffic weight assigned to a revision */
@@ -1450,7 +1436,7 @@ export interface Volume {
   storageName?: string;
   /** List of secrets to be added in volume. If no secrets are provided, all secrets in collection will be added to volume. */
   secrets?: SecretVolumeItem[];
-  /** Mount options used while mounting the Azure file share or NFS Azure file share. Must be a comma-separated string. */
+  /** Mount options used while mounting the AzureFile. Must be a comma-separated string. */
   mountOptions?: string;
 }
 
@@ -1842,8 +1828,6 @@ export interface OpenTelemetryConfiguration {
 export interface DestinationsConfiguration {
   /** Open telemetry datadog destination configuration */
   dataDogConfiguration?: DataDogConfiguration;
-  /** Open telemetry otlp configurations */
-  otlpConfigurations?: OtlpConfiguration[];
 }
 
 /** Configuration of datadog */
@@ -1852,26 +1836,6 @@ export interface DataDogConfiguration {
   site?: string;
   /** The data dog api key */
   key?: string;
-}
-
-/** Configuration of otlp */
-export interface OtlpConfiguration {
-  /** The name of otlp configuration */
-  name?: string;
-  /** The endpoint of otlp configuration */
-  endpoint?: string;
-  /** Boolean indicating if otlp configuration is insecure */
-  insecure?: boolean;
-  /** Headers of otlp configurations */
-  headers?: Header[];
-}
-
-/** Header of otlp configuration */
-export interface Header {
-  /** The key of otlp configuration header */
-  key?: string;
-  /** The value of otlp configuration header */
-  value?: string;
 }
 
 /** Configuration of Open Telemetry traces */
@@ -2248,8 +2212,6 @@ export interface DaprComponentResiliencyPolicyConfiguration {
   httpRetryPolicy?: DaprComponentResiliencyPolicyHttpRetryPolicyConfiguration;
   /** The optional timeout policy configuration */
   timeoutPolicy?: DaprComponentResiliencyPolicyTimeoutPolicyConfiguration;
-  /** The optional circuit breaker policy configuration */
-  circuitBreakerPolicy?: DaprComponentResiliencyPolicyCircuitBreakerPolicyConfiguration;
 }
 
 /** Dapr Component Resiliency Policy HTTP Retry Policy Configuration. */
@@ -2272,16 +2234,6 @@ export interface DaprComponentResiliencyPolicyHttpRetryBackOffConfiguration {
 export interface DaprComponentResiliencyPolicyTimeoutPolicyConfiguration {
   /** The optional response timeout in seconds */
   responseTimeoutInSeconds?: number;
-}
-
-/** Dapr Component Resiliency Policy Circuit Breaker Policy Configuration. */
-export interface DaprComponentResiliencyPolicyCircuitBreakerPolicyConfiguration {
-  /** The number of consecutive errors before the circuit is opened. */
-  consecutiveErrors?: number;
-  /** The interval in seconds until a retry attempt is made after the circuit is opened. */
-  timeoutInSeconds?: number;
-  /** The optional interval in seconds after which the error count resets to 0. An interval of 0 will never reset. If not specified, the timeoutInSeconds value will be used. */
-  intervalInSeconds?: number;
 }
 
 /** Dapr Subscriptions ARM resource. */
@@ -2331,18 +2283,6 @@ export interface ManagedEnvironmentStoragesCollection {
 export interface ManagedEnvironmentStorageProperties {
   /** Azure file properties */
   azureFile?: AzureFileProperties;
-  /** NFS Azure file properties */
-  nfsAzureFile?: NfsAzureFileProperties;
-}
-
-/** NFS Azure File Properties. */
-export interface NfsAzureFileProperties {
-  /** Server for NFS azure file. */
-  server?: string;
-  /** Access mode for storage */
-  accessMode?: AccessMode;
-  /** NFS Azure file share name. */
-  shareName?: string;
 }
 
 /** SourceControl collection ARM resource. */
@@ -2376,8 +2316,6 @@ export interface GithubActionConfiguration {
   runtimeStack?: string;
   /** Runtime version */
   runtimeVersion?: string;
-  /** List of environment variables to be passed to the build. */
-  buildEnvironmentVariables?: EnvironmentVariable[];
 }
 
 /** Container App registry information. */
@@ -2429,60 +2367,6 @@ export interface UsageName {
   value?: string;
   /** The localized name of the resource. */
   localizedValue?: string;
-}
-
-/** Java Components ARM resource. */
-export interface JavaComponentsCollection {
-  /** Collection of resources. */
-  value: JavaComponent[];
-  /**
-   * Link to next page of resources.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** Configuration properties for a Java Component */
-export interface JavaComponentConfigurationProperty {
-  /** The name of the property */
-  propertyName?: string;
-  /** The value of the property */
-  value?: string;
-}
-
-/** Configuration to bind a Java Component to another Java Component */
-export interface JavaComponentServiceBind {
-  /** Name of the service bind */
-  name?: string;
-  /** Resource id of the target service */
-  serviceId?: string;
-}
-
-/** .NET Components ARM resource. */
-export interface DotNetComponentsCollection {
-  /** Collection of resources. */
-  value: DotNetComponent[];
-  /**
-   * Link to next page of resources.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly nextLink?: string;
-}
-
-/** Configuration properties for a .NET Component */
-export interface DotNetComponentConfigurationProperty {
-  /** The name of the property */
-  propertyName?: string;
-  /** The value of the property */
-  value?: string;
-}
-
-/** Configuration to bind a .NET Component to another .NET Component */
-export interface DotNetComponentServiceBind {
-  /** Name of the service bind */
-  name?: string;
-  /** Resource id of the target service */
-  serviceId?: string;
 }
 
 /** Container App executions names list. */
@@ -2768,36 +2652,6 @@ export interface SourceControl extends ProxyResource {
   githubActionConfiguration?: GithubActionConfiguration;
 }
 
-/** Java Component. */
-export interface JavaComponent extends ProxyResource {
-  /** Type of the Java Component. */
-  componentType?: JavaComponentType;
-  /**
-   * Provisioning state of the Java Component.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: JavaComponentProvisioningState;
-  /** List of Java Components configuration properties */
-  configurations?: JavaComponentConfigurationProperty[];
-  /** List of Java Components that are bound to the Java component */
-  serviceBinds?: JavaComponentServiceBind[];
-}
-
-/** .NET Component. */
-export interface DotNetComponent extends ProxyResource {
-  /** Type of the .NET Component. */
-  componentType?: DotNetComponentType;
-  /**
-   * Provisioning state of the .NET Component.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly provisioningState?: DotNetComponentProvisioningState;
-  /** List of .NET Components configuration properties */
-  configurations?: DotNetComponentConfigurationProperty[];
-  /** List of .NET Components that are bound to the .NET component */
-  serviceBinds?: DotNetComponentServiceBind[];
-}
-
 /** Information about the SourceToCloud builder resource. */
 export interface BuilderResource extends TrackedResource {
   /** The managed service identities assigned to this resource. */
@@ -2919,8 +2773,6 @@ export interface ContainerAppAuthToken extends TrackedResource {
 export interface ManagedEnvironment extends TrackedResource {
   /** Kind of the Environment. */
   kind?: string;
-  /** Managed identities for the Managed Environment to interact with other Azure services without maintaining any secrets or credentials in code. */
-  identity?: ManagedServiceIdentity;
   /**
    * Provisioning state of the Environment.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -3101,26 +2953,6 @@ export interface JobsStopExecutionHeaders {
 
 /** Defines headers for Jobs_stopMultipleExecutions operation. */
 export interface JobsStopMultipleExecutionsHeaders {
-  location?: string;
-}
-
-/** Defines headers for JavaComponents_update operation. */
-export interface JavaComponentsUpdateHeaders {
-  location?: string;
-}
-
-/** Defines headers for JavaComponents_delete operation. */
-export interface JavaComponentsDeleteHeaders {
-  location?: string;
-}
-
-/** Defines headers for DotNetComponents_update operation. */
-export interface DotNetComponentsUpdateHeaders {
-  location?: string;
-}
-
-/** Defines headers for DotNetComponents_delete operation. */
-export interface DotNetComponentsDeleteHeaders {
   location?: string;
 }
 
@@ -3553,24 +3385,6 @@ export enum KnownIngressClientCertificateMode {
  */
 export type IngressClientCertificateMode = string;
 
-/** Known values of {@link IngressTargetPortHttpScheme} that the service accepts. */
-export enum KnownIngressTargetPortHttpScheme {
-  /** Http */
-  Http = "http",
-  /** Https */
-  Https = "https",
-}
-
-/**
- * Defines values for IngressTargetPortHttpScheme. \
- * {@link KnownIngressTargetPortHttpScheme} can be used interchangeably with IngressTargetPortHttpScheme,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **http** \
- * **https**
- */
-export type IngressTargetPortHttpScheme = string;
-
 /** Known values of {@link AppProtocol} that the service accepts. */
 export enum KnownAppProtocol {
   /** Http */
@@ -3660,8 +3474,6 @@ export enum KnownStorageType {
   EmptyDir = "EmptyDir",
   /** Secret */
   Secret = "Secret",
-  /** NfsAzureFile */
-  NfsAzureFile = "NfsAzureFile",
 }
 
 /**
@@ -3671,8 +3483,7 @@ export enum KnownStorageType {
  * ### Known values supported by the service
  * **AzureFile** \
  * **EmptyDir** \
- * **Secret** \
- * **NfsAzureFile**
+ * **Secret**
  */
 export type StorageType = string;
 
@@ -3963,99 +3774,6 @@ export enum KnownSourceControlOperationState {
  * **Canceled**
  */
 export type SourceControlOperationState = string;
-
-/** Known values of {@link JavaComponentType} that the service accepts. */
-export enum KnownJavaComponentType {
-  /** SpringBootAdmin */
-  SpringBootAdmin = "SpringBootAdmin",
-  /** SpringCloudEureka */
-  SpringCloudEureka = "SpringCloudEureka",
-  /** SpringCloudConfig */
-  SpringCloudConfig = "SpringCloudConfig",
-}
-
-/**
- * Defines values for JavaComponentType. \
- * {@link KnownJavaComponentType} can be used interchangeably with JavaComponentType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **SpringBootAdmin** \
- * **SpringCloudEureka** \
- * **SpringCloudConfig**
- */
-export type JavaComponentType = string;
-
-/** Known values of {@link JavaComponentProvisioningState} that the service accepts. */
-export enum KnownJavaComponentProvisioningState {
-  /** Succeeded */
-  Succeeded = "Succeeded",
-  /** Failed */
-  Failed = "Failed",
-  /** Canceled */
-  Canceled = "Canceled",
-  /** Deleting */
-  Deleting = "Deleting",
-  /** InProgress */
-  InProgress = "InProgress",
-}
-
-/**
- * Defines values for JavaComponentProvisioningState. \
- * {@link KnownJavaComponentProvisioningState} can be used interchangeably with JavaComponentProvisioningState,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Succeeded** \
- * **Failed** \
- * **Canceled** \
- * **Deleting** \
- * **InProgress**
- */
-export type JavaComponentProvisioningState = string;
-
-/** Known values of {@link DotNetComponentType} that the service accepts. */
-export enum KnownDotNetComponentType {
-  /** AspireDashboard */
-  AspireDashboard = "AspireDashboard",
-  /** AspireResourceServerApi */
-  AspireResourceServerApi = "AspireResourceServerApi",
-}
-
-/**
- * Defines values for DotNetComponentType. \
- * {@link KnownDotNetComponentType} can be used interchangeably with DotNetComponentType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **AspireDashboard** \
- * **AspireResourceServerApi**
- */
-export type DotNetComponentType = string;
-
-/** Known values of {@link DotNetComponentProvisioningState} that the service accepts. */
-export enum KnownDotNetComponentProvisioningState {
-  /** Succeeded */
-  Succeeded = "Succeeded",
-  /** Failed */
-  Failed = "Failed",
-  /** Canceled */
-  Canceled = "Canceled",
-  /** Deleting */
-  Deleting = "Deleting",
-  /** InProgress */
-  InProgress = "InProgress",
-}
-
-/**
- * Defines values for DotNetComponentProvisioningState. \
- * {@link KnownDotNetComponentProvisioningState} can be used interchangeably with DotNetComponentProvisioningState,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **Succeeded** \
- * **Failed** \
- * **Canceled** \
- * **Deleting** \
- * **InProgress**
- */
-export type DotNetComponentProvisioningState = string;
 /** Defines values for UnauthenticatedClientActionV2. */
 export type UnauthenticatedClientActionV2 =
   | "RedirectToLoginPage"
@@ -4239,18 +3957,11 @@ export interface BuildersListByResourceGroupNextOptionalParams
 export type BuildersListByResourceGroupNextResponse = BuilderCollection;
 
 /** Optional parameters. */
-export interface BuildsByBuilderResourceListOptionalParams
+export interface BuildsListByBuilderResourceOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the list operation. */
-export type BuildsByBuilderResourceListResponse = BuildCollection;
-
-/** Optional parameters. */
-export interface BuildsByBuilderResourceListNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listNext operation. */
-export type BuildsByBuilderResourceListNextResponse = BuildCollection;
+/** Contains response data for the listByBuilderResource operation. */
+export type BuildsListByBuilderResourceResponse = BuildCollection;
 
 /** Optional parameters. */
 export interface BuildsGetOptionalParams extends coreClient.OperationOptions {}
@@ -4283,11 +3994,18 @@ export interface BuildsDeleteOptionalParams
 export type BuildsDeleteResponse = BuildsDeleteHeaders;
 
 /** Optional parameters. */
-export interface BuildAuthTokenListOptionalParams
+export interface BuildsListAuthTokenOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the list operation. */
-export type BuildAuthTokenListResponse = BuildToken;
+/** Contains response data for the listAuthToken operation. */
+export type BuildsListAuthTokenResponse = BuildToken;
+
+/** Optional parameters. */
+export interface BuildsListByBuilderResourceNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listByBuilderResourceNext operation. */
+export type BuildsListByBuilderResourceNextResponse = BuildCollection;
 
 /** Optional parameters. */
 export interface ConnectedEnvironmentsListBySubscriptionOptionalParams
@@ -5095,42 +4813,6 @@ export type NamespacesCheckNameAvailabilityResponse =
   CheckNameAvailabilityResponse;
 
 /** Optional parameters. */
-export interface DaprComponentResiliencyPoliciesListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type DaprComponentResiliencyPoliciesListResponse =
-  DaprComponentResiliencyPoliciesCollection;
-
-/** Optional parameters. */
-export interface DaprComponentResiliencyPoliciesGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type DaprComponentResiliencyPoliciesGetResponse =
-  DaprComponentResiliencyPolicy;
-
-/** Optional parameters. */
-export interface DaprComponentResiliencyPoliciesCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the createOrUpdate operation. */
-export type DaprComponentResiliencyPoliciesCreateOrUpdateResponse =
-  DaprComponentResiliencyPolicy;
-
-/** Optional parameters. */
-export interface DaprComponentResiliencyPoliciesDeleteOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Optional parameters. */
-export interface DaprComponentResiliencyPoliciesListNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listNext operation. */
-export type DaprComponentResiliencyPoliciesListNextResponse =
-  DaprComponentResiliencyPoliciesCollection;
-
-/** Optional parameters. */
 export interface DaprComponentsListOptionalParams
   extends coreClient.OperationOptions {}
 
@@ -5168,6 +4850,42 @@ export interface DaprComponentsListNextOptionalParams
 
 /** Contains response data for the listNext operation. */
 export type DaprComponentsListNextResponse = DaprComponentsCollection;
+
+/** Optional parameters. */
+export interface DaprComponentResiliencyPoliciesListOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the list operation. */
+export type DaprComponentResiliencyPoliciesListResponse =
+  DaprComponentResiliencyPoliciesCollection;
+
+/** Optional parameters. */
+export interface DaprComponentResiliencyPoliciesGetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the get operation. */
+export type DaprComponentResiliencyPoliciesGetResponse =
+  DaprComponentResiliencyPolicy;
+
+/** Optional parameters. */
+export interface DaprComponentResiliencyPoliciesCreateOrUpdateOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the createOrUpdate operation. */
+export type DaprComponentResiliencyPoliciesCreateOrUpdateResponse =
+  DaprComponentResiliencyPolicy;
+
+/** Optional parameters. */
+export interface DaprComponentResiliencyPoliciesDeleteOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Optional parameters. */
+export interface DaprComponentResiliencyPoliciesListNextOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the listNext operation. */
+export type DaprComponentResiliencyPoliciesListNextResponse =
+  DaprComponentResiliencyPoliciesCollection;
 
 /** Optional parameters. */
 export interface DaprSubscriptionsListOptionalParams
@@ -5298,120 +5016,6 @@ export interface ManagedEnvironmentUsagesListNextOptionalParams
 
 /** Contains response data for the listNext operation. */
 export type ManagedEnvironmentUsagesListNextResponse = ListUsagesResult;
-
-/** Optional parameters. */
-export interface JavaComponentsListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type JavaComponentsListResponse = JavaComponentsCollection;
-
-/** Optional parameters. */
-export interface JavaComponentsGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type JavaComponentsGetResponse = JavaComponent;
-
-/** Optional parameters. */
-export interface JavaComponentsCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createOrUpdate operation. */
-export type JavaComponentsCreateOrUpdateResponse = JavaComponent;
-
-/** Optional parameters. */
-export interface JavaComponentsUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the update operation. */
-export type JavaComponentsUpdateResponse = JavaComponent;
-
-/** Optional parameters. */
-export interface JavaComponentsDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the delete operation. */
-export type JavaComponentsDeleteResponse = JavaComponentsDeleteHeaders;
-
-/** Optional parameters. */
-export interface JavaComponentsListNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listNext operation. */
-export type JavaComponentsListNextResponse = JavaComponentsCollection;
-
-/** Optional parameters. */
-export interface DotNetComponentsListOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the list operation. */
-export type DotNetComponentsListResponse = DotNetComponentsCollection;
-
-/** Optional parameters. */
-export interface DotNetComponentsGetOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the get operation. */
-export type DotNetComponentsGetResponse = DotNetComponent;
-
-/** Optional parameters. */
-export interface DotNetComponentsCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the createOrUpdate operation. */
-export type DotNetComponentsCreateOrUpdateResponse = DotNetComponent;
-
-/** Optional parameters. */
-export interface DotNetComponentsUpdateOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the update operation. */
-export type DotNetComponentsUpdateResponse = DotNetComponent;
-
-/** Optional parameters. */
-export interface DotNetComponentsDeleteOptionalParams
-  extends coreClient.OperationOptions {
-  /** Delay to wait until next poll, in milliseconds. */
-  updateIntervalInMs?: number;
-  /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
-  resumeFrom?: string;
-}
-
-/** Contains response data for the delete operation. */
-export type DotNetComponentsDeleteResponse = DotNetComponentsDeleteHeaders;
-
-/** Optional parameters. */
-export interface DotNetComponentsListNextOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the listNext operation. */
-export type DotNetComponentsListNextResponse = DotNetComponentsCollection;
 
 /** Optional parameters. */
 export interface ContainerAppsAPIClientOptionalParams

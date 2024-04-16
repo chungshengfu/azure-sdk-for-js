@@ -1,28 +1,14 @@
 # Release History
-
-## 2.1.0-beta.2 (Unreleased)
-
-### Features Added
-
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
-## 2.1.0-beta.1 (2024-03-18)
+    
+## 2.1.0-beta.2 (2024-04-16)
     
 **Features**
 
   - Added operation group AppResiliencyOperations
-  - Added operation group BuildAuthToken
   - Added operation group Builders
   - Added operation group Builds
-  - Added operation group BuildsByBuilderResource
   - Added operation group DaprComponentResiliencyPolicies
   - Added operation group DaprSubscriptions
-  - Added operation group DotNetComponents
-  - Added operation group JavaComponents
   - Added operation group ManagedEnvironmentUsages
   - Added operation group Usages
   - Added operation Jobs.getDetector
@@ -38,7 +24,6 @@
   - Added Interface AppResiliencyListOptionalParams
   - Added Interface AppResiliencyUpdateOptionalParams
   - Added Interface BlobStorageTokenStore
-  - Added Interface BuildAuthTokenListOptionalParams
   - Added Interface BuildCollection
   - Added Interface BuildConfiguration
   - Added Interface BuilderCollection
@@ -56,15 +41,15 @@
   - Added Interface BuildersUpdateHeaders
   - Added Interface BuildersUpdateOptionalParams
   - Added Interface BuildResource
-  - Added Interface BuildsByBuilderResourceListNextOptionalParams
-  - Added Interface BuildsByBuilderResourceListOptionalParams
   - Added Interface BuildsCreateOrUpdateHeaders
   - Added Interface BuildsCreateOrUpdateOptionalParams
   - Added Interface BuildsDeleteHeaders
   - Added Interface BuildsDeleteOptionalParams
   - Added Interface BuildsGetOptionalParams
+  - Added Interface BuildsListAuthTokenOptionalParams
+  - Added Interface BuildsListByBuilderResourceNextOptionalParams
+  - Added Interface BuildsListByBuilderResourceOptionalParams
   - Added Interface BuildToken
-  - Added Interface CertificateKeyVaultProperties
   - Added Interface CircuitBreakerPolicy
   - Added Interface ContainerRegistry
   - Added Interface ContainerRegistryWithCustomImage
@@ -75,7 +60,6 @@
   - Added Interface DaprComponentResiliencyPoliciesListNextOptionalParams
   - Added Interface DaprComponentResiliencyPoliciesListOptionalParams
   - Added Interface DaprComponentResiliencyPolicy
-  - Added Interface DaprComponentResiliencyPolicyCircuitBreakerPolicyConfiguration
   - Added Interface DaprComponentResiliencyPolicyConfiguration
   - Added Interface DaprComponentResiliencyPolicyHttpRetryBackOffConfiguration
   - Added Interface DaprComponentResiliencyPolicyHttpRetryPolicyConfiguration
@@ -94,39 +78,14 @@
   - Added Interface DaprSubscriptionsListOptionalParams
   - Added Interface DataDogConfiguration
   - Added Interface DestinationsConfiguration
-  - Added Interface DotNetComponent
-  - Added Interface DotNetComponentConfigurationProperty
-  - Added Interface DotNetComponentsCollection
-  - Added Interface DotNetComponentsCreateOrUpdateOptionalParams
-  - Added Interface DotNetComponentsDeleteHeaders
-  - Added Interface DotNetComponentsDeleteOptionalParams
-  - Added Interface DotNetComponentServiceBind
-  - Added Interface DotNetComponentsGetOptionalParams
-  - Added Interface DotNetComponentsListNextOptionalParams
-  - Added Interface DotNetComponentsListOptionalParams
-  - Added Interface DotNetComponentsUpdateHeaders
-  - Added Interface DotNetComponentsUpdateOptionalParams
   - Added Interface EncryptionSettings
   - Added Interface EnvironmentVariable
   - Added Interface GetCustomDomainVerificationIdOptionalParams
-  - Added Interface Header
   - Added Interface HeaderMatch
   - Added Interface HttpConnectionPool
   - Added Interface HttpGet
   - Added Interface HttpRetryPolicy
   - Added Interface IngressPortMapping
-  - Added Interface JavaComponent
-  - Added Interface JavaComponentConfigurationProperty
-  - Added Interface JavaComponentsCollection
-  - Added Interface JavaComponentsCreateOrUpdateOptionalParams
-  - Added Interface JavaComponentsDeleteHeaders
-  - Added Interface JavaComponentsDeleteOptionalParams
-  - Added Interface JavaComponentServiceBind
-  - Added Interface JavaComponentsGetOptionalParams
-  - Added Interface JavaComponentsListNextOptionalParams
-  - Added Interface JavaComponentsListOptionalParams
-  - Added Interface JavaComponentsUpdateHeaders
-  - Added Interface JavaComponentsUpdateOptionalParams
   - Added Interface JobsGetDetectorOptionalParams
   - Added Interface JobsListDetectorsOptionalParams
   - Added Interface JobsProxyGetOptionalParams
@@ -135,9 +94,7 @@
   - Added Interface ManagedEnvironmentUsagesListNextOptionalParams
   - Added Interface ManagedEnvironmentUsagesListOptionalParams
   - Added Interface MetricsConfiguration
-  - Added Interface NfsAzureFileProperties
   - Added Interface OpenTelemetryConfiguration
-  - Added Interface OtlpConfiguration
   - Added Interface PreBuildStep
   - Added Interface TcpConnectionPool
   - Added Interface TcpRetryPolicy
@@ -153,7 +110,6 @@
   - Added Type Alias AppResiliencyListNextResponse
   - Added Type Alias AppResiliencyListResponse
   - Added Type Alias AppResiliencyUpdateResponse
-  - Added Type Alias BuildAuthTokenListResponse
   - Added Type Alias BuilderProvisioningState
   - Added Type Alias BuildersCreateOrUpdateResponse
   - Added Type Alias BuildersDeleteResponse
@@ -164,11 +120,12 @@
   - Added Type Alias BuildersListBySubscriptionResponse
   - Added Type Alias BuildersUpdateResponse
   - Added Type Alias BuildProvisioningState
-  - Added Type Alias BuildsByBuilderResourceListNextResponse
-  - Added Type Alias BuildsByBuilderResourceListResponse
   - Added Type Alias BuildsCreateOrUpdateResponse
   - Added Type Alias BuildsDeleteResponse
   - Added Type Alias BuildsGetResponse
+  - Added Type Alias BuildsListAuthTokenResponse
+  - Added Type Alias BuildsListByBuilderResourceNextResponse
+  - Added Type Alias BuildsListByBuilderResourceResponse
   - Added Type Alias BuildStatus
   - Added Type Alias CertificateType
   - Added Type Alias DaprComponentResiliencyPoliciesCreateOrUpdateResponse
@@ -179,24 +136,7 @@
   - Added Type Alias DaprSubscriptionsGetResponse
   - Added Type Alias DaprSubscriptionsListNextResponse
   - Added Type Alias DaprSubscriptionsListResponse
-  - Added Type Alias DotNetComponentProvisioningState
-  - Added Type Alias DotNetComponentsCreateOrUpdateResponse
-  - Added Type Alias DotNetComponentsDeleteResponse
-  - Added Type Alias DotNetComponentsGetResponse
-  - Added Type Alias DotNetComponentsListNextResponse
-  - Added Type Alias DotNetComponentsListResponse
-  - Added Type Alias DotNetComponentsUpdateResponse
-  - Added Type Alias DotNetComponentType
   - Added Type Alias GetCustomDomainVerificationIdResponse
-  - Added Type Alias IngressTargetPortHttpScheme
-  - Added Type Alias JavaComponentProvisioningState
-  - Added Type Alias JavaComponentsCreateOrUpdateResponse
-  - Added Type Alias JavaComponentsDeleteResponse
-  - Added Type Alias JavaComponentsGetResponse
-  - Added Type Alias JavaComponentsListNextResponse
-  - Added Type Alias JavaComponentsListResponse
-  - Added Type Alias JavaComponentsUpdateResponse
-  - Added Type Alias JavaComponentType
   - Added Type Alias JobsGetDetectorResponse
   - Added Type Alias JobsListDetectorsResponse
   - Added Type Alias JobsProxyGetResponse
@@ -206,33 +146,21 @@
   - Added Type Alias UsagesListResponse
   - Interface AuthConfig has a new optional parameter encryptionSettings
   - Interface AvailableWorkloadProfileProperties has a new optional parameter gpus
-  - Interface CertificateProperties has a new optional parameter certificateKeyVaultProperties
   - Interface CertificateProperties has a new optional parameter certificateType
-  - Interface CustomDomainConfiguration has a new optional parameter certificateKeyVaultProperties
   - Interface DaprComponent has a new optional parameter serviceComponentBind
-  - Interface GithubActionConfiguration has a new optional parameter buildEnvironmentVariables
   - Interface Ingress has a new optional parameter additionalPortMappings
-  - Interface Ingress has a new optional parameter targetPortHttpScheme
   - Interface Job has a new optional parameter extendedLocation
   - Interface JobPatchProperties has a new optional parameter extendedLocation
   - Interface LogAnalyticsConfiguration has a new optional parameter dynamicJsonColumns
   - Interface Login has a new optional parameter tokenStore
   - Interface ManagedEnvironment has a new optional parameter appInsightsConfiguration
-  - Interface ManagedEnvironment has a new optional parameter identity
   - Interface ManagedEnvironment has a new optional parameter openTelemetryConfiguration
-  - Interface ManagedEnvironmentStorageProperties has a new optional parameter nfsAzureFile
   - Interface ServiceBind has a new optional parameter clientType
   - Interface ServiceBind has a new optional parameter customizedKeys
   - Added Enum KnownBuilderProvisioningState
   - Added Enum KnownBuildProvisioningState
   - Added Enum KnownBuildStatus
   - Added Enum KnownCertificateType
-  - Added Enum KnownDotNetComponentProvisioningState
-  - Added Enum KnownDotNetComponentType
-  - Added Enum KnownIngressTargetPortHttpScheme
-  - Added Enum KnownJavaComponentProvisioningState
-  - Added Enum KnownJavaComponentType
-  - Enum KnownStorageType has a new value NfsAzureFile
     
 ## 2.0.0 (2023-08-08)
 

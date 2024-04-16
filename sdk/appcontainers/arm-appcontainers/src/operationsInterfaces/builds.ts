@@ -6,19 +6,35 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
+import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { SimplePollerLike, OperationState } from "@azure/core-lro";
 import {
+  BuildResource,
+  BuildsListByBuilderResourceOptionalParams,
   BuildsGetOptionalParams,
   BuildsGetResponse,
-  BuildResource,
   BuildsCreateOrUpdateOptionalParams,
   BuildsCreateOrUpdateResponse,
   BuildsDeleteOptionalParams,
   BuildsDeleteResponse,
+  BuildsListAuthTokenOptionalParams,
+  BuildsListAuthTokenResponse,
 } from "../models";
 
+/// <reference lib="esnext.asynciterable" />
 /** Interface representing a Builds. */
 export interface Builds {
+  /**
+   * List BuildResource resources by BuilderResource
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param builderName The name of the builder.
+   * @param options The options parameters.
+   */
+  listByBuilderResource(
+    resourceGroupName: string,
+    builderName: string,
+    options?: BuildsListByBuilderResourceOptionalParams,
+  ): PagedAsyncIterableIterator<BuildResource>;
   /**
    * Get a BuildResource
    * @param resourceGroupName The name of the resource group. The name is case insensitive.
@@ -95,4 +111,17 @@ export interface Builds {
     buildName: string,
     options?: BuildsDeleteOptionalParams,
   ): Promise<BuildsDeleteResponse>;
+  /**
+   * Gets the token used to connect to the endpoint where source code can be uploaded for a build.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param builderName The name of the builder.
+   * @param buildName The name of a build.
+   * @param options The options parameters.
+   */
+  listAuthToken(
+    resourceGroupName: string,
+    builderName: string,
+    buildName: string,
+    options?: BuildsListAuthTokenOptionalParams,
+  ): Promise<BuildsListAuthTokenResponse>;
 }

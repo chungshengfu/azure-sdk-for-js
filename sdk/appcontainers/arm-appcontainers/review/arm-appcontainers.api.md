@@ -312,18 +312,6 @@ export interface BlobStorageTokenStore {
 }
 
 // @public
-export interface BuildAuthToken {
-    list(resourceGroupName: string, builderName: string, buildName: string, options?: BuildAuthTokenListOptionalParams): Promise<BuildAuthTokenListResponse>;
-}
-
-// @public
-export interface BuildAuthTokenListOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type BuildAuthTokenListResponse = BuildToken;
-
-// @public
 export interface BuildCollection {
     nextLink?: string;
     value: BuildResource[];
@@ -478,26 +466,9 @@ export interface Builds {
     beginDelete(resourceGroupName: string, builderName: string, buildName: string, options?: BuildsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<BuildsDeleteResponse>, BuildsDeleteResponse>>;
     beginDeleteAndWait(resourceGroupName: string, builderName: string, buildName: string, options?: BuildsDeleteOptionalParams): Promise<BuildsDeleteResponse>;
     get(resourceGroupName: string, builderName: string, buildName: string, options?: BuildsGetOptionalParams): Promise<BuildsGetResponse>;
+    listAuthToken(resourceGroupName: string, builderName: string, buildName: string, options?: BuildsListAuthTokenOptionalParams): Promise<BuildsListAuthTokenResponse>;
+    listByBuilderResource(resourceGroupName: string, builderName: string, options?: BuildsListByBuilderResourceOptionalParams): PagedAsyncIterableIterator<BuildResource>;
 }
-
-// @public
-export interface BuildsByBuilderResource {
-    list(resourceGroupName: string, builderName: string, options?: BuildsByBuilderResourceListOptionalParams): PagedAsyncIterableIterator<BuildResource>;
-}
-
-// @public
-export interface BuildsByBuilderResourceListNextOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type BuildsByBuilderResourceListNextResponse = BuildCollection;
-
-// @public
-export interface BuildsByBuilderResourceListOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type BuildsByBuilderResourceListResponse = BuildCollection;
 
 // @public
 export interface BuildsCreateOrUpdateHeaders {
@@ -537,6 +508,27 @@ export interface BuildsGetOptionalParams extends coreClient.OperationOptions {
 export type BuildsGetResponse = BuildResource;
 
 // @public
+export interface BuildsListAuthTokenOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type BuildsListAuthTokenResponse = BuildToken;
+
+// @public
+export interface BuildsListByBuilderResourceNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type BuildsListByBuilderResourceNextResponse = BuildCollection;
+
+// @public
+export interface BuildsListByBuilderResourceOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type BuildsListByBuilderResourceResponse = BuildCollection;
+
+// @public
 export type BuildStatus = string;
 
 // @public
@@ -557,12 +549,6 @@ export interface CertificateCollection {
 }
 
 // @public
-export interface CertificateKeyVaultProperties {
-    identity?: string;
-    keyVaultUrl?: string;
-}
-
-// @public
 export interface CertificatePatch {
     tags?: {
         [propertyName: string]: string;
@@ -571,7 +557,6 @@ export interface CertificatePatch {
 
 // @public
 export interface CertificateProperties {
-    certificateKeyVaultProperties?: CertificateKeyVaultProperties;
     certificateType?: CertificateType;
     readonly expirationDate?: Date;
     readonly issueDate?: Date;
@@ -1048,13 +1033,9 @@ export class ContainerAppsAPIClient extends coreClient.ServiceClient {
     // (undocumented)
     billingMeters: BillingMeters;
     // (undocumented)
-    buildAuthToken: BuildAuthToken;
-    // (undocumented)
     builders: Builders;
     // (undocumented)
     builds: Builds;
-    // (undocumented)
-    buildsByBuilderResource: BuildsByBuilderResource;
     // (undocumented)
     certificates: Certificates;
     // (undocumented)
@@ -1083,11 +1064,7 @@ export class ContainerAppsAPIClient extends coreClient.ServiceClient {
     daprComponents: DaprComponents;
     // (undocumented)
     daprSubscriptions: DaprSubscriptions;
-    // (undocumented)
-    dotNetComponents: DotNetComponents;
     getCustomDomainVerificationId(options?: GetCustomDomainVerificationIdOptionalParams): Promise<GetCustomDomainVerificationIdResponse>;
-    // (undocumented)
-    javaComponents: JavaComponents;
     jobExecution(resourceGroupName: string, jobName: string, jobExecutionName: string, options?: JobExecutionOptionalParams): Promise<JobExecutionResponse>;
     // (undocumented)
     jobs: Jobs;
@@ -1511,7 +1488,6 @@ export interface CustomDomain {
 
 // @public
 export interface CustomDomainConfiguration {
-    certificateKeyVaultProperties?: CertificateKeyVaultProperties;
     certificatePassword?: string;
     certificateValue?: Uint8Array;
     readonly customDomainVerificationId?: string;
@@ -1646,15 +1622,7 @@ export interface DaprComponentResiliencyPolicy extends ProxyResource {
 }
 
 // @public
-export interface DaprComponentResiliencyPolicyCircuitBreakerPolicyConfiguration {
-    consecutiveErrors?: number;
-    intervalInSeconds?: number;
-    timeoutInSeconds?: number;
-}
-
-// @public
 export interface DaprComponentResiliencyPolicyConfiguration {
-    circuitBreakerPolicy?: DaprComponentResiliencyPolicyCircuitBreakerPolicyConfiguration;
     httpRetryPolicy?: DaprComponentResiliencyPolicyHttpRetryPolicyConfiguration;
     timeoutPolicy?: DaprComponentResiliencyPolicyTimeoutPolicyConfiguration;
 }
@@ -1880,7 +1848,6 @@ export interface DefaultErrorResponseErrorDetailsItem {
 // @public
 export interface DestinationsConfiguration {
     dataDogConfiguration?: DataDogConfiguration;
-    otlpConfigurations?: OtlpConfiguration[];
 }
 
 // @public
@@ -1969,110 +1936,6 @@ export interface DiagnosticSupportTopic {
 
 // @public
 export type DnsVerificationTestResult = "Passed" | "Failed" | "Skipped";
-
-// @public
-export interface DotNetComponent extends ProxyResource {
-    componentType?: DotNetComponentType;
-    configurations?: DotNetComponentConfigurationProperty[];
-    readonly provisioningState?: DotNetComponentProvisioningState;
-    serviceBinds?: DotNetComponentServiceBind[];
-}
-
-// @public
-export interface DotNetComponentConfigurationProperty {
-    propertyName?: string;
-    value?: string;
-}
-
-// @public
-export type DotNetComponentProvisioningState = string;
-
-// @public
-export interface DotNetComponents {
-    beginCreateOrUpdate(resourceGroupName: string, environmentName: string, name: string, dotNetComponentEnvelope: DotNetComponent, options?: DotNetComponentsCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<DotNetComponentsCreateOrUpdateResponse>, DotNetComponentsCreateOrUpdateResponse>>;
-    beginCreateOrUpdateAndWait(resourceGroupName: string, environmentName: string, name: string, dotNetComponentEnvelope: DotNetComponent, options?: DotNetComponentsCreateOrUpdateOptionalParams): Promise<DotNetComponentsCreateOrUpdateResponse>;
-    beginDelete(resourceGroupName: string, environmentName: string, name: string, options?: DotNetComponentsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<DotNetComponentsDeleteResponse>, DotNetComponentsDeleteResponse>>;
-    beginDeleteAndWait(resourceGroupName: string, environmentName: string, name: string, options?: DotNetComponentsDeleteOptionalParams): Promise<DotNetComponentsDeleteResponse>;
-    beginUpdate(resourceGroupName: string, environmentName: string, name: string, dotNetComponentEnvelope: DotNetComponent, options?: DotNetComponentsUpdateOptionalParams): Promise<SimplePollerLike<OperationState<DotNetComponentsUpdateResponse>, DotNetComponentsUpdateResponse>>;
-    beginUpdateAndWait(resourceGroupName: string, environmentName: string, name: string, dotNetComponentEnvelope: DotNetComponent, options?: DotNetComponentsUpdateOptionalParams): Promise<DotNetComponentsUpdateResponse>;
-    get(resourceGroupName: string, environmentName: string, name: string, options?: DotNetComponentsGetOptionalParams): Promise<DotNetComponentsGetResponse>;
-    list(resourceGroupName: string, environmentName: string, options?: DotNetComponentsListOptionalParams): PagedAsyncIterableIterator<DotNetComponent>;
-}
-
-// @public
-export interface DotNetComponentsCollection {
-    readonly nextLink?: string;
-    value: DotNetComponent[];
-}
-
-// @public
-export interface DotNetComponentsCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type DotNetComponentsCreateOrUpdateResponse = DotNetComponent;
-
-// @public
-export interface DotNetComponentsDeleteHeaders {
-    // (undocumented)
-    location?: string;
-}
-
-// @public
-export interface DotNetComponentsDeleteOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type DotNetComponentsDeleteResponse = DotNetComponentsDeleteHeaders;
-
-// @public
-export interface DotNetComponentServiceBind {
-    name?: string;
-    serviceId?: string;
-}
-
-// @public
-export interface DotNetComponentsGetOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type DotNetComponentsGetResponse = DotNetComponent;
-
-// @public
-export interface DotNetComponentsListNextOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type DotNetComponentsListNextResponse = DotNetComponentsCollection;
-
-// @public
-export interface DotNetComponentsListOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type DotNetComponentsListResponse = DotNetComponentsCollection;
-
-// @public
-export interface DotNetComponentsUpdateHeaders {
-    // (undocumented)
-    location?: string;
-}
-
-// @public
-export interface DotNetComponentsUpdateOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type DotNetComponentsUpdateResponse = DotNetComponent;
-
-// @public
-export type DotNetComponentType = string;
 
 // @public
 export interface EncryptionSettings {
@@ -2171,7 +2034,6 @@ export interface GitHub {
 // @public
 export interface GithubActionConfiguration {
     azureCredentials?: AzureCredentials;
-    buildEnvironmentVariables?: EnvironmentVariable[];
     contextPath?: string;
     githubPersonalAccessToken?: string;
     image?: string;
@@ -2195,12 +2057,6 @@ export interface Google {
     login?: LoginScopes;
     registration?: ClientRegistration;
     validation?: AllowedAudiencesValidation;
-}
-
-// @public
-export interface Header {
-    key?: string;
-    value?: string;
 }
 
 // @public
@@ -2282,7 +2138,6 @@ export interface Ingress {
     ipSecurityRestrictions?: IpSecurityRestrictionRule[];
     stickySessions?: IngressStickySessions;
     targetPort?: number;
-    targetPortHttpScheme?: IngressTargetPortHttpScheme;
     traffic?: TrafficWeight[];
     transport?: IngressTransportMethod;
 }
@@ -2303,9 +2158,6 @@ export interface IngressStickySessions {
 }
 
 // @public
-export type IngressTargetPortHttpScheme = string;
-
-// @public
 export type IngressTransportMethod = string;
 
 // @public
@@ -2319,110 +2171,6 @@ export interface IpSecurityRestrictionRule {
     ipAddressRange: string;
     name: string;
 }
-
-// @public
-export interface JavaComponent extends ProxyResource {
-    componentType?: JavaComponentType;
-    configurations?: JavaComponentConfigurationProperty[];
-    readonly provisioningState?: JavaComponentProvisioningState;
-    serviceBinds?: JavaComponentServiceBind[];
-}
-
-// @public
-export interface JavaComponentConfigurationProperty {
-    propertyName?: string;
-    value?: string;
-}
-
-// @public
-export type JavaComponentProvisioningState = string;
-
-// @public
-export interface JavaComponents {
-    beginCreateOrUpdate(resourceGroupName: string, environmentName: string, name: string, javaComponentEnvelope: JavaComponent, options?: JavaComponentsCreateOrUpdateOptionalParams): Promise<SimplePollerLike<OperationState<JavaComponentsCreateOrUpdateResponse>, JavaComponentsCreateOrUpdateResponse>>;
-    beginCreateOrUpdateAndWait(resourceGroupName: string, environmentName: string, name: string, javaComponentEnvelope: JavaComponent, options?: JavaComponentsCreateOrUpdateOptionalParams): Promise<JavaComponentsCreateOrUpdateResponse>;
-    beginDelete(resourceGroupName: string, environmentName: string, name: string, options?: JavaComponentsDeleteOptionalParams): Promise<SimplePollerLike<OperationState<JavaComponentsDeleteResponse>, JavaComponentsDeleteResponse>>;
-    beginDeleteAndWait(resourceGroupName: string, environmentName: string, name: string, options?: JavaComponentsDeleteOptionalParams): Promise<JavaComponentsDeleteResponse>;
-    beginUpdate(resourceGroupName: string, environmentName: string, name: string, javaComponentEnvelope: JavaComponent, options?: JavaComponentsUpdateOptionalParams): Promise<SimplePollerLike<OperationState<JavaComponentsUpdateResponse>, JavaComponentsUpdateResponse>>;
-    beginUpdateAndWait(resourceGroupName: string, environmentName: string, name: string, javaComponentEnvelope: JavaComponent, options?: JavaComponentsUpdateOptionalParams): Promise<JavaComponentsUpdateResponse>;
-    get(resourceGroupName: string, environmentName: string, name: string, options?: JavaComponentsGetOptionalParams): Promise<JavaComponentsGetResponse>;
-    list(resourceGroupName: string, environmentName: string, options?: JavaComponentsListOptionalParams): PagedAsyncIterableIterator<JavaComponent>;
-}
-
-// @public
-export interface JavaComponentsCollection {
-    readonly nextLink?: string;
-    value: JavaComponent[];
-}
-
-// @public
-export interface JavaComponentsCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type JavaComponentsCreateOrUpdateResponse = JavaComponent;
-
-// @public
-export interface JavaComponentsDeleteHeaders {
-    // (undocumented)
-    location?: string;
-}
-
-// @public
-export interface JavaComponentsDeleteOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type JavaComponentsDeleteResponse = JavaComponentsDeleteHeaders;
-
-// @public
-export interface JavaComponentServiceBind {
-    name?: string;
-    serviceId?: string;
-}
-
-// @public
-export interface JavaComponentsGetOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type JavaComponentsGetResponse = JavaComponent;
-
-// @public
-export interface JavaComponentsListNextOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type JavaComponentsListNextResponse = JavaComponentsCollection;
-
-// @public
-export interface JavaComponentsListOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type JavaComponentsListResponse = JavaComponentsCollection;
-
-// @public
-export interface JavaComponentsUpdateHeaders {
-    // (undocumented)
-    location?: string;
-}
-
-// @public
-export interface JavaComponentsUpdateOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type JavaComponentsUpdateResponse = JavaComponent;
-
-// @public
-export type JavaComponentType = string;
 
 // @public
 export interface Job extends TrackedResource {
@@ -2906,21 +2654,6 @@ export enum KnownCreatedByType {
 }
 
 // @public
-export enum KnownDotNetComponentProvisioningState {
-    Canceled = "Canceled",
-    Deleting = "Deleting",
-    Failed = "Failed",
-    InProgress = "InProgress",
-    Succeeded = "Succeeded"
-}
-
-// @public
-export enum KnownDotNetComponentType {
-    AspireDashboard = "AspireDashboard",
-    AspireResourceServerApi = "AspireResourceServerApi"
-}
-
-// @public
 export enum KnownEnvironmentProvisioningState {
     Canceled = "Canceled",
     Failed = "Failed",
@@ -2947,33 +2680,11 @@ export enum KnownIngressClientCertificateMode {
 }
 
 // @public
-export enum KnownIngressTargetPortHttpScheme {
-    Http = "http",
-    Https = "https"
-}
-
-// @public
 export enum KnownIngressTransportMethod {
     Auto = "auto",
     Http = "http",
     Http2 = "http2",
     Tcp = "tcp"
-}
-
-// @public
-export enum KnownJavaComponentProvisioningState {
-    Canceled = "Canceled",
-    Deleting = "Deleting",
-    Failed = "Failed",
-    InProgress = "InProgress",
-    Succeeded = "Succeeded"
-}
-
-// @public
-export enum KnownJavaComponentType {
-    SpringBootAdmin = "SpringBootAdmin",
-    SpringCloudConfig = "SpringCloudConfig",
-    SpringCloudEureka = "SpringCloudEureka"
 }
 
 // @public
@@ -3063,7 +2774,6 @@ export enum KnownSourceControlOperationState {
 export enum KnownStorageType {
     AzureFile = "AzureFile",
     EmptyDir = "EmptyDir",
-    NfsAzureFile = "NfsAzureFile",
     Secret = "Secret"
 }
 
@@ -3215,7 +2925,6 @@ export interface ManagedEnvironment extends TrackedResource {
     readonly defaultDomain?: string;
     readonly deploymentErrors?: string;
     readonly eventStreamEndpoint?: string;
-    identity?: ManagedServiceIdentity;
     infrastructureResourceGroup?: string;
     kedaConfiguration?: KedaConfiguration;
     kind?: string;
@@ -3398,7 +3107,6 @@ export interface ManagedEnvironmentStorage extends ProxyResource {
 // @public
 export interface ManagedEnvironmentStorageProperties {
     azureFile?: AzureFileProperties;
-    nfsAzureFile?: NfsAzureFileProperties;
 }
 
 // @public
@@ -3468,13 +3176,6 @@ export interface NamespacesCheckNameAvailabilityOptionalParams extends coreClien
 
 // @public
 export type NamespacesCheckNameAvailabilityResponse = CheckNameAvailabilityResponse;
-
-// @public
-export interface NfsAzureFileProperties {
-    accessMode?: AccessMode;
-    server?: string;
-    shareName?: string;
-}
 
 // @public
 export interface Nonce {
@@ -3552,14 +3253,6 @@ export interface OperationsListOptionalParams extends coreClient.OperationOption
 
 // @public
 export type OperationsListResponse = AvailableOperations;
-
-// @public
-export interface OtlpConfiguration {
-    endpoint?: string;
-    headers?: Header[];
-    insecure?: boolean;
-    name?: string;
-}
 
 // @public
 export interface PreBuildStep {

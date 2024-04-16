@@ -34,8 +34,6 @@ import {
   DaprSubscription as DaprSubscriptionMapper,
   ManagedEnvironmentStorage as ManagedEnvironmentStorageMapper,
   SourceControl as SourceControlMapper,
-  JavaComponent as JavaComponentMapper,
-  DotNetComponent as DotNetComponentMapper,
 } from "../models/mappers";
 
 export const contentType: OperationParameter = {
@@ -136,7 +134,7 @@ export const name: OperationURLParameter = {
 export const apiVersion: OperationQueryParameter = {
   parameterPath: "apiVersion",
   mapper: {
-    defaultValue: "2023-11-02-preview",
+    defaultValue: "2023-08-01-preview",
     isConstant: true,
     serializedName: "api-version",
     type: {
@@ -593,14 +591,4 @@ export const environmentName2: OperationURLParameter = {
       name: "String",
     },
   },
-};
-
-export const javaComponentEnvelope: OperationParameter = {
-  parameterPath: "javaComponentEnvelope",
-  mapper: JavaComponentMapper,
-};
-
-export const dotNetComponentEnvelope: OperationParameter = {
-  parameterPath: "dotNetComponentEnvelope",
-  mapper: DotNetComponentMapper,
 };

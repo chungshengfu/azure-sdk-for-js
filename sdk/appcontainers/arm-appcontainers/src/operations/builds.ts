@@ -6,6 +6,8 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
+import { PagedAsyncIterableIterator, PageSettings } from "@azure/core-paging";
+import { setContinuationToken } from "../pagingHelper";
 import { Builds } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
@@ -18,15 +20,22 @@ import {
 } from "@azure/core-lro";
 import { createLroSpec } from "../lroImpl";
 import {
+  BuildResource,
+  BuildsListByBuilderResourceNextOptionalParams,
+  BuildsListByBuilderResourceOptionalParams,
+  BuildsListByBuilderResourceResponse,
   BuildsGetOptionalParams,
   BuildsGetResponse,
-  BuildResource,
   BuildsCreateOrUpdateOptionalParams,
   BuildsCreateOrUpdateResponse,
   BuildsDeleteOptionalParams,
   BuildsDeleteResponse,
+  BuildsListAuthTokenOptionalParams,
+  BuildsListAuthTokenResponse,
+  BuildsListByBuilderResourceNextResponse,
 } from "../models";
 
+/// <reference lib="esnext.asynciterable" />
 /** Class containing Builds operations. */
 export class BuildsImpl implements Builds {
   private readonly client: ContainerAppsAPIClient;
@@ -37,6 +46,107 @@ export class BuildsImpl implements Builds {
    */
   constructor(client: ContainerAppsAPIClient) {
     this.client = client;
+  }
+
+  /**
+   * List BuildResource resources by BuilderResource
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param builderName The name of the builder.
+   * @param options The options parameters.
+   */
+  public listByBuilderResource(
+    resourceGroupName: string,
+    builderName: string,
+    options?: BuildsListByBuilderResourceOptionalParams,
+  ): PagedAsyncIterableIterator<BuildResource> {
+    const iter = this.listByBuilderResourcePagingAll(
+      resourceGroupName,
+      builderName,
+      options,
+    );
+    return {
+      next() {
+        return iter.next();
+      },
+      [Symbol.asyncIterator]() {
+        return this;
+      },
+      byPage: (settings?: PageSettings) => {
+        if (settings?.maxPageSize) {
+          throw new Error("maxPageSize is not supported by this operation.");
+        }
+        return this.listByBuilderResourcePagingPage(
+          resourceGroupName,
+          builderName,
+          options,
+          settings,
+        );
+      },
+    };
+  }
+
+  private async *listByBuilderResourcePagingPage(
+    resourceGroupName: string,
+    builderName: string,
+    options?: BuildsListByBuilderResourceOptionalParams,
+    settings?: PageSettings,
+  ): AsyncIterableIterator<BuildResource[]> {
+    let result: BuildsListByBuilderResourceResponse;
+    let continuationToken = settings?.continuationToken;
+    if (!continuationToken) {
+      result = await this._listByBuilderResource(
+        resourceGroupName,
+        builderName,
+        options,
+      );
+      let page = result.value || [];
+      continuationToken = result.nextLink;
+      setContinuationToken(page, continuationToken);
+      yield page;
+    }
+    while (continuationToken) {
+      result = await this._listByBuilderResourceNext(
+        resourceGroupName,
+        builderName,
+        continuationToken,
+        options,
+      );
+      continuationToken = result.nextLink;
+      let page = result.value || [];
+      setContinuationToken(page, continuationToken);
+      yield page;
+    }
+  }
+
+  private async *listByBuilderResourcePagingAll(
+    resourceGroupName: string,
+    builderName: string,
+    options?: BuildsListByBuilderResourceOptionalParams,
+  ): AsyncIterableIterator<BuildResource> {
+    for await (const page of this.listByBuilderResourcePagingPage(
+      resourceGroupName,
+      builderName,
+      options,
+    )) {
+      yield* page;
+    }
+  }
+
+  /**
+   * List BuildResource resources by BuilderResource
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param builderName The name of the builder.
+   * @param options The options parameters.
+   */
+  private _listByBuilderResource(
+    resourceGroupName: string,
+    builderName: string,
+    options?: BuildsListByBuilderResourceOptionalParams,
+  ): Promise<BuildsListByBuilderResourceResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, builderName, options },
+      listByBuilderResourceOperationSpec,
+    );
   }
 
   /**
@@ -255,10 +365,69 @@ export class BuildsImpl implements Builds {
     );
     return poller.pollUntilDone();
   }
+
+  /**
+   * Gets the token used to connect to the endpoint where source code can be uploaded for a build.
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param builderName The name of the builder.
+   * @param buildName The name of a build.
+   * @param options The options parameters.
+   */
+  listAuthToken(
+    resourceGroupName: string,
+    builderName: string,
+    buildName: string,
+    options?: BuildsListAuthTokenOptionalParams,
+  ): Promise<BuildsListAuthTokenResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, builderName, buildName, options },
+      listAuthTokenOperationSpec,
+    );
+  }
+
+  /**
+   * ListByBuilderResourceNext
+   * @param resourceGroupName The name of the resource group. The name is case insensitive.
+   * @param builderName The name of the builder.
+   * @param nextLink The nextLink from the previous successful call to the ListByBuilderResource method.
+   * @param options The options parameters.
+   */
+  private _listByBuilderResourceNext(
+    resourceGroupName: string,
+    builderName: string,
+    nextLink: string,
+    options?: BuildsListByBuilderResourceNextOptionalParams,
+  ): Promise<BuildsListByBuilderResourceNextResponse> {
+    return this.client.sendOperationRequest(
+      { resourceGroupName, builderName, nextLink, options },
+      listByBuilderResourceNextOperationSpec,
+    );
+  }
 }
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
+const listByBuilderResourceOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/builders/{builderName}/builds",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.BuildCollection,
+    },
+    default: {
+      bodyMapper: Mappers.DefaultErrorResponse,
+    },
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.builderName,
+  ],
+  headerParameters: [Parameters.accept],
+  serializer,
+};
 const getOperationSpec: coreClient.OperationSpec = {
   path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/builders/{builderName}/builds/{buildName}",
   httpMethod: "GET",
@@ -267,7 +436,7 @@ const getOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.BuildResource,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse,
+      bodyMapper: Mappers.DefaultErrorResponse,
     },
   },
   queryParameters: [Parameters.apiVersion],
@@ -298,7 +467,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.BuildResource,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse,
+      bodyMapper: Mappers.DefaultErrorResponse,
     },
   },
   requestBody: Parameters.buildEnvelope,
@@ -331,7 +500,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
       headersMapper: Mappers.BuildsDeleteHeaders,
     },
     default: {
-      bodyMapper: Mappers.ErrorResponse,
+      bodyMapper: Mappers.DefaultErrorResponse,
     },
   },
   queryParameters: [Parameters.apiVersion],
@@ -341,6 +510,49 @@ const deleteOperationSpec: coreClient.OperationSpec = {
     Parameters.resourceGroupName,
     Parameters.builderName,
     Parameters.buildName,
+  ],
+  headerParameters: [Parameters.accept],
+  serializer,
+};
+const listAuthTokenOperationSpec: coreClient.OperationSpec = {
+  path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/builders/{builderName}/builds/{buildName}/listAuthToken",
+  httpMethod: "POST",
+  responses: {
+    200: {
+      bodyMapper: Mappers.BuildToken,
+    },
+    default: {
+      bodyMapper: Mappers.DefaultErrorResponse,
+    },
+  },
+  queryParameters: [Parameters.apiVersion],
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.builderName,
+    Parameters.buildName,
+  ],
+  headerParameters: [Parameters.accept],
+  serializer,
+};
+const listByBuilderResourceNextOperationSpec: coreClient.OperationSpec = {
+  path: "{nextLink}",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.BuildCollection,
+    },
+    default: {
+      bodyMapper: Mappers.DefaultErrorResponse,
+    },
+  },
+  urlParameters: [
+    Parameters.$host,
+    Parameters.subscriptionId,
+    Parameters.resourceGroupName,
+    Parameters.nextLink,
+    Parameters.builderName,
   ],
   headerParameters: [Parameters.accept],
   serializer,

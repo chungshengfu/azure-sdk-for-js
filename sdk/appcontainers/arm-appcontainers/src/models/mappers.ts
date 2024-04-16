@@ -2156,13 +2156,6 @@ export const CustomDomainConfiguration: coreClient.CompositeMapper = {
           name: "String",
         },
       },
-      certificateKeyVaultProperties: {
-        serializedName: "certificateKeyVaultProperties",
-        type: {
-          name: "Composite",
-          className: "CertificateKeyVaultProperties",
-        },
-      },
       certificateValue: {
         serializedName: "certificateValue",
         type: {
@@ -2192,27 +2185,6 @@ export const CustomDomainConfiguration: coreClient.CompositeMapper = {
       subjectName: {
         serializedName: "subjectName",
         readOnly: true,
-        type: {
-          name: "String",
-        },
-      },
-    },
-  },
-};
-
-export const CertificateKeyVaultProperties: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "CertificateKeyVaultProperties",
-    modelProperties: {
-      identity: {
-        serializedName: "identity",
-        type: {
-          name: "String",
-        },
-      },
-      keyVaultUrl: {
-        serializedName: "keyVaultUrl",
         type: {
           name: "String",
         },
@@ -2308,13 +2280,6 @@ export const CertificateProperties: coreClient.CompositeMapper = {
         readOnly: true,
         type: {
           name: "String",
-        },
-      },
-      certificateKeyVaultProperties: {
-        serializedName: "certificateKeyVaultProperties",
-        type: {
-          name: "Composite",
-          className: "CertificateKeyVaultProperties",
         },
       },
       password: {
@@ -2879,12 +2844,6 @@ export const Ingress: coreClient.CompositeMapper = {
               className: "IngressPortMapping",
             },
           },
-        },
-      },
-      targetPortHttpScheme: {
-        serializedName: "targetPortHttpScheme",
-        type: {
-          name: "String",
         },
       },
     },
@@ -4805,18 +4764,6 @@ export const DestinationsConfiguration: coreClient.CompositeMapper = {
           className: "DataDogConfiguration",
         },
       },
-      otlpConfigurations: {
-        serializedName: "otlpConfigurations",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "OtlpConfiguration",
-            },
-          },
-        },
-      },
     },
   },
 };
@@ -4834,66 +4781,6 @@ export const DataDogConfiguration: coreClient.CompositeMapper = {
       },
       key: {
         serializedName: "key",
-        type: {
-          name: "String",
-        },
-      },
-    },
-  },
-};
-
-export const OtlpConfiguration: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "OtlpConfiguration",
-    modelProperties: {
-      name: {
-        serializedName: "name",
-        type: {
-          name: "String",
-        },
-      },
-      endpoint: {
-        serializedName: "endpoint",
-        type: {
-          name: "String",
-        },
-      },
-      insecure: {
-        serializedName: "insecure",
-        type: {
-          name: "Boolean",
-        },
-      },
-      headers: {
-        serializedName: "headers",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "Header",
-            },
-          },
-        },
-      },
-    },
-  },
-};
-
-export const Header: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "Header",
-    modelProperties: {
-      key: {
-        serializedName: "key",
-        type: {
-          name: "String",
-        },
-      },
-      value: {
-        serializedName: "value",
         type: {
           name: "String",
         },
@@ -5990,14 +5877,6 @@ export const DaprComponentResiliencyPolicyConfiguration: coreClient.CompositeMap
               "DaprComponentResiliencyPolicyTimeoutPolicyConfiguration",
           },
         },
-        circuitBreakerPolicy: {
-          serializedName: "circuitBreakerPolicy",
-          type: {
-            name: "Composite",
-            className:
-              "DaprComponentResiliencyPolicyCircuitBreakerPolicyConfiguration",
-          },
-        },
       },
     },
   };
@@ -6056,35 +5935,6 @@ export const DaprComponentResiliencyPolicyTimeoutPolicyConfiguration: coreClient
       modelProperties: {
         responseTimeoutInSeconds: {
           serializedName: "responseTimeoutInSeconds",
-          type: {
-            name: "Number",
-          },
-        },
-      },
-    },
-  };
-
-export const DaprComponentResiliencyPolicyCircuitBreakerPolicyConfiguration: coreClient.CompositeMapper =
-  {
-    type: {
-      name: "Composite",
-      className:
-        "DaprComponentResiliencyPolicyCircuitBreakerPolicyConfiguration",
-      modelProperties: {
-        consecutiveErrors: {
-          serializedName: "consecutiveErrors",
-          type: {
-            name: "Number",
-          },
-        },
-        timeoutInSeconds: {
-          serializedName: "timeoutInSeconds",
-          type: {
-            name: "Number",
-          },
-        },
-        intervalInSeconds: {
-          serializedName: "intervalInSeconds",
           type: {
             name: "Number",
           },
@@ -6234,40 +6084,6 @@ export const ManagedEnvironmentStorageProperties: coreClient.CompositeMapper = {
           className: "AzureFileProperties",
         },
       },
-      nfsAzureFile: {
-        serializedName: "nfsAzureFile",
-        type: {
-          name: "Composite",
-          className: "NfsAzureFileProperties",
-        },
-      },
-    },
-  },
-};
-
-export const NfsAzureFileProperties: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "NfsAzureFileProperties",
-    modelProperties: {
-      server: {
-        serializedName: "server",
-        type: {
-          name: "String",
-        },
-      },
-      accessMode: {
-        serializedName: "accessMode",
-        type: {
-          name: "String",
-        },
-      },
-      shareName: {
-        serializedName: "shareName",
-        type: {
-          name: "String",
-        },
-      },
     },
   },
 };
@@ -6360,18 +6176,6 @@ export const GithubActionConfiguration: coreClient.CompositeMapper = {
         serializedName: "runtimeVersion",
         type: {
           name: "String",
-        },
-      },
-      buildEnvironmentVariables: {
-        serializedName: "buildEnvironmentVariables",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "EnvironmentVariable",
-            },
-          },
         },
       },
     },
@@ -6522,149 +6326,6 @@ export const UsageName: coreClient.CompositeMapper = {
       },
       localizedValue: {
         serializedName: "localizedValue",
-        type: {
-          name: "String",
-        },
-      },
-    },
-  },
-};
-
-export const JavaComponentsCollection: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "JavaComponentsCollection",
-    modelProperties: {
-      value: {
-        serializedName: "value",
-        required: true,
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "JavaComponent",
-            },
-          },
-        },
-      },
-      nextLink: {
-        serializedName: "nextLink",
-        readOnly: true,
-        type: {
-          name: "String",
-        },
-      },
-    },
-  },
-};
-
-export const JavaComponentConfigurationProperty: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "JavaComponentConfigurationProperty",
-    modelProperties: {
-      propertyName: {
-        serializedName: "propertyName",
-        type: {
-          name: "String",
-        },
-      },
-      value: {
-        serializedName: "value",
-        type: {
-          name: "String",
-        },
-      },
-    },
-  },
-};
-
-export const JavaComponentServiceBind: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "JavaComponentServiceBind",
-    modelProperties: {
-      name: {
-        serializedName: "name",
-        type: {
-          name: "String",
-        },
-      },
-      serviceId: {
-        serializedName: "serviceId",
-        type: {
-          name: "String",
-        },
-      },
-    },
-  },
-};
-
-export const DotNetComponentsCollection: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "DotNetComponentsCollection",
-    modelProperties: {
-      value: {
-        serializedName: "value",
-        required: true,
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "DotNetComponent",
-            },
-          },
-        },
-      },
-      nextLink: {
-        serializedName: "nextLink",
-        readOnly: true,
-        type: {
-          name: "String",
-        },
-      },
-    },
-  },
-};
-
-export const DotNetComponentConfigurationProperty: coreClient.CompositeMapper =
-  {
-    type: {
-      name: "Composite",
-      className: "DotNetComponentConfigurationProperty",
-      modelProperties: {
-        propertyName: {
-          serializedName: "propertyName",
-          type: {
-            name: "String",
-          },
-        },
-        value: {
-          serializedName: "value",
-          type: {
-            name: "String",
-          },
-        },
-      },
-    },
-  };
-
-export const DotNetComponentServiceBind: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "DotNetComponentServiceBind",
-    modelProperties: {
-      name: {
-        serializedName: "name",
-        type: {
-          name: "String",
-        },
-      },
-      serviceId: {
-        serializedName: "serviceId",
         type: {
           name: "String",
         },
@@ -7388,100 +7049,6 @@ export const SourceControl: coreClient.CompositeMapper = {
   },
 };
 
-export const JavaComponent: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "JavaComponent",
-    modelProperties: {
-      ...ProxyResource.type.modelProperties,
-      componentType: {
-        serializedName: "properties.componentType",
-        type: {
-          name: "String",
-        },
-      },
-      provisioningState: {
-        serializedName: "properties.provisioningState",
-        readOnly: true,
-        type: {
-          name: "String",
-        },
-      },
-      configurations: {
-        serializedName: "properties.configurations",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "JavaComponentConfigurationProperty",
-            },
-          },
-        },
-      },
-      serviceBinds: {
-        serializedName: "properties.serviceBinds",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "JavaComponentServiceBind",
-            },
-          },
-        },
-      },
-    },
-  },
-};
-
-export const DotNetComponent: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "DotNetComponent",
-    modelProperties: {
-      ...ProxyResource.type.modelProperties,
-      componentType: {
-        serializedName: "properties.componentType",
-        type: {
-          name: "String",
-        },
-      },
-      provisioningState: {
-        serializedName: "properties.provisioningState",
-        readOnly: true,
-        type: {
-          name: "String",
-        },
-      },
-      configurations: {
-        serializedName: "properties.configurations",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "DotNetComponentConfigurationProperty",
-            },
-          },
-        },
-      },
-      serviceBinds: {
-        serializedName: "properties.serviceBinds",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "DotNetComponentServiceBind",
-            },
-          },
-        },
-      },
-    },
-  },
-};
-
 export const BuilderResource: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -7748,13 +7315,6 @@ export const ManagedEnvironment: coreClient.CompositeMapper = {
         serializedName: "kind",
         type: {
           name: "String",
-        },
-      },
-      identity: {
-        serializedName: "identity",
-        type: {
-          name: "Composite",
-          className: "ManagedServiceIdentity",
         },
       },
       provisioningState: {
@@ -8219,66 +7779,6 @@ export const JobsStopMultipleExecutionsHeaders: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
     className: "JobsStopMultipleExecutionsHeaders",
-    modelProperties: {
-      location: {
-        serializedName: "location",
-        type: {
-          name: "String",
-        },
-      },
-    },
-  },
-};
-
-export const JavaComponentsUpdateHeaders: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "JavaComponentsUpdateHeaders",
-    modelProperties: {
-      location: {
-        serializedName: "location",
-        type: {
-          name: "String",
-        },
-      },
-    },
-  },
-};
-
-export const JavaComponentsDeleteHeaders: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "JavaComponentsDeleteHeaders",
-    modelProperties: {
-      location: {
-        serializedName: "location",
-        type: {
-          name: "String",
-        },
-      },
-    },
-  },
-};
-
-export const DotNetComponentsUpdateHeaders: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "DotNetComponentsUpdateHeaders",
-    modelProperties: {
-      location: {
-        serializedName: "location",
-        type: {
-          name: "String",
-        },
-      },
-    },
-  },
-};
-
-export const DotNetComponentsDeleteHeaders: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "DotNetComponentsDeleteHeaders",
     modelProperties: {
       location: {
         serializedName: "location",
