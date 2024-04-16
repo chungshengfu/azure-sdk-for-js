@@ -98,13 +98,17 @@ export interface ActionGroupResource extends AzureResource {
 export interface ActionGroups {
     beginCreateNotificationsAtActionGroupResourceLevel(resourceGroupName: string, actionGroupName: string, notificationRequest: NotificationRequestBody, options?: ActionGroupsCreateNotificationsAtActionGroupResourceLevelOptionalParams): Promise<SimplePollerLike<OperationState<ActionGroupsCreateNotificationsAtActionGroupResourceLevelResponse>, ActionGroupsCreateNotificationsAtActionGroupResourceLevelResponse>>;
     beginCreateNotificationsAtActionGroupResourceLevelAndWait(resourceGroupName: string, actionGroupName: string, notificationRequest: NotificationRequestBody, options?: ActionGroupsCreateNotificationsAtActionGroupResourceLevelOptionalParams): Promise<ActionGroupsCreateNotificationsAtActionGroupResourceLevelResponse>;
+    beginReconcileNSP(resourceGroupName: string, actionGroupName: string, configurationName: string, options?: ActionGroupsReconcileNSPOptionalParams): Promise<SimplePollerLike<OperationState<ActionGroupsReconcileNSPResponse>, ActionGroupsReconcileNSPResponse>>;
+    beginReconcileNSPAndWait(resourceGroupName: string, actionGroupName: string, configurationName: string, options?: ActionGroupsReconcileNSPOptionalParams): Promise<ActionGroupsReconcileNSPResponse>;
     createOrUpdate(resourceGroupName: string, actionGroupName: string, actionGroup: ActionGroupResource, options?: ActionGroupsCreateOrUpdateOptionalParams): Promise<ActionGroupsCreateOrUpdateResponse>;
     delete(resourceGroupName: string, actionGroupName: string, options?: ActionGroupsDeleteOptionalParams): Promise<void>;
     enableReceiver(resourceGroupName: string, actionGroupName: string, enableRequest: EnableRequest, options?: ActionGroupsEnableReceiverOptionalParams): Promise<void>;
     get(resourceGroupName: string, actionGroupName: string, options?: ActionGroupsGetOptionalParams): Promise<ActionGroupsGetResponse>;
+    getNSP(resourceGroupName: string, actionGroupName: string, configurationName: string, options?: ActionGroupsGetNSPOptionalParams): Promise<ActionGroupsGetNSPResponse>;
     getTestNotificationsAtActionGroupResourceLevel(resourceGroupName: string, actionGroupName: string, notificationId: string, options?: ActionGroupsGetTestNotificationsAtActionGroupResourceLevelOptionalParams): Promise<ActionGroupsGetTestNotificationsAtActionGroupResourceLevelResponse>;
     listByResourceGroup(resourceGroupName: string, options?: ActionGroupsListByResourceGroupOptionalParams): PagedAsyncIterableIterator<ActionGroupResource>;
     listBySubscriptionId(options?: ActionGroupsListBySubscriptionIdOptionalParams): PagedAsyncIterableIterator<ActionGroupResource>;
+    listNSP(resourceGroupName: string, actionGroupName: string, options?: ActionGroupsListNSPOptionalParams): PagedAsyncIterableIterator<NetworkSecurityPerimeterConfiguration>;
     update(resourceGroupName: string, actionGroupName: string, actionGroupPatch: ActionGroupPatchBody, options?: ActionGroupsUpdateOptionalParams): Promise<ActionGroupsUpdateResponse>;
 }
 
@@ -138,6 +142,13 @@ export interface ActionGroupsEnableReceiverOptionalParams extends coreClient.Ope
 }
 
 // @public
+export interface ActionGroupsGetNSPOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type ActionGroupsGetNSPResponse = NetworkSecurityPerimeterConfiguration;
+
+// @public
 export interface ActionGroupsGetOptionalParams extends coreClient.OperationOptions {
 }
 
@@ -164,6 +175,35 @@ export interface ActionGroupsListBySubscriptionIdOptionalParams extends coreClie
 
 // @public
 export type ActionGroupsListBySubscriptionIdResponse = ActionGroupList;
+
+// @public
+export interface ActionGroupsListNSPNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type ActionGroupsListNSPNextResponse = NetworkSecurityPerimeterConfigurationListResult;
+
+// @public
+export interface ActionGroupsListNSPOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type ActionGroupsListNSPResponse = NetworkSecurityPerimeterConfigurationListResult;
+
+// @public
+export interface ActionGroupsReconcileNSPHeaders {
+    // (undocumented)
+    location?: string;
+}
+
+// @public
+export interface ActionGroupsReconcileNSPOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type ActionGroupsReconcileNSPResponse = ActionGroupsReconcileNSPHeaders;
 
 // @public
 export interface ActionGroupsUpdateOptionalParams extends coreClient.OperationOptions {
@@ -284,6 +324,25 @@ export interface ActivityLogsListOptionalParams extends coreClient.OperationOpti
 export type ActivityLogsListResponse = EventDataCollection;
 
 // @public
+export interface AdxDestination {
+    databaseName?: string;
+    readonly ingestionUri?: string;
+    name?: string;
+    resourceId?: string;
+}
+
+// @public
+export interface AgentSetting {
+    name?: KnownAgentSettingName;
+    value?: string;
+}
+
+// @public
+export interface AgentSettingsSpec {
+    logs?: AgentSetting[];
+}
+
+// @public
 export type AggregationType = "None" | "Average" | "Count" | "Minimum" | "Maximum" | "Total";
 
 // @public
@@ -341,7 +400,7 @@ export interface AlertRulePatchObject {
 }
 
 // @public
-export interface AlertRuleResource extends ResourceAutoGenerated3 {
+export interface AlertRuleResource extends ResourceAutoGenerated4 {
     action?: RuleActionUnion;
     actions?: RuleActionUnion[];
     condition: RuleConditionUnion;
@@ -473,7 +532,7 @@ export interface AutoscaleProfile {
 }
 
 // @public
-export interface AutoscaleSettingResource extends ResourceAutoGenerated2 {
+export interface AutoscaleSettingResource extends ResourceAutoGenerated3 {
     enabled?: boolean;
     namePropertiesName?: string;
     notifications?: AutoscaleNotification[];
@@ -924,11 +983,15 @@ export interface DataCollectionEndpointResourceSystemData extends SystemData {
 
 // @public
 export interface DataCollectionEndpoints {
+    beginReconcileNSP(resourceGroupName: string, dataCollectionEndpointName: string, configurationName: string, options?: DataCollectionEndpointsReconcileNSPOptionalParams): Promise<SimplePollerLike<OperationState<DataCollectionEndpointsReconcileNSPResponse>, DataCollectionEndpointsReconcileNSPResponse>>;
+    beginReconcileNSPAndWait(resourceGroupName: string, dataCollectionEndpointName: string, configurationName: string, options?: DataCollectionEndpointsReconcileNSPOptionalParams): Promise<DataCollectionEndpointsReconcileNSPResponse>;
     create(resourceGroupName: string, dataCollectionEndpointName: string, options?: DataCollectionEndpointsCreateOptionalParams): Promise<DataCollectionEndpointsCreateResponse>;
     delete(resourceGroupName: string, dataCollectionEndpointName: string, options?: DataCollectionEndpointsDeleteOptionalParams): Promise<void>;
     get(resourceGroupName: string, dataCollectionEndpointName: string, options?: DataCollectionEndpointsGetOptionalParams): Promise<DataCollectionEndpointsGetResponse>;
+    getNSP(resourceGroupName: string, dataCollectionEndpointName: string, configurationName: string, options?: DataCollectionEndpointsGetNSPOptionalParams): Promise<DataCollectionEndpointsGetNSPResponse>;
     listByResourceGroup(resourceGroupName: string, options?: DataCollectionEndpointsListByResourceGroupOptionalParams): PagedAsyncIterableIterator<DataCollectionEndpointResource>;
     listBySubscription(options?: DataCollectionEndpointsListBySubscriptionOptionalParams): PagedAsyncIterableIterator<DataCollectionEndpointResource>;
+    listNSP(resourceGroupName: string, dataCollectionEndpointName: string, options?: DataCollectionEndpointsListNSPOptionalParams): PagedAsyncIterableIterator<NetworkSecurityPerimeterConfiguration>;
     update(resourceGroupName: string, dataCollectionEndpointName: string, options?: DataCollectionEndpointsUpdateOptionalParams): Promise<DataCollectionEndpointsUpdateResponse>;
 }
 
@@ -943,6 +1006,13 @@ export type DataCollectionEndpointsCreateResponse = DataCollectionEndpointResour
 // @public
 export interface DataCollectionEndpointsDeleteOptionalParams extends coreClient.OperationOptions {
 }
+
+// @public
+export interface DataCollectionEndpointsGetNSPOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type DataCollectionEndpointsGetNSPResponse = NetworkSecurityPerimeterConfiguration;
 
 // @public
 export interface DataCollectionEndpointsGetOptionalParams extends coreClient.OperationOptions {
@@ -980,6 +1050,35 @@ export interface DataCollectionEndpointsListBySubscriptionOptionalParams extends
 export type DataCollectionEndpointsListBySubscriptionResponse = DataCollectionEndpointResourceListResult;
 
 // @public
+export interface DataCollectionEndpointsListNSPNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type DataCollectionEndpointsListNSPNextResponse = NetworkSecurityPerimeterConfigurationListResult;
+
+// @public
+export interface DataCollectionEndpointsListNSPOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type DataCollectionEndpointsListNSPResponse = NetworkSecurityPerimeterConfigurationListResult;
+
+// @public
+export interface DataCollectionEndpointsReconcileNSPHeaders {
+    // (undocumented)
+    location?: string;
+}
+
+// @public
+export interface DataCollectionEndpointsReconcileNSPOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type DataCollectionEndpointsReconcileNSPResponse = DataCollectionEndpointsReconcileNSPHeaders;
+
+// @public
 export interface DataCollectionEndpointsUpdateOptionalParams extends coreClient.OperationOptions {
     body?: ResourceForUpdate;
 }
@@ -989,17 +1088,24 @@ export type DataCollectionEndpointsUpdateResponse = DataCollectionEndpointResour
 
 // @public
 export interface DataCollectionRule {
+    agentSettings?: DataCollectionRuleAgentSettings;
     dataCollectionEndpointId?: string;
     dataFlows?: DataFlow[];
     dataSources?: DataCollectionRuleDataSources;
     description?: string;
     destinations?: DataCollectionRuleDestinations;
+    readonly endpoints?: DataCollectionRuleEndpoints;
     readonly immutableId?: string;
     readonly metadata?: DataCollectionRuleMetadata;
     readonly provisioningState?: KnownDataCollectionRuleProvisioningState;
+    references?: DataCollectionRuleReferences;
     streamDeclarations?: {
         [propertyName: string]: StreamDeclaration;
     };
+}
+
+// @public
+export interface DataCollectionRuleAgentSettings extends AgentSettingsSpec {
 }
 
 // @public
@@ -1123,16 +1229,26 @@ export interface DataCollectionRuleDestinations extends DestinationsSpec {
 }
 
 // @public
+export interface DataCollectionRuleEndpoints extends EndpointsSpec {
+}
+
+// @public
 export interface DataCollectionRuleMetadata extends Metadata {
 }
 
 // @public
+export interface DataCollectionRuleReferences extends ReferencesSpec {
+}
+
+// @public
 export interface DataCollectionRuleResource {
+    agentSettings?: DataCollectionRuleAgentSettings;
     dataCollectionEndpointId?: string;
     dataFlows?: DataFlow[];
     dataSources?: DataCollectionRuleDataSources;
     description?: string;
     destinations?: DataCollectionRuleDestinations;
+    readonly endpoints?: DataCollectionRuleEndpoints;
     readonly etag?: string;
     readonly id?: string;
     identity?: DataCollectionRuleResourceIdentity;
@@ -1142,6 +1258,7 @@ export interface DataCollectionRuleResource {
     readonly metadata?: DataCollectionRuleMetadata;
     readonly name?: string;
     readonly provisioningState?: KnownDataCollectionRuleProvisioningState;
+    references?: DataCollectionRuleReferences;
     streamDeclarations?: {
         [propertyName: string]: StreamDeclaration;
     };
@@ -1190,6 +1307,7 @@ export type DataCollectionRulesCreateResponse = DataCollectionRuleResource;
 
 // @public
 export interface DataCollectionRulesDeleteOptionalParams extends coreClient.OperationOptions {
+    deleteAssociations?: boolean;
 }
 
 // @public
@@ -1243,6 +1361,7 @@ export interface DataContainer {
 // @public
 export interface DataFlow {
     builtInTransform?: string;
+    captureOverflow?: boolean;
     destinations?: string[];
     outputStream?: string;
     streams?: KnownDataFlowStreams[];
@@ -1281,15 +1400,17 @@ export type DataStatus = string;
 
 // @public
 export interface DefaultErrorResponse {
-    error?: ErrorDetailAutoGenerated;
+    error?: ErrorDetailAutoGenerated2;
 }
 
 // @public
 export interface DestinationsSpec {
+    azureDataExplorer?: AdxDestination[];
     azureMonitorMetrics?: DestinationsSpecAzureMonitorMetrics;
     eventHubs?: EventHubDestination[];
     eventHubsDirect?: EventHubDirectDestination[];
     logAnalytics?: LogAnalyticsDestination[];
+    microsoftFabric?: MicrosoftFabricDestination[];
     monitoringAccounts?: MonitoringAccountDestination[];
     storageAccounts?: StorageBlobDestination[];
     storageBlobsDirect?: StorageBlobDestination[];
@@ -1329,7 +1450,7 @@ export interface DiagnosticSettingsCategoryListOptionalParams extends coreClient
 export type DiagnosticSettingsCategoryListResponse = DiagnosticSettingsCategoryResourceCollection;
 
 // @public
-export interface DiagnosticSettingsCategoryResource extends ResourceAutoGenerated5 {
+export interface DiagnosticSettingsCategoryResource extends Resource {
     categoryGroups?: string[];
     categoryType?: CategoryType;
     readonly systemData?: SystemData;
@@ -1366,7 +1487,7 @@ export interface DiagnosticSettingsListOptionalParams extends coreClient.Operati
 export type DiagnosticSettingsListResponse = DiagnosticSettingsResourceCollection;
 
 // @public
-export interface DiagnosticSettingsResource extends ResourceAutoGenerated5 {
+export interface DiagnosticSettingsResource extends Resource {
     eventHubAuthorizationRuleId?: string;
     eventHubName?: string;
     logAnalyticsDestinationType?: string;
@@ -1444,6 +1565,17 @@ export interface EnableRequest {
 }
 
 // @public
+export interface EndpointsSpec {
+    readonly logsIngestion?: string;
+    readonly metricsIngestion?: string;
+}
+
+// @public
+export interface EnrichmentData {
+    storageBlobs?: StorageBlob[];
+}
+
+// @public
 export interface ErrorAdditionalInfo {
     readonly info?: Record<string, unknown>;
     readonly type?: string;
@@ -1451,7 +1583,7 @@ export interface ErrorAdditionalInfo {
 
 // @public
 export interface ErrorContract {
-    error?: ErrorResponseAutoGenerated;
+    error?: ErrorResponseAutoGenerated2;
 }
 
 // @public
@@ -1473,6 +1605,15 @@ export interface ErrorDetailAutoGenerated {
 }
 
 // @public
+export interface ErrorDetailAutoGenerated2 {
+    readonly additionalInfo?: ErrorAdditionalInfo[];
+    readonly code?: string;
+    readonly details?: ErrorDetailAutoGenerated2[];
+    readonly message?: string;
+    readonly target?: string;
+}
+
+// @public
 export interface ErrorModel {
     code: string;
     message?: string;
@@ -1480,22 +1621,22 @@ export interface ErrorModel {
 
 // @public
 export interface ErrorResponse {
+    error?: ErrorDetail;
+}
+
+// @public
+export interface ErrorResponseAutoGenerated {
     code?: string;
     message?: string;
 }
 
 // @public
-export interface ErrorResponseAutoGenerated {
+export interface ErrorResponseAutoGenerated2 {
     readonly additionalInfo?: ErrorAdditionalInfo[];
     readonly code?: string;
-    readonly details?: ErrorResponseAutoGenerated[];
+    readonly details?: ErrorResponseAutoGenerated2[];
     readonly message?: string;
     readonly target?: string;
-}
-
-// @public
-export interface ErrorResponseAutoGenerated2 {
-    error?: ErrorDetail;
 }
 
 // @public
@@ -1505,13 +1646,18 @@ export interface ErrorResponseAutoGenerated3 {
 
 // @public
 export interface ErrorResponseAutoGenerated4 {
+    error?: ErrorDetailAutoGenerated2;
+}
+
+// @public
+export interface ErrorResponseAutoGenerated5 {
     readonly code?: string;
     readonly message?: string;
 }
 
 // @public
 export interface ErrorResponseCommonV2 {
-    error?: ErrorDetailAutoGenerated;
+    error?: ErrorDetailAutoGenerated2;
 }
 
 // @public
@@ -1652,6 +1798,7 @@ export interface IisLogsDataSource {
     logDirectories?: string[];
     name?: string;
     streams: string[];
+    transformKql?: string;
 }
 
 // @public
@@ -1696,6 +1843,9 @@ export enum KnownAccessMode {
 export enum KnownActionType {
     Internal = "Internal"
 }
+
+// @public
+export type KnownAgentSettingName = string;
 
 // @public
 export enum KnownAggregationTypeEnum {
@@ -1799,6 +1949,12 @@ export enum KnownKind {
 }
 
 // @public
+export enum KnownKnownAgentSettingName {
+    MaxDiskQuotaInMB = "MaxDiskQuotaInMB",
+    UseTimeReceivedForForwardedEvents = "UseTimeReceivedForForwardedEvents"
+}
+
+// @public
 export enum KnownKnownColumnDefinitionType {
     Boolean = "boolean",
     Datetime = "datetime",
@@ -1881,6 +2037,7 @@ export enum KnownKnownLocationSpecProvisioningStatus {
 
 // @public
 export enum KnownKnownLogFilesDataSourceFormat {
+    Json = "json",
     Text = "text"
 }
 
@@ -1913,6 +2070,12 @@ export enum KnownKnownPublicNetworkAccessOptions {
     Disabled = "Disabled",
     Enabled = "Enabled",
     SecuredByPerimeter = "SecuredByPerimeter"
+}
+
+// @public
+export enum KnownKnownStorageBlobLookupType {
+    Cidr = "Cidr",
+    String = "String"
 }
 
 // @public
@@ -1968,6 +2131,13 @@ export enum KnownKnownSyslogDataSourceStreams {
 export enum KnownKnownWindowsEventLogDataSourceStreams {
     MicrosoftEvent = "Microsoft-Event",
     MicrosoftWindowsEvent = "Microsoft-WindowsEvent"
+}
+
+// @public
+export enum KnownKnownWindowsFirewallLogsDataSourceProfileFilter {
+    Domain = "Domain",
+    Private = "Private",
+    Public = "Public"
 }
 
 // @public
@@ -2112,6 +2282,9 @@ export enum KnownScaleRuleMetricDimensionOperationType {
 }
 
 // @public
+export type KnownStorageBlobLookupType = string;
+
+// @public
 export type KnownSyslogDataSourceFacilityNames = string;
 
 // @public
@@ -2131,6 +2304,9 @@ export enum KnownTimeAggregation {
 
 // @public
 export type KnownWindowsEventLogDataSourceStreams = string;
+
+// @public
+export type KnownWindowsFirewallLogsDataSourceProfileFilter = string;
 
 // @public
 export interface LocalizableString {
@@ -2171,6 +2347,7 @@ export interface LogFilesDataSource {
     name?: string;
     settings?: LogFilesDataSourceSettings;
     streams: string[];
+    transformKql?: string;
 }
 
 // @public
@@ -2205,7 +2382,7 @@ export interface LogProfileCollection {
 }
 
 // @public
-export interface LogProfileResource extends ResourceAutoGenerated4 {
+export interface LogProfileResource extends ResourceAutoGenerated5 {
     categories: string[];
     locations: string[];
     retentionPolicy: RetentionPolicy;
@@ -2308,6 +2485,7 @@ export interface ManagementEventRuleCondition extends RuleCondition {
 // @public
 export interface Metadata {
     readonly provisionedBy?: string;
+    readonly provisionedByImmutableId?: string;
     readonly provisionedByResourceId?: string;
 }
 
@@ -2723,6 +2901,15 @@ export interface MetricValue {
     total?: number;
 }
 
+// @public
+export interface MicrosoftFabricDestination {
+    artifactId?: string;
+    databaseName?: string;
+    ingestionUri?: string;
+    name?: string;
+    tenantId?: string;
+}
+
 // @public (undocumented)
 export class MonitorClient extends coreClient.ServiceClient {
     // (undocumented)
@@ -2788,6 +2975,8 @@ export class MonitorClient extends coreClient.ServiceClient {
     privateLinkScopeOperationStatus: PrivateLinkScopeOperationStatus;
     // (undocumented)
     privateLinkScopes: PrivateLinkScopes;
+    // (undocumented)
+    scheduledQueryRule: ScheduledQueryRule;
     // (undocumented)
     scheduledQueryRules: ScheduledQueryRules;
     // (undocumented)
@@ -2861,6 +3050,25 @@ export interface NetworkRuleSet {
 }
 
 // @public
+export interface NetworkSecurityPerimeterConfiguration extends ProxyResource {
+    // (undocumented)
+    networkSecurityPerimeter?: NSPConfigPerimeter;
+    // (undocumented)
+    profile?: NSPConfigProfile;
+    // (undocumented)
+    provisioningIssues?: NSPProvisioningIssue[];
+    readonly provisioningState?: string;
+    // (undocumented)
+    resourceAssociation?: NSPConfigAssociation;
+}
+
+// @public
+export interface NetworkSecurityPerimeterConfigurationListResult {
+    readonly nextLink?: string;
+    readonly value?: NetworkSecurityPerimeterConfiguration[];
+}
+
+// @public
 export interface NotificationRequestBody {
     alertType: string;
     armRoleReceivers?: ArmRoleReceiver[];
@@ -2874,6 +3082,88 @@ export interface NotificationRequestBody {
     smsReceivers?: SmsReceiver[];
     voiceReceivers?: VoiceReceiver[];
     webhookReceivers?: WebhookReceiver[];
+}
+
+// @public (undocumented)
+export interface NSPConfigAccessRule {
+    // (undocumented)
+    name?: string;
+    // (undocumented)
+    properties?: NSPConfigAccessRuleProperties;
+}
+
+// @public (undocumented)
+export interface NSPConfigAccessRuleProperties {
+    // (undocumented)
+    addressPrefixes?: string[];
+    // (undocumented)
+    direction?: string;
+    // (undocumented)
+    fullyQualifiedDomainNames?: string[];
+    // (undocumented)
+    networkSecurityPerimeters?: NSPConfigNetworkSecurityPerimeterRule[];
+    // (undocumented)
+    subscriptions?: string[];
+}
+
+// @public (undocumented)
+export interface NSPConfigAssociation {
+    // (undocumented)
+    accessMode?: string;
+    // (undocumented)
+    name?: string;
+}
+
+// @public (undocumented)
+export interface NSPConfigNetworkSecurityPerimeterRule {
+    // (undocumented)
+    id?: string;
+    // (undocumented)
+    location?: string;
+    // (undocumented)
+    perimeterGuid?: string;
+}
+
+// @public (undocumented)
+export interface NSPConfigPerimeter {
+    // (undocumented)
+    id?: string;
+    // (undocumented)
+    location?: string;
+    // (undocumented)
+    perimeterGuid?: string;
+}
+
+// @public (undocumented)
+export interface NSPConfigProfile {
+    // (undocumented)
+    accessRules?: NSPConfigAccessRule[];
+    // (undocumented)
+    accessRulesVersion?: string;
+    // (undocumented)
+    name?: string;
+}
+
+// @public (undocumented)
+export interface NSPProvisioningIssue {
+    // (undocumented)
+    name?: string;
+    // (undocumented)
+    properties?: NSPProvisioningIssueProperties;
+}
+
+// @public (undocumented)
+export interface NSPProvisioningIssueProperties {
+    // (undocumented)
+    description?: string;
+    // (undocumented)
+    issueType?: string;
+    // (undocumented)
+    severity?: string;
+    // (undocumented)
+    suggestedAccessRules?: string[];
+    // (undocumented)
+    suggestedResourceIds?: string[];
 }
 
 // @public
@@ -2939,7 +3229,7 @@ export type OperationsListResponse = OperationListResultAutoGenerated;
 // @public
 export interface OperationStatus {
     endTime?: Date;
-    error?: ErrorDetailAutoGenerated;
+    error?: ErrorDetailAutoGenerated2;
     id?: string;
     name?: string;
     startTime?: Date;
@@ -2958,6 +3248,7 @@ export interface PerfCounterDataSource {
     name?: string;
     samplingFrequencyInSeconds?: number;
     streams?: KnownPerfCounterDataSourceStreams[];
+    transformKql?: string;
 }
 
 // @public
@@ -3013,7 +3304,7 @@ export interface PrivateEndpointAutoGenerated {
 }
 
 // @public
-export interface PrivateEndpointConnection extends Resource {
+export interface PrivateEndpointConnection extends ResourceAutoGenerated {
     readonly groupIds?: string[];
     privateEndpoint?: PrivateEndpoint;
     privateLinkServiceConnectionState?: PrivateLinkServiceConnectionState;
@@ -3021,7 +3312,7 @@ export interface PrivateEndpointConnection extends Resource {
 }
 
 // @public
-export interface PrivateEndpointConnectionAutoGenerated extends ResourceAutoGenerated5 {
+export interface PrivateEndpointConnectionAutoGenerated extends Resource {
     privateEndpoint?: PrivateEndpointAutoGenerated;
     privateLinkServiceConnectionState?: PrivateLinkServiceConnectionState;
     provisioningState?: PrivateEndpointConnectionProvisioningState;
@@ -3078,7 +3369,7 @@ export type PrivateEndpointConnectionsListByPrivateLinkScopeResponse = PrivateEn
 export type PrivateEndpointServiceConnectionStatus = string;
 
 // @public
-export interface PrivateLinkResource extends ResourceAutoGenerated5 {
+export interface PrivateLinkResource extends Resource {
     readonly groupId?: string;
     readonly requiredMembers?: string[];
     requiredZoneNames?: string[];
@@ -3259,14 +3550,14 @@ export interface PrometheusForwarderDataSource {
 export type ProvisioningState = string;
 
 // @public
-export interface ProxyResource {
-    readonly id?: string;
-    readonly name?: string;
-    readonly type?: string;
+export interface ProxyResource extends Resource {
 }
 
 // @public
-export interface ProxyResourceAutoGenerated extends ResourceAutoGenerated5 {
+export interface ProxyResourceAutoGenerated {
+    readonly id?: string;
+    readonly name?: string;
+    readonly type?: string;
 }
 
 // @public
@@ -3293,10 +3584,18 @@ export interface RecurrentSchedule {
 }
 
 // @public
+export interface ReferencesSpec {
+    enrichmentData?: ReferencesSpecEnrichmentData;
+}
+
+// @public
+export interface ReferencesSpecEnrichmentData extends EnrichmentData {
+}
+
+// @public
 export interface Resource {
     readonly id?: string;
     readonly name?: string;
-    readonly systemData?: SystemData;
     readonly type?: string;
 }
 
@@ -3311,12 +3610,8 @@ export interface ResourceAutoGenerated {
 // @public
 export interface ResourceAutoGenerated2 {
     readonly id?: string;
-    location: string;
     readonly name?: string;
     readonly systemData?: SystemData;
-    tags?: {
-        [propertyName: string]: string;
-    };
     readonly type?: string;
 }
 
@@ -3325,6 +3620,7 @@ export interface ResourceAutoGenerated3 {
     readonly id?: string;
     location: string;
     readonly name?: string;
+    readonly systemData?: SystemData;
     tags?: {
         [propertyName: string]: string;
     };
@@ -3345,7 +3641,11 @@ export interface ResourceAutoGenerated4 {
 // @public
 export interface ResourceAutoGenerated5 {
     readonly id?: string;
+    location: string;
     readonly name?: string;
+    tags?: {
+        [propertyName: string]: string;
+    };
     readonly type?: string;
 }
 
@@ -3511,9 +3811,53 @@ export type ScaleRuleMetricDimensionOperationType = string;
 export type ScaleType = "ChangeCount" | "PercentChangeCount" | "ExactCount" | "ServiceAllowedNextValue";
 
 // @public
+export interface ScheduledQueryRule {
+    beginReconcileNSP(resourceGroupName: string, ruleName: string, configurationName: string, options?: ScheduledQueryRuleReconcileNSPOptionalParams): Promise<SimplePollerLike<OperationState<ScheduledQueryRuleReconcileNSPResponse>, ScheduledQueryRuleReconcileNSPResponse>>;
+    beginReconcileNSPAndWait(resourceGroupName: string, ruleName: string, configurationName: string, options?: ScheduledQueryRuleReconcileNSPOptionalParams): Promise<ScheduledQueryRuleReconcileNSPResponse>;
+    getNSP(resourceGroupName: string, ruleName: string, configurationName: string, options?: ScheduledQueryRuleGetNSPOptionalParams): Promise<ScheduledQueryRuleGetNSPResponse>;
+    listNSP(resourceGroupName: string, ruleName: string, options?: ScheduledQueryRuleListNSPOptionalParams): PagedAsyncIterableIterator<NetworkSecurityPerimeterConfiguration>;
+}
+
+// @public
 export interface ScheduledQueryRuleCriteria {
     allOf?: Condition[];
 }
+
+// @public
+export interface ScheduledQueryRuleGetNSPOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type ScheduledQueryRuleGetNSPResponse = NetworkSecurityPerimeterConfiguration;
+
+// @public
+export interface ScheduledQueryRuleListNSPNextOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type ScheduledQueryRuleListNSPNextResponse = NetworkSecurityPerimeterConfigurationListResult;
+
+// @public
+export interface ScheduledQueryRuleListNSPOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type ScheduledQueryRuleListNSPResponse = NetworkSecurityPerimeterConfigurationListResult;
+
+// @public
+export interface ScheduledQueryRuleReconcileNSPHeaders {
+    // (undocumented)
+    location?: string;
+}
+
+// @public
+export interface ScheduledQueryRuleReconcileNSPOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type ScheduledQueryRuleReconcileNSPResponse = ScheduledQueryRuleReconcileNSPHeaders;
 
 // @public
 export interface ScheduledQueryRuleResource {
@@ -3646,7 +3990,7 @@ export interface ScheduledQueryRulesUpdateOptionalParams extends coreClient.Oper
 export type ScheduledQueryRulesUpdateResponse = ScheduledQueryRuleResource;
 
 // @public
-export interface ScopedResource extends ProxyResourceAutoGenerated {
+export interface ScopedResource extends ProxyResource {
     linkedResourceId?: string;
     readonly provisioningState?: string;
     readonly systemData?: SystemData;
@@ -3697,6 +4041,14 @@ export interface SmsReceiverAutoGenerated {
     name: string;
     phoneNumber: string;
     readonly status?: ReceiverStatus;
+}
+
+// @public (undocumented)
+export interface StorageBlob {
+    blobUrl?: string;
+    lookupType?: KnownStorageBlobLookupType;
+    name?: string;
+    resourceId?: string;
 }
 
 // @public (undocumented)
@@ -3762,6 +4114,7 @@ export interface SyslogDataSource {
     logLevels?: KnownSyslogDataSourceLogLevels[];
     name?: string;
     streams?: KnownSyslogDataSourceStreams[];
+    transformKql?: string;
 }
 
 // @public
@@ -3929,7 +4282,7 @@ export interface TimeWindow {
 }
 
 // @public
-export interface TrackedResource extends ResourceAutoGenerated {
+export interface TrackedResource extends ResourceAutoGenerated2 {
     location: string;
     tags?: {
         [propertyName: string]: string;
@@ -3937,7 +4290,7 @@ export interface TrackedResource extends ResourceAutoGenerated {
 }
 
 // @public
-export interface TrackedResourceAutoGenerated extends ResourceAutoGenerated5 {
+export interface TrackedResourceAutoGenerated extends Resource {
     location: string;
     tags?: {
         [propertyName: string]: string;
@@ -3969,7 +4322,7 @@ export interface VMInsightsGetOnboardingStatusOptionalParams extends coreClient.
 export type VMInsightsGetOnboardingStatusResponse = VMInsightsOnboardingStatus;
 
 // @public
-export interface VMInsightsOnboardingStatus extends ProxyResource {
+export interface VMInsightsOnboardingStatus extends ProxyResourceAutoGenerated {
     data?: DataContainer[];
     dataStatus?: DataStatus;
     onboardingStatus?: OnboardingStatus;
@@ -4032,12 +4385,14 @@ export interface WebtestLocationAvailabilityCriteria extends MetricAlertCriteria
 export interface WindowsEventLogDataSource {
     name?: string;
     streams?: KnownWindowsEventLogDataSourceStreams[];
+    transformKql?: string;
     xPathQueries?: string[];
 }
 
 // @public
 export interface WindowsFirewallLogsDataSource {
     name?: string;
+    profileFilter?: KnownWindowsFirewallLogsDataSourceProfileFilter[];
     streams: string[];
 }
 
