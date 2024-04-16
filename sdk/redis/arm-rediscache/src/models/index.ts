@@ -229,6 +229,8 @@ export interface RedisCommonPropertiesRedisConfiguration {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly maxclients?: string;
+  /** The keyspace events which should be monitored. */
+  notifyKeyspaceEvents?: string;
   /**
    * Preferred auth method to communicate to storage account used for data archive, specify SAS or ManagedIdentity, default value is SAS
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -903,7 +905,7 @@ export enum KnownSkuName {
   /** Standard */
   Standard = "Standard",
   /** Premium */
-  Premium = "Premium"
+  Premium = "Premium",
 }
 
 /**
@@ -922,7 +924,7 @@ export enum KnownSkuFamily {
   /** C */
   C = "C",
   /** P */
-  P = "P"
+  P = "P",
 }
 
 /**
@@ -942,7 +944,7 @@ export enum KnownTlsVersion {
   /** One1 */
   One1 = "1.1",
   /** One2 */
-  One2 = "1.2"
+  One2 = "1.2",
 }
 
 /**
@@ -961,7 +963,7 @@ export enum KnownPublicNetworkAccess {
   /** Enabled */
   Enabled = "Enabled",
   /** Disabled */
-  Disabled = "Disabled"
+  Disabled = "Disabled",
 }
 
 /**
@@ -979,7 +981,7 @@ export enum KnownUpdateChannel {
   /** Stable */
   Stable = "Stable",
   /** Preview */
-  Preview = "Preview"
+  Preview = "Preview",
 }
 
 /**
@@ -1001,7 +1003,7 @@ export enum KnownManagedServiceIdentityType {
   /** UserAssigned */
   UserAssigned = "UserAssigned",
   /** SystemAssignedUserAssigned */
-  SystemAssignedUserAssigned = "SystemAssigned, UserAssigned"
+  SystemAssignedUserAssigned = "SystemAssigned, UserAssigned",
 }
 
 /**
@@ -1043,7 +1045,7 @@ export enum KnownProvisioningState {
   /** Updating */
   Updating = "Updating",
   /** ConfiguringAAD */
-  ConfiguringAAD = "ConfiguringAAD"
+  ConfiguringAAD = "ConfiguringAAD",
 }
 
 /**
@@ -1074,7 +1076,7 @@ export enum KnownPrivateEndpointServiceConnectionStatus {
   /** Approved */
   Approved = "Approved",
   /** Rejected */
-  Rejected = "Rejected"
+  Rejected = "Rejected",
 }
 
 /**
@@ -1097,7 +1099,7 @@ export enum KnownPrivateEndpointConnectionProvisioningState {
   /** Deleting */
   Deleting = "Deleting",
   /** Failed */
-  Failed = "Failed"
+  Failed = "Failed",
 }
 
 /**
@@ -1119,7 +1121,7 @@ export enum KnownRebootType {
   /** SecondaryNode */
   SecondaryNode = "SecondaryNode",
   /** AllNodes */
-  AllNodes = "AllNodes"
+  AllNodes = "AllNodes",
 }
 
 /**
@@ -1136,7 +1138,7 @@ export type RebootType = string;
 /** Known values of {@link DefaultName} that the service accepts. */
 export enum KnownDefaultName {
   /** Default */
-  Default = "default"
+  Default = "default",
 }
 
 /**
@@ -1161,7 +1163,7 @@ export enum KnownAccessPolicyProvisioningState {
   /** Canceled */
   Canceled = "Canceled",
   /** Failed */
-  Failed = "Failed"
+  Failed = "Failed",
 }
 
 /**
@@ -1183,7 +1185,7 @@ export enum KnownAccessPolicyType {
   /** Custom */
   Custom = "Custom",
   /** BuiltIn */
-  BuiltIn = "BuiltIn"
+  BuiltIn = "BuiltIn",
 }
 
 /**
@@ -1209,7 +1211,7 @@ export enum KnownAccessPolicyAssignmentProvisioningState {
   /** Canceled */
   Canceled = "Canceled",
   /** Failed */
-  Failed = "Failed"
+  Failed = "Failed",
 }
 
 /**
@@ -1373,7 +1375,8 @@ export interface RedisListUpgradeNotificationsNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listUpgradeNotificationsNext operation. */
-export type RedisListUpgradeNotificationsNextResponse = NotificationListResponse;
+export type RedisListUpgradeNotificationsNextResponse =
+  NotificationListResponse;
 
 /** Optional parameters. */
 export interface RedisListByResourceGroupNextOptionalParams
@@ -1426,7 +1429,8 @@ export interface PatchSchedulesListByRedisResourceOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByRedisResource operation. */
-export type PatchSchedulesListByRedisResourceResponse = RedisPatchScheduleListResult;
+export type PatchSchedulesListByRedisResourceResponse =
+  RedisPatchScheduleListResult;
 
 /** Optional parameters. */
 export interface PatchSchedulesCreateOrUpdateOptionalParams
@@ -1451,7 +1455,8 @@ export interface PatchSchedulesListByRedisResourceNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByRedisResourceNext operation. */
-export type PatchSchedulesListByRedisResourceNextResponse = RedisPatchScheduleListResult;
+export type PatchSchedulesListByRedisResourceNextResponse =
+  RedisPatchScheduleListResult;
 
 /** Optional parameters. */
 export interface LinkedServerCreateOptionalParams
@@ -1500,7 +1505,8 @@ export interface PrivateEndpointConnectionsListOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
-export type PrivateEndpointConnectionsListResponse = PrivateEndpointConnectionListResult;
+export type PrivateEndpointConnectionsListResponse =
+  PrivateEndpointConnectionListResult;
 
 /** Optional parameters. */
 export interface PrivateEndpointConnectionsGetOptionalParams
@@ -1530,7 +1536,8 @@ export interface PrivateLinkResourcesListByRedisCacheOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listByRedisCache operation. */
-export type PrivateLinkResourcesListByRedisCacheResponse = PrivateLinkResourceListResult;
+export type PrivateLinkResourcesListByRedisCacheResponse =
+  PrivateLinkResourceListResult;
 
 /** Optional parameters. */
 export interface AsyncOperationStatusGetOptionalParams
@@ -1591,7 +1598,8 @@ export interface AccessPolicyAssignmentCreateUpdateOptionalParams
 }
 
 /** Contains response data for the createUpdate operation. */
-export type AccessPolicyAssignmentCreateUpdateResponse = RedisCacheAccessPolicyAssignment;
+export type AccessPolicyAssignmentCreateUpdateResponse =
+  RedisCacheAccessPolicyAssignment;
 
 /** Optional parameters. */
 export interface AccessPolicyAssignmentDeleteOptionalParams
@@ -1607,21 +1615,24 @@ export interface AccessPolicyAssignmentGetOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
-export type AccessPolicyAssignmentGetResponse = RedisCacheAccessPolicyAssignment;
+export type AccessPolicyAssignmentGetResponse =
+  RedisCacheAccessPolicyAssignment;
 
 /** Optional parameters. */
 export interface AccessPolicyAssignmentListOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
-export type AccessPolicyAssignmentListResponse = RedisCacheAccessPolicyAssignmentList;
+export type AccessPolicyAssignmentListResponse =
+  RedisCacheAccessPolicyAssignmentList;
 
 /** Optional parameters. */
 export interface AccessPolicyAssignmentListNextOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
-export type AccessPolicyAssignmentListNextResponse = RedisCacheAccessPolicyAssignmentList;
+export type AccessPolicyAssignmentListNextResponse =
+  RedisCacheAccessPolicyAssignmentList;
 
 /** Optional parameters. */
 export interface RedisManagementClientOptionalParams
