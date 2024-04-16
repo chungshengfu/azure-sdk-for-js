@@ -833,13 +833,6 @@ export const SupportedSku: coreClient.CompositeMapper = {
           },
         },
       },
-      batchSupportEndOfLife: {
-        serializedName: "batchSupportEndOfLife",
-        readOnly: true,
-        type: {
-          name: "DateTime",
-        },
-      },
     },
   },
 };
@@ -1399,6 +1392,7 @@ export const ImageReference: coreClient.CompositeMapper = {
         },
       },
       version: {
+        defaultValue: "latest",
         serializedName: "version",
         type: {
           name: "String",
@@ -2842,133 +2836,6 @@ export const AzureFileShareConfiguration: coreClient.CompositeMapper = {
   },
 };
 
-export const UpgradePolicy: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "UpgradePolicy",
-    modelProperties: {
-      mode: {
-        serializedName: "mode",
-        required: true,
-        type: {
-          name: "Enum",
-          allowedValues: ["automatic", "manual", "rolling"],
-        },
-      },
-      automaticOSUpgradePolicy: {
-        serializedName: "automaticOSUpgradePolicy",
-        type: {
-          name: "Composite",
-          className: "AutomaticOSUpgradePolicy",
-        },
-      },
-      rollingUpgradePolicy: {
-        serializedName: "rollingUpgradePolicy",
-        type: {
-          name: "Composite",
-          className: "RollingUpgradePolicy",
-        },
-      },
-    },
-  },
-};
-
-export const AutomaticOSUpgradePolicy: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "AutomaticOSUpgradePolicy",
-    modelProperties: {
-      disableAutomaticRollback: {
-        serializedName: "disableAutomaticRollback",
-        type: {
-          name: "Boolean",
-        },
-      },
-      enableAutomaticOSUpgrade: {
-        serializedName: "enableAutomaticOSUpgrade",
-        type: {
-          name: "Boolean",
-        },
-      },
-      useRollingUpgradePolicy: {
-        serializedName: "useRollingUpgradePolicy",
-        type: {
-          name: "Boolean",
-        },
-      },
-      osRollingUpgradeDeferral: {
-        serializedName: "osRollingUpgradeDeferral",
-        type: {
-          name: "Boolean",
-        },
-      },
-    },
-  },
-};
-
-export const RollingUpgradePolicy: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "RollingUpgradePolicy",
-    modelProperties: {
-      enableCrossZoneUpgrade: {
-        serializedName: "enableCrossZoneUpgrade",
-        type: {
-          name: "Boolean",
-        },
-      },
-      maxBatchInstancePercent: {
-        constraints: {
-          InclusiveMaximum: 100,
-          InclusiveMinimum: 5,
-        },
-        serializedName: "maxBatchInstancePercent",
-        type: {
-          name: "Number",
-        },
-      },
-      maxUnhealthyInstancePercent: {
-        constraints: {
-          InclusiveMaximum: 100,
-          InclusiveMinimum: 5,
-        },
-        serializedName: "maxUnhealthyInstancePercent",
-        type: {
-          name: "Number",
-        },
-      },
-      maxUnhealthyUpgradedInstancePercent: {
-        constraints: {
-          InclusiveMaximum: 100,
-          InclusiveMinimum: 0,
-        },
-        serializedName: "maxUnhealthyUpgradedInstancePercent",
-        type: {
-          name: "Number",
-        },
-      },
-      pauseTimeBetweenBatches: {
-        serializedName: "pauseTimeBetweenBatches",
-        type: {
-          name: "String",
-        },
-      },
-      prioritizeUnhealthyInstances: {
-        serializedName: "prioritizeUnhealthyInstances",
-        type: {
-          name: "Boolean",
-        },
-      },
-      rollbackFailedInstancesOnPolicyBreach: {
-        serializedName: "rollbackFailedInstancesOnPolicyBreach",
-        type: {
-          name: "Boolean",
-        },
-      },
-    },
-  },
-};
-
 export const BatchPoolIdentity: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -3649,13 +3516,6 @@ export const Pool: coreClient.CompositeMapper = {
         type: {
           name: "Enum",
           allowedValues: ["Default", "Classic", "Simplified"],
-        },
-      },
-      upgradePolicy: {
-        serializedName: "properties.upgradePolicy",
-        type: {
-          name: "Composite",
-          className: "UpgradePolicy",
         },
       },
       resourceTags: {

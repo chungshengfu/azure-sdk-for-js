@@ -1,15 +1,13 @@
 # Release History
+    
+## 10.0.0 (2024-04-16)
+    
+**Breaking Changes**
 
-## 9.2.1 (Unreleased)
-
-### Features Added
-
-### Breaking Changes
-
-### Bugs Fixed
-
-### Other Changes
-
+  - Interface Pool no longer has parameter upgradePolicy
+  - Interface SupportedSku no longer has parameter batchSupportEndOfLife
+    
+    
 ## 9.2.0 (2024-03-13)
     
 **Features**

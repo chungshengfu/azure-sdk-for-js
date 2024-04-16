@@ -349,11 +349,6 @@ export interface SupportedSku {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly capabilities?: SkuCapability[];
-  /**
-   * The time when Azure Batch service will retire this SKU.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly batchSupportEndOfLife?: Date;
 }
 
 /** A SKU capability, such as the number of cores. */
@@ -1026,46 +1021,6 @@ export interface AzureFileShareConfiguration {
   mountOptions?: string;
 }
 
-/** Describes an upgrade policy - automatic, manual, or rolling. */
-export interface UpgradePolicy {
-  /** Specifies the mode of an upgrade to virtual machines in the scale set.<br /><br /> Possible values are:<br /><br /> **Manual** - You  control the application of updates to virtual machines in the scale set. You do this by using the manualUpgrade action.<br /><br /> **Automatic** - All virtual machines in the scale set are automatically updated at the same time.<br /><br /> **Rolling** - Scale set performs updates in batches with an optional pause time in between. */
-  mode: UpgradeMode;
-  /** The configuration parameters used for performing automatic OS upgrade. */
-  automaticOSUpgradePolicy?: AutomaticOSUpgradePolicy;
-  /** This property is only supported on Pools with the virtualMachineConfiguration property. */
-  rollingUpgradePolicy?: RollingUpgradePolicy;
-}
-
-/** The configuration parameters used for performing automatic OS upgrade. */
-export interface AutomaticOSUpgradePolicy {
-  /** Whether OS image rollback feature should be disabled. */
-  disableAutomaticRollback?: boolean;
-  /** Indicates whether OS upgrades should automatically be applied to scale set instances in a rolling fashion when a newer version of the OS image becomes available. <br /><br /> If this is set to true for Windows based pools, [WindowsConfiguration.enableAutomaticUpdates](https://learn.microsoft.com/en-us/rest/api/batchmanagement/pool/create?tabs=HTTP#windowsconfiguration) cannot be set to true. */
-  enableAutomaticOSUpgrade?: boolean;
-  /** Indicates whether rolling upgrade policy should be used during Auto OS Upgrade. Auto OS Upgrade will fallback to the default policy if no policy is defined on the VMSS. */
-  useRollingUpgradePolicy?: boolean;
-  /** Defer OS upgrades on the TVMs if they are running tasks. */
-  osRollingUpgradeDeferral?: boolean;
-}
-
-/** The configuration parameters used while performing a rolling upgrade. */
-export interface RollingUpgradePolicy {
-  /** Allow VMSS to ignore AZ boundaries when constructing upgrade batches. Take into consideration the Update Domain and maxBatchInstancePercent to determine the batch size. If this field is not set, Azure Azure Batch will not set its default value. The value of enableCrossZoneUpgrade on the created VirtualMachineScaleSet will be decided by the default configurations on VirtualMachineScaleSet. This field is able to be set to true or false only when using NodePlacementConfiguration as Zonal. */
-  enableCrossZoneUpgrade?: boolean;
-  /** The maximum percent of total virtual machine instances that will be upgraded simultaneously by the rolling upgrade in one batch. As this is a maximum, unhealthy instances in previous or future batches can cause the percentage of instances in a batch to decrease to ensure higher reliability. The value of this field should be between 5 and 100, inclusive. If both maxBatchInstancePercent and maxUnhealthyInstancePercent are assigned with value, the value of maxBatchInstancePercent should not be more than maxUnhealthyInstancePercent. */
-  maxBatchInstancePercent?: number;
-  /** The maximum percentage of the total virtual machine instances in the scale set that can be simultaneously unhealthy, either as a result of being upgraded, or by being found in an unhealthy state by the virtual machine health checks before the rolling upgrade aborts. This constraint will be checked prior to starting any batch. The value of this field should be between 5 and 100, inclusive. If both maxBatchInstancePercent and maxUnhealthyInstancePercent are assigned with value, the value of maxBatchInstancePercent should not be more than maxUnhealthyInstancePercent. */
-  maxUnhealthyInstancePercent?: number;
-  /** The maximum percentage of upgraded virtual machine instances that can be found to be in an unhealthy state. This check will happen after each batch is upgraded. If this percentage is ever exceeded, the rolling update aborts. The value of this field should be between 0 and 100, inclusive. */
-  maxUnhealthyUpgradedInstancePercent?: number;
-  /** The wait time between completing the update for all virtual machines in one batch and starting the next batch. The time duration should be specified in ISO 8601 format. */
-  pauseTimeBetweenBatches?: string;
-  /** Upgrade all unhealthy instances in a scale set before any healthy instances. */
-  prioritizeUnhealthyInstances?: boolean;
-  /** Rollback failed instances to previous model if the Rolling Upgrade policy is violated. */
-  rollbackFailedInstancesOnPolicyBreach?: boolean;
-}
-
 /** The identity of the Batch pool, if configured. If the pool identity is updated during update an existing pool, only the new vms which are created after the pool shrinks to 0 will have the updated identities */
 export interface BatchPoolIdentity {
   /** The type of identity used for the Batch Pool. */
@@ -1364,8 +1319,6 @@ export interface Pool extends ProxyResource {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly currentNodeCommunicationMode?: NodeCommunicationMode;
-  /** Describes an upgrade policy - automatic, manual, or rolling. */
-  upgradePolicy?: UpgradePolicy;
   /** The user-defined tags to be associated with the Azure Batch Pool. When specified, these tags are propagated to the backing Azure resources associated with the pool. This property can only be specified when the Batch account was created with the poolAllocationMode property set to 'UserSubscription'. */
   resourceTags?: { [propertyName: string]: string };
 }
@@ -1717,8 +1670,6 @@ export type CertificateStoreLocation = "CurrentUser" | "LocalMachine";
 export type CertificateVisibility = "StartTask" | "Task" | "RemoteUser";
 /** Defines values for NodeCommunicationMode. */
 export type NodeCommunicationMode = "Default" | "Classic" | "Simplified";
-/** Defines values for UpgradeMode. */
-export type UpgradeMode = "automatic" | "manual" | "rolling";
 /** Defines values for PoolIdentityType. */
 export type PoolIdentityType = "UserAssigned" | "None";
 
