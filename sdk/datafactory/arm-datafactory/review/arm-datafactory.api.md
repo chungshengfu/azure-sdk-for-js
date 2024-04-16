@@ -747,7 +747,7 @@ export interface AzureFunctionActivity extends ExecutionActivity {
     body?: any;
     functionName: any;
     headers?: {
-        [propertyName: string]: string;
+        [propertyName: string]: any;
     };
     method: AzureFunctionActivityMethod;
     type: "AzureFunctionActivity";
@@ -1621,15 +1621,15 @@ export { Credential_2 as Credential }
 // @public
 export interface CredentialListResponse {
     nextLink?: string;
-    value: ManagedIdentityCredentialResource[];
+    value: CredentialResource[];
 }
 
 // @public
 export interface CredentialOperations {
-    createOrUpdate(resourceGroupName: string, factoryName: string, credentialName: string, credential: ManagedIdentityCredentialResource, options?: CredentialOperationsCreateOrUpdateOptionalParams): Promise<CredentialOperationsCreateOrUpdateResponse>;
+    createOrUpdate(resourceGroupName: string, factoryName: string, credentialName: string, credential: CredentialResource, options?: CredentialOperationsCreateOrUpdateOptionalParams): Promise<CredentialOperationsCreateOrUpdateResponse>;
     delete(resourceGroupName: string, factoryName: string, credentialName: string, options?: CredentialOperationsDeleteOptionalParams): Promise<void>;
     get(resourceGroupName: string, factoryName: string, credentialName: string, options?: CredentialOperationsGetOptionalParams): Promise<CredentialOperationsGetResponse>;
-    listByFactory(resourceGroupName: string, factoryName: string, options?: CredentialOperationsListByFactoryOptionalParams): PagedAsyncIterableIterator<ManagedIdentityCredentialResource>;
+    listByFactory(resourceGroupName: string, factoryName: string, options?: CredentialOperationsListByFactoryOptionalParams): PagedAsyncIterableIterator<CredentialResource>;
 }
 
 // @public
@@ -1638,7 +1638,7 @@ export interface CredentialOperationsCreateOrUpdateOptionalParams extends coreCl
 }
 
 // @public
-export type CredentialOperationsCreateOrUpdateResponse = ManagedIdentityCredentialResource;
+export type CredentialOperationsCreateOrUpdateResponse = CredentialResource;
 
 // @public
 export interface CredentialOperationsDeleteOptionalParams extends coreClient.OperationOptions {
@@ -1650,7 +1650,7 @@ export interface CredentialOperationsGetOptionalParams extends coreClient.Operat
 }
 
 // @public
-export type CredentialOperationsGetResponse = ManagedIdentityCredentialResource;
+export type CredentialOperationsGetResponse = CredentialResource;
 
 // @public
 export interface CredentialOperationsListByFactoryNextOptionalParams extends coreClient.OperationOptions {
@@ -5363,12 +5363,11 @@ export interface MagentoSource extends TabularSource {
 
 // @public
 export interface ManagedIdentityCredential extends Credential_2 {
-    resourceId?: string;
     type: "ManagedIdentity";
 }
 
 // @public
-export interface ManagedIdentityCredentialResource extends SubResource {
+export interface ManagedIdentityCredentialResource extends CredentialResource {
     properties: ManagedIdentityCredential;
 }
 
@@ -7102,6 +7101,7 @@ export interface SalesforceServiceCloudV2Sink extends CopySink {
 export interface SalesforceServiceCloudV2Source extends CopySource {
     additionalColumns?: any;
     includeDeletedObjects?: any;
+    query?: any;
     soqlQuery?: any;
     type: "SalesforceServiceCloudV2Source";
 }
@@ -7159,6 +7159,7 @@ export type SalesforceV2SinkWriteBehavior = string;
 // @public
 export interface SalesforceV2Source extends TabularSource {
     includeDeletedObjects?: any;
+    query?: any;
     soqlQuery?: any;
     type: "SalesforceV2Source";
 }
@@ -7456,7 +7457,7 @@ export type ScriptActivityParameterType = string;
 export interface ScriptActivityScriptBlock {
     parameters?: ScriptActivityParameter[];
     text: any;
-    type: ScriptType;
+    type: any;
 }
 
 // @public
@@ -7618,6 +7619,11 @@ export interface ServicePrincipalCredential extends Credential_2 {
     servicePrincipalKey?: AzureKeyVaultSecretReference;
     tenant?: any;
     type: "ServicePrincipal";
+}
+
+// @public
+export interface ServicePrincipalCredentialResource extends CredentialResource {
+    properties: ServicePrincipalCredential;
 }
 
 // @public
@@ -8885,7 +8891,7 @@ export interface WebActivity extends ExecutionActivity {
     datasets?: DatasetReference[];
     disableCertValidation?: boolean;
     headers?: {
-        [propertyName: string]: string;
+        [propertyName: string]: any;
     };
     httpRequestTimeout?: any;
     linkedServices?: LinkedServiceReference[];
@@ -8936,7 +8942,7 @@ export interface WebHookActivity extends ControlActivity {
     authentication?: WebActivityAuthentication;
     body?: any;
     headers?: {
-        [propertyName: string]: string;
+        [propertyName: string]: any;
     };
     method: WebHookActivityMethod;
     policy?: SecureInputOutputPolicy;
