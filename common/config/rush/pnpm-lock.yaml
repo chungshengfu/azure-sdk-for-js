@@ -1235,6 +1235,21 @@ packages:
       - supports-color
     dev: false
 
+  /@azure/arm-cognitiveservices@7.5.0:
+    resolution: {integrity: sha512-UA13hCXP1Ou3chmwLf4FoXibVn5mmstcVqOhR+f5Iwv1ScwdlocIMC4jn9vkrJnkSwHE+03SSax5upAkmr6fnw==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      '@azure/abort-controller': 1.1.0
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
+      tslib: 2.6.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /@azure/arm-cosmosdb@16.0.0-beta.6:
     resolution: {integrity: sha512-Ue4ocP8qCsFDeBZ/MjMNyVt4e9QhU3UgrRfZSw6kWiMzdrCgDePnZvjzZs9PQpjAsXbHGd9HlEIXg9Dl6Y/uww==}
     engines: {node: '>=14.0.0'}
@@ -8000,6 +8015,12 @@ packages:
     hasBin: true
     dev: false
 
+  /mkdirp@2.1.6:
+    resolution: {integrity: sha512-+hEnITedc8LAtIP9u3HJDFIdcLV2vXP33sqLLIzkv1Db1zO/1OxbvYf0Y1OC/S/Qo5dxHXepofhmxL02PsKe+A==}
+    engines: {node: '>=10'}
+    hasBin: true
+    dev: false
+
   /mkdirp@3.0.1:
     resolution: {integrity: sha512-+NsyUUAZDmo6YVHzL/stxSu3t9YS1iljliy3BSDrXJ/dkn1KYdmtZODGGjLcc9XLgVVpH4KshHB8XmZgMhaBXg==}
     engines: {node: '>=10'}
@@ -8894,6 +8915,7 @@ packages:
 
   /queue-tick@1.0.1:
     resolution: {integrity: sha512-kJt5qhMxoszgU/62PLP1CJytzd2NKetjSRnyuj31fDd3Rlcz3fzlFdFLD1SItunPwyqEOkca6GbV612BWfaBag==}
+    requiresBuild: true
     dev: false
 
   /randombytes@2.1.0:
@@ -12435,7 +12457,7 @@ packages:
     dev: false
 
   file:projects/arm-cognitiveservices.tgz:
-    resolution: {integrity: sha512-chTH1KiO4ZsPf6I1VhvSMjsCgYdCd3rAY7I9LbzNkDFgzu4ChVvpb/it4ZpaOKBSO0GNU9rXVAClwcNF/ln8hA==, tarball: file:projects/arm-cognitiveservices.tgz}
+    resolution: {integrity: sha512-hxKkfdMriFAP3jhpek6agqw8AROQirS9Ht/umUDKWiz7YxgjRcRADBF5YkI06Rr9ZaG8n9GTH4kVBKdTUE2t+g==, tarball: file:projects/arm-cognitiveservices.tgz}
     name: '@rush-temp/arm-cognitiveservices'
     version: 0.0.0
     dependencies:
@@ -12449,12 +12471,13 @@ packages:
       chai: 4.3.10
       cross-env: 7.0.3
       dotenv: 16.4.5
-      mkdirp: 3.0.1
+      esm: 3.2.25
+      mkdirp: 2.1.6
       mocha: 10.4.0
       rimraf: 5.0.5
-      ts-node: 10.9.2(@types/node@18.19.31)(typescript@5.4.5)
+      ts-node: 10.9.2(@types/node@18.19.31)(typescript@5.3.3)
       tslib: 2.6.2
-      typescript: 5.4.5
+      typescript: 5.3.3
       uglify-js: 3.17.4
     transitivePeerDependencies:
       - '@swc/core'
@@ -19051,7 +19074,7 @@ packages:
     dev: false
 
   file:projects/core-rest-pipeline.tgz:
-    resolution: {integrity: sha512-x1BGAnFJ7U+Sql8tAruxzEo0Z1ZK3vJVkW0YAxMIrtS2D2EcVvthAUgciwDA2lRM0gwGQgMCT2LaiaAsp0AwJg==, tarball: file:projects/core-rest-pipeline.tgz}
+    resolution: {integrity: sha512-ClNrE1AVjNg9sJ+vXsV0x7t7q2SfzT/+4LayM8IF/0d5xUS0cbQkLx6H/+apMU6XNZcyKEofncf9QK31cGXXDA==, tarball: file:projects/core-rest-pipeline.tgz}
     name: '@rush-temp/core-rest-pipeline'
     version: 0.0.0
     dependencies:
@@ -20911,7 +20934,7 @@ packages:
     dev: false
 
   file:projects/monitor-opentelemetry.tgz:
-    resolution: {integrity: sha512-C+nIR7ErkNg8p/U8troHdXhdmPQOLJdQpvEZapicAeAjeZ9UqxY/N4U43uY2IZURyASpcnZxSiDb4YagxXcGcQ==, tarball: file:projects/monitor-opentelemetry.tgz}
+    resolution: {integrity: sha512-5Zavq9MkfFVlmPJWE22le3NCPuP4kaK67e9QIEtcmVdjcL6Z9H2e4RyKKY6ejOO4YFD+y+eLxIwJ/PqMQ4iVTQ==, tarball: file:projects/monitor-opentelemetry.tgz}
     name: '@rush-temp/monitor-opentelemetry'
     version: 0.0.0
     dependencies:
@@ -20957,7 +20980,7 @@ packages:
     dev: false
 
   file:projects/monitor-query.tgz:
-    resolution: {integrity: sha512-qhJ09fwX+sw2L8MGjYL+phAWFKi2Q1cck0xXlcQo5Zu03tW4okRJ53Oa5AnyhLaD7D53vNrMQ99JZZVQWCtSfg==, tarball: file:projects/monitor-query.tgz}
+    resolution: {integrity: sha512-mLcOvs6TSai6nVkn6uXk5KFjVJBTvykMtWI0k9rc4H8m8iLOObIAcKegeAOGMeULoYSANE5jB4SMCz1NU9+QtQ==, tarball: file:projects/monitor-query.tgz}
     name: '@rush-temp/monitor-query'
     version: 0.0.0
     dependencies:
@@ -21035,13 +21058,14 @@ packages:
     dev: false
 
   file:projects/openai-1.tgz:
-    resolution: {integrity: sha512-Oh6mjgg4aIC4BxoitkWBhaGVkIT9AbA2lyaaeZepHLNrOdlGIo2IGUqIyHGg/aEP2G0hI2UTCEl2YHn2h2HUwA==, tarball: file:projects/openai-1.tgz}
+    resolution: {integrity: sha512-gwEWspRIem5OgzmWr2G7R2LI7zB76Zicw0wxkJkfXYpRwAcGKEJN+gW2wIgmQhjLBvjtj/nYt3AjGa7EFTgfgg==, tarball: file:projects/openai-1.tgz}
     name: '@rush-temp/openai-1'
     version: 0.0.0
     dependencies:
       '@azure-tools/test-credential': 1.0.4
       '@azure-tools/test-recorder': 3.1.2
       '@azure/abort-controller': 1.1.0
+      '@azure/arm-cognitiveservices': 7.5.0
       '@microsoft/api-extractor': 7.43.1(@types/node@18.19.31)
       '@types/mocha': 10.0.6
       '@types/node': 18.19.31
@@ -21079,12 +21103,13 @@ packages:
     dev: false
 
   file:projects/openai-assistants.tgz:
-    resolution: {integrity: sha512-tA0aRE86blOl0L7X3Jb/AWYye1NICetDvlRMQlT4KlKLPwhTHkg2xe9rTi/q6SIHe4mT0raB0tMcO9IQKE5tNA==, tarball: file:projects/openai-assistants.tgz}
+    resolution: {integrity: sha512-atd80xbZ5m4wwsPNOxUimFOvAwB1WiQfJcQzMwahZIX7wCuTsp2RsqZ+otbZLxZ9gNmdKmXAe+CJMzD2w3FxYQ==, tarball: file:projects/openai-assistants.tgz}
     name: '@rush-temp/openai-assistants'
     version: 0.0.0
     dependencies:
       '@azure-tools/test-credential': 1.0.4
       '@azure-tools/test-recorder': 3.1.2
+      '@azure/arm-cognitiveservices': 7.5.0
       '@microsoft/api-extractor': 7.43.1(@types/node@18.19.31)
       '@types/mocha': 10.0.6
       '@types/node': 18.19.31
@@ -21470,7 +21495,7 @@ packages:
     dev: false
 
   file:projects/perf-monitor-opentelemetry.tgz:
-    resolution: {integrity: sha512-yQRbYhfNZ51zmExqjIc0RIUOH1paTiR2eGdTYqJRBAvl+1NLq1AlkzACQt01R0kIVl65F9TlRYJ2yQ1f+Ipb7Q==, tarball: file:projects/perf-monitor-opentelemetry.tgz}
+    resolution: {integrity: sha512-mRqF7edxY/hxArY862viK7MZ6D/OludZydiaryakA+5lyEuICMzotxxOpDhOKhg02Jm5wyp+oRkpveIVfZK8/w==, tarball: file:projects/perf-monitor-opentelemetry.tgz}
     name: '@rush-temp/perf-monitor-opentelemetry'
     version: 0.0.0
     dependencies:

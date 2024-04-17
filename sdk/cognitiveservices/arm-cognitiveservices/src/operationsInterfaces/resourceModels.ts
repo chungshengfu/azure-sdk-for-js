@@ -7,18 +7,16 @@
  */
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { CommitmentTier, CommitmentTiersListOptionalParams } from "../models";
+import { ModelProperties, ResourceModelsListOptionalParams } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Interface representing a CommitmentTiers. */
-export interface CommitmentTiers {
+/** Interface representing a ResourceModels. */
+export interface ResourceModels {
   /**
-   * List Commitment Tiers.
-   * @param location Resource location.
+   * List subscription level Models.
    * @param options The options parameters.
    */
   list(
-    location: string,
-    options?: CommitmentTiersListOptionalParams,
-  ): PagedAsyncIterableIterator<CommitmentTier>;
+    options?: ResourceModelsListOptionalParams,
+  ): PagedAsyncIterableIterator<ModelProperties>;
 }
