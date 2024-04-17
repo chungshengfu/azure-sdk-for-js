@@ -1265,6 +1265,21 @@ packages:
       - supports-color
     dev: false
 
+  /@azure/arm-storage@18.2.0:
+    resolution: {integrity: sha512-jLUsAVFq5YBOYQfhE6L+KaUs+lntctKVafPz50FFScfzPMHYT/SptQGZ7BKzAJBBE/evdt8afmt2NSdl8Szomg==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      '@azure/abort-controller': 1.1.0
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
+      tslib: 2.6.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /@azure/communication-common@2.3.1:
     resolution: {integrity: sha512-6ZQt20iMZbyckQn4m1TDwiDv3Fzyt1h4lnQ1szBBns2x3VQY9XHbnskPtvUdwK/HT+c/1PoUwof3toy1AIznbQ==}
     engines: {node: '>=18.0.0'}
@@ -8000,6 +8015,12 @@ packages:
     hasBin: true
     dev: false
 
+  /mkdirp@2.1.6:
+    resolution: {integrity: sha512-+hEnITedc8LAtIP9u3HJDFIdcLV2vXP33sqLLIzkv1Db1zO/1OxbvYf0Y1OC/S/Qo5dxHXepofhmxL02PsKe+A==}
+    engines: {node: '>=10'}
+    hasBin: true
+    dev: false
+
   /mkdirp@3.0.1:
     resolution: {integrity: sha512-+NsyUUAZDmo6YVHzL/stxSu3t9YS1iljliy3BSDrXJ/dkn1KYdmtZODGGjLcc9XLgVVpH4KshHB8XmZgMhaBXg==}
     engines: {node: '>=10'}
@@ -12213,13 +12234,14 @@ packages:
     dev: false
 
   file:projects/arm-batch.tgz:
-    resolution: {integrity: sha512-PEFF1xoihZUbyqYsAFC4brctf7ZnYDOaJo90Chnz5tKMpebitLX+ZVCaakX7sOCfQWtde+ZUg57tA/Yj8Ab7yg==, tarball: file:projects/arm-batch.tgz}
+    resolution: {integrity: sha512-6oKXPjbl8HmAf8XErDYk/ck8sjX257FJ4TnN0si4w+rBWVcbTA7LVlEeO+BqvOCPArnN6d3LZrRV8IwZEi675w==, tarball: file:projects/arm-batch.tgz}
     name: '@rush-temp/arm-batch'
     version: 0.0.0
     dependencies:
       '@azure-tools/test-credential': 1.0.4
       '@azure-tools/test-recorder': 3.1.2
       '@azure/abort-controller': 1.1.0
+      '@azure/arm-storage': 18.2.0
       '@microsoft/api-extractor': 7.43.1(@types/node@18.19.31)
       '@types/chai': 4.3.14
       '@types/mocha': 10.0.6
@@ -13922,7 +13944,7 @@ packages:
     dev: false
 
   file:projects/arm-eventhub.tgz:
-    resolution: {integrity: sha512-QypJrpNJamBQy2uxPlK9gNJIy3qsdxMHO9TBQ9Bpc+HvXeFJ8S+w+QeuM753d1BdZbddqBsJm34YumyFQYhjBA==, tarball: file:projects/arm-eventhub.tgz}
+    resolution: {integrity: sha512-XPH102kXWlR6x+cAT7kzlhxkWaPKIkMWpjLNBI/IGH0tuJW9kSUbgbcfCiLfVVDkrr3pYtUABIL/aC4iUQQOFg==, tarball: file:projects/arm-eventhub.tgz}
     name: '@rush-temp/arm-eventhub'
     version: 0.0.0
     dependencies:
@@ -13930,6 +13952,7 @@ packages:
       '@azure-tools/test-recorder': 3.1.2
       '@azure/abort-controller': 1.1.0
       '@azure/arm-network': 32.2.0
+      '@azure/arm-storage': 18.2.0
       '@microsoft/api-extractor': 7.43.1(@types/node@18.19.31)
       '@types/chai': 4.3.14
       '@types/mocha': 10.0.6
@@ -15140,13 +15163,14 @@ packages:
     dev: false
 
   file:projects/arm-mediaservices.tgz:
-    resolution: {integrity: sha512-17EIxEj1hjVt/725+nph/dC43R8/XHWIJDRfqcjpafDUuajmF1OctPpowzygfTokdl6B76B27Q6dP1OL4w/bAA==, tarball: file:projects/arm-mediaservices.tgz}
+    resolution: {integrity: sha512-rwsQNYKMe795GyCZJglrIIhzyb5SNdRaX++htZh0nwosYKZEpeox9cS3MHGsT+zUFvtc9d6wKVn2VXM+VTtq6A==, tarball: file:projects/arm-mediaservices.tgz}
     name: '@rush-temp/arm-mediaservices'
     version: 0.0.0
     dependencies:
       '@azure-tools/test-credential': 1.0.4
       '@azure-tools/test-recorder': 3.1.2
       '@azure/abort-controller': 1.1.0
+      '@azure/arm-storage': 18.2.0
       '@microsoft/api-extractor': 7.43.1(@types/node@18.19.31)
       '@types/chai': 4.3.14
       '@types/mocha': 10.0.6
@@ -15306,13 +15330,14 @@ packages:
     dev: false
 
   file:projects/arm-monitor.tgz:
-    resolution: {integrity: sha512-rXl7edH/qvF0PYRHIG+FI9crymep+YwvWyTb7tcN9r83mZtEtiYF+QGVO7RLCdehL+vFF/7T9WuqREE1PL/FbA==, tarball: file:projects/arm-monitor.tgz}
+    resolution: {integrity: sha512-2tNXX4yoYeF2/tLdfguFjiA7TOPedGGILZjWBqW3/aZlM2V+2B/GlSQEz4p8C6plmXVnxENQvsp56GxFr/93hw==, tarball: file:projects/arm-monitor.tgz}
     name: '@rush-temp/arm-monitor'
     version: 0.0.0
     dependencies:
       '@azure-tools/test-credential': 1.0.4
       '@azure-tools/test-recorder': 3.1.2
       '@azure/abort-controller': 1.1.0
+      '@azure/arm-storage': 18.2.0
       '@microsoft/api-extractor': 7.43.1(@types/node@18.19.31)
       '@types/chai': 4.3.14
       '@types/mocha': 10.0.6
@@ -17300,7 +17325,7 @@ packages:
     dev: false
 
   file:projects/arm-storage.tgz:
-    resolution: {integrity: sha512-/CV5DDNYynYHgraHafJH+skgMiUmHeS2ssy6X6czUqvdaAtBniX1xHRgF3m4QOh0k2xzQr2ayO6geniBijfaRg==, tarball: file:projects/arm-storage.tgz}
+    resolution: {integrity: sha512-qnDaC6UkZO9YCURM0/L/BukpDFCT9zLbGxX9XN0D0A/kd82nt4cBy/9S1qSI33s+mg7l65p04s7Pri0aDczfOA==, tarball: file:projects/arm-storage.tgz}
     name: '@rush-temp/arm-storage'
     version: 0.0.0
     dependencies:
@@ -17314,12 +17339,13 @@ packages:
       chai: 4.3.10
       cross-env: 7.0.3
       dotenv: 16.4.5
-      mkdirp: 3.0.1
+      esm: 3.2.25
+      mkdirp: 2.1.6
       mocha: 10.4.0
       rimraf: 5.0.5
-      ts-node: 10.9.2(@types/node@18.19.31)(typescript@5.4.5)
+      ts-node: 10.9.2(@types/node@18.19.31)(typescript@5.3.3)
       tslib: 2.6.2
-      typescript: 5.4.5
+      typescript: 5.3.3
       uglify-js: 3.17.4
     transitivePeerDependencies:
       - '@swc/core'
@@ -19051,7 +19077,7 @@ packages:
     dev: false
 
   file:projects/core-rest-pipeline.tgz:
-    resolution: {integrity: sha512-x1BGAnFJ7U+Sql8tAruxzEo0Z1ZK3vJVkW0YAxMIrtS2D2EcVvthAUgciwDA2lRM0gwGQgMCT2LaiaAsp0AwJg==, tarball: file:projects/core-rest-pipeline.tgz}
+    resolution: {integrity: sha512-ClNrE1AVjNg9sJ+vXsV0x7t7q2SfzT/+4LayM8IF/0d5xUS0cbQkLx6H/+apMU6XNZcyKEofncf9QK31cGXXDA==, tarball: file:projects/core-rest-pipeline.tgz}
     name: '@rush-temp/core-rest-pipeline'
     version: 0.0.0
     dependencies:
@@ -20911,7 +20937,7 @@ packages:
     dev: false
 
   file:projects/monitor-opentelemetry.tgz:
-    resolution: {integrity: sha512-C+nIR7ErkNg8p/U8troHdXhdmPQOLJdQpvEZapicAeAjeZ9UqxY/N4U43uY2IZURyASpcnZxSiDb4YagxXcGcQ==, tarball: file:projects/monitor-opentelemetry.tgz}
+    resolution: {integrity: sha512-5Zavq9MkfFVlmPJWE22le3NCPuP4kaK67e9QIEtcmVdjcL6Z9H2e4RyKKY6ejOO4YFD+y+eLxIwJ/PqMQ4iVTQ==, tarball: file:projects/monitor-opentelemetry.tgz}
     name: '@rush-temp/monitor-opentelemetry'
     version: 0.0.0
     dependencies:
@@ -20957,7 +20983,7 @@ packages:
     dev: false
 
   file:projects/monitor-query.tgz:
-    resolution: {integrity: sha512-qhJ09fwX+sw2L8MGjYL+phAWFKi2Q1cck0xXlcQo5Zu03tW4okRJ53Oa5AnyhLaD7D53vNrMQ99JZZVQWCtSfg==, tarball: file:projects/monitor-query.tgz}
+    resolution: {integrity: sha512-mLcOvs6TSai6nVkn6uXk5KFjVJBTvykMtWI0k9rc4H8m8iLOObIAcKegeAOGMeULoYSANE5jB4SMCz1NU9+QtQ==, tarball: file:projects/monitor-query.tgz}
     name: '@rush-temp/monitor-query'
     version: 0.0.0
     dependencies:
@@ -21470,7 +21496,7 @@ packages:
     dev: false
 
   file:projects/perf-monitor-opentelemetry.tgz:
-    resolution: {integrity: sha512-yQRbYhfNZ51zmExqjIc0RIUOH1paTiR2eGdTYqJRBAvl+1NLq1AlkzACQt01R0kIVl65F9TlRYJ2yQ1f+Ipb7Q==, tarball: file:projects/perf-monitor-opentelemetry.tgz}
+    resolution: {integrity: sha512-mRqF7edxY/hxArY862viK7MZ6D/OludZydiaryakA+5lyEuICMzotxxOpDhOKhg02Jm5wyp+oRkpveIVfZK8/w==, tarball: file:projects/perf-monitor-opentelemetry.tgz}
     name: '@rush-temp/perf-monitor-opentelemetry'
     version: 0.0.0
     dependencies:
